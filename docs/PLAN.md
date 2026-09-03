@@ -153,7 +153,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   roster is in `sandbox/instruments.js`, RUNNING_LOG §20; keyswitch notes verified on the red
   keys) `done 2026-09-03` (all 16 parts registered from screenshots, §22; track verified from the file, §23) · R4 Fluteb SI2 (the last three presets: Staccato, Trills KS, Whistle Tones; 13 slots free)
   `done 2026-09-03` (§22–23) · R5 Bass Clarinet XS (Kontakt 8, four slots ch 1–4; #3's configured track can be
-  imported) `todo` · R6 Piano 8Dio (Kontakt, ch 1) `todo` · R7 Piano PP2 (UVI, harmonics A3,
+  imported) `done 2026-09-03` (track verified from the file, §25; the 34-preset roster + keyswitch map, §24) · R6 Piano 8Dio (Kontakt, ch 1) `todo` · R7 Piano PP2 (UVI, harmonics A3,
   muted A5) `todo` · R8–R11 Vn1 / Vn2 / Va / Vc XS (Kontakt 8, four slots each) `todo` · R12
   REC (audio, record output stereo, receive from the track under test) `todo` · R13 save +
   commit; on the composer's Chrome the app's Web MIDI list shows the eight ports `todo`.

@@ -985,3 +985,13 @@ four slots must sit on its own channel (1–4); Omni would sound all four on eve
   Clarinet presets (#30–33) flagged VERIFY** — a pseudo instrument may shift the zone.
   Names worth knowing for CN-4: #24–26 Vibrato MW / Velocity / inverted, #27 Secco, #28
   Portato, #20 With Accent, #3–4 Staccato MW Shape (the wheel shapes short notes).
+
+## §25. R5 verified from the project file
+
+Composer: *"bcl done"*. `reaper/septet_rack.rpp` (1.48 MB now — Kontakt's state with four
+instruments inside): `Bass Clarinet XS` · `REC 1 4608 1 0` = armed · MIDI input, all channels ·
+monitoring ON · record mode input · `VST3i: Kontakt 8`. The input value 4608 is the same
+number piece #3's Bass Clarinet track carried for the same port — Reaper's own device index,
+stable on this machine. The four slot channels (D11: 1–4) live inside Kontakt's binary chunk
+and cannot be read from the file; a one-note test at 0h proves them (one voice on ch 1, not
+four). Three tracks done, in score order.
