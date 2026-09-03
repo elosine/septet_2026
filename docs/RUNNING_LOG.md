@@ -287,3 +287,22 @@ presets carry "10 tubas" labels · `docs/instrument_map.json` has zero instrumen
 **Deliberately left in place:** the bank presets tuned on tubas (morph models, texture
 models/params, shape presets, panel snapshots) — the composer's own reference material,
 labelled by origin; replaced by septet presets as they are made.
+
+## §10. Correction to §9: a day-one canonical stub exists after all
+
+§9 says the UI-saved `scores/septet.json` was deleted and "the composer names the first
+real file." After that, a cold reload of the app showed one 404: the app's default session
+is bound to `septet`, and with no file of that name every fresh start opened on "Score not
+found". So `scores/septet.json` was written again through the running server — an empty
+score with the seven-track table, `layoutVersion` 3 and a metadata note saying what it is —
+and **committed as the day-one canonical stub** (commit `6d6a6f3`), exactly as piece #4
+carried its `7tubas.json` stub from day 1. The piece itself will live in the `piece-sNN`
+chain once composing starts (piece #4's NAMING.md); the stub only makes the cold start
+clean. Filed as a correction rather than an edit to §9, per the journal rules.
+
+## §11. Session 1 checkpoint (before the clear)
+
+Wrapped on Fable at the composer's `/checkpoint`. Position: 0a ☑ · 0b ☑ · next 0g + 0i
+(Opus, one session). The working tree was clean after `6d6a6f3`; the preview servers on
+5300/4800 belong to this session and stop with it — the next session starts them from
+`.claude/launch.json` (`score`, `sandbox`) or with `node score/server.js`.

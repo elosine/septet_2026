@@ -23,6 +23,11 @@
 - **The IR contract (D9):** the composer save is the ground truth; the IR is derived from
   it by the extractor and is the single source for the animated score, video, print and
   stands. Composing never waits on it.
+- **Apps (0b, live since 2026-09-03):** `node score/server.js` → http://localhost:5300/
+  composer.html · `node sandbox/serve.js` → http://localhost:4800 · `.claude/launch.json`
+  names them `score` / `sandbox`. `scores/septet.json` = the committed day-one stub; the
+  piece goes in the `piece-sNN` chain (#4's NAMING.md). Recipes: `sandbox/instruments.js`
+  (provisional until 0e/0c).
 
 ### Map of piece #4 (survey 2026-09-03) — what the port inherits
 
@@ -121,7 +126,38 @@ extracts to IR) on Opus; **0e** loopMIDI + Reaper rack with the composer; **0c**
 5. **0d on Fable + the composer's ear**: CC7 → dB on one Xsample string preset and the bass
    clarinet with `probes/cc7_calibration_probe.ps1`; state rule; the dynamics recipe.
 
-**Open at session end:** — (0b closed and committed; nothing in flight)
+**Open at session end** *(mid-session checkpoint, 2026-09-03, Fable — written for an AI
+that has never seen this conversation):*
+- **Task and state:** phase 0 setup. 0a and 0b are CLOSED and pushed (`6d6a6f3`). Nothing
+  is half-built. The composer score app and sandbox run and were verified live
+  (RUNNING_LOG §9); `scores/septet.json` is the committed day-one stub (§10).
+- **Latest deliverable:** the ported composer module — `score/`, `sandbox/`, `bank/`,
+  `probes/`, `tools/model_bank.js`; apps at http://localhost:5300/composer.html and
+  http://localhost:4800 (`.claude/launch.json` names them `score` and `sandbox`).
+- **Next concrete step (PLAN 0g, then 0i), as an instruction:** from
+  `C:\Users\jwloy\GitHub\for_seven_tubas`, copy byte-exact into this repo:
+  `notation/lib`, `notation/registry`, `notation/schema`, `notation/app/notation.html`,
+  `notation/GLYPH_EXTENSION_CONTRACT.md`, `tools/{notate_section,notate_block,ir_extract,
+  ir_extract_golden,ir_validate,ir_validate_battery,export_print,export_video,test_render,
+  test_layout,test_animobj,test_coords,prove_unmoved}.js`, `tools/fixtures/`, `print/score/
+  build.sh`, `print/cover/`, `package.json` (then `npm install` for resvg), plus
+  `docs/NOTATION_STANDARDS.md`, `docs/NOTATION_WORKFLOW.md`, `notation/schema/IR_SCHEMA_v0.md`
+  as reference copies. Do NOT copy `notation/ir/*.ir.json` (tuba pages) or `notation/video`
+  renders. Run `node tools/test_render.js`, `test_layout.js`, `test_animobj.js`,
+  `test_coords.js` and record pass counts. Then 0i: make a 30-second test save with a
+  handful of notes on three lanes (through the app or by hand from the stub), run
+  `node tools/notate_section.js --score <name> --w0 0 --w1 30` and
+  `node tools/ir_validate.js <id> --against-source`; read what fails; fix the S1 side or
+  file the classifier work under PLAN 2a. Journal every number as you go.
+- **Resume reads:** `docs/PLAN.md` §0 items **0g** and **0i** · journal §4 **D9** (the IR
+  contract) · `RUNNING_LOG.md` **§9** (what the port changed — the extractor reads
+  `score.tracks[].instKey` and `layoutVersion` 3) · piece #4's
+  `docs/NOTATION_ARCHITECTURE.md` §1 (the four strata) and the header of
+  `tools/notate_section.js`.
+- **Pending the composer:** piccolo vs bass flute (CN-2) — not blocking. 0e needs the
+  composer at Reaper; do not attempt it alone.
+- **Deliberately uncommitted:** nothing. `git status --short` was empty after `6d6a6f3`;
+  this checkpoint commit carries only docs.
 
 **Open questions:**
 - **Q1 flute doubling instrument:** piccolo or bass flute — composer undecided; SI2 flute
