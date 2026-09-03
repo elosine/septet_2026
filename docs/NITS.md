@@ -33,3 +33,9 @@
   opposite: `one-shot` is the NOTATION rule (revert to base mode explicitly after the note); the
   sampler keeps the CC0 selection until the next CC0. Harmless here because every note's
   prelude writes its own CC0; fix the comment and the flag's meaning at PLAN 0c.
+- **`sonify_core` route resolution falls back to `techs[0]` for an unknown technique key,
+  silently** (2026-09-03, first sound). With the full rosters in, the 0i test saves' string
+  notes (`ord`, `staccato`, `pizz`, `arco`, `bartok`) resolve to preset #1 of the string menu
+  (Vibrato Velocity + MW inverted) with no warning. Make the fallback loud (console.warn +
+  a visible mark on the object), and re-key or retire `scores/0i-test*.json` at 0c.7. Not
+  blocking: fresh notes pick a real key from the menu.

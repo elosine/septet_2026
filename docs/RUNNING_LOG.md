@@ -1113,3 +1113,13 @@ channels — the one-note test proves those. **A todo from the composer, filed a
 *"revisit save file logic, try to simplify/make more logical."* The piano lane's technique
 menu (`recTechSel`) carries main · plucked · harmonics · muted when the piano lane is
 selected — his *"can I also have the other pianos in the midi play menu"* is already yes.
+- **First sound, 2026-09-03 evening:** the composer at the app on Chrome: flute and violin
+  sounded; *"cello not sounding, how to draw notes, with keyboard plugged in no sound"*. The
+  keyboard: winmm now lists `Keystation 88 MK3` at input index 40 and `MIDIIN2` at 41, and
+  `reaper.ini`'s `midiins_h = 4095` covered indices 32–43 — **Reaper had the Keystation
+  enabled** (the single-client trap of #3's ledger, I3 in #4's) — the composer cleared it:
+  *"midi keyboard works now"*. The cello: two checks handed over (the Vc track's input meter
+  when the app auditions; Kontakt slot 1 on [A] 1). Found while looking: `sonify_core`'s route
+  falls back to `techs[0]` for an unknown technique key — the 0i test saves carry the
+  pre-roster string keys (`ord`, `staccato`, `pizz`, `arco`), so their string notes now audition
+  as preset #1 "Vibrato Velocity + MW inverted", silently. NITS.
