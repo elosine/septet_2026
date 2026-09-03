@@ -25,9 +25,11 @@ const INSTRUMENTS = {
   // what the player does; `preset` names the UVI patch; a KS mode carries `ks` = the switch note
   // the prelude latches before the note (`tech.ks`, wired at 0c.7 — until then the object's own
   // `ksNote`, the tuba path). KEYSWITCH NUMBERS: the manual's note names are scientific (C4 = 60),
-  // so manual C1 = MIDI 24 = UVI display "C0" — exactly where the tuba's Cresc & Decr KS was
-  // measured (24/25/26). VERIFY ON THE UVI KEYBOARD (red keys) at R3: Durations KS is the one
-  // preset the manual puts at C2/C#2 (36/37). Range: sounding C4–C7, B3 with the extension
+  // but the FLUTE's switches sit an octave above the tuba's: the composer's UVI screenshot at R3
+  // (A1, Aeolian KS) shows the red key at display C1 = MIDI 36, just under the tan extended range
+  // that starts at C#1 — SI2 puts each instrument's KS zone under its own range. So manual C1 → 36,
+  // C#1 → 37, D1 → 38; Durations KS (manual C2/C#2) → 48/49. Each KS preset is checked on its red
+  // keys as it loads. Range: sounding C4–C7, B3 with the extension
   // → MIDI 59–96 (manual p. 51); per-preset ranges are read from the UVI GUI at 0c, never
   // ear-scanned. Multiphonics Menu: one multiphonic per key, C3–F5 = MIDI 48–77 (manual
   // "FLUTE Multiphonics"). Piccolo / bass flute are NOT here yet — undecided (D6; CN-2, CN-4).
@@ -38,24 +40,24 @@ const INSTRUMENTS = {
     rangeHigh: 96,
     techniques: [
       // A1 · Flute Aeolian KS
-      { key: "aeolian_and_ord", label: "Aeolian & Ordinario",        preset: "Flute Aeolian KS",            channel: 1,  ks: 24 },
-      { key: "aeolian",         label: "Aeolian",                    preset: "Flute Aeolian KS",            channel: 1,  ks: 25 },
+      { key: "aeolian_and_ord", label: "Aeolian & Ordinario",        preset: "Flute Aeolian KS",            channel: 1,  ks: 36, rangeLow: 60, rangeHigh: 83 },   // native C3–B4 (UVI) = MIDI 60–83; tan extension 37–59 and 84+ (screenshot 2026-09-03)
+      { key: "aeolian",         label: "Aeolian",                    preset: "Flute Aeolian KS",            channel: 1,  ks: 37, rangeLow: 60, rangeHigh: 83 },   // C#1 red? — composer to confirm (manual: second switch)
       // A2 · Flute Chromatic Scale
       { key: "chrom_scale",     label: "Chromatic Scale",            preset: "Flute Chromatic Scale",       channel: 2 },
       // A3 · Flute Cresc & Decrescendo KS
-      { key: "cresc",           label: "Crescendo",                  preset: "Flute Cresc & Decrescendo KS", channel: 3, ks: 24 },
-      { key: "cresc_decresc",   label: "Crescendo to Decrescendo",   preset: "Flute Cresc & Decrescendo KS", channel: 3, ks: 25 },
-      { key: "decresc",         label: "Decrescendo",                preset: "Flute Cresc & Decrescendo KS", channel: 3, ks: 26 },
+      { key: "cresc",           label: "Crescendo",                  preset: "Flute Cresc & Decrescendo KS", channel: 3, ks: 36 },
+      { key: "cresc_decresc",   label: "Crescendo to Decrescendo",   preset: "Flute Cresc & Decrescendo KS", channel: 3, ks: 37 },
+      { key: "decresc",         label: "Decrescendo",                preset: "Flute Cresc & Decrescendo KS", channel: 3, ks: 38 },
       // A4 · Flute Durations KS (fixed-length notes; manual: C2 / C#2)
-      { key: "dur_0_5s",        label: "Duration 0.5 s",             preset: "Flute Durations KS",          channel: 4,  ks: 36 },
-      { key: "dur_1s",          label: "Duration 1 s",               preset: "Flute Durations KS",          channel: 4,  ks: 37 },
+      { key: "dur_0_5s",        label: "Duration 0.5 s",             preset: "Flute Durations KS",          channel: 4,  ks: 48 },
+      { key: "dur_1s",          label: "Duration 1 s",               preset: "Flute Durations KS",          channel: 4,  ks: 49 },
       // A5 · Flute FX KS
-      { key: "jet_whistle",     label: "Jet Whistle",                preset: "Flute FX KS",                 channel: 5,  ks: 24 },
-      { key: "key_click",       label: "Key Click",                  preset: "Flute FX KS",                 channel: 5,  ks: 25 },
-      { key: "tongue_ram",      label: "Tongue Ram",                 preset: "Flute FX KS",                 channel: 5,  ks: 26 },
+      { key: "jet_whistle",     label: "Jet Whistle",                preset: "Flute FX KS",                 channel: 5,  ks: 36 },
+      { key: "key_click",       label: "Key Click",                  preset: "Flute FX KS",                 channel: 5,  ks: 37 },
+      { key: "tongue_ram",      label: "Tongue Ram",                 preset: "Flute FX KS",                 channel: 5,  ks: 38 },
       // A6 · Flute Finger Modes KS
-      { key: "harmonic_fing",   label: "Harmonic Fingering",         preset: "Flute Finger Modes KS",       channel: 6,  ks: 24 },
-      { key: "discolored_fing", label: "Discolored Fingering",       preset: "Flute Finger Modes KS",       channel: 6,  ks: 25 },
+      { key: "harmonic_fing",   label: "Harmonic Fingering",         preset: "Flute Finger Modes KS",       channel: 6,  ks: 36 },
+      { key: "discolored_fing", label: "Discolored Fingering",       preset: "Flute Finger Modes KS",       channel: 6,  ks: 37 },
       // A7 · Flute Flatterzunge
       { key: "flz",             label: "Flatterzunge",               preset: "Flute Flatterzunge",          channel: 7 },
       // A8 · Flute Fortepiano
@@ -63,26 +65,26 @@ const INSTRUMENTS = {
       // A9 · Flute Multiphonics Menu (one multiphonic per key)
       { key: "multiphonics",    label: "Multiphonics Menu",          preset: "Flute Multiphonics Menu",     channel: 9,  rangeLow: 48, rangeHigh: 77 },
       // A10 · Flute Ord & Aeolian KS (the two transitions)
-      { key: "ord_to_aeolian",  label: "Ordinario to Aeolian",       preset: "Flute Ord & Aeolian KS",      channel: 10, ks: 24 },
-      { key: "aeolian_to_ord",  label: "Aeolian to Ordinario",       preset: "Flute Ord & Aeolian KS",      channel: 10, ks: 25 },
+      { key: "ord_to_aeolian",  label: "Ordinario to Aeolian",       preset: "Flute Ord & Aeolian KS",      channel: 10, ks: 36 },
+      { key: "aeolian_to_ord",  label: "Aeolian to Ordinario",       preset: "Flute Ord & Aeolian KS",      channel: 10, ks: 37 },
       // A11 · Flute Ord & Flatterzunge KS (the two transitions)
-      { key: "ord_to_flz",      label: "Ordinario to Flatterzunge",  preset: "Flute Ord & Flatterzunge KS", channel: 11, ks: 24 },
-      { key: "flz_to_ord",      label: "Flatterzunge to Ordinario",  preset: "Flute Ord & Flatterzunge KS", channel: 11, ks: 25 },
+      { key: "ord_to_flz",      label: "Ordinario to Flatterzunge",  preset: "Flute Ord & Flatterzunge KS", channel: 11, ks: 36 },
+      { key: "flz_to_ord",      label: "Flatterzunge to Ordinario",  preset: "Flute Ord & Flatterzunge KS", channel: 11, ks: 37 },
       // A12 · Flute Ordinario
       { key: "ord",             label: "Ordinario",                  preset: "Flute Ordinario",             channel: 12 },
       // A13 · Flute Pizzicato
       { key: "pizzicato",       label: "Pizzicato",                  preset: "Flute Pizzicato",             channel: 13 },
       // A14 · Flute Play & Sing KS
-      { key: "play_sing",       label: "Play and Sing (sung C4)",    preset: "Flute Play & Sing KS",        channel: 14, ks: 24 },
-      { key: "play_sing_unison",label: "Play and Sing Unison",       preset: "Flute Play & Sing KS",        channel: 14, ks: 25 },
+      { key: "play_sing",       label: "Play and Sing (sung C4)",    preset: "Flute Play & Sing KS",        channel: 14, ks: 36 },
+      { key: "play_sing_unison",label: "Play and Sing Unison",       preset: "Flute Play & Sing KS",        channel: 14, ks: 37 },
       // A15 · Flute Quartertones Ordinario
       { key: "ord_1q",          label: "Ordinario quarter-tone",     preset: "Flute Quartertones Ordinario", channel: 15 },
       // A16 · Flute Sforzando
       { key: "sforzando",       label: "Sforzando",                  preset: "Flute Sforzando",             channel: 16 },
       // ---- second instance "Fluteb" (A1–A3) ----
       { key: "staccato",        label: "Staccato",                   preset: "Flute Staccato",              port: "Fluteb", channel: 1 },
-      { key: "trill_m2",        label: "Trill minor 2nd",            preset: "Flute Trills KS",             port: "Fluteb", channel: 2, ks: 24 },
-      { key: "trill_M2",        label: "Trill major 2nd",            preset: "Flute Trills KS",             port: "Fluteb", channel: 2, ks: 25 },
+      { key: "trill_m2",        label: "Trill minor 2nd",            preset: "Flute Trills KS",             port: "Fluteb", channel: 2, ks: 36 },
+      { key: "trill_M2",        label: "Trill major 2nd",            preset: "Flute Trills KS",             port: "Fluteb", channel: 2, ks: 37 },
       { key: "whistle_tones",   label: "Whistle Tones",              preset: "Flute Whistle Tones",         port: "Fluteb", channel: 3 },
     ],
   },

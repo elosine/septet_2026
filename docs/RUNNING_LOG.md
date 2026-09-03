@@ -818,3 +818,15 @@ from the skeleton: `whistle_sweep` and `note_durations` (not presets); new: `for
 `multiphonics` (one multiphonic per key, C3–F5 = MIDI 48–77 per the manual's table), the two
 duration modes. Alphabetical order chosen so the composer loads by walking down the list;
 Staccato landing on the second instance costs nothing — a port name in a recipe.
+
+## §21. R3, part A1 — the flute's keyswitch zone is an octave above the tuba's (read from the screen)
+
+Composer's UVI screenshot of A1 (Aeolian KS), asked *"can you confirm what you see"*: grey keys
+(unmapped) at the far left · ONE red key at UVI **C1** · tan keys C#1–B2 (extended range,
+stretched) · white keys **C3–B4** (the native samples: MIDI 60–83, sounding C4–B5) · tan again
+from C5 up, cut by the frame. So the switch is at MIDI **36**, not the 24 I had taken from the
+tuba's measured zone — SI2 puts each instrument's KS keys just under ITS OWN extended range,
+and the flute's starts at C#1. Applied: every flute `ks` +12 (36/37/38; Durations KS 48/49),
+Aeolian KS native range 60–83 recorded, the header comment corrected. Open: the manual lists a
+second switch (C#1 = Aeolian); the black key beside the red one looks plain black in the image —
+composer to confirm on screen. Each further KS preset gets the same look as it loads.
