@@ -1129,3 +1129,23 @@ selected — his *"can I also have the other pianos in the midi play menu"* is a
   Purge ▾ → Reload all samples. Started `docs/SAMPLER_QUIRKS.md` for the septet's own
   findings (this, the Keystation grab, the hidden input selector, the octave traps, the FX
   bypass rule, the CC#0 correction) on top of #3's ledger.
+
+## §31. First sound: the cello bisected, a probe born, `rack-test` written for the composer
+
+Composer: *"no cello, what is the fix? unclear"* — then, to a note sent straight into the `Vc`
+port from PowerShell (winmm, CC7 127 · CC0 5 = Senza Vibrato Velocity #6 · C3 for 2 s, and
+the same on Vn1 as the control): *"yes heard cello"*. So Reaper, the port and Kontakt's slot
+1 on [A] 1 are right; the silent path was the APP's: the old `0i-test-b` cello note carries
+`technique: 'ord'`, which no longer exists for the strings, and `sonify_core` falls back to
+`techs[0]` = preset #1 "Vibrato Velocity + MW inverted" — a wheel-driven preset, silent where
+the wheel sat (the NITS entry of the hour). The probe is kept as
+**`probes/port_note_probe.ps1`** (-Port -Channel -CC0 -Note -Ms): the bisecting tool for every
+"X is silent" from now on — sounds → the app's fault; silent → the rack's.
+
+*"and can you just add notes to each part via a save file pls"* — **`scores/rack-test.json`**,
+written by the app itself (its object shape, its `saveSession`): a marker `ACT-rack-test` and
+eleven notes 2 s apart, one per PORT and per piano technique — Flute `ord` (Flute ch 12) ·
+`staccato` (Fluteb ch 1) · bass clarinet `senza_vel` (#13) · piano `main` / `plucked` /
+`harmonics` / `muted` (ch 1 / 2 / 3 / 5) · vn1 · vn2 · va · vc `senza_vel` (#6) — every route
+checked against the rosters before saving (all resolve, with their CC0). Play walks the rack
+in score order; a silent slot names its own port and channel.
