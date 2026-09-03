@@ -1,0 +1,165 @@
+# PLAN — septet 2026
+
+> **Rules:** IDs are stable — never renumber, only append. Status: `todo` / `doing` /
+> `done` / `deferred` / `dropped`. Position = order. Every item keeps a one-line ***why***.
+> Same conventions as pieces #3 and #4.
+
+## The piece in one line
+
+Flute (picc/bass fl) · bass clarinet · piano · 2 vn · va · vc, ≤ 12 min, for TEMPUS LAB
+2026 (deadline 2026-10-15). Animated score, the tuba piece's format; a PDF + video for the
+submission; parts + performance score only if selected (concerts 26–28 Nov 2026).
+
+## The timeline that binds everything
+
+| | |
+|---|---|
+| 2026-09-03 | project opened, kit installed (0a) |
+| ~2026-09-10 | **0 closed:** first sound from every instrument through the score app |
+| 2026-09-10 → 10-05 | **1 compose** (notation work interleaved from the first real page) |
+| ~2026-10-05 → 10-13 | **2b presentation score:** print PDF (A3) + video |
+| 2026-10-15 | **4 submission** (deadline 23:59 CET) |
+| early Nov | selection announced; if selected → **2a/2c parts** + **3 performance score** by ~10-29 |
+
+---
+
+## 0. Setup — `doing`
+
+- **0a — PM kit** — `done 2026-09-03` — journal · plan · planner · RUNNING_LOG (lab
+  journal) · COMPOSITION_NOTES (sketch pad) · AI_METHODOLOGY + SESSION_HYGIENE (from #4) ·
+  HOW_WE_WORK + SESSION_PROTOCOL (from #3) · checkpoint/postclear commands · .gitignore.
+  *Why:* the session skills are wired to it; decisions survive clears from minute one.
+
+- **0b — Composer module port** — `todo` — **the safe port that preserves all functionality.**
+  *Why:* the composer will use "very similar structures" to the tuba piece; the app is the
+  composing surface from day one.
+  - **0b.1 — Copy the folder set from #4** (byte-exact, then adapt): `score/` (server.js,
+    snapshots.js, palette.json, public/*) · `sandbox/` (serve.js, index.html,
+    instruments.js, motives/ empty) · `tools/model_bank.js` · `bank/` **model and preset
+    files only** (morph_models/params/recipes, shape_presets, texture_models/params,
+    pulse_palette, panel_snapshots, sample_lengths) · `probes/` senders + `cc7_map.json` ·
+    `docs/instrument_map.json` skeleton · `start_score_server.bat`. **NOT copied:** the
+    tuba material banks (CLOUD02*, CLUST01*, VERT01*, DB3*, GESTURE*, cluster_bank,
+    blast_taxonomy, actuals) — piece data.
+  - **0b.2 — Re-palette:** `TRACKS` = 7 instrument-keyed tracks (`flute`, `bass_clarinet`,
+    `piano`, `violin1`, `violin2`, `viola`, `cello`; top→bottom score order), `META_LAYER = 7`,
+    lane HTML + the track `<select>`, title/session name, ports 5300/4800, the two
+    `INSTRUMENTS.tuba1` lookups → the selected track's instrument, the one
+    `'tuba' + (10 - k)` port spot → recipe lookup, `layoutVersion` bumped with its migration
+    for 7 + META. **Per-track pitch axis** from each instrument's range (piano 21–108;
+    piccolo to 108; bass flute down to 48; bass clarinet to 34; strings by instrument).
+  - **0b.3 — Bank skeletons:** empty-but-valid `cluster_bank.json`, `blast_taxonomy.json`,
+    `bank/actuals/`, `bank/texture_actuals/` so every route answers and every panel opens.
+  - **0b.4 — Verify in the running app** (AI_METHODOLOGY rule 4): server up on 5300 ·
+    every panel opens without console errors · save → version → load → discard round trip ·
+    Web MIDI lists the 7 ports · a note from each track reaches its port (0e first).
+  - **0b.5 — Sandbox up** on 4800 with the empty motive library; thru path per #4 P6.
+  - **0b.6 — Grep audit** for stragglers: `tuba`, `10 -`, `=== 10`, `7tubas`, `5200`, `4700`.
+
+- **0c — Instrument recipes (`sandbox/instruments.js`)** — `todo` — one entry per track:
+  techniques with `{channel, port?, cc0?, ks?, range}`, per-library mechanism.
+  *Why:* the recipes ARE how the AI and the app produce the right MIDI for each sound.
+  - **0c.1 — Flute track (D6 doubling model):** SI2 flute in C (channel-per-technique);
+    piccolo and bass flute as instrument-switch techniques on the same track — **library
+    TBD (journal Q1)**.
+  - **0c.2 — Bass clarinet:** Xsample, from #3's `sandbox/instruments.js` (`mechanism: "cc0"`,
+    13 starter presets) + `XSAMPLE_BASSCL_map.md`. Copy, don't re-research.
+  - **0c.3 — Piano:** 8Dio Steinway (main, velocity + CC64) + IRCAM Prepared Piano 2
+    (harmonics CC21, muted) from #2's `instrument_map.json` (`Piano1` ch 1–5). One track,
+    preparations as techniques.
+  - **0c.4 — Strings ×4:** per the 0d verdict. If SI2: ~40 techniques each → overflow
+    port per instrument (`Vn1` + `Vn1b`), the tuba pattern. If Xsample: CC0 presets +
+    the 3-bank channel discipline from #1 (or CC120/123 verified to reset).
+  - **0c.5 — Transposition + clef metadata per instrument** recorded now (bass clarinet
+    written a major 9th up; piccolo 8vb; bass flute 8va; alto clef for viola) — unused
+    until phase 2, free to record, expensive to rediscover.
+
+- **0d — Strings library compare: Xsample Contemporary Solo Strings vs SI2** — `todo` —
+  from docs on hand first (#1 `cc_mapping_registry.json` + `MIDI_MUSIC_GENERATION.md` §18–19;
+  SI2 manual pp. 59–62; #3's UVI/Xsample quirks), then the composer's ear on one seam
+  test per library. Axes: technique roster · continuous control (MW crossfade vs CC7;
+  #3 found Xsample's crossfade > UVI's) · legato/gliss (Xsample CC68/24 vs SI2 transition
+  patches) · switching cost (CC0 vs channels) · quirks (Xsample CC state, UVI ranges).
+  *Why:* the composer: "I might just use SI2 for the strings ... it depends on the
+  functionality ... I don't wanna lose any of that Xsample functionality." Output: a
+  one-page verdict table → 0c.4.
+
+- **0e — loopMIDI + Reaper rack** — `todo` *(composer at the machine, AI walks the R-steps
+  as in #3)* — ports named = track ids, case-exact (`Flute`, `BassCl`, `Piano`, `Vn1`,
+  `Vn2`, `Va`, `Vc`, plus `-b` overflow ports where a library exceeds 16 techniques); one
+  Reaper track per port, **input monitoring ON** (Principle 1); `reaper/septet_rack.rpp`
+  committed, Media/Backups/AutoSaves ignored (#3's D6). Kontakt 8 for Xsample/8Dio, UVI
+  Workstation for SI2/PP2. *Why:* it is the whole audition path; #3 lost a session to
+  monitoring being off.
+
+- **0f — The AI's MIDI generation path** — `todo` — three routes, all inherited, wired to
+  the septet recipes: (i) **live** — app objects → `compiler.js`/`sonify_core.js` → Web MIDI
+  → loopMIDI, recipe resolution `tech.port || inst.port`, channel, CC0 prelude, keyswitch
+  notes; (ii) **offline** — `tools/midi_out.js` SMF writer → Reaper import (timing
+  separated from the browser scheduler); (iii) **probes** — `probes/*.ps1` winmm sender
+  for calibration batteries. Per-library CC lanes catalogued: CC1 (Xsample MW dynamics),
+  CC7 (UVI level; #4 measured the CC7→dB curve), CC64/CC21 (piano), bend range per
+  library (#4 measured 1.99 st on SI2; Xsample editable to ±1 oct). *Why:* "setting up AI
+  ability to generate the proper MIDI signals, control channels, etc. to manage these
+  instruments" — the composer's stated third pillar.
+
+- **0g — Notation/IR infrastructure carried over now, adapted later** — `todo` — copy
+  `notation/{lib,registry,schema,app}` (no `ir/` pages), `tools/{notate_section, notate_block,
+  ir_extract*, ir_validate*, export_print, export_video, test_render, test_layout,
+  test_animobj, test_coords, prove_unmoved}`, `print/` (build.sh, cover generator, no PDFs),
+  `notation/GLYPH_EXTENSION_CONTRACT.md`, `docs/NOTATION_STANDARDS.md` + `IR_SCHEMA_v0.md`
+  as reference copies; `package.json` with resvg; fonts policy from #4 (never committed).
+  Run the test batteries once to prove the copy is whole. **Adaptation list, for phase 2a
+  (recorded so it does not bite):** treble + alto clef glyphs and per-part clef · written
+  pitch (transposition) per part · piano grand staff with chord columns, accidental stacks,
+  ottava (rules in #2's `CHORD_SPACING_RULES.md`, `dimensions_table.json`) · instrument
+  change marks for the flute doubling · string/wind technique marks · A3 format entry ·
+  rehearsal marks as IR data · parts = `frameParts` subset + own pagination + cues.
+  *Why:* "of course all the IR and whatever infrastructure we need" — copying costs
+  nothing now; adapting waits for real material.
+
+- **0h — Gate: phase 0 closed** — `todo` — every track sounds from the score app through
+  its own port with the right technique switching; a save round-trips; the sandbox
+  captures a motive into the library; `RUNNING_LOG` has the numbers. *Why:* one verified
+  gate instead of seven confidence claims.
+
+## 1. Compose — `todo` (starts the moment 0h passes; tools built per need, the #3/#4 MO)
+
+- Sketch pad: `docs/COMPOSITION_NOTES.md` — the opening is already there (ensemble attack →
+  curve-based tremolos with fp entries → tremolo fugue → density-build sound mass).
+- Tuba engines to pull per need: `compiler.js` swell clouds and grain envelopes (present
+  in the port), texture/pulse/multitempo panels (present), density-build recipes
+  (`CURVE_DATABASE.md` MAXDENSE-1 / BUILD-1 — data in #4, consult when the mass is built).
+
+## 2. Notate — `deferred` until the first real page exists
+
+- **2a — Engine adaptation** — the 0g list. Start with the page the opening needs.
+- **2b — Presentation score** — print PDF (A3 landscape, format entry + cover + performance
+  notes page as in #4) + video (`export_video.js`, Reaper render at fixed BPM, sync proof
+  as #4's PHASE 5). **Deadline-bound: 2026-10-15.**
+- **2c — Parts** — only if selected; due ~2026-10-29.
+
+## 3. Performance score — `deferred` — port #4's modules when they exist there (D2).
+
+## 4. Submission package — `todo` — form (PDF), bio (½ page), work description (optional
+  ½ page), fee €25 + payment PDF, score PDF ≤ A3. Field-by-field record in RUNNING_LOG.
+
+---
+
+## Standing mandates (apply to everything)
+
+- **M1 — Re-examine, don't re-implement** (#3 D4): every ported workflow gets the question
+  "fewest manual steps between intention and hearing it?"
+- **M2 — Engine vs palette seam** (#3 D3): architecture piece-agnostic; this piece's
+  instruments/techniques/objects are data. Keep the seam clean; extract nothing yet.
+- **M3 — Notation-first identity** (#3 D7): a sound's identity is its performer-facing
+  description; MIDI is a rendering. Hacks live in the recipe, never in the identity.
+- **M4 — The piece is the goal** (`AI_METHODOLOGY.md`): fix what blocks, file the rest.
+
+## Parking lot
+
+- Electronics eligibility under the call (journal Q3) — ask before designing any.
+- Shared engine package across pieces — after the septet (D1).
+- Rehearsal marks as score data; the conductor role — the tuba performance arc (its
+  `ARCHITECTURE.md`) will settle these; inherit, don't redo.
+- Beating-frequency / demo-recording apparatus from #4 — only if the music asks.

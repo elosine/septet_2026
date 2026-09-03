@@ -1,0 +1,38 @@
+# Node
+node_modules/
+
+# Reaper — the rack (.rpp) IS committed; these are not
+*.rpp-bak
+*.reapeaks
+reaper/media/
+reaper/Media/
+reaper/Backups/
+reaper/AutoSaves/
+
+# Composer score — canonical scores/*.json ARE committed; safety-net versions and the
+# autosave working copies are not (piece #3 D8, piece #4 D10)
+scores/versions/
+scores/*-work.json
+
+# Fonts are licensed software and this repo is public (piece #4, day 36) — never committed
+fonts/
+
+# Derivable render outputs
+notation/video/**/*.mp4
+notation/video/**/*.png
+notation/video/**/*.rgba
+notation/video/test/
+notation/video/probe/
+notation/video/renders/demos/
+print/score/*.pdf
+print/score/*.__print.html
+
+# Probe / research artefacts
+probes/_selftest_render.wav
+probes/last_bend_analysis.json
+research/audio/*.wav
+research/audio/*.flac
+
+# OS noise
+Thumbs.db
+.DS_Store
