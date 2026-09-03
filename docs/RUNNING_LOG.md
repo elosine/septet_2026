@@ -975,3 +975,13 @@ four slots must sit on its own channel (1–4); Omni would sound all four on eve
   #29); #34 is an Ensemble-routed LOCK construction (slot 4 active, Slot rr 2, Trigger off),
   bright and high, and sits mostly ABOVE the standard zone. Registered as 55–93. **Every bass
   clarinet technique in the roster now has a range** (16 techniques after the R5 additions).
+- **The Preset Menu, whole** (composer's two screenshots, *"presets menu"*): 33 factory presets
+  1–33, **#34 Flutter LOCK** — piece #3's first bespoke preset, verified there 2026-08-05 — and
+  **Free Preset slots from #35** for our own. The roster now carries all 34 (cc0 = N − 1),
+  keys kept for the sixteen already there, with **`mw: true` on the sixteen wheel-shaped
+  presets** (the CC1 dynamic — curve-channel material under D11; Velocity presets are
+  main-channel material). Ranges: the read ones as registered; the standard zone assumed for
+  the rest (the composer sends only what differs); the four **Pseudo Contrabass / Pseudo
+  Clarinet presets (#30–33) flagged VERIFY** — a pseudo instrument may shift the zone.
+  Names worth knowing for CN-4: #24–26 Vibrato MW / Velocity / inverted, #27 Secco, #28
+  Portato, #20 With Accent, #3–4 Staccato MW Shape (the wheel shapes short notes).

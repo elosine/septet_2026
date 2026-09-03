@@ -110,7 +110,7 @@ const INSTRUMENTS = {
   // THE FLOOR RULE follows: playable A#0–F4 on the display = MIDI 34–65; nothing below 34 is ever sent
   //   as a note (21–33 are switches and function keys). Candidate techniques for 0c: the two trills and
   //   the four slides — CC#0 122 + the function key, then CC#0 118 to leave the mode.
-  // Copied from piece #3 sandbox/instruments.js `bass_clarinet_xs` (its 13 starter presets);
+  // Started from piece #3 sandbox/instruments.js `bass_clarinet_xs` (13 starter presets); the FULL menu
   // the deep map is #3/docs/XSAMPLE_BASSCL_map.md. Floor rule: never send below MIDI 34.
   bass_clarinet: {
     label: "Bass Clarinet",
@@ -119,22 +119,45 @@ const INSTRUMENTS = {
     rangeHigh: 65,  // standard zone per XSAMPLE_BASSCL_map §6d
     mechanism: "cc0",
     techniques: [
-      { key: "senza_mw",    label: "Senza Vibrato MW (#1)",         channel: 1, cc0: 0, rangeLow: 34, rangeHigh: 65 },   // GUI low A#0 / high F4 (composer screenshot, R5)
-      { key: "natural_vib_mw", label: "Natural Vibrato MW (#2)",    channel: 1, cc0: 1, rangeLow: 34, rangeHigh: 65 },   // GUI A#0–F4 (screenshot, R5); the sampled vibrato, vs the curve-channel CC4 width
-      { key: "flutter_mw",  label: "Flutter Tongue MW (#5)",        channel: 1, cc0: 4, rangeLow: 34, rangeHigh: 60 },   // GUI high C4 — the flutters stop a fourth short (screenshot, R5)
-      { key: "slap",        label: "Slap Tongue (#6)",              channel: 1, cc0: 5, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d, GUI-read 2026-08-08
-      { key: "gliss_undef", label: "Glissando Undefined (#7)",      channel: 1, cc0: 6, rangeLow: 34, rangeHigh: 42 },
-      { key: "gliss_undef_mw", label: "Glissando Undefined MW (#21)", channel: 1, cc0: 20, rangeLow: 34, rangeHigh: 42 },   // GUI A#0–F#1 (screenshot, R5): the wheel-shaped sibling of #7
-      { key: "key_noises",  label: "Key Noises (#9)",               channel: 1, cc0: 8, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d
-      { key: "mp_short",    label: "Multiphonics short (#10)",      channel: 1, cc0: 9,  rangeLow: 34, rangeHigh: 46 },
-      { key: "air_noises",  label: "Air Noises (#11)",              channel: 1, cc0: 10, rangeLow: 34, rangeHigh: 65 },   // GUI A#0–F4 (screenshot, R5) + #3 map
-      { key: "cresc",       label: "Crescendo (#12)",               channel: 1, cc0: 11, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d
-      { key: "morph_vxmw",  label: "Senza+Flutter Vel×MW (#15)",    channel: 1, cc0: 14, rangeLow: 34, rangeHigh: 60 },   // GUI high C4 (screenshot, R5) — the flutter layer caps it, like #5 / #16
+      // The full Preset Menu as the composer's Kontakt shows it (screenshots, R5, 2026-09-03): 33 factory
+      // presets + #34 Flutter LOCK (piece #3's bespoke preset) + Free Preset slots 35–88 for our own.
+      // CC#0 = preset number − 1. `mw: true` = the wheel (CC1) shapes the dynamic — curve-channel
+      // material under D11; Velocity presets are main-channel material. Ranges: standard A#0–F4 = 34–65;
+      // flutter-tongue sample presets 34–60; glissandi 34–42; multiphonics 34–46; #34 55–93.
+      { key: "senza_mw", label: "Senza Vibrato MW (#1)", channel: 1, cc0: 0, rangeLow: 34, rangeHigh: 65, mw: true },   // GUI A#0–F4 (screenshot, R5)
+      { key: "natural_vib_mw", label: "Natural Vibrato MW (#2)", channel: 1, cc0: 1, rangeLow: 34, rangeHigh: 65, mw: true },   // GUI A#0–F4 (screenshot, R5); the sampled vibrato, vs the curve-channel CC4 width
+      { key: "stac_vel_mwshape", label: "Staccato Velocity MW Shape (#3)", channel: 1, cc0: 2, rangeLow: 34, rangeHigh: 65, mw: true },   // standard zone assumed (composer sends only the ones that differ)
+      { key: "stac2_mwshape", label: "Staccato 2 MW Shape (#4)", channel: 1, cc0: 3, rangeLow: 34, rangeHigh: 65, mw: true },   // standard zone assumed
+      { key: "flutter_mw", label: "Flutter Tongue MW (#5)", channel: 1, cc0: 4, rangeLow: 34, rangeHigh: 60, mw: true },   // GUI high C4 — the flutter-tongue sample presets stop a fourth short (screenshot, R5)
+      { key: "slap", label: "Slap Tongue Velocity (#6)", channel: 1, cc0: 5, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d, GUI-read 2026-08-08
+      { key: "gliss_undef", label: "Glissando Undefined MW Shape (#7)", channel: 1, cc0: 6, rangeLow: 34, rangeHigh: 42, mw: true },   // GUI A#0–F#1 (screenshot, R5): the narrow gesture zone
+      { key: "undef_tones", label: "Undefined Tones Velocity (#8)", channel: 1, cc0: 7, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d (Trigger off, Timer 0)
+      { key: "key_noises", label: "Key Noises Velocity (#9)", channel: 1, cc0: 8, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d
+      { key: "mp_short", label: "Multiphonics Velocity (#10)", channel: 1, cc0: 9, rangeLow: 34, rangeHigh: 46 },   // GUI A#0–A#1 (screenshot, R5); 13 keys, cataloged in #3's map §6c
+      { key: "air_noises", label: "Air Noises Velocity (#11)", channel: 1, cc0: 10, rangeLow: 34, rangeHigh: 65 },   // GUI A#0–F4 (screenshot, R5); Legato Int. 39 factory
+      { key: "cresc", label: "Crescendo (#12)", channel: 1, cc0: 11, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d
+      { key: "senza_vel", label: "Senza Vibrato Velocity (#13)", channel: 1, cc0: 12, rangeLow: 34, rangeHigh: 65 },   // standard zone assumed
+      { key: "natural_vib_vel", label: "Natural Vibrato Velocity (#14)", channel: 1, cc0: 13, rangeLow: 34, rangeHigh: 65 },   // standard zone assumed
+      { key: "morph_vxmw", label: "Senza Vibrato + Flutter Tongue Velocity X MW (#15)", channel: 1, cc0: 14, rangeLow: 34, rangeHigh: 60, mw: true },   // GUI high C4 (screenshot, R5) — the flutter layer caps it
       { key: "flutter_vel", label: "Flutter Tongue Velocity (#16)", channel: 1, cc0: 15, rangeLow: 34, rangeHigh: 60 },   // GUI high C4 (screenshot, R5)
-      { key: "flutter_vel_mwinv", label: "Flutter Tongue Velocity + MW inverted (#29)", channel: 1, cc0: 28, rangeLow: 34, rangeHigh: 60 },   // GUI A#0–C4 (screenshot, R5); every flutter preset caps at C4
-      { key: "triple16",    label: "Triple Tongue 16T (#18)",       channel: 1, cc0: 17, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d
-      { key: "mp_loop",     label: "Multiphonics looping (#22)",    channel: 1, cc0: 21, rangeLow: 34, rangeHigh: 46 },
-      { key: "flutter_lock",label: "Flutter LOCK bright (#34)",     channel: 1, cc0: 33, rangeLow: 55, rangeHigh: 93 },   // GUI low G2 / high A5 (screenshot, R5): an Ensemble-routed LOCK preset, high and bright — NOT the flutter samples' own zone; Slot rr 2, slot 4 active, Trigger off
+      { key: "senza_vel_mwinv", label: "Senza Vibrato Velocity + MW inverted (#17)", channel: 1, cc0: 16, rangeLow: 34, rangeHigh: 65, mw: true },   // standard zone assumed
+      { key: "triple16", label: "Triple Tongue 16T (#18)", channel: 1, cc0: 17, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d (RR always rnd)
+      { key: "stac_vel", label: "Staccato Velocity (#19)", channel: 1, cc0: 18, rangeLow: 34, rangeHigh: 65 },   // standard zone assumed
+      { key: "accent_vel", label: "With Accent Velocity (#20)", channel: 1, cc0: 19, rangeLow: 34, rangeHigh: 65 },   // standard zone assumed
+      { key: "gliss_undef_mw", label: "Glissando Undefined MW (#21)", channel: 1, cc0: 20, rangeLow: 34, rangeHigh: 42, mw: true },   // GUI A#0–F#1 (screenshot, R5): the wheel-shaped sibling of #7
+      { key: "mp_loop", label: "Multiphonics MW (#22)", channel: 1, cc0: 21, rangeLow: 34, rangeHigh: 46, mw: true },   // GUI A#0–A#1 (screenshot, R5)
+      { key: "air_noises_mw", label: "Air Noises MW (#23)", channel: 1, cc0: 22, rangeLow: 34, rangeHigh: 65, mw: true },   // standard zone assumed
+      { key: "vib_mw", label: "Vibrato MW (#24)", channel: 1, cc0: 23, rangeLow: 34, rangeHigh: 65, mw: true },   // standard zone assumed
+      { key: "vib_vel", label: "Vibrato Velocity (#25)", channel: 1, cc0: 24, rangeLow: 34, rangeHigh: 65 },   // standard zone assumed
+      { key: "vib_vel_mwinv", label: "Vibrato Velocity + MW inverted (#26)", channel: 1, cc0: 25, rangeLow: 34, rangeHigh: 65, mw: true },   // standard zone assumed
+      { key: "secco", label: "Secco Velocity (#27)", channel: 1, cc0: 26, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d (Slot rr 2)
+      { key: "portato", label: "Portato Velocity (#28)", channel: 1, cc0: 27, rangeLow: 34, rangeHigh: 65 },   // standard zone assumed
+      { key: "flutter_vel_mwinv", label: "Flutter Tongue Velocity + MW inverted (#29)", channel: 1, cc0: 28, rangeLow: 34, rangeHigh: 60, mw: true },   // GUI A#0–C4 (screenshot, R5)
+      { key: "pseudo_cb_vel_mwinv", label: "Pseudo Contrabass Velocity + MW inverted (#30)", channel: 1, cc0: 29, rangeLow: 34, rangeHigh: 65, mw: true },   // zone NOT read — a pseudo instrument may shift it; VERIFY on the GUI before use
+      { key: "pseudo_cb_stac", label: "Pseudo Contrabass Staccato Velocity (#31)", channel: 1, cc0: 30, rangeLow: 34, rangeHigh: 65 },   // zone NOT read — VERIFY
+      { key: "pseudo_cl_vel_mwinv", label: "Pseudo Clarinet Velocity + MW inverted (#32)", channel: 1, cc0: 31, rangeLow: 34, rangeHigh: 65, mw: true },   // zone NOT read — VERIFY
+      { key: "pseudo_cl_stac", label: "Pseudo Clarinet Staccato Velocity (#33)", channel: 1, cc0: 32, rangeLow: 34, rangeHigh: 65 },   // zone NOT read — VERIFY
+      { key: "flutter_lock", label: "Flutter LOCK (#34, the composer's bespoke preset from piece #3)", channel: 1, cc0: 33, rangeLow: 55, rangeHigh: 93 },   // GUI low G2 / high A5 (screenshot, R5): Ensemble-routed LOCK, slot 4 active, Slot rr 2 — high and bright
     ],
   },
 
