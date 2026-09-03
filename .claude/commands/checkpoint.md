@@ -40,9 +40,9 @@ Do these in order, then say plainly that it is safe to `/clear`.
      untracked or modified path being left alone **and why** — composer scores mid-edit,
      Reaper saves, loose files at a folder root.
 
-3. **Commit.** Stage **explicit paths only, never `git add -A`**. Message captures intent:
-   `session N mid: [task] — [state]`. Never skip the commit: uncommitted work plus a dead
-   context is unrecoverable. **Push only if the composer says so** (repo policy: ask).
+3. **Commit + push.** Stage **explicit paths only, never `git add -A`**. Message captures
+   intent: `session N mid: [task] — [state]`. Never skip the commit: uncommitted work plus
+   a dead context is unrecoverable. **Push follows the commit automatically** (D8).
 
 4. **Say it plainly:** what was committed, what was left, that it is safe to `/clear` and
    then `/postclear` — and **which model to resume on**.

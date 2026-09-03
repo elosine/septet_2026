@@ -15,6 +15,10 @@ print — by **copy-forward with the instrument palette rewritten** (journal D1)
 delivery format is the tuba piece's: an animated scrolling score with the same animated
 devices; a presentation score (video + print) for the submission; the performance score
 before rehearsals, ported from the tuba modules once they exist there (D2, D3).
+**The IR contract (D9):** the composer save is the ground truth; the IR is derived from
+it by the extractor and is the single source for every downstream score. Libraries:
+SI2 flute · Xsample bass clarinet · 8Dio Steinway + IRCAM Prepared Piano 2 ·
+**Xsample Contemporary Solo Strings** (D7).
 
 ## READ FIRST — how to work here
 
@@ -85,8 +89,9 @@ The rules, adopted from `live-electronics-engine` (its CLAUDE.md and `docs/journ
   libraries and map (8Dio Steinway, IRCAM Prepared Piano 2), the piano notation rules
 - **#1** `C:\Users\jwloy\GitHub\string_quartet_no1-composer` — Xsample Contemporary Solo
   Strings (CC0 articulations, channel banks, gliss keyswitches), MIDI architecture standards
-- **live-electronics-engine** `C:\Users\jwloy\GitHub\live-electronics-engine` — the
-  lab-journal practice this repo adopts; SuperCollider engines (a possible later thread)
+- **live-electronics-engine** `C:\Users\jwloy\GitHub\live-electronics-engine` — attached
+  for the lab-journal practice this repo adopts, **nothing else**: no electronics in this
+  piece and no code from that repo (composer, 2026-09-03)
 
 Consult only when a specific named question requires it. Never edit them.
 
@@ -94,6 +99,6 @@ Consult only when a specific named question requires it. Never edit them.
 
 - Commit at the natural wrap of an approved chunk; reference plan IDs in messages.
 - Stage **explicit paths only, never `git add -A`**.
-- Push: ask at session end (*"push now?"*) — the user-level default. Piece #4 pushed
-  automatically (its D30, a two-agent situation); this repo's policy is an open question
-  in journal §2 until the composer confirms.
+- **Push automatically after every commit** (D8, composer 2026-09-03 — piece #4's D30
+  adopted). Do not ask. The inherited "ask push now?" lines in HOW_WE_WORK and
+  SESSION_PROTOCOL are superseded and marked so in place.

@@ -57,7 +57,7 @@
    - **Trim:** compress older sessions to one line each; §2 target ~40 lines.
 4. **Promote & sync:** mid-session decisions from §2 → **§4 Decisions** (with why + rejected); **PLAN.md** statuses current, new items added with IDs and whys; **§6 Done** if a milestone shipped; **§5 Playbooks** if process steps/gotchas emerged.
 5. **Review §7 Human Notes with the user:** add / update / mark complete.
-6. **Commit** (stage explicit paths — never `git add -A` — with a descriptive message referencing plan IDs), then **always ask "push now?"** — show `git log origin/main..HEAD --oneline` first. A session must not end with unpushed work unless the user explicitly declines.
+6. **Commit** (stage explicit paths — never `git add -A` — with a descriptive message referencing plan IDs), then **push** — this repo pushes after every commit (D8, composer 2026-09-03; the inherited "ask push now?" is superseded). Show `git log origin/main..HEAD --oneline` if anything was left unpushed.
 7. **If a milestone completed:** suggest a git tag.
 
 ### What makes a good §2 update

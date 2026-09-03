@@ -33,3 +33,14 @@
 - **The density build** has a measured recipe in #4 (`CURVE_DATABASE.md` MAXDENSE-1 /
   BUILD-1, laws L1–L4); the question for this ensemble is how seven unlike instruments
   saturate versus ten tubas — a listening question, not a porting one.
+
+---
+
+## CN-2 · 2026-09-03 — the flute doubling, undecided
+
+> *"The flutes — I'm not sure yet if I'm using piccolo or bass flute, but you're right, it's
+> on the same track in the score, so we'll just make those adjustments if the time comes."*
+
+**AI note:** the track is modelled so either can be added as a switch later (journal D6);
+nothing in the port depends on the choice. SI2 has neither instrument, so the choice also
+names a library to confirm.

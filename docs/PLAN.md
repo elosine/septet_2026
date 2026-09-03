@@ -59,38 +59,49 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 - **0c — Instrument recipes (`sandbox/instruments.js`)** — `todo` — one entry per track:
   techniques with `{channel, port?, cc0?, ks?, range}`, per-library mechanism.
   *Why:* the recipes ARE how the AI and the app produce the right MIDI for each sound.
-  - **0c.1 — Flute track (D6 doubling model):** SI2 flute in C (channel-per-technique);
-    piccolo and bass flute as instrument-switch techniques on the same track — **library
-    TBD (journal Q1)**.
+  - **0c.1 — Flute track (D6 doubling model):** SI2 flute in C (channel-per-technique) is
+    the track's instrument now. **Piccolo vs bass flute: composer undecided** ("we'll just
+    make those adjustments if the time comes") — the switch technique and its library are
+    added when chosen; the track model already allows it.
   - **0c.2 — Bass clarinet:** Xsample, from #3's `sandbox/instruments.js` (`mechanism: "cc0"`,
     13 starter presets) + `XSAMPLE_BASSCL_map.md`. Copy, don't re-research.
   - **0c.3 — Piano:** 8Dio Steinway (main, velocity + CC64) + IRCAM Prepared Piano 2
     (harmonics CC21, muted) from #2's `instrument_map.json` (`Piano1` ch 1–5). One track,
     preparations as techniques.
-  - **0c.4 — Strings ×4:** per the 0d verdict. If SI2: ~40 techniques each → overflow
-    port per instrument (`Vn1` + `Vn1b`), the tuba pattern. If Xsample: CC0 presets +
-    the 3-bank channel discipline from #1 (or CC120/123 verified to reset).
+  - **0c.4 — Strings ×4: Xsample Contemporary Solo Strings (D7).** `mechanism: "cc0"` as
+    the bass clarinet; seed the technique list from #1's `cc_mapping_registry.json` (CC0
+    89 senza vib · 95 pizz · 71 pizz open · 97 Bartók · molto vib · behind the bridge, with
+    their one-shot/persistent state rules) + the gliss keyswitches (B0 / G#1 / A1) + CC68/24
+    legato. One port per instrument; **channels = banks only if 0d says CC state must be
+    isolated** (the quartet's 3-bank workaround), otherwise one channel.
   - **0c.5 — Transposition + clef metadata per instrument** recorded now (bass clarinet
     written a major 9th up; piccolo 8vb; bass flute 8va; alto clef for viola) — unused
     until phase 2, free to record, expensive to rediscover.
 
-- **0d — Strings library compare: Xsample Contemporary Solo Strings vs SI2** — `todo` —
-  from docs on hand first (#1 `cc_mapping_registry.json` + `MIDI_MUSIC_GENERATION.md` §18–19;
-  SI2 manual pp. 59–62; #3's UVI/Xsample quirks), then the composer's ear on one seam
-  test per library. Axes: technique roster · continuous control (MW crossfade vs CC7;
-  #3 found Xsample's crossfade > UVI's) · legato/gliss (Xsample CC68/24 vs SI2 transition
-  patches) · switching cost (CC0 vs channels) · quirks (Xsample CC state, UVI ranges).
-  *Why:* the composer: "I might just use SI2 for the strings ... it depends on the
-  functionality ... I don't wanna lose any of that Xsample functionality." Output: a
-  one-page verdict table → 0c.4.
+- **0d — Xsample dynamics nailed: CC7 and CC state** — `todo` *(repurposed 2026-09-03:
+  the library compare was decided by the composer → D7; what remains is his one named
+  risk: "we just need to get the CC7 nailed down")*. Bounded, measured, not a survey:
+  - **0d.1 — CC7 → dB curve** on one Xsample string preset and the bass clarinet, with
+    #4's `probes/cc7_calibration_probe.ps1` (port/channel are parameters; 33 steps,
+    retriggered note per step). #3 never measured CC7 on Xsample — only the CC1 crossfade.
+  - **0d.2 — State rule verified by ear + probe:** does CC7 persist as channel state
+    (the quartet's finding: a crescendo ending at CC7=127 left the channel loud; CC120/123
+    did not reset it)? Recipe rule regardless of the answer: **every event's prelude writes
+    its own CC7 — never rely on a reset.** Only if that fails do channel banks return.
+  - **0d.3 — Which lane does what:** CC1 = timbre-dynamics on MW presets (#3's standing
+    recipe: sustained dynamics = CC1 curves), CC7 = level; how the app's level lane maps to
+    each. Written as `docs/XSAMPLE_DYNAMICS_RECIPE.md`, one page, with the numbers.
+  *Why:* the composer's own risk statement; the quartet's three-bank workaround exists
+  because this was never settled, and the recipes (0c) inherit whatever 0d decides.
 
 - **0e — loopMIDI + Reaper rack** — `todo` *(composer at the machine, AI walks the R-steps
   as in #3)* — ports named = track ids, case-exact (`Flute`, `BassCl`, `Piano`, `Vn1`,
-  `Vn2`, `Va`, `Vc`, plus `-b` overflow ports where a library exceeds 16 techniques); one
-  Reaper track per port, **input monitoring ON** (Principle 1); `reaper/septet_rack.rpp`
-  committed, Media/Backups/AutoSaves ignored (#3's D6). Kontakt 8 for Xsample/8Dio, UVI
-  Workstation for SI2/PP2. *Why:* it is the whole audition path; #3 lost a session to
-  monitoring being off.
+  `Vn2`, `Va`, `Vc`; a `-b` overflow port only for a UVI instrument exceeding 16
+  techniques — the flute may need one, the Xsample strings will not); one Reaper track per
+  port, **input monitoring ON** (Principle 1); `reaper/septet_rack.rpp` committed,
+  Media/Backups/AutoSaves ignored (#3's D6). Kontakt 8 for Xsample/8Dio, UVI Workstation
+  for SI2/PP2. *Why:* it is the whole audition path; #3 lost a session to monitoring
+  being off.
 
 - **0f — The AI's MIDI generation path** — `todo` — three routes, all inherited, wired to
   the septet recipes: (i) **live** — app objects → `compiler.js`/`sonify_core.js` → Web MIDI
@@ -120,8 +131,19 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 
 - **0h — Gate: phase 0 closed** — `todo` — every track sounds from the score app through
   its own port with the right technique switching; a save round-trips; the sandbox
-  captures a motive into the library; `RUNNING_LOG` has the numbers. *Why:* one verified
-  gate instead of seven confidence claims.
+  captures a motive into the library; 0i's extraction passes; `RUNNING_LOG` has the
+  numbers. *Why:* one verified gate instead of seven confidence claims.
+
+- **0i — The S1 data contract for the IR (D9), proved** — `todo` — (a) the septet save
+  carries, from the first object: instrument-keyed tracks · a technique key on every
+  sounding object · the flute's instrument-in-hand as track data · stable ids · **one
+  fixed layer convention** for META shapes vs notes (written into `NAMING.md` here) · the
+  sounding-length rule per material · group ids on gestures. (b) **Proof:** a 30-second
+  septet test save through `tools/notate_section.js --score <test> --w0 0 --w1 30` and
+  `tools/ir_validate.js --against-source`; read what fails and fix the S1 side now; file
+  the septet classifier / class-registry work under 2a. *Why:* the composer: *"I want to
+  make sure that's understood and that's in there from the beginning."* The IR is derived
+  from S1, so S1's shape is the only thing that can bite later.
 
 ## 1. Compose — `todo` (starts the moment 0h passes; tools built per need, the #3/#4 MO)
 
@@ -158,7 +180,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 
 ## Parking lot
 
-- Electronics eligibility under the call (journal Q3) — ask before designing any.
+- ~~Electronics eligibility under the call~~ — **no electronics in this piece** (composer
+  2026-09-03); `live-electronics-engine` stays attached for its journaling practice only.
 - Shared engine package across pieces — after the septet (D1).
 - Rehearsal marks as score data; the conductor role — the tuba performance arc (its
   `ARCHITECTURE.md`) will settle these; inherit, don't redo.

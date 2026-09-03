@@ -5,8 +5,10 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ►** 2026-09-03 — phase 0 (setup). The port plan awaits the composer's go (PLAN 0b).
-Nothing composed yet; the opening idea is on the sketch pad (CN-1).
+**NOW ►** 2026-09-03 — phase 0 (setup). Plan settled (D1–D9: tuba stack copied forward,
+Xsample strings, IR derived from the save); **PLAN 0b, the composer-module port, awaits
+the composer's "go".** Nothing composed yet; the opening idea is on the sketch pad (CN-1);
+piccolo vs bass flute undecided (CN-2).
 
 ---
 

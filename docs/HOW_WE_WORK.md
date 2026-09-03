@@ -62,7 +62,7 @@ The single living plan. Stable IDs (`1c` stays `1c` forever), statuses, one-line
 - Reference active plan IDs (e.g. `1c`) and decision IDs (e.g. `D2`) in messages.
 
 **Pushes**
-- **AI never pushes automatically.** After commits, surface the unpushed count; at Session End, always ask *"push now?"*. A session must not end with unpushed work unless the user explicitly declines.
+- ~~**AI never pushes automatically.**~~ **Superseded in this repo by D8 (composer 2026-09-03): push automatically after every commit, explicit paths only.** *(Inherited text: after commits, surface the unpushed count; at Session End, always ask "push now?".)*
 
 **Before building anything new — quick pre-check**
 1. What exists? 2. What changes? 3. What could break? 4. How do we verify?

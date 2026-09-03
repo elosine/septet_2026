@@ -18,7 +18,11 @@
 - **Phases (D3):** 0 setup → 1 compose (sample libraries + composer score) → 2 notate
   (2a engine adaptation · 2b presentation score) → 3 performance versions → 4 submission.
 - **Reference repos** (read-only, additional working dirs): #4 tubas · #3 bcha · #2 2p2p ·
-  #1 sq1 · `live-electronics-engine`. Consult per named question only.
+  #1 sq1 · `live-electronics-engine` (its journaling practice only — no electronics, no
+  code from it in this piece; composer 2026-09-03). Consult per named question only.
+- **The IR contract (D9):** the composer save is the ground truth; the IR is derived from
+  it by the extractor and is the single source for the animated score, video, print and
+  stands. Composing never waits on it.
 
 ### Map of piece #4 (survey 2026-09-03) — what the port inherits
 
@@ -83,27 +87,34 @@ port planned; the kit installed.**
 - Port plan written to `PLAN.md` §0 (0b–0h) with the bites-later items named; no code
   ported yet — **awaits the composer's go on the plan.**
 
+*Same session, later:* the composer answered the four questions (RUNNING_LOG §8): strings =
+**Xsample** (D7) · push after every commit (D8) · no electronics, the live-electronics repo
+is for its journaling practice only · flute: piccolo vs bass flute undecided, same track,
+adjust when chosen. **The IR contract stated as D9** — S1 (the composer save) is the ground
+truth, the IR is derived from it and is the single source for every downstream score.
+
 **Next up:** PLAN **0b — composer module port** (Opus, from the written plan, after a
-clear), then **0d strings-library compare** (Fable, conversation) and **0c/0e/0f** in order.
+clear) — **awaits the composer's "go"** — then **0i** (prove the septet save extracts to
+IR), **0e** at Reaper, **0c** recipes, **0d** Xsample dynamics/CC7 nailed, **0h** gate.
 
 **NEXT STEPS · MODEL · CLEAR:**
-1. ► Composer reviews the brief + `PLAN.md` §0; answers the open questions below. (Fable)
+1. ► Composer says "go" on 0b (or amends `PLAN.md` §0). **Then this is the clear point.**
 2. `/checkpoint` · `/clear` · **0b on Opus**: copy-forward, re-palette to 7 tracks, bank
    skeletons, verify in the running app (server, every panel, save/load/version, port list).
-3. **0d on Fable**: Xsample Contemporary Solo Strings vs SI2 strings — roster × control
-   axes × quirks from docs on hand; composer's ear on the crossfade seam; verdict → 0c.
+3. **0i on Opus, same session**: a 30-s septet test save through `notate_section.js` +
+   `ir_validate.js --against-source`; read what fails; file the classifier work under 2a.
 4. **0e with the composer at Reaper**: loopMIDI ports, rack, monitoring ON, rack committed.
+5. **0d on Fable + the composer's ear**: CC7 → dB measured on one Xsample string preset and
+   the bass clarinet with #4's probe; the state-reset rule verified; the dynamics recipe written.
 
-**Open at session end:** — (session 1; nothing in flight beyond the plan awaiting review)
+**Open at session end:** — (session 1; nothing in flight beyond 0b awaiting the go)
 
 **Open questions:**
-- **Q1 libraries for the flute family:** SI2 has flute in C only. Piccolo and bass flute —
-  Xsample woodwinds owned? another library? (blocks 0c for that track)
-- **Q2 strings library:** Xsample Contemporary Solo Strings vs SI2 → PLAN 0d compare.
-- **Q3 electronics eligibility:** the call admits only the listed instruments. If live
-  electronics enter the piece, ask scores@tempus-konnex.com first.
-- **Q4 push policy:** ask at session end (default) or push after each commit (#4's D30)?
+- **Q1 flute doubling instrument:** piccolo or bass flute — composer undecided; SI2 flute
+  in C is the track's instrument until then; the switch recipe is added when chosen.
+  Library for the chosen instrument to confirm then (SI2 has neither).
 - **Q5 print format:** #4's tabloid is 432 mm long, past A3's 420 mm. Plan for A3 landscape.
+- *(Q2 strings → D7 · Q3 electronics → none in this piece · Q4 push → D8. Closed.)*
 
 **Blockers:** none.
 
@@ -163,6 +174,47 @@ sources; verified here only when they bite.)*
   *Why:* a doubling modelled as three tracks would notate as three staves and break the
   one-player = one-lane reading the animated score depends on. *Reversible* if the sandbox
   shows the switch needs to be its own object.
+- **D7** *(2026-09-03, composer)* — **Strings = Xsample Contemporary Solo Strings.** *Why
+  (composer):* the quartet's work transfers — technique switching, the control channels
+  "used effectively" there — and piece #3 re-examined the same Xsample controller model on
+  the bass clarinet (CC0 preset select, MW dynamics, CC68/24 legato → gliss). *Rejected:*
+  SI2 strings for uniformity — "I don't wanna lose any of that Xsample functionality."
+  *Named residual risk, the composer's own:* **volume — "we just need to get the CC7 nailed
+  down"** → PLAN 0d, a bounded measurement, not an open-ended survey.
+- **D8** *(2026-09-03, composer)* — **Push automatically after every commit**, staging
+  explicit paths only (piece #4's D30 adopted; the inherited "ask push now?" in
+  HOW_WE_WORK / SESSION_PROTOCOL is superseded, noted in place).
+- **D9** *(2026-09-03)* — **The IR contract, stated from the beginning.** The composer's
+  understanding: *"the IR is the data layer created in the composition stage and then used
+  for all the other layers, just converting the data."* The precise form, as piece #4 built
+  it (verified in `notation/app/notation.html` `loadIr`, `tools/export_print.js` /
+  `export_video.js` `--ir`, and ARCHITECTURE.md "everything draws from the IR"):
+  1. **The composer-score save file (S1) is the ground truth of the composition** — curves
+     and markers on instrument-keyed tracks, one timecode in seconds.
+  2. **The IR is DERIVED from S1** by an extractor (`tools/notate_section.js` →
+     `notation/lib/extract_core.js`): a classifier over rules turns S1 objects into semantic
+     events / chunks / groups with provenance on every node; derived ids are deterministic
+     functions of source ids; notational decisions attach as authored overlays that
+     re-attach by id when the IR is regenerated; the continuous (envelopes, curves) is
+     referenced, never copied.
+  3. **The IR is then the single source for every downstream manifestation** — the
+     animated notation score, the video, the print score, and the performance stands (a
+     live view of the IR, per #4's architecture). Print vs video proved byte-identical in #4.
+  4. So the IR is **created from the composition, not during it**, and is regenerable at
+     any time because S1 stays live. Composing never waits on the IR; the IR never freezes
+     the composition. This is what makes "notate as a separate phase" (D3) safe.
+  5. **What must be true of S1 from the beginning** (the real "in there from the start"):
+     instrument-keyed tracks (have) · a technique key on every sounding object (the recipe
+     key = the IR's `technique`) · the flute's instrument-in-hand as track data (D6) ·
+     stable, never-reused object ids (have) · **one fixed convention for which layer holds
+     META shapes vs notes** (the tuba classifier had to absorb drift between scores) · the
+     real-sounding-length rule per material (#4's D9: one-shots carry sample-true length)
+     · group ids on gestures. **Proof, not assertion: PLAN 0i** runs the tuba extractor and
+     validator on a small septet save.
+  6. **What IS piece-specific in the pipeline:** the classifier rules and the class
+     registry (`notation/registry/classes.json`; #4's trance-stream / density-cloud
+     classes). Those get septet classes in phase 2a. The schema, validator, layout and
+     renderers do not change for that.
 
 ---
 
@@ -189,6 +241,6 @@ sources; verified here only when they bite.)*
 
 **Active:**
 - Penn State abstract (tuba repo): host as a doc + submit the form by **Fri 4 Sept, 11:59 pm ET**.
-- Confirm which flute-family and strings libraries are installed (Q1, Q2).
+- Decide piccolo vs bass flute when the music asks (Q1); confirm that library is installed.
 
 **Completed:**

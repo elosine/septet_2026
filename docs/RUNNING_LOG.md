@@ -158,3 +158,54 @@ SESSION_PROTOCOL (copied from #3, one line changed: explicit staging instead of 
 `.claude/commands/{checkpoint,postclear}` (from #4; the push line now follows this repo's
 policy), `.gitignore` (from #4, trimmed). **No code copied** — PLAN 0b waits for the go.
 The `live-electronics-engine` folder was granted as an additional working directory.
+
+## §8. The composer's four answers, and the IR question settled
+
+**The IR, in the composer's words:** *"I want to clarify one thing about the IR layer. I
+was under the impression that this was basically the peak — this was the data layer that
+would be created in the composition stage and then be used for all the other layers, just
+converting the data. So I want to make sure that's understood and that's in there from the
+beginning — or correct me if I'm misunderstanding something."*
+
+**The answer, checked against the tuba repo rather than remembered:** half right, and the
+half that matters. The IR IS the single source for every downstream score — the animated
+notation app loads the IR first (`notation.html` `loadIr`), then fetches the save named in
+`ir.source.score` only for the continuous data the IR references; print and video take
+`--ir` and nothing else; #4's ARCHITECTURE.md line 354: *"everything draws from the IR
+(save → IR → print / video / stands — one source, proven byte-identical for print vs
+video)."* But it is **not created in the composition stage**: it is *derived* from the
+composer save by the extractor (`notate_section.js` → `extract_core.js`), with provenance
+on every node, deterministic derived ids, and authored overlays that re-attach by id, so
+it can be regenerated whenever the save moves. The composer save (S1) stays the ground
+truth of the composition. Consequence: composing never waits on the IR, and "in there from
+the beginning" means the *save's shape* must carry what extraction needs — recorded as D9
+with the seven-point list, and PLAN 0i proves it by running the extractor on a septet
+test save instead of trusting the list. *Rejected framing:* "author the IR during
+composition" — it would create a second copy of the composition to keep in sync, which is
+exactly what #4's "reference, don't copy" law forbids.
+
+**The flutes:** *"I'm not sure yet if I'm using piccolo or bass flute, but you're right,
+it's on the same track in the score, so we'll just make those adjustments if the time
+comes."* → CN-2; PLAN 0c.1 reworded; Q1 narrowed to "which one, and is its library
+installed."
+
+**Strings:** *"Let's go with the Xsample for the strings. I believe we've overcome most of
+the hurdles with the bass clarinet, or at least re-examined them, so I probably shouldn't
+have as much anxiety about that. We know how to switch techniques; we have a grasp on the
+control channels, and a lot of them were used in the string quartet effectively. I think we
+have to get some of the volume switching right — I guess I have a little bit of anxiety. I
+don't want to get too bogged down in that, but we'll cross that when we get there. We just
+need to get the CC7 nailed down."* → D7. The anxiety is well placed and bounded: #3's
+Xsample findings are about CC1 (the MW crossfade) — a grep of the bass clarinet map and
+the quirks ledger finds **no CC7 measurement on Xsample at all**; the quartet's three
+channel banks exist because CC7 state persisted and CC120/123 did not reset it. So PLAN 0d
+is repurposed from "library compare" to "CC7 → dB measured with #4's probe (it takes port
+and channel as parameters) + the state rule verified + a one-page dynamics recipe." Small,
+measurable, and it closes the one thing the quartet never closed.
+
+**Electronics:** *"No live electronics in this piece. That was just to get you access to
+some of the journaling techniques. I don't think we'll use any of the code from that
+repo."* → Q3 closed; CLAUDE.md and the parking lot say so.
+
+**Push:** *"Q4: go ahead and push after every commit."* → D8; CLAUDE.md, the checkpoint
+command and the inherited HOW_WE_WORK / SESSION_PROTOCOL lines amended in place.
