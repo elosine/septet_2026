@@ -28,3 +28,8 @@
   the septet's first pages (PLAN 2a).
 - **`tools/notate_section.js` prints "all ten parts" when `parts.length === 10`** (2026-09-03).
   Cosmetic; seven here — change the literal when 2a touches the file.
+- **`sandbox/instruments.js` header says `oneShot: true` "marks Xsample presets that revert to
+  the base mode after one note"** (2026-09-03, RUNNING_LOG §16). Piece #1's registry says the
+  opposite: `one-shot` is the NOTATION rule (revert to base mode explicitly after the note); the
+  sampler keeps the CC0 selection until the next CC0. Harmless here because every note's
+  prelude writes its own CC0; fix the comment and the flag's meaning at PLAN 0c.

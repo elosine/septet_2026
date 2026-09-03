@@ -644,3 +644,94 @@ on one port with plugin-side channel filters and it worked.
 every port/channel"), the stop-flush sweep (line 9028), and `morph_emit.js` with
 `CC_LEAD_MS = 250` and `TAIL_MS = 2000`. Nothing to port for 0e; 0d measures whether Kontakt /
 Xsample obey the same law.
+
+## §16. The bank design, worked out — why the timing law is not enough, and what a channel buys
+
+**Prompted by** the composer, on reading §15: *"let's continue to work out the CC seven and
+vibrato because that was the same issue we had in the string quartet because there's going to be
+events that happen right after a crescendo much sooner than two seconds. And there might be
+events before a crescendo in less than two hundred fifty milliseconds. So for example, I might
+have a crescendo in the violin that goes to secco, so immediate off, ramp down CC seven, but then
+the next event might come in in a hundred and fifty milliseconds or in two hundred milliseconds.
+So probably better to continue using multiple channels. … most events will get sent to the main
+stream channel … any volume change ones will go to another track that just handles CC seven …
+we'll just use velocity on the main channel for just standard dynamics. … The same principle
+applies to vibrato. I forgot the combination, but there's a couple different channels I have to
+use to get molto vibrato or no vibrato. So that has to have its own channel because it can't be
+reset in time. … since bass clarinet is Xsample as well, we might as well treat it that way.
+And, actually, maybe all the instruments. Give me your analysis, and then maybe we'll figure this
+out as we build, because we can do the port allocation after making the tracks in Reaper."*
+
+**1. What the two numbers are, and therefore what a channel buys.** Both of #4's constants are
+the cost of MOVING a controller on a channel where a note is sounding or about to sound: the
+sampler smooths CC7, so a level written just before a note-on bleeds into the attack (hence
+250 ms of lead), and a level restored while the release rings yanks the tail (hence the 2 s
+wait). A channel whose CC7 is never moved has no timing problem at all. That is the entire
+case for the composer's main channel: CC7 written once (127, by the sweep) and never touched;
+dynamics by velocity; the next plain note after a crescendo needs no lead whether it comes
+150 ms or 2 s later. On a curve channel every event writes its own start level in its
+prelude, so the only collision left is two CURVE events on the same channel closer than the
+lead time (crescendo-to-secco, then another curve 150 ms later): the second one's prelude
+would jump the level while the first is still being cut. Alternating between two curve
+channels removes that; a third covers a third curve inside the window. **So curve channels
+are round-robin, not one-per-controller.** The composer's exact scenario — main-channel note
+150–200 ms after a secco — never touches a curve channel at all.
+
+**2. Vibrato, found rather than remembered.** The quartet (`AI_VIBRATO_PROMPT_GUIDE.md`,
+`MIDI_MUSIC_GENERATION.md` §9) drove vibrato width with **CC4 and channel pressure sent
+together, same value**, on the "senza vibrato" preset (CC0 89) in its own bank; the doc never
+settled which of the two Xsample obeys (*"channel pressure / vibrato: may be simpler — after
+note-off, reset channel pressure to 0. Needs testing"*). **Molto vibrato is a different
+sampled preset** (CC0 2 arco, CC0 70 pizz), i.e. an articulation, not a curve; the registry's
+`one-shot` is the NOTATION rule (*"revert to base mode after the note"*), the sampler keeps
+the selection until the next CC0. (Consequence for the septet skeleton: its `oneShot: true`
+comment says the preset reverts by itself — it does not; every note's prelude writes its own
+CC0, so no revert is ever needed. NITS.) The residue argument for width is identical to CC7's:
+a width curve leaves CC4 / pressure on its channel, and a plain note on the main channel never
+sees it. **The point that decides the layout:** a note that swells AND changes its vibrato
+width is ONE note on ONE channel — so any channel that carries curves must accept every
+continuous controller. A dedicated vibrato channel is therefore just one more curve channel;
+the split is by EVENT CLASS (plain vs curve-bearing), not by controller. Molto vibrato as a
+preset lives on the main channel like pizz, selected by the prelude's CC0.
+
+**3. Per instrument.**
+- **Strings ×4 (Kontakt):** one Kontakt instance per track holding the same Xsample
+  instrument three times — slot 1 = ch 1 MAIN · slot 2 = ch 2 CURVE A · slot 3 = ch 3 CURVE B
+  (a fourth, ch 4 CURVE C, if the music ever puts three curves inside 250 ms). Every slot has
+  the whole CC0 articulation set, so a pizz-tremolo swell or an arco swell both work on a
+  curve channel. One port per instrument, unchanged.
+- **Bass clarinet (Kontakt):** the same three slots. Its MW presets take CC1 as the timbre
+  dynamic (#3's standing recipe: sustained dynamics = CC1 curves) — CC1 is continuous state
+  too, so CC1 curves ride the curve channels; a plain note on an MW preset writes a static CC1
+  in its prelude on the main channel (the settle time Kontakt needs for that is 0d's to
+  measure; #3's XC1 seam test found the crossfade itself seamless).
+- **Flute (SI2 in UVI):** channel = technique, 16 + 12 parts — no spare channel per
+  technique, so banks cost slots. Either the tuba law as it stands (proven on this engine; the
+  app's cold/warm entry logic), or curve copies of the few curve-bearing techniques (`ord`,
+  `aeolian`, `flz` …) in the four free Fluteb slots. Decide at 0c once the composer's UVI
+  order is transcribed; recommendation: a curve copy of `ord` at least.
+- **Piano:** main only — velocity and pedal; a piano cannot swell. PP2 parts as planned.
+
+**4. What the app needs (0c / 0f), and it is small.** `sandbox/instruments.js` gains per
+instrument `channels: { main: 1, curve: [2, 3] }`; `sonify_core`'s route (today
+`ch = tech.channel`) picks main for `sonifyMode 'plain'` / `'ks'` and the next curve channel,
+round-robin per instrument, for curve mode — the S1 field that classifies the event already
+exists (NAMING.md §2.3; `sonifyMode`). The prelude on a curve channel writes CC0 + the start
+values of every controller the event uses (CC7; CC1; CC4 + pressure); the stop-sweep already
+visits every channel in the map (`composer.html` line 9042). `CC_LEAD_MS` / `TAIL_MS` stay,
+and only curve channels ever see them.
+
+**5. What 0d must measure on Kontakt / Xsample, none of it measured before:** the CC7 → dB
+law (Kontakt volume; the quartet's crescendos used it, nobody measured it) · the CC1
+crossfade's settle time before a note-on · **CC4 vs channel pressure** for width (a 30-second
+probe: a held note, one controller at a time) · CC0 switch latency (a note right after a
+preset change).
+
+**6. Reaper consequence:** ports unchanged (eight); each Kontakt track holds three slots on
+ch 1–3, track input = its port, all channels, monitoring on; the UVI tracks unchanged. The
+R-steps stand, with one added step per Kontakt track: duplicate the instrument twice, set the
+slot channels 1 / 2 / 3.
+
+**Proposed to the composer:** main + curve A/B (or A/B/C from the start as cheap insurance)
+for the five Kontakt instruments; the quartet's literal three banks (main / CC7 / vibrato)
+rejected for the one-note-two-curves case; flute per 0c; piano main only.
