@@ -894,3 +894,26 @@ composer to confirm on screen. Each further KS preset gets the same look as it l
   above C5. **All nineteen parts registered** — 30 technique keys, every one with a range read
   from the screen; keyswitch numbers 36/37/38 (Durations 48/49) with the second and third
   switches flagged "verify by playing" where UVI showed no red key.
+
+## §23. R3 + R4 verified from the project file; two lessons about reading a `.rpp`
+
+Composer: *"done"* after the input/monitoring detour (the default theme hides the input
+selector and the speaker until the track is armed or the arm button is right-clicked — the
+question *"the big speaker icon, that's input monitoring on, correct?"* answered yes from the
+screenshot, then from the file). `reaper/septet_rack.rpp`, 184 KB, two tracks:
+
+| track | REC line | read |
+|---|---|---|
+| `Flute SI2` | `REC 1 5216 1 0 …` | armed · MIDI input (≥ 4096), channel 0 = all · **monitor 1 = ON** · record mode 0 = input |
+| `Fluteb SI2` | `REC 1 5280 1 0 …` | the same |
+
+Both hold one `VSTi: UVIWorkstation (UVI) (34 out)` — the VST2 build, where the tuba rack
+used the VST3 (`VST3i: UVIWorkstation`); no consequence for MIDI, noted so nobody "fixes" it.
+
+**Lesson 1 — Reaper's MIDI device index is Reaper's own.** `(5216 − 4096) / 32 = 35` and
+`(5280 − 4096) / 32 = 37`, but winmm today lists `Flute` at 23 and `Fluteb` at 34 (the
+loopMIDI enumeration also moved since R1: `Flute` was 33). Decoding the field against winmm
+names the wrong ports; the composer's screenshot (`MIDI: Flute: All ch`, `MIDI: Fluteb: All
+c…`) is the identity check, the file proves arm / all-channels / monitoring / mode. **Lesson 2
+—** my first decode read the wrong columns because `grep -n` glues the line number to the
+leading spaces; the REC fields are arm · input · monitor · mode, counted after the word `REC`.
