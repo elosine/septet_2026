@@ -5,11 +5,13 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ►** 2026-09-03 — phase 0 (setup). **PLAN 0b done: the composer score app runs on
-:5300 with the seven lanes, the sandbox on :4800** (verified live, RUNNING_LOG §9). Next:
-0i (prove the septet save extracts to IR), 0e (loopMIDI + Reaper rack, with the composer),
-0c (recipes), 0d (CC7 nailed), 0h gate. Nothing composed yet; the opening idea is on the
-sketch pad (CN-1); piccolo vs bass flute undecided (CN-2).
+**NOW ►** 2026-09-03 — phase 0 (setup). 0b done (composer app :5300, sandbox :4800).
+**0g done: the notation/IR stack is in this repo and proven whole** — 11 batteries green
+on staged tuba goldens, print + video exporters run, 22/22 routes live (RUNNING_LOG §12).
+Next: **0i** (prove the septet save extracts to IR; first known bite: the META layer
+convention), 0e (loopMIDI + Reaper rack, with the composer), 0c (recipes), 0d (CC7
+nailed), 0h gate. Nothing composed yet; the opening idea is on the sketch pad (CN-1);
+piccolo vs bass flute undecided (CN-2).
 
 ---
 

@@ -306,3 +306,114 @@ Wrapped on Fable at the composer's `/checkpoint`. Position: 0a ☑ · 0b ☑ · 
 (Opus, one session). The working tree was clean after `6d6a6f3`; the preview servers on
 5300/4800 belong to this session and stop with it — the next session starts them from
 `.claude/launch.json` (`score`, `sandbox`) or with `node score/server.js`.
+
+## §12. PLAN 0g — the notation/IR stack carried over, and proven whole by its own batteries
+
+**Prompted by:** the composer's go after the postclear check-in — *"A) good to go; stay
+with fable for now"* — 0g then 0i in one session on Fable, not the Opus the checkpoint had
+pencilled in (offered as B1/B2; the composer chose B1).
+
+**0g.1 — the copy, byte-exact.** 97 tracked files from `for_seven_tubas`, listed with
+`git ls-files` (so loose local files could not come along), moved by a tar pipe, then every
+one `cmp`-ed against its source: **97/97 identical.** By area: `notation/lib` 21 ·
+`registry` 4 · `schema` 3 · `glyph_sources` 5 · `app` 3 (`notation.html` + the two Crimson
+Pro faces) · `GLYPH_EXTENSION_CONTRACT.md` · `audio/.gitignore` · tools 22 — the
+checkpoint's nine (notate_section, notate_block, ir_extract, ir_extract_golden,
+ir_validate, ir_validate_battery, export_print, export_video, prove_unmoved) plus, by the
+rule *carry the method, not the renders*: the glyph-capture pipeline (`port_glyphs` + three
+`glyph_probe_*`, with `notation/glyph_sources/` and `fixtures/lp_probes/` — 2a needs
+treble and alto clefs), `pattern_analyze` (the D63 analyser behind `--pattern`),
+`protrusion_detect`, `audit_playability`, `export_midi` and `test_sonify_core` (both named
+by NOTATION_WORKFLOW), `notate_morph` (the CLI for the copied `morph_overlays.js`),
+`make_cut` (the video's cut list), `set_brick` + `move_object` (the S1 editors the notation
+loop used), `v0_proofs` (the true-size container proofs the septet's own A3 / seven-lane
+container will need) · 13 test batteries (every `test_*` that exercises `notation/lib`) ·
+`tools/fixtures` 15 · `print/` 7 (`score/build.sh`, the `cover/` generator + SVGs) ·
+`docs/NOTATION_STANDARDS.md` + `NOTATION_WORKFLOW.md` as reference copies with one
+provenance line prepended — the only two files not byte-identical, by design.
+
+**Deliberately NOT copied, by name:** the 18 tuba IR pages + `index.json` (see 0g.2),
+`notation/app/proof*.svg` + `proofs_v0/` (tuba renders), `notation/audio/demo-heldmax.mid`,
+`notation/video/`, #4's `package-lock.json` (regenerated here under the septet's name), the
+score-arc and demo tools (`extract_section`, `build_versions`, `gen_demo_heldmax_midi`, the
+`cres_*` / `piece_s*` / `cloud02*` generators), `docs/NOTATION_ARCHITECTURE.md` (read in
+#4, cited by path).
+
+**Three small things of our own:** `package.json` written for this repo — the same single
+dependency `@resvg/resvg-js ^2.6.2`, and `pngjs ^7.0.0` recorded as *optional* because
+`export_video --probe` needs it behind a try/catch and #4 had it installed but never
+declared it (`npm install` → resvg 2.6.2 + pngjs 7.0.0, lockfile generated) ·
+`.gitignore`: `fonts/` narrowed to `/fonts/` — the inherited pattern matches a `fonts`
+directory at ANY depth and would have swallowed `notation/app/fonts/` (in #4 those two
+files were tracked before the rule existed); Crimson Pro is SIL OFL, redistributable, and
+the app, `export_print` and `export_video` read it from there · `notation/ir/README.md` —
+what lives there, and the staging recipe of 0g.2.
+
+**0g.2 — the decision the checkpoint did not foresee: the batteries hard-code tuba pages.**
+`test_render / layout / animobj / splice / extract_played / midiplayer / pattern_fit /
+notate_block`, `ir_extract_golden` and `ir_validate_battery` read
+`notation/ir/{trance-bar-01, morph-window-01, db1, db1-all-x01, trance-section-01,
+section1-e20, section1-e30, density-apex-01}` by name and, through `--against-source`,
+nine tuba scores (`tranceA002f`, `piece-final-draft-001`, `piece-s25-finished01`,
+`piece-s23`, `piece-s27`, `piece-s28`, `cloud02-10track`, `cloud02i-b`, `cloud02i-b2`).
+Options weighed: (a) commit the pages as fixtures — 14 MB of another piece's notation in
+this repo, `db1` alone 6.6 MB, and the checkpoint said not to; (b) repoint ten test files
+at a fixtures directory — an adaptation now, after which `cmp` no longer proves the copy;
+(c) **stage the pages and scores temporarily, run everything, delete, write the recipe
+down** — chosen. PLAN 0g's own words are "run the test batteries ONCE to prove the copy is
+whole"; the septet's pages and re-snapshotted fixtures replace the tuba goldens at 2a.
+Staged 27 files; removed 28 (the smoke page of 0g.4 included); `git status` afterwards
+showed only the intended additions and nothing left behind in `scores/`.
+
+**0g.3 — the batteries, on the staged goldens (Node 24.12):**
+
+| battery | result |
+|---|---|
+| test_coords · test_stamps | GREEN — these need no pages; they run in the repo as committed |
+| test_render · test_layout · test_animobj · test_splice · test_graphic | GREEN — census, clipping, staff math, A3 census, beaming, parachute, section smoke, every snapshot stable |
+| test_pattern_fit | GREEN — 85 checks |
+| ir_extract_golden | GREEN — extraction reproduces trance-bar-01 (19 events, 2 chunks) |
+| ir_validate_battery | GREEN — 30 red + 6 green cases all behaved (36) |
+| test_notate_block | GREEN — 65 passed, 0 failed |
+| test_extract_played | RED, 1 failure: snapshot drift. **RED in #4 itself too** (run there read-only, nothing written): its fixture dates from #4 commit `faea00f` and the section1 pages moved on. The source's stale snapshot, not the copy → NITS |
+| test_playability | RED: ENOENT `docs/SI2_staccato_lengths.md` — the tuba sample-length doc; the septet's tables come at 0c/0d |
+| test_midiplayer · test_sonify_core | RED: `r.port` null — a tuba lane resolves to key `tuba1`, which the septet's `sandbox/instruments.js` skeleton does not carry, so the route is null. **Correction to §9:** the `'tuba'+(n+1)` fallback yields the KEY only; with no tuba recipe here a #4 save does not play in this repo. It was never going to need to |
+
+Eleven GREEN. The four RED all trace to the septet's own tables or to the source — none to
+the copied code.
+
+**0g.4 — the 0i tool chain end to end, on known-good input:**
+`node tools/notate_section.js --score tranceA002f --w0 58.4 --w1 66.8 --id 0g-smoke --exp`
+(the golden's own window, all parts) → `READY: 107 events, 15 chunks {simple-bar: 15} ·
+VALID vs source`, manifest entry written. Then, as an independent process,
+`node tools/ir_validate.js notation/ir/0g-smoke.ir.json --against-source --complete` →
+`VALID (107 events, 15 chunks, 0 overlays; against-source checked; completeness checked)`.
+(The golden holds 19 events / 2 chunks for the same seconds because it was cut to one
+part; `ir_extract_golden` reproduces it with its own parameters.) **The validator takes a
+PATH, not an id** — the checkpoint's `ir_validate.js <id>` form dies with ENOENT
+`<repo>/<id>`; the §2 instruction for 0i is corrected.
+
+**0g.5 — the exporters.** `export_print.js --ir db1 --pages 1-2` → a 2-page PDF (145 KB)
+through Chrome headless: Tabloid 17×11, ten lanes, 11.41 s/page, 67 pages for 753 s,
+section marks BLOOM / CONVERGENCE / BALANCE / TRANCE read from the score's `ACT-` markers —
+every one of those numbers is the tuba geometry; the A3 / seven-lane entry is on the 2a
+list. `export_video.js --ir db1 --view video --probe 5` → one page rasterized through
+resvg, `db1_video_t5-000.png` (60 KB), looked at: ten bass-clef staves, the cursor, the GC
+bars, swells, heads with go lines — a real frame.
+
+**0g.6 — verified in the running app.** `score/server.js` on 5300 (its inherited routes
+already served `/notation/`): **22/22 routes 200** — the page, the ten lib scripts it
+loads, `glyphs.json`, the three registry files, the schema, both fonts,
+`/sandbox/instruments.js`, `/sonify_core.js`, `/api/notation/renders`,
+`/probes/cc7_map.json`. `/notation/ir/index.json` is 404 by design — the manifest is
+optional in the app (`try { … } catch { /* manifest optional */ }`) and `notate_section`
+creates it. The app loads with its controls (view · parts T1–T10 · window / pages) and
+shows `Error: IR fetch 404`, because its built-in picker names a tuba page: the pre-2a
+state, exactly what PLAN 0g means by "carried over now, adapted later".
+
+**What running it found that reading would not** (all filed in PLAN 0g's 2a list so they
+do not bite): `classify.js` line 25 — `obj.layer === 10` → META shape, while the septet's
+META is layer 7 — 0i meets this first · notation.html's T1–T10 parts and tuba IR ids ·
+export_print / build.sh / make_cover geometry and names (and make_cover's `$OUT`
+hard-coded to #4's scratchpad) · export_midi's port order · playability's tuba doc · the
+snapshot fixtures are tuba hashes.

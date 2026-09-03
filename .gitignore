@@ -14,8 +14,11 @@ reaper/AutoSaves/
 scores/versions/
 scores/*-work.json
 
-# Fonts are licensed software and this repo is public (piece #4, day 36) — never committed
-fonts/
+# Fonts are licensed software and this repo is public (piece #4, day 36) — never committed.
+# Root only: notation/app/fonts/ holds Crimson Pro, which is under the SIL Open Font
+# Licence (Google Fonts) and may be redistributed; the app, export_print and export_video
+# read it from there.
+/fonts/
 
 # Derivable render outputs
 notation/video/**/*.mp4

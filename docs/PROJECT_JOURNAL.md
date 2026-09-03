@@ -107,18 +107,32 @@ lane assignment added (`laneCanPlay`). `sandbox/instruments.js` is the seven-ins
 skeleton, every channel/range provisional until 0e/0c. Apps: `node score/server.js` →
 http://localhost:5300/composer.html · `node sandbox/serve.js` → http://localhost:4800.
 
-**Next up:** **0g** (copy the notation/IR infrastructure) then **0i** (prove a septet save
-extracts to IR) on Opus; **0e** loopMIDI + Reaper rack with the composer; **0c** recipes;
-**0d** CC7 nailed; **0h** gate → compose.
+*Same session, act four — after the checkpoint clear, on Fable (composer: "stay with fable
+for now"): **PLAN 0g DONE.*** The notation/IR stack — engine, registry, schema, glyph
+pipeline, extractor, validator, print + video exporters, 13 test batteries, fixtures, print
+skeleton, resvg — copied byte-exact from #4 (97 files, `cmp` 97/97) and **proven whole in
+this repo**: 11 batteries GREEN against the tuba goldens staged temporarily (not stored
+here; `notation/ir/README.md` has the recipe), 4 RED for reasons in the septet's own tables
+or the source's own stale snapshot, none in the copied code; `notate_section` →
+`ir_validate` ran end to end on a tuba window (107 events, 15 chunks, VALID);
+`export_print` wrote a 2-page PDF through Chrome headless; `export_video --probe`
+rasterized a frame through resvg; 22/22 notation routes 200 on the running server and the
+app loads (it shows "IR fetch 404" until a septet page exists — the pre-2a state).
+RUNNING_LOG §12.
+
+**Next up:** **0i** (prove a septet save extracts to IR — the first known bite is
+`classify.js` treating layer 10 as META; ours is layer 7); **0e** loopMIDI + Reaper rack
+with the composer; **0c** recipes; **0d** CC7 nailed; **0h** gate → compose.
 
 **NEXT STEPS · MODEL · CLEAR:**
-1. ► **This is the clear point** (0b wrapped, committed, pushed). `/session-end` or
-   `/checkpoint`, `/clear`.
-2. **0g + 0i on Opus, one session**: copy `notation/{lib,registry,schema,app}` +
-   `tools/{notate_section, notate_block, ir_extract*, ir_validate*, export_print,
-   export_video, test_*, prove_unmoved}` + `print/` + `package.json` (resvg); run the test
-   batteries; then a 30-s septet test save through `notate_section.js` and
-   `ir_validate.js --against-source`; read what fails; file the classifier work under 2a.
+1. ☑ 0b wrapped, checkpoint, clear; resumed on Fable (the composer's choice over the
+   planned Opus: "stay with fable for now").
+2. ☑ **0g** — the stack is here and proven whole (RUNNING_LOG §12). ► **0i now, same
+   session**: a 30-s septet test save (through the app's own save path) →
+   `node tools/notate_section.js --score <name> --w0 0 --w1 30 --id 0i-test` →
+   `node tools/ir_validate.js notation/ir/0i-test.ir.json --against-source --complete`
+   (the validator takes a PATH); read what fails; fix the S1 side now (D9 §5); file the
+   classifier / registry work under 2a.
 3. **0e with the composer at Reaper** (any model, conversation): loopMIDI ports `Flute`
    (+`Fluteb`), `BassCl`, `Piano`, `Vn1`, `Vn2`, `Va`, `Vc`; one Reaper track per port,
    monitoring ON; rack committed; the app's Web MIDI port list checked on Chrome.
@@ -128,36 +142,32 @@ extracts to IR) on Opus; **0e** loopMIDI + Reaper rack with the composer; **0c**
 
 **Open at session end** *(mid-session checkpoint, 2026-09-03, Fable — written for an AI
 that has never seen this conversation):*
-- **Task and state:** phase 0 setup. 0a and 0b are CLOSED and pushed (`6d6a6f3`). Nothing
-  is half-built. The composer score app and sandbox run and were verified live
-  (RUNNING_LOG §9); `scores/septet.json` is the committed day-one stub (§10).
-- **Latest deliverable:** the ported composer module — `score/`, `sandbox/`, `bank/`,
-  `probes/`, `tools/model_bank.js`; apps at http://localhost:5300/composer.html and
-  http://localhost:4800 (`.claude/launch.json` names them `score` and `sandbox`).
-- **Next concrete step (PLAN 0g, then 0i), as an instruction:** from
-  `C:\Users\jwloy\GitHub\for_seven_tubas`, copy byte-exact into this repo:
-  `notation/lib`, `notation/registry`, `notation/schema`, `notation/app/notation.html`,
-  `notation/GLYPH_EXTENSION_CONTRACT.md`, `tools/{notate_section,notate_block,ir_extract,
-  ir_extract_golden,ir_validate,ir_validate_battery,export_print,export_video,test_render,
-  test_layout,test_animobj,test_coords,prove_unmoved}.js`, `tools/fixtures/`, `print/score/
-  build.sh`, `print/cover/`, `package.json` (then `npm install` for resvg), plus
-  `docs/NOTATION_STANDARDS.md`, `docs/NOTATION_WORKFLOW.md`, `notation/schema/IR_SCHEMA_v0.md`
-  as reference copies. Do NOT copy `notation/ir/*.ir.json` (tuba pages) or `notation/video`
-  renders. Run `node tools/test_render.js`, `test_layout.js`, `test_animobj.js`,
-  `test_coords.js` and record pass counts. Then 0i: make a 30-second test save with a
-  handful of notes on three lanes (through the app or by hand from the stub), run
-  `node tools/notate_section.js --score <name> --w0 0 --w1 30` and
-  `node tools/ir_validate.js <id> --against-source`; read what fails; fix the S1 side or
-  file the classifier work under PLAN 2a. Journal every number as you go.
-- **Resume reads:** `docs/PLAN.md` §0 items **0g** and **0i** · journal §4 **D9** (the IR
-  contract) · `RUNNING_LOG.md` **§9** (what the port changed — the extractor reads
-  `score.tracks[].instKey` and `layoutVersion` 3) · piece #4's
-  `docs/NOTATION_ARCHITECTURE.md` §1 (the four strata) and the header of
-  `tools/notate_section.js`.
+- **Task and state:** phase 0 setup. 0a, 0b and 0g are CLOSED and pushed. Nothing is
+  half-built. The composer score app and sandbox run (RUNNING_LOG §9); the notation stack
+  is in the repo and its batteries pass on staged tuba goldens (§12); `scores/septet.json`
+  is the committed day-one stub (§10).
+- **Latest deliverable:** the notation/IR stack — `notation/`, the notation `tools/`,
+  `print/`, `package.json` (resvg + pngjs) — plus the composer module from 0b. Apps:
+  http://localhost:5300/composer.html · http://localhost:5300/notation/app/notation.html ·
+  http://localhost:4800 (`.claude/launch.json`: `score`, `sandbox`).
+- **Next concrete step (PLAN 0i), as an instruction:** (1) read `notation/lib/classify.js`
+  and the header of `notation/lib/extract_core.js` for what the classifier expects of an S1
+  object (layer convention, `technique`, `groupId`, `sonifyNote`, `startSeconds` /
+  `endSeconds`, `nodes`) — known bite: `layer === 10` is META there, ours is layer 7.
+  (2) Make a 30-second test save with a handful of notes on three lanes THROUGH THE
+  RUNNING APP's own save path (so the file is what the app writes; by hand from
+  `scores/septet.json` only as a fallback, with the app's object shape). (3) Run
+  `node tools/notate_section.js --score <name> --w0 0 --w1 30 --id 0i-test --label "0i test"`,
+  then `node tools/ir_validate.js notation/ir/0i-test.ir.json --against-source --complete`
+  (the validator takes a PATH, not an id). (4) Read what fails; fix the S1 side now (the
+  D9 §5 list: technique key on every sounding object, instrument-in-hand, stable ids, one
+  layer convention, sounding-length rule, group ids); file classifier / class-registry work
+  under PLAN 2a. Journal every number as you go (RUNNING_LOG §13).
+- **Resume reads:** journal §4 **D9** · `RUNNING_LOG.md` **§12** · `docs/PLAN.md` **0i** ·
+  `notation/ir/README.md`.
 - **Pending the composer:** piccolo vs bass flute (CN-2) — not blocking. 0e needs the
   composer at Reaper; do not attempt it alone.
-- **Deliberately uncommitted:** nothing. `git status --short` was empty after `6d6a6f3`;
-  this checkpoint commit carries only docs.
+- **Deliberately uncommitted:** nothing after the 0g commit.
 
 **Open questions:**
 - **Q1 flute doubling instrument:** piccolo or bass flute — composer undecided; SI2 flute

@@ -21,3 +21,10 @@
   not what routes MIDI here (`sandbox/instruments.js` is). Fill or retire at PLAN 0c.
 - **Web MIDI cannot be exercised from the in-app browser** ("MIDI access denied"); every
   MIDI-path verification runs on the composer's Chrome at 0e (2026-09-03).
+- **Piece #4's own `tools/test_extract_played.js` is RED in the source repo** (2026-09-03,
+  PLAN 0g): its snapshot fixture was last written at #4 commit `faea00f` (D1) and the
+  section1 pages moved on; the copy here inherits that state. Not ours to fix (never edit
+  #4); noted so nobody hunts the drift in this repo's copy. Re-snapshot with `--update` on
+  the septet's first pages (PLAN 2a).
+- **`tools/notate_section.js` prints "all ten parts" when `parts.length === 10`** (2026-09-03).
+  Cosmetic; seven here — change the literal when 2a touches the file.

@@ -119,7 +119,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   ability to generate the proper MIDI signals, control channels, etc. to manage these
   instruments" — the composer's stated third pillar.
 
-- **0g — Notation/IR infrastructure carried over now, adapted later** — `todo` — copy
+- **0g — Notation/IR infrastructure carried over now, adapted later** — `done 2026-09-03` *(RUNNING_LOG §12: 97 files byte-exact, 11 batteries green on staged tuba goldens, exporters run, 22/22 routes live)* — copy
   `notation/{lib,registry,schema,app}` (no `ir/` pages), `tools/{notate_section, notate_block,
   ir_extract*, ir_validate*, export_print, export_video, test_render, test_layout,
   test_animobj, test_coords, prove_unmoved}`, `print/` (build.sh, cover generator, no PDFs),
@@ -133,6 +133,25 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   rehearsal marks as IR data · parts = `frameParts` subset + own pagination + cues.
   *Why:* "of course all the IR and whatever infrastructure we need" — copying costs
   nothing now; adapting waits for real material.
+  **Found by RUNNING the copy (0g), added to the 2a list so it does not bite:**
+  `notation/lib/classify.js` maps `layer === 10` → META shape (the tuba META layer; ours
+  is 7 — 0i meets this first; the fix is D9 §5's one fixed layer convention) · the
+  notation app's parts list is T1–T10 and its built-in IR ids are the tuba pages (it shows
+  "IR fetch 404" until a septet page exists) · `export_print.js` + `print/score/build.sh`
+  assume Tabloid 17×11, ten lanes, `IR=db1`, `OUT=BCB-score-DRAFT.pdf`, section marks from
+  `ACT-` markers (→ A3 landscape, seven lanes, septet names) · `print/cover/make_cover.ps1`
+  carries the tuba title/subtitle, Letter/Tabloid sizes and an `$OUT` path into #4's
+  scratchpad · `export_midi.js` writes ports in the fixed T1..T10(b) order (→ the 0e port
+  list, at 0f) · `playability.js` / `test_playability.js` read the tuba doc
+  `docs/SI2_staccato_lengths.md` (→ the septet's sample-length tables, 0c/0d) ·
+  `test_midiplayer` / `test_sonify_core` / `test_extract_played` need a septet score,
+  recipes and their own snapshot · every `tools/fixtures/*_snapshot.json` is a hash of tuba
+  pages — regenerate with `--update` on the first septet pages. **Not carried, by name:**
+  `notation/ir/*` (18 tuba pages + manifest; staged for the batteries per
+  `notation/ir/README.md`), `notation/app/proof*.svg` + `proofs_v0/`,
+  `notation/audio/demo-heldmax.mid`, `notation/video/`, the score-arc and demo tools
+  (`extract_section`, `build_versions`, `gen_demo_heldmax_midi`), and
+  `docs/NOTATION_ARCHITECTURE.md` (read in #4, cited by path).
 
 - **0h — Gate: phase 0 closed** — `todo` — every track sounds from the score app through
   its own port with the right technique switching; a save round-trips; the sandbox

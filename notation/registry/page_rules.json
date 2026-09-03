@@ -1,0 +1,12 @@
+{
+  "_contract": "Page-edge decision rules (accommodation strategy 'page-edge-rules', NOTATION_ARCHITECTURE §3 item 5): stored as RULES, not baked positions (P6). The splicer (notation/lib/splice.js) consults these; changing a rule re-plans every page on the next render.",
+  "version": "0.1",
+  "cutSlackSeconds": 2.0,
+  "minPageSeconds": 3.0,
+  "_doc_cutPreference": [
+    "candidates are scored: fewest SEVERED beamable pairs across ALL interrupted sub-beat chunks (stamp-atomic; grids in different parts can be incommensurate, so any chunk still left off its grid is RECORDED in the page's offGrid list, never silent) · then fewest interrupted chunks (by MATERIAL extent, not span) · ties toward the target time"
+  ],
+  "reshowAtCut": ["tempoLabelContinuation"],
+  "_doc_alwaysShown": "the clef pins to the view's left edge and part labels always draw — render behavior, not rules; only tempoLabelContinuation is rule-gated here",
+  "continuationPrefix": "(cont.) "
+}
