@@ -81,3 +81,32 @@ names a library to confirm.
   rulers that converge into one shared ruler**, and back.
 - **Where it could sit:** after CN-1's density mass, as the way out of it — or as the
   tremolo fugue's stretto. The composer's call; the sketch pad keeps both.
+
+---
+
+## CN-4 · 2026-09-03 — heterophony, bass clarinet and piccolo
+
+> *"Heterophony between bass clarinet and piccolo. Close micro counterpoint. Like, interactive
+> looping line."*
+
+**AI reading (not the composer's words):**
+
+- **A duet texture, the thin opposite of CN-1's mass and CN-3's whole-ensemble convergence:**
+  one line shared by two players three octaves apart (bass clarinet, standard zone MIDI 34–65;
+  piccolo above the flute's 59–96), each varying it — heterophony as register-displaced
+  variants of the same loop rather than independent voices.
+- **"Micro" reads two ways, and the libraries allow both:** micro-INTERVAL — the Xsample bass
+  clarinet has a quarter-tone/gliss preset (`gliss_undef`) and bends about 1–2 semitones, SI2's
+  flute has `Ordinario quarter-tone`, and every S1 object can carry a bend (the morph bend
+  path) — or micro-TIMING — the two lines a few tens of milliseconds apart, drifting. The tuba
+  piece's `phase_shift.js` (PLAN 2ad: drift as a phase machine) is built for the second
+  reading; the first needs per-note bend in the recipes (0c).
+- **"Interactive looping line":** a loop both players own, each answering the other's variant
+  inside it — in the sandbox that is a captured motive (the motive library) played on two
+  lanes with per-lane transforms (offset, ornament, inflection); the pulse sequencer gives the
+  loop its pulse. Playable early in phase 1 with the tools as ported.
+- **A shared timbral vocabulary makes the heterophony more than pitch:** both instruments have
+  flutter (`flz` / `flutter_mw`), key noise (`key_click` / `key_noises`), air (`aeolian` /
+  `air_noises`) — the variants can differ in colour while the line stays one.
+- **A signal for CN-2, not a decision:** this idea names the piccolo. If it stands, the flute
+  doubling is piccolo and the piccolo library is the one to confirm (SI2 has none).
