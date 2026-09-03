@@ -82,10 +82,10 @@ const INSTRUMENTS = {
       // A16 · Flute Sforzando
       { key: "sforzando",       label: "Sforzando",                  preset: "Flute Sforzando",             channel: 16, rangeLow: 60, rangeHigh: 96 },   // A16 screenshot: no red keys; white C3→C6 (60–96); grey elsewhere, no tan
       // ---- second instance "Fluteb" (A1–A3) ----
-      { key: "staccato",        label: "Staccato",                   preset: "Flute Staccato",              port: "Fluteb", channel: 1 },
-      { key: "trill_m2",        label: "Trill minor 2nd",            preset: "Flute Trills KS",             port: "Fluteb", channel: 2, ks: 36 },
-      { key: "trill_M2",        label: "Trill major 2nd",            preset: "Flute Trills KS",             port: "Fluteb", channel: 2, ks: 37 },
-      { key: "whistle_tones",   label: "Whistle Tones",              preset: "Flute Whistle Tones",         port: "Fluteb", channel: 3 },
+      { key: "staccato",        label: "Staccato",                   preset: "Flute Staccato",              port: "Fluteb", channel: 1, rangeLow: 60, rangeHigh: 96 },   // Fluteb A1 screenshot: no red keys; white C3→C6 (60–96) native; tan below C3 and above C6 (stretched)
+      { key: "trill_m2",        label: "Trill minor 2nd",            preset: "Flute Trills KS",             port: "Fluteb", channel: 2, ks: 36, rangeLow: 60, rangeHigh: 96 },   // Fluteb A2 screenshot: red C1; C#1 not red; white C3→C6 (60–96); grey elsewhere, no tan
+      { key: "trill_M2",        label: "Trill major 2nd",            preset: "Flute Trills KS",             port: "Fluteb", channel: 2, ks: 37, rangeLow: 60, rangeHigh: 96 },   // C#1 — verify
+      { key: "whistle_tones",   label: "Whistle Tones",              preset: "Flute Whistle Tones",         port: "Fluteb", channel: 3, rangeLow: 48, rangeHigh: 84 },   // Fluteb A3 screenshot: no red keys; white C2→C5 (48–84) native; tan below C2 and above C5
     ],
   },
   // ---- BASS CLARINET — Xsample (Kontakt), CC#0 selects the preset (preset N => CC#0 N-1) ----

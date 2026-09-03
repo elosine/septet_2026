@@ -886,3 +886,11 @@ composer to confirm on screen. Each further KS preset gets the same look as it l
   A7, A8, A10, A11, A12, A15, A16; A2 from 48; A5 48–83 (tan both sides); A6 ≈79–96; A9 60–89
   (tan both sides); A13 60–84 (tan both sides); A1 60–83 (tan); A14 from 60 (top cut). Purple
   keys on A2 (C3, C4) and A5 (C4), meaning open.
+- **Fluteb A1 Staccato:** no red keys · white **C3 → C6** (60–96) native · tan below C3 and
+  above C6 — the one full-range patch that also carries a stretched extension both sides.
+- **Fluteb A2 Trills KS:** red **C1** (36), C#1 not red (major-2nd mode unconfirmed on screen) ·
+  white **C3 → C6** (60–96) · grey elsewhere, no tan.
+- **Fluteb A3 Whistle Tones:** no red keys · white **C2 → C5** (48–84) native · tan below C2 and
+  above C5. **All nineteen parts registered** — 30 technique keys, every one with a range read
+  from the screen; keyswitch numbers 36/37/38 (Durations 48/49) with the second and third
+  switches flagged "verify by playing" where UVI showed no red key.
