@@ -44,3 +44,40 @@
 **AI note:** the track is modelled so either can be added as a switch later (journal D6);
 nothing in the port depends on the choice. SI2 has neither instrument, so the choice also
 names a library to confirm.
+
+---
+
+## CN-3 · 2026-09-03 — tempos that converge
+
+> *"Try ensemble playing different tempos, then accelerate or decelerate and hit the same
+> tempo in unison at some point in the future. Use the bouncing ball for the tempos on either
+> side and then a curve for acceleration and deceleration. Performers will have to practice
+> the degree of accel or decel to get from one tempo to the next in that much time. The curve
+> will assist."*
+
+**AI reading (not the composer's words):**
+
+- **Three devices, two of which exist.** The bouncing ball is the GC (`notation/lib/gc.js`,
+  ported whole from piece #1: arc, impact marker, ball, magenta) — one per part, bouncing at
+  that part's tempo. The curve is the notation's continuous channel (NOTATION_ARCHITECTURE
+  amendment 1: *"the performer expressing the curve"*). The new thing is the **tempo ramp**:
+  a per-part tempo function from A_i to the shared tempo B at a meeting time, with the ball's
+  bounce period following it.
+- **The audition rig is halfway there.** `multitempo.js` (PLAN 2ac from #4) already plays N
+  pulse streams at integer-ratio tempi (3:4:5 …) and the composer listens to the composite;
+  it has no accel / decel and no convergence — its ratios are constant and realign every
+  common cycle. A "ramp" segment (period from a curve, ending on a common downbeat) is a
+  small addition to a pure, tested engine: the first sandbox experiment for this idea.
+- **The arithmetic the curve carries.** The beats a part plays during its ramp are the
+  integral of its tempo curve, so "arrive at the same tempo" and "arrive on the same beat"
+  are two different constraints; a linear ramp fixes the beat count, and making every part
+  land ON a beat at the meeting point constrains each curve's shape. That is exactly what the
+  performer practises and what the drawn curve assists — and the tool can compute it, and
+  print the beat count under each ramp as a derived mark.
+- **For the notation stack (2a):** the IR's tempo map is constant per chunk today
+  (`anchorSeconds` / `unitSeconds` / `beatSeconds`); a ramp needs a tempo FUNCTION per chunk
+  (from · to · shape). The tuba piece left "tempo scope: per chunk, per part or
+  ensemble-shared" open (its §8 row 8); this idea answers it for this piece: **per-part
+  rulers that converge into one shared ruler**, and back.
+- **Where it could sit:** after CN-1's density mass, as the way out of it — or as the
+  tremolo fugue's stretto. The composer's call; the sketch pad keeps both.
