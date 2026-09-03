@@ -863,3 +863,9 @@ composer to confirm on screen. Each further KS preset gets the same look as it l
   keys, one multiphonic each — the manual's table runs C3..F5 too, so THAT table is in display
   names, unlike its keyswitch pages; the roster's 48–77 (my scientific reading) corrected to
   60–89 · tan below C3 and above F5 (transposed multiphonics, extended both sides).
+- **Composer's request at A9, filed as PLAN 0c.8:** *"can we make a todo for later to walk a9, I
+  believe you would play through the range while I record and then analyze the file; I want to
+  make a correspondence to the key and the approximate pitch content of the multiphonic."*
+  Noted alongside: the SI2 manual carries a thirty-row table of exactly that correspondence
+  (key → pitches with quarter-tone marks, at mf) — the walk seeds from it and verifies it by
+  recording and spectrum, and the same recording yields the sounding lengths (0c.6).
