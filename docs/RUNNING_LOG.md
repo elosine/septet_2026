@@ -1018,3 +1018,11 @@ Gain check applies to both instrument slots (the composer's standing reminder).
   GAIN knob besides Kontakt's header volume — both count for the gain check, both left at
   default. Its preset list (Staccato, Reversed, Glisten, Infinity, Ethereal, Glockiano,
   Suppressiano, Emperor, Golden, The Future) is noted as candidate techniques for later.
+
+## §27. R6 verified from the project file
+
+Composer: *"done"*. `Piano Kontakt` · `REC 1 5408 1 0` = armed · MIDI input, all channels ·
+monitoring ON · input mode · `VST3i: Kontakt 8`; the file is 2.8 MB with two Kontakt states
+inside. The two slots (8Dio 1969 Legacy Piano on [A] 1, Spitfire Plucked Piano on [A] 2)
+sit in Kontakt's binary chunk — not readable from the file; the one-note test at 0h proves
+them. Four tracks in score order: Flute SI2 · Fluteb SI2 · Bass Clarinet XS · Piano Kontakt.
