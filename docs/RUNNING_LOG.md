@@ -1092,3 +1092,24 @@ future reuse of it.
   menu — plucked, muted, harmonics"* (the piano lane's technique list already carries the
   four; verified in the running app, below) · **CN-5** (scattered strikes) to the sketch pad ·
   **PLAN 1a** (a more fluid way to draw curves) as a todo.
+
+## §30. R12 + R13 — the rack read whole
+
+Composer: *"all saved, composer score running in browser."* `reaper/septet_rack.rpp`, 6.47 MB,
+ten tracks in score order:
+
+| track | REC line | read |
+|---|---|---|
+| Flute SI2 · Fluteb SI2 | `REC 1 … 1 0` | armed · MIDI all channels · monitoring ON · UVI (VST2) |
+| Bass Clarinet XS | `REC 1 4608 1 0` | armed · MIDI all · monitoring ON · Kontakt 8 |
+| Piano Kontakt | `REC 1 5408 1 0` | armed · MIDI all · monitoring ON · Kontakt 8 |
+| Piano PP2 | `REC 1 5408 1 0` | same port as Piano Kontakt · **UVI only now** — the stray Kontakt of 18:02 is gone |
+| Vn1 · Vn2 · Va · Vc XS | `REC 1 5440/5472/5504/5536 1 0` | armed · MIDI all · monitoring ON · Kontakt 8 each |
+| REC | `REC 0 0 1 1` | un-armed · audio input · record mode 1 = output (stereo) · no receives yet |
+
+Every instrument track: exactly one plugin, input = its port on all channels, monitoring on.
+What the file cannot show: the slot channels inside Kontakt (D11's 1–4) and the UVI part
+channels — the one-note test proves those. **A todo from the composer, filed as PLAN 1b:**
+*"revisit save file logic, try to simplify/make more logical."* The piano lane's technique
+menu (`recTechSel`) carries main · plucked · harmonics · muted when the piano lane is
+selected — his *"can I also have the other pianos in the midi play menu"* is already yes.

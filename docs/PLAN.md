@@ -162,8 +162,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   `done 2026-09-03` (§22–23) · R5 Bass Clarinet XS (Kontakt 8, four slots ch 1–4; #3's configured track can be
   imported) `done 2026-09-03` (track verified from the file, §25; the 34-preset roster + keyswitch map, §24) · R6 Piano Kontakt (8Dio 1969 Legacy Piano ch 1 + Spitfire Plucked Piano ch 2) `done 2026-09-03` (§27) · R7 Piano PP2 (UVI, harmonics A3,
   muted A5) `done 2026-09-03` (composer: read the file at the end, not per instrument — the Piano PP2 chain showed a second, live Kontakt beside the UVI at 18:02; re-check at R13) · R8–R11 Vn1 / Vn2 / Va / Vc XS (Kontakt 8, four slots each) `done 2026-09-03` (on the composer's word; rosters §29; file read at R13) · R12
-  REC (audio, record output stereo, receive from the track under test) `todo` · R13 save +
-  commit; on the composer's Chrome the app's Web MIDI list shows the eight ports `todo`.
+  REC (audio, record output stereo, receive from the track under test) `done 2026-09-03` (§30) · R13 save +
+  commit; on the composer's Chrome the app's Web MIDI list shows the eight ports `done 2026-09-03` (the file read in §30; the Chrome port list confirmed by the composer).
   *Why:* it is the whole audition path; #3 lost a session to monitoring being off.
 
 - **0f — The AI's MIDI generation path** — `todo` — three routes, all inherited, wired to
@@ -234,6 +234,12 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   becomes a node curve, instead of node-by-node placement. *Why:* the curve is the piece's
   primary continuous notation (D9; NOTATION_ARCHITECTURE amendment 1) and CN-1, CN-3, CN-5 all
   live in curves; drawing speed is composing speed.
+- **1b — Revisit the save-file logic; simplify, make it more logical** — `todo` *(composer,
+  2026-09-03: "todo: revisit save file logic, try to simplify/make more logical")* — the
+  inherited chain (canonical `piece-sNN` · `-work` autosave copy · `Save as next` · `Variant` ·
+  `Restore` snapshots, NAMING.md §1) is three pieces' accretion; design the septet's own rule set
+  before the first real save (`piece-s01`), so no file is ever renamed after the fact. *Why:*
+  autosave has eaten a score in every previous piece; the logic must be obvious to be safe.
 
 - Sketch pad: `docs/COMPOSITION_NOTES.md` — the opening is already there (ensemble attack →
   curve-based tremolos with fp entries → tremolo fugue → density-build sound mass).
