@@ -1,0 +1,15 @@
+{
+ "irs": [
+  {
+   "id": "0i-test-b",
+   "label": "0i test b",
+   "score": "0i-test-b",
+   "window": [
+    0,
+    30
+   ],
+   "profile": "trance",
+   "exp": true
+  }
+ ]
+}

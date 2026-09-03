@@ -417,3 +417,98 @@ META is layer 7 — 0i meets this first · notation.html's T1–T10 parts and tu
 export_print / build.sh / make_cover geometry and names (and make_cover's `$OUT`
 hard-coded to #4's scratchpad) · export_midi's port order · playability's tuba doc · the
 snapshot fixtures are tuba hashes.
+
+## §13. PLAN 0i — the S1 → IR contract, proved on a septet save
+
+**Prompted by:** the 0i instruction in journal §2 — *make a 30-second test save, run it through
+`notate_section` and `ir_validate`, read what fails, fix the S1 side now, file the classifier
+work under 2a* — straight after 0g, under the same go from the composer.
+
+**0i.1 — the test save, written by the app.** Composer app on :5300 (checked live: `Composer`
+ready, 8 lanes, the seven tracks, `META_LAYER` 7, `nextId` 1, zero console errors on load).
+In the page, twelve objects were built with the app's OWN insert-time object literals — the
+blast/cluster insert shape: `wc-N` ids from `Composer.nextId`, `nodes` / `segments`,
+`sonifyNote`, `technique`, `sonifyMode: 'plain'`, `recVel`; the META shape on `META_LAYER`
+with the gesture's `groupId`; a marker `mk-1` with `time` / `label` — and saved with the
+app's `saveSession()`, so the serializer (`collectData`: `layoutVersion` 3, `tracks`,
+`objects`, `nextId`) and the server's `saveComposerScore` are the app's, not a hand-written
+file. Content, 30 s, three lanes + META: flute (part 0) `ord` 1–3 s C5 · `ord` 5–7.5 s E5
+with a three-node crescendo envelope · `staccato` 9 s G5; violin 1 (part 3) five `pizz` at
+12.0 / 12.25 / 12.5 / 12.75 / 13.0 s (G4 A4 B4 C5 D5) under `groupId grp-0i-01`, plus the
+gesture's META shape on layer 7, 12.0–13.3 s; cello (part 6) `arco` 15–22 s C3 · `bartok`
+25 s G2; marker `ACT-0i-test` at 0. **`scores/0i-test.json`** (5118 B, the real septet
+technique keys) and **`scores/0i-test-b.json`** (5139 B, the same objects with pizz →
+staccato, arco → ord, bartok → staccato: the keys the tuba classifier knows). Both kept as
+evidence (NAMING.md §1).
+
+**0i.2 — four extractions, the failures read:**
+
+| run | command | result |
+|---|---|---|
+| A | `--score 0i-test` (default `--parts 0-9`) | THROW `classify: no rule claims object wc-5 — {"layer":3,"technique":"pizz",…}` |
+| B | `--score 0i-test --parts 0-6` | the same throw on `pizz` — the technique vocabulary, not the layer |
+| C | `--score 0i-test-b` (default parts) | THROW `no rule claims object wc-10 — {"layer":7,…}` (no technique): **the META shape swept in as a sounding object** — `classify.js` line 25 says META = layer 10, and the default parts `0-9` include our layer 7 |
+| D | `--score 0i-test-b --parts 0-6` | **READY: 10 events, 6 chunks {unresolved 5, simple-bar 1} · VALID vs source · in the picker**; 6 warnings `no staccato sample length for midi 67…79; using drawn length` |
+
+Then, as an independent process, `node tools/ir_validate.js notation/ir/0i-test-b.ir.json
+--against-source --complete` → `VALID (10 events, 6 chunks, 0 overlays; against-source
+checked; completeness checked)`.
+
+**0i.3 — what the page says** (`notation/ir/0i-test-b.ir.json`): `source {score: 0i-test-b,
+window [0, 30], parts [0..6]}`; every event `derived`, ids `ev-wc-N`, chunk ids
+`ch-<part>-wc-N`; the flute's three objects classified `ord-sustained` ·
+`drawn-crescendo-curve` (the three-node envelope) · `fixed-oneshot`; **the five-note violin
+run promoted to `trance-stream` and fitted as one `simple-bar` — unit 250 ms, beat 0.5 s
+(120 bpm), subdivision 2, max error 0** — DB-6's segmentation-by-behaviour works on septet
+data unchanged; the cello's two as `ord-sustained` + `fixed-oneshot`. The ORD family carries
+its drawn duration (D9); the one-shots carry the drawn length with a warning, because the
+copied `sample_lengths.json` is the tuba's and has no rows for these pitches.
+`provenance.build` records the exact command. Markers are skipped by the extractor by design
+and `--complete` does not count them; print reads them for section marks.
+
+**0i.4 — in the running notation app:** `notation/ir/index.json` now lists the page (written
+by notate_section; the app merged it — the built-in select is empty in this copy, so the
+picker IS the manifest). Selecting it: no error, view `video`, the page renders — the
+flute's events on the first staff with go lines and dynamics, the violin bar's GC device —
+inside the tuba's 1920×1080 ten-lane video frame with T1–T10 labels (`container.json` and
+the app's part labels: 2a).
+
+**0i.5 — the D9 §5 checklist, verdicts:**
+- **instrument-keyed tracks** — ✓ `tracks[].instKey`, `layoutVersion` 3; the extractor
+  addresses parts by index, never by name.
+- **a technique key on every sounding object** — ✓ the app's insert paths always write it;
+  **rule written (NAMING.md §2.3):** a lane object without `sonifyNote` + `technique` is
+  not sound.
+- **the flute's instrument-in-hand as track data** — **resolved as a property of the
+  technique recipe, not a separate field** (D6: piccolo / bass flute are techniques of the
+  flute track; the note's `technique` says which instrument is in hand; clef and
+  transposition metadata at 0c.5). Pending CN-2 for which instrument.
+- **stable, never-reused ids** — ✓ `nextId` only grows; the derived ids are functions of
+  the source ids, so authored overlays re-attach on regeneration.
+- **one fixed layer convention** — **written (NAMING.md §2.2):** sounding = 0…6, META = 7 =
+  `tracks.length`, never with `sonifyNote`. S1 is right; the pipeline's literal 10 is 2a's
+  first line (`classify.js:25`, and notate_section's default parts). Until then:
+  `--parts 0-6`.
+- **the sounding-length rule per material** — **the S1 side named:**
+  `bank/sample_lengths.json[technique][midi]`, read by the app's `techLength` and by the
+  extractor alike; the septet's one-shot rows are measured at 0c/0d (PLAN 0c.6 added).
+- **group ids on gestures** — ✓ member notes and the META shape share `groupId`.
+
+**Filed under 2a** (PLAN): the technique → class map as registry data (every septet key
+throws today, by design — CL-5, never a silent unknown); `classify.js` META layer from
+`tracks.length`; notate_section's default parts from the score; part labels from
+`tracks[].short`; the seven-lane container. **Decided against:** moving septet META shapes to
+layer 10 to suit the tuba code — S1 must not contort to the pipeline (D9 §4) — and patching
+the classifier now: 0g's rule is *carried over now, adapted later*, and the engine stays
+byte-identical to #4 until a real page needs otherwise.
+
+**Also this act:** `.gitattributes` with `*.sh text eol=lf`. Both repos run
+`core.autocrlf=true` with no attributes; `print/score/build.sh` is LF today only because a
+tool wrote it and it was never re-checked-out — a fresh clone would CRLF it and bash would
+die on the carriage returns. One line here; #4's copy has the same exposure and is not ours
+to touch.
+
+**Position at the end of the act:** 0a · 0b · 0g · 0i closed. 0e (loopMIDI + Reaper rack)
+needs the composer at the machine; 0c follows from the rack as built; 0d from 0c. The
+AI-alone work that remains before 0e is 0c.5 (transposition + clef metadata) and nothing
+else on the critical path.

@@ -120,19 +120,27 @@ rasterized a frame through resvg; 22/22 notation routes 200 on the running serve
 app loads (it shows "IR fetch 404" until a septet page exists — the pre-2a state).
 RUNNING_LOG §12.
 
-**Next up:** **0i** (prove a septet save extracts to IR — the first known bite is
-`classify.js` treating layer 10 as META; ours is layer 7); **0e** loopMIDI + Reaper rack
-with the composer; **0c** recipes; **0d** CC7 nailed; **0h** gate → compose.
+*Same session, act five — **PLAN 0i DONE.*** A 30-s test save with ten notes on three lanes,
+a gesture with its META shape and a marker, built in the running app with its own object
+shape and saved by its own `saveSession()`. Four extractions read: the real septet technique
+keys throw in the tuba classifier (`pizz` — by design, CL-5); the default `--parts 0-9`
+sweeps our META layer 7 in and throws on the META shape; with the classifier's keys and
+`--parts 0-6` the page is **READY and VALID** (10 events, 6 chunks; the five-note run
+promoted to `trance-stream`, one `simple-bar` at 120 bpm, error 0) and renders in the
+notation app. The D9 §5 list is written as rules in **`docs/NAMING.md` §2** — S1 is right
+as the app writes it; the two bites are pipeline-side and filed under 2a; the sounding-length
+table is 0c.6. RUNNING_LOG §13.
+
+**Next up:** **0e** loopMIDI + Reaper rack — the composer at the machine; then **0c**
+recipes from the rack as built; **0d** CC7 nailed; **0h** gate → compose. AI-alone before
+0e: only **0c.5** (transposition + clef metadata).
 
 **NEXT STEPS · MODEL · CLEAR:**
 1. ☑ 0b wrapped, checkpoint, clear; resumed on Fable (the composer's choice over the
    planned Opus: "stay with fable for now").
-2. ☑ **0g** — the stack is here and proven whole (RUNNING_LOG §12). ► **0i now, same
-   session**: a 30-s septet test save (through the app's own save path) →
-   `node tools/notate_section.js --score <name> --w0 0 --w1 30 --id 0i-test` →
-   `node tools/ir_validate.js notation/ir/0i-test.ir.json --against-source --complete`
-   (the validator takes a PATH); read what fails; fix the S1 side now (D9 §5); file the
-   classifier / registry work under 2a.
+2. ☑ **0g** — the stack is here and proven whole (RUNNING_LOG §12). ☑ **0i** — a septet
+   save extracts to a VALID page; conventions in NAMING.md §2; bites filed under 2a
+   (RUNNING_LOG §13). ► **This is the next clear point** — 0e needs the composer.
 3. **0e with the composer at Reaper** (any model, conversation): loopMIDI ports `Flute`
    (+`Fluteb`), `BassCl`, `Piano`, `Vn1`, `Vn2`, `Va`, `Vc`; one Reaper track per port,
    monitoring ON; rack committed; the app's Web MIDI port list checked on Chrome.
@@ -142,32 +150,32 @@ with the composer; **0c** recipes; **0d** CC7 nailed; **0h** gate → compose.
 
 **Open at session end** *(mid-session checkpoint, 2026-09-03, Fable — written for an AI
 that has never seen this conversation):*
-- **Task and state:** phase 0 setup. 0a, 0b and 0g are CLOSED and pushed. Nothing is
+- **Task and state:** phase 0 setup. 0a, 0b, 0g and 0i are CLOSED and pushed. Nothing is
   half-built. The composer score app and sandbox run (RUNNING_LOG §9); the notation stack
-  is in the repo and its batteries pass on staged tuba goldens (§12); `scores/septet.json`
-  is the committed day-one stub (§10).
-- **Latest deliverable:** the notation/IR stack — `notation/`, the notation `tools/`,
-  `print/`, `package.json` (resvg + pngjs) — plus the composer module from 0b. Apps:
-  http://localhost:5300/composer.html · http://localhost:5300/notation/app/notation.html ·
-  http://localhost:4800 (`.claude/launch.json`: `score`, `sandbox`).
-- **Next concrete step (PLAN 0i), as an instruction:** (1) read `notation/lib/classify.js`
-  and the header of `notation/lib/extract_core.js` for what the classifier expects of an S1
-  object (layer convention, `technique`, `groupId`, `sonifyNote`, `startSeconds` /
-  `endSeconds`, `nodes`) — known bite: `layer === 10` is META there, ours is layer 7.
-  (2) Make a 30-second test save with a handful of notes on three lanes THROUGH THE
-  RUNNING APP's own save path (so the file is what the app writes; by hand from
-  `scores/septet.json` only as a fallback, with the app's object shape). (3) Run
-  `node tools/notate_section.js --score <name> --w0 0 --w1 30 --id 0i-test --label "0i test"`,
-  then `node tools/ir_validate.js notation/ir/0i-test.ir.json --against-source --complete`
-  (the validator takes a PATH, not an id). (4) Read what fails; fix the S1 side now (the
-  D9 §5 list: technique key on every sounding object, instrument-in-hand, stable ids, one
-  layer convention, sounding-length rule, group ids); file classifier / class-registry work
-  under PLAN 2a. Journal every number as you go (RUNNING_LOG §13).
-- **Resume reads:** journal §4 **D9** · `RUNNING_LOG.md` **§12** · `docs/PLAN.md` **0i** ·
-  `notation/ir/README.md`.
-- **Pending the composer:** piccolo vs bass flute (CN-2) — not blocking. 0e needs the
-  composer at Reaper; do not attempt it alone.
-- **Deliberately uncommitted:** nothing after the 0g commit.
+  is in the repo, proven by its batteries (§12) and by a septet page (§13);
+  `scores/septet.json` is the day-one stub (§10); `scores/0i-test*.json` and
+  `notation/ir/0i-test-b.ir.json` are the 0i proof, kept as evidence.
+- **Latest deliverable:** `docs/NAMING.md` — the score-file names and the S1 conventions
+  the IR reads (D9 §5 as rules); the first septet page in the notation app's picker.
+  Apps: http://localhost:5300/composer.html ·
+  http://localhost:5300/notation/app/notation.html · http://localhost:4800
+  (`.claude/launch.json`: `score`, `sandbox`).
+- **Next concrete step (PLAN 0e), as an instruction — WITH THE COMPOSER, never alone:**
+  at Reaper, create the loopMIDI ports `Flute`, `Fluteb`, `BassCl`, `Piano`, `Vn1`, `Vn2`,
+  `Va`, `Vc` (case-exact; the names in `sandbox/instruments.js`); one Reaper track per port
+  with the library instance loaded and record-monitoring ON; save the rack as
+  `reaper/septet_rack.rpp` and commit it; then, on the composer's Chrome (not the in-app
+  browser — Web MIDI is denied there), open http://localhost:5300/composer.html and check
+  the Web MIDI port list shows all eight; transcribe the UVI / Kontakt slot order into
+  `sandbox/instruments.js` (it is the ground truth for 0c). Walk the composer one R-step at
+  a time (HOW_WE_WORK). **If the composer is not at the machine:** do 0c.5 instead —
+  transposition + clef metadata per instrument recorded in `sandbox/instruments.js`
+  (bass clarinet written a major 9th up; piccolo 8vb; bass flute 8va; viola alto clef).
+- **Resume reads:** journal §4 **D6**, **D9** · `RUNNING_LOG.md` **§13** · `docs/PLAN.md`
+  **0e**, **0c** · `docs/NAMING.md` §2 · piece #3's `docs/SAMPLER_QUIRKS.md` (Xsample CC0
+  state) when 0c starts.
+- **Pending the composer:** 0e itself · piccolo vs bass flute (CN-2) — not blocking.
+- **Deliberately uncommitted:** nothing after the 0i commit.
 
 **Open questions:**
 - **Q1 flute doubling instrument:** piccolo or bass flute — composer undecided; SI2 flute

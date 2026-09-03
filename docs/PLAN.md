@@ -82,6 +82,11 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   - **0c.5 — Transposition + clef metadata per instrument** recorded now (bass clarinet
     written a major 9th up; piccolo 8vb; bass flute 8va; alto clef for viola) — unused
     until phase 2, free to record, expensive to rediscover.
+  - **0c.6 — One-shot sounding lengths (D9; NAMING.md §2.7):** rows in
+    `bank/sample_lengths.json[technique][midi]` for every septet one-shot technique (pizz,
+    Bartók, slap, key click, staccato, …), measured as piece #4 measured the tubas; the
+    app's `techLength` and the extractor read the same table. Until then the extractor uses
+    the drawn length and warns (0i, run D: six warnings on ten notes).
 
 - **0d — Xsample dynamics nailed: CC7 and CC state** — `todo` *(repurposed 2026-09-03:
   the library compare was decided by the composer → D7; what remains is his one named
@@ -158,7 +163,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   captures a motive into the library; 0i's extraction passes; `RUNNING_LOG` has the
   numbers. *Why:* one verified gate instead of seven confidence claims.
 
-- **0i — The S1 data contract for the IR (D9), proved** — `todo` — (a) the septet save
+- **0i — The S1 data contract for the IR (D9), proved** — `done 2026-09-03` *(RUNNING_LOG §13; the conventions in `docs/NAMING.md` §2; proof saves `scores/0i-test*.json`, page `notation/ir/0i-test-b.ir.json`)* — (a) the septet save
   carries, from the first object: instrument-keyed tracks · a technique key on every
   sounding object · the flute's instrument-in-hand as track data · stable ids · **one
   fixed layer convention** for META shapes vs notes (written into `NAMING.md` here) · the
@@ -180,6 +185,11 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 ## 2. Notate — `deferred` until the first real page exists
 
 - **2a — Engine adaptation** — the 0g list. Start with the page the opening needs.
+  **First lines, from 0i (RUNNING_LOG §13):** technique → notation class as registry data
+  (`classes.json` + `classify.js` rules — every septet key throws today, by design) ·
+  `classify.js` META layer = `tracks.length`, not the literal 10, and `notate_section`'s
+  default parts from the score (until then `--parts 0-6`) · part labels from
+  `tracks[].short` · the seven-lane container.
 - **2b — Presentation score** — print PDF (A3 landscape, format entry + cover + performance
   notes page as in #4) + video (`export_video.js`, Reaper render at fixed BPM, sync proof
   as #4's PHASE 5). **Deadline-bound: 2026-10-15.**
