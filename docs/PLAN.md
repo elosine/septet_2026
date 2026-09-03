@@ -64,7 +64,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 - **0c — Instrument recipes (`sandbox/instruments.js`)** — `todo` — one entry per track:
   techniques with `{channel, port?, cc0?, ks?, range}`, per-library mechanism.
   *Why:* the recipes ARE how the AI and the app produce the right MIDI for each sound.
-  - **0c.1 — Flute track (D6 doubling model):** SI2 flute in C (channel-per-technique) is
+  - **0c.1 — Flute track (D6 doubling model):** SI2 flute in C (one UVI part per PRESET: 19 presets, 30 technique keys, nine of the presets
+    keyswitched — RUNNING_LOG §20) is
     the track's instrument now. **Piccolo vs bass flute: composer undecided** ("we'll just
     make those adjustments if the time comes") — the switch technique and its library are
     added when chosen; the track model already allows it.
@@ -92,8 +93,9 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
     `sonifyMode 'plain'` / `'ks'` and the next curve channel, round-robin per instrument, for
     curve mode; the prelude on a curve channel writes CC0 + the start value of every
     controller the event uses (CC7; CC1; CC4 + channel pressure); the stop-sweep already
-    visits every channel in the map. Flute: decide curve copies of `ord` (and which others)
-    in the four free Fluteb slots vs the tuba law, once the UVI order is transcribed. Fix the
+    visits every channel in the map; the keyswitch comes from the technique (`tech.ks`) when the
+    object carries no `ksNote` (the flute's KS presets). Flute: decide curve copies of `ord`
+    (and which others) in the thirteen free Fluteb slots vs the tuba law. Fix the
     `oneShot` comment (NITS: the sampler does not revert; the notation rule did).
 
 - **0d — Xsample dynamics nailed: CC7 and CC state** — `todo` *(repurposed 2026-09-03:
@@ -135,8 +137,9 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   eight ports as inputs; hardware inputs disabled; auto-enable off; auto-save prefs
   `done 2026-09-03` (Reaper 7.72; the eight inputs enabled per `reaper.ini`'s masks, the
   UMC1820 input off; the auto-enable option not verifiable from the ini) ·
-  R3 Flute SI2 (UVI, 16 parts A1–A16 in the composer's order — transcribed into
-  `sandbox/instruments.js`, the ground truth for 0c) `todo` · R4 Fluteb SI2 (the other 12)
+  R3 Flute SI2 (UVI, the first 16 PRESETS as parts A1–A16 in the browser's order — the
+  roster is in `sandbox/instruments.js`, RUNNING_LOG §20; keyswitch notes verified on the red
+  keys) `todo` · R4 Fluteb SI2 (the last three presets: Staccato, Trills KS, Whistle Tones; 13 slots free)
   `todo` · R5 Bass Clarinet XS (Kontakt 8, four slots ch 1–4; #3's configured track can be
   imported) `todo` · R6 Piano 8Dio (Kontakt, ch 1) `todo` · R7 Piano PP2 (UVI, harmonics A3,
   muted A5) `todo` · R8–R11 Vn1 / Vn2 / Va / Vc XS (Kontakt 8, four slots each) `todo` · R12

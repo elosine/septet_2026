@@ -778,3 +778,43 @@ connected today) disabled. The tuba-era inputs stay enabled from #4's days; harm
 "auto-enable new devices" option leaves no key I can find in the ini — not verified; the
 hardware input being off is what matters until the keyboard is plugged in. The project file
 is committed now, as #3's D6 and PLAN 0e intend.
+
+## §20. R3 correction — the flute roster is 19 PRESETS, not 28 techniques; the channel table re-ordered
+
+**Prompted by** the composer's screenshot of the UVI browser at R3 (*"these are what are
+available, can you re-order the channel table"*): 19 Flute presets — `Aeolian KS · Chromatic
+Scale · Cresc & Decrescendo KS · Durations KS · FX KS · Finger Modes KS · Flatterzunge ·
+Fortepiano · Multiphonics Menu · Ord & Aeolian KS · Ord & Flatterzunge KS · Ordinario ·
+Pizzicato · Play & Sing KS · Quartertones Ordinario · Sforzando · Staccato · Trills KS ·
+Whistle Tones`. The 0b skeleton had listed the MANUAL's 28 techniques as 28 UVI parts — the
+same mistake the tuba piece corrected on its day 1: SI2 ships single-technique patches plus
+"KS" patches that hold two or three techniques switched by a keyswitch note.
+
+**Read from the manual** (#3's `docs/manuals/extracted/IRCAM_Solo_Instruments_2_manual.txt`,
+pp. 10–12 "Layers & Keyswitches – Flute"): Aeolian KS = Aeolian & Ordinario C1 · Aeolian C#1 ·
+Cresc & Decrescendo KS = Crescendo C1 · Cresc→Decresc C#1 · Decrescendo D1 · Durations KS =
+0.5 s C2 · 1 s C#2 · FX KS = Jet Whistle C1 · Key Click C#1 · Tongue Ram D1 · Finger Modes
+KS = Harmonic C1 · Discolored C#1 · Ord & Aeolian KS = Ord→Aeolian C1 · Aeolian→Ord C#1 ·
+Ord & Flatterzunge KS = Ord→Flz C1 · Flz→Ord C#1 (the TRANSITIONS, not plain ord + flz) ·
+Play & Sing KS = sung C4 at C1 · Unison C#1 · Trills KS = minor 2nd C1 · major 2nd C#1.
+**Octave calibration, not assumed:** the manual writes the same C1/C#1/D1 for every
+instrument's Cresc & Decrescendo KS, and the tuba piece MEASURED that preset's switches at
+MIDI 24/25/26 (UVI display C0/C#0/D0) — so the manual's names are scientific (C4 = 60), manual
+C1 = MIDI 24, and UVI's display sits one octave lower (#3's octave ledger). The one preset
+the manual puts elsewhere is Durations KS (C2/C#2 = 36/37); all keyswitches are verified on
+UVI's red keys at R3 before 0c trusts them.
+
+**The new roster** (`sandbox/instruments.js`, flute block): one UVI part per preset in the
+browser's alphabetical order — A1 Aeolian KS · A2 Chromatic Scale · A3 Cresc & Decrescendo
+KS · A4 Durations KS · A5 FX KS · A6 Finger Modes KS · A7 Flatterzunge · A8 Fortepiano · A9
+Multiphonics Menu · A10 Ord & Aeolian KS · A11 Ord & Flatterzunge KS · A12 Ordinario · A13
+Pizzicato · A14 Play & Sing KS · A15 Quartertones Ordinario · A16 Sforzando on `Flute`;
+Staccato · Trills KS · Whistle Tones as A1–A3 on `Fluteb` (13 slots free for 0c.7's curve
+copies). **30 technique keys** over the 19 parts: a key names what the player does
+(`ord_to_flz`, `key_click`, `dur_1s` …), `preset` names the UVI patch, and a KS mode carries
+`ks` = its switch note, latched by the prelude (`tech.ks` — wired at 0c.7; today the app
+latches only an object's own `ksNote`, the tuba path; the number is inert until then). Gone
+from the skeleton: `whistle_sweep` and `note_durations` (not presets); new: `fortepiano`,
+`multiphonics` (one multiphonic per key, C3–F5 = MIDI 48–77 per the manual's table), the two
+duration modes. Alphabetical order chosen so the composer loads by walking down the list;
+Staccato landing on the second instance costs nothing — a port name in a recipe.
