@@ -1050,3 +1050,30 @@ over as one recipe: Kontakt 8, the elastic Xsample string instrument four times 
 gains at unity, inputs Vn1 / Vn2 / Va / Vc all channels, arm, monitor. Asked for the violin's
 preset menu and each instrument's standard-preset range to build the rosters as the bass
 clarinet's was built.
+
+## §29. R8–R11 — the string rosters built from the composer's Kontakt menus; a CC#0 correction
+
+**Prompted by** the composer's screenshots at the string tracks: the cello's whole Preset Menu
+(1–88, four clips), the violin's menu through #27 (*"let me know if the one menu differs and I
+can clip rest"* — it does not, except the string names in #31–38 and #73–76: cello / viola
+C G D A, violin G D A E, by the library's pattern), the GUI ranges of a standard preset on
+each instrument — **cello `C1–B4` = 36–83, violin `G2–F6` = 55–101, viola `C2–A5` = 48–93**
+(Kontakt display, C3 = 60) — and *"extra blue key at top"*: the Preset / Phrase Mode switch
+(the AIL manual: A#7, or CC#0 126/127), above anything the app sends.
+
+**Written into `sandbox/instruments.js`:** one generator `xsStringTechs(strings, lo, hi)`,
+instantiated per instrument — **88 techniques each, cc0 = preset − 1**, `mw: true` on the 33
+wheel-shaped presets, position-based keys for the per-string presets (`nh_sul1..4`,
+`pizz_h_sul1..4`) so the four instruments share every key, the D11 channel map
+`{ main: 1, curve: [2, 3, 4] }` on each. Per-preset range exceptions come as the composer
+sends them (his rule: only where the range changes).
+
+**The correction, worth a line in the D-log's shadow:** the 0b skeleton carried piece #1's
+registry values — arco 89, pizz 95, Bartók 97. The Xsample manual's CC#0 table (§15's read)
+says 88–117 select the KEYSWITCH BANKS' stored presets 1–30, i.e. those numbers meant
+"whatever the quartet had stored in slot 2 / 8 / 10 of its own Kontakt" — not portable. The
+direct presets are Senza Vibrato Velocity #6 (cc0 5), Pizzicato Velocity #70 (cc0 69), Bartók
+Pizzicato #80 (cc0 79); the skeleton's 71 / 2 / 70 / 6 / 80 were direct and right (Pizzicato
+Open Strings #72, Vibrato MW #3, Pizzicato Vibrato #71, Arco Open Strings #7, Behind Bridge
+#81). Piece #1's `cc_mapping_registry.json` is therefore only half-portable; noted for any
+future reuse of it.

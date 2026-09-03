@@ -179,32 +179,121 @@ const INSTRUMENTS = {
     ],
   },
 
-  // ---- STRINGS — Xsample Contemporary Solo Strings (Kontakt), CC#0 articulation select ----
-  // Values from piece #1 docs/cc_mapping_registry.json (the quartet's proven set): persistent
-  // modes (arco senza vib 89, pizz 95) and one-shots that revert to the base mode after one
-  // note (pizz open 71, Bartók 97, molto vib arco 2 / pizz 70, open string arco 6, behind the
-  // bridge pizz 80). Gliss keyswitches (B0 mode, G#1 down, A1 up) and CC68/24 legato come in
-  // at 0c. Ranges: SI2 manual's sounding ranges as placeholders (vn G3–G7, va C3–C6, vc C2–C6)
-  // — Xsample's own ranges are read off the GUI at 0e. Channel banks return only if PLAN 0d
-  // finds CC7 state must be isolated (the quartet's three-bank workaround).
-  violin1: { label: "Violin 1", port: "Vn1", rangeLow: 55, rangeHigh: 103, mechanism: "cc0", techniques: xsStringTechs() },
-  violin2: { label: "Violin 2", port: "Vn2", rangeLow: 55, rangeHigh: 103, mechanism: "cc0", techniques: xsStringTechs() },
-  viola:   { label: "Viola",    port: "Va",  rangeLow: 48, rangeHigh: 84,  mechanism: "cc0", techniques: xsStringTechs() },
-  cello:   { label: "Cello",    port: "Vc",  rangeLow: 36, rangeHigh: 84,  mechanism: "cc0", techniques: xsStringTechs() },
+  // ---- STRINGS — Xsample Contemporary Solo Strings (Kontakt), CC#0 selects the preset ----
+  // Re-rostered 2026-09-03 at R8–R11 from the composer's Kontakt screenshots (RUNNING_LOG §29): the
+  // FULL Preset Menu, 88 presets, identical across violin / viola / cello except the string names in
+  // #31–38 and #73–76 (cello and viola C G D A; violin G D A E — the violin's own menu confirmed
+  // through #27, the rest by the library's pattern). CC#0 = preset − 1, DIRECT presets only.
+  // CORRECTION to the 0b skeleton: piece #1's registry values 89 / 95 / 97 were KEYSWITCH-BANK
+  // presets (CC#0 88–117 = the banks' stored slots, per the Xsample manual), i.e. whatever the
+  // quartet had stored in its own Kontakt — not portable. Senza vibrato = #6 (cc0 5), pizzicato =
+  // #70 (cc0 69), Bartók = #80 (cc0 79). `mw: true` = the wheel (CC1) shapes the dynamic (curve-
+  // channel material under D11); Velocity presets are main-channel material. Ranges from the GUI
+  // low/high fields on the standard preset (Kontakt display C3 = 60): violin G2–F6 = 55–101, viola
+  // C2–A5 = 48–93, cello C1–B4 = 36–83; per-preset exceptions are registered as the composer sends
+  // them. Keyswitch zone = the bass clarinet's (green 21–23 function keys, red 24–33 bank slots,
+  // all reachable by CC#0 — never sent as notes); the blue key at the very top is the Preset /
+  // Phrase Mode switch (manual: A#7, or CC#0 126/127). Channels per D11: 1 main · 2–4 curve A/B/C.
+  violin1: { label: "Violin 1", port: "Vn1", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101) },
+  violin2: { label: "Violin 2", port: "Vn2", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101) },
+  viola:   { label: "Viola",    port: "Va",  rangeLow: 48, rangeHigh: 93,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 48, 93) },
+  cello:   { label: "Cello",    port: "Vc",  rangeLow: 36, rangeHigh: 83,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 36, 83) },
 };
 
-// One roster for the four Xsample strings (fresh arrays per instrument so per-instrument
-// edits at 0c never bleed across). Hoisted function declaration, so the table above may use it.
-function xsStringTechs() {
+// The one Xsample string roster, instantiated per instrument (fresh arrays, so per-instrument
+// range exceptions at 0c never bleed across). `s` = the four open strings low→high; lo/hi = the
+// instrument's standard zone. Hoisted function declaration, so the table above may use it.
+function xsStringTechs(s, lo, hi) {
+  const P = (n, key, label, mw) => ({ key, label: label + " (#" + n + ")", channel: 1, cc0: n - 1, rangeLow: lo, rangeHigh: hi, ...(mw ? { mw: true } : {}) });
   return [
-    { key: "arco",           label: "Arco senza vib. (CC0 89)",         channel: 1, cc0: 89 },
-    { key: "pizz",           label: "Pizzicato (CC0 95)",               channel: 1, cc0: 95 },
-    { key: "pizz_open",      label: "Pizz. open string (CC0 71)",       channel: 1, cc0: 71, oneShot: true },
-    { key: "bartok",         label: "Bartok pizz. (CC0 97)",            channel: 1, cc0: 97, oneShot: true },
-    { key: "molto_vib_arco", label: "Molto vibrato, arco (CC0 2)",      channel: 1, cc0: 2,  oneShot: true },
-    { key: "molto_vib_pizz", label: "Molto vibrato, pizz (CC0 70)",     channel: 1, cc0: 70, oneShot: true },
-    { key: "open_arco",      label: "Open string, arco (CC0 6)",        channel: 1, cc0: 6,  oneShot: true },
-    { key: "bb_pizz",        label: "Behind the bridge pizz (CC0 80)",  channel: 1, cc0: 80, oneShot: true },
+    P(1, "vib_vel_mwinv", "Vibrato Velocity + MW inverted", true),
+    P(2, "vib_vel", "Vibrato Velocity"),
+    P(3, "vib_mw", "Vibrato MW", true),
+    P(4, "accent_vib_vel", "Accent Vibrato Velocity"),
+    P(5, "senza_vel_mwinv", "Senza Vibrato Velocity + MW inverted", true),
+    P(6, "senza_vel", "Senza Vibrato Velocity"),
+    P(7, "arco_open_vel", "Arco Open Strings Velocity"),
+    P(8, "senza_mw", "Senza Vibrato MW", true),
+    P(9, "arco_open_mw", "Arco Open Strings MW", true),
+    P(10, "accent_senza_vel", "Accent Senza Vibrato Velocity"),
+    P(11, "light_accent_hi_vel", "Light Accent Velocity - high position"),
+    P(12, "marcato_sfz_vel", "Marcato sfz Velocity"),
+    P(13, "marcato_stac_vel", "Marcato Staccato Velocity"),
+    P(14, "marcato_stac_open_vel", "Marcato Staccato Open Strings Velocity"),
+    P(15, "marcato_spicc_vel", "Marcato + Spiccato Velocity"),
+    P(16, "spicc_vel", "Spiccato Velocity"),
+    P(17, "spicc_open_vel", "Spiccato Open Strings Velocity"),
+    P(18, "spicc_vel_soft_x_bright_mw", "Spiccato Velocity - Soft X Bright MW", true),
+    P(19, "stac_vel", "Staccato Velocity"),
+    P(20, "stac_open_vel", "Staccato Open Strings Velocity"),
+    P(21, "gettato_vel", "Gettato Velocity"),
+    P(22, "trem_vel_mwinv", "Tremolo Velocity + MW inverted", true),
+    P(23, "trem_vel", "Tremolo Velocity"),
+    P(24, "trem_open_vel", "Tremolo Open Strings Velocity"),
+    P(25, "trem_mw", "Tremolo MW", true),
+    P(26, "trem_open_mw", "Tremolo Open Strings MW", true),
+    P(27, "nh_gliss_slow_vel", "Natural Harmonics Glissando Slow Velocity"),
+    P(28, "nh_gliss_slow_mw", "Natural Harmonics Glissando Slow MW", true),
+    P(29, "nh_gliss_fast_vel", "Natural Harmonics Glissando Fast Velocity"),
+    P(30, "nh_gliss_fast_mw", "Natural Harmonics Glissando Fast MW", true),
+    P(31, "nh_sul1_vel", "Natural Harmonics Sul " + s[0] + " Velocity"),
+    P(32, "nh_sul1_mw", "Natural Harmonics Sul " + s[0] + " MW", true),
+    P(33, "nh_sul2_vel", "Natural Harmonics Sul " + s[1] + " Velocity"),
+    P(34, "nh_sul2_mw", "Natural Harmonics Sul " + s[1] + " MW", true),
+    P(35, "nh_sul3_vel", "Natural Harmonics Sul " + s[2] + " Velocity"),
+    P(36, "nh_sul3_mw", "Natural Harmonics Sul " + s[2] + " MW", true),
+    P(37, "nh_sul4_vel", "Natural Harmonics Sul " + s[3] + " Velocity"),
+    P(38, "nh_sul4_mw", "Natural Harmonics Sul " + s[3] + " MW", true),
+    P(39, "ah_vel", "Artificial Harmonics Velocity"),
+    P(40, "ah_mw", "Artificial Harmonics MW", true),
+    P(41, "ah_spicc_vel", "Artificial Harmonics Spiccato Velocity"),
+    P(42, "ah_trem_mw", "Artificial Harmonics Tremolo MW", true),
+    P(43, "flaut_vel", "Flautando Fragile Velocity"),
+    P(44, "flaut_mw", "Flautando Fragile MW", true),
+    P(45, "flaut_x_sp_mw_vel", "Flautando Fragile X Sul Ponticello MW - Velocity", true),
+    P(46, "sp_vel", "Sul Ponticello Velocity"),
+    P(47, "sp_mw", "Sul Ponticello MW", true),
+    P(48, "sp_spicc_vel", "Sul Ponticello Spiccato Velocity"),
+    P(49, "sp_trem_vel", "Sul Ponticello Tremolo Velocity"),
+    P(50, "sp_trem_mw", "Sul Ponticello Tremolo MW", true),
+    P(51, "sp_trem_x_sp_mw_vel", "Sul Ponticello Tremolo X Sul Ponticello MW - Velocity", true),
+    P(52, "circ_bow_vel", "Circular Bowing Velocity"),
+    P(53, "circ_bow_mw", "Circular Bowing MW", true),
+    P(54, "bow_op_vel", "Bow Overpressure Velocity"),
+    P(55, "bow_op_mw", "Bow Overpressure MW", true),
+    P(56, "bow_op_x_marcato_sfz_mw_vel", "Bow Overpressure X Marcato sfz MW - Velocity", true),
+    P(57, "bow_op_stac_vel", "Bow Overpressure Staccato Velocity"),
+    P(58, "tailpiece_vel", "Tailpiece Bowed Velocity"),
+    P(59, "tailpiece_mw", "Tailpiece Bowed MW", true),
+    P(60, "sord_vib_vel_mwinv", "Sordino Vibrato Velocity + MW inverted", true),
+    P(61, "sord_vib_vel", "Sordino Vibrato Velocity"),
+    P(62, "sord_vib_mw", "Sordino Vibrato MW", true),
+    P(63, "sord_senza_vel_mwinv", "Sordino Senza Vibrato Velocity + MW inverted", true),
+    P(64, "sord_senza_vel", "Sordino Senza Vibrato Velocity"),
+    P(65, "sord_open_vel", "Sordino Open Strings Velocity"),
+    P(66, "sord_senza_mw", "Sordino Senza Vibrato MW", true),
+    P(67, "sord_open_mw", "Sordino Open Strings MW", true),
+    P(68, "sord_spicc_vel", "Sordino Spiccato Velocity"),
+    P(69, "sord_spicc_open_vel", "Sordino Spiccato Open Strings Velocity"),
+    P(70, "pizz_vel", "Pizzicato Velocity"),
+    P(71, "pizz_vib_vel", "Pizzicato Vibrato Velocity"),
+    P(72, "pizz_open_vel", "Pizzicato Open Strings Velocity"),
+    P(73, "pizz_h_sul1_vel", "Pizzicato Harmonics Sul " + s[0] + " Velocity"),
+    P(74, "pizz_h_sul2_vel", "Pizzicato Harmonics Sul " + s[1] + " Velocity"),
+    P(75, "pizz_h_sul3_vel", "Pizzicato Harmonics Sul " + s[2] + " Velocity"),
+    P(76, "pizz_h_sul4_vel", "Pizzicato Harmonics Sul " + s[3] + " Velocity"),
+    P(77, "pizz_sp_vel", "Pizzicato Sul Ponticello Velocity"),
+    P(78, "pizz_sp_open_vel", "Pizzicato Sul Ponticello Open Strings Velocity"),
+    P(79, "pizz_x_sp_mw_vel", "Pizzicato X Sul Ponticello MW - Velocity", true),
+    P(80, "bartok_vel", "Bartok Pizzicato Velocity"),
+    P(81, "pizz_behind_bridge_vel", "Pizzicato Behind Bridge Velocity"),
+    P(82, "pizz_peg_box_vel", "Pizzicato In Peg Box Velocity"),
+    P(83, "col_legno_vel", "Col Legno Velocity"),
+    P(84, "col_legno_gett_vel", "Col Legno Gettato Velocity"),
+    P(85, "finger_vel", "Finger Velocity"),
+    P(86, "body_vel", "Body Strokes Velocity"),
+    P(87, "undef_vel", "Undefined Sounds Velocity"),
+    P(88, "undef_mw", "Undefined Sounds MW", true),
   ];
 }
 
