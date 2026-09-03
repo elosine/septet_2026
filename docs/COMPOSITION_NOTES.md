@@ -110,3 +110,25 @@ names a library to confirm.
   `air_noises`) — the variants can differ in colour while the line stays one.
 - **A signal for CN-2, not a decision:** this idea names the piccolo. If it stands, the flute
   doubling is piccolo and the piccolo library is the one to confirm (SI2 has none).
+
+---
+
+## CN-5 · 2026-09-03 — scattered strikes
+
+> *"Scattered strikes. Not quite unison strikes. Each player slightly offset."*
+
+**AI reading (not the composer's words):**
+
+- **An ensemble attack that is not one attack:** seven players hitting the same moment with
+  small, deliberate offsets — a smear of onsets tens of milliseconds wide rather than a chord.
+  The tuba piece's density machinery already thinks in onset scatter (the cloud and blast
+  placement, `assignBlast` with its occupancy tiers); here the scatter IS the gesture.
+- **It is CN-1's opening attack, re-read:** "initial ensemble attack" could be exactly this
+  — the unison that isn't. And it pairs with CN-3: the same players who will later converge
+  in tempo start by not quite coinciding.
+- **Notation:** the animated score can show the offsets literally (seven go-lines a hair
+  apart); the print score needs a device for "not together" — an arrow-spread, a bracketed
+  smear, or seven independent grace-note distances. A 2a question when the first such
+  strike exists.
+- **Playable now:** a blast with per-lane start offsets is a one-parameter extension of the
+  blast panel (a scatter width, random or shaped).

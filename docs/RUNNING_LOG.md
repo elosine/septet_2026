@@ -1087,3 +1087,8 @@ future reuse of it.
 - **R8–R11 done** on the composer's *"done"* (file read deferred to R13 by his rule). Nine
   instrument tracks now exist in score order; R12 (REC) and R13 (save, the file read, the Web
   MIDI list on Chrome) remain.
+- **Composer, R12/R13 in one breath:** *"all saved, composer score running in browser"* · a
+  question — *"from the composer score, can I also have the other pianos in the midi play
+  menu — plucked, muted, harmonics"* (the piano lane's technique list already carries the
+  four; verified in the running app, below) · **CN-5** (scattered strikes) to the sketch pad ·
+  **PLAN 1a** (a more fluid way to draw curves) as a todo.

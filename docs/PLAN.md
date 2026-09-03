@@ -229,6 +229,12 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 
 ## 1. Compose — `todo` (starts the moment 0h passes; tools built per need, the #3/#4 MO)
 
+- **1a — A more fluid way to draw curves in the score** — `todo` *(composer, 2026-09-03: "todo:
+  figure out a more fluid way to draw curves in the score")* — freehand or pen-style entry that
+  becomes a node curve, instead of node-by-node placement. *Why:* the curve is the piece's
+  primary continuous notation (D9; NOTATION_ARCHITECTURE amendment 1) and CN-1, CN-3, CN-5 all
+  live in curves; drawing speed is composing speed.
+
 - Sketch pad: `docs/COMPOSITION_NOTES.md` — the opening is already there (ensemble attack →
   curve-based tremolos with fp entries → tremolo fugue → density-build sound mass).
 - Tuba engines to pull per need: `compiler.js` swell clouds and grain envelopes (present
