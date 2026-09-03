@@ -963,3 +963,5 @@ four slots must sit on its own channel (1–4); Omni would sound all four on eve
 - **#15 Senza Vibrato + Flutter Tongue Velocity × MW:** `A#0–C4` = 34–60 — capped like the two
   flutter presets (the flutter layer sets the ceiling). Only #34 Flutter LOCK remains unread;
   its name says it will be 34–60 too — the composer sends it only if not.
+- **#21 Glissando Undefined MW:** `A#0–F#1` = 34–42, the wheel-shaped sibling of #7 (#3's
+  table listed them together). Added to the roster (cc0 20).

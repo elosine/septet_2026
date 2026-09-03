@@ -124,6 +124,7 @@ const INSTRUMENTS = {
       { key: "flutter_mw",  label: "Flutter Tongue MW (#5)",        channel: 1, cc0: 4, rangeLow: 34, rangeHigh: 60 },   // GUI high C4 — the flutters stop a fourth short (screenshot, R5)
       { key: "slap",        label: "Slap Tongue (#6)",              channel: 1, cc0: 5, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d, GUI-read 2026-08-08
       { key: "gliss_undef", label: "Glissando Undefined (#7)",      channel: 1, cc0: 6, rangeLow: 34, rangeHigh: 42 },
+      { key: "gliss_undef_mw", label: "Glissando Undefined MW (#21)", channel: 1, cc0: 20, rangeLow: 34, rangeHigh: 42 },   // GUI A#0–F#1 (screenshot, R5): the wheel-shaped sibling of #7
       { key: "key_noises",  label: "Key Noises (#9)",               channel: 1, cc0: 8, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d
       { key: "mp_short",    label: "Multiphonics short (#10)",      channel: 1, cc0: 9,  rangeLow: 34, rangeHigh: 46 },
       { key: "air_noises",  label: "Air Noises (#11)",              channel: 1, cc0: 10, rangeLow: 34, rangeHigh: 65 },   // GUI A#0–F4 (screenshot, R5) + #3 map
