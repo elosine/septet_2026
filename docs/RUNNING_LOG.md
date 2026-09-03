@@ -1149,3 +1149,22 @@ eleven notes 2 s apart, one per PORT and per piano technique — Flute `ord` (Fl
 `harmonics` / `muted` (ch 1 / 2 / 3 / 5) · vn1 · vn2 · va · vc `senza_vel` (#6) — every route
 checked against the rosters before saving (all resolve, with their CC0). Play walks the rack
 in score order; a silent slot names its own port and channel.
+
+## §32. The three silent strings, found by following the chain one step at a time
+
+Composer, after the guessing got thick: *"let's be more systematic … Let's follow the chain
+together and figure out where it's breaking down one step at a time. Only talk right now."*
+The chain, six steps (app → Chrome → loopMIDI port → Reaper track → Kontakt instance → a
+slot listening on the channel → the instrument). Known: Vn1 works end to end; Vn2, Va, Vc
+silent even from the direct port probe, with the track meter flashing (MIDI reaches the
+track); Kontakt's own keyboard sounds them (instrument and audio fine). The decisive test was
+the composer's: **he switched Vn2's track input to the Vn1 port** — the same note on the same
+port and channel sounded Vn1 and left Vn2 silent → the fault is inside Vn2's Kontakt. He then
+said *"you would have had to send it on A2"* and sent the screenshot: **Contemporary Violin,
+`MIDI Ch: [A] 2`** — and the earlier viola/cello screenshots had read `[A] 3` and `[A] 4`.
+**Cause:** the quartet's habit (one port, a channel per instrument: vn1 = 1, vn2 = 2, va = 3,
+vc = 4) applied to a rack where each instrument has its own port and the channels are D11's
+banks (slot 1 on [A] 1, then 2–4). Vn1 was right by coincidence of its number. **Fix:** on
+Vn2, Va, Vc set the four slots to [A] 1–4; Vn2's input back to `Vn2`. Lesson for the ledger:
+per-instrument port ⇒ every instrument starts at channel 1; and the "switch the silent
+track's input to a working port" test isolates the plugin in one move.

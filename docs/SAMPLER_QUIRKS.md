@@ -49,3 +49,9 @@
   at F4 (65); glissandi at F#1 (42); multiphonics at A#1 (46); the composer's Flutter LOCK
   (#34) sits at G2–A5 (55–93). Strings: violin G2–F6 (55–101), viola C2–A5 (48–93), cello
   C1–B4 (36–83) on the standard presets; open-string presets narrow to the strings' zone.
+- **Silent track, meter flashing, the instrument plays from Kontakt's own keyboard** — the
+  slot's `MIDI Ch` is not the channel being sent. With one port per instrument (the septet),
+  every instrument's slot 1 sits on **[A] 1**; numbering instruments across channels (vn2 =
+  ch 2, va = 3 …) is the quartet's one-port habit and leaves channel 1 unheard. The one-move
+  test: switch the silent track's input to a port that works — if it stays silent, the fault
+  is inside that track's plugin. *(Vn2 / Va / Vc, first sound, 2026-09-03.)*
