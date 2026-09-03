@@ -872,3 +872,10 @@ composer to confirm on screen. Each further KS preset gets the same look as it l
 - **A10 Ord & Aeolian KS · A11 Ord & Flatterzunge KS:** both the same picture — red **C1**
   (36), C#1 not red (the second transition unconfirmed on screen), white **C3 → C6** (60–96),
   grey elsewhere, no tan.
+- **A12 Ordinario:** no red keys · white **C3 → C6** (60–96), B2 grey — the manual's "B3 with
+  special extension" is not in this patch · no tan.
+- **A13 Pizzicato:** no red keys · white **C3 → C5** native (60–84) · tan below C3 and above C5.
+- **A14 Play & Sing KS:** red **C1** (36), C#1 not red · tan **C#1 → B2** (37–59), extended
+  below · white from **C3** (60); the frame is cut around E4, so the top is provisional (96).
+- **A15 Quartertones Ordinario:** no red keys · white **C3 → C6** (60–96) · grey elsewhere, no
+  tan. Whether a key sounds the quarter-tone above or below its name is a 0c ear question.

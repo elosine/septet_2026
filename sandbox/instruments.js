@@ -71,14 +71,14 @@ const INSTRUMENTS = {
       { key: "ord_to_flz",      label: "Ordinario to Flatterzunge",  preset: "Flute Ord & Flatterzunge KS", channel: 11, ks: 36, rangeLow: 60, rangeHigh: 96 },   // A11 screenshot: as A10 — red C1, white C3→C6, grey elsewhere
       { key: "flz_to_ord",      label: "Flatterzunge to Ordinario",  preset: "Flute Ord & Flatterzunge KS", channel: 11, ks: 37, rangeLow: 60, rangeHigh: 96 },   // C#1 — verify
       // A12 · Flute Ordinario
-      { key: "ord",             label: "Ordinario",                  preset: "Flute Ordinario",             channel: 12 },
+      { key: "ord",             label: "Ordinario",                  preset: "Flute Ordinario",             channel: 12, rangeLow: 60, rangeHigh: 96 },   // A12 screenshot: no red keys; white C3→C6 (60–96); B2 grey (the manual's B3 extension is not in this patch); no tan
       // A13 · Flute Pizzicato
-      { key: "pizzicato",       label: "Pizzicato",                  preset: "Flute Pizzicato",             channel: 13 },
+      { key: "pizzicato",       label: "Pizzicato",                  preset: "Flute Pizzicato",             channel: 13, rangeLow: 60, rangeHigh: 84 },   // A13 screenshot: no red keys; white C3→C5 native (60–84); tan below C3 and above C5 (stretched)
       // A14 · Flute Play & Sing KS
-      { key: "play_sing",       label: "Play and Sing (sung C4)",    preset: "Flute Play & Sing KS",        channel: 14, ks: 36 },
-      { key: "play_sing_unison",label: "Play and Sing Unison",       preset: "Flute Play & Sing KS",        channel: 14, ks: 37 },
+      { key: "play_sing",       label: "Play and Sing (sung C4)",    preset: "Flute Play & Sing KS",        channel: 14, ks: 36, rangeLow: 60, rangeHigh: 96 },   // A14 screenshot: red C1; C#1 not red; tan C#1–B2 (37–59) below; white from C3 (60), right end cut in the frame (top provisional 96)
+      { key: "play_sing_unison",label: "Play and Sing Unison",       preset: "Flute Play & Sing KS",        channel: 14, ks: 37, rangeLow: 60, rangeHigh: 96 },   // C#1 — verify
       // A15 · Flute Quartertones Ordinario
-      { key: "ord_1q",          label: "Ordinario quarter-tone",     preset: "Flute Quartertones Ordinario", channel: 15 },
+      { key: "ord_1q",          label: "Ordinario quarter-tone",     preset: "Flute Quartertones Ordinario", channel: 15, rangeLow: 60, rangeHigh: 96 },   // A15 screenshot: no red keys; white C3→C6 (60–96), grey elsewhere, no tan. Which quarter-tone each key sounds (above? below?) — 0c, by ear
       // A16 · Flute Sforzando
       { key: "sforzando",       label: "Sforzando",                  preset: "Flute Sforzando",             channel: 16 },
       // ---- second instance "Fluteb" (A1–A3) ----
