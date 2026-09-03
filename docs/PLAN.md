@@ -96,6 +96,18 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
     visits every channel in the map; the keyswitch comes from the technique (`tech.ks`) when the
     object carries no `ksNote` (the flute's KS presets). Flute: decide curve copies of `ord`
     (and which others) in the thirteen free Fluteb slots vs the tuba law. Fix the
+  - **0c.8 — The multiphonics walk (flute A9)** — `todo` *(composer, 2026-09-03: "walk a9 … you
+    would play through the range while I record and then analyze the file; I want to make a
+    correspondence to the key and the approximate pitch content of the multiphonic")* — a
+    probe in the `sample_length_probe.ps1` mould plays the thirty keys C3–F5 (display; MIDI
+    60–89), each held ~2 s with a gap, on port `Flute` channel 9, while Reaper's REC track
+    records; an analyser (per-note spectral peaks → pitches ± cents, plus the sounding length
+    for 0c.6) writes `bank/flute_multiphonics.json` (key → pitch content) and
+    `docs/FLUTE_MULTIPHONICS_map.md`. **Seed first from the manual:** SI2's own table (#3
+    `docs/manuals/extracted/IRCAM_Solo_Instruments_2_manual.txt` lines 3032–3062) already lists
+    each key's pitches with quarter-tone marks and the dynamic (mf) — the walk verifies and
+    refines it by ear and spectrum. *Why:* a multiphonic is chosen by its sound, and the
+    notation (2a) needs the pitch content, not the trigger key.
     `oneShot` comment (NITS: the sampler does not revert; the notation rule did).
 
 - **0d — Xsample dynamics nailed: CC7 and CC state** — `todo` *(repurposed 2026-09-03:

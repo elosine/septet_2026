@@ -65,11 +65,11 @@ const INSTRUMENTS = {
       // A9 · Flute Multiphonics Menu (one multiphonic per key)
       { key: "multiphonics",    label: "Multiphonics Menu",          preset: "Flute Multiphonics Menu",     channel: 9,  rangeLow: 60, rangeHigh: 89 },   // A9 screenshot: no red keys; white C3→F5 DISPLAY = MIDI 60–89, one multiphonic per key (30, = the manual's table C3..F5 read as display names); tan below C3 and above F5
       // A10 · Flute Ord & Aeolian KS (the two transitions)
-      { key: "ord_to_aeolian",  label: "Ordinario to Aeolian",       preset: "Flute Ord & Aeolian KS",      channel: 10, ks: 36 },
-      { key: "aeolian_to_ord",  label: "Aeolian to Ordinario",       preset: "Flute Ord & Aeolian KS",      channel: 10, ks: 37 },
+      { key: "ord_to_aeolian",  label: "Ordinario to Aeolian",       preset: "Flute Ord & Aeolian KS",      channel: 10, ks: 36, rangeLow: 60, rangeHigh: 96 },   // A10 screenshot: red C1; C#1 not red; white C3→C6 (60–96); grey elsewhere, no tan
+      { key: "aeolian_to_ord",  label: "Aeolian to Ordinario",       preset: "Flute Ord & Aeolian KS",      channel: 10, ks: 37, rangeLow: 60, rangeHigh: 96 },   // C#1 — verify
       // A11 · Flute Ord & Flatterzunge KS (the two transitions)
-      { key: "ord_to_flz",      label: "Ordinario to Flatterzunge",  preset: "Flute Ord & Flatterzunge KS", channel: 11, ks: 36 },
-      { key: "flz_to_ord",      label: "Flatterzunge to Ordinario",  preset: "Flute Ord & Flatterzunge KS", channel: 11, ks: 37 },
+      { key: "ord_to_flz",      label: "Ordinario to Flatterzunge",  preset: "Flute Ord & Flatterzunge KS", channel: 11, ks: 36, rangeLow: 60, rangeHigh: 96 },   // A11 screenshot: as A10 — red C1, white C3→C6, grey elsewhere
+      { key: "flz_to_ord",      label: "Flatterzunge to Ordinario",  preset: "Flute Ord & Flatterzunge KS", channel: 11, ks: 37, rangeLow: 60, rangeHigh: 96 },   // C#1 — verify
       // A12 · Flute Ordinario
       { key: "ord",             label: "Ordinario",                  preset: "Flute Ordinario",             channel: 12 },
       // A13 · Flute Pizzicato

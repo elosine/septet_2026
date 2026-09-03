@@ -869,3 +869,6 @@ composer to confirm on screen. Each further KS preset gets the same look as it l
   Noted alongside: the SI2 manual carries a thirty-row table of exactly that correspondence
   (key → pitches with quarter-tone marks, at mf) — the walk seeds from it and verifies it by
   recording and spectrum, and the same recording yields the sounding lengths (0c.6).
+- **A10 Ord & Aeolian KS · A11 Ord & Flatterzunge KS:** both the same picture — red **C1**
+  (36), C#1 not red (the second transition unconfirmed on screen), white **C3 → C6** (60–96),
+  grey elsewhere, no tan.
