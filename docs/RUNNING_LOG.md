@@ -1013,3 +1013,8 @@ second instrument slot in the SAME Kontakt instance as the Steinway (slot MIDI c
 [A] 1 and [A] 2); the track is renamed `Piano Kontakt`; the Prepared Piano 2 (UVI) stays the
 second track, R7, on channels 3 / 4 / 5. Recipe: `plucked` (ch 2, 21–108); PLAN 0e amended.
 Gain check applies to both instrument slots (the composer's standing reminder).
+- **R6, slot 1 settled:** *"8dio replacing spitfire grand"* — `8DIO_1969_Legacy_Piano` on
+  MIDI Ch [A] 1, DEFAULT preset, the full 88 blue (21–108). The 8Dio panel carries its own
+  GAIN knob besides Kontakt's header volume — both count for the gain check, both left at
+  default. Its preset list (Staccato, Reversed, Glisten, Infinity, Ethereal, Glockiano,
+  Suppressiano, Emperor, Golden, The Future) is noted as candidate techniques for later.

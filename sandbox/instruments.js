@@ -172,7 +172,7 @@ const INSTRUMENTS = {
     rangeLow: 21,
     rangeHigh: 108,
     techniques: [
-      { key: "main",      label: "Steinway (8Dio)",                  channel: 1 },
+      { key: "main",      label: "8Dio 1969 Legacy Piano (Steinway 1969)", channel: 1, rangeLow: 21, rangeHigh: 108 },   // R6 screenshot: 8DIO_1969_Legacy_Piano, MIDI Ch [A] 1, DEFAULT preset, blue A-1 upward = the full 88; the 8Dio panel has its own GAIN knob — left at default for the gain check; its other presets (Staccato, Reversed, Glisten, Infinity, Ethereal, Glockiano, Suppressiano, Emperor, Golden, The Future) are candidate techniques, not loaded
       { key: "plucked",   label: "Plucked Piano (Spitfire)",          channel: 2, rangeLow: 21, rangeHigh: 108 },   // R6, 2026-09-03: Spitfire Plucked Piano in the same Kontakt instance as the Steinway, on the channel #2 reserved; Kontakt keyboard shows the whole range blue, keyswitches red around C#-1/D#-1 and "Reset on key F-1" — all below 21, never sent
       { key: "harmonics", label: "Harmonics (Prepared Piano 2)",     channel: 3, rangeLow: 21, rangeHigh: 77 },
       { key: "muted",     label: "Muted strings (Prepared Piano 2)", channel: 5 },
