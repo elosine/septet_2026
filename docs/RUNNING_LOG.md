@@ -1026,3 +1026,7 @@ monitoring ON · input mode · `VST3i: Kontakt 8`; the file is 2.8 MB with two K
 inside. The two slots (8Dio 1969 Legacy Piano on [A] 1, Spitfire Plucked Piano on [A] 2)
 sit in Kontakt's binary chunk — not readable from the file; the one-note test at 0h proves
 them. Four tracks in score order: Flute SI2 · Fluteb SI2 · Bass Clarinet XS · Piano Kontakt.
+- **R7, composer: *"maximizer and tilt fx bypass?"*** — yes, both. A maximizer is a limiter
+  and would flatten the very level relationships 0d measures; the tilt EQ colours the raw
+  sample. The rack stays dry and unprocessed; colour is added later in Reaper, measurably.
+  The per-track rule now says: reverb off, built-in dynamics / EQ bypassed, gains at unity.
