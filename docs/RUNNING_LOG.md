@@ -956,3 +956,10 @@ four slots must sit on its own channel (1–4); Omni would sound all four on eve
   crescendo, triple tongue 34–65; glissando 34–42 and the multiphonics 34–46 were already in.
   #2 Natural Vibrato MW added to the roster (cc0 1). Still unranged: #15 Senza+Flutter Vel×MW
   and #34 Flutter LOCK — the composer sends them only if they differ.
+- **Confirmed on screen, R5:** #7 Glissando Undefined MW Shape `low A#0 / high F#1` = 34–42,
+  #10 Multiphonics Velocity `A#0–A#1` = 34–46 — both exactly as #3's table had them; the
+  roster already carried these. (The multiphonics preset's `Legato Int.` reads 39, like Air
+  Noises — factory values, noted for 0c.)
+- **#15 Senza Vibrato + Flutter Tongue Velocity × MW:** `A#0–C4` = 34–60 — capped like the two
+  flutter presets (the flutter layer sets the ceiling). Only #34 Flutter LOCK remains unread;
+  its name says it will be 34–60 too — the composer sends it only if not.
