@@ -43,21 +43,21 @@ const INSTRUMENTS = {
       { key: "aeolian_and_ord", label: "Aeolian & Ordinario",        preset: "Flute Aeolian KS",            channel: 1,  ks: 36, rangeLow: 60, rangeHigh: 83 },   // native C3–B4 (UVI) = MIDI 60–83; tan extension 37–59 and 84+ (screenshot 2026-09-03)
       { key: "aeolian",         label: "Aeolian",                    preset: "Flute Aeolian KS",            channel: 1,  ks: 37, rangeLow: 60, rangeHigh: 83 },   // C#1 red? — composer to confirm (manual: second switch)
       // A2 · Flute Chromatic Scale
-      { key: "chrom_scale",     label: "Chromatic Scale",            preset: "Flute Chromatic Scale",       channel: 2 },
+      { key: "chrom_scale",     label: "Chromatic Scale",            preset: "Flute Chromatic Scale",       channel: 2,  rangeLow: 48, rangeHigh: 96 },   // A2 screenshot: white C2→ past C5 (right end cut; 96 = the instrument top, provisional); no red keys; purple at C3 + C4 — meaning not in the manual legend; no tan
       // A3 · Flute Cresc & Decrescendo KS
-      { key: "cresc",           label: "Crescendo",                  preset: "Flute Cresc & Decrescendo KS", channel: 3, ks: 36 },
-      { key: "cresc_decresc",   label: "Crescendo to Decrescendo",   preset: "Flute Cresc & Decrescendo KS", channel: 3, ks: 37 },
-      { key: "decresc",         label: "Decrescendo",                preset: "Flute Cresc & Decrescendo KS", channel: 3, ks: 38 },
+      { key: "cresc",           label: "Crescendo",                  preset: "Flute Cresc & Decrescendo KS", channel: 3, ks: 36, rangeLow: 60, rangeHigh: 96 },   // A3 screenshot: red C1 + C#1; white C3→C6 and beyond (cut ~D6); grey below C3, no tan
+      { key: "cresc_decresc",   label: "Crescendo to Decrescendo",   preset: "Flute Cresc & Decrescendo KS", channel: 3, ks: 37, rangeLow: 60, rangeHigh: 96 },
+      { key: "decresc",         label: "Decrescendo",                preset: "Flute Cresc & Decrescendo KS", channel: 3, ks: 38, rangeLow: 60, rangeHigh: 96 },   // D1 looked GREY in the A3 screenshot, not red — the manual's third switch; verify by pressing it
       // A4 · Flute Durations KS (fixed-length notes; manual: C2 / C#2)
-      { key: "dur_0_5s",        label: "Duration 0.5 s",             preset: "Flute Durations KS",          channel: 4,  ks: 48 },
-      { key: "dur_1s",          label: "Duration 1 s",               preset: "Flute Durations KS",          channel: 4,  ks: 49 },
+      { key: "dur_0_5s",        label: "Duration 0.5 s",             preset: "Flute Durations KS",          channel: 4,  ks: 48, rangeLow: 60, rangeHigh: 96 },   // A4 screenshot: red C2 (48) ✓ manual; C#2 looked black (second switch unconfirmed); white C3→C6+, grey below, no tan
+      { key: "dur_1s",          label: "Duration 1 s",               preset: "Flute Durations KS",          channel: 4,  ks: 49, rangeLow: 60, rangeHigh: 96 },   // C#2 — verify (not red on screen)
       // A5 · Flute FX KS
-      { key: "jet_whistle",     label: "Jet Whistle",                preset: "Flute FX KS",                 channel: 5,  ks: 36 },
-      { key: "key_click",       label: "Key Click",                  preset: "Flute FX KS",                 channel: 5,  ks: 37 },
-      { key: "tongue_ram",      label: "Tongue Ram",                 preset: "Flute FX KS",                 channel: 5,  ks: 38 },
+      { key: "jet_whistle",     label: "Jet Whistle",                preset: "Flute FX KS",                 channel: 5,  ks: 36, rangeLow: 48, rangeHigh: 83 },   // A5 screenshot: red C1 + C#1; tan D1–B1 (38–47) and C5+ (84+); white C2–B4 native; PURPLE C4
+      { key: "key_click",       label: "Key Click",                  preset: "Flute FX KS",                 channel: 5,  ks: 37, rangeLow: 48, rangeHigh: 83 },
+      { key: "tongue_ram",      label: "Tongue Ram",                 preset: "Flute FX KS",                 channel: 5,  ks: 38, rangeLow: 48, rangeHigh: 83 },   // D1 is TAN on screen, not red — the manual's third switch (tongue ram); verify by pressing
       // A6 · Flute Finger Modes KS
-      { key: "harmonic_fing",   label: "Harmonic Fingering",         preset: "Flute Finger Modes KS",       channel: 6,  ks: 36 },
-      { key: "discolored_fing", label: "Discolored Fingering",       preset: "Flute Finger Modes KS",       channel: 6,  ks: 37 },
+      { key: "harmonic_fing",   label: "Harmonic Fingering",         preset: "Flute Finger Modes KS",       channel: 6,  ks: 36, rangeLow: 79, rangeHigh: 96 },   // A6 screenshot: red C1; white only from ≈G4 (display) → C6+ = MIDI ≈79–96 (upper register); grey elsewhere, no tan
+      { key: "discolored_fing", label: "Discolored Fingering",       preset: "Flute Finger Modes KS",       channel: 6,  ks: 37, rangeLow: 79, rangeHigh: 96 },   // C#1 not red on screen — verify
       // A7 · Flute Flatterzunge
       { key: "flz",             label: "Flatterzunge",               preset: "Flute Flatterzunge",          channel: 7 },
       // A8 · Flute Fortepiano

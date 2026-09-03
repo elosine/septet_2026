@@ -830,3 +830,29 @@ and the flute's starts at C#1. Applied: every flute `ks` +12 (36/37/38; Duration
 Aeolian KS native range 60–83 recorded, the header comment corrected. Open: the manual lists a
 second switch (C#1 = Aeolian); the black key beside the red one looks plain black in the image —
 composer to confirm on screen. Each further KS preset gets the same look as it loads.
+
+## §22. R3 — the flute parts registered from the composer's UVI screenshots, one line each
+
+- **A2 Chromatic Scale:** no red keys (no keyswitch) · white from C2 (MIDI 48) rightward past
+  C5, the right end cut by the frame (top provisional 96) · no tan keys — the whole mapped range
+  is native · **two PURPLE keys, C3 and C4** (MIDI 60, 72), a colour the manual's legend does
+  not define; the tuba piece met one purple key (Filtered by Voice, G0) and flagged it "anomaly,
+  verify". Guess, not knowledge: the scale sample's octave anchors. Asked the composer.
+- **A3 Cresc & Decrescendo KS:** red **C1 and C#1** (36, 37) — the black key is red here, so a
+  black-key switch does render red (A1's C#1 therefore really is plain black) · D1 looks grey,
+  though the manual lists a third switch there (decrescendo) — recorded as 38 with a verify flag
+  · white **C3 → C6 and past it** (60–96, the flute's full range; frame cut near D6) · grey
+  D1–B2, no tan: no extended range on this preset.
+- **A4 Durations KS:** red **C2** (48) — the manual's C2, confirming the octave rule once more ·
+  C#2 looks black (the 1 s mode unconfirmed, as A1's second switch) · white C3 → C6+ (60–96) ·
+  grey below C3, no tan.
+- **A5 FX KS:** red **C1 + C#1** (36, 37) · D1 is TAN, not red — the manual's third switch
+  (tongue ram) does not show; same pattern as A3's D1 · tan D1–B1 (38–47) and from C5 up (84+):
+  extended both sides · white **C2–B4** native (48–83) · **purple C4** (72) again.
+  **Pattern so far:** UVI colours at most two red keys even where the manual lists three; and
+  purple keys appear on Chromatic Scale (C3, C4) and FX (C4). Both to be resolved by playing at
+  0c, not by staring at the screen.
+- **A6 Finger Modes KS:** red **C1** (36); C#1 not red · white only from about **G4 (display)
+  to C6 and past** — MIDI ≈79–96, the upper register, where harmonic and discoloured fingerings
+  exist · grey everywhere below, no tan. The low bound is read off the picture (±1 key); 0c
+  reads it from the GUI's range field.
