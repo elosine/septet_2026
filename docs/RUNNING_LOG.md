@@ -917,3 +917,35 @@ names the wrong ports; the composer's screenshot (`MIDI: Flute: All ch`, `MIDI: 
 c…`) is the identity check, the file proves arm / all-channels / monitoring / mode. **Lesson 2
 —** my first decode read the wrong columns because `grep -n` glues the line number to the
 leading spaces; the REC fields are arm · input · monitor · mode, counted after the word `REC`.
+
+## §24. R5 — the bass clarinet's keyswitch zone decoded against the manual
+
+**Prompted by** the composer at Kontakt, ten screenshots of `Bass Clarinet.nki` (Preset
+Designer, Preset Mode on/off, KS Bank 1–3, toggle and trill & slide modes) and *"can you help me
+figure out the key switches?"*, with his own readings: *"a-1 low velocity switches to key switch
+mode, high velocity tune base note mode, a#-1 high toggle switch mode(?), low back to key
+switch, b high trill and slide mode, c0 high in keyswitch mode pre16 flutter tongue velocity
+and the rest of the reds are different presets but we are using cc0 to switch those; toggle
+switch mode: c–eb 0 are more presets but when you select one it toggles off … the pink/purple
+keys starting at e0 make the 0s seen in the image … trill and slide mode c–d more presets, d#
+turns legato button on, e I'm not sure, f0 yellow?, f# toggles round robin off for a moment
+then goes back to repetition rnd, same with g# and a?"* — and *"looks like black keys are range
+in this one"* (Kontakt greys the unmapped keys; the normally coloured keys A#0–F4 on the
+display ARE the range, MIDI 34–65, matching the GUI's `low: A#0 / high: F4`).
+
+**Read in the AIL Extended Scripting manual (#3, pp. 3, 8, 22)** — every observation lands:
+the three green keys are velocity-split function keys (low = bank 1/2/3; high = tune-base /
+toggle / trill-and-slide modes); the ten red keys per bank are stored preset switches; in
+toggle mode the six magenta keys E0–A0 switch sound slots 1–6 and the `<0>`/`<1>` row is
+their state; in trill & slide mode D#0/E0 are half- and whole-tone trills (aftertouch = speed
+— the trill engages legato, hence the button lighting), F0 resets the slot round-robin counter,
+F#0/G0 slide down/up on release, G#0/A0 slide down/up in legato (they swap in the "slides"
+sounds, which is the round-robin display flicker); Preset Mode off is Phrase Mode, the yellow
+keys playing Phrase Designer phrases. Manual names are scientific and Kontakt shows an octave
+lower — the same trap as SI2's manual, the same fix. **Everything is also a CC#0 value**
+(88–117, 118–122, 126/127), so the recipes never send a switch note; the floor rule (never a
+note below 34) is confirmed as the whole safety story. Written into the bass clarinet header of
+`sandbox/instruments.js`; the trills and slides noted as 0c candidates (CN-4 will want them).
+
+**Caught in the screenshots:** the slot's header reads `MIDI Ch: Omni`. Under D11 each of the
+four slots must sit on its own channel (1–4); Omni would sound all four on every note.

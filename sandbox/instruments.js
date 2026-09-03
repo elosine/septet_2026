@@ -89,6 +89,27 @@ const INSTRUMENTS = {
     ],
   },
   // ---- BASS CLARINET — Xsample (Kontakt), CC#0 selects the preset (preset N => CC#0 N-1) ----
+  // THE KEYSWITCH ZONE, decoded 2026-09-03 at R5 from the composer's Kontakt screenshots + the AIL
+  // Extended Scripting manual (#3 docs/manuals/extracted/Xsample_AIL_Extended_Scripting.txt, pp. 3, 8, 22).
+  // Manual names are scientific (C4 = 60); Kontakt DISPLAYS one octave lower (C3 = 60). MIDI numbers:
+  //   21 22 23  (Kontakt A-1 A#-1 B-1, GREEN)  velocity-sensitive function keys — LOW velocity: select
+  //             Key Switch Bank 1 / 2 / 3; HIGH velocity: A-1 = Tune Base Note mode, A#-1 = Toggle
+  //             Switch mode, B-1 = Trill & Slide mode.
+  //   24–33     (Kontakt C0–A0, RED) 10 key switches per bank, 3 banks = 30 preset slots (Store KS).
+  //   Tune Base Note mode: keys 22–33 set the base note of the current tuning (pure tunings).
+  //   Toggle Switch mode (or CC#0 121): MAGENTA keys 28–33 (E0–A0) toggle sound slots 1–6 on/off
+  //             (the <1>/<0> row above the slots); 24–27 stay key switches.
+  //   Trill & Slide mode (or CC#0 122): 27 (D#0) half-tone trill · 28 (E0) whole-tone trill (aftertouch =
+  //             speed) · 29 (F0, yellow) slot round-robin counter reset · 30 slide down / 31 slide up
+  //             (release switch) · 32 slide down / 33 slide up (legato); 24–26 stay key switches.
+  //   Preset Mode off = Phrase Mode on (button, blue A#7, or CC#0 126/127): the yellow keys play the
+  //             Phrase Designer's phrases (monophonic).
+  // CC#0 covers all of it without a key: 0–87 presets 1–88 · 88–117 keyswitch-bank presets 1–30 ·
+  //   118/119/120 bank 1/2/3 · 121 toggle mode · 122 slide & trill mode · 126/127 preset/phrase mode;
+  //   round robin by CC#82 (0–20 on repetition · 21–41 off · 42–62 random · 63–83 always).
+  // THE FLOOR RULE follows: playable A#0–F4 on the display = MIDI 34–65; nothing below 34 is ever sent
+  //   as a note (21–33 are switches and function keys). Candidate techniques for 0c: the two trills and
+  //   the four slides — CC#0 122 + the function key, then CC#0 118 to leave the mode.
   // Copied from piece #3 sandbox/instruments.js `bass_clarinet_xs` (its 13 starter presets);
   // the deep map is #3/docs/XSAMPLE_BASSCL_map.md. Floor rule: never send below MIDI 34.
   bass_clarinet: {
