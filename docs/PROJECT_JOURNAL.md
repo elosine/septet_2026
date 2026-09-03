@@ -93,21 +93,35 @@ is for its journaling practice only · flute: piccolo vs bass flute undecided, s
 adjust when chosen. **The IR contract stated as D9** — S1 (the composer save) is the ground
 truth, the IR is derived from it and is the single source for every downstream score.
 
-**Next up:** PLAN **0b — composer module port** (Opus, from the written plan, after a
-clear) — **awaits the composer's "go"** — then **0i** (prove the septet save extracts to
-IR), **0e** at Reaper, **0c** recipes, **0d** Xsample dynamics/CC7 nailed, **0h** gate.
+*Same session, act three — **PLAN 0b DONE** (composer: "go on 0b"):* the composer score
+app and sandbox ported, re-paletted to seven instrument-keyed tracks, and **verified in the
+running app** (36/36 routes, save/version/load round trip, zero console errors, four
+panels, UI save on disk — RUNNING_LOG §9). Two defects found only by running (the literal
+eleven-lane table; the server dying on a missing-file stream), both fixed. Range-aware
+lane assignment added (`laneCanPlay`). `sandbox/instruments.js` is the seven-instrument
+skeleton, every channel/range provisional until 0e/0c. Apps: `node score/server.js` →
+http://localhost:5300/composer.html · `node sandbox/serve.js` → http://localhost:4800.
+
+**Next up:** **0g** (copy the notation/IR infrastructure) then **0i** (prove a septet save
+extracts to IR) on Opus; **0e** loopMIDI + Reaper rack with the composer; **0c** recipes;
+**0d** CC7 nailed; **0h** gate → compose.
 
 **NEXT STEPS · MODEL · CLEAR:**
-1. ► Composer says "go" on 0b (or amends `PLAN.md` §0). **Then this is the clear point.**
-2. `/checkpoint` · `/clear` · **0b on Opus**: copy-forward, re-palette to 7 tracks, bank
-   skeletons, verify in the running app (server, every panel, save/load/version, port list).
-3. **0i on Opus, same session**: a 30-s septet test save through `notate_section.js` +
+1. ► **This is the clear point** (0b wrapped, committed, pushed). `/session-end` or
+   `/checkpoint`, `/clear`.
+2. **0g + 0i on Opus, one session**: copy `notation/{lib,registry,schema,app}` +
+   `tools/{notate_section, notate_block, ir_extract*, ir_validate*, export_print,
+   export_video, test_*, prove_unmoved}` + `print/` + `package.json` (resvg); run the test
+   batteries; then a 30-s septet test save through `notate_section.js` and
    `ir_validate.js --against-source`; read what fails; file the classifier work under 2a.
-4. **0e with the composer at Reaper**: loopMIDI ports, rack, monitoring ON, rack committed.
-5. **0d on Fable + the composer's ear**: CC7 → dB measured on one Xsample string preset and
-   the bass clarinet with #4's probe; the state-reset rule verified; the dynamics recipe written.
+3. **0e with the composer at Reaper** (any model, conversation): loopMIDI ports `Flute`
+   (+`Fluteb`), `BassCl`, `Piano`, `Vn1`, `Vn2`, `Va`, `Vc`; one Reaper track per port,
+   monitoring ON; rack committed; the app's Web MIDI port list checked on Chrome.
+4. **0c recipes on Opus** from the rack as built (UVI slot order = ground truth).
+5. **0d on Fable + the composer's ear**: CC7 → dB on one Xsample string preset and the bass
+   clarinet with `probes/cc7_calibration_probe.ps1`; state rule; the dynamics recipe.
 
-**Open at session end:** — (session 1; nothing in flight beyond 0b awaiting the go)
+**Open at session end:** — (0b closed and committed; nothing in flight)
 
 **Open questions:**
 - **Q1 flute doubling instrument:** piccolo or bass flute — composer undecided; SI2 flute
@@ -232,6 +246,9 @@ sources; verified here only when they bite.)*
 
 - 2026-09-03 — **0a** PM kit installed (journal, plan, planner, lab journal, sketch pad,
   methodology, protocol, hygiene, commands, gitignore, CLAUDE.md, README).
+- 2026-09-03 — **0b** composer module ported from piece #4 and verified live: score app
+  :5300 (seven instrument-keyed lanes + META), sandbox :4800, bank skeletons, the
+  seven-instrument recipe skeleton (RUNNING_LOG §9).
 
 ---
 

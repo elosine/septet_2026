@@ -30,7 +30,12 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   HOW_WE_WORK + SESSION_PROTOCOL (from #3) · checkpoint/postclear commands · .gitignore.
   *Why:* the session skills are wired to it; decisions survive clears from minute one.
 
-- **0b — Composer module port** — `todo` — **the safe port that preserves all functionality.**
+- **0b — Composer module port** — `done 2026-09-03` *(RUNNING_LOG §9: copy byte-exact →
+  patch script with asserted match counts → verified in the running app: 36/36 routes,
+  save/version/load round trip, zero console errors, four panels open, UI save on disk;
+  two defects found only by running: the literal eleven-lane table, the server dying on a
+  missing-file stream. Web MIDI port check deferred to 0e — the in-app browser denies MIDI.)*
+  — **the safe port that preserves all functionality.**
   *Why:* the composer will use "very similar structures" to the tuba piece; the app is the
   composing surface from day one.
   - **0b.1 — Copy the folder set from #4** (byte-exact, then adapt): `score/` (server.js,

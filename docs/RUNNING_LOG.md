@@ -209,3 +209,81 @@ repo."* → Q3 closed; CLAUDE.md and the parking lot say so.
 
 **Push:** *"Q4: go ahead and push after every commit."* → D8; CLAUDE.md, the checkpoint
 command and the inherited HOW_WE_WORK / SESSION_PROTOCOL lines amended in place.
+
+## §9. PLAN 0b — the composer module ported, and verified in the running app
+
+**Prompted by:** the composer's *"go on 0b"*. Done on Fable in the same session (no
+clear), because the plan was already written and the composer said go.
+
+**0b.1 — the copy, byte-exact first.** `score/` (server, snapshots, palette, public/*),
+`sandbox/` (serve, index, instruments), `tools/model_bank.js`, ten `bank/*.json` model and
+preset files, `probes/*.ps1|*.py` + `cc7_map.json`, `docs/instrument_map.json`,
+`start_score_server.bat`. `cmp`/`diff -rq` confirmed identical to `for_seven_tubas` before
+any edit. NOT copied: the tuba material banks (CLOUD02*, CLUST01*, VERT01*, DB3*, GESTURE*,
+cluster_bank, blast_taxonomy, actuals), `sandbox/motives/*` (4 tuba motives).
+
+**0b.2 — the re-palette, as one patch script that asserts every match count before it
+writes** (scratchpad `port_0b2.py`; it refused to run once — a string I expected once
+occurred twice — and wrote nothing until the count was corrected). What changed, and why:
+- `composer.html`: title · session default `septet` · seven lane `<div>`s and the track
+  `<select>` (7 + META) · lane CSS 10 % × 10 → 14.2857 % × 7 · `TRACKS` = the seven
+  instrument-keyed tracks with a `short` label · `META_LAYER` 10 → 7 · `layoutVersion` 3
+  (+ a loud `console.warn` when a ten-lane tuba save is opened, never a silent drop) ·
+  the record panel's technique list now follows the selected lane's instrument · the
+  blast/cluster panel resolves port/channel/CC0 from the lane's recipe (`cgRoute`) instead
+  of `'tuba' + n` arithmetic · every literal `10` that meant "lane count" → `META_LAYER`.
+- **The one design addition: range-aware lane assignment.** `laneCanPlay(lane, pitch)`;
+  a lane whose instrument cannot play the pitch scores `'hard'` in `assignBlast`,
+  `assignCluster` and `bestLaneFor`, so the placement engines route around it the way they
+  route around a busy player. The tubas were interchangeable; a violin lane is not a cello
+  lane. Verified live: flute cannot take MIDI 40, cello can, violin 1 can take 100.
+- `sonify_core.js`: the lane → instrument key now comes from the SAVE's own track table
+  (`score.tracks[layer].instKey`), fallback `'tuba'+(n+1)` so piece #4 saves still play.
+- `compiler.js`: `spec.parts || 10` (×7) → `partsDefault()` = `META_LAYER` at call time;
+  `pulse_seq.js` / `multitempo.js` `LANES` likewise; `texture_panel.js` ten-player
+  defaults → `META_LAYER`. `server.js` → port 5300; `sandbox/serve.js` → 4800.
+- `auditionNote` gained an optional `cc0` (the Xsample articulation prelude) so an
+  audition lands on the technique it names; the cluster-panel callers and the property
+  panel's audition pads pass it through.
+
+**0b.3 — bank skeletons:** empty-but-valid `cluster_bank.json` and `blast_taxonomy.json`
+with the tuba files' key sets; `pulse_palette.json` emptied (its entries referenced tuba
+sonorities S008–S047 and the Pulse/MT panels warned on every open); `palette.json` emptied.
+`sandbox/instruments.js` rewritten as the seven-instrument SKELETON — every channel and
+range marked provisional until 0e/0c: flute 28 SI2 techniques over `Flute` + `Fluteb`,
+bass clarinet = piece #3's 13 CC0 presets verbatim, piano 3 preparations on one port,
+strings = the quartet's 8 CC0 values with one-shot flags.
+
+**0b.4 — verified in the running app, not by reading:**
+- HTTP battery: **36/36 routes 200** (every script, every `/api/*` the page fetches, the
+  static `/docs`, `/bank`, `/probes`, `/sandbox/instruments.js`).
+- Save API: save → `versioned:false`; save again → `versioned:true`; list · load ·
+  versions all correct; files seen on disk (270 bytes each); deleted after.
+- Page: `Composer initialized`, **zero console errors** on a fresh tab; `TRACKS` = the
+  seven ids; `META_LAYER` 7; `Composer.lanes` = lane1..lane7 + laneMeta with META at
+  index 7; the track select = 7 + META; record panel = 7 lanes / 28 flute techniques;
+  per-track ranges as written.
+- Panels: Morph · Texture · Pulse · MT all open, no errors.
+- UI save: clicking Save wrote `scores/septet.json` (layoutVersion 3, seven tracks) plus
+  a version snapshot; both deleted afterwards — the composer names the first real file.
+- Sandbox on 4800: instrument menu = the seven, technique menu = 28 for the flute,
+  `/motives` 200. **Web MIDI cannot be verified in the in-app browser** ("MIDI access
+  denied" is its policy) — the port list check moves to 0e, on the composer's Chrome.
+
+**Two defects the running app found that reading did not:**
+1. `this.lanes` was a literal list of eleven element ids (`lane1..lane10, laneMeta`) —
+   seven lanes left three nulls and put META at index 10, so `init()` threw on the first
+   load and the record panel never populated. Now derived from `TRACKS`.
+2. **The server died mid-port**: it served the page at the moment the stale instrument
+   file was deleted, and `fs.createReadStream` on a missing file raised an unhandled
+   stream error that killed the process. Guarded with an existence check → 404. The
+   probes route already had the guard; the generic static route too.
+
+**Deferred, filed in NITS:** `clusterview.html` / `chordview.html` still address `tuba1..`
+ports (tuba research viewers, inert until a cluster bank exists) · `multitempo.js` `LO/HI`
+30–67 is the tuba range · probes' `$Port = 'tuba1'` defaults · the copied texture/morph
+presets carry "10 tubas" labels · `docs/instrument_map.json` has zero instruments.
+
+**Deliberately left in place:** the bank presets tuned on tubas (morph models, texture
+models/params, shape presets, panel snapshots) — the composer's own reference material,
+labelled by origin; replaced by septet presets as they are made.
