@@ -1000,3 +1000,16 @@ four). Three tracks done, in score order.
   instrument volume at unity, part reverb off) — the baseline 0d's CC7 law is measured against;
   #4 never recorded a number for its "gain staging calibrated", only the check. Applies
   retroactively to the three tracks already built.
+
+## §26. R6 — the plucked piano exists after all (Spitfire), and joins the Steinway's Kontakt
+
+Composer, loading track 5: *"plucked piano also spitfire, let's set up the loopmidi and track
+name etc"* — a Kontakt screenshot with Spitfire's **Plucked Piano** loaded (MIDI Ch: Omni,
+the whole keyboard blue, red keyswitches around C#-1 / D#-1, "Reset on key F-1"). Piece #2
+had reserved `Piano` channel 2 for a plucked piano with the library "TBD"; the septet has one.
+**Decision, by the standing rules:** no new port (one player, one port, D-lineage from #3),
+no new track — the plucked piano is a technique on **channel 2** of `Piano`, loaded as a
+second instrument slot in the SAME Kontakt instance as the Steinway (slot MIDI channels
+[A] 1 and [A] 2); the track is renamed `Piano Kontakt`; the Prepared Piano 2 (UVI) stays the
+second track, R7, on channels 3 / 4 / 5. Recipe: `plucked` (ch 2, 21–108); PLAN 0e amended.
+Gain check applies to both instrument slots (the composer's standing reminder).

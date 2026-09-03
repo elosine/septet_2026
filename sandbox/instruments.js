@@ -161,11 +161,11 @@ const INSTRUMENTS = {
     ],
   },
 
-  // ---- PIANO — 8Dio Steinway Grand (Kontakt) + IRCAM Prepared Piano 2 (UVI) on ONE port ----
+  // ---- PIANO — 8Dio Steinway Grand + Spitfire Plucked Piano (Kontakt) + IRCAM Prepared Piano 2 (UVI), ONE port ----
   // From piece #2 docs/instrument_map.json (port "Piano1", channels 1–5): main ch 1 (velocity,
-  // CC64 pedal) · harmonics ch 3 (+ch 4 second layer; CC21 pitch shift, 19.048 cents/step,
+  // CC64 pedal) · plucked ch 2 (Spitfire, added at R6) · harmonics ch 3 (+ch 4 second layer; CC21 pitch shift, 19.048 cents/step,
   // 85 ms CC lead; sounding cap MIDI 101) · muted ch 5. Preparations are TECHNIQUES of one
-  // piano track. Plucked piano had no library in #2 ("TBD") — not listed until it has one.
+  // piano track. Plucked piano had no library in #2 ("TBD"); the septet has Spitfire's, on ch 2.
   piano: {
     label: "Piano",
     port: "Piano",
@@ -173,6 +173,7 @@ const INSTRUMENTS = {
     rangeHigh: 108,
     techniques: [
       { key: "main",      label: "Steinway (8Dio)",                  channel: 1 },
+      { key: "plucked",   label: "Plucked Piano (Spitfire)",          channel: 2, rangeLow: 21, rangeHigh: 108 },   // R6, 2026-09-03: Spitfire Plucked Piano in the same Kontakt instance as the Steinway, on the channel #2 reserved; Kontakt keyboard shows the whole range blue, keyswitches red around C#-1/D#-1 and "Reset on key F-1" — all below 21, never sent
       { key: "harmonics", label: "Harmonics (Prepared Piano 2)",     channel: 3, rangeLow: 21, rangeHigh: 77 },
       { key: "muted",     label: "Muted strings (Prepared Piano 2)", channel: 5 },
     ],

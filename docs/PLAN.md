@@ -136,9 +136,10 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   the R-steps as in #3; RUNNING_LOG §15–17)* — **the layout (D10 order, D11 banks):** eight
   loopMIDI ports, case-exact — `Flute` · `Fluteb` (the SI2 flute's 28 techniques, 16 + 12,
   the tuba pattern) · `BassCl` (exists from #3, reused) · `Piano` (one port, two tracks:
-  8Dio in Kontakt on ch 1, IRCAM PP2 in UVI with parts on ch 3 / ch 5 — #2's proven layout)
+  Kontakt with 8Dio Steinway on ch 1 + Spitfire Plucked Piano on ch 2, IRCAM PP2 in UVI with
+  parts on ch 3 / 4 / 5 — #2's layout plus the plucked piano it never had a library for)
   · `Vn1` `Vn2` `Va` `Vc`; ten Reaper tracks in score order — Flute SI2 · Fluteb SI2 ·
-  Bass Clarinet XS · Piano 8Dio · Piano PP2 · Vn1 XS · Vn2 XS · Va XS · Vc XS · REC; every
+  Bass Clarinet XS · Piano Kontakt · Piano PP2 · Vn1 XS · Vn2 XS · Va XS · Vc XS · REC; every
   Kontakt track holds its Xsample instrument in **four slots on ch 1–4** (main, curve
   A/B/C); every track: input = its port, Source channel All, no map-to-channel, **input
   monitoring ON** (Principle 1); **plugin gain checked on every instrument as it is loaded**
@@ -157,7 +158,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   roster is in `sandbox/instruments.js`, RUNNING_LOG §20; keyswitch notes verified on the red
   keys) `done 2026-09-03` (all 16 parts registered from screenshots, §22; track verified from the file, §23) · R4 Fluteb SI2 (the last three presets: Staccato, Trills KS, Whistle Tones; 13 slots free)
   `done 2026-09-03` (§22–23) · R5 Bass Clarinet XS (Kontakt 8, four slots ch 1–4; #3's configured track can be
-  imported) `done 2026-09-03` (track verified from the file, §25; the 34-preset roster + keyswitch map, §24) · R6 Piano 8Dio (Kontakt, ch 1) `todo` · R7 Piano PP2 (UVI, harmonics A3,
+  imported) `done 2026-09-03` (track verified from the file, §25; the 34-preset roster + keyswitch map, §24) · R6 Piano Kontakt (8Dio Steinway ch 1 + Spitfire Plucked Piano ch 2) `todo` · R7 Piano PP2 (UVI, harmonics A3,
   muted A5) `todo` · R8–R11 Vn1 / Vn2 / Va / Vc XS (Kontakt 8, four slots each) `todo` · R12
   REC (audio, record output stereo, receive from the track under test) `todo` · R13 save +
   commit; on the composer's Chrome the app's Web MIDI list shows the eight ports `todo`.
