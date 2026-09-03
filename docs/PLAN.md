@@ -189,7 +189,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   (`classes.json` + `classify.js` rules — every septet key throws today, by design) ·
   `classify.js` META layer = `tracks.length`, not the literal 10, and `notate_section`'s
   default parts from the score (until then `--parts 0-6`) · part labels from
-  `tracks[].short` · the seven-lane container.
+  `tracks[].short` · the seven-lane container · **score order and bracketing per D10**
+  (the composer score's order top to bottom; winds bracket · piano brace · strings bracket).
 - **2b — Presentation score** — print PDF (A3 landscape, format entry + cover + performance
   notes page as in #4) + video (`export_video.js`, Reaper render at fixed BPM, sync proof
   as #4's PHASE 5). **Deadline-bound: 2026-10-15.**

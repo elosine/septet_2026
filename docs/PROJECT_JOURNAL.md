@@ -283,6 +283,21 @@ sources; verified here only when they bite.)*
      registry (`notation/registry/classes.json`; #4's trance-stream / density-cloud
      classes). Those get septet classes in phase 2a. The schema, validator, layout and
      renderers do not change for that.
+- **D10** *(2026-09-03, composer)* — **The composer score's lane order is the standard
+  orchestral score order, top to bottom: flute (with its doublings) · bass clarinet · piano ·
+  violin 1 · violin 2 · viola · cello.** The composer: *"look at a standard orchestration for
+  the score layout. We'll lay out the composer score the same. My guess is strings at the
+  bottom, piano in the middle, flute on top. And then the others in between."* The standard
+  (Adler, *The Study of Orchestration*; Gould, *Behind Bars*): woodwinds · brass · percussion ·
+  harp and keyboards · voices · strings, high to low within a family — for these seven,
+  exactly the guess (the bass clarinet takes the clarinet's place under the flute; a piccolo
+  or bass flute stays on the flute's line, D6). The one other convention, piano at the
+  bottom, belongs to chamber music with piano and strings alone (trio, quartet, quintet;
+  *Pierrot Lunaire*'s own score puts the piano last); a mixed ensemble with winds reads in
+  orchestral order today. **Verified in the running app:** the lanes already sit in this
+  order (TRACKS as ported at 0b — RUNNING_LOG §14). *Consequence for phase 2:* the notation
+  score, the print and the parts keep the same order; bracket groups winds / piano brace /
+  strings (PLAN 2a).
 
 ---
 

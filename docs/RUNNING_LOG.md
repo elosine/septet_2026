@@ -512,3 +512,34 @@ to touch.
 needs the composer at the machine; 0c follows from the rack as built; 0d from 0c. The
 AI-alone work that remains before 0e is 0c.5 (transposition + clef metadata) and nothing
 else on the critical path.
+
+## §14. Score order — the composer score follows the orchestral standard (D10)
+
+**Prompted by** the composer, straight after 0i: *"Can you look at a standard orchestration
+for the score layout? We'll lay out the composer score the same. My guess is strings at the
+bottom, piano in the middle, flute on top. And then the others in between."*
+
+**What the standard says** (Adler, *The Study of Orchestration*; Gould, *Behind Bars*, the
+score-order chapter): woodwinds · brass · percussion · harp and keyboards · voices · strings,
+top to bottom; inside a family, high to low. Applied to these seven: **flute · bass clarinet
+· piano · violin 1 · violin 2 · viola · cello** — the guess, exactly. The bass clarinet takes
+the clarinet's row under the flute (no oboe, no bassoon here); a piccolo or bass flute stays
+on the flute's row (D6); the cello is the lowest string.
+
+**The one alternative, and why not:** chamber music with piano and strings alone — trio,
+quartet, quintet — puts the piano at the BOTTOM, under the strings; *Pierrot Lunaire*'s own
+score does the same (flute, clarinet, violin, cello, recitation, piano). That is the
+"piano as the partner of a string group" reading. A mixed ensemble with winds is read as a
+small orchestra today (Ligeti's Chamber Concerto: winds, brass, keyboards, strings), and the
+Tempus septet is that kind of ensemble. Orchestral order it is.
+
+**Verified in the running app, not asserted:** on http://localhost:5300/composer.html the
+lane labels sit in DOM order Flute | Bass Cl. | Piano | Violin 1 | Violin 2 | Viola | Cello
+| META, and the screenshot shows the 0i test material where the order predicts it — the
+flute's three shapes on the top lane, the cello's long note on the bottom one. The app was
+ported at 0b with `TRACKS` in this order, so nothing changes; D10 records that this is now a
+decision, not an accident of the port.
+
+**What follows for phase 2** (PLAN 2a, one clause added): the notation score, the print
+score and the parts keep the same top-to-bottom order; bracket groups winds · piano brace ·
+strings.
