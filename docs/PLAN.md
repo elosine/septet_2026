@@ -141,7 +141,11 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   Bass Clarinet XS · Piano 8Dio · Piano PP2 · Vn1 XS · Vn2 XS · Va XS · Vc XS · REC; every
   Kontakt track holds its Xsample instrument in **four slots on ch 1–4** (main, curve
   A/B/C); every track: input = its port, Source channel All, no map-to-channel, **input
-  monitoring ON** (Principle 1); Reaper never owns the Keystation (hardware inputs disabled,
+  monitoring ON** (Principle 1); **plugin gain checked on every instrument as it is loaded**
+  (composer, 2026-09-03: "remind me with each instrument to check the instrument plugin gain" —
+  UVI part volume and Kontakt instrument volume at 0 dB / unity, part reverb off, so every
+  track starts from the same baseline and 0d's CC7 law is measured against it; #4's ISSUES I1
+  names "UVI part volume knobs" as a quiet-track cause); Reaper never owns the Keystation (hardware inputs disabled,
   auto-enable off); `reaper/septet_rack.rpp` committed, Media/Backups/AutoSaves ignored.
   **R-steps** (one at a time, the composer at Reaper, the AI verifying what it can):
   R1 loopMIDI: add `Flute` `Fluteb` `Piano` `Vn1` `Vn2` `Va` `Vc` — AI verifies via winmm

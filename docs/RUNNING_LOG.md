@@ -995,3 +995,8 @@ number piece #3's Bass Clarinet track carried for the same port — Reaper's own
 stable on this machine. The four slot channels (D11: 1–4) live inside Kontakt's binary chunk
 and cannot be read from the file; a one-note test at 0h proves them (one voice on ch 1, not
 four). Three tracks done, in score order.
+- **Standing reminder, composer at R6:** *"please remind me with each instrument to check the
+  instrument plugin gain."* Added to PLAN 0e's per-track rule (UVI part volume / Kontakt
+  instrument volume at unity, part reverb off) — the baseline 0d's CC7 law is measured against;
+  #4 never recorded a number for its "gain staging calibrated", only the check. Applies
+  retroactively to the three tracks already built.
