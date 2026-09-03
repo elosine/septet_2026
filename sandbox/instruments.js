@@ -31,7 +31,7 @@ const INSTRUMENTS = {
   // C#1 → 37, D1 → 38; Durations KS (manual C2/C#2) → 48/49. Each KS preset is checked on its red
   // keys as it loads. Range: sounding C4–C7, B3 with the extension
   // → MIDI 59–96 (manual p. 51); per-preset ranges are read from the UVI GUI at 0c, never
-  // ear-scanned. Multiphonics Menu: one multiphonic per key, C3–F5 = MIDI 48–77 (manual
+  // ear-scanned. Multiphonics Menu: one multiphonic per key, display C3–F5 = MIDI 60–89 (manual
   // "FLUTE Multiphonics"). Piccolo / bass flute are NOT here yet — undecided (D6; CN-2, CN-4).
   flute: {
     label: "Flute",
@@ -59,11 +59,11 @@ const INSTRUMENTS = {
       { key: "harmonic_fing",   label: "Harmonic Fingering",         preset: "Flute Finger Modes KS",       channel: 6,  ks: 36, rangeLow: 79, rangeHigh: 96 },   // A6 screenshot: red C1; white only from ≈G4 (display) → C6+ = MIDI ≈79–96 (upper register); grey elsewhere, no tan
       { key: "discolored_fing", label: "Discolored Fingering",       preset: "Flute Finger Modes KS",       channel: 6,  ks: 37, rangeLow: 79, rangeHigh: 96 },   // C#1 not red on screen — verify
       // A7 · Flute Flatterzunge
-      { key: "flz",             label: "Flatterzunge",               preset: "Flute Flatterzunge",          channel: 7 },
+      { key: "flz",             label: "Flatterzunge",               preset: "Flute Flatterzunge",          channel: 7,  rangeLow: 60, rangeHigh: 96 },   // A7 screenshot: no red keys; white C3→C6 (60–96), grey beyond C6 — the top is C6 display = MIDI 96; no tan
       // A8 · Flute Fortepiano
-      { key: "fortepiano",      label: "Fortepiano",                 preset: "Flute Fortepiano",            channel: 8 },
+      { key: "fortepiano",      label: "Fortepiano",                 preset: "Flute Fortepiano",            channel: 8,  rangeLow: 60, rangeHigh: 96 },   // A8 screenshot: no red keys; white C3→C6 (60–96), grey beyond; no tan
       // A9 · Flute Multiphonics Menu (one multiphonic per key)
-      { key: "multiphonics",    label: "Multiphonics Menu",          preset: "Flute Multiphonics Menu",     channel: 9,  rangeLow: 48, rangeHigh: 77 },
+      { key: "multiphonics",    label: "Multiphonics Menu",          preset: "Flute Multiphonics Menu",     channel: 9,  rangeLow: 60, rangeHigh: 89 },   // A9 screenshot: no red keys; white C3→F5 DISPLAY = MIDI 60–89, one multiphonic per key (30, = the manual's table C3..F5 read as display names); tan below C3 and above F5
       // A10 · Flute Ord & Aeolian KS (the two transitions)
       { key: "ord_to_aeolian",  label: "Ordinario to Aeolian",       preset: "Flute Ord & Aeolian KS",      channel: 10, ks: 36 },
       { key: "aeolian_to_ord",  label: "Aeolian to Ordinario",       preset: "Flute Ord & Aeolian KS",      channel: 10, ks: 37 },

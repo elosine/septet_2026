@@ -856,3 +856,10 @@ composer to confirm on screen. Each further KS preset gets the same look as it l
   to C6 and past** — MIDI ≈79–96, the upper register, where harmonic and discoloured fingerings
   exist · grey everywhere below, no tan. The low bound is read off the picture (±1 key); 0c
   reads it from the GUI's range field.
+- **A7 Flatterzunge:** no red keys · white **C3 → C6** and grey past C6 — so the flute's top is
+  display C6 = MIDI 96 exactly, which fixes the "cut" tops of A3/A4 at 96 as well · no tan.
+- **A8 Fortepiano:** as A7 — no red keys, white C3 → C6 (60–96), grey beyond, no tan.
+- **A9 Multiphonics Menu:** no red keys · white **C3 → F5 on the display = MIDI 60–89**, thirty
+  keys, one multiphonic each — the manual's table runs C3..F5 too, so THAT table is in display
+  names, unlike its keyswitch pages; the roster's 48–77 (my scientific reading) corrected to
+  60–89 · tan below C3 and above F5 (transposed multiphonics, extended both sides).
