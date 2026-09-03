@@ -949,3 +949,10 @@ note below 34) is confirmed as the whole safety story. Written into the bass cla
 
 **Caught in the screenshots:** the slot's header reads `MIDI Ch: Omni`. Under D11 each of the
 four slots must sit on its own channel (1–4); Omni would sound all four on every note.
+- **R5 ranges, composer sending only the presets whose range differs from the standard
+  A#0–F4 (34–65):** #5 Flutter Tongue MW and #16 Flutter Tongue Velocity stop at **C4 (60)**;
+  #1 Senza Vibrato MW, #2 Natural Vibrato MW and #11 Air Noises are the standard 34–65
+  (screenshots); the rest of the roster takes #3's GUI-read table (§6d) — slap, key noises,
+  crescendo, triple tongue 34–65; glissando 34–42 and the multiphonics 34–46 were already in.
+  #2 Natural Vibrato MW added to the roster (cc0 1). Still unranged: #15 Senza+Flutter Vel×MW
+  and #34 Flutter LOCK — the composer sends them only if they differ.

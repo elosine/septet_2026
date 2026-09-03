@@ -119,17 +119,18 @@ const INSTRUMENTS = {
     rangeHigh: 65,  // standard zone per XSAMPLE_BASSCL_map §6d
     mechanism: "cc0",
     techniques: [
-      { key: "senza_mw",    label: "Senza Vibrato MW (#1)",         channel: 1, cc0: 0 },
-      { key: "flutter_mw",  label: "Flutter Tongue MW (#5)",        channel: 1, cc0: 4 },
-      { key: "slap",        label: "Slap Tongue (#6)",              channel: 1, cc0: 5 },
+      { key: "senza_mw",    label: "Senza Vibrato MW (#1)",         channel: 1, cc0: 0, rangeLow: 34, rangeHigh: 65 },   // GUI low A#0 / high F4 (composer screenshot, R5)
+      { key: "natural_vib_mw", label: "Natural Vibrato MW (#2)",    channel: 1, cc0: 1, rangeLow: 34, rangeHigh: 65 },   // GUI A#0–F4 (screenshot, R5); the sampled vibrato, vs the curve-channel CC4 width
+      { key: "flutter_mw",  label: "Flutter Tongue MW (#5)",        channel: 1, cc0: 4, rangeLow: 34, rangeHigh: 60 },   // GUI high C4 — the flutters stop a fourth short (screenshot, R5)
+      { key: "slap",        label: "Slap Tongue (#6)",              channel: 1, cc0: 5, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d, GUI-read 2026-08-08
       { key: "gliss_undef", label: "Glissando Undefined (#7)",      channel: 1, cc0: 6, rangeLow: 34, rangeHigh: 42 },
-      { key: "key_noises",  label: "Key Noises (#9)",               channel: 1, cc0: 8 },
+      { key: "key_noises",  label: "Key Noises (#9)",               channel: 1, cc0: 8, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d
       { key: "mp_short",    label: "Multiphonics short (#10)",      channel: 1, cc0: 9,  rangeLow: 34, rangeHigh: 46 },
-      { key: "air_noises",  label: "Air Noises (#11)",              channel: 1, cc0: 10 },
-      { key: "cresc",       label: "Crescendo (#12)",               channel: 1, cc0: 11 },
+      { key: "air_noises",  label: "Air Noises (#11)",              channel: 1, cc0: 10, rangeLow: 34, rangeHigh: 65 },   // GUI A#0–F4 (screenshot, R5) + #3 map
+      { key: "cresc",       label: "Crescendo (#12)",               channel: 1, cc0: 11, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d
       { key: "morph_vxmw",  label: "Senza+Flutter Vel×MW (#15)",    channel: 1, cc0: 14 },
-      { key: "flutter_vel", label: "Flutter Tongue Velocity (#16)", channel: 1, cc0: 15 },
-      { key: "triple16",    label: "Triple Tongue 16T (#18)",       channel: 1, cc0: 17 },
+      { key: "flutter_vel", label: "Flutter Tongue Velocity (#16)", channel: 1, cc0: 15, rangeLow: 34, rangeHigh: 60 },   // GUI high C4 (screenshot, R5)
+      { key: "triple16",    label: "Triple Tongue 16T (#18)",       channel: 1, cc0: 17, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d
       { key: "mp_loop",     label: "Multiphonics looping (#22)",    channel: 1, cc0: 21, rangeLow: 34, rangeHigh: 46 },
       { key: "flutter_lock",label: "Flutter LOCK bright (#34)",     channel: 1, cc0: 33 },
     ],
