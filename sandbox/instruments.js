@@ -80,7 +80,7 @@ const INSTRUMENTS = {
       // A15 · Flute Quartertones Ordinario
       { key: "ord_1q",          label: "Ordinario quarter-tone",     preset: "Flute Quartertones Ordinario", channel: 15, rangeLow: 60, rangeHigh: 96 },   // A15 screenshot: no red keys; white C3→C6 (60–96), grey elsewhere, no tan. Which quarter-tone each key sounds (above? below?) — 0c, by ear
       // A16 · Flute Sforzando
-      { key: "sforzando",       label: "Sforzando",                  preset: "Flute Sforzando",             channel: 16 },
+      { key: "sforzando",       label: "Sforzando",                  preset: "Flute Sforzando",             channel: 16, rangeLow: 60, rangeHigh: 96 },   // A16 screenshot: no red keys; white C3→C6 (60–96); grey elsewhere, no tan
       // ---- second instance "Fluteb" (A1–A3) ----
       { key: "staccato",        label: "Staccato",                   preset: "Flute Staccato",              port: "Fluteb", channel: 1 },
       { key: "trill_m2",        label: "Trill minor 2nd",            preset: "Flute Trills KS",             port: "Fluteb", channel: 2, ks: 36 },

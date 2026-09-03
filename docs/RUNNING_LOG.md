@@ -879,3 +879,10 @@ composer to confirm on screen. Each further KS preset gets the same look as it l
   below · white from **C3** (60); the frame is cut around E4, so the top is provisional (96).
 - **A15 Quartertones Ordinario:** no red keys · white **C3 → C6** (60–96) · grey elsewhere, no
   tan. Whether a key sounds the quarter-tone above or below its name is a 0c ear question.
+- **A16 Sforzando:** no red keys · white **C3 → C6** (60–96) · grey elsewhere, no tan.
+  **The `Flute` instance is fully registered (A1–A16).** Summary of the sixteen: keyswitch
+  presets show one red key at C1 (36), two on A3 and A5 (C1 + C#1), Durations at C2 (48); the
+  manual's further switches are unconfirmed on screen. Native ranges: the full 60–96 on A3, A4,
+  A7, A8, A10, A11, A12, A15, A16; A2 from 48; A5 48–83 (tan both sides); A6 ≈79–96; A9 60–89
+  (tan both sides); A13 60–84 (tan both sides); A1 60–83 (tan); A14 from 60 (top cut). Purple
+  keys on A2 (C3, C4) and A5 (C4), meaning open.
