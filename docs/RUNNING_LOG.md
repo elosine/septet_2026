@@ -1084,3 +1084,6 @@ future reuse of it.
   function, like `xsStringTechs`), verified in node and in the running app (zero errors, the
   seven counts intact, violin #7 55–76). Rule for me: the commit belongs in the same `&&`
   chain as the check, always.
+- **R8–R11 done** on the composer's *"done"* (file read deferred to R13 by his rule). Nine
+  instrument tracks now exist in score order; R12 (REC) and R13 (save, the file read, the Web
+  MIDI list on Chrome) remain.

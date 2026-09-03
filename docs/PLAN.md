@@ -161,7 +161,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   keys) `done 2026-09-03` (all 16 parts registered from screenshots, §22; track verified from the file, §23) · R4 Fluteb SI2 (the last three presets: Staccato, Trills KS, Whistle Tones; 13 slots free)
   `done 2026-09-03` (§22–23) · R5 Bass Clarinet XS (Kontakt 8, four slots ch 1–4; #3's configured track can be
   imported) `done 2026-09-03` (track verified from the file, §25; the 34-preset roster + keyswitch map, §24) · R6 Piano Kontakt (8Dio 1969 Legacy Piano ch 1 + Spitfire Plucked Piano ch 2) `done 2026-09-03` (§27) · R7 Piano PP2 (UVI, harmonics A3,
-  muted A5) `done 2026-09-03` (composer: read the file at the end, not per instrument — the Piano PP2 chain showed a second, live Kontakt beside the UVI at 18:02; re-check at R13) · R8–R11 Vn1 / Vn2 / Va / Vc XS (Kontakt 8, four slots each) `todo` · R12
+  muted A5) `done 2026-09-03` (composer: read the file at the end, not per instrument — the Piano PP2 chain showed a second, live Kontakt beside the UVI at 18:02; re-check at R13) · R8–R11 Vn1 / Vn2 / Va / Vc XS (Kontakt 8, four slots each) `done 2026-09-03` (on the composer's word; rosters §29; file read at R13) · R12
   REC (audio, record output stereo, receive from the track under test) `todo` · R13 save +
   commit; on the composer's Chrome the app's Web MIDI list shows the eight ports `todo`.
   *Why:* it is the whole audition path; #3 lost a session to monitoring being off.
