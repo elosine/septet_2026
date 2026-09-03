@@ -194,15 +194,15 @@ const INSTRUMENTS = {
   // them. Keyswitch zone = the bass clarinet's (green 21–23 function keys, red 24–33 bank slots,
   // all reachable by CC#0 — never sent as notes); the blue key at the very top is the Preset /
   // Phrase Mode switch (manual: A#7, or CC#0 126/127). Channels per D11: 1 main · 2–4 curve A/B/C.
-  violin1: { label: "Violin 1", port: "Vn1", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, VN_RANGES) },
-  violin2: { label: "Violin 2", port: "Vn2", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, VN_RANGES) },
+  violin1: { label: "Violin 1", port: "Vn1", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
+  violin2: { label: "Violin 2", port: "Vn2", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
   viola:   { label: "Viola",    port: "Va",  rangeLow: 48, rangeHigh: 93,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 48, 93) },
   cello:   { label: "Cello",    port: "Vc",  rangeLow: 36, rangeHigh: 83,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 36, 83) },
 };
 
 // Per-preset zones read from the GUI as the composer uses a preset (his rule at R8: "there are too many
 // presets, let's get ranges as I use them"). Violin: #7 Arco Open Strings `G2–E4` = 55–76 (2026-09-03).
-const VN_RANGES = { arco_open_vel: [55, 76] };
+function vnRanges() { return { arco_open_vel: [55, 76] }; }   // hoisted, like xsStringTechs — the table above runs first
 // The composer's practice (R8): the VELOCITY presets by default — the MW ones "sound different" and are
 // chosen deliberately; under D11 that keeps most string material on the main channel.
 // The one Xsample string roster, instantiated per instrument (fresh arrays, so per-instrument
