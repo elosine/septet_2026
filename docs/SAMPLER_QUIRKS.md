@@ -1,0 +1,51 @@
+# Sampler & Reaper quirks — the septet's additions
+
+> Piece #3's `docs/SAMPLER_QUIRKS.md` (in `for_bass_clarinet_harp_and_accordion`) is the ledger
+> and applies here as written — monitoring, channel filters, single-client hardware inputs,
+> UVI part channels, the octave-display conventions. This file holds only what the septet
+> found on top of it, 2026-09-03 onward. One bullet each: symptom → cause → fix.
+
+## Kontakt 8
+
+- **Instrument goes silent right after a preset change; header shows `Memory: 0`.** Cause:
+  the instrument's **Purge** state — Spitfire's panel has a "Purge unused" option, and a
+  purge with nothing played yet unloads every sample; Kontakt does NOT reload purged samples
+  when a note arrives, it plays silence. Fix: instrument header → **Purge ▾ → Reload all
+  samples** (Memory climbs back). Leave "Purge unused" alone until a piece is finished and
+  the played set is known. *(Plucked Piano, first sound, 2026-09-03.)*
+- **Four slots of one instrument on one track (D11):** each slot's header `MIDI Ch` must be
+  `[A] 1` … `[A] 4`. A slot left on `Omni` sounds on every channel — one note becomes four
+  voices. Not readable from the `.rpp`; the one-note test is the check.
+
+## Reaper 7.72
+
+- **The default theme hides the record-input selector and the monitoring speaker** until
+  the track is armed. Right-click the arm button for the same menu (Input → MIDI → port → All
+  Channels; Monitor input). *(R3.)*
+- **Plugging a hardware keyboard in while Reaper runs enables it as a Reaper input** (the
+  ini's `midiins` mask already covered the new device index). Chrome's Web MIDI then gets
+  nothing — the app is silent from the keyboard. Fix: Preferences → MIDI Devices → disable
+  input on `Keystation 88 MK3` and `MIDIIN2 (Keystation 88 MK3)`, reload the app. *(First
+  sound, 2026-09-03.)*
+- **Reaper's REC-line device index is Reaper's own**, not winmm's; decode arm / channel /
+  monitor / mode from the file, take the device identity from the track's own label.
+
+## UVI Workstation (SI2, PP2)
+
+- **The manual's keyswitch names are scientific (C4 = 60); the display is an octave lower**,
+  and each instrument's switch zone sits just under its own extended range — the flute's at
+  display C1 = MIDI 36, the tuba's at C0 = 24. Read the red keys, never the manual alone.
+- **PP2's yellow octave is the Edit page's selected octave**, not a sound; its low blue keys
+  C-1–G#-1 are Bar Hits (hands / sticks / mallets on the cast-iron plate).
+- **Preset FX ship on:** IR reverb, and in PP2 a Maximizer (threshold −1 dB) and a Tilt EQ —
+  bypass all of them in the rack (PLAN 0e's per-track rule).
+
+## Xsample (Kontakt)
+
+- **CC#0 88–117 are the keyswitch banks' stored slots, not presets** — piece #1's registry
+  values 89 / 95 / 97 meant "whatever that Kontakt had stored there". Use direct presets,
+  CC#0 = preset − 1. (RUNNING_LOG §29.)
+- **Every flutter-tongue sample preset of the bass clarinet tops out at C4 (60)**, the rest
+  at F4 (65); glissandi at F#1 (42); multiphonics at A#1 (46); the composer's Flutter LOCK
+  (#34) sits at G2–A5 (55–93). Strings: violin G2–F6 (55–101), viola C2–A5 (48–93), cello
+  C1–B4 (36–83) on the standard presets; open-string presets narrow to the strings' zone.

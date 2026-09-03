@@ -1123,3 +1123,9 @@ selected — his *"can I also have the other pianos in the midi play menu"* is a
   falls back to `techs[0]` for an unknown technique key — the 0i test saves carry the
   pre-roster string keys (`ord`, `staccato`, `pizz`, `arco`), so their string notes now audition
   as preset #1 "Vibrato Velocity + MW inverted", silently. NITS.
+- **Plucked piano silent after choosing "Normal" from Spitfire's Presets menu.** The
+  screenshot says why: header `Memory: 0` with "Purge unused" selected — the purge unloaded
+  every sample, and Kontakt plays silence for purged samples rather than reloading them. Fix:
+  Purge ▾ → Reload all samples. Started `docs/SAMPLER_QUIRKS.md` for the septet's own
+  findings (this, the Keystation grab, the hidden input selector, the octave traps, the FX
+  bypass rule, the CC#0 correction) on top of #3's ledger.
