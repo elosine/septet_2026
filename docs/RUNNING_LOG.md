@@ -1030,3 +1030,12 @@ them. Four tracks in score order: Flute SI2 · Fluteb SI2 · Bass Clarinet XS ·
   and would flatten the very level relationships 0d measures; the tilt EQ colours the raw
   sample. The rack stays dry and unprocessed; colour is added later in Reaper, measurably.
   The per-track rule now says: reverb off, built-in dynamics / EQ bypassed, gains at unity.
+- **R7, PP2's keyboard colours, from the manual not the screen:** the low blue/grey keys are
+  **Bar Hits — "mapped from C-1 to G#-1, each of the piano's metal bars recorded in unique
+  ways: hands, sticks or mallets"** (the cast-iron plate, not the wood — the composer's guess
+  in kind); the **yellow octave is the octave SELECTED in PP2's Edit page** — PP2 assigns
+  preparations and parameters per octave (Init / Randomize / Copy-Paste Octave, MIDI Select
+  picks the octave by playing a key), and the keyboard highlights the selected one. Not a
+  sound; a cursor. Bar hits (MIDI 0–8) sit below anything the app sends — a candidate
+  technique for later, like the 8Dio presets. PP2's Maximizer found on its FX page (threshold
+  −1 dB, ceiling −0.1 dB) — bypassed per the rule.
