@@ -131,11 +131,20 @@ notation app. The D9 §5 list is written as rules in **`docs/NAMING.md` §2** �
 as the app writes it; the two bites are pipeline-side and filed under 2a; the sounding-length
 table is 0c.6. RUNNING_LOG §13.
 
-**Next up:** **0e in progress** — D10 (score order) and D11 (channel banks: main + curve
-A/B/C on every Kontakt port) decided, RUNNING_LOG §15–17. R1 = the composer adds the loopMIDI
-ports `Flute` `Fluteb` `Piano` `Vn1` `Vn2` `Va` `Vc` (`BassCl` exists from #3), the AI
-verifies from winmm; then R2–R13 per PLAN 0e; then **0c** recipes from the rack as built
-(with the `channels` map), **0d** the Xsample measurements, **0h** gate → compose.
+*Same session, the rack:* **0e built, R1–R13** — eight loopMIDI ports (verified from winmm);
+`reaper/septet_rack.rpp`, ten tracks in score order, every instrument track armed / MIDI all
+channels / monitoring ON / one plugin, REC on output-stereo, read whole (RUNNING_LOG §30);
+the composer's screenshots turned every instrument's PRESET MENU into the recipe file — flute
+19 presets / 30 techniques with keyswitch notes and ranges (§20–22), bass clarinet 34 (§24),
+piano 4 (8Dio 1969 Legacy · Spitfire Plucked · PP2 harmonics · muted), strings 88 each with a
+per-preset range hook (§29); D11's four slots per Kontakt port; the gain / bypass rule
+(§26–27); CN-3, CN-4, CN-5 on the sketch pad; PLAN 0c.8, 1a, 1b from the composer.
+
+**Next up:** **the one-note test per track from the composer app on Chrome** — proves the
+ports, the slot channels (one voice, not four) and the gains; 0e's last step and 0h's first.
+Then **0d** the Xsample measurements (CC7 → dB, CC1 settle, CC4 vs pressure, CC0 latency),
+the rest of **0c** (0c.5 clefs/transposition · 0c.6 sample lengths · 0c.7 channel map +
+router · 0c.8 multiphonics walk), **0h** gate → compose.
 
 **NEXT STEPS · MODEL · CLEAR:**
 1. ☑ 0b wrapped, checkpoint, clear; resumed on Fable (the composer's choice over the

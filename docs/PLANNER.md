@@ -9,9 +9,12 @@
 0g done (the notation/IR stack here, proven whole — RUNNING_LOG §12); **0i done: a septet
 save written by the app extracts to a VALID page** — the S1 conventions are in
 `docs/NAMING.md` §2, the two bites (technique vocabulary, META layer) filed under 2a
-(RUNNING_LOG §13). **0e in progress:** D10 score order and D11 channel banks (main + curve A/B/C on every
-Kontakt port) decided; R1 = the composer adds the seven loopMIDI ports (RUNNING_LOG §15–17).
-Then 0c (recipes from the rack), 0d (the Xsample measurements), 0h gate. Nothing composed yet; the
+(RUNNING_LOG §13). **0e built:** D10 score order, D11 channel banks; eight loopMIDI ports; the rack
+`reaper/septet_rack.rpp` with ten tracks in score order, read whole (RUNNING_LOG §30); every
+instrument's full preset menu in `sandbox/instruments.js` with ranges as read (§20–29). Next:
+**the one-note test per track from the composer app on Chrome** (0e's last step and 0h's
+first: ports, slot channels, gains), then 0d (the Xsample measurements), the rest of 0c
+(0c.5–0c.8), 0h gate. Nothing composed yet; the
 opening idea is on the sketch pad (CN-1); piccolo vs bass flute undecided (CN-2).
 
 ---
