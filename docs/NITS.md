@@ -44,3 +44,11 @@
   play/pause. Fix: blur any select on `change` (and on ESC), or a capturing keydown handler
   that blurs the active select before the transport reads SPACE. One line; do it at the next
   pass over `composer.html`, and check the same for the number inputs (Start / End).
+- **After a page reload the composer app is silent until the first Play / audition / CC7
+  Reset / record-arm** (composer, 2026-09-03, first sound; console showed `_zoneMidiOutputs`
+  empty, `_hwInput` NONE on a freshly reloaded page). `initZoneMidi()` — which populates the
+  output map AND binds the keyboard (`bindHwInput`) — is kicked lazily by those actions
+  (`tickZoneMidiPlayback`, the CC7 Reset / record-arm handlers). So a reloaded page has a dead
+  keyboard and no outputs until one of them fires. Fix: call `initZoneMidi()` once on load
+  (or on the first user gesture / focus), so the keyboard and playback are live immediately.
+  Workaround meanwhile: click CC7 Reset (or press Play once) after every reload.

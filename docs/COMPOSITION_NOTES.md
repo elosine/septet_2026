@@ -132,3 +132,33 @@ names a library to confirm.
   strike exists.
 - **Playable now:** a blast with per-lane start offsets is a one-parameter extension of the
   blast panel (a scatter width, random or shaped).
+
+---
+
+## CN-6 · 2026-09-03 — strikes, then chosen harmony, then tremolos on curves
+
+> *"Play a number of scattered strikes in time. And then after, find a way to choose harmonies
+> and orchestration and then play series of tremolo curves or tremolos on curves between. The
+> strings get taken over by tremolos."*
+
+**AI reading (not the composer's words):**
+
+- **A three-stage form, and it braids CN-1, CN-3, CN-5 into one arc:** (1) scattered strikes
+  (CN-5) — the not-quite-unison attacks; (2) a harmony/orchestration is CHOSEN out of what the
+  strikes leave ringing; (3) tremolo curves grow between the struck points and take over — the
+  strings first, per the last line. This is CN-1's "attack → curve-tremolos → tremolo fugue"
+  said again with a middle step made explicit: the harmony is selected, not pre-composed.
+- **"Choose harmonies and orchestration" wants a TOOL, and #2 built one:** the chord/harmony
+  selection machinery of `composition_for_two_pianos_and_two_percussion` (chord shapes, sets,
+  cells; the pitch/harmonic set databases already in this app's save schema — `databases:
+  {chordShapes, sets, cells}`). The step is: from the strike pitches, pick a sonority and an
+  orchestration (which players hold which notes), then hand those notes to the tremolo curves.
+- **"Tremolo curves / tremolos on curves":** the curve drives the tremolo — its speed, its
+  swell, or the pitch it tremolos around — exactly CN-3's curve-as-instruction and CN-1's
+  curve-based tremolos. Every string preset here has a Tremolo family (Xsample #22–26, plus
+  Sul Ponticello Tremolo, Artificial Harmonics Tremolo); "taken over by tremolos" is a
+  cross-fade from struck/arco material into the tremolo presets on the curve channels.
+- **Playable path:** strikes = a scattered blast (CN-5); harmony choice = the chord tools;
+  the tremolo takeover = curve objects with a tremolo technique whose density follows the
+  curve. The one new instruction is "tremolo speed from the curve," a small engine addition
+  kin to the multitempo ramp (CN-3).
