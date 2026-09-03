@@ -134,7 +134,7 @@ const INSTRUMENTS = {
       { key: "flutter_vel_mwinv", label: "Flutter Tongue Velocity + MW inverted (#29)", channel: 1, cc0: 28, rangeLow: 34, rangeHigh: 60 },   // GUI A#0–C4 (screenshot, R5); every flutter preset caps at C4
       { key: "triple16",    label: "Triple Tongue 16T (#18)",       channel: 1, cc0: 17, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d
       { key: "mp_loop",     label: "Multiphonics looping (#22)",    channel: 1, cc0: 21, rangeLow: 34, rangeHigh: 46 },
-      { key: "flutter_lock",label: "Flutter LOCK bright (#34)",     channel: 1, cc0: 33 },
+      { key: "flutter_lock",label: "Flutter LOCK bright (#34)",     channel: 1, cc0: 33, rangeLow: 55, rangeHigh: 93 },   // GUI low G2 / high A5 (screenshot, R5): an Ensemble-routed LOCK preset, high and bright — NOT the flutter samples' own zone; Slot rr 2, slot 4 active, Trigger off
     ],
   },
 

@@ -970,3 +970,8 @@ four slots must sit on its own channel (1–4); Omni would sound all four on eve
   at the same ceiling; added to the roster (cc0 28). Rule of thumb now on record: **every
   flutter-tongue preset tops out at C4 (60), everything else at F4 (65)**, glissandi at F#1
   (42), multiphonics at A#1 (46).
+- **#34 Flutter LOCK: `low G2 / high A5` = 55–93** — the exception that corrects the rule
+  just written: the C4 ceiling belongs to the flutter-tongue SAMPLE presets (#5, #15, #16,
+  #29); #34 is an Ensemble-routed LOCK construction (slot 4 active, Slot rr 2, Trigger off),
+  bright and high, and sits mostly ABOVE the standard zone. Registered as 55–93. **Every bass
+  clarinet technique in the roster now has a range** (16 techniques after the R5 additions).
