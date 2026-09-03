@@ -763,3 +763,18 @@ Composer: *"done"*. winmm listing (the `MidiDevs` snippet): `Flute` · `Fluteb` 
 case, no near-miss names, no unexpected extras; the machine now has 41 MIDI outs (34 + 7).
 `reaper/` created for R2 (the project file is the first thing to live there;
 Media / Backups / AutoSaves under it are gitignored).
+
+## §19. R2 verified — the project exists; Reaper's MIDI inputs read from its ini
+
+Composer: *"reaper done"*. `reaper/septet_rack.rpp` is in the repo (Reaper **7.72/win64**,
+header `<REAPER_PROJECT 0.1`, zero tracks, 2 069 bytes, CRLF as Reaper writes it); a
+`reaper/Backups/` appeared beside it and is gitignored. Reaper's device state is not in the
+project but in `%APPDATA%\REAPER\reaper.ini`: `midiins` is a bitmask over the winmm INPUT
+device indices — low word `2147450868` = `0x7FFF7FF4`, high word `midiins_h` = `4095`. Read
+against the device order: index 2 (`BassCl`) enabled; indices 33–39 (`Flute` `Fluteb` `Piano`
+`Vn1` `Vn2` `Va` `Vc`, the seven added at R1, at the end of the list) enabled through the high
+mask; index 0 (`UMC1820 MIDI In`, the only hardware input present — the Keystation is not
+connected today) disabled. The tuba-era inputs stay enabled from #4's days; harmless. The
+"auto-enable new devices" option leaves no key I can find in the ini — not verified; the
+hardware input being off is what matters until the keyboard is plugged in. The project file
+is committed now, as #3's D6 and PLAN 0e intend.

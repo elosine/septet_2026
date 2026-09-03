@@ -132,7 +132,9 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   **R-steps** (one at a time, the composer at Reaper, the AI verifying what it can):
   R1 loopMIDI: add `Flute` `Fluteb` `Piano` `Vn1` `Vn2` `Va` `Vc` — AI verifies via winmm
   `done 2026-09-03` (8/8 exact, out + in; 41 MIDI outs on the machine) · R2 new project → `reaper/septet_rack.rpp`; MIDI Devices → Reset all → enable the
-  eight ports as inputs; hardware inputs disabled; auto-enable off; auto-save prefs `todo` ·
+  eight ports as inputs; hardware inputs disabled; auto-enable off; auto-save prefs
+  `done 2026-09-03` (Reaper 7.72; the eight inputs enabled per `reaper.ini`'s masks, the
+  UMC1820 input off; the auto-enable option not verifiable from the ini) ·
   R3 Flute SI2 (UVI, 16 parts A1–A16 in the composer's order — transcribed into
   `sandbox/instruments.js`, the ground truth for 0c) `todo` · R4 Fluteb SI2 (the other 12)
   `todo` · R5 Bass Clarinet XS (Kontakt 8, four slots ch 1–4; #3's configured track can be
