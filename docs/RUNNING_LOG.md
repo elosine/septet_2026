@@ -965,3 +965,8 @@ four slots must sit on its own channel (1–4); Omni would sound all four on eve
   its name says it will be 34–60 too — the composer sends it only if not.
 - **#21 Glissando Undefined MW:** `A#0–F#1` = 34–42, the wheel-shaped sibling of #7 (#3's
   table listed them together). Added to the roster (cc0 20).
+- **#22 Multiphonics MW:** `A#0–A#1` = 34–46 on screen — as the roster had it (mp_loop, cc0 21).
+- **#29 Flutter Tongue Velocity + MW inverted:** `A#0–C4` = 34–60 — the fourth flutter preset
+  at the same ceiling; added to the roster (cc0 28). Rule of thumb now on record: **every
+  flutter-tongue preset tops out at C4 (60), everything else at F4 (65)**, glissandi at F#1
+  (42), multiphonics at A#1 (46).

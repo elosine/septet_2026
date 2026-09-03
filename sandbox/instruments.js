@@ -131,6 +131,7 @@ const INSTRUMENTS = {
       { key: "cresc",       label: "Crescendo (#12)",               channel: 1, cc0: 11, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d
       { key: "morph_vxmw",  label: "Senza+Flutter Vel×MW (#15)",    channel: 1, cc0: 14, rangeLow: 34, rangeHigh: 60 },   // GUI high C4 (screenshot, R5) — the flutter layer caps it, like #5 / #16
       { key: "flutter_vel", label: "Flutter Tongue Velocity (#16)", channel: 1, cc0: 15, rangeLow: 34, rangeHigh: 60 },   // GUI high C4 (screenshot, R5)
+      { key: "flutter_vel_mwinv", label: "Flutter Tongue Velocity + MW inverted (#29)", channel: 1, cc0: 28, rangeLow: 34, rangeHigh: 60 },   // GUI A#0–C4 (screenshot, R5); every flutter preset caps at C4
       { key: "triple16",    label: "Triple Tongue 16T (#18)",       channel: 1, cc0: 17, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d
       { key: "mp_loop",     label: "Multiphonics looping (#22)",    channel: 1, cc0: 21, rangeLow: 34, rangeHigh: 46 },
       { key: "flutter_lock",label: "Flutter LOCK bright (#34)",     channel: 1, cc0: 33 },
