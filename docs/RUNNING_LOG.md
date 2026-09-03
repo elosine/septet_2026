@@ -755,3 +755,11 @@ line third field = 1 on every instrument track, one `<VST` per track, track orde
 
 **R1, as given to the composer:** in loopMIDI add seven ports, names exactly `Flute`,
 `Fluteb`, `Piano`, `Vn1`, `Vn2`, `Va`, `Vc` (`BassCl` exists). Nothing else in this step.
+
+## §18. R1 verified — the eight ports exist, exact names
+
+Composer: *"done"*. winmm listing (the `MidiDevs` snippet): `Flute` · `Fluteb` · `BassCl` ·
+`Piano` · `Vn1` · `Vn2` · `Va` · `Vc` — every one present as a MIDI out AND a MIDI in, exact
+case, no near-miss names, no unexpected extras; the machine now has 41 MIDI outs (34 + 7).
+`reaper/` created for R2 (the project file is the first thing to live there;
+Media / Backups / AutoSaves under it are gitignored).
