@@ -543,3 +543,104 @@ decision, not an accident of the port.
 **What follows for phase 2** (PLAN 2a, one clause added): the notation score, the print
 score and the parts keep the same top-to-bottom order; bracket groups winds · piano brace ·
 strings.
+
+## §15. 0e opens — where CC7 and control state stand (found in the sources), and the port / rack layout proposed
+
+**Prompted by** the composer: *"let's establish where we are with CC seven and other control
+channel messages. I don't have perfect recall about this. In the string quartet, I believe we
+had a separate cc7 track and a separate track for the vibrato width; but we may have resolved
+this in the tuba piece. Towards the end, there are some swells, and it could be that we reset.
+We figured out how to reset everything in time … there were tests. I know we ran the test, so
+let's find those and see where we are. … the tubas needed two tracks to handle all the presets
+… we may need to do that as well for these instruments. Let's figure out the loopMIDI port
+layout and the reaper layout, and then we'll start building."* Also settled at the top: the
+Reaper session is laid out in score order (D10).
+
+**1. The quartet (#1) — the memory is right: state was isolated by CHANNEL BANKS.**
+`string_quartet_no1-composer/docs/PROJECT_JOURNAL.md` lines 64 and 240–243: 12 MIDI channels
+in three banks — base (1–4), vibrato (5–8: CC4 + channel pressure), volume (9–12: CC7 ramps for
+crescendo / long-tone gliss / pizz tremolo). *"Why separate banks? The synth doesn't reliably
+respond to CC120/CC123 for state reset. A crescendo ending at CC7=127 leaves the channel
+permanently loud. Isolating by bank prevents cross-contamination."* Secco cut-offs used CC7→0
+because CC120/123 were ignored (`MIDI_MUSIC_GENERATION.md` line 285). The
+`cc_mapping_registry.json` carries the CC0 articulation ids (89 arco/senza · 95 pizz · 71 pizz
+open · 97 Bartók · 53 bow overpressure) with their state rules (`persistent` vs `one-shot`
+with a revert pattern) — that is the seed of 0c.4.
+
+**2. The tuba piece (#4) — resolved differently: OWN the state per event, don't isolate it.**
+- *The loudness lane:* curve material (swells, morphs, drawn crescendos) is a CC7 stream
+  through the MEASURED CC7→dB map — `probes/cc7_calibration_probe.ps1` (33 steps, retriggered
+  note per step) + `probes/analyze_cc7.py` → `probes/cc7_map.json` (2026-08-10, tuba1 ch1,
+  pitch 45, floor −120 dB, span 58.1 dB). One-shots and keyboard material play by velocity with
+  **CC7 pinned at 127 before every note** (journal line 1269; RUNNING_LOG line 4648: *"CC7 =
+  loudness … velocity is not the dynamic carrier"*, *"swell works"*).
+- *The residue, and the reset the composer remembers:* `docs/ISSUES.md` **I1 "CC7 residue:
+  tracks stuck quiet"** — swell grains end at zero, the last CC7 on the channel ≈ 0, UVI keeps
+  channel volume per channel independent of patch. **Cure (2026-08-13):** (1) the stop-flush
+  sweeps all-notes-off + CC7=127 + every technique's CC0 default across the ENTIRE technique
+  map; (2) a **CC7 Reset** button in the composer top bar, same sweep on demand; (3) sandbox
+  per-note immunity. **The test:** `cc7test-1track` — 20 back-to-back short surges on Tuba 1;
+  equal loudness first-to-last = healthy lifecycle. I2 is the same anatomy for CC0 sub-patch
+  state (the sweep re-asserts each technique's cc0 default).
+- *"Reset everything in time" — the CC7 timing law* (`docs/MORPH_FINDINGS.md` "The CC7 timing
+  law", day 14, ear-verified — composer: *"Blip gone."*): a cold attack needs real CC7 settle
+  time — 2–5 ms is not enough, **250 ms is clean**; restoring CC7 upward while the release tail
+  rings (~0.69 s) blips, so the **restore is delayed 2 s past the note-offs**. Constants
+  `CC_LEAD_MS 250`, `TAIL_MS 2000` in `score/public/morph_emit.js`; panic = note-offs + CC123
+  at once, bend centred at once, CC7=127 restore at +2 s. Also: SI2 responds to velocity AND
+  CC7 (D36, then re-read: the "attack at CC7=0" was the timing, not the velocity).
+- **So in #4 there are no CC7 or vibrato banks.** One UVI multi per port, one channel per
+  technique, and the EMITTER owns the state: prelude (CC0 + CC7, 150–250 ms ahead) → note →
+  delayed restore → stop-sweep. The two-track pattern the composer remembers is the UVI
+  16-part limit only: `Tuba1 SI2` (16 techniques) + `Tuba1b SI2` (the rest) on ports `tuba1` /
+  `tuba1b` — 20 tracks for ten tubas, plus a `REC` track. (`7_tubas_rack.rpp` carries the
+  `Tuba8 SI2` / `Tuba8b SI2` pair TWICE — a duplicate not to inherit.)
+
+**3. What is NOT settled, and is exactly PLAN 0d.** Everything above was measured on SI2 in
+UVI. The septet's bass clarinet and strings are **Xsample in Kontakt**: CC1 is the timbre
+dynamic on MW presets (#3 `XSAMPLE_BASSCL_map.md`: *"CC1 pre-set needed on MW presets (at 0 =
+near silence)"*, the standing recipe "sustained dynamics = CC1 curves"); CC7 is Kontakt's
+volume — it worked as the crescendo ramp on the quartet's Xsample strings, but its dB law was
+never measured (#3 measured only the CC1 crossfade); vibrato width on Xsample was CC4 (+
+aftertouch) in the quartet. **The rule to test at 0d.2, stated now:** the per-event prelude
+writes EVERY CC the technique uses — CC0, CC1, CC4, CC7 — and the stop-sweep restores every
+default; channel banks return only if the ear test on Xsample fails.
+
+**4. The rack pattern, from #3's ledger and #4's rack (`SAMPLER_QUIRKS.md` Reaper section):**
+one Reaper track per loopMIDI port · port name = the recipe's port, case-exact · track input =
+that port, Source channel **All**, no "map input to channel" · **input monitoring ON** (the
+`REC` line's 3rd field = 1 — *"the #1 silent killer … cost us a full session"*) · new loopMIDI
+ports appear only after Preferences → MIDI Devices → Reset all MIDI devices, then Enable
+input · hardware inputs (Keystation, UMC1820) **disabled** in Reaper and auto-enable OFF —
+hardware MIDI is single-client on Windows and Reaper would starve Chrome's Web MIDI · a `REC`
+audio track (record mode: output, stereo) receiving from the track under test — #4's received
+Tuba 1 only; the probes' `.wav` come from it.
+
+**5. The machine today** (winmm, 2026-09-03): 33 MIDI outs — `tuba1..10` + `b`, `Accordion`,
+`BassCl`, `Harp`, `Piano1`, `Piano2`, `Perc1-A/B/C`, `Perc2-A/B/C`, `reaper1`, the UMC1820,
+the GS synth. loopMIDI running; Reaper not running. **`BassCl` already exists** (piece #3,
+same instrument, same name as the septet skeleton) — reuse it.
+
+**6. The layout PROPOSED to the composer** (decision pending; PLAN 0e rewritten when
+confirmed):
+
+| # | loopMIDI port | Reaper track (score order, D10) | plugin | channels |
+|---|---|---|---|---|
+| 1 | `Flute` | Flute SI2 | UVI Workstation, SI2 Flute multi | 16 techniques, one per part A1–A16 |
+| 2 | `Fluteb` | Fluteb SI2 | UVI Workstation, second instance | the remaining 12 (the tuba pattern) |
+| 3 | `BassCl` (exists) | Bass Clarinet XS | Kontakt 8, Xsample bass clarinet | ch 1; CC0 selects the preset |
+| 4 | `Piano` | Piano 8Dio | Kontakt 8, 8Dio Steinway | ch 1 |
+| 4 | `Piano` (same) | Piano PP2 | UVI Workstation, IRCAM Prepared Piano 2 | parts A3 harmonics, A5 muted — #2's proven layout (`HARMONICS_PIANO_PLAN.md` Phase 6) |
+| 5–8 | `Vn1` `Vn2` `Va` `Vc` | Vn1 XS · Vn2 XS · Va XS · Vc XS | Kontakt 8, Xsample Contemporary Solo Strings | ch 1 each; CC0 articulations; no banks unless 0d.2 fails |
+| — | — | REC | audio, record output stereo | receive from the track under test |
+
+Eight ports (seven new), ten tracks. Rejected: a separate CC7 or vibrato track per instrument
+(#1's bank scheme) — #4 showed the emitter can own the state, and the app already has the
+prelude, the restore and the sweep; a second port for the piano's second plugin — #2 ran both
+on one port with plugin-side channel filters and it worked.
+
+**7. Checked in this repo, not assumed:** the ported composer app already carries the whole
+#4 mechanism — the `CC7 Reset` button (`composer.html` line 453, "All-notes-off + CC7=127 on
+every port/channel"), the stop-flush sweep (line 9028), and `morph_emit.js` with
+`CC_LEAD_MS = 250` and `TAIL_MS = 2000`. Nothing to port for 0e; 0d measures whether Kontakt /
+Xsample obey the same law.
