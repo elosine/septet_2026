@@ -1039,3 +1039,14 @@ them. Four tracks in score order: Flute SI2 · Fluteb SI2 · Bass Clarinet XS ·
   sound; a cursor. Bar hits (MIDI 0–8) sit below anything the app sends — a candidate
   technique for later, like the 8Dio presets. PP2's Maximizer found on its FX page (threshold
   −1 dB, ceiling −0.1 dB) — bypassed per the rule.
+
+## §28. R7 closed by the composer; the per-instrument file read stops here
+
+Composer, after the Piano PP2 chain showed a live Kontakt 8 ahead of the UVI (a duplicated
+track, most likely): *"its fine lets move on no need to read each inst. you can read at end."*
+So: R7 done on his word; the file is read once at R13 with everything in it, and the double
+instrument on `Piano PP2` is the first thing checked then. R8–R11 (the four strings) handed
+over as one recipe: Kontakt 8, the elastic Xsample string instrument four times on [A] 1–4,
+gains at unity, inputs Vn1 / Vn2 / Va / Vc all channels, arm, monitor. Asked for the violin's
+preset menu and each instrument's standard-preset range to build the rosters as the bass
+clarinet's was built.
