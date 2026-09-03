@@ -1077,3 +1077,10 @@ Pizzicato #80 (cc0 79); the skeleton's 71 / 2 / 70 / 6 / 80 were direct and righ
 Open Strings #72, Vibrato MW #3, Pizzicato Vibrato #71, Arco Open Strings #7, Behind Bridge
 #81). Piece #1's `cc_mapping_registry.json` is therefore only half-portable; noted for any
 future reuse of it.
+- **A slip, on the record:** commit `7d85803` shipped an `instruments.js` that THROWS
+  (`VN_RANGES` read before its `const` initialized — the table runs before the declaration).
+  The node check caught it, but my command chain ran the commit on a separate line after the
+  heredoc, so the failure did not stop it. Fixed one commit later (`dd45f61`: a hoisted
+  function, like `xsStringTechs`), verified in node and in the running app (zero errors, the
+  seven counts intact, violin #7 55–76). Rule for me: the commit belongs in the same `&&`
+  chain as the check, always.
