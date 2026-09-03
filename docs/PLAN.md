@@ -77,8 +77,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
     the bass clarinet; seed the technique list from #1's `cc_mapping_registry.json` (CC0
     89 senza vib · 95 pizz · 71 pizz open · 97 Bartók · molto vib · behind the bridge, with
     their one-shot/persistent state rules) + the gliss keyswitches (B0 / G#1 / A1) + CC68/24
-    legato. One port per instrument; **channels = banks only if 0d says CC state must be
-    isolated** (the quartet's 3-bank workaround), otherwise one channel.
+    legato. One port per instrument; **channels by event class (D11): main 1 · curve
+    2 / 3 / 4**, the same CC0 set loaded in every slot.
   - **0c.5 — Transposition + clef metadata per instrument** recorded now (bass clarinet
     written a major 9th up; piccolo 8vb; bass flute 8va; alto clef for viola) — unused
     until phase 2, free to record, expensive to rediscover.
@@ -87,6 +87,14 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
     Bartók, slap, key click, staccato, …), measured as piece #4 measured the tubas; the
     app's `techLength` and the extractor read the same table. Until then the extractor uses
     the drawn length and warns (0i, run D: six warnings on ten notes).
+  - **0c.7 — The channel map and the router (D11):** every Kontakt instrument gets
+    `channels: { main: 1, curve: [2, 3, 4] }`; `sonify_core`'s route picks `main` for
+    `sonifyMode 'plain'` / `'ks'` and the next curve channel, round-robin per instrument, for
+    curve mode; the prelude on a curve channel writes CC0 + the start value of every
+    controller the event uses (CC7; CC1; CC4 + channel pressure); the stop-sweep already
+    visits every channel in the map. Flute: decide curve copies of `ord` (and which others)
+    in the four free Fluteb slots vs the tuba law, once the UVI order is transcribed. Fix the
+    `oneShot` comment (NITS: the sampler does not revert; the notation rule did).
 
 - **0d — Xsample dynamics nailed: CC7 and CC state** — `todo` *(repurposed 2026-09-03:
   the library compare was decided by the composer → D7; what remains is his one named
@@ -97,21 +105,42 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   - **0d.2 — State rule verified by ear + probe:** does CC7 persist as channel state
     (the quartet's finding: a crescendo ending at CC7=127 left the channel loud; CC120/123
     did not reset it)? Recipe rule regardless of the answer: **every event's prelude writes
-    its own CC7 — never rely on a reset.** Only if that fails do channel banks return.
+    its own CC7 — never rely on a reset.** Channel banks are in from the start (D11): the
+    main channel's CC7 is never moved; the rule binds the curve channels.
   - **0d.3 — Which lane does what:** CC1 = timbre-dynamics on MW presets (#3's standing
     recipe: sustained dynamics = CC1 curves), CC7 = level; how the app's level lane maps to
     each. Written as `docs/XSAMPLE_DYNAMICS_RECIPE.md`, one page, with the numbers.
-  *Why:* the composer's own risk statement; the quartet's three-bank workaround exists
-  because this was never settled, and the recipes (0c) inherit whatever 0d decides.
+  - **0d.4 — The Xsample controller probes, none measured before:** **CC4 vs channel
+    pressure** for vibrato width (a held note, one controller at a time — the quartet sent
+    both and never learned which one Xsample obeys) · the CC1 crossfade's settle time before
+    a note-on · CC0 switch latency (a note right after a preset change). Each on one string
+    preset and the bass clarinet; numbers into the recipe doc.
+  *Why:* the composer's own risk statement; D11 keeps the banks by design, and 0d decides
+  what the preludes must write and how early; the recipes (0c) inherit whatever 0d finds.
 
-- **0e — loopMIDI + Reaper rack** — `todo` *(composer at the machine, AI walks the R-steps
-  as in #3)* — ports named = track ids, case-exact (`Flute`, `BassCl`, `Piano`, `Vn1`,
-  `Vn2`, `Va`, `Vc`; a `-b` overflow port only for a UVI instrument exceeding 16
-  techniques — the flute may need one, the Xsample strings will not); one Reaper track per
-  port, **input monitoring ON** (Principle 1); `reaper/septet_rack.rpp` committed,
-  Media/Backups/AutoSaves ignored (#3's D6). Kontakt 8 for Xsample/8Dio, UVI Workstation
-  for SI2/PP2. *Why:* it is the whole audition path; #3 lost a session to monitoring
-  being off.
+- **0e — loopMIDI + Reaper rack** — `doing 2026-09-03` *(composer at the machine, AI walks
+  the R-steps as in #3; RUNNING_LOG §15–17)* — **the layout (D10 order, D11 banks):** eight
+  loopMIDI ports, case-exact — `Flute` · `Fluteb` (the SI2 flute's 28 techniques, 16 + 12,
+  the tuba pattern) · `BassCl` (exists from #3, reused) · `Piano` (one port, two tracks:
+  8Dio in Kontakt on ch 1, IRCAM PP2 in UVI with parts on ch 3 / ch 5 — #2's proven layout)
+  · `Vn1` `Vn2` `Va` `Vc`; ten Reaper tracks in score order — Flute SI2 · Fluteb SI2 ·
+  Bass Clarinet XS · Piano 8Dio · Piano PP2 · Vn1 XS · Vn2 XS · Va XS · Vc XS · REC; every
+  Kontakt track holds its Xsample instrument in **four slots on ch 1–4** (main, curve
+  A/B/C); every track: input = its port, Source channel All, no map-to-channel, **input
+  monitoring ON** (Principle 1); Reaper never owns the Keystation (hardware inputs disabled,
+  auto-enable off); `reaper/septet_rack.rpp` committed, Media/Backups/AutoSaves ignored.
+  **R-steps** (one at a time, the composer at Reaper, the AI verifying what it can):
+  R1 loopMIDI: add `Flute` `Fluteb` `Piano` `Vn1` `Vn2` `Va` `Vc` — AI verifies via winmm
+  `todo` · R2 new project → `reaper/septet_rack.rpp`; MIDI Devices → Reset all → enable the
+  eight ports as inputs; hardware inputs disabled; auto-enable off; auto-save prefs `todo` ·
+  R3 Flute SI2 (UVI, 16 parts A1–A16 in the composer's order — transcribed into
+  `sandbox/instruments.js`, the ground truth for 0c) `todo` · R4 Fluteb SI2 (the other 12)
+  `todo` · R5 Bass Clarinet XS (Kontakt 8, four slots ch 1–4; #3's configured track can be
+  imported) `todo` · R6 Piano 8Dio (Kontakt, ch 1) `todo` · R7 Piano PP2 (UVI, harmonics A3,
+  muted A5) `todo` · R8–R11 Vn1 / Vn2 / Va / Vc XS (Kontakt 8, four slots each) `todo` · R12
+  REC (audio, record output stereo, receive from the track under test) `todo` · R13 save +
+  commit; on the composer's Chrome the app's Web MIDI list shows the eight ports `todo`.
+  *Why:* it is the whole audition path; #3 lost a session to monitoring being off.
 
 - **0f — The AI's MIDI generation path** — `todo` — three routes, all inherited, wired to
   the septet recipes: (i) **live** — app objects → `compiler.js`/`sonify_core.js` → Web MIDI

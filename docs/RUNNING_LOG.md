@@ -735,3 +735,23 @@ slot channels 1 / 2 / 3.
 **Proposed to the composer:** main + curve A/B (or A/B/C from the start as cheap insurance)
 for the five Kontakt instruments; the quartet's literal three banks (main / CC7 / vibrato)
 rejected for the one-note-two-curves case; flute per 0c; piano main only.
+
+## §17. D11 taken ("b"); PLAN 0e rewritten as the R-steps; R1 handed to the composer
+
+**The composer's answer to §16's three options: "b"** — main + curve A / B / C on every
+Kontakt port, from the start. Recorded as **D11** (journal §4) with the reasoning and the
+rejected alternatives; PLAN 0c.4 / 0c.7 (the `channels` map and the router), 0d.2 / 0d.4 (the
+Xsample controller probes), and 0e (the layout and R1–R13) rewritten to match.
+
+**Working assumptions carried forward, offered in §15 and not objected to:** the piano's two
+plugins on ONE port `Piano` with plugin-side channel filters (8Dio ch 1; PP2 parts A3 / A5),
+and the existing `BassCl` port reused as-is. Either is a one-line change if the composer
+prefers otherwise while building.
+
+**Verification the AI can do without Reaper:** the winmm device list (the `MidiDevs` snippet,
+§15 item 5) shows every loopMIDI port as a MIDI out and in; a name typo shows up there before
+it can cost an hour in Reaper. The rack file itself is checked the same way as #4's: `REC`
+line third field = 1 on every instrument track, one `<VST` per track, track order = D10.
+
+**R1, as given to the composer:** in loopMIDI add seven ports, names exactly `Flute`,
+`Fluteb`, `Piano`, `Vn1`, `Vn2`, `Va`, `Vc` (`BassCl` exists). Nothing else in this step.

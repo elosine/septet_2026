@@ -131,9 +131,11 @@ notation app. The D9 §5 list is written as rules in **`docs/NAMING.md` §2** �
 as the app writes it; the two bites are pipeline-side and filed under 2a; the sounding-length
 table is 0c.6. RUNNING_LOG §13.
 
-**Next up:** **0e** loopMIDI + Reaper rack — the composer at the machine; then **0c**
-recipes from the rack as built; **0d** CC7 nailed; **0h** gate → compose. AI-alone before
-0e: only **0c.5** (transposition + clef metadata).
+**Next up:** **0e in progress** — D10 (score order) and D11 (channel banks: main + curve
+A/B/C on every Kontakt port) decided, RUNNING_LOG §15–17. R1 = the composer adds the loopMIDI
+ports `Flute` `Fluteb` `Piano` `Vn1` `Vn2` `Va` `Vc` (`BassCl` exists from #3), the AI
+verifies from winmm; then R2–R13 per PLAN 0e; then **0c** recipes from the rack as built
+(with the `channels` map), **0d** the Xsample measurements, **0h** gate → compose.
 
 **NEXT STEPS · MODEL · CLEAR:**
 1. ☑ 0b wrapped, checkpoint, clear; resumed on Fable (the composer's choice over the
@@ -163,7 +165,9 @@ that has never seen this conversation):*
 - **Next concrete step (PLAN 0e), as an instruction — WITH THE COMPOSER, never alone:**
   at Reaper, create the loopMIDI ports `Flute`, `Fluteb`, `BassCl`, `Piano`, `Vn1`, `Vn2`,
   `Va`, `Vc` (case-exact; the names in `sandbox/instruments.js`); one Reaper track per port
-  with the library instance loaded and record-monitoring ON; save the rack as
+  with the library instance loaded (Kontakt tracks: the instrument in FOUR slots on ch 1–4,
+  D11; the piano's two plugins on two tracks, both reading port `Piano`) and
+  record-monitoring ON; save the rack as
   `reaper/septet_rack.rpp` and commit it; then, on the composer's Chrome (not the in-app
   browser — Web MIDI is denied there), open http://localhost:5300/composer.html and check
   the Web MIDI port list shows all eight; transcribe the UVI / Kontakt slot order into
@@ -298,6 +302,28 @@ sources; verified here only when they bite.)*
   order (TRACKS as ported at 0b — RUNNING_LOG §14). *Consequence for phase 2:* the notation
   score, the print and the parts keep the same order; bracket groups winds / piano brace /
   strings (PLAN 2a).
+- **D11** *(2026-09-03, composer)* — **Channel banks by EVENT CLASS, from the start, on every
+  Kontakt / Xsample port** (bass clarinet, vn 1, vn 2, va, vc): **ch 1 MAIN** — plain notes,
+  dynamics by velocity, articulation by the prelude's CC0, keyswitches; no continuous
+  controller is ever written here — and **ch 2 / 3 / 4 CURVE A / B / C**, used round-robin
+  for any event that carries a continuous controller (CC7 level, CC1 timbre dynamic, CC4 +
+  pressure vibrato width, bend), each event writing its own start values in its prelude. The
+  composer: *"there's going to be events that happen right after a crescendo much sooner
+  than two seconds … a crescendo in the violin that goes to secco … the next event might
+  come in in a hundred and fifty milliseconds … So probably better to continue using
+  multiple channels."* Offered A (main + two curve channels), B (main + three), C (the
+  quartet's literal main / CC7 / vibrato banks); the composer chose **B** ("b"). *Why:* #4's
+  250 ms lead and 2 s restore are the cost of moving a controller on a channel where a note
+  sounds; a channel that is never moved has no timing cost, so the main channel is free of
+  the law entirely; the only collision left is two curve events on one channel inside the
+  lead window, and three curve channels cover three of them — cheap insurance, a Kontakt slot
+  costs RAM only. *Rejected:* one channel per CONTROLLER (the quartet's scheme), because a
+  note that swells and changes its vibrato width at once is one note on one channel — the
+  split must be by event class. Flute (UVI, channel = technique) is decided at 0c: curve
+  copies of the curve-bearing techniques in the four free Fluteb slots, or the tuba law as
+  it stands; piano main only. Vibrato found, not remembered: width = CC4 + channel pressure
+  (which one Xsample obeys is 0d's to measure); molto vibrato is a preset (CC0 2 / 70) and
+  lives on the main channel. RUNNING_LOG §15–16.
 
 ---
 
