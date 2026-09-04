@@ -65,6 +65,55 @@ The starting set:
   playhead as a gesture (groupId + META shape); time × / warp / rhythm-only; the redaction
   groups. All in the v1 panel; their place in the new layout is decided as A–C land.
 
+## E · The orchestration panel — `wanted`
+
+> *"To the right of the keyboard will be the orchestration panel. Let's just have the seven
+> instruments in their order from top to bottom. And then I'll be able to shuffle with a
+> button, and there'll be dotted lines drawn from the keyboard keys to the instruments — which
+> notes are playing them. I don't necessarily want the flute to always be on top. I want to
+> hear a shuffle."*
+
+- Right of the keyboard: the seven instruments, score order top to bottom (D10).
+- **Shuffle**: a random assignment of the strike's notes to instruments. Dotted lines from
+  each key to its instrument show the assignment.
+- *AI notes:* the lines are SVG over both panels; each instrument row also lists its note(s)
+  and technique (the v1 selects move here).
+
+## F · Ranges — `adopted 2026-09-03`
+
+> *"What happens when the ranges don't fit? … I don't want things to be too fiddly."* — the
+> AI's proposal, adopted by the composer ("Those are good suggestions. Let's adopt those."):
+
+1. **The shuffle never produces a misfit**: it draws only assignments with every note inside
+   its instrument's range.
+2. **A hand assignment that doesn't fit gets one click:** **fold** (default — the note moves
+   by octaves into the range; its line shows ↑ / ↓) or **skip** (nobody plays it; greyed).
+3. **One switch, "shuffle may fold":** off = played registers only (a low strike stays with
+   cello, bass clarinet, piano); on = the shuffle may fold pitch classes by octave, so any
+   instrument can take any pitch class.
+4. **Top / bottom locks:** "top → instrument", "bottom → instrument"; the shuffle respects
+   them and moves everything else.
+
+## G · Audition modes — `wanted`
+
+> *"I want to be able to hear the chord, audition it, and then if I want to reorchestrate.
+> And same with the piano part too — let's have that just be piano, and I can listen to the
+> harmony as a piano, or I can listen to orchestrated."*
+
+- Two Hear modes: **piano** (every note of the strike on the piano lane, the harmony alone)
+  and **orchestrated** (the current assignment through the rack). Both from the same button
+  row; the timing transforms apply to both.
+
+## H · The piano's role — `wanted`
+
+> *"What do I do about the piano? Sometimes I'll want it to double — play more than the one
+> note — or just play one note."*
+
+- *AI proposal (asked):* one switch with four positions — **one** (the piano is a player
+  like the others: one note) · **rest** (it takes every note nobody else has — the default
+  when a strike has more notes than players) · **all** (it plays the whole chord under the
+  orchestration: doubling) · **none** (silent). The shuffle honours the switch.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 1. **"Cluster together":** chromatic — the pitch classes packed semitone-adjacent inside one
@@ -74,3 +123,4 @@ The starting set:
 ## Log
 
 - 2026-09-03 — A, B, C stated by the composer; D exists as v1. Nothing built against A–C yet.
+- 2026-09-03, later — E (orchestration panel) stated; F (ranges) proposed and adopted; G (audition modes) stated; H (the piano's role) raised, a four-way switch proposed.
