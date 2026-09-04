@@ -1619,3 +1619,29 @@ rule amended for this rack, for that reason.
 **Recommended:** build our own bridge (~100 lines of Lua + a Node job runner), not an MCP
 install — nothing between the AI and the API, no dependency, verifiable by read-back. Plan 0k
 in four steps (bridge · jobs · apply B · the co-work protocol). Awaiting the composer's go.
+
+## §49. UVI Workstation's state is XML — the plugin's insides are text (amends §48)
+
+Composer: *"so, how about the initial set up, i had to insert the instrument and add a multi and
+change a# etc. bypass effects x 19. any solutions to this? hybrid? other methods to access fx
+plugin interface? i think uvi has some sort of programmable messages?"*
+
+Checked in the rack file rather than guessed: the Flute SI2 track's `<VST` block, base64
+→ bytes: a 312-byte header, then a **zlib stream that inflates to 3.5 MB of XML**
+(`<UVI4><Engine …><Synth DisplayName="Master" Gain="0.79432821">` — the composer's −2 dB
+of this morning, as a number), then a short tail. In the XML: sixteen `<Part … Gain=
+MidiChannel= OutputName= Mute= …>`, each `<Program … ProgramPath="$IRCAM Solo Instruments
+2.ufs/Presets/05 Flute/…uvip" BypassInsertFX=…>`, every insert effect with its own
+`Bypass="0|1"` (1790 bypassed flags in the file — the composer's nineteen clicks, as text).
+The PP2 track the same (47 MB of XML). Kontakt's chunk is the NKI binary (KSP script text
+visible inside, no structure to edit) — not this route.
+
+**So, for UVI, the plugin interface IS accessible without the GUI:** parts, channels, gains,
+outputs, preset paths, effect bypasses are attributes; a change = decode → edit → deflate →
+re-encode → back into the track (live through the bridge's `SetTrackStateChunk`, or the file
++ reload). Two things to prove before trusting it: the round trip (re-encode unchanged and
+have UVI accept it) and one visible edit (a part's channel) seen in the GUI. This amends
+§48's "instance masters are GUI-only": true for Kontakt, false for UVI. Kontakt's setup
+stays GUI + duplication (a finished track's chunk copied to an identical instrument, track
+templates), with desktop automation for the repeated clicks and a possible KSP multi-script
+for runtime settings (unexplored).
