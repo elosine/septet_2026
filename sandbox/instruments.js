@@ -54,7 +54,7 @@ const INSTRUMENTS = {
       // A5 · Flute FX KS
       { key: "jet_whistle",     label: "Jet Whistle",                preset: "Flute FX KS",                 channel: 5,  ks: 36, rangeLow: 48, rangeHigh: 83 },   // A5 screenshot: red C1 + C#1; tan D1–B1 (38–47) and C5+ (84+); white C2–B4 native; PURPLE C4
       { key: "key_click",       label: "Key Click",                  preset: "Flute FX KS",                 channel: 5,  ks: 37, rangeLow: 48, rangeHigh: 83 },
-      { key: "tongue_ram",      label: "Tongue Ram",                 preset: "Flute FX KS",                 channel: 5,  ks: 38, rangeLow: 48, rangeHigh: 83 },   // D1 is TAN on screen, not red — the manual's third switch (tongue ram); verify by pressing
+      { key: "tongue_ram",      label: "Tongue Ram",                 preset: "Flute FX KS",                 channel: 5,  ks: 38, rangeLow: 48, rangeHigh: 83 },   // D1 is TAN on screen, not red — the manual's third switch (tongue ram); verify by pressing   // UNVERIFIED in the loaded patch (composer, 2026-09-04: "i dont see a tongue ram in the sampler") — only C1/C#1 were red in the A5 screenshot; press D1 (38) on the FX KS part to settle it; until then the written tongue ram uses the pizzicato sample
       // A6 · Flute Finger Modes KS
       { key: "harmonic_fing",   label: "Harmonic Fingering",         preset: "Flute Finger Modes KS",       channel: 6,  ks: 36, rangeLow: 79, rangeHigh: 96 },   // A6 screenshot: red C1; white only from ≈G4 (display) → C6+ = MIDI ≈79–96 (upper register); grey elsewhere, no tan
       { key: "discolored_fing", label: "Discolored Fingering",       preset: "Flute Finger Modes KS",       channel: 6,  ks: 37, rangeLow: 79, rangeHigh: 96 },   // C#1 not red on screen — verify
@@ -73,7 +73,7 @@ const INSTRUMENTS = {
       // A12 · Flute Ordinario
       { key: "ord",             label: "Ordinario",                  preset: "Flute Ordinario",             channel: 12, rangeLow: 60, rangeHigh: 96 },   // A12 screenshot: no red keys; white C3→C6 (60–96); B2 grey (the manual's B3 extension is not in this patch); no tan
       // A13 · Flute Pizzicato
-      { key: "pizzicato",       label: "Pizzicato",                  preset: "Flute Pizzicato",             channel: 13, rangeLow: 60, rangeHigh: 84 },   // A13 screenshot: no red keys; white C3→C5 native (60–84); tan below C3 and above C5 (stretched)
+      { key: "pizzicato",       label: "Pizzicato",                  preset: "Flute Pizzicato",  notate: "tongue ram",             channel: 13, rangeLow: 60, rangeHigh: 84 },   // A13 screenshot: no red keys; white C3→C5 native (60–84); tan below C3 and above C5 (stretched)   // NOTATES AS TONGUE RAM (composer, 2026-09-04: "pizzicato sounds loud in sample, just note that we'll notate this as tongue ram") — the SI2 pizzicato sample stands in for the written tongue ram; RUNNING_LOG §44
       // A14 · Flute Play & Sing KS
       { key: "play_sing",       label: "Play and Sing (sung C4)",    preset: "Flute Play & Sing KS",        channel: 14, ks: 36, rangeLow: 60, rangeHigh: 96 },   // A14 screenshot: red C1; C#1 not red; tan C#1–B2 (37–59) below; white from C3 (60), right end cut in the frame (top provisional 96)
       { key: "play_sing_unison",label: "Play and Sing Unison",       preset: "Flute Play & Sing KS",        channel: 14, ks: 37, rangeLow: 60, rangeHigh: 96 },   // C#1 — verify

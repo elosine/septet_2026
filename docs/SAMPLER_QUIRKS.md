@@ -40,6 +40,12 @@
 - **Preset FX ship on:** IR reverb, and in PP2 a Maximizer (threshold −1 dB) and a Tilt EQ —
   bypass all of them in the rack (PLAN 0e's per-track rule).
 
+- **Flute: the SI2 Pizzicato sample stands in for the written TONGUE RAM** (composer, 2026-09-04:
+  "pizzicato sounds loud in sample, just note that we'll notate this as tongue ram"). The recipe
+  carries `notate: "tongue ram"` on `flute.pizzicato`; the notation layer (2a) reads it. The FX KS
+  preset's own tongue ram (manual: third keyswitch, D1 = 38) was not seen in the loaded patch —
+  only C1/C#1 lit; unverified until D1 is pressed on the FX part (Flute ch 5).
+
 ## Xsample (Kontakt)
 
 - **CC#0 88–117 are the keyswitch banks' stored slots, not presets** — piece #1's registry

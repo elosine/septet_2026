@@ -368,6 +368,11 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   player's row), any number at once; Hear plays only the soloed voices while any are soloed;
   a `solo off` button clears them. Distinct from the piano flag and the future double-stop flag.
 
+- **U4 — a narrower rhythm strip.** *"you can save horizontal space by reducing the rhythm
+  zoom/width of bands"* — *AI reading:* the strip's default width fits the strike's span into
+  ~40 % of the drawer instead of the whole remainder (a zoom slider keeps the wide view), the
+  bands drawn at true 60 ms width (thin at that zoom); the space saved goes to U1's gap.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the

@@ -299,6 +299,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 ## 2. Notate — `deferred` until the first real page exists
 
 - **2a — Engine adaptation** — the 0g list. Start with the page the opening needs.
+  *Technique → notation mappings to honour (from the recipe's `notate` field): flute `pizzicato`
+  sample → written **tongue ram** (composer, 2026-09-04, RUNNING_LOG §44).*
   **First lines, from 0i (RUNNING_LOG §13):** technique → notation class as registry data
   (`classes.json` + `classify.js` rules — every septet key throws today, by design) ·
   `classify.js` META layer = `tracks.length`, not the literal 10, and `notate_section`'s

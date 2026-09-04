@@ -1480,3 +1480,20 @@ the embouchure hole and the tongue is rammed into it, the tube becomes a closed 
 speaks a loud percussive "pop" a major seventh BELOW the fingered pitch (the manual's KS on
 the FX preset, SI2 does the transposition itself — verify in 0c.8 which pitch the key sounds).
 Both are strikes; the pizzicato is the softer, higher, more pitch-true of the two.
+
+## §44. U4 (a narrower rhythm strip); the flute pizzicato notates as tongue ram
+
+Composer: *"more features, you can save horizontal space by reducing the rhythm zoom/width of
+bands; idont see a tongue ram in the sampler correct me if wrong, pizzicato sounds loud in
+sample, just note that we'll notate this as tongue ram."*
+
+- **U4** queued (STRIKES_TOOL): the rhythm strip narrower by default, the bands at true width.
+- **Tongue ram in the sampler:** the recipe lists `tongue_ram` on the Flute FX KS preset from
+  the SI2 manual (third keyswitch, D1 = 38) — but the composer's A5 screenshot showed only
+  C1/C#1 red and the composer does not see one in the sampler. Marked UNVERIFIED in the recipe;
+  settled by pressing D1 on the FX part (Flute ch 5) some day; not needed now.
+- **Decision (composer): the SI2 Pizzicato sample is what sounds, and it is NOTATED as tongue
+  ram** — the loud, popping sample is closer to the written tongue ram than to a tongue
+  pizzicato. Recorded as `notate: "tongue ram"` on `flute.pizzicato` in `sandbox/instruments.js`
+  (the first use of a technique → notation mapping field; the notation layer reads it at 2a),
+  in SAMPLER_QUIRKS, and as a 2a note in PLAN.
