@@ -357,6 +357,16 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   clarinet `stac_vel` (Staccato Velocity #19), strings `stac_vel` (#19); the piano keeps `main`
   (8Dio). Applies to shuffle, hand assignment and the row menus' initial value; the strike's
   as-played state stays the piano's.
+  **Revised the same morning:** *"new default: flute pizzicato (can you explain this technique,
+  tongue ram?), violins-bartok pizz, vla/vc, gettato, bass clarinet slap tongue, all fff=127"* —
+  *AI reading:* the defaults become flute `pizzicato` · bass clarinet `slap` · violins
+  `bartok_vel` · viola/cello `gettato_vel` · piano `main`, at velocity 127 (the drawer's dyn ×
+  and flatten still apply on top). These five are also measured against each other in the
+  balance run (PLAN 0j, RUNNING_LOG §43).
+- **U3 — solo a voice or a set of voices.** *"can we solo individual voices or a collection"* —
+  *AI reading:* a solo flag per voice (a click with a modifier on a dot, or an `S` on the
+  player's row), any number at once; Hear plays only the soloed voices while any are soloed;
+  a `solo off` button clears them. Distinct from the piano flag and the future double-stop flag.
 
 ## Open questions for the composer (only what blocks the next piece)
 

@@ -14,9 +14,11 @@ the level is the loudest 1 s RMS inside the note - flat (dBFS) and K-weighted (t
 BS.1770 pre-filter: a +4 dB high shelf above ~1.7 kHz and a 38 Hz high-pass, applied in the
 frequency domain - the "perceived" reading, numpy only).
 
-Per instrument: level127 = the mean over its three pitches at velocity 127 (dB); level64 the
-same at 64; trim = target - level127, target = the QUIETEST instrument's level127 by default
-(cuts only, so nothing can clip) or a dB figure. Writes bank/balance.json (measurements with
+Per instrument (its PLAIN technique): level127 = the mean over its three pitches at velocity
+127 (dB); level64 the same at 64; trim = target - level127, target = the QUIETEST instrument's
+level127 by default (cuts only, so nothing can clip) or a dB figure. The STRIKE articulations
+(flute pizzicato, bass clarinet slap, Bartok pizz, gettato) are measured the same way and
+reported against the instrument's plain level and against each other (after the trims). Writes bank/balance.json (measurements with
 provenance + the trims) and prints the Reaper fader values to type in.
 """
 import argparse, json, os, sys, datetime
@@ -103,8 +105,14 @@ def main():
     key = 'dbK' if a.weight == 'k' else 'dbFlat'
     insts = {}
     for r in rows:
-        d = insts.setdefault(r['inst'], {'label': r['label'], 'port': r['port'], 'tech': r['tech'], 'techLabel': r['techLabel'], 'notes': []})
-        d['notes'].append({'pitch': r['pitch'], 'vel': r['vel'], 'onset': r['onset'], 'found': r['found'], 'dbFlat': r['dbFlat'], 'dbK': r['dbK']})
+        role = r.get('role', 'plain')
+        d = insts.setdefault(r['inst'], {'label': r['label'], 'port': r['port'], 'tech': None, 'techLabel': None, 'notes': [], 'techniques': {}})
+        if role == 'plain':
+            d['tech'] = r['tech']; d['techLabel'] = r['techLabel']
+            d['notes'].append({'pitch': r['pitch'], 'vel': r['vel'], 'onset': r['onset'], 'found': r['found'], 'dbFlat': r['dbFlat'], 'dbK': r['dbK']})
+        else:
+            tq = d['techniques'].setdefault(r['tech'], {'techLabel': r['techLabel'], 'port': r['port'], 'notes': []})
+            tq['notes'].append({'pitch': r['pitch'], 'vel': r['vel'], 'onset': r['onset'], 'found': r['found'], 'dbFlat': r['dbFlat'], 'dbK': r['dbK']})
     for k, d in insts.items():
         v127 = [q[key] for q in d['notes'] if q['vel'] == 127 and q['found']]
         v64 = [q[key] for q in d['notes'] if q['vel'] == 64 and q['found']]
@@ -116,6 +124,13 @@ def main():
     target = min(levels) if a.target == 'quietest' else float(a.target)
     for d in insts.values():
         d['trimDb'] = round(target - d['level127'], 1) if d['level127'] is not None else None
+        for tq in d['techniques'].values():
+            v127 = [q[key] for q in tq['notes'] if q['vel'] == 127 and q['found']]
+            v64 = [q[key] for q in tq['notes'] if q['vel'] == 64 and q['found']]
+            tq['level127'] = round(float(np.mean(v127)), 2) if v127 else None
+            tq['level64'] = round(float(np.mean(v64)), 2) if v64 else None
+            tq['vsPlainDb'] = round(tq['level127'] - d['level127'], 1) if tq['level127'] is not None and d['level127'] is not None else None
+            tq['afterTrimDb'] = round(tq['level127'] + d['trimDb'], 1) if tq['level127'] is not None and d['trimDb'] is not None else None
 
     print(f"\nweighting {a.weight} | target {target:.2f} dB ({'the quietest instrument' if a.target == 'quietest' else 'given'})\n")
     print(f"{'instrument':10} {'port':7} {'technique':32} {'127 (dB)':>9} {'spread':>7} {'64 (dB)':>8} {'127-64':>7} {'TRIM':>6}   notes at 127 (pitch: dB)")
@@ -129,6 +144,18 @@ def main():
         sp = f"{d['spread127']:.1f}" if d['spread127'] is not None else '  -'
         tr = f"{d['trimDb']:+.1f}" if d['trimDb'] is not None else '  -'
         print(f"{d['label']:10} {d['port']:7} {d['techLabel'][:32]:32} {l127:>9} {sp:>7} {l64:>8} {diff:>7} {tr:>6}   {n127}")
+    techs = [(k, d, tk, tq) for k in S['order'] if k in insts for d in [insts[k]] for tk, tq in d['techniques'].items()]
+    if techs:
+        print(f"\nSTRIKE articulations at 127 (measured against each other; 'after trim' = with the instrument's trim applied, target {target:.1f})\n")
+        print(f"{'instrument':10} {'technique':36} {'127 (dB)':>9} {'vs plain':>9} {'after trim':>11}   notes at 127 (pitch: dB)")
+        for k, d, tk, tq in techs:
+            n127 = ' '.join(f"{q['pitch']}:{q[key]:.1f}" + ('' if q['found'] else '?') for q in tq['notes'] if q['vel'] == 127)
+            l = f"{tq['level127']:.1f}" if tq['level127'] is not None else '  -'
+            vp = f"{tq['vsPlainDb']:+.1f}" if tq['vsPlainDb'] is not None else '  -'
+            at = f"{tq['afterTrimDb']:.1f}" if tq['afterTrimDb'] is not None else '  -'
+            print(f"{d['label']:10} {tq['techLabel'][:36]:36} {l:>9} {vp:>9} {at:>11}   {n127}")
+        vals = [tq['afterTrimDb'] for _, _, _, tq in techs if tq['afterTrimDb'] is not None]
+        if len(vals) > 1: print(f"\nspread of the strike articulations after the trims: {max(vals) - min(vals):.1f} dB (loudest {max(vals):.1f}, quietest {min(vals):.1f})")
     missing = [f"{r['label']} {r['pitch']}@{r['vel']}" for r in rows if not r['found']]
     if missing: print('\nNOT FOUND (no onset where the timetable expects one): ' + ', '.join(missing))
     print('\nReaper: type each TRIM into the track\'s volume field (double-click the fader) - the piece\'s fff is then matched across the ensemble.')

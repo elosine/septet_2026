@@ -244,6 +244,14 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   becomes a node curve, instead of node-by-node placement. *Why:* the curve is the piece's
   primary continuous notation (D9; NOTATION_ARCHITECTURE amendment 1) and CN-1, CN-3, CN-5 all
   live in curves; drawing speed is composing speed.
+  *Composer, 2026-09-04, the shape of it:* *"for easier wave-curves, i can plot high and low
+  points including plateaus, system will plot the entire wave-curve, I can then easily, easier
+  than now, adjust individual slopes, so something like click on segment, mouse scroll up/down
+  left/right, (we need to better callibrate the mouse adjustment), click off or another"* —
+  *AI reading:* extrema-first drawing (click the peaks, troughs and plateau ends; the curve is
+  fitted through them), then per-segment shaping: click a segment to select it, the wheel bends
+  its slope (vertical = curvature / exponent, horizontal = where the bend sits), click elsewhere
+  to release; the wheel's gain per notch calibrated so one notch is a visible, repeatable step.
 - **1b — Revisit the save-file logic; simplify, make it more logical** — `todo` *(composer,
   2026-09-03: "todo: revisit save file logic, try to simplify/make more logical")* — the
   inherited chain (canonical `piece-sNN` · `-work` autosave copy · `Save as next` · `Variant` ·

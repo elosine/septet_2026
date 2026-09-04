@@ -1442,3 +1442,41 @@ to the cp1252 console raised UnicodeEncodeError — the analyzer reconfigures st
 `python probes\analyze_balance.py <that wav>`; type the TRIM column into each track's volume
 field. Then the trims are written into `sandbox/instruments.js` (`balanceDb`) and
 SAMPLER_QUIRKS, and the rack file re-saved.
+
+## §43. The first test's second batch: solo, the strike defaults, the level test revised, the wave-curve idea
+
+Composer, three messages while the balance run waited at step 1:
+- *"can there be a larger gap between piano keyboard and instruments, cant see where the lines
+  are drawn to; can we make the default sound for all stacatto, no stac atto for piano so leave
+  as is; collect these and I'll have you do a feature update all at once"* → STRIKES_TOOL U1, U2.
+- *"can we solo individual voices or a collection; and new default: flute pizzicato (can you
+  explain this technique, tongue ram?), violins-bartok pizz, vla/vc, gettato, bass clarinet slap
+  tongue, all fff=127; and then sorry can you revise the level test keep what you have and add
+  above articulations against each other"* → U3; U2 revised (the strike defaults replace the
+  staccato idea); the balance run revised.
+- *"a todo when we get there, for easier wave-curves, i can plot high and low points including
+  plateaus, system will plot the entire wave-curve … click on segment, mouse scroll up/down
+  left/right, (we need to better callibrate the mouse adjustment), click off or another"* →
+  PLAN 1a, verbatim, with the AI's reading (extrema-first drawing, per-segment wheel shaping).
+
+**The level test revised (PLAN 0j):** `tools/balance_schedule.js` now adds a second pass —
+each instrument's STRIKE articulation the same way as its plain one (flute Pizzicato on Flute
+ch 13, range 60–84 → pitches 66 72 78; bass clarinet Slap Tongue #6 cc0 5; violins Bartók
+Pizzicato #80 cc0 79; viola/cello Gettato #21 cc0 20; the piano has none) — **78 notes,
+224 s**; `--nostrike` gives the old run, `--strike inst=key` swaps one. `analyze_balance.py`
+keeps the trims from the plain pass and prints a second table: each strike articulation's
+level at 127, its distance from the instrument's plain level, and its level AFTER the trim —
+the number that says whether the strikes sit level with each other once the faders are set,
+and the spread across them. Self-test re-run: plain trims exact, the strike table prints
+(0.0 dB differences by construction — the synthetic file gives both passes the same gain).
+Where a strike articulation lands off the others after the trims, the remedy is a
+per-technique gain, not a fader — decided when the numbers are in (a CC7 offset in the note's
+prelude is the candidate, the tuba piece's per-event CC7 ownership makes it cheap).
+
+**Tongue ram vs flute pizzicato (answered in chat):** *pizzicato* on the flute is a tongue
+pizzicato — the tongue snaps off the closed lips (or the palate) with the fingering held, a
+short pitched "plip" at roughly the fingered pitch, quiet, dry; *tongue ram* — the lips seal
+the embouchure hole and the tongue is rammed into it, the tube becomes a closed pipe and
+speaks a loud percussive "pop" a major seventh BELOW the fingered pitch (the manual's KS on
+the FX preset, SI2 does the transposition itself — verify in 0c.8 which pitch the key sounds).
+Both are strikes; the pizzicato is the softer, higher, more pitch-true of the two.
