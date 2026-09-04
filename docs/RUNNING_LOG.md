@@ -1693,3 +1693,24 @@ manual is dragging one script onto each Kontakt instance and, in UVI, nothing.
 
 The manual: https://docs.native-instruments.com/pdf-guides/kontakt/Kontakt_8_API_Reference-en_260924.pdf
 (NI's document; not stored in the repo). Filed as REAPER_CONTROL mechanism 8c; PLAN 0k.5.
+
+## §52. 0k.1 built: the bridge, the job runner, the Kontakt proof script — awaiting the first heartbeat
+
+Composer: *"just slot it in to the plan and what are the steps now?"* → PLAN 0k carries the
+running order (bridge ► · Kontakt proof · UVI proof · apply B · setup scripts).
+
+Built: `reaper/bridge/bridge.lua` (a defer loop: oldest `inbox/*.lua` → `load` in a sandboxed
+env with `reaper` → `xpcall` with traceback → `outbox/<name>.json` {ok, result | error, ms,
+project} → the job moved to `done/`; a heartbeat file each second with Reaper's version, the
+project, the track count, the play state; a one-copy guard on extstate; `atexit` cleanup; a
+JSON encoder of its own) · `tools/reaper_job.js` (atomic drop into the inbox — temp name then
+rename — and a 30 ms poll for the answer; jobs `heartbeat · tracks · fader · save · chunk ·
+run <file> · -e <lua>`) · `reaper/bridge/install.md` · `reaper/kontakt/proof_readback.lua`
+(every slot's name / MIDI channel / output / volume / pan / mute / solo / polyphony / tune →
+`reaper/kontakt/out/readback_<time>.json`, nothing changed).
+
+Installed: `%APPDATA%\REAPER\Scripts\__startup.lua` was present but EMPTY (Reaticulate's
+folder, no startup line) — now the one `dofile` line; the runtime folders exist and are
+gitignored. The heartbeat is absent until the composer starts the bridge once in the running
+Reaper (Actions → ReaScript: Load… → bridge.lua) — the first proof is that heartbeat and the
+`tracks` job listing the rack.

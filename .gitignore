@@ -39,3 +39,10 @@ research/audio/*.flac
 # OS noise
 Thumbs.db
 .DS_Store
+
+# the Reaper bridge runtime (PLAN 0k) and Kontakt proof outputs
+reaper/bridge/inbox/
+reaper/bridge/outbox/
+reaper/bridge/done/
+reaper/bridge/heartbeat.json
+reaper/kontakt/out/
