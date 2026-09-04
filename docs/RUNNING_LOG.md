@@ -1264,3 +1264,19 @@ puts the last onset at 964 ms (= 482 × 2); Insert at 21.81 s wrote 21 objects (
 lanes 0–6, + 1 META shape, layer 7) under `grp-strike-3-218`; Hear reports the browser's Web
 MIDI block gracefully where MIDI is denied. The composer's listening pass is the next step;
 sequence playback (a whole sequence with its inter-strike gaps) and 1d are after.
+
+## §38. The strikes tool, requirements gathered — `docs/STRIKES_TOOL.md` opened
+
+Composer, with the tuba Blast Sandbox's vertical keyboard as "image one": *"let's talk
+through a plan to build this together … Let's start with the keyboard … this will show the
+notes as I played them on the piano, in each of the scattered strikes … one at a time … Then I
+want some preset buttons … one the original, one spread out (try to achieve an even spread),
+one cluster together, and then I'll be able to move that cluster to different octaves; one
+clustered low and clustered high … I'll want to add some when I'm working … and a reshuffle
+… if it's a cluster high, I can just hit reshuffle and reshuffle the notes into a different
+high cluster. Gather these requirements and organize them for now."* Organized into
+`docs/STRIKES_TOOL.md` (A keyboard view · B voicing presets · C reshuffle · D the v1 panel's
+functions to re-fit), each with the words, the AI's reading, and a status; two blocking
+questions asked (what "cluster together" means — chromatic packing or the played chord
+squeezed; keyboard range). Reuse found: `chordview.html`'s keyboard + pitch-class palette,
+`vert_bank.js`'s even-spread by octave displacement.

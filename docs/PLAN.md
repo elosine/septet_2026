@@ -240,7 +240,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   `Restore` snapshots, NAMING.md §1) is three pieces' accretion; design the septet's own rule set
   before the first real save (`piece-s01`), so no file is ever renamed after the fact. *Why:*
   autosave has eaten a score in every previous piece; the logic must be obvious to be safe.
-- **1c — The scattered-strike database + the reorchestration panel** — `doing 2026-09-03` *(1c.1 `tools/strike_db.js` + `bank/scattered_strikes.json` done, RUNNING_LOG §36; 1c.2 `score/public/strike_panel.js` v1 done and verified in the running app, §37 — the composer's listening pass is next)* *(composer,
+- **1c — The scattered-strike database + the reorchestration panel** — `doing 2026-09-03` *(1c.1 `tools/strike_db.js` + `bank/scattered_strikes.json` done, RUNNING_LOG §36; 1c.2 `score/public/strike_panel.js` v1 done and verified in the running app, §37 — the composer's listening pass is next; **the requirements now grow piece by piece in `docs/STRIKES_TOOL.md`** — keyboard view, voicing presets, reshuffle first)* *(composer,
   2026-09-03, on his first material save "scattered strike 01"; RUNNING_LOG §33 has the words)*
   — the piece's first compositional tool, in the piece #2 ostinato-timing-DB mould
   (`bank/ostinato_timing_db_2p2p.json`: ingestions with provenance, per-sample stats, two
