@@ -162,3 +162,27 @@ names a library to confirm.
   the tremolo takeover = curve objects with a tremolo technique whose density follows the
   curve. The one new instruction is "tremolo speed from the curve," a small engine addition
   kin to the multitempo ramp (CN-3).
+
+---
+
+## CN-7 · 2026-09-03 — a circular cycle of strikes
+
+> *"Circular cycle of strikes. Tremolos interrupted by strikes, and interrupted by
+> accelerations, which end in strikes or tremolos."*
+
+**AI reading (not the composer's words):**
+
+- **A cycle, not a line:** three states — STRIKE, TREMOLO, ACCELERATION — that hand off to
+  each other: a tremolo is cut by a strike; a tremolo is cut by an acceleration; an
+  acceleration lands on a strike or dissolves into a tremolo. It closes on itself, so the
+  form can turn any number of times and exit from any state.
+- **Every element is already named on the sketch pad:** the strikes (CN-5, scattered; the
+  1c database), the tremolos on curves (CN-6), the accelerations (CN-3's ramps, per player or
+  ensemble-wide). CN-7 is the grammar that binds them.
+- **"Interrupted":** the cut is the event — a tremolo does not resolve, it is stopped. That
+  argues for hard edges (a strike as a secco cut, D11's curve channels making the cut clean
+  regardless of what was ringing) and for accelerations that can end on either exit, decided
+  late.
+- **For the tools:** the three states map onto three generators — the strike panel (1c), the
+  tremolo curve, the tempo ramp — and a "cycle" is a sequence of them with transition rules;
+  a small state-machine sketch could audition whole cycles before any is composed by hand.
