@@ -1497,3 +1497,69 @@ sample, just note that we'll notate this as tongue ram."*
   pizzicato. Recorded as `notate: "tongue ram"` on `flute.pizzicato` in `sandbox/instruments.js`
   (the first use of a technique → notation mapping field; the notation layer reads it at 2a),
   in SAMPLER_QUIRKS, and as a 2a note in PLAN.
+
+## §45. The first balance take is digital silence — the REC track had nothing routed into it
+
+Composer: *"recording"* → the AI ran `probes/balance_probe.ps1` (the composer: *"can you
+run?"*): 78 notes, done in 222.5 s, every note printed on time. Reaper wrote
+`reaper/Media/10-REC-260904_1247.wav` (270.7 s, 44.1 kHz, 24-bit stereo — the RECORD_PATH is
+`Media`, gitignored). The analyzer: *no onset found*. Inspected: **peak −240 dBFS, every
+second −240 dB** — digital silence for the whole take, the file complete and closed.
+
+**Diagnosis from the rack file, not a guess:** the REC track's line is `REC 0 0 1 1 …` —
+record mode 1 = "output (stereo)", input 0 = hardware mono input 1, monitor on; there is **no
+`AUXRECV` anywhere in the file and no folder (`ISBUS 0 0` on every track)**. So REC's output
+= its own hardware input (silent on WASAPI shared, and not the rack's audio in any case) —
+the instrument tracks reach the master directly and never pass through REC. Piece #4's REC
+track must have been fed live (receives that were never saved) — the ported rack carries only
+its shell.
+
+**The fix chosen:** make REC a FOLDER PARENT of the nine instrument tracks (REC first in the
+list, `ISBUS 1 1`; the last child `ISBUS 2 -1`; the children's `MAINSEND 1 0` then means
+"to the parent"), REC's input set to none. Its output becomes the mix of the nine, "record
+output (stereo)" captures exactly that, and the master still hears everything through REC.
+Done by editing the `.rpp` after the composer saves the live project (so the edit starts from
+the truth), then File → Open to reload. Rejected: nine receives written by hand (the AUXRECV
+field list is version-dependent — a folder is two flags); recording the master (Reaper has no
+such input).
+
+## §46. The balance run measured — the numbers, the window question, and what the strikes say
+
+The second take (`reaper/Media/01-REC-260904_1313.wav`, 255 s, REC now a folder parent of the
+nine tracks — the composer found the folder button; the flute pre-trimmed by the composer
+after a +0.5 dB clip on the first attempt) — **no clipping, highest sample peak −1.6 dBFS**,
+all 78 notes on time; the schedule found 21.99 s into the file.
+
+**The window matters.** The first pass used the loudest 1 s RMS (piece #4's measure): it
+undersells anything that decays — the piano read −38 and the flute pizzicato −44. Re-measured
+with **400 ms** (BS.1770's momentary integration) for the sustained sounds and **50 ms** to
+read the strikes at their own length; the analyzer now takes `--win` (default 0.4) and a
+`--min −70 dBFS` "found" rule (a note below it did not sound), the floor clamped at −90 dB
+(digital silence between notes had put it at −180). K-weighted throughout.
+
+**Sustained (plain) at 127, 400 ms:** flute −6.6 · bass clarinet −18.4 · piano −34.4 ·
+violin 1 −27.7 · violin 2 −27.2 · viola −23.9 · cello −26.3 dB. Peaks: −1.6 · −7.7 · −20.6 ·
+−23.5 · −22.7 · −15.9 · −14.7. The flute is 21 dB above the violins, the piano 7 dB below them
+— the composer's ear ("flute sounds quite loud") in numbers. 127 → 64 drops 7 (flute), 10–12
+(the rest), 5.6 (viola).
+
+**Strikes at 127, 50 ms:** flute pizzicato −19.9 (14 dB under the flute's sustained; its
+sample PEAK is level with the ordinario's, −1.9 vs −1.6 — a loud instant, little energy) ·
+bass clarinet slap −24.8 (6 under) · Bartók −21 (6 ABOVE the violin's sustained; peak 14 dB
+above) · gettato −24 / −26 (level with the sustained). After per-instrument trims anchored on
+the sustained sounds the strikes spread **20 dB** (Bartók −22 … flute pizzicato −42). That is
+the finding: **one gain per instrument balances the sustained sounds; the strikes then land
+where the samples put them — a flute tongue pizz far under a Bartók pizz, as in life.** If
+the composer wants the strikes level with each other, that is a per-TECHNIQUE gain (a second
+table, applied by the app), decided after listening in the drawer.
+
+**Two range facts from the data:** the violins' Bartók Pizzicato has NO sample at B♭6 (90) —
+both violins silent there (found rule) — its top is somewhere in 79–89, to be read from the
+GUI; the cello's Senza Vibrato is 12 dB softer at B4 (71) than at C3 (48).
+
+**The anchor.** Trims to the quietest (the piano) would pull the flute −28 dB and everything
+else −7…−16 — a quiet mockup. Proposed anchor instead: the violins' level (−27.45): flute
+−21 · bass clarinet −9 · piano +7 · violin 1 0 · violin 2 0 · viola −3.5 · cello −1 (the
+analyzer's `--target -27.45`), applied at the sampler instance masters (piece #4's
+gain-staging rule, the composer's own instinct today: "trim at instrument?"), faders at 0.
+`bank/balance.json` holds the 400 ms measurement with provenance.

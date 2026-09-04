@@ -44,9 +44,11 @@ def k_weight(f):
 
 def db(x): return 20 * np.log10(max(x, 1e-9))
 
-def level(seg, sr, weight):
-    """loudest 1 s window (RMS) in the segment, flat and K-weighted, in dB(FS)."""
-    win = min(len(seg), int(sr * 1.0)); hop = max(1, int(sr * 0.05))
+def level(seg, sr, weight, win_s=0.4):
+    """loudest window (RMS, win_s long) in the segment, flat and K-weighted, in dB(FS).
+    400 ms = the 'momentary' integration of BS.1770 - short enough to read a strike or a
+    decaying piano note at its loudness, long enough to ignore a single click."""
+    win = min(len(seg), int(sr * win_s)); hop = max(1, int(sr * 0.02))
     best_flat, best_k = 1e-9, 1e-9
     f = np.fft.rfftfreq(win, 1 / sr); wk = k_weight(f)
     for s in range(0, max(1, len(seg) - win + 1), hop):
@@ -74,12 +76,14 @@ def main():
     ap.add_argument('--weight', default='k', choices=['k', 'flat'])
     ap.add_argument('--out', default=os.path.join(ROOT, 'bank', 'balance.json'))
     ap.add_argument('--offset', type=float, default=None, help='recording start of the schedule, in s (default: detected from the first onset)')
+    ap.add_argument('--win', type=float, default=0.4, help='RMS window in s (0.4 = momentary; 1.0 = the sustained reading)')
+    ap.add_argument('--min', type=float, default=-70.0, help='a note below this level (dBFS) counts as NOT sounding')
     a = ap.parse_args()
 
     S = json.load(open(a.schedule, encoding='utf-8'))
     x, sr = sf.read(a.wav, always_2d=True); x = x.mean(axis=1)
     env, hop = envelope(x, sr)
-    floor = float(np.percentile(env, 5))
+    floor = max(float(np.percentile(env, 5)), -90.0)   # digital silence between notes would put the floor at -180
     notes = S['notes']
     # the recording's start: the first frame 20 dB over the floor = the first note's onset
     if a.offset is None:
@@ -98,9 +102,10 @@ def main():
         found = (env[f0:f1] > floor + 15).any() if f1 > f0 else False
         on = (f0 + loc) * hop / sr if found else t_on
         seg = x[int(on * sr): int(min(len(x), (t_off + 0.2) * sr))]
-        if not len(seg): flat, kk = -99.0, -99.0
-        else: flat, kk = level(seg, sr, a.weight == 'k')
-        rows.append(dict(n, onset=round(on, 3), found=bool(found), dbFlat=round(flat, 2), dbK=(round(kk, 2) if kk is not None else None)))
+        if not len(seg): flat, kk, pk = -99.0, -99.0, -99.0
+        else: flat, kk = level(seg, sr, a.weight == 'k', a.win); pk = db(float(np.max(np.abs(seg))))
+        if flat < a.min: found = False    # nothing sounded where the timetable expected a note (e.g. a pitch outside the preset's samples)
+        rows.append(dict(n, onset=round(on, 3), found=bool(found), dbFlat=round(flat, 2), dbK=(round(kk, 2) if kk is not None else None), peakDb=round(pk, 2), clip=bool(pk >= -0.1)))
 
     key = 'dbK' if a.weight == 'k' else 'dbFlat'
     insts = {}
@@ -109,16 +114,18 @@ def main():
         d = insts.setdefault(r['inst'], {'label': r['label'], 'port': r['port'], 'tech': None, 'techLabel': None, 'notes': [], 'techniques': {}})
         if role == 'plain':
             d['tech'] = r['tech']; d['techLabel'] = r['techLabel']
-            d['notes'].append({'pitch': r['pitch'], 'vel': r['vel'], 'onset': r['onset'], 'found': r['found'], 'dbFlat': r['dbFlat'], 'dbK': r['dbK']})
+            d['notes'].append({'pitch': r['pitch'], 'vel': r['vel'], 'onset': r['onset'], 'found': r['found'], 'dbFlat': r['dbFlat'], 'dbK': r['dbK'], 'peakDb': r['peakDb'], 'clip': r['clip']})
         else:
             tq = d['techniques'].setdefault(r['tech'], {'techLabel': r['techLabel'], 'port': r['port'], 'notes': []})
-            tq['notes'].append({'pitch': r['pitch'], 'vel': r['vel'], 'onset': r['onset'], 'found': r['found'], 'dbFlat': r['dbFlat'], 'dbK': r['dbK']})
+            tq['notes'].append({'pitch': r['pitch'], 'vel': r['vel'], 'onset': r['onset'], 'found': r['found'], 'dbFlat': r['dbFlat'], 'dbK': r['dbK'], 'peakDb': r['peakDb'], 'clip': r['clip']})
     for k, d in insts.items():
         v127 = [q[key] for q in d['notes'] if q['vel'] == 127 and q['found']]
         v64 = [q[key] for q in d['notes'] if q['vel'] == 64 and q['found']]
         d['level127'] = round(float(np.mean(v127)), 2) if v127 else None
         d['level64'] = round(float(np.mean(v64)), 2) if v64 else None
         d['spread127'] = round(float(max(v127) - min(v127)), 2) if len(v127) > 1 else None
+        pk = [q['peakDb'] for q in d['notes'] if q['vel'] == 127 and q['found']]
+        d['peak127'] = round(float(max(pk)), 1) if pk else None
     levels = [d['level127'] for d in insts.values() if d['level127'] is not None]
     if not levels: sys.exit('no note found at all')
     target = min(levels) if a.target == 'quietest' else float(a.target)
@@ -132,8 +139,8 @@ def main():
             tq['vsPlainDb'] = round(tq['level127'] - d['level127'], 1) if tq['level127'] is not None and d['level127'] is not None else None
             tq['afterTrimDb'] = round(tq['level127'] + d['trimDb'], 1) if tq['level127'] is not None and d['trimDb'] is not None else None
 
-    print(f"\nweighting {a.weight} | target {target:.2f} dB ({'the quietest instrument' if a.target == 'quietest' else 'given'})\n")
-    print(f"{'instrument':10} {'port':7} {'technique':32} {'127 (dB)':>9} {'spread':>7} {'64 (dB)':>8} {'127-64':>7} {'TRIM':>6}   notes at 127 (pitch: dB)")
+    print(f"\nweighting {a.weight} | window {a.win:.2f} s | target {target:.2f} dB ({'the quietest instrument' if a.target == 'quietest' else 'given'})\n")
+    print(f"{'instrument':10} {'port':7} {'technique':32} {'127 (dB)':>9} {'spread':>7} {'peak':>6} {'64 (dB)':>8} {'127-64':>7} {'TRIM':>6}   notes at 127 (pitch: dB)")
     for k in S['order']:
         d = insts.get(k)
         if not d: continue
@@ -143,7 +150,8 @@ def main():
         diff = f"{d['level127'] - d['level64']:.1f}" if d['level127'] is not None and d['level64'] is not None else '  -'
         sp = f"{d['spread127']:.1f}" if d['spread127'] is not None else '  -'
         tr = f"{d['trimDb']:+.1f}" if d['trimDb'] is not None else '  -'
-        print(f"{d['label']:10} {d['port']:7} {d['techLabel'][:32]:32} {l127:>9} {sp:>7} {l64:>8} {diff:>7} {tr:>6}   {n127}")
+        pk = f"{d['peak127']:.1f}" if d['peak127'] is not None else '  -'
+        print(f"{d['label']:10} {d['port']:7} {d['techLabel'][:32]:32} {l127:>9} {sp:>7} {pk:>6} {l64:>8} {diff:>7} {tr:>6}   {n127}")
     techs = [(k, d, tk, tq) for k in S['order'] if k in insts for d in [insts[k]] for tk, tq in d['techniques'].items()]
     if techs:
         print(f"\nSTRIKE articulations at 127 (measured against each other; 'after trim' = with the instrument's trim applied, target {target:.1f})\n")
@@ -156,11 +164,14 @@ def main():
             print(f"{d['label']:10} {tq['techLabel'][:36]:36} {l:>9} {vp:>9} {at:>11}   {n127}")
         vals = [tq['afterTrimDb'] for _, _, _, tq in techs if tq['afterTrimDb'] is not None]
         if len(vals) > 1: print(f"\nspread of the strike articulations after the trims: {max(vals) - min(vals):.1f} dB (loudest {max(vals):.1f}, quietest {min(vals):.1f})")
+    clipped = [f"{r['label']} {r['techLabel'][:12]} {r['pitch']}@{r['vel']} (peak {r['peakDb']:+.1f})" for r in rows if r['clip']]
+    if clipped: print('\nCLIPPED (sample peak at 0 dBFS - the reading is low, lower that instrument and re-run it alone): ' + ', '.join(clipped))
+    else: print(f"\nno clipping: highest sample peak {max(r['peakDb'] for r in rows):+.1f} dBFS")
     missing = [f"{r['label']} {r['pitch']}@{r['vel']}" for r in rows if not r['found']]
     if missing: print('\nNOT FOUND (no onset where the timetable expects one): ' + ', '.join(missing))
     print('\nReaper: type each TRIM into the track\'s volume field (double-click the fader) - the piece\'s fff is then matched across the ensemble.')
 
-    out = {'measuredAt': datetime.datetime.now().isoformat(timespec='seconds'), 'wav': os.path.basename(a.wav), 'schedule': os.path.relpath(a.schedule, ROOT).replace('\\', '/'),
+    out = {'measuredAt': datetime.datetime.now().isoformat(timespec='seconds'), 'wav': os.path.basename(a.wav), 'windowS': a.win, 'minDb': a.min, 'schedule': os.path.relpath(a.schedule, ROOT).replace('\\', '/'),
            'scheduleGeneratedAt': S.get('generatedAt'), 'weighting': a.weight, 'targetDb': round(target, 2), 'targetRule': a.target, 'noiseFloorDb': round(floor, 1), 'offsetS': round(offset, 3),
            'instruments': {k: insts[k] for k in S['order'] if k in insts}}
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
