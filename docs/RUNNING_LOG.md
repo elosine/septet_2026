@@ -1645,3 +1645,18 @@ have UVI accept it) and one visible edit (a part's channel) seen in the GUI. Thi
 stays GUI + duplication (a finished track's chunk copied to an identical instrument, track
 templates), with desktop automation for the repeated clicks and a possible KSP multi-script
 for runtime settings (unexplored).
+
+## §50. Kontakt's "#000 … #511" parameters — host automation, a third door into the samplers
+
+Composer, a screenshot of Reaper's Param menu on the Piano Kontakt track (FX parameter list:
+#000, #001 … ): *"also the param i dont know if these would be useful"*. They are Kontakt 8's
+host-automation slots (VST3 exposes 512 unnamed ones; UVI Workstation has its own set). Each
+is BLANK until a knob inside Kontakt is assigned to it (Kontakt → Automation → Host
+Automation → drag the slot onto the knob), a one-time GUI drag per knob per instance; after
+that the knob is a number the bridge sets and reads (`TrackFX_SetParam`), saved in the `.rpp`.
+The catch: the obvious knob, the slot's Volume, is the one CC7 drives — the app's CC7 = 127
+pin would overwrite a trim there at the first note. Useful on knobs CC7 does not touch: the
+8Dio panel's own GAIN, the Xsample instrument's volume control, Kontakt's Output-section
+faders. So for Kontakt: setup stays GUI once; STATIC trims can become numbers through host
+automation on a CC7-free knob; the rest of the AI-side control is Reaper's. Not needed for
+UVI (the XML route, §49). Filed in REAPER_CONTROL as mechanism 8b.
