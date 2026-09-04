@@ -161,34 +161,32 @@ router · 0c.8 multiphonics walk), **0h** gate → compose.
 
 **Open at session end** *(mid-session checkpoint, 2026-09-03, Fable — written for an AI
 that has never seen this conversation):*
-- **Task and state:** phase 0 setup. 0a, 0b, 0g and 0i are CLOSED and pushed. Nothing is
-  half-built. The composer score app and sandbox run (RUNNING_LOG §9); the notation stack
-  is in the repo, proven by its batteries (§12) and by a septet page (§13);
-  `scores/septet.json` is the day-one stub (§10); `scores/0i-test*.json` and
-  `notation/ir/0i-test-b.ir.json` are the 0i proof, kept as evidence.
-- **Latest deliverable:** `docs/NAMING.md` — the score-file names and the S1 conventions
-  the IR reads (D9 §5 as rules); the first septet page in the notation app's picker.
-  Apps: http://localhost:5300/composer.html ·
-  http://localhost:5300/notation/app/notation.html · http://localhost:4800
-  (`.claude/launch.json`: `score`, `sandbox`).
-- **Next concrete step (PLAN 0e), as an instruction — WITH THE COMPOSER, never alone:**
-  at Reaper, create the loopMIDI ports `Flute`, `Fluteb`, `BassCl`, `Piano`, `Vn1`, `Vn2`,
-  `Va`, `Vc` (case-exact; the names in `sandbox/instruments.js`); one Reaper track per port
-  with the library instance loaded (Kontakt tracks: the instrument in FOUR slots on ch 1–4,
-  D11; the piano's two plugins on two tracks, both reading port `Piano`) and
-  record-monitoring ON; save the rack as
-  `reaper/septet_rack.rpp` and commit it; then, on the composer's Chrome (not the in-app
-  browser — Web MIDI is denied there), open http://localhost:5300/composer.html and check
-  the Web MIDI port list shows all eight; transcribe the UVI / Kontakt slot order into
-  `sandbox/instruments.js` (it is the ground truth for 0c). Walk the composer one R-step at
-  a time (HOW_WE_WORK). **If the composer is not at the machine:** do 0c.5 instead —
-  transposition + clef metadata per instrument recorded in `sandbox/instruments.js`
-  (bass clarinet written a major 9th up; piccolo 8vb; bass flute 8va; viola alto clef).
-- **Resume reads:** journal §4 **D6**, **D9** · `RUNNING_LOG.md` **§13** · `docs/PLAN.md`
-  **0e**, **0c** · `docs/NAMING.md` §2 · piece #3's `docs/SAMPLER_QUIRKS.md` (Xsample CC0
-  state) when 0c starts.
-- **Pending the composer:** 0e itself · piccolo vs bass flute (CN-2) — not blocking.
-- **Deliberately uncommitted:** nothing after the 0i commit.
+- **Task and state:** phase 0 nearly closed — 0a, 0b, 0g, 0i and **0e** DONE and pushed; the
+  rack sounds on every port from the composer app (RUNNING_LOG §35). The composer's first
+  material is in: `scores/ScatteredStrikes01.json` (577 piano strikes, 73 s). Open in phase 0:
+  0c.5–0c.8, 0d (the Xsample measurements), 0f, the 0h gate (its first check passed). The
+  composer runs the score server himself now (`node score\server.js`); the three curve copies
+  ([A] 2–4) per Kontakt track are added when 0c.7 wires the curve routing.
+- **Latest deliverable:** the rack (`reaper/septet_rack.rpp`, ten tracks) + every instrument's
+  full preset roster with ranges in `sandbox/instruments.js` + `scores/rack-test.json`;
+  `docs/SAMPLER_QUIRKS.md` opened; `probes/port_note_probe.ps1`; PLAN 1a–1d filed from the
+  composer's words.
+- **Next concrete step (PLAN 1c.1), as an instruction:** write `tools/strike_db.js`. Read
+  `scores/ScatteredStrikes01.json`; cluster onsets into STRIKES with a gap threshold (default
+  500 ms, a dial); per strike record every onset's offset from the strike's first onset —
+  absolute seconds, normalized 0–1 over the strike's span, and in units of its median gap —
+  the HARMONY = all notes (midi, layer → instKey, technique, recVel), and the RHYTHM = the
+  onsets after redacting any within 60 ms (dial) of a previous kept onset; the SEQUENCE =
+  inter-strike distances first-onset to first-onset, absolute + normalized. Write
+  `bank/scattered_strikes.json` in the mould of `bank/ostinato_timing_db_2p2p.json`
+  (ingestions with provenance: score, window, object ids, thresholds, date; per-sample
+  stats). Print the census (strikes, notes per strike, redactions) and show it to the
+  composer before building 1c.2, the panel in the composer score.
+- **Resume reads:** `docs/PLAN.md` **1c** · `RUNNING_LOG.md` **§33–35** ·
+  `bank/ostinato_timing_db_2p2p.json` (the mould) · `docs/NAMING.md` §2.
+- **Pending the composer:** CN-2 (piccolo vs bass flute; CN-4 leans piccolo) — not blocking.
+- **Deliberately uncommitted:** nothing after this commit (the rack file as last saved is
+  committed with it).
 
 **Open questions:**
 - **Q1 flute doubling instrument:** piccolo or bass flute — composer undecided; SI2 flute
