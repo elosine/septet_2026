@@ -2015,3 +2015,49 @@ zz-ai-mig 14-05 (was "zz-ai-mig 14:05"), zz-ai-mig-two" → both on the file, bo
 key gone, the `.migrated` copy present → test entries deleted through the route, the file back to an
 empty bucket. Answer: they are preserved (localStorage survives closing the browser; only clearing
 site data loses them) and they move into the committed file on the next reload — commit then.
+
+## §67. The save system: the composer's ask, the facts, and a proposal (PLAN 1b opened)
+
+Composer, session 3: *"Let's talk about the save file system. It's a bit too complex for me. So I
+think there were basically two categories. One was the sort of main piece or score. And maybe the
+other ones were, like, experiments. … maybe we keep them in the same place. Just give them a naming
+convention, or maybe we have two different menus. Then regardless of which version I'm working
+with … I do want some sort of auto save, but then the two issues are I don't wanna bloat the commit
+or the Repo And I also don't want to have it override, like, the auto save if I make a mistake …
+And then I want to be able to keep kind of a running version. so that when I finish something, I
+can give it a name. Like, if I'm working on the scattered strikes, if I got, like, five in, I can
+call it … scatter strikes one dot five … They're save, vary, and restore. It's not intuitive, and
+I can't remember the rules from session to session. … I know in things like Microsoft Word … I
+don't love the auto save with that either. … let's just discuss it first, please."*
+
+**The facts, from the code (composer.html SAVE SYSTEM, server.js header, NAMING.md §1, #4 D10):**
+two menus already exist — Piece (`piece-*`) and Scores (everything else), one folder. The
+protection (working copy `-work`, autosave writes there, Save as next → `sNN+1`, Variant → `sNNa`)
+applies ONLY to `piece-*` names; an experiment such as `ScatteredStrikes01` has no working copy —
+autosave rewrites the file 5 s after any change, which is the override the composer fears, and why
+today's folder holds hand-made copies (`-og`, `a`, `a-2`, `septet001`). Save = the file + a hidden
+timestamped snapshot (`scores/versions/`, cap 20, gitignored, this machine only); Restore lists
+them. Git carries every `scores/*.json` except `-work` and `versions/`. The numbering `piece-sNN`
+is not load-bearing for the tools (their `piece-s…` hits are tuba defaults and fixture provenance).
+
+**The precedent worth copying:** Reaper's — the project file changes only on Save; autosave goes
+to timestamped backups in a folder nobody looks at; a new name is Save as. Ableton (Backup folder)
+and Logic (Project Alternatives ≈ named versions) are the same model. Word's AutoSave writes into
+the document as you type — the opposite model, the one the composer does not love. Google Docs:
+continuous save plus "name current version" — the naming half is the useful part.
+
+**Proposed (undecided — put to the composer as options):** one rule for both categories —
+(1) everything opens through a working copy, piece or experiment; the file changes only on Save;
+a mistake = reload the file; (2) Save = the running version (+ the hidden snapshot as now);
+(3) "Name this version" = the milestone: the file AND a frozen copy `<name>-v1.5.json` with the
+label the composer types (next number suggested), committed — replaces Variant and Save as next;
+(4) two categories, one folder, two menus as today, the `piece-` prefix the only rule;
+(5) Restore leaves the toolbar (the snapshots stay as a silent net the AI can dig into);
+(6) git: files + named versions committed, `-work` + snapshots ignored — a named version is
+~210 KB, fifty of them ~10 MB, similar JSON packs well: not a bloat problem; the clutter problem
+(hand-made copies) is what named versions remove; (7) session end: the AI checks for `-work` files
+newer than their file and asks before the commit. Toolbar after: Save · Name version… · Piece ·
+Experiments. Options put: A version naming (`-v1.5`, dots allowed by one server line, or free
+text) · B category by prefix (recommended) or by a checkbox · C Restore removed (recommended) or
+renamed "backups" · D open-with-unsaved-edits: no dialog, open the working copy and say
+"unsaved edits from HH:MM — Save or Reload".
