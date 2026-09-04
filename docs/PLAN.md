@@ -241,11 +241,11 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   *(composer: "what capabilities does ai have and what are the mechanisms … comprehensive
   survey … best, fast and reliable and most functions" → `docs/REAPER_CONTROL.md`; RUNNING_LOG
   §48–51; "just slot it in to the plan")* — **the running order** (► = active):
-  1. ► **0k.1 the bridge** — `reaper/bridge/bridge.lua` (defer loop, inbox → pcall → outbox
+  1. ☑ **0k.1 the bridge** (proven 2026-09-04, RUNNING_LOG §53: 31 ms round trip) — `reaper/bridge/bridge.lua` (defer loop, inbox → pcall → outbox
      JSON, heartbeat) + `tools/reaper_job.js`; the AI appends the startup line to
      `%APPDATA%\REAPER\Scripts\__startup.lua`; the composer starts it once now (Actions →
      ReaScript: Load…); proof = the `tracks` job lists the rack.
-  2. **0k.2 the Kontakt proof** (Piano Kontakt): `reaper/kontakt/proof_readback.lua` (every
+  2. ► **0k.2 the Kontakt proof** (Piano Kontakt): `reaper/kontakt/proof_readback.lua` (every
      slot's name / channel / output / volume → a file) · a write (Plucked −6 dB, read back,
      restored) · a load (a second Plucked into a free slot on [A] 5, output 2, read back,
      removed). Composer: Options → Developer once; drag the script onto the rack.

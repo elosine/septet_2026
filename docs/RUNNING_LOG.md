@@ -1714,3 +1714,13 @@ folder, no startup line) — now the one `dofile` line; the runtime folders exis
 gitignored. The heartbeat is absent until the composer starts the bridge once in the running
 Reaper (Actions → ReaScript: Load… → bridge.lua) — the first proof is that heartbeat and the
 `tracks` job listing the rack.
+
+## §53. 0k.1 PROVEN: the bridge answers in 31 ms
+
+Composer ran `bridge.lua` through "ReaScript: Run ReaScript (EEL2 or Lua)…" (the console:
+`[bridge] 0.1 (2026-09-04) watching …eaperridge\inbox`). The first check from the AI
+had run seconds before the load — no heartbeat; the second: **alive, Reaper 7.72/x64, the
+rack project, 10 tracks**, and the `tracks` job answered with the whole rack — **0 ms inside
+Reaper, 31 ms round trip** through the files — every track's name, fader (all 0 dB), arm (all
+armed), folder depth (REC +1 … Vc −1: the folder the composer built this morning, seen from
+inside), record mode (REC = 1, output), and FX (UVI ×3, Kontakt 8 ×6). PLAN 0k.1 ☑ → 0k.2.
