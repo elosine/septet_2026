@@ -186,3 +186,11 @@ names a library to confirm.
 - **For the tools:** the three states map onto three generators — the strike panel (1c), the
   tremolo curve, the tempo ramp — and a "cycle" is a sequence of them with transition rules;
   a small state-machine sketch could audition whole cycles before any is composed by hand.
+
+## For the NEXT piece (not this one) — noted here so it is not lost
+
+- **2026-09-04, composer, verbatim:** *"note for next piece: lake George piece, pairs, eng
+  horn/bassoon, horn/trumpet, cello/bass + percussion. start with morph section"*
+  — *AI reading:* piece #6, the "Lake George" piece: three PAIRS (english horn + bassoon ·
+  horn + trumpet · cello + double bass) plus percussion; its opening section built from the
+  MORPH device (piece #4's morph panel, carried in this stack). Filed in the journal §7 too.

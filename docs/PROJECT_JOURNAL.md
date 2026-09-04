@@ -365,4 +365,8 @@ status line, not an exception) and `requestAnimationFrame` never fires while it 
   plugin's gain** (unity; preset FX such as the maximizer / tilt bypassed) whenever a Kontakt or
   UVI instrument is loaded or its preset changed — SAMPLER_QUIRKS.md has the rule.
 
+- **Next piece (after the septet): the "Lake George" piece** — pairs: english horn/bassoon,
+  horn/trumpet, cello/bass, + percussion; start with a morph section (composer, 2026-09-04;
+  verbatim in COMPOSITION_NOTES).
+
 **Completed:**
