@@ -249,10 +249,10 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      slot's name / channel / output / volume → a file) · a write (Plucked −6 dB, read back,
      restored) · a load (a second Plucked into a free slot on [A] 5, output 2, read back,
      removed). Composer: Options → Developer once; drag the script onto the rack.
-  3. ► **0k.3 the UVI proof** (Flute SI2): `tools/uvi_state.js` decode → unchanged re-encode →
+  3. ☑ **0k.3 the UVI proof** (proven with audio 2026-09-04, RUNNING_LOG §57–59; token `$Engine/Out n`) (Flute SI2): `tools/uvi_state.js` decode → unchanged re-encode →
      `SetTrackStateChunk` through the bridge → UVI still plays; then part 13 → outputs 3/4,
      seen in the GUI and in the track's routing.
-  4. **0k.4 apply B** (§47): faders flute −21 · bcl −9 · piano +7 · vn 0 · va −3.5 · vc −1 by
+  4. ► **0k.4 apply B** (the flute lane exists — §59) (§47): faders flute −21 · bcl −9 · piano +7 · vn 0 · va −3.5 · vc −1 by
      the bridge; `Flute strikes` child track on UVI outs 3/4 (+21); a second bass-clarinet
      slot on [A] 5 → output st.2 → `BassCl strikes` (+13) by a Kontakt script; recipe
      `slap.channel = 5` + `balanceDb`; re-measure `-Only flute,bass_clarinet`; SAMPLER_QUIRKS.

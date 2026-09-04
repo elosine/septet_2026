@@ -1812,3 +1812,30 @@ host side — why this VST2 instance's outputs beyond the first pair carry nothi
 plugin-output count still at 2 from instantiation? a UVI preference for multi-out?). Part 13
 reverted to Main so the pizzicato sounds meanwhile. Awaiting the FX window's "n/34 out"
 pin connector and UVI's preferences, from the composer's screen.
+
+## §59. 0k.3 PROVEN end to end — the token was a path; the "dead" meters were a mute
+
+**The missing piece, learned by diffing rather than guessing:** the composer set A13's output in
+UVI's Settings tab; the state diff against the baseline was ONE attribute: `OutputName=
+"$Engine/Out 2"` — a path, not the bare "Out 2" the plugin's strings show. With that token,
+written by text: the pizzicato **leaves the flute's main channels (−154 dB), arrives on the
+flute's channels 3/4 (−2.3 / −2.8), on the `Flute strikes` track (−2.3 / −2.8), on REC and the
+master (−0.9 / −1.4)**; the ordinario control stays on 1/2 and never touches the strikes track.
+UVI's insides are text, proven with audio. `tools/uvi_state.js set-output "<track>" <part>
+"Out n" --push` now does it in one line (prefix added, read back).
+
+**Two things that cost an hour, for the record.** (1) The `Flute strikes` child was built at
++21 dB absolute — wrong by design: the +21 is RELATIVE to the flute's coming −21 fader, so the
+child belongs at 0 dB; the pizzicato's sample peak is −1 dBFS, and the GUI test put +20 dBFS
+into REC. (2) After that blast, **REC was muted** (the composer's hand, understandably — a muted
+folder parent silences every instrument and freezes their meters), and the next six tests were
+read behind that mute: the send, the parent-send channel count, a plugin reload and a mute
+"kick" were all suspected before the state dump showed `REC mute 1`. Lesson (P10 candidate):
+**when downstream meters freeze at identical values, dump mute / solo / routing FIRST.**
+Unmuted through the bridge; the parent send back to "all channels" is harmless (REC has two).
+
+Method notes: `Track_GetPeakInfo` reads a track's INPUT (pre-fader) level — the child read
+the source's level at +21 while REC read +20; a job may start its own defer loop (peakwatch)
+so note timing from outside stops mattering; `TrackFX_SetOffline` true/false re-instantiates a
+plugin from its state (UVI needs ~30 s to reload 16 parts). PLAN 0k.3 ☑; 0k.4's flute lane
+exists (`Flute strikes`, send flute 3/4 → child, post-FX pre-fader, 0 dB).

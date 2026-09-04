@@ -11,7 +11,8 @@
 //   node tools/uvi_state.js decode "Flute SI2" flute.xml       # the XML to a file
 //   node tools/uvi_state.js roundtrip "Flute SI2" [--push]     # re-encode unchanged; --push sends it to Reaper and reads back
 //   node tools/uvi_state.js encode "Flute SI2" flute.xml --push   # an edited XML into the running instance
-//   node tools/uvi_state.js set "Flute SI2" --part 13 --output "Out 3-4" --push   # (later: named edits)
+//   node tools/uvi_state.js set-output "Flute SI2" 13 "Out 2" --push  # a part to an output pair: "Out 2".."Out 17", or "" = Main.
+//       The stored token is a path, "$Engine/Out 2" (learned by diffing the GUI's change, RUNNING_LOG §59); the tool adds the prefix.
 //
 // Every length field in the UVI header that equals (old compressed length + k) for a small k is
 // rewritten as (new compressed length + k): the header's own bookkeeping, handled generically.
@@ -139,6 +140,20 @@ function info(xml) {
             const back = splitState(findVst(getChunk(track)).raw);
             console.log('read back: xml identical to what was pushed =', Buffer.compare(back.xml, xml) === 0, '| compressed', back.compLen, '| header', back.z);
         }
+        return;
+    }
+    if (cmd === 'set-output') {
+        const part = +args[2], name = args[3] || '';
+        const token = name === '' ? '' : (name.startsWith('$Engine/') ? name : '$Engine/' + name);
+        let s = st.xml.toString('utf8');
+        const m = new RegExp('<Part Name="Part ' + (part - 1) + '"[^>]*>').exec(s);
+        if (!m || !m[0].includes('DisplayName="Part ' + part + '"')) throw new Error('no part ' + part);
+        const el = m[0].replace(/OutputName="[^"]*"/, 'OutputName="' + token + '"');
+        s = s.slice(0, m.index) + el + s.slice(m.index + m[0].length);
+        const xml = Buffer.from(s, 'utf8');
+        const nb = rebuild(st.header, xml, st.compLen);
+        console.log(JSON.stringify({ track, part, output: token || '(main)', selfDecodeIdentical: Buffer.compare(splitState(Buffer.concat([nb.raw, st.tail])).xml, xml) === 0 }));
+        if (flag('push')) { const r = pushChunk(track, withNewState(vst, Buffer.concat([nb.raw, st.tail]))); console.log('pushed:', JSON.stringify(r.result || r.error)); const back = info(splitState(findVst(getChunk(track)).raw).xml); console.log('read back part ' + part + ' output:', back.parts[part - 1].output); }
         return;
     }
     console.error('unknown command ' + cmd); process.exit(2);

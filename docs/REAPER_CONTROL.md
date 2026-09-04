@@ -59,7 +59,7 @@ instance master (`<Synth DisplayName="Master" Gain=>` — the composer's −2 dB
 0.794). The header carries two lengths (the block size = 12 + compressed bytes at offset
 296; the XML length at 308), so a write-back is header + new lengths + `zlib(xml)`. **UVI
 setup — parts, channels, presets by path, outputs, gains, bypasses — is therefore a text
-edit**, live through the bridge (`SetTrackStateChunk`) or in the file. To prove before use:
+edit**, live through the bridge (`SetTrackStateChunk`) or in the file. **Proven with audio 2026-09-04 (§59): a part's output pair is `OutputName="$Engine/Out n"` (a path; n = 2…17), `tools/uvi_state.js set-output`.** To prove before use:
 the unchanged round trip, then one visible edit. Kontakt's block is the NKI binary: its setup
 stays GUI (once) + duplication by chunk copy for identical instruments + desktop automation
 for repeated clicks; a KSP multi-script for runtime settings is unexplored. The instance-master

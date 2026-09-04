@@ -12,6 +12,7 @@ for _, n in ipairs(NAMES) do
     if nm == n then tracks[#tracks + 1] = { name = n, tr = tr, max = { 0, 0, 0, 0 } } end
   end
 end
+tracks[#tracks + 1] = { name = 'MASTER', tr = reaper.GetMasterTrack(0), max = { 0, 0, 0, 0 } }
 local t0 = reaper.time_precise()
 local ticks = 0
 local outpath = job.root .. package.config:sub(1, 1) .. 'outbox' .. package.config:sub(1, 1) .. 'peakwatch.json'
