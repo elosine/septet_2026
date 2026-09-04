@@ -132,7 +132,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   *Why:* the composer's own risk statement; D11 keeps the banks by design, and 0d decides
   what the preludes must write and how early; the recipes (0c) inherit whatever 0d finds.
 
-- **0e — loopMIDI + Reaper rack** — `doing 2026-09-03` *(composer at the machine, AI walks
+- **0e — loopMIDI + Reaper rack** — `done 2026-09-03` *(the rack sounds on every port: `rack-test` played whole, RUNNING_LOG §35; composer at the machine, AI walks
   the R-steps as in #3; RUNNING_LOG §15–17)* — **the layout (D10 order, D11 banks):** eight
   loopMIDI ports, case-exact — `Flute` · `Fluteb` (the SI2 flute's 28 techniques, 16 + 12,
   the tuba pattern) · `BassCl` (exists from #3, reused) · `Piano` (one port, two tracks:

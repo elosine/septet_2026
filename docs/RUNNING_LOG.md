@@ -1205,3 +1205,12 @@ The console `copy(JSON.stringify(Composer.collectData()))` fallback was given fo
 time (it prints `undefined` and fills the clipboard — normal). From here the composer runs
 the server himself (`start_score_server.bat` / `node score/server.js`) so it no longer depends
 on this session's tools. The file is the seed for PLAN 1c; committed as material.
+
+## §35. 0e closed: "rack works"
+
+Composer, after setting viola and cello to [A] 1: *"rack works"* — `rack-test` plays through
+every port from the composer app on Chrome; the keyboard plays through the app. **PLAN 0e
+DONE**, and 0h's first check (every track sounds from the score app through its own port)
+passed. The composer now runs the server himself (`cd C:\Users\jwloy\GitHub\septet_2026` ·
+`node score\server.js`). Left open in the rack, by decision: one instrument per Kontakt track
+today; the three curve copies on [A] 2–4 are added when 0c.7 wires the curve routing.
