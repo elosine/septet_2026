@@ -140,53 +140,47 @@ piano 4 (8Dio 1969 Legacy · Spitfire Plucked · PP2 harmonics · muted), string
 per-preset range hook (§29); D11's four slots per Kontakt port; the gain / bypass rule
 (§26–27); CN-3, CN-4, CN-5 on the sketch pad; PLAN 0c.8, 1a, 1b from the composer.
 
-**Next up:** **the one-note test per track from the composer app on Chrome** — proves the
-ports, the slot channels (one voice, not four) and the gains; 0e's last step and 0h's first.
-Then **0d** the Xsample measurements (CC7 → dB, CC1 settle, CC4 vs pressure, CC0 latency),
-the rest of **0c** (0c.5 clefs/transposition · 0c.6 sample lengths · 0c.7 channel map +
-router · 0c.8 multiphonics walk), **0h** gate → compose.
+**Next up:** **the composer's morning test of the STRIKES drawer** (PLAN 1c.2, RUNNING_LOG §39,
+`docs/STRIKES_TOOL.md`): `cd C:\Users\jwloy\GitHub\septet_2026` → `node score\server.js`
+(restart it once: the `rescan` route is new) → http://localhost:5300/composer.html → **Strikes**.
+Open `ScatteredStrikes01` (or its working copy) if Replace in place is to be tried — Replace
+refuses inside any other save by design. Then, from the listening: I double stops · the K lock ·
+M/N/P the harmony collection, the swap by voice rank, the Messiaen sets (= PLAN 1d) · the
+`kind` field in `sandbox/instruments.js`. Behind it, phase 0's remainder: **0d** the Xsample
+measurements, **0c.5–0c.8**, the curve copies A2–A4 in Kontakt (0c.7), the **0h** gate.
 
 **NEXT STEPS · MODEL · CLEAR:**
-1. ☑ 0b wrapped, checkpoint, clear; resumed on Fable (the composer's choice over the
-   planned Opus: "stay with fable for now").
-2. ☑ **0g** — the stack is here and proven whole (RUNNING_LOG §12). ☑ **0i** — a septet
-   save extracts to a VALID page; conventions in NAMING.md §2; bites filed under 2a
-   (RUNNING_LOG §13). ► **This is the next clear point** — 0e needs the composer.
-3. **0e with the composer at Reaper** (any model, conversation): loopMIDI ports `Flute`
-   (+`Fluteb`), `BassCl`, `Piano`, `Vn1`, `Vn2`, `Va`, `Vc`; one Reaper track per port,
-   monitoring ON; rack committed; the app's Web MIDI port list checked on Chrome.
-4. **0c recipes on Opus** from the rack as built (UVI slot order = ground truth).
-5. **0d on Fable + the composer's ear**: CC7 → dB on one Xsample string preset and the bass
+1. ☑ 0b · 0g · 0i · 0e DONE and pushed (RUNNING_LOG §9, §12, §13, §35).
+2. ☑ **1c.1** the strike database (§36) · ☑ **1c.2** the drawer built and verified (§39).
+   ► **The composer tests the drawer** — any model, conversation first; fix what blocks, file
+   the rest to NITS / STRIKES_TOOL statuses (`built` → `seen by the composer` → `accepted`).
+3. Then the drawer's next steps in the order the composer sets (I · K lock · M/N/P · `kind`).
+4. **0d on Fable + the composer's ear**: CC7 → dB on one Xsample string preset and the bass
    clarinet with `probes/cc7_calibration_probe.ps1`; state rule; the dynamics recipe.
+5. 0c.5–0c.8, 0h gate → compose (CN-5/CN-6 are built from these strikes).
 
-**Open at session end** *(mid-session checkpoint, 2026-09-03, Fable — written for an AI
-that has never seen this conversation):*
-- **Task and state:** phase 0 nearly closed — 0a, 0b, 0g, 0i and **0e** DONE and pushed; the
-  rack sounds on every port from the composer app (RUNNING_LOG §35). The composer's first
-  material is in: `scores/ScatteredStrikes01.json` (577 piano strikes, 73 s). Open in phase 0:
-  0c.5–0c.8, 0d (the Xsample measurements), 0f, the 0h gate (its first check passed). The
-  composer runs the score server himself now (`node score\server.js`); the three curve copies
-  ([A] 2–4) per Kontakt track are added when 0c.7 wires the curve routing.
-- **Latest deliverable:** the rack (`reaper/septet_rack.rpp`, ten tracks) + every instrument's
-  full preset roster with ranges in `sandbox/instruments.js` + `scores/rack-test.json`;
-  `docs/SAMPLER_QUIRKS.md` opened; `probes/port_note_probe.ps1`; PLAN 1a–1d filed from the
-  composer's words.
-- **Next concrete step (PLAN 1c.1), as an instruction:** write `tools/strike_db.js`. Read
-  `scores/ScatteredStrikes01.json`; cluster onsets into STRIKES with a gap threshold (default
-  500 ms, a dial); per strike record every onset's offset from the strike's first onset —
-  absolute seconds, normalized 0–1 over the strike's span, and in units of its median gap —
-  the HARMONY = all notes (midi, layer → instKey, technique, recVel), and the RHYTHM = the
-  onsets after redacting any within 60 ms (dial) of a previous kept onset; the SEQUENCE =
-  inter-strike distances first-onset to first-onset, absolute + normalized. Write
-  `bank/scattered_strikes.json` in the mould of `bank/ostinato_timing_db_2p2p.json`
-  (ingestions with provenance: score, window, object ids, thresholds, date; per-sample
-  stats). Print the census (strikes, notes per strike, redactions) and show it to the
-  composer before building 1c.2, the panel in the composer score.
-- **Resume reads:** `docs/PLAN.md` **1c** · `RUNNING_LOG.md` **§33–35** ·
-  `bank/ostinato_timing_db_2p2p.json` (the mould) · `docs/NAMING.md` §2.
-- **Pending the composer:** CN-2 (piccolo vs bass flute; CN-4 leans piccolo) — not blocking.
-- **Deliberately uncommitted:** nothing after this commit (the rack file as last saved is
-  committed with it).
+**Open at session end** *(2026-09-03 night, Fable, session closed by the AI on the composer's
+instruction "do the build … run a session end, and then I'll try the tool out in the morning" —
+written for an AI that has never seen this conversation):*
+- **Task and state:** phase 0 nearly closed (0a, 0b, 0e, 0g, 0i DONE); **PLAN 1c built end to
+  end:** `tools/strike_db.js` → `bank/scattered_strikes.json` (46 strikes from
+  `scores/ScatteredStrikes01.json`) → `score/public/strike_drawer.js`, the full-width STRIKES
+  drawer in the composer score, verified in the running app against the composer's own server
+  (RUNNING_LOG §39). The requirements A–T, each with the composer's words and a status, are
+  `docs/STRIKES_TOOL.md`. Two first-sound page bugs fixed in `composer.html`; the server gained
+  `POST /api/strikes/ingest`. The composer runs the score server himself (`node score\server.js`);
+  the AI's browser pane cannot use Web MIDI (Hear fails gracefully there) and must never save.
+- **Latest deliverable:** the drawer + the docs above + `strike_panel.js` removed.
+- **Next concrete step, as an instruction:** none for the AI before the composer has listened.
+  When the composer reports: treat each remark as a STRIKES_TOOL status change or a new lettered
+  item, fix what blocks in `strike_drawer.js` (one file; `StrikeDrawer` on `window`, the state in
+  `voices[]` / `cfg`, `render()` redraws everything; `notesFor(mode)` is the one place notes are
+  made for Hear and Insert alike), verify in the running app, log to RUNNING_LOG.
+- **Resume reads:** `docs/STRIKES_TOOL.md` (header + "The build") · `RUNNING_LOG.md` **§39** ·
+  `docs/PLAN.md` **1c** · `score/public/strike_drawer.js` header comment.
+- **Pending the composer:** the listening pass; CN-2 (piccolo vs bass flute) — not blocking.
+- **Deliberately uncommitted:** `scores/0i-test-b.json`, `scores/rack-test.json` show as
+  modified on disk from the app's own re-saves (autosave) — harmless, not staged.
 
 **Open questions:**
 - **Q1 flute doubling instrument:** piccolo or bass flute — composer undecided; SI2 flute

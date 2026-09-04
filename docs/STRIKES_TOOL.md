@@ -6,10 +6,10 @@
 > AI's reading and implementation notes marked as such — and it grows as the tool does.
 > Status per item: `wanted` → `built` → `seen by the composer` → `accepted`.
 > The database behind it: `bank/scattered_strikes.json` (tools/strike_db.js, RUNNING_LOG §36).
-> The v1 panel (`score/public/strike_panel.js`, §37) is the starting point and is rebuilt
-> around these as they land.
+> **The build: `score/public/strike_drawer.js`** (2026-09-03 night, RUNNING_LOG §39) — the full-width
+> drawer in the composer score; the v1 panel (§37) is gone. Open the score, press `Strikes`.
 
-## A · The keyboard view — `wanted`
+## A · The keyboard view — `built 2026-09-03 — the drawer, for the composer's test`
 
 > *"Let's start with the keyboard like image one. This will show the notes as I played them
 > on the piano, in each of the scattered strikes … I should see one at a time."*
@@ -24,7 +24,7 @@
   things"): whether the keyboard can also show all strikes; how the keyboard and the v1 note
   table relate (the table may become the per-note assignment view under the keyboard).
 
-## B · Voicing presets — `wanted`
+## B · Voicing presets — `built 2026-09-03 (six presets + reshuffle; cluster = smallest chromatic span, ± octave)`
 
 > *"Then I want some preset buttons. I'll give you a few choices now, but I want the ability
 > to just add while I'm working with the tool — I can just tell you I want more of these."*
@@ -55,7 +55,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   or the played intervals compressed. Presets are data (a small table of named transforms),
   so adding one is a line, not a build.
 
-## C · Reshuffle — `wanted`
+## C · Reshuffle — `built 2026-09-03`
 
 > *"I want the ability to reshuffle any of these. So if it's a cluster high, then I can just
 > hit reshuffle, and I'll just reshuffle the notes into a different high cluster."*
@@ -66,13 +66,13 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   the keyboard redraws. The seed is kept with the strike so a liked shuffle can be inserted
   and recalled.
 
-## D · Carried over from the first ask (RUNNING_LOG §33) — `built (v1)`, to be re-fitted
+## D · Carried over from the first ask (RUNNING_LOG §33) — `re-fitted into the drawer 2026-09-03 (v1 panel removed)`
 
 - Per-note instrument / octave / technique assignment; Hear through the rack; Insert at the
   playhead as a gesture (groupId + META shape); time × / warp / rhythm-only; the redaction
   groups. All in the v1 panel; their place in the new layout is decided as A–C land.
 
-## E · The orchestration panel — `wanted`
+## E · The orchestration panel — `built 2026-09-03 (shuffle · may fold · top/bottom locks · articulation per row · dotted lines)`
 
 > *"To the right of the keyboard will be the orchestration panel. Let's just have the seven
 > instruments in their order from top to bottom. And then I'll be able to shuffle with a
@@ -86,7 +86,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
 - *AI notes:* the lines are SVG over both panels; each instrument row also lists its note(s)
   and technique (the v1 selects move here).
 
-## F · Ranges — `adopted 2026-09-03`
+## F · Ranges — `built 2026-09-03 (adopted; the shuffle never misfits, hand choices fold ↑↓ or ✕)`
 
 > *"What happens when the ranges don't fit? … I don't want things to be too fiddly."* — the
 > AI's proposal, adopted by the composer ("Those are good suggestions. Let's adopt those."):
@@ -101,7 +101,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
 4. **Top / bottom locks:** "top → instrument", "bottom → instrument"; the shuffle respects
    them and moves everything else.
 
-## G · Audition modes — `wanted`
+## G · Audition modes — `built 2026-09-03 (Hear piano · Hear orchestrated · Stop)`
 
 > *"I want to be able to hear the chord, audition it, and then if I want to reorchestrate.
 > And same with the piano part too — let's have that just be piano, and I can listen to the
@@ -111,7 +111,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   and **orchestrated** (the current assignment through the rack). Both from the same button
   row; the timing transforms apply to both.
 
-## H · The piano's part — `adopted 2026-09-03`
+## H · The piano's part — `built 2026-09-03 (flags per note, ring, click-to-toggle, quick buttons; a shuffle starts the piano on one note)`
 
 > *"Sometimes I'll want it to double — play more than the one note — or just play one note."*
 > and, on the four-way switch first proposed: *"I may want it to play all the above … It might
@@ -131,7 +131,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   piano with just one note, and then I could add more notes to the piano part as you suggest."*
   So a shuffle treats the piano as one player among seven (one note), and the flags / quick
   buttons add notes afterwards.
-## I · Double stops — `wanted 2026-09-03`
+## I · Double stops — `wanted 2026-09-03 — not built yet, after the listening pass`
 
 > *"And, yes, on the double stops."* (to the AI's note that the piano's per-note flag extends
 > to a second-note flag on a string player)
@@ -146,7 +146,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   first double stop is placed. Winds cannot take two; the bass clarinet's multiphonics are a
   technique, not a second note.
 
-## J · The rhythm column — `wanted 2026-09-03` (transforms proposed, awaiting the composer)
+## J · The rhythm column — `built 2026-09-03 (span × · shape + amount · jitter · reverse · rotate · reshuffle; the bands re-derived live)`
 
 > *"A third column will be the rhythms. A relatively zoomed-in view where I should be able to
 > control zoom to a certain extent. Something close to the piano keyboard, or they could just
@@ -174,7 +174,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   tightening merges more; the audio always plays every note at its own onset; "rhythm only" snaps
   each note to its CURRENT tick. The database keeps the as-played grouping as a reference only.
 
-## K · The order of the notes — `wanted 2026-09-03`
+## K · The order of the notes — `built 2026-09-03 (presets · shuffle · click two dots to swap; lock not yet)`
 
 > *"I should be able to scatter the order. I think I'm mostly playing, in the original, down
 > to up, but I can scatter which notes come first, in different orders. Again, a shuffle and
@@ -187,7 +187,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   (snaps to slots) or click two dots to swap; a **lock** pins a dot's slot through shuffles
   (as the top / bottom locks do in the orchestration).
 
-## L · The model in one sentence — `confirmed 2026-09-03`
+## L · The model in one sentence — `confirmed 2026-09-03 — coded as the three lists`
 
 > Composer: *"Can we flatten both? So the pitches get distributed — there's eleven, and any
 > pitch can go to any of the players — and then the scatter rhythm is the x axis: any of the
@@ -200,7 +200,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   is one pairing kept as a preset. The bands belong to the onset list alone; whatever pitch
   lands inside one lands on that attack.
 
-## M · The harmony collection as a source — `wanted 2026-09-03` (= PLAN 1d, seen from the tool)
+## M · The harmony collection as a source — `wanted 2026-09-03 — not built yet (= PLAN 1d)`
 
 > *"Then we'll collect all the harmonies … a drop-down and scrollable panel like the one in the
 > blast sandbox, so I can drop that down, click on any of the harmonies, and play them. And
@@ -221,7 +221,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   (`H042 · tuba vert 28 V4 · C4 C#4 D4`). Numbers are what gets said aloud; the tag says where
   it came from.
 
-## N · Choosing a harmony: orchestrating it into the strike — `adopted 2026-09-03`
+## N · Choosing a harmony: orchestrating it into the strike — `adopted 2026-09-03 — not built yet (needs M)`
 
 > *"If I choose a harmony, it's got to be orchestrated into this scattered shape — what the
 > piano keyboard represents. Similarly even the played version has to be reorchestrated so the
@@ -235,7 +235,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   silent; with FEWER: the surplus players fall silent. Every harmony, the played one included,
   goes through the same path — there is no special case.
 
-## O · Not losing work: takes — `adopted 2026-09-03`
+## O · Not losing work: takes — `built 2026-09-03 (v1: takes in the browser's localStorage + one-level back)`
 
 > *"I don't want to lose work. Say I take the original, orchestrate, find a rhythm, listen —
 > then I decide I want to listen to it in a different harmony. It may not fit the orchestration,
@@ -247,7 +247,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   one; switching the harmony is non-destructive (N) and an automatic `previous` step keeps the
   last state so `back` is one click. A take can be inserted into the score at any time.
 
-## P · The Messiaen modes — `wanted 2026-09-03`
+## P · The Messiaen modes — `wanted 2026-09-03 — not built yet`
 
 > *"Messiaen — and there's more than mode three. I think we end up using all the modes … it
 > might have been in the multitempo parts where it was distributed across time, not in one
@@ -259,7 +259,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   27 pitch sets) enter the collection as harmonies, tagged `messiaen m3/F` etc. More notes
   than players → N's attrition: the shuffle drops at random, or the piano's flags take the rest.
 
-## Q · Linked to the score — `wanted 2026-09-03`
+## Q · Linked to the score — `built 2026-09-03 (pick in the sequence, playhead follows, Insert @ playhead, Replace in place — only inside the source save; delete not yet)`
 
 > *"In the tuba composer score there's the Insertion pull-down. Instead of this, integrate
 > that into the sandbox somehow, and have the thing I'm working on in the sandbox linked to
@@ -277,7 +277,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   to its `t0`; later the reverse (select in the score → select in the tool).
 - The Insertion strip's mini-keyboard row is reused as the harmony picker (M).
 
-## R · Decisions before the build — `2026-09-03`
+## R · Decisions before the build — `decided 2026-09-03 — all six applied in the build`
 
 1. **Where it lives — a FULL-WIDTH DRAWER inside the composer score.** Composer: *"if you can
    make it a full-size drawer, that's fine. The blast sandbox actually takes the whole screen
@@ -299,7 +299,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
    a small `88` toggle expands the keyboard to the full range when the piano needs it; notes
    beyond the visible span (piano only) show as arrows at the top / bottom edge.
 
-## S · The articulation column and the stand-in rule — `adopted 2026-09-03`
+## S · The articulation column and the stand-in rule — `built 2026-09-03 (menu per row · picker by kind · stand-ins; the `kind` field in instruments.js still pending — a name rule classifies until then)`
 
 > *"After the instrumentation, before the rhythm panel, is column three; rhythm becomes column
 > four. I'll click on the instrument, and then I'd have a choice of articulations — the strings
@@ -328,7 +328,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
 - Composer, confirming: grouped by kind, but **every articulation visible** in the full list;
   the menu on the instrument row, click exposes the full list. Adopted.
 
-## T · Auditioning variants: the side panel — `wanted 2026-09-03`
+## T · Auditioning variants: the side panel — `built 2026-09-03 (variant list with ▶ hear / click select, for fixed · noise · multiphonic)`
 
 > *"I don't necessarily want to overclutter things, but it would be good to have a quick way
 > to audition the variation. For the multiphonics, they don't really have much to do with the
@@ -343,9 +343,21 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
 
 ## Open questions for the composer (only what blocks the next piece)
 
-1. **"Cluster together":** chromatic — the pitch classes packed semitone-adjacent inside one
-   octave — or the played chord squeezed by moving only the outliers in by octaves?
-2. **Keyboard range shown:** the whole piano (88) or the ensemble's span (C1–C7)?
+*(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the
+keyboard shows the ensemble's span with an `88` toggle (R6).)* **None open before the listening pass.**
+
+## The build, as shipped for the morning test (2026-09-03 night)
+
+Start: `cd C:\Users\jwloy\GitHub\septet_2026` → `node score\server.js` (restart it once — the
+`rescan` route is new) → http://localhost:5300/composer.html → press **Strikes**.
+
+- **In:** A–H, J, K (no lock), L, O (v1), Q (no delete), R, S (name-rule kinds), T. Verification
+  numbers in RUNNING_LOG §39.
+- **Not yet:** I double stops · K lock · M harmony collection + index · N harmony swap · P Messiaen
+  · the snapshot API · the `kind` field in `sandbox/instruments.js` (0c).
+- **Rules worth knowing while testing:** Replace works only with the strike's source save (or its
+  `-work` copy) open — ids repeat across saves; Insert goes to the playhead of whatever is open.
+  SPACE in the drawer = hear / stop. Takes live in the browser (localStorage), not in the repo.
 
 ## Log
 
@@ -360,3 +372,4 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
 - 2026-09-03, later — R: decisions 1 (full-width drawer in the score) and 2 (duration ×) taken; 3 (strike techniques) in discussion; 4–6 open.
 - 2026-09-03, later — S: the articulation column and the stand-in rule recorded; layout proposed; `kind` metadata named as the 0c prerequisite.
 - 2026-09-03, later — S adopted; T (variant side panel) recorded; B clarified (cluster = smallest chromatic span, movable; high+low clusters; spread out); R4 dynamics, R5, R6 (ensemble span + an 88 toggle for the piano) decided. All pre-build decisions taken.
+- 2026-09-03, night — **built:** the drawer (`strike_drawer.js`) with A–H, J, K, L, O, Q, R, S, T as marked above; verified in the running app; the Replace-by-id hazard found and closed (source-save guard). RUNNING_LOG §39. Next: the composer's listening pass, then I, K lock, M/N/P.

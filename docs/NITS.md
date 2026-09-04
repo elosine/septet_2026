@@ -39,12 +39,12 @@
   (Vibrato Velocity + MW inverted) with no warning. Make the fallback loud (console.warn +
   a visible mark on the object), and re-key or retire `scores/0i-test*.json` at 0c.7. Not
   blocking: fresh notes pick a real key from the menu.
-- **Pull-down menus in the composer score trap the spacebar** (composer, 2026-09-03, first
+- ~~FIXED 2026-09-03 (with the strikes drawer, RUNNING_LOG §39): selects and number inputs blur on `change`; SPACE on a focused select toggles play.~~ **Pull-down menus in the composer score trap the spacebar** (composer, 2026-09-03, first
   sound): after a `<select>` is used it keeps focus, so SPACE opens the dropdown instead of
   play/pause. Fix: blur any select on `change` (and on ESC), or a capturing keydown handler
   that blurs the active select before the transport reads SPACE. One line; do it at the next
   pass over `composer.html`, and check the same for the number inputs (Start / End).
-- **After a page reload the composer app is silent until the first Play / audition / CC7
+- ~~FIXED 2026-09-03 (RUNNING_LOG §39): `initZoneMidi()` runs at the end of `init()`.~~ **After a page reload the composer app is silent until the first Play / audition / CC7
   Reset / record-arm** (composer, 2026-09-03, first sound; console showed `_zoneMidiOutputs`
   empty, `_hwInput` NONE on a freshly reloaded page). `initZoneMidi()` — which populates the
   output map AND binds the keyboard (`bindHwInput`) — is kicked lazily by those actions

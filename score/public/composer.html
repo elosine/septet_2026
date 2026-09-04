@@ -501,7 +501,7 @@
      Loads AFTER pulse_seq_panel so its MT button anchors to Pulse. -->
 <script src="/multitempo.js"></script>
 <script src="/multitempo_panel.js" defer></script>
-<script src="/strike_panel.js" defer></script>   <!-- PLAN 1c.2: the STRIKES panel (scattered-strike database) -->
+<script src="/strike_drawer.js" defer></script>   <!-- PLAN 1c.2: the STRIKES drawer (docs/STRIKES_TOOL.md) -->
 <script>
 // ============================================
 // INSTRUMENT REGISTRY — Loads instrument_map.json, bridges Layer 2 (musical intent) ↔ Layer 3 (MIDI/sampler)
@@ -1721,6 +1721,13 @@ const Composer = {
         }
 
         console.log('Composer initialized');
+        // 2026-09-03 (NITS): (a) menus and number fields give focus back after use, so SPACE
+        // reaches the transport; (b) bind Web MIDI now — outputs AND the keyboard — instead of
+        // waiting for the first Play / audition / CC7 Reset (a reloaded page was silent until then).
+        document.addEventListener('change', ev => {
+            if (ev.target && ev.target.matches && ev.target.matches('select, input[type=number]')) ev.target.blur();
+        }, true);
+        if (this.initZoneMidi) this.initZoneMidi();
     },
 
     // ========== TICK MARKS ==========
@@ -2136,6 +2143,10 @@ const Composer = {
             }
 
             // Space = play/pause
+            // 2026-09-03 (NITS, composer: "pull-down menus trap the spacebar"): a used <select> kept
+            // focus, so SPACE opened it instead of play. Every select / number input now blurs on
+            // change (the capturing listener in init), and SPACE here also blurs a focused select.
+            if (e.key === ' ' && e.target.matches('select')) { e.target.blur(); e.preventDefault(); this.togglePlay(); return; }
             if (e.key === ' ' && !e.target.matches('input, textarea, select')) {
                 e.preventDefault();
                 this.togglePlay();

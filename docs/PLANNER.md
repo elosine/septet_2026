@@ -15,7 +15,7 @@ on every port from the composer app** (`rack-test`, RUNNING_LOG §35). The first
 in: `scores/ScatteredStrikes01.json` (577 piano strikes, 73 s). Next: **PLAN 1c** (the
 scattered-strike database + reorchestration panel, from that file), 0d (the Xsample
 measurements), the rest of 0c (0c.5–0c.8), 0h gate. Still open in the rack: the three
-curve copies (A2–A4) per Kontakt track, added when the curve routing is wired (0c.7). Nothing composed yet; the
+curve copies (A2–A4) per Kontakt track, added when the curve routing is wired (0c.7). **PLAN 1c built:** the strike database (`bank/scattered_strikes.json`, 46 strikes) and **the STRIKES drawer in the composer score** (`Strikes` button; RUNNING_LOG §39; the requirements in `docs/STRIKES_TOOL.md`) — **the composer's morning test is next.** Nothing composed yet; the
 opening idea is on the sketch pad (CN-1); piccolo vs bass flute undecided (CN-2).
 
 ---

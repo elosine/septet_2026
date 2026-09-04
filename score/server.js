@@ -9,6 +9,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { spawnSync } = require('child_process');   // PLAN 1c: /api/strikes/ingest runs tools/strike_db.js
 
 // 5300 is THE port — every doc, bookmark and launch config says so, and the
 // default is unchanged. The override exists only so a second, throwaway instance
@@ -338,6 +339,24 @@ const server = http.createServer((req, res) => {
     const R = wrapRes(res);
 
     // APIs
+    // PLAN 1c (2026-09-03): re-ingest a save into the scattered-strike database from the
+    // Strikes drawer. Runs tools/strike_db.js as a child (the tool stays the one authority on
+    // the capture); returns its census text. Body: { score, gap?, sim?, label? }.
+    if (req.method === 'POST' && url === '/api/strikes/ingest') {
+        return readBody(req, (err, body) => {
+            if (err) return R.status(400).json({ success: false, error: 'Bad JSON' });
+            const name = safe(String((body && body.score) || ''));
+            if (!name) return R.status(400).json({ success: false, error: 'score required' });
+            const args = [path.join(__dirname, '..', 'tools', 'strike_db.js'), '--score', name];
+            if (body.gap != null) args.push('--gap', String(+body.gap));
+            if (body.sim != null) args.push('--sim', String(+body.sim));
+            if (body.label) args.push('--label', String(body.label));
+            const r = spawnSync(process.execPath, args, { cwd: path.join(__dirname, '..'), encoding: 'utf8', timeout: 60000 });
+            if (r.status !== 0) return R.status(500).json({ success: false, error: (r.stderr || r.stdout || 'strike_db failed').slice(-800) });
+            console.log('strikes: ingested ' + name);
+            return R.json({ success: true, census: r.stdout });
+        });
+    }
     if (req.method === 'POST' && url === '/api/composer/save') {
         return readBody(req, (err, body) => {
             if (err) return R.status(400).json({ success: false, error: 'Bad JSON' });

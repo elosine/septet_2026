@@ -1280,3 +1280,84 @@ functions to re-fit), each with the words, the AI's reading, and a status; two b
 questions asked (what "cluster together" means — chromatic packing or the played chord
 squeezed; keyboard range). Reuse found: `chordview.html`'s keyboard + pitch-class palette,
 `vert_bank.js`'s even-spread by octave displacement.
+
+## §39. PLAN 1c.2 — the STRIKES drawer built (steps 1–3 + a first cut of the rest), verified in the running app
+
+Composer, closing the requirements session: *"do the build, and then … after everything's
+documented and committed and pushed, if you could run a session end, and then I'll try the tool
+out in the morning."* Built overnight, against the composer's own running server on :5300 (the
+AI's pane holds no port); the composer's test is the next step.
+
+**What exists — `score/public/strike_drawer.js` (~800 lines), replacing the v1 panel
+(`strike_panel.js` removed):** a full-width drawer from the bottom of the composer score
+(the `Strikes` button beside `MT`; drag its top edge to resize; ✕ or the button closes it).
+Left → right: (0) the SEQUENCE list of the source save — index · go time · note count · range,
+click = select, and the score's playhead parks on the strike (Q); (1) the vertical KEYBOARD,
+ensemble span C2–C7 with the `88` toggle (R6), uniform semitone rows (Z1/Z2/Z3 zoom), every
+voice a dot in its pitch-class colour with its name — hollow = a stand-in sounds instead of the
+pitch (S), a ring = the piano also plays it (H); click a key or a dot to toggle the piano flag;
+(2) the ORCHESTRATION, seven rows in score order with `shuffle`, `may fold`, top → / bottom →
+locks, `as played`, and an articulation `<select>` per row grouped by kind (pitched / fixed /
+noise / multiphonic), the assigned notes shown with ↑↓ when folded and `*` when standing in;
+dotted lines from each dot to its player; (3) the ARTICULATION picker (click a player's name):
+the full roster by kind plus the VARIANT list (open strings for fixed-pitch techniques, the
+technique's keys for noise / multiphonic) with ▶ to hear each and click to select (T);
+(4) the RHYTHM strip, rows shared with the keyboard, time left → right with a ruler, the
+60 ms bands drawn LIVE from the current onsets (J's rule), and the controls: span ×, shape
+(as played / even / front-loaded / back-loaded / centre / edges / random) with an amount
+blend, jitter, reverse, rotate, reshuffle; ORDER presets (as played / low → high / high → low /
+outside-in / inside-out / random), shuffle order, and click-two-dots-to-swap (K). Bottom bar:
+voicing presets original · spread out · cluster (± octave) · cluster low · cluster high ·
+high + low · reshuffle voicing (B, C; cluster = the smallest chromatic span, R5); Hear piano ·
+Hear orchestrated · Stop (G); dur × · dyn × · flatten (R2, R4); the piano quick buttons none ·
+one · top+bottom · rest · all (H); Insert @ playhead · Replace in place · back · save / load
+take (O, Q). SPACE inside the drawer = hear / stop, never the score's transport.
+
+**The model as coded (L):** `voices[]` = the harmony (pitch0 as played, pitch after the voicing
+preset, lane, fold, tech, standIn, piano flag, slot); the onset PATTERN is derived from the
+as-played onsets by the transforms; the ORDER maps voice → slot. Every transform re-derives
+the bands. The shuffle draws players at random without replacement, never a misfit (the
+technique's range from `instruments.js`; folding by octave only when `may fold` is on; locks
+first). A hand assignment that misfits folds (↑↓) or is marked ✕ and stays silent. Fixed /
+noise / multiphonic articulations get a default stand-in (nearest open string; the folded pitch
+inside the technique's range), overridable in the variant list. Hear = MorphEmit's routes, CC7
+127 per route, CC0 30 ms before each note, one absolute time base, `panic()` the one stop.
+Insert = blast-insert object shape (`groupId grp-strike-<index>-<t×10>`, `sonifyNote`,
+`technique`, `sonifyMode 'plain'`, `recVel`, `srcKind 'strike'`) + the META shape on layer 7,
+undo pushed, META window opened.
+
+**Verified in the running app (the composer's server, the AI's pane, zero console errors):**
+strike #3 of ScatteredStrikes01 (20 notes, span 482 ms): all six voicings produce the expected
+registers (cluster 51–59 → 63–71 at +1 oct; high + low = two packed clusters 39–47 / 88–95);
+shuffle without folding assigns all seven players inside their ranges (0 misfits, checked
+against the technique ranges); with folding + locks, top → Flute and bottom → Cello hold;
+stand-in on `arco_open_vel` → nearest open string (F2 → G2); the seven rhythm shapes, reverse,
+rotate, jitter, span × 2 give the intended onset patterns; bands regroup live (4 as played → 7
+even); all six orders correct; Insert wrote 7 notes + 1 META object in one group in 13 ms;
+Replace inside the source save removed the originals and re-inserted at t0; the piano quick
+buttons count as designed (topbot 3 = own + top + bottom; rest = own + the 13 unassigned);
+takes save and load back; Hear fails gracefully with the app's own message when Web MIDI is
+blocked (this pane) — the composer's Chrome has it.
+
+**Found and fixed while verifying — a real hazard:** object ids are PER SAVE (`wc-40` exists in
+every score), so the first Replace deleted six unrelated objects from whatever score was
+loaded. Rule now: Replace only inside the strike's own source save or its `-work` copy
+(`pieceBase(sessionName) === strike.source`); otherwise it refuses with a status line and
+does nothing. Second: the drawer's footer clipped its second row at a fixed height — the
+drawer is now a flex column (footer never clipped). Third, a pane fact for the record: a
+hidden browser pane never fires `requestAnimationFrame`, so a test script that awaits one
+stalls — the dotted lines are drawn in a rAF (fine when the page is visible), tests call
+`renderLines()` directly.
+
+**Two page bugs from the first-sound session fixed in `composer.html` (NITS):** a `<select>`
+or number input blurs on `change` and SPACE on a focused select toggles play instead of the
+dropdown; `initZoneMidi()` runs once at the end of `init()` so a reloaded page has its
+outputs and keyboard immediately. **Server:** `POST /api/strikes/ingest {score, gap, sim}`
+runs `tools/strike_db.js` (the drawer's `rescan`) — the composer's running server predates it;
+**restart `node score\server.js` once in the morning.**
+
+**Not built tonight, by design (the composer listens first):** I double stops (a second flag on
+the strings); K's lock; M / P the harmony collection and the Messiaen sets (index H001…,
+PLAN 1d); N harmony swap by voice rank; the snapshot API beyond takes-in-localStorage;
+the `kind` field in `instruments.js` (S — tonight a name rule classifies the rosters: cello
+52 pitched / 30 fixed / 6 noise); Q's delete. NITS keeps the still-open `techs[0]` fallback.
