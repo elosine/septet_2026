@@ -40,7 +40,9 @@ const INST = () => (typeof INSTRUMENTS !== 'undefined' ? INSTRUMENTS : (root.INS
 
 const DB_URL = '/bank/scattered_strikes.json';
 const STORE = 'septet.strikeDrawer.v3';
-const TAKES = 'septet.strikeTakes.v1';
+const TAKES = 'septet.strikeTakes.v1';            // v1: the browser's takes — read once by the migration, never written again
+const TAKES_PANEL = 'strikes';                     // O v2 (2026-09-04): takes live in bank/panel_snapshots.json under this bucket
+const TAKE_NAME = /^[A-Za-z0-9._ -]{1,64}$/;       // the server's name rule (score/snapshots.js), checked here first
 const LEAD_MS = 250, CC0_LEAD_MS = 30;
 const SPAN = { lo: 36, hi: 96 };        // the ensemble's span on screen (cello C2 … flute C7)
 const FULL = { lo: 21, hi: 108 };       // the `88` toggle
@@ -115,6 +117,7 @@ const D = {
         window.addEventListener('resize', () => { if (this.el && this.el.style.display !== 'none') this.render(); });
         const e = E_();
         if (e) { const prev = e.onStop; e.onStop = () => { if (prev) try { prev(); } catch (x) {} this.onStopped(); }; }
+        this.refreshTakes().then(() => this.migrateTakes());
     },
 
     build() {
@@ -169,6 +172,7 @@ const D = {
               '<button id="skBack" style="' + btn + '" title="one step back">back</button>' +
               '<input id="skTakeName" placeholder="take name" style="width:90px;' + inp + '"><button id="skTakeSave" style="' + btn + '">save take</button>' +
               '<select id="skTakeSel" style="max-width:130px;' + inp + '"><option value="">load take…</option></select>' +
+              '<button id="skTakeDel" title="delete the take named in the box (asks first)" style="' + btn + '">&times;</button>' +
               '<span id="skPlayhead" style="display:none;color:#e8cf9a">&#9654;</span>' +
             '</div>';
         document.body.appendChild(d);
@@ -203,18 +207,26 @@ const D = {
         q('#skBack').addEventListener('click', () => this.back());
         q('#skTakeSave').addEventListener('click', () => this.saveTake());
         q('#skTakeSel').addEventListener('change', e => { if (e.target.value) this.loadTake(e.target.value); e.target.value = ''; });
+        q('#skTakeDel').addEventListener('click', () => this.deleteTake());
         // resize handle
         let drag = null;
         q('#skHandle').addEventListener('mousedown', e => { drag = { y: e.clientY, h: d.getBoundingClientRect().height }; e.preventDefault(); });
         document.addEventListener('mousemove', e => { if (!drag) return; const h = clamp(drag.h + (drag.y - e.clientY), 220, window.innerHeight); d.style.height = h + 'px'; this.cfg.full = false; this.cfg.heightPx = h; this.render(); });
         document.addEventListener('mouseup', () => { if (drag) this.save(); drag = null; });
-        // SPACE inside the drawer = hear orchestrated / stop; never the score's transport
-        d.addEventListener('keydown', ev => {
-            if (ev.code === 'Space' && !ev.target.matches('input, select, textarea')) {
-                ev.preventDefault(); ev.stopPropagation();
-                const e = E_(); if (e && e._playing) { e.panic(); this.onStopped(); } else this.play('orch');
-            }
-        });
+        // SPACE while the drawer is open = hear orchestrated / stop, wherever the focus is; the score's own SPACE
+        // (a bubbling listener on window) never sees it. Capture phase on window, because the score blurs every
+        // select and number input on change (composer.html init, the "pull-down menus trap the spacebar" fix),
+        // which dropped the focus to <body> and handed SPACE to the transport (composer, 2026-09-04: "at some
+        // point it started playing the main score"). Text entry keeps its SPACE (the take name); a focused
+        // select or button is blurred first so SPACE cannot open or press it.
+        window.addEventListener('keydown', ev => {
+            if (ev.code !== 'Space' || !this.el || this.el.style.display === 'none') return;
+            const t = ev.target, m = q => !!(t && t.matches && t.matches(q));
+            if (m('textarea, input[type=text], input[type=number], input[type=search], input:not([type])')) return;
+            if (m('select, button')) t.blur();
+            ev.preventDefault(); ev.stopPropagation();
+            const e = E_(); if (e && e._playing) { e.panic(); this.onStopped(); } else this.play('orch');
+        }, true);
         this.writeFields();
     },
 
@@ -258,6 +270,7 @@ const D = {
         this.el.focus();
         if (bad.length) { this.setStatus('PREFLIGHT: ' + bad.join(' · '), true); return; }
         this.loadDb(false);
+        this.refreshTakes();
     },
 
     // ------------------------------------------------------------------ the database
@@ -795,15 +808,65 @@ const D = {
     },
     snapshot() { this.prev = this.state(); },
     back() { if (!this.prev) { this.setStatus('nothing to go back to'); return; } const p = this.prev; this.prev = null; this.applyState(p); this.setStatus('back one step'); },
-    takes() { try { return JSON.parse(localStorage.getItem(TAKES) || '[]'); } catch (e) { return []; } },
-    saveTake() {
-        const name = (this.el.querySelector('#skTakeName').value || '').trim() || ('take ' + new Date().toISOString().slice(11, 16));
-        const list = this.takes().filter(t => t.name !== name); list.push({ name, time: new Date().toISOString(), state: this.state() });
-        try { localStorage.setItem(TAKES, JSON.stringify(list)); } catch (e) {}
-        this.fillTakes(); this.setStatus('take saved: ' + name);
+    // O v2 (composer, 2026-09-04: "lets keep those save files as well"): takes live in bank/panel_snapshots.json
+    // through /api/snapshots (panel 'strikes') — the file the other panels use and git carries — not in the
+    // browser. `state` is opaque to the server; `saved` is stamped there. The v1 localStorage takes are copied
+    // over once (migrateTakes); the browser copy is kept under a '.migrated' key, never deleted.
+    takeList: {},
+    async refreshTakes() {
+        try {
+            const file = await fetch('/api/snapshots', { cache: 'no-store' }).then(x => x.json());
+            this.takeList = (file && file.panels && file.panels[TAKES_PANEL]) || {};
+        } catch (e) { this.takeList = {}; this.setStatus('take list failed: ' + e.message + ' (is node score/server.js running?)', true); }
+        this.fillTakes();
     },
-    loadTake(name) { const t = this.takes().find(x => x.name === name); if (!t) return; this.snapshot(); this.applyState(t.state); this.setStatus('take loaded: ' + name); },
-    fillTakes() { const sel = this.el.querySelector('#skTakeSel'); sel.innerHTML = '<option value="">load take…</option>' + this.takes().map(t => '<option value="' + t.name + '">' + t.name + '</option>').join(''); },
+    takeNames() { const t = this.takeList; return Object.keys(t).sort((a, b) => String(t[b].saved || '').localeCompare(String(t[a].saved || ''))); },
+    fillTakes() { const sel = this.el.querySelector('#skTakeSel'); if (!sel) return; sel.innerHTML = '<option value="">load take…</option>' + this.takeNames().map(nme => '<option value="' + nme.replace(/"/g, '&quot;') + '">' + nme + '</option>').join(''); },
+    async postTake(body) {
+        const r = await fetch('/api/snapshots', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ panel: TAKES_PANEL }, body)) }).then(x => x.json());
+        if (!r.success) throw new Error(r.error || '?');
+        return r;
+    },
+    takeComment() { return this.strike ? ('strike #' + this.strike.index + ' · ' + this.strike.source) : ''; },
+    async saveTake() {
+        const box = this.el.querySelector('#skTakeName'), d = new Date(), pad = x => String(x).padStart(2, '0');
+        const name = (box.value || '').trim() || ('take ' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + pad(d.getMinutes()));
+        if (!TAKE_NAME.test(name)) { this.setStatus('take not saved: a name is 1–64 letters, digits, dot, underscore, space or hyphen — got "' + name + '"', true); return; }
+        try {
+            const r = await this.postTake({ name, comment: this.takeComment(), state: this.state() });
+            box.value = name; await this.refreshTakes();
+            this.setStatus('take saved: ' + name + (r.existed ? ' (replaced)' : '') + ' · ' + r.panels + ' take' + (r.panels === 1 ? '' : 's') + ' in bank/panel_snapshots.json (committed at the wrap)');
+        } catch (e) { this.setStatus('take not saved: ' + e.message, true); }
+    },
+    loadTake(name) {
+        const t = this.takeList[name]; if (!t) { this.setStatus('no take named "' + name + '"', true); return; }
+        this.snapshot(); this.applyState(t.state);
+        const box = this.el.querySelector('#skTakeName'); if (box) box.value = name;
+        this.setStatus('take loaded: ' + name + (t.comment ? ' · ' + t.comment : '') + ' · saved ' + String(t.saved || '').slice(0, 16).replace('T', ' '));
+    },
+    async deleteTake() {
+        const box = this.el.querySelector('#skTakeName'), name = (box.value || '').trim();
+        if (!name || !this.takeList[name]) { this.setStatus('type or load the name of the take to delete', true); return; }
+        if (!window.confirm('Delete take "' + name + '" from bank/panel_snapshots.json?')) return;
+        try { const r = await this.postTake({ name, delete: true }); box.value = ''; await this.refreshTakes(); this.setStatus('take deleted: ' + name + ' · ' + r.panels + ' left'); }
+        catch (e) { this.setStatus('delete failed: ' + e.message, true); }
+    },
+    async migrateTakes() {
+        let old = []; try { old = JSON.parse(localStorage.getItem(TAKES) || '[]'); } catch (e) { old = []; }
+        if (!Array.isArray(old) || !old.length) return;
+        const done = [], skipped = [];
+        for (const t of old) {
+            const name = (String(t.name || 'take').replace(/[^A-Za-z0-9._ -]/g, '-').slice(0, 64).trim()) || 'take';
+            if (this.takeList[name]) { skipped.push(name); continue; }
+            try {
+                await this.postTake({ name, comment: 'from the browser, saved ' + String(t.time || '').slice(0, 16).replace('T', ' ') + (name !== t.name ? ' (was "' + t.name + '")' : ''), state: t.state });
+                done.push(name + (name !== t.name ? ' (was "' + t.name + '")' : ''));
+            } catch (e) { this.setStatus('take migration stopped at "' + name + '": ' + e.message + ' — the browser copies are kept', true); return; }
+        }
+        try { localStorage.setItem(TAKES + '.migrated', localStorage.getItem(TAKES)); localStorage.removeItem(TAKES); } catch (e) {}
+        await this.refreshTakes();
+        this.setStatus('takes moved to bank/panel_snapshots.json: ' + (done.join(', ') || 'none') + (skipped.length ? ' · already there: ' + skipped.join(', ') : ''));
+    },
 
     // ------------------------------------------------------------------ misc
     save() { try { localStorage.setItem(STORE, JSON.stringify(this.cfg)); } catch (e) {} },

@@ -235,7 +235,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   silent; with FEWER: the surplus players fall silent. Every harmony, the played one included,
   goes through the same path — there is no special case.
 
-## O · Not losing work: takes — `built 2026-09-03 (v1: takes in the browser's localStorage + one-level back)`
+## O · Not losing work: takes — `built 2026-09-03 (v1: takes in the browser's localStorage + one-level back)` · `v2 2026-09-04: takes in bank/panel_snapshots.json (bucket strikes) through /api/snapshots, committed with the repo; the v1 browser takes migrated once on the next reload; × deletes the named take (asks first)`
 
 > *"I don't want to lose work. Say I take the original, orchestrate, find a rhythm, listen —
 > then I decide I want to listen to it in a different harmony. It may not fit the orchestration,
@@ -386,10 +386,12 @@ Start: `cd C:\Users\jwloy\GitHub\septet_2026` → `node score\server.js` (restar
 - **In:** A–H, J, K (no lock), L, O (v1), Q (no delete), R, S (name-rule kinds), T. Verification
   numbers in RUNNING_LOG §39.
 - **Not yet:** I double stops · K lock · M harmony collection + index · N harmony swap · P Messiaen
-  · the snapshot API · the `kind` field in `sandbox/instruments.js` (0c).
+  · the `kind` field in `sandbox/instruments.js` (0c).
 - **Rules worth knowing while testing:** Replace works only with the strike's source save (or its
   `-work` copy) open — ids repeat across saves; Insert goes to the playhead of whatever is open.
-  SPACE in the drawer = hear / stop. Takes live in the browser (localStorage), not in the repo.
+  SPACE while the drawer is open = hear / stop, wherever the focus is (the score's transport never gets
+  it; a text box keeps its spaces). Takes live in `bank/panel_snapshots.json` (O v2) and are committed at
+  each wrap; a take name is 1–64 letters, digits, dot, underscore, space or hyphen.
 
 ## Log
 
@@ -407,3 +409,4 @@ Start: `cd C:\Users\jwloy\GitHub\septet_2026` → `node score\server.js` (restar
 - 2026-09-03, night — **built:** the drawer (`strike_drawer.js`) with A–H, J, K, L, O, Q, R, S, T as marked above; verified in the running app; the Replace-by-id hazard found and closed (source-save guard). RUNNING_LOG §39. Next: the composer's listening pass, then I, K lock, M/N/P.
 - 2026-09-04, morning — the composer's first look: a `STRIKES ▴` tab at the page's bottom edge (the toolbar wraps on smaller screens), the drawer full page height by default with `↕ half`, keyboard rows fitted to the drawer. RUNNING_LOG §40.
 - 2026-09-04, evening — **U1–U4 built** in one update (composer: "then build all 4 pls"): a gap column between keyboard and players with the lines landing on a marker per row and the hovered row's lines brightened (U1); the strike defaults flute pizzicato · bcl slap · violins Bartók · viola/cello gettato · piano main, and `flat 127` on by default (U2); solo — shift-click a dot (keyboard or rhythm), `S` per player row, `solo off` in the footer; while anything is soloed only the soloed voices sound (U3); the rhythm strip at 480 px by default with a width slider 320–1400, the saved space to the gap (U4). Verified in the running app, no console errors. RUNNING_LOG §64.
+- 2026-09-04, session 3 — **O v2 + the SPACE bug** (composer: "yes lets keep those save files as well, also I've saved 2 already lets try to preserve them" · "I hit space to play, that was working But then at some point, it started playing the main score"): takes moved from the browser to `bank/panel_snapshots.json` through the panels' snapshot route (bucket `strikes`), with a one-time migration of the v1 localStorage takes, the server's name rule checked in the drawer, and a `×` delete; SPACE re-routed — a window capture-phase listener owns SPACE while the drawer is open, because the score's blur-every-select-on-change rule dropped the focus to the page body and the score's own SPACE handler took over. Reproduced, fixed and verified in the running app (RUNNING_LOG §65). Also answered: an instrument left out by the shuffle is hooked back in by hand — double-click the dot, click the player's row; the note folds by octave into range (↓ / ↑); nothing else moves (F, the two-click assign).

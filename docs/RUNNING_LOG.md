@@ -1949,3 +1949,57 @@ bartok_vel · viola/cello:gettato_vel`; every note at velocity 127; 7 landing ma
 buttons, 7 lines; one voice soloed → Hear yields 1 note (the dot's stroke white), solo off →
 7; the hovered lane's line 2.2 px against 1; the strip 480 → 320 px with the slider. The
 slap plays the strike slot (channel 5) through the recipe. Next: the composer's test.
+
+## §65. Takes into the repo (O v2), and SPACE taken back from the transport
+
+Composer, at the start of session 3: *"are the takes in the strikes saved and eventually
+commit/pushed?"* — No: v1 kept them in the browser's localStorage (`septet.strikeTakes.v1`,
+STRIKES_TOOL O); nothing on disk. Then: *"yes lets keep those save files as well, also I've saved 2
+already lets try to preserve them; and in the strikes drawer, I hit space to play, that was working
+But then at some point, it started playing the main score. I could hear it too. So if we could
+prevent that from happening, that'd be good."*
+
+**Takes (O v2).** The drawer now saves through the panels' snapshot route (`/api/snapshots`,
+`score/snapshots.js`: state opaque, an unknown panel created on first contact, `saved` stamped by
+the server, a bad name refused) into `bank/panel_snapshots.json` under the bucket `strikes` — the
+file git carries. `save take` / `load take…` / a new `×` (deletes the take named in the box, asks
+first). The default name is `take YYYY-MM-DD HHMM` (v1's `take HH:MM` would fail the server's name
+rule — no colon). A one-time migration on the next page load copies every v1 take to the file
+(a name corrected to the rule is said so; a name already on the file is skipped), then renames the
+browser key to `…v1.migrated` — nothing deleted. The list refetches on every open, so a take the AI
+writes appears without a reload. *Rejected:* keeping localStorage as the store (per-browser, not in
+git — the composer's question was the whole point); a new route (the snapshot route exists for this,
+and the file's `_contract` already names takes as its use).
+
+**SPACE.** Diagnosis from the code, then reproduced in the AI's pane on the composer's server:
+the drawer's SPACE listener sat on the drawer element, so it saw keys only while the focus was
+inside the drawer; the score's own rule from 2026-09-03 ("pull-down menus trap the spacebar") blurs
+every `select` and number input on change (a capturing `change` listener in `composer.html` init),
+so the first technique or preset change in the drawer moved the focus to `<body>` — and the score's
+window-level SPACE handler (`togglePlay`) took the next SPACE. Reproduction: drawer open → a
+`select` change → `activeElement` = BODY → SPACE → `Composer.isPlaying = true`, the drawer silent.
+Fix: the drawer's listener moved to `window` in the CAPTURE phase, gated on the drawer being open —
+it runs before the score's bubbling listener whatever the target, stops propagation, blurs a focused
+select or button first (SPACE would open / press it), and leaves text entry alone (the take-name box
+needs its spaces). While the drawer is open SPACE belongs to the drawer; the score's Play button
+still works by mouse.
+
+**Verified in the running app** (the composer's server, the AI's pane, zero console errors):
+drawer closed → SPACE plays the score (unchanged) · drawer open, focus on BODY after a select change
+→ SPACE: the score does NOT start and the drawer's hear path runs (the pane's "BLOCKED Web MIDI"
+status is that path's own preflight — MIDI is denied in the pane, NITS) · SPACE in the take-name box:
+untouched · SPACE on a focused select in the drawer: blurred, the score silent · take `zz-ai-test`
+saved → in the file with its strikeId, 20 voices, the comment `strike #3 · ScatteredStrikes01` and
+the server's timestamp → in the list → loaded (the status names the take, its comment, the time) →
+`take 14:05` refused with the rule → deleted (0 left, the list empty). Side effect worth knowing:
+the server rewrites the bank file with 2-space indentation (it was 1-space from piece #4's tool) —
+a one-time whitespace diff plus the empty `strikes` bucket, committed now; the composer's two takes
+land in it on his next reload and are committed then.
+
+**Also answered (composer, mid-turn, with a screenshot — F6 unassigned, the cello row empty):**
+*"And what if an instrument gets left out? Can I hook it back in without reshuffling?"* — Yes: the
+two-click assign (F): double-click the dot on the keyboard (status: "voice F6 armed — click a player
+row to assign it"), then click the Cello row; the note folds by octave into the cello's
+strike-technique range (the line shows ↓); nothing else moves. Why it was left out: the shuffle never
+misfits and `shuffle may fold` was off, so a voice that sits outside the last free player's range as
+played is dropped rather than folded; with `shuffle may fold` on it would have been folded.

@@ -108,6 +108,12 @@ M/N/P harmony collection, swap, Messiaen = PLAN 1d), or phase 0's remainder: **0
 measurements, **0c.5–0c.8** (0c.7 runs `curve_slots.lua`), **0f**, the **0h** gate → compose
 (CN-5 / CN-6 from the strikes).
 
+**This session (2026-09-04, session 3, Fable) — in progress:** the composer asked whether the drawer's takes
+are saved and committed → **takes moved to `bank/panel_snapshots.json` (O v2); his two browser takes migrate
+on his next reload — commit the bank file then.** The SPACE bug (the drawer's SPACE went to the score's
+transport after any select change) fixed and verified: SPACE belongs to the drawer while it is open.
+RUNNING_LOG §65. The drawer test continues.
+
 **NEXT STEPS · MODEL · CLEAR:**
 1. ☑ 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1c.1 · 1c.2 (+U1–U4) DONE and pushed.
 2. ► **The composer tests the drawer** (any model; conversation first). Fix what blocks; file the
