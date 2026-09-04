@@ -1724,3 +1724,16 @@ rack project, 10 tracks**, and the `tracks` job answered with the whole rack —
 Reaper, 31 ms round trip** through the files — every track's name, fader (all 0 dB), arm (all
 armed), folder depth (REC +1 … Vc −1: the folder the composer built this morning, seen from
 inside), record mode (REC = 1, output), and FX (UVI ×3, Kontakt 8 ×6). PLAN 0k.1 ☑ → 0k.2.
+
+## §54. 0k.3 half-proven: the live UVI state read and rebuilt through the bridge (not yet pushed)
+
+`tools/uvi_state.js` (info · decode · roundtrip · encode, `--push` to write into the running
+instance) read the Flute SI2 track's chunk THROUGH THE BRIDGE — the live state, not the file:
+16 parts, `MidiChannel` 0-based (Part 13 = channel 13 = the Pizzicato, as the recipe says),
+every part +6.00 dB, the master −2.00 dB (the composer's trim of this morning, live),
+programs by name and path, 3 528 052 bytes of XML, a 312-byte header, no tail. The header
+has ONE length field (offset 288 = 12 + compressed) — the tool rewrites any field equal to
+the old compressed length + k, generically. Unchanged re-encode: compressed 105 275 →
+105 354 bytes (a different zlib, the same XML), self-decode identical. The push (the same
+state back into the instance, then a read-back) waits for its turn after the Kontakt proof
+— the running order — and for the composer's ear on the instance afterwards.
