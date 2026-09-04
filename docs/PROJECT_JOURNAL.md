@@ -109,8 +109,8 @@ measurements, **0c.5–0c.8** (0c.7 runs `curve_slots.lua`), **0f**, the **0h** 
 (CN-5 / CN-6 from the strikes).
 
 **This session (2026-09-04, session 3, Fable) — in progress:** the composer asked whether the drawer's takes
-are saved and committed → **takes moved to `bank/panel_snapshots.json` (O v2); his two browser takes migrate
-on his next reload — commit the bank file then.** The SPACE bug (the drawer's SPACE went to the score's
+are saved and committed → **takes moved to `bank/panel_snapshots.json` (O v2); his four browser takes (00-a, 00-b,
+01-a, 01-b) migrated on his reload and are committed.** The SPACE bug (the drawer's SPACE went to the score's
 transport after any select change) fixed and verified: SPACE belongs to the drawer while it is open.
 RUNNING_LOG §65. The drawer test continues.
 
