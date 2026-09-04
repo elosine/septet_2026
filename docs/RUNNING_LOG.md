@@ -1194,3 +1194,14 @@ precedents on hand: `bank/ostinato_timing_db_2p2p.json` (ingestions + per-sample
 attacks, two thresholds) and the blast panel's Hear / Insert / Replace controls. **The save
 is not on disk yet** — `scores/` holds no "scattered strike" file at 19:00; the composer is
 asked to check the session name and press Save.
+
+## §34. The first material is on disk: `ScatteredStrikes01`
+
+The score server (the preview-tool instance) had died a second time today — the composer's
+Save answered *"TypeError: Failed to fetch"* — restarted, the page not reloaded, Save
+pressed again: **`scores/ScatteredStrikes01.json`, 211 KB, 577 notes, all on the piano lane
+(technique `main`), 0.6 – 73.1 s**, played on the Keystation into the score's record panel.
+The console `copy(JSON.stringify(Composer.collectData()))` fallback was given for the next
+time (it prints `undefined` and fills the clipboard — normal). From here the composer runs
+the server himself (`start_score_server.bat` / `node score/server.js`) so it no longer depends
+on this session's tools. The file is the seed for PLAN 1c; committed as material.
