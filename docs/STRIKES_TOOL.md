@@ -193,6 +193,83 @@ The starting set:
   is one pairing kept as a preset. The bands belong to the onset list alone; whatever pitch
   lands inside one lands on that attack.
 
+## M · The harmony collection as a source — `wanted 2026-09-03` (= PLAN 1d, seen from the tool)
+
+> *"Then we'll collect all the harmonies … a drop-down and scrollable panel like the one in the
+> blast sandbox, so I can drop that down, click on any of the harmonies, and play them. And
+> when we collect the harmonies from the various pieces, let's give a better indexing system —
+> numbers are okay, but consistent and simple and easy to understand. … the chord shapes from
+> the two-piano piece, all of these blasts, and I believe some other ones scattered about the
+> tuba piece — Messiaen, clusters, octaves, stacked fifths. This would be a view onto that
+> harmony collection."*
+
+- The strip from the tuba Blast Sandbox (mini vertical keyboards in a scrollable row, a
+  drop-down, play, auto-hear) as the harmony picker; click = load the harmony into the tool.
+- Sources inventoried 2026-09-03: tuba `blast_taxonomy.json` (20 harmonies, 138 sonorities,
+  3 custom lists), `cluster_bank.json` (44 clusters), `pulse_palette.json` (29 sonorities,
+  S008–S047), Messiaen mode 3 on F (26 pitches, PLAN #4); the two-pianos chord shapes (inside
+  its saves' `databases.chordShapes`); the septet's own strikes (46 so far).
+- **Index proposal:** one running number for the whole collection, `H001`, `H002` …, assigned
+  once, never reused (append-only), plus a source tag and the original name in the label
+  (`H042 · tuba vert 28 V4 · C4 C#4 D4`). Numbers are what gets said aloud; the tag says where
+  it came from.
+
+## N · Choosing a harmony: orchestrating it into the strike — `adopted 2026-09-03`
+
+> *"If I choose a harmony, it's got to be orchestrated into this scattered shape — what the
+> piano keyboard represents. Similarly even the played version has to be reorchestrated so the
+> ensemble can play it."*
+
+- *AI proposal:* the orchestration and the order are stored **by voice rank**, not by pitch:
+  voice 1 = the lowest note … voice n = the highest. A new harmony with n notes maps 1:1 onto
+  the same ranks — the same players, the same onsets, the same piano flags — so the built
+  arrangement survives the swap. Ranges then adapt by F's rule (fold, marked ↑ / ↓, or skip).
+  A harmony with MORE notes: the extra voices go where the piano flags say (rest) or stay
+  silent; with FEWER: the surplus players fall silent. Every harmony, the played one included,
+  goes through the same path — there is no special case.
+
+## O · Not losing work: takes — `adopted 2026-09-03`
+
+> *"I don't want to lose work. Say I take the original, orchestrate, find a rhythm, listen —
+> then I decide I want to listen to it in a different harmony. It may not fit the orchestration,
+> but I don't want to lose what I built, and I want to easily hear my choices, and go back."*
+
+- *AI proposal:* the tool's whole state — harmony, onset pattern, order, orchestration, piano
+  and double-stop flags, transforms, seeds — is a **take**. `Save take` names it (the panels'
+  snapshot loop, `bank/panel_snapshots.json`); the take list is a drop-down; `Load` restores
+  one; switching the harmony is non-destructive (N) and an automatic `previous` step keeps the
+  last state so `back` is one click. A take can be inserted into the score at any time.
+
+## P · The Messiaen modes — `wanted 2026-09-03`
+
+> *"Messiaen — and there's more than mode three. I think we end up using all the modes … it
+> might have been in the multitempo parts where it was distributed across time, not in one
+> chord. So those aren't really chords, but maybe we can add them: pull in all the Messiaen
+> modes, and we can just use your attrition strategy, or the shuffle can randomly choose what
+> to drop."*
+
+- All seven modes of limited transposition in every transposition (2 + 3 + 4 + 6 + 6 + 6 + 6 =
+  27 pitch sets) enter the collection as harmonies, tagged `messiaen m3/F` etc. More notes
+  than players → N's attrition: the shuffle drops at random, or the piano's flags take the rest.
+
+## Q · Linked to the score — `wanted 2026-09-03`
+
+> *"In the tuba composer score there's the Insertion pull-down. Instead of this, integrate
+> that into the sandbox somehow, and have the thing I'm working on in the sandbox linked to
+> the rhythmic position in the score. I played a bunch of those chords directly into the
+> score, and they have a go time. So in the sandbox I can identify which one I'm working with,
+> and that gets linked back to the score at the time it comes from. So the first step of the
+> tool would be to choose which step in the sequence of scattered strikes I'm working with,
+> and that loads into the keyboard, harmony, etcetera."*
+
+- **Step one of the tool: pick the strike by its place in the sequence** (index · go time);
+  the database already carries its source save, object ids and `t0`, so the link is data.
+- Operations from the Insertion strip, in the tool: **replace in place** (the take written
+  back over the original strike at its time — the original notes replaced, ids kept where
+  possible), **insert @ playhead**, delete. Selecting a strike may move the score's playhead
+  to its `t0`; later the reverse (select in the score → select in the tool).
+- The Insertion strip's mini-keyboard row is reused as the harmony picker (M).
+
 ## Open questions for the composer (only what blocks the next piece)
 
 1. **"Cluster together":** chromatic — the pitch classes packed semitone-adjacent inside one
@@ -207,3 +284,5 @@ The starting set:
 - 2026-09-03, later — K (order of the notes) stated; presets, shuffle, drag / swap, lock.
 - 2026-09-03, later — J rule: the redaction grouping is live, re-derived after every transform.
 - 2026-09-03, later — L: the three-list model confirmed by the composer.
+- 2026-09-03, later — M (the harmony collection as a source; index proposal), N (harmony swap by voice rank), O (takes) recorded; N and O proposed.
+- 2026-09-03, later — N, O adopted; P (all Messiaen modes) and Q (linked to the score; step one = pick the strike in the sequence) recorded.
