@@ -237,24 +237,31 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   TRACK GAIN in the rack (every playback path, no app code) and as `balanceDb` in
   `sandbox/instruments.js`. *Rejected:* velocity scaling (changes the sample layer), a CC7
   offset (eats the dynamics channel). Re-run whenever a library or preset changes.
-- **0k — The Reaper bridge: ReaScript from the AI, and the co-work protocol for the samplers**
-  — `planned 2026-09-04, awaiting the composer's go` *(composer: "what capabilities does ai
-  have and what are the mechanisms … lets do a comprehensive survey and find the best, fast and
-  reliable and most functions"; the survey, the finding and the plan in
-  `docs/REAPER_CONTROL.md`; RUNNING_LOG §48)* — 0k.1 `reaper/bridge/bridge.lua` (a defer loop
-  from `__startup.lua`, inbox → pcall → outbox JSON, heartbeat) + `install.md`; 0k.2
-  `tools/reaper_job.js` (tracks · fader · child track + receive / sub-output · fx · param ·
-  arm / record / stop · save · render; later midi-import); 0k.3 apply B (§47) — faders + the
-  `Flute strikes` / `BassCl strikes` child tracks on sampler sub-outputs, re-measure; 0k.4 the
-  co-work protocol for GUI-only steps; **0k.5 the sampler setups as code** — UVI: the state XML
-  (§49) edited by `tools/uvi_state.js` (decode · edit · re-encode, proven by a round trip); Kontakt:
-  one Lua script per track type on the Kontakt Lua API (§51: `load_instrument`, MIDI channel,
-  output, volume, `save_multi`), dropped onto the rack once per instance; host automation for
-  CC7-free knobs (§50). co-work protocol for GUI-only steps. *Why:* every later rack change (curve copies, strike
-  slots, renders, the performance-score MIDI) becomes a job with a read-back instead of a
-  screenshot conversation. *Rejected:* community MCP servers (the same bridge with a Python
-  stack and a fixed vocabulary); CC7 trims (reset by the app's CC7 pin); instance-master trims
-  (GUI-only, no number).
+- **0k — The Reaper bridge, the sampler setups as code, and B applied** — `doing 2026-09-04`
+  *(composer: "what capabilities does ai have and what are the mechanisms … comprehensive
+  survey … best, fast and reliable and most functions" → `docs/REAPER_CONTROL.md`; RUNNING_LOG
+  §48–51; "just slot it in to the plan")* — **the running order** (► = active):
+  1. ► **0k.1 the bridge** — `reaper/bridge/bridge.lua` (defer loop, inbox → pcall → outbox
+     JSON, heartbeat) + `tools/reaper_job.js`; the AI appends the startup line to
+     `%APPDATA%\REAPER\Scripts\__startup.lua`; the composer starts it once now (Actions →
+     ReaScript: Load…); proof = the `tracks` job lists the rack.
+  2. **0k.2 the Kontakt proof** (Piano Kontakt): `reaper/kontakt/proof_readback.lua` (every
+     slot's name / channel / output / volume → a file) · a write (Plucked −6 dB, read back,
+     restored) · a load (a second Plucked into a free slot on [A] 5, output 2, read back,
+     removed). Composer: Options → Developer once; drag the script onto the rack.
+  3. **0k.3 the UVI proof** (Flute SI2): `tools/uvi_state.js` decode → unchanged re-encode →
+     `SetTrackStateChunk` through the bridge → UVI still plays; then part 13 → outputs 3/4,
+     seen in the GUI and in the track's routing.
+  4. **0k.4 apply B** (§47): faders flute −21 · bcl −9 · piano +7 · vn 0 · va −3.5 · vc −1 by
+     the bridge; `Flute strikes` child track on UVI outs 3/4 (+21); a second bass-clarinet
+     slot on [A] 5 → output st.2 → `BassCl strikes` (+13) by a Kontakt script; recipe
+     `slap.channel = 5` + `balanceDb`; re-measure `-Only flute,bass_clarinet`; SAMPLER_QUIRKS.
+  5. **0k.5 the setup scripts** — one Kontakt Lua per track type (the ×4 curve slots for
+     0c.7, the piano pair, the bass clarinet) and the UVI XML tool as the standing way to
+     configure; host automation for CC7-free knobs (§50) when a static sampler knob is wanted.
+  Then back to the drawer's feature update (STRIKES_TOOL U1–U4) when the composer says.
+  *Why:* every later rack change becomes a job with a read-back instead of a screenshot
+  conversation. *Rejected:* community MCP servers; CC7 trims; GUI-only trims.
 ## 1. Compose — `todo` (starts the moment 0h passes; tools built per need, the #3/#4 MO)
 
 - **1a — A more fluid way to draw curves in the score** — `todo` *(composer, 2026-09-03: "todo:
