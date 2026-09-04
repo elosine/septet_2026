@@ -341,7 +341,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   them; the noise technique's keys; the open strings) — click to hear, click to select; the
   choice is stored on the voice (the stand-in key). Out of the way until needed.
 
-## U · Feature queue from the first test — `collecting 2026-09-04`
+## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64)
 
 > Composer: *"collect these and I'll have you do a feature update all at once."* Each request
 > verbatim, the AI's reading beneath; built together when the composer says so.
@@ -406,3 +406,4 @@ Start: `cd C:\Users\jwloy\GitHub\septet_2026` → `node score\server.js` (restar
 - 2026-09-03, later — S adopted; T (variant side panel) recorded; B clarified (cluster = smallest chromatic span, movable; high+low clusters; spread out); R4 dynamics, R5, R6 (ensemble span + an 88 toggle for the piano) decided. All pre-build decisions taken.
 - 2026-09-03, night — **built:** the drawer (`strike_drawer.js`) with A–H, J, K, L, O, Q, R, S, T as marked above; verified in the running app; the Replace-by-id hazard found and closed (source-save guard). RUNNING_LOG §39. Next: the composer's listening pass, then I, K lock, M/N/P.
 - 2026-09-04, morning — the composer's first look: a `STRIKES ▴` tab at the page's bottom edge (the toolbar wraps on smaller screens), the drawer full page height by default with `↕ half`, keyboard rows fitted to the drawer. RUNNING_LOG §40.
+- 2026-09-04, evening — **U1–U4 built** in one update (composer: "then build all 4 pls"): a gap column between keyboard and players with the lines landing on a marker per row and the hovered row's lines brightened (U1); the strike defaults flute pizzicato · bcl slap · violins Bartók · viola/cello gettato · piano main, and `flat 127` on by default (U2); solo — shift-click a dot (keyboard or rhythm), `S` per player row, `solo off` in the footer; while anything is soloed only the soloed voices sound (U3); the rhythm strip at 480 px by default with a width slider 320–1400, the saved space to the gap (U4). Verified in the running app, no console errors. RUNNING_LOG §64.

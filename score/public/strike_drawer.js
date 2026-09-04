@@ -39,7 +39,7 @@ const METAL = () => (typeof META_LAYER !== 'undefined' ? META_LAYER : root.META_
 const INST = () => (typeof INSTRUMENTS !== 'undefined' ? INSTRUMENTS : (root.INSTRUMENTS || {}));
 
 const DB_URL = '/bank/scattered_strikes.json';
-const STORE = 'septet.strikeDrawer.v2';
+const STORE = 'septet.strikeDrawer.v3';
 const TAKES = 'septet.strikeTakes.v1';
 const LEAD_MS = 250, CC0_LEAD_MS = 30;
 const SPAN = { lo: 36, hi: 96 };        // the ensemble's span on screen (cello C2 … flute C7)
@@ -51,6 +51,9 @@ const PC_PALETTE = ['#ffd479', '#7ec9a8', '#8ea9c9', '#c98a8a', '#b58ec9', '#d4c
 const nm = m => NAMES[((m % 12) + 12) % 12] + (Math.floor(m / 12) - 1);
 const OPEN_STRINGS = { violin1: [55, 62, 69, 76], violin2: [55, 62, 69, 76], viola: [48, 55, 62, 69], cello: [36, 43, 50, 57] };
 const PLAIN_PREF = ['ord', 'main', 'senza_vel', 'senza_mw', 'staccato'];
+// U2 (composer, 2026-09-04): the default articulation of a strike — flute pizzicato (the written tongue
+// ram), bass clarinet slap, violins Bartók, viola / cello gettato; the piano as it is; all at 127
+const STRIKE_DEFAULT = { flute: 'pizzicato', bass_clarinet: 'slap', violin1: 'bartok_vel', violin2: 'bartok_vel', viola: 'gettato_vel', cello: 'gettato_vel', piano: 'main' };
 
 function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function shuffled(arr, rnd) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -89,7 +92,7 @@ const D = {
     voices: [], slots: [], ph: null, base: 0, prev: null, pickerLane: null,
     cfg: { strikeId: null, show88: false, rowH: 0, full: true, heightPx: 0, voicing: 'original', vSeed: 1, clusterOct: 0,
            timeX: 1, shape: 'played', amount: 1, jitterMs: 0, rSeed: 1, order: 'played', oSeed: 1, simMs: 60,
-           durX: 1, dynX: 1, flatten: false, mayFold: false, topLock: -1, bottomLock: -1, oSeedShuffle: 1, zoomPxPerMs: 0 },
+           durX: 1, dynX: 1, flatten: true, mayFold: false, topLock: -1, bottomLock: -1, oSeedShuffle: 1, zoomPxPerMs: 0, rhythmW: 480 },
 
     // ------------------------------------------------------------------ init / build
     init() {
@@ -139,9 +142,11 @@ const D = {
             '<div id="skBody" style="flex:1 1 auto;min-height:0;position:relative;display:flex;gap:0;align-items:stretch;overflow:auto">' +
               '<div id="skSeq" style="flex:0 0 190px;overflow:auto;border-right:1px solid #333;padding:2px 0"></div>' +
               '<div id="skKbWrap" style="flex:0 0 150px;position:relative"><svg id="skKb" width="150" height="10"></svg></div>' +
+              '<div id="skGap" style="flex:1 1 140px;max-width:320px;min-width:120px" title="the dotted lines run here: key → player"></div>' +
               '<div id="skOrch" style="flex:0 0 330px;border-left:1px solid #333;border-right:1px solid #333;position:relative;display:flex;flex-direction:column"></div>' +
               '<div id="skPick" style="flex:0 0 240px;border-right:1px solid #333;overflow:auto;display:none;padding:4px 6px"></div>' +
-              '<div id="skRhyWrap" style="flex:1 1 auto;position:relative;min-width:300px"><svg id="skRhy" width="100%" height="10"></svg></div>' +
+              '<div id="skRhyWrap" style="flex:0 0 480px;position:relative;min-width:300px"><svg id="skRhy" width="100%" height="10"></svg></div>' +
+              '<div id="skSpacer" style="flex:1 1 0"></div>' +
               '<svg id="skLines" style="position:absolute;left:0;top:0;pointer-events:none;overflow:visible"></svg>' +
             '</div>' +
             '<div id="skFoot" style="flex:none;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;padding:4px 10px;border-top:1px solid #444">' +
@@ -153,7 +158,8 @@ const D = {
               '<button id="skHearP" style="' + btn + '">Hear piano</button><button id="skHearO" style="' + btn + ';color:#e8cf9a">Hear orchestrated</button><button id="skStop" style="' + btn + '">Stop</button>' +
               '<label>dur &times; <input id="skDurX" type="number" min="0.1" max="20" step="0.1" style="width:44px;' + inp + '"></label>' +
               '<label>dyn &times; <input id="skDynX" type="number" min="0.1" max="2" step="0.05" style="width:44px;' + inp + '"></label>' +
-              '<label><input id="skFlat" type="checkbox"> flatten</label>' +
+              '<label title="every note at velocity 127 (dyn × still applies)"><input id="skFlat" type="checkbox"> flat 127</label>' +
+              '<button id="skSoloOff" style="' + btn + '" title="U3: shift-click a dot (keyboard or rhythm) to solo a voice, S on a player row to solo its voices">solo off</button>' +
               '<span style="color:#555">|</span>' +
               '<span style="color:#9a9">piano</span>' +
               ['none', 'one', 'topbot', 'rest', 'all'].map(k => '<button class="skPno" data-k="' + k + '" style="' + btn + '">' + ({ none: 'none', one: 'one', topbot: 'top+bottom', rest: 'rest', all: 'all' })[k] + '</button>').join('') +
@@ -190,6 +196,7 @@ const D = {
         q('#skDurX').addEventListener('change', e => { this.cfg.durX = clamp(+e.target.value || 1, 0.1, 20); this.save(); });
         q('#skDynX').addEventListener('change', e => { this.cfg.dynX = clamp(+e.target.value || 1, 0.1, 2); this.save(); });
         q('#skFlat').addEventListener('change', e => { this.cfg.flatten = e.target.checked; this.save(); });
+        q('#skSoloOff').addEventListener('click', () => { this.snapshot(); this.voices.forEach(v => { v.solo = false; }); this.render(); });
         d.querySelectorAll('.skPno').forEach(b => b.addEventListener('click', () => { this.snapshot(); this.pianoQuick(b.dataset.k); this.render(); }));
         q('#skInsert').addEventListener('click', () => this.insert(false));
         q('#skReplace').addEventListener('click', () => this.insert(true));
@@ -310,7 +317,7 @@ const D = {
         // voices as played; the as-played pairing: voice i ↔ its own onset
         this.voices = s.notes.map((n, i) => ({
             id: n.objectId, i, pitch0: n.midi, pc: ((n.midi % 12) + 12) % 12, pitch: n.midi,
-            lane: -1, fold: 0, tech: null, standIn: null, piano: false, vel: n.vel != null ? n.vel : 100, durMs: n.durMs || 100,
+            lane: -1, fold: 0, tech: null, standIn: null, piano: false, solo: false, vel: n.vel != null ? n.vel : 100, durMs: n.durMs || 100,
             dt0: n.dtMs, slot: i,
         }));
         this.slotsPlayed = s.notes.map(n => n.dtMs);      // the onset pattern as played (voice order)
@@ -374,6 +381,8 @@ const D = {
 
     // ------------------------------------------------------------------ orchestration (E, F)
     instOf(lane) { const T = TRK(); return lane >= 0 && T[lane] ? INST()[T[lane].instKey] : null; },
+    // U2: the strike default for a player, if its roster has it; else the plain technique
+    defaultTech(lane) { const T = TRK(), inst = this.instOf(lane); if (!inst) return null; const want = T[lane] && STRIKE_DEFAULT[T[lane].instKey]; if (want && (inst.techniques || []).some(q => q.key === want)) return want; return plainTech(inst); },
     techOf(v) { const inst = this.instOf(v.lane); return inst ? ((inst.techniques || []).find(t => t.key === v.tech) || null) : null; },
     fitVoice(v) {
         // F: fold by octave into the player's (technique's) range; fixed-pitch / noise / multiphonic → stand-in
@@ -402,8 +411,8 @@ const D = {
         const vs = [...this.voices].sort((a, b) => a.pitch - b.pitch);
         vs.forEach(v => { v.lane = -1; v.fold = 0; v.standIn = null; v.skip = false; v.piano = false; });
         const free = new Set([...Array(n).keys()]);
-        const give = (v, lane) => { v.lane = lane; v.tech = plainTech(this.instOf(lane)); this.fitVoice(v); free.delete(lane); };
-        const fits = (v, lane) => { const inst = this.instOf(lane); if (!inst) return false; const [lo, hi] = techRange(inst, (inst.techniques || []).find(t => t.key === plainTech(inst))); return this.cfg.mayFold ? !!foldInto(v.pitch, lo, hi) : (v.pitch >= lo && v.pitch <= hi); };
+        const give = (v, lane) => { v.lane = lane; v.tech = this.defaultTech(lane); this.fitVoice(v); free.delete(lane); };
+        const fits = (v, lane) => { const inst = this.instOf(lane); if (!inst) return false; const tk = this.defaultTech(lane); const [lo, hi] = techRange(inst, (inst.techniques || []).find(t => t.key === tk)); return this.cfg.mayFold ? !!foldInto(v.pitch, lo, hi) : (v.pitch >= lo && v.pitch <= hi); };
         // locks first: the highest and the lowest voice
         if (this.cfg.topLock >= 0 && vs.length) { const v = vs[vs.length - 1]; if (fits(v, this.cfg.topLock) || this.cfg.mayFold) give(v, this.cfg.topLock); }
         if (this.cfg.bottomLock >= 0 && vs.length > 1) { const v = vs[0]; if (v.lane < 0 && (fits(v, this.cfg.bottomLock) || this.cfg.mayFold)) give(v, this.cfg.bottomLock); }
@@ -416,7 +425,7 @@ const D = {
         // the piano plays what it was given (one note); any leftover voice is silent until flagged
         this.voices.forEach(v => { if (v.lane >= 0 && T[v.lane].instKey === 'piano') v.piano = true; });
     },
-    assign(v, lane) { v.lane = lane; v.fold = 0; v.standIn = null; if (lane >= 0) { v.tech = plainTech(this.instOf(lane)); if (!this.fitVoice(v)) v.skip = true; } },
+    assign(v, lane) { v.lane = lane; v.fold = 0; v.standIn = null; if (lane >= 0) { v.tech = this.defaultTech(lane); if (!this.fitVoice(v)) v.skip = true; } },
     pianoQuick(k) {
         const vs = [...this.voices].sort((a, b) => a.pitch - b.pitch);
         const T = TRK(); const pianoLane = T.findIndex(t => t.instKey === 'piano');
@@ -505,7 +514,7 @@ const D = {
             if (m % 12 === 0) s += '<text x="2" y="' + (y + h * 0.8) + '" font-size="' + Math.max(8, h) + '" fill="#777">C' + (m / 12 - 1) + '</text>';
         }
         // voices
-        const r = Math.max(2.5, h * 0.42);
+        const r = Math.max(2.5, h * 0.42); const anySolo = this.voices.some(v => v.solo);
         const byPitch = {};
         this.voices.forEach(v => { (byPitch[v.pitch] = byPitch[v.pitch] || []).push(v); });
         Object.keys(byPitch).forEach(p => {
@@ -513,7 +522,7 @@ const D = {
             list.forEach((v, k) => {
                 const cy = this.keyY(m) + h / 2, cx = 122 + k * 10, col = this.pcColor(v.pc);
                 if (v.piano) s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r + 2.5) + '" fill="none" stroke="#e8cf9a" stroke-width="1.2"/>';
-                s += '<circle class="skDot" data-i="' + v.i + '" cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + (v.standIn != null ? 'none' : col) + '" stroke="' + col + '" stroke-width="1.5" style="cursor:pointer"><title>' + nm(v.pitch) + (v.pitch !== v.pitch0 ? ' (played ' + nm(v.pitch0) + ')' : '') + (v.standIn != null ? ' · stands in: ' + nm(v.standIn) : '') + '</title></circle>';
+                s += '<circle class="skDot" data-i="' + v.i + '" cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + (v.standIn != null ? 'none' : col) + '" stroke="' + (v.solo ? '#fff' : col) + '" stroke-width="' + (v.solo ? 2.5 : 1.5) + '" opacity="' + (anySolo && !v.solo ? 0.35 : 1) + '" style="cursor:pointer"><title>' + (v.solo ? 'SOLO · ' : '') + nm(v.pitch) + (v.pitch !== v.pitch0 ? ' (played ' + nm(v.pitch0) + ')' : '') + (v.standIn != null ? ' · stands in: ' + nm(v.standIn) : '') + '</title></circle>';
                 if (k === 0) s += '<text x="40" y="' + (cy + 3) + '" font-size="' + Math.max(8, Math.min(11, h + 2)) + '" fill="' + col + '" text-anchor="end">' + nm(m) + '</text>';
             });
         });
@@ -524,7 +533,7 @@ const D = {
         svg.innerHTML = s;
         // click a key → toggle the piano flag of the voice(s) on it; click a dot too
         svg.querySelectorAll('.skKey').forEach(k => k.addEventListener('click', () => { const m = +k.dataset.m; const vs = this.voices.filter(v => v.pitch === m); if (!vs.length) return; this.snapshot(); vs.forEach(v => { v.piano = !v.piano; }); this.render(); }));
-        svg.querySelectorAll('.skDot').forEach(dd => dd.addEventListener('click', ev => { ev.stopPropagation(); const v = this.voices[+dd.dataset.i]; this.snapshot(); v.piano = !v.piano; this.render(); }));
+        svg.querySelectorAll('.skDot').forEach(dd => dd.addEventListener('click', ev => { ev.stopPropagation(); const v = this.voices[+dd.dataset.i]; this.snapshot(); if (ev.shiftKey) v.solo = !v.solo; else v.piano = !v.piano; this.render(); }));
     },
     renderOrch() {
         const T = TRK(), box = this.el.querySelector('#skOrch');
@@ -542,11 +551,14 @@ const D = {
             const inst = INST()[t.instKey]; const mine = this.voices.filter(v => v.lane === lane);
             const techs = (inst && inst.techniques) || [];
             const groups = {}; techs.forEach(tq => { const k = kindOf(tq); (groups[k] = groups[k] || []).push(tq); });
-            const cur = mine.length ? (mine[0].tech || plainTech(inst)) : plainTech(inst);
+            const cur = mine.length ? (mine[0].tech || this.defaultTech(lane)) : this.defaultTech(lane);
             const menu = '<select class="skTech" data-lane="' + lane + '" style="' + inp + '">' + ['pitched', 'fixed', 'noise', 'multiphonic'].filter(k => groups[k]).map(k => '<optgroup label="' + k + '">' + groups[k].map(tq => '<option value="' + tq.key + '"' + (tq.key === cur ? ' selected' : '') + '>' + tq.label + '</option>').join('') + '</optgroup>').join('') + '</select>';
             const notes = mine.map(v => '<span style="color:' + this.pcColor(v.pc) + '">' + nm(this.soundingPitch(v)) + (v.fold ? (v.fold > 0 ? '↑' : '↓') : '') + (v.standIn != null ? '*' : '') + (v.skip ? ' ✕' : '') + '</span>').join(' ');
+            const soloed = mine.length > 0 && mine.every(v => v.solo);
             s += '<div class="skRow" data-lane="' + lane + '" style="display:flex;gap:6px;align-items:center;padding:1px 6px;' + (this.pickerLane === lane ? 'background:rgba(201,160,90,.15)' : '') + '">' +
+                '<span class="skLand" style="flex:none;width:8px;height:8px;border-radius:50%;background:' + (mine.length ? '#e8cf9a' : '#444') + '" title="the lines land here"></span>' +
                 '<span class="skRowName" style="width:64px;cursor:pointer;color:#e8cf9a" title="click: the full articulation list">' + t.label + '</span>' +
+                '<button class="skSolo" data-lane="' + lane + '" style="' + btn + ';padding:0 4px;' + (soloed ? 'background:#e8cf9a;color:#222' : '') + '" title="solo this player\'s voices">S</button>' +
                 '<span style="width:88px;overflow:hidden;white-space:nowrap">' + (notes || '<span style="color:#555">·</span>') + '</span>' + menu + '</div>';
         });
         s += '</div>';
@@ -558,9 +570,11 @@ const D = {
         box.querySelector('#skAsPlayed').addEventListener('click', () => { this.snapshot(); this.asPlayedOrchestration(); this.render(); });
         box.querySelectorAll('.skTech').forEach(sel => sel.addEventListener('change', e => { const lane = +sel.dataset.lane; this.snapshot(); this.voices.filter(v => v.lane === lane).forEach(v => { v.tech = e.target.value; v.standIn = null; this.fitVoice(v); }); this.render(); }));
         box.querySelectorAll('.skRowName').forEach(el => el.addEventListener('click', () => { const lane = +el.parentNode.dataset.lane; this.pickerLane = this.pickerLane === lane ? null : lane; this.render(); }));
+        box.querySelectorAll('.skSolo').forEach(el => el.addEventListener('click', ev => { ev.stopPropagation(); const lane = +el.dataset.lane; const mine = this.voices.filter(v => v.lane === lane); if (!mine.length) return; this.snapshot(); const on = !mine.every(v => v.solo); mine.forEach(v => { v.solo = on; }); this.render(); }));
+        box.querySelectorAll('.skRow').forEach(row => { row.addEventListener('mouseenter', () => { this.hoverLane = +row.dataset.lane; this.renderLines(); }); row.addEventListener('mouseleave', () => { this.hoverLane = null; this.renderLines(); }); });
         // drop a voice on a player: click a dot on the keyboard, then a row (two-click assign)
         box.querySelectorAll('.skRow').forEach(row => row.addEventListener('click', ev => {
-            if (ev.target.tagName === 'SELECT' || ev.target.classList.contains('skRowName')) return;
+            if (ev.target.tagName === 'SELECT' || ev.target.tagName === 'BUTTON' || ev.target.classList.contains('skRowName')) return;
             if (this.pendingVoice == null) return;
             const v = this.voices[this.pendingVoice]; this.pendingVoice = null;
             this.snapshot(); this.assign(v, +row.dataset.lane); this.render();
@@ -595,6 +609,7 @@ const D = {
     },
     renderRhythm() {
         const wrap = this.el.querySelector('#skRhyWrap'), svg = this.el.querySelector('#skRhy');
+        wrap.style.flex = '0 0 ' + clamp(this.cfg.rhythmW || 480, 320, 1400) + 'px';
         const R = this.range(), h = this.rh(), rows = R.hi - R.lo + 1, H = rows * h + 4;
         const W = Math.max(300, wrap.clientWidth - 4);
         svg.setAttribute('height', H); svg.style.height = H + 'px'; svg.setAttribute('width', W);
@@ -611,9 +626,9 @@ const D = {
         const step = spanMs > 2000 ? 500 : spanMs > 600 ? 100 : 50;
         for (let t = 0; t <= spanMs + 1; t += step) s += '<line x1="' + X(t) + '" y1="0" x2="' + X(t) + '" y2="' + H + '" stroke="#333"/><text x="' + (X(t) + 2) + '" y="10" font-size="9" fill="#666">' + Math.round(t) + '</text>';
         // dots
-        const r = Math.max(2.5, h * 0.42);
+        const r = Math.max(2.5, h * 0.42); const anySolo = this.voices.some(v => v.solo);
         timed.forEach(q => { const v = q.v, cy = this.keyY(v.pitch) + h / 2, col = this.pcColor(v.pc); if (v.pitch < R.lo || v.pitch > R.hi) return;
-            s += '<circle class="skRDot" data-i="' + v.i + '" cx="' + X(q.onMs) + '" cy="' + cy + '" r="' + r + '" fill="' + (v.lane >= 0 || v.piano ? col : 'none') + '" stroke="' + col + '" stroke-width="1.5" style="cursor:pointer"' + (this.swapFirst === v.i ? ' stroke-dasharray="2 2"' : '') + '><title>' + nm(v.pitch) + ' @ ' + Math.round(q.onMs) + ' ms · slot ' + v.slot + '</title></circle>'; });
+            s += '<circle class="skRDot" data-i="' + v.i + '" cx="' + X(q.onMs) + '" cy="' + cy + '" r="' + r + '" fill="' + (v.lane >= 0 || v.piano ? col : 'none') + '" stroke="' + (v.solo ? '#fff' : col) + '" stroke-width="' + (v.solo ? 2.5 : 1.5) + '" opacity="' + (anySolo && !v.solo ? 0.35 : 1) + '" style="cursor:pointer"' + (this.swapFirst === v.i ? ' stroke-dasharray="2 2"' : '') + '><title>' + nm(v.pitch) + ' @ ' + Math.round(q.onMs) + ' ms · slot ' + v.slot + '</title></circle>'; });
         svg.innerHTML = s;
         // controls (HTML, over the strip's left margin)
         let ctl = wrap.querySelector('#skRhyCtl');
@@ -630,7 +645,8 @@ const D = {
                 '<div><button id="skRev" style="' + btn + '">reverse</button> <button id="skRot" style="' + btn + '">rotate</button> <button id="skRRe" style="' + btn + '">reshuffle</button></div>' +
                 '<span style="color:#9a9;margin-top:4px">order</span>' +
                 '<label><select id="skOrder" style="' + inp + ';width:78px"><option value="played">as played</option><option value="lowhigh">low → high</option><option value="highlow">high → low</option><option value="outin">outside-in</option><option value="inout">inside-out</option><option value="random">random</option></select></label>' +
-                '<div><button id="skORe" style="' + btn + '">shuffle order</button></div><span style="color:#666">click two dots to swap</span>';
+                '<div><button id="skORe" style="' + btn + '">shuffle order</button></div><span style="color:#666">click two dots to swap<br>shift-click = solo</span>' +
+                '<label style="margin-top:4px">width <input id="skRhyW" type="range" min="320" max="1400" step="20" style="width:64px"></label>';
             wrap.appendChild(ctl);
             const q = sel => ctl.querySelector(sel);
             q('#skTimeX').addEventListener('change', e => { this.cfg.timeX = clamp(+e.target.value || 1, 0.05, 20); this.save(); this.render(); });
@@ -642,11 +658,13 @@ const D = {
             q('#skRRe').addEventListener('click', () => { this.snapshot(); this.cfg.rSeed++; if (this.cfg.shape === 'played') this.cfg.shape = 'random'; this.save(); this.render(); });
             q('#skOrder').addEventListener('change', e => { this.snapshot(); this.cfg.order = e.target.value; this.save(); this.render(); });
             q('#skORe').addEventListener('click', () => { this.snapshot(); this.cfg.oSeed++; this.cfg.order = 'random'; this.save(); this.render(); });
+            q('#skRhyW').addEventListener('input', e => { this.cfg.rhythmW = +e.target.value; this.save(); this.render(); });
         }
-        ctl.querySelector('#skTimeX').value = this.cfg.timeX; ctl.querySelector('#skShape').value = this.cfg.shape; ctl.querySelector('#skAmt').value = this.cfg.amount; ctl.querySelector('#skJit').value = this.cfg.jitterMs; ctl.querySelector('#skOrder').value = this.cfg.order;
+        ctl.querySelector('#skRhyW').value = this.cfg.rhythmW || 480; ctl.querySelector('#skTimeX').value = this.cfg.timeX; ctl.querySelector('#skShape').value = this.cfg.shape; ctl.querySelector('#skAmt').value = this.cfg.amount; ctl.querySelector('#skJit').value = this.cfg.jitterMs; ctl.querySelector('#skOrder').value = this.cfg.order;
         // dots: click one, then another = swap their slots; a dot on the keyboard then a player row = assign
-        svg.querySelectorAll('.skRDot').forEach(dd => dd.addEventListener('click', () => {
+        svg.querySelectorAll('.skRDot').forEach(dd => dd.addEventListener('click', ev => {
             const i = +dd.dataset.i;
+            if (ev.shiftKey) { this.snapshot(); this.voices[i].solo = !this.voices[i].solo; this.render(); return; }
             if (this.swapFirst == null) { this.swapFirst = i; this.render(); return; }
             const a = this.voices[this.swapFirst], b = this.voices[i]; this.swapFirst = null;
             if (a !== b) { this.snapshot(); const t = a.slot; a.slot = b.slot; b.slot = t; this.cfg.order = 'manual'; }
@@ -667,10 +685,12 @@ const D = {
             if (v.lane < 0) return;
             const dot = kb.querySelector('.skDot[data-i="' + v.i + '"]'); const row = rows[v.lane];
             if (!dot || !row) return;
-            const a = dot.getBoundingClientRect(), b = row.getBoundingClientRect();
+            const land = row.querySelector('.skLand') || row;
+            const a = dot.getBoundingClientRect(), b = land.getBoundingClientRect();
             const x1 = a.left + a.width - bb.left + body.scrollLeft, y1 = a.top + a.height / 2 - bb.top + body.scrollTop;
-            const x2 = b.left - bb.left + body.scrollLeft + 4, y2 = b.top + b.height / 2 - bb.top + body.scrollTop;
-            s += '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + this.pcColor(v.pc) + '" stroke-width="1" stroke-dasharray="3 3" opacity="0.8"/>';
+            const x2 = b.left + b.width / 2 - bb.left + body.scrollLeft, y2 = b.top + b.height / 2 - bb.top + body.scrollTop;
+            const hot = this.hoverLane === v.lane, dim = this.hoverLane != null && !hot;
+            s += '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + this.pcColor(v.pc) + '" stroke-width="' + (hot ? 2.2 : 1) + '" stroke-dasharray="' + (hot ? '5 3' : '3 3') + '" opacity="' + (hot ? 1 : dim ? 0.3 : 0.8) + '"/>';
         });
         svg.innerHTML = s;
     },
@@ -678,9 +698,10 @@ const D = {
     // ------------------------------------------------------------------ hear (G)
     notesFor(mode) {
         const T = TRK(); const pianoLane = T.findIndex(t => t.instKey === 'piano');
-        const out = [];
+        const out = []; const anySolo = this.voices.some(v => v.solo);
         this.timed().forEach(q => {
-            const v = q.v; const vel = clamp(Math.round((this.cfg.flatten ? 100 : v.vel) * this.cfg.dynX), 1, 127);
+            const v = q.v; const vel = clamp(Math.round((this.cfg.flatten ? 127 : v.vel) * this.cfg.dynX), 1, 127);
+            if (anySolo && !v.solo) return;                       // U3: while anything is soloed, only the soloed voices sound
             if (mode === 'piano') { out.push({ lane: pianoLane, tech: plainTech(this.instOf(pianoLane)), midi: v.pitch, vel, onMs: q.onMs, durMs: q.durMs }); return; }
             if (v.lane >= 0 && !v.skip) out.push({ lane: v.lane, tech: v.tech || plainTech(this.instOf(v.lane)), midi: this.soundingPitch(v), vel, onMs: q.onMs, durMs: q.durMs });
             if (v.piano && v.lane !== pianoLane) out.push({ lane: pianoLane, tech: plainTech(this.instOf(pianoLane)), midi: v.pitch, vel, onMs: q.onMs, durMs: q.durMs });
@@ -765,11 +786,11 @@ const D = {
     },
 
     // ------------------------------------------------------------------ back / takes (O)
-    state() { return JSON.parse(JSON.stringify({ strikeId: this.cfg.strikeId, cfg: this.cfg, voices: this.voices.map(v => ({ i: v.i, pitch: v.pitch, lane: v.lane, fold: v.fold, tech: v.tech, standIn: v.standIn, piano: v.piano, slot: v.slot, skip: !!v.skip })) })); },
+    state() { return JSON.parse(JSON.stringify({ strikeId: this.cfg.strikeId, cfg: this.cfg, voices: this.voices.map(v => ({ i: v.i, pitch: v.pitch, lane: v.lane, fold: v.fold, tech: v.tech, standIn: v.standIn, piano: v.piano, solo: !!v.solo, slot: v.slot, skip: !!v.skip })) })); },
     applyState(st) {
         if (!st || !this.strike || st.strikeId !== this.strike.id) { if (st && st.strikeId && this.db && this.db.strikes[st.strikeId]) { this.select(st.strikeId); } if (!st || st.strikeId !== (this.strike && this.strike.id)) return; }
         Object.assign(this.cfg, st.cfg); this.cfg.strikeId = this.strike.id;
-        st.voices.forEach(sv => { const v = this.voices[sv.i]; if (!v) return; Object.assign(v, { pitch: sv.pitch, lane: sv.lane, fold: sv.fold, tech: sv.tech, standIn: sv.standIn, piano: sv.piano, slot: sv.slot, skip: sv.skip }); });
+        st.voices.forEach(sv => { const v = this.voices[sv.i]; if (!v) return; Object.assign(v, { pitch: sv.pitch, lane: sv.lane, fold: sv.fold, tech: sv.tech, standIn: sv.standIn, piano: sv.piano, solo: !!sv.solo, slot: sv.slot, skip: sv.skip }); });
         this.writeFields(); this.render();
     },
     snapshot() { this.prev = this.state(); },

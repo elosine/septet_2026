@@ -1923,3 +1923,29 @@ Fix (0.2.1): clear the flag before the `dofile`. One more restart by the compose
 in 31 ms in between, twice in a row. Editing `bridge.lua` is now a push and a `reload`, no
 clicks. PLAN 0k.5's foundation stands; `curve_slots.lua` waits for 0c.7. Next, at the
 composer's word: the drawer's feature update (STRIKES_TOOL U1–U4).
+
+## §64. The drawer's feature update: U1–U4 built and verified
+
+Composer: *"then build all 4 pls"* (after the Lake George note). One patch of 30 edits to
+`strike_drawer.js`:
+- **U1** a gap column between the keyboard and the players (grows with the screen, 120–320 px);
+  every player row carries a landing marker (lit when the player has notes) that the dotted
+  lines end on; hovering a row brightens its lines (2.2 px, the others dimmed).
+- **U2** `STRIKE_DEFAULT` per instrument — flute `pizzicato` · bass clarinet `slap` · violins
+  `bartok_vel` · viola / cello `gettato_vel` · piano `main` — used by the shuffle, by hand
+  assignment and as each row's menu default; `flat 127` on by default (the settings key bumped
+  to v3 so the new defaults apply once). `defaultTech(lane)` falls back to the plain technique
+  where a roster lacks the strike.
+- **U3** a `solo` flag per voice: shift-click a dot on the keyboard or in the rhythm strip, `S`
+  on a player row (all its voices), `solo off` in the footer; soloed dots white-ringed, the rest
+  dimmed; while anything is soloed, Hear and Insert use only the soloed voices. In the state
+  and the takes.
+- **U4** the rhythm strip at 480 px by default (a `width` slider 320–1400 in its controls), the
+  bands at their true width; the freed space goes to the gap, the remainder to a spacer.
+
+**Verified in the running app** (the composer's server, the AI's pane, zero console errors):
+shuffle on strike #3 gives `flute:pizzicato · bass_clarinet:slap · piano:main · violin1/2:
+bartok_vel · viola/cello:gettato_vel`; every note at velocity 127; 7 landing markers, 7 `S`
+buttons, 7 lines; one voice soloed → Hear yields 1 note (the dot's stroke white), solo off →
+7; the hovered lane's line 2.2 px against 1; the strip 480 → 320 px with the slider. The
+slap plays the strike slot (channel 5) through the recipe. Next: the composer's test.
