@@ -1737,3 +1737,17 @@ the old compressed length + k, generically. Unchanged re-encode: compressed 105 
 105 354 bytes (a different zlib, the same XML), self-decode identical. The push (the same
 state back into the instance, then a read-back) waits for its turn after the Kontakt proof
 — the running order — and for the composer's ear on the instance afterwards.
+
+## §55. 0k.2 step 1 PROVEN: the Kontakt Lua API runs inside the plugin instance in Reaper
+
+Composer: *"neither is that easy, other way or more clear instructions"* (the drag / F11) →
+the clear route: Kontakt → Options → Developer → enable; the **KONTAKT ▾ menu → "Run Lua
+script…"** → the file. *"ok ran"* — twice (14:55, 14:58). `reaper/kontakt/out/readback_*.json`:
+multi "New (default)", 2 instruments — **Plucked Piano: slot 2 (idx 128), MIDI channel 2,
+output 0, volume −0.02 dB, polyphony 32 · 8DIO_1969_Legacy_Piano: slot 3 (idx 256), MIDI
+channel 1, output 0, −0.02 dB, polyphony 896** — slot 1 is empty (the Spitfire grand the 8Dio
+replaced). The API's index arithmetic confirmed (128 per slot). One bug of mine: `ok and v or
+'ERR'` turns a legitimate `false` (mute, solo) into "ERR false" — fixed with an if.
+`proof_write.lua` (Plucked −6 dB → read back → restored → read back, a file with both) is the
+next drag; the load proof needs the library's `.nki` path — read from Native Instruments'
+registry entries rather than searched for.

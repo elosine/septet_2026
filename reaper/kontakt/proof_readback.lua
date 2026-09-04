@@ -12,7 +12,7 @@ for _, idx in ipairs(Kontakt.get_instrument_indices()) do
   local r = { idx = idx, slot = math.floor(idx / 128) + 1 }
   for _, f in ipairs({ 'name', 'midi_channel', 'output_channel', 'volume', 'pan', 'mute', 'solo', 'polyphony', 'tune' }) do
     local ok, v = pcall(Kontakt['get_instrument_' .. f], idx)
-    r[f] = ok and v or ('ERR ' .. tostring(v))
+    if ok then r[f] = v else r[f] = 'ERR ' .. tostring(v) end
   end
   rows[#rows + 1] = r
 end
