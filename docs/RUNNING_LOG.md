@@ -1563,3 +1563,29 @@ else −7…−16 — a quiet mockup. Proposed anchor instead: the violins' leve
 analyzer's `--target -27.45`), applied at the sampler instance masters (piece #4's
 gain-staging rule, the composer's own instinct today: "trim at instrument?"), faders at 0.
 `bank/balance.json` holds the 400 ms measurement with provenance.
+
+## §47. Decision: the balance anchors on the violins (A); the strikes at those trims
+
+Composer: *"for gain anchor on violin, and clarify strikes? what will they be at adjusted
+values and remember flute pizz meant to actually be tongue ram so louder, what is it like if
+strikes at different gains you send cc msg or different tracks?"*
+
+**A adopted** — trims (400 ms, K, target −27.45 = the violins): flute −21 · bass clarinet −9
+· piano +7 · violin 1 0 · violin 2 0 · viola −3.5 · cello −1, at the sampler masters.
+
+**The strikes at those trims (50 ms reading + trim):** Bartók −21 (both violins) · piano's
+own note −21 · cello gettato −27 · viola gettato −28 · bass clarinet slap −34 · flute
+pizzicato −41. So the two wind strikes fall 13 and 20 dB under the string strikes — and the
+flute's is meant to be a TONGUE RAM, a loud pop, not a tongue pizz.
+
+**Mechanisms compared (the AI's analysis, given in chat):** (1) CC7 per technique in the
+note's prelude — the app already owns CC7 per event, but CC7 only cuts, so a boost means
+raising the instrument's master and cutting every other technique, and CC7 is also the
+dynamics channel (a 20 dB offset eats a third of its span); a stray note without the offset
+is loud. (2) Separate CHANNELS/parts with their own gain — the flute's pizzicato is already
+its own UVI part (ch 13): put the −21 on the SUSTAINED parts, leave the pizzicato part at 0,
+and the tongue ram lands at −20, level with the Bartók, no CC, no new track; the bass
+clarinet's slap is a CC0 preset inside one Kontakt instrument, so it gets a second slot of
+the same instrument on a strike channel (D11 leaves 5+ free) with its own slot volume (+12
+max) — the recipe's `channel` field routes it. Recommended (2): static, D11-shaped, nothing
+to go wrong at play time. Awaiting the composer's pick.
