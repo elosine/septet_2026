@@ -46,6 +46,17 @@
   preset's own tongue ram (manual: third keyswitch, D1 = 38) was not seen in the loaded patch —
   only C1/C#1 lit; unverified until D1 is pressed on the FX part (Flute ch 5).
 
+- **The balance, as set 2026-09-04 (RUNNING_LOG §46–47, §61):** Reaper faders — flute −21 · Fluteb −21 ·
+  bass clarinet −9 · Piano Kontakt +7 · Piano PP2 +7 · violins 0 · viola −3.5 · cello −1; the strike lanes
+  `Flute strikes` / `BassCl strikes` at 0. Anchor = the violins' Senza Vibrato at 127 (−27.45 dB, 400 ms,
+  K-weighted). The recipe's `balanceDb` mirrors the faders. Re-run `tools/balance_schedule.js` +
+  `probes/balance_probe.ps1` + `probes/analyze_balance.py` after any library or preset change.
+- **Strike lanes:** the flute Pizzicato part (UVI Part 13) goes to `$Engine/Out 2` (plugin pins 3/4 →
+  track channels 3/4 → a post-FX pre-fader send → `Flute strikes`); the bass clarinet's slap plays a
+  second copy of the instrument in Kontakt slot 5 ("Bass Clarinet STRIKE", [A] 5, output st.2 →
+  `BassCl strikes`). Both built by script (`tools/uvi_state.js set-output`, `reaper/kontakt/
+  bcl_strike_slot.lua`, `reaper/bridge/jobs/strike_lane.lua`); the app routes by the recipe's channel.
+
 ## Xsample (Kontakt)
 
 - **CC#0 88–117 are the keyswitch banks' stored slots, not presets** — piece #1's registry

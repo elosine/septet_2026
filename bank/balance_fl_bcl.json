@@ -1,0 +1,305 @@
+{
+ "measuredAt": "2026-09-04T15:55:47",
+ "wav": "01-REC-260904_1553.wav",
+ "windowS": 0.4,
+ "minDb": -70.0,
+ "schedule": "probes/balance_schedule_fl_bcl.json",
+ "scheduleGeneratedAt": "2026-09-04T19:51:15.230Z",
+ "weighting": "k",
+ "targetDb": -27.45,
+ "targetRule": "-27.45",
+ "noiseFloorDb": -90.0,
+ "offsetS": 18.65,
+ "instruments": {
+  "flute": {
+   "label": "Flute",
+   "port": "Flute",
+   "tech": "ord",
+   "techLabel": "Ordinario",
+   "notes": [
+    {
+     "pitch": 69,
+     "vel": 127,
+     "onset": 21.65,
+     "found": true,
+     "dbFlat": -28.74,
+     "dbK": -27.58,
+     "peakDb": -22.6,
+     "clip": false
+    },
+    {
+     "pitch": 78,
+     "vel": 127,
+     "onset": 24.14,
+     "found": true,
+     "dbFlat": -29.61,
+     "dbK": -28.94,
+     "peakDb": -24.27,
+     "clip": false
+    },
+    {
+     "pitch": 87,
+     "vel": 127,
+     "onset": 26.66,
+     "found": true,
+     "dbFlat": -27.74,
+     "dbK": -26.23,
+     "peakDb": -23.56,
+     "clip": false
+    },
+    {
+     "pitch": 69,
+     "vel": 64,
+     "onset": 29.15,
+     "found": true,
+     "dbFlat": -39.22,
+     "dbK": -38.21,
+     "peakDb": -31.76,
+     "clip": false
+    },
+    {
+     "pitch": 78,
+     "vel": 64,
+     "onset": 31.64,
+     "found": true,
+     "dbFlat": -34.15,
+     "dbK": -33.46,
+     "peakDb": -28.58,
+     "clip": false
+    },
+    {
+     "pitch": 87,
+     "vel": 64,
+     "onset": 34.15,
+     "found": true,
+     "dbFlat": -34.5,
+     "dbK": -33.14,
+     "peakDb": -29.75,
+     "clip": false
+    }
+   ],
+   "techniques": {
+    "pizzicato": {
+     "techLabel": "Pizzicato",
+     "port": "Flute",
+     "notes": [
+      {
+       "pitch": 66,
+       "vel": 127,
+       "onset": 55.64,
+       "found": true,
+       "dbFlat": -27.55,
+       "dbK": -42.88,
+       "peakDb": -0.74,
+       "clip": false
+      },
+      {
+       "pitch": 72,
+       "vel": 127,
+       "onset": 58.15,
+       "found": true,
+       "dbFlat": -26.94,
+       "dbK": -44.01,
+       "peakDb": -1.14,
+       "clip": false
+      },
+      {
+       "pitch": 78,
+       "vel": 127,
+       "onset": 60.64,
+       "found": true,
+       "dbFlat": -27.95,
+       "dbK": -40.96,
+       "peakDb": -0.97,
+       "clip": false
+      },
+      {
+       "pitch": 66,
+       "vel": 64,
+       "onset": 63.14,
+       "found": true,
+       "dbFlat": -36.99,
+       "dbK": -51.9,
+       "peakDb": -10.87,
+       "clip": false
+      },
+      {
+       "pitch": 72,
+       "vel": 64,
+       "onset": 65.65,
+       "found": true,
+       "dbFlat": -36.26,
+       "dbK": -52.98,
+       "peakDb": -10.71,
+       "clip": false
+      },
+      {
+       "pitch": 78,
+       "vel": 64,
+       "onset": 68.14,
+       "found": true,
+       "dbFlat": -37.17,
+       "dbK": -49.67,
+       "peakDb": -10.42,
+       "clip": false
+      }
+     ],
+     "level127": -42.62,
+     "level64": -51.52,
+     "vsPlainDb": -15.0,
+     "afterTrimDb": -42.5
+    }
+   },
+   "level127": -27.58,
+   "level64": -34.94,
+   "spread127": 2.71,
+   "peak127": -22.6,
+   "trimDb": 0.1
+  },
+  "bass_clarinet": {
+   "label": "Bass Clarinet",
+   "port": "BassCl",
+   "tech": "senza_vel",
+   "techLabel": "Senza Vibrato Velocity (#13)",
+   "notes": [
+    {
+     "pitch": 42,
+     "vel": 127,
+     "onset": 38.63,
+     "found": true,
+     "dbFlat": -30.1,
+     "dbK": -29.46,
+     "peakDb": -22.48,
+     "clip": false
+    },
+    {
+     "pitch": 50,
+     "vel": 127,
+     "onset": 41.04,
+     "found": true,
+     "dbFlat": -25.39,
+     "dbK": -25.09,
+     "peakDb": -16.83,
+     "clip": false
+    },
+    {
+     "pitch": 57,
+     "vel": 127,
+     "onset": 43.54,
+     "found": true,
+     "dbFlat": -28.75,
+     "dbK": -27.93,
+     "peakDb": -19.62,
+     "clip": false
+    },
+    {
+     "pitch": 42,
+     "vel": 64,
+     "onset": 46.04,
+     "found": true,
+     "dbFlat": -40.32,
+     "dbK": -40.25,
+     "peakDb": -33.11,
+     "clip": false
+    },
+    {
+     "pitch": 50,
+     "vel": 64,
+     "onset": 48.65,
+     "found": true,
+     "dbFlat": -35.25,
+     "dbK": -35.37,
+     "peakDb": -29.61,
+     "clip": false
+    },
+    {
+     "pitch": 57,
+     "vel": 64,
+     "onset": 51.15,
+     "found": true,
+     "dbFlat": -37.58,
+     "dbK": -37.56,
+     "peakDb": -30.63,
+     "clip": false
+    }
+   ],
+   "techniques": {
+    "slap": {
+     "techLabel": "Slap Tongue Velocity (#6)",
+     "port": "BassCl",
+     "notes": [
+      {
+       "pitch": 42,
+       "vel": 127,
+       "onset": 72.65,
+       "found": true,
+       "dbFlat": -35.54,
+       "dbK": -42.06,
+       "peakDb": -13.45,
+       "clip": false
+      },
+      {
+       "pitch": 50,
+       "vel": 127,
+       "onset": 75.15,
+       "found": true,
+       "dbFlat": -36.29,
+       "dbK": -41.41,
+       "peakDb": -13.43,
+       "clip": false
+      },
+      {
+       "pitch": 57,
+       "vel": 127,
+       "onset": 77.64,
+       "found": true,
+       "dbFlat": -38.24,
+       "dbK": -43.4,
+       "peakDb": -13.21,
+       "clip": false
+      },
+      {
+       "pitch": 42,
+       "vel": 64,
+       "onset": 80.15,
+       "found": true,
+       "dbFlat": -44.59,
+       "dbK": -51.2,
+       "peakDb": -22.54,
+       "clip": false
+      },
+      {
+       "pitch": 50,
+       "vel": 64,
+       "onset": 82.65,
+       "found": true,
+       "dbFlat": -45.34,
+       "dbK": -50.65,
+       "peakDb": -22.49,
+       "clip": false
+      },
+      {
+       "pitch": 57,
+       "vel": 64,
+       "onset": 85.14,
+       "found": true,
+       "dbFlat": -47.27,
+       "dbK": -52.4,
+       "peakDb": -22.19,
+       "clip": false
+      }
+     ],
+     "level127": -42.29,
+     "level64": -51.42,
+     "vsPlainDb": -14.8,
+     "afterTrimDb": -42.3
+    }
+   },
+   "level127": -27.49,
+   "level64": -37.73,
+   "spread127": 4.37,
+   "peak127": -16.8,
+   "trimDb": 0.0
+  }
+ }
+}

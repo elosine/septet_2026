@@ -1861,3 +1861,24 @@ exists (`Flute strikes`, send flute 3/4 → child, post-FX pre-fader, 0 dB).
   slap now on channel 5) for the re-measurement of the two instruments.
 - Unsaved in Reaper until the composer's CTRL+S (the rule): the lanes, the faders, the UVI
   routing, the Kontakt slot.
+
+## §61. 0k.4 CLOSED: the re-measurement lands on the anchor; the strikes on their lanes
+
+`reaper/Media/01-REC-260904_1553.wav` (the flute + bass clarinet timetable, 24 notes, 71 s;
+no clipping, peak −0.7 dBFS), analyzed against the violins' anchor −27.45:
+- **Sustained at 127 (400 ms, K):** flute Ordinario **−27.6** (residual +0.1) · bass clarinet
+  Senza **−27.5** (+0.0). The faders set through the bridge did exactly what §47 said.
+- **Strikes at 127 on their lanes (50 ms):** flute Pizzicato / tongue ram **−19.8** — level
+  with the Bartók pizz (−21, §47) as B intended; bass clarinet slap **−25.0** — 4 dB under the
+  Bartók, the gettati at −27 / −28 just below it. The lanes sit at 0 dB: the strikes simply
+  keep their untrimmed level while the sustained sounds took the trims — no positive gain
+  anywhere, nothing near clipping.
+- `bank/balance_fl_bcl.json` (400 ms) holds the run; the 50 ms reading is in this entry.
+
+**The state of the rack after today** (SAMPLER_QUIRKS ledger updated): faders flute −21 ·
+Fluteb −21 · bass clarinet −9 · both pianos +7 · violins 0 · viola −3.5 · cello −1 · lanes 0;
+`Flute strikes` (UVI Part 13 → `$Engine/Out 2`) and `BassCl strikes` (Kontakt slot 5 "Bass
+Clarinet STRIKE", [A] 5, output st.2) fed by post-FX pre-fader sends of channels 3/4; the
+recipe carries `balanceDb`, `slap.channel = 5`, `lane` on both strike techniques. PLAN 0k.4 ☑.
+What remains of 0k is 0k.5, the setup scripts as the standing way (the ×4 curve slots for
+0c.7 etc.) — not needed today.
