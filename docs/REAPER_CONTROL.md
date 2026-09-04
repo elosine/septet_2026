@@ -48,6 +48,21 @@ that needs its own gain goes to a **child track fed by a sampler sub-output** (U
 sub-output set once in the sampler GUI. Piece #4's gain-staging rule (calibrate at the
 sampler master) is amended for this rack for the reason above. Recorded in RUNNING_LOG §48.
 
+## 3b · Amendment (same day, RUNNING_LOG §49): UVI Workstation's insides are text
+
+The UVI VST block in the rack file decodes to a 312-byte header and a zlib stream of XML
+(`<UVI4>`; 3.5 MB for the flute): sixteen `<Part MidiChannel= Gain= OutputName= Mute=>`, each
+`<Program ProgramPath="…uvip" BypassInsertFX=>`, every insert effect's `Bypass`, and the
+instance master (`<Synth DisplayName="Master" Gain=>` — the composer's −2 dB read back as
+0.794). The header carries two lengths (the block size = 12 + compressed bytes at offset
+296; the XML length at 308), so a write-back is header + new lengths + `zlib(xml)`. **UVI
+setup — parts, channels, presets by path, outputs, gains, bypasses — is therefore a text
+edit**, live through the bridge (`SetTrackStateChunk`) or in the file. To prove before use:
+the unchanged round trip, then one visible edit. Kontakt's block is the NKI binary: its setup
+stays GUI (once) + duplication by chunk copy for identical instruments + desktop automation
+for repeated clicks; a KSP multi-script for runtime settings is unexplored. The instance-master
+sentence in §3 holds for Kontakt only.
+
 ## 4 · The plan — PLAN 0k, the Reaper bridge
 
 1. **The bridge** — `reaper/bridge/bridge.lua`: a defer loop; picks the oldest `inbox/*.lua`,
