@@ -240,6 +240,37 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   `Restore` snapshots, NAMING.md §1) is three pieces' accretion; design the septet's own rule set
   before the first real save (`piece-s01`), so no file is ever renamed after the fact. *Why:*
   autosave has eaten a score in every previous piece; the logic must be obvious to be safe.
+- **1c — The scattered-strike database + the reorchestration panel** — `todo` *(composer,
+  2026-09-03, on his first material save "scattered strike 01"; RUNNING_LOG §33 has the words)*
+  — the piece's first compositional tool, in the piece #2 ostinato-timing-DB mould
+  (`bank/ostinato_timing_db_2p2p.json`: ingestions with provenance, per-sample stats, two
+  thresholds). **1c.1 the capture** (`tools/strike_db.js`, from a save + window): strikes =
+  onset clusters separated by a strike gap (dial, ~500 ms as #2); per strike, EVERY onset's
+  displacement from the strike's first onset, absolute (s) and normalized (0–1 over the
+  strike's span, plus units of its median gap) so it can be multiplied, stretched, warped; the
+  harmony = ALL notes (pitch, instrument, technique) — nothing redacted; the rhythm = the
+  onsets after redacting any within the **simultaneity threshold, default 60 ms** (composer:
+  "somewhere around fifty milliseconds … maybe sixty" — the dial); and the SEQUENCE: the
+  inter-strike distances first-onset to first-onset, absolute and normalized ("the timing of
+  the whole sequence captured"). Written to `bank/scattered_strikes.json` with provenance
+  (score, window, object ids). **1c.2 the panel** (in the composer score, the `*_panel.js`
+  pattern; a lab only if the score cannot host it): pick a strike (or a sequence) from the DB
+  → a table of its notes with per-note INSTRUMENT, OCTAVE ± and TECHNIQUE choices → time
+  transforms (multiply, stretch, warp curve) → Hear through the rack → Insert at the playhead
+  as objects with a `groupId` and the gesture's META shape (NAMING.md §2). The blast panel's
+  Hear / Insert / Replace column controls are the precedent; the difference is MANUAL
+  assignment ("I can choose to place different notes to different instruments"). *Why:* CN-5
+  and CN-6 are built from these strikes; the database makes a strike reusable material rather
+  than a one-off.
+- **1d — The harmony database, gathered from all the pieces** — `todo` *(composer, same
+  breath: "collect up a harmony database from all my pieces … the two piano two percussion
+  piece where I have things called chord shapes, and then in the tuba piece … blasts … gather
+  up all the harmonies into a single database")* — after 1c. Sources: #2's chord shapes (its
+  save schema `databases.chordShapes`, and its banks), #4's blasts / sonorities
+  (`blast_taxonomy.json`, the pulse palette's S-numbers, the cluster bank), the septet's own
+  strikes (1c). One `bank/harmony_db.json`: pitch-class set + voicing + provenance (piece, file,
+  id, date) per entry; the 1c panel reads it as a second source. *Why:* the composer's
+  harmonic vocabulary as one addressable table.
 
 - Sketch pad: `docs/COMPOSITION_NOTES.md` — the opening is already there (ensemble attack →
   curve-based tremolos with fp entries → tremolo fugue → density-build sound mass).

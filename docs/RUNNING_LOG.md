@@ -1168,3 +1168,29 @@ banks (slot 1 on [A] 1, then 2–4). Vn1 was right by coincidence of its number.
 Vn2, Va, Vc set the four slots to [A] 1–4; Vn2's input back to `Vn2`. Lesson for the ledger:
 per-instrument port ⇒ every instrument starts at channel 1; and the "switch the silent
 track's input to a working port" test isolates the plugin in one move.
+
+## §33. The composer's first material, and the tool it asks for (filed as PLAN 1c / 1d, not started)
+
+Composer, mid-rack-test: *"I've made a save file called scattered strike zero one. Can we do a
+little bit like the ostinato database from the two piano two percussion piece? I want to
+capture all the onsets for each scattered strike and their relationship, and then I want to
+be able to stretch it out or warp — capture its absolute rhythmic displacement, but also some
+sort of normalized version that can be transformed, multiplied, or stretched. Then I want to
+capture the harmony in each one, that's with all the notes. But for the rhythms, if there are
+any that are essentially simultaneous, let's come up with a threshold, maybe somewhere around
+fifty milliseconds, where you could still hear two things apart, maybe a little bit more,
+maybe sixty — and redact the ones that fall too close. But the harmonies, let's capture
+everything. Then I want a way to reorchestrate these and hear them in the ensemble, an easy
+way where I can rearrange, place different notes to different instruments, change octaves,
+change articulations. If we can do it right in the composer score somehow, that would be
+ideal, otherwise in a lab. Then start a scattered strike database. … Not only the small
+timing differences in a single strike, but also the way it is as is, the gaps between the
+strikes — the timing of the whole sequence captured; in the database, the inter-strike
+distances. … And add to the to-do: collect up a harmony database from all my pieces — the two
+piano piece's chord shapes, the tuba piece's blasts — into a single database. Do the above
+first."* Filed as **PLAN 1c** (capture tool + panel; thresholds as dials, 60 ms simultaneity,
+~500 ms strike gap as #2's ostinato DB) and **1d** (the harmony database, after 1c). The
+precedents on hand: `bank/ostinato_timing_db_2p2p.json` (ingestions + per-sample stats +
+attacks, two thresholds) and the blast panel's Hear / Insert / Replace controls. **The save
+is not on disk yet** — `scores/` holds no "scattered strike" file at 19:00; the composer is
+asked to check the session name and press Save.
