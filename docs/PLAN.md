@@ -227,6 +227,16 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   make sure that's understood and that's in there from the beginning."* The IR is derived
   from S1, so S1's shape is the only thing that can bite later.
 
+- **0j — Ensemble balance: per-track trims from one measured run** — `kit built 2026-09-04,
+  awaiting the composer's recording` *(composer: "an easy but data based way to normalize the
+  volume between instruments … a 127 flute is same perceived loudness as 127 violin";
+  RUNNING_LOG §41–42)* — `tools/balance_schedule.js` (the timetable from the recipe file:
+  plain technique × 3 pitches × vel 127 / 64) → `probes/balance_probe.ps1` (plays it into the
+  ports while the REC track records) → `probes/analyze_balance.py` (loudest 1 s RMS per note,
+  flat + K-weighted; trim = quietest − level at 127) → `bank/balance.json`. The trims live as
+  TRACK GAIN in the rack (every playback path, no app code) and as `balanceDb` in
+  `sandbox/instruments.js`. *Rejected:* velocity scaling (changes the sample layer), a CC7
+  offset (eats the dynamics channel). Re-run whenever a library or preset changes.
 ## 1. Compose — `todo` (starts the moment 0h passes; tools built per need, the #3/#4 MO)
 
 - **1a — A more fluid way to draw curves in the score** — `todo` *(composer, 2026-09-03: "todo:

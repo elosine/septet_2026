@@ -1380,3 +1380,65 @@ Done, verified in the pane against the composer's running server, no console err
 
 *Not done:* the toolbar's own wrapping on smaller screens (a page matter, not the drawer's) —
 NITS when it bites elsewhere.
+
+## §41. Ensemble balance — "a 127 flute is the same perceived loudness as a 127 violin"
+
+Composer, first listening in the drawer (remote over Chrome Remote Desktop, Reaper switched to
+WASAPI shared so CRD carries its audio): *"can we figure out an easy but data based way to
+normalize the volume between instruments, flute sounds quite loud, so balance in the ensemble,
+a 127 flute is same perceived loudness as 127 violin."*
+
+The AI's proposal (piece #4's method, `probes/cc7_calibration_probe.ps1` → the REC track →
+`probes/measure_rms.py`, turned into a balance probe): one scripted run plays every port's
+plain technique at three pitches (25 / 50 / 75 % of the range) at velocity 127 and 64, on a
+fixed schedule; the composer records the run once on the rack's REC track; an analyzer slices
+the WAV by the schedule and reports per instrument the loudest 1 s RMS (K-weighted option for
+"perceived") and the trim to a common target. Apply the trims as TRACK GAIN in the rack (every
+playback path benefits, no app code, headroom untouched) and record them as data in
+`sandbox/instruments.js` (`balanceDb`) + SAMPLER_QUIRKS. Rejected: velocity scaling in the app
+(changes the sample layer, i.e. the timbre); a CC7 offset per instrument (eats the dynamics
+channel's headroom). Caveat stated: equal RMS at 127 = fff matched across the ensemble, a
+baseline the composer balances musically afterwards. Awaiting the composer's pick.
+
+## §42. The balance kit built: timetable → probe → recording → trims (PLAN 0j)
+
+Composer: *"A, go ahead"* (§41's option A — Reaper track gain, measured). Three pieces, all
+data-driven from the recipe file, none touching the app:
+
+- **`tools/balance_schedule.js`** — reads `sandbox/instruments.js` (evaluated as the browser
+  script it is) and writes `probes/balance_schedule.json`: every track in score order, its
+  PLAIN technique (ord · main · senza_vel — the flute's Ordinario on Flute ch 12, the bass
+  clarinet's Senza Vibrato Velocity #13, the 8Dio piano ch 1, the strings' Senza Vibrato
+  Velocity #6), three pitches at 25 / 50 / 75 % of that technique's range, velocity 127 then
+  64; 1.5 s notes, 1 s gaps, 2 s between instruments, 3 s lead-in — **42 notes, 122 s.**
+  Pitches: flute 69 78 87 · bcl 42 50 57 · piano 43 65 86 · vn 67 78 90 · va 59 71 82 ·
+  vc 48 60 71.
+- **`probes/balance_probe.ps1`** — plays the timetable straight into the loopMIDI ports
+  (winmm, the port_note_probe pattern): CC7 127 + CC0 (or the UVI keyswitch) 300 ms before
+  each note, absolute Stopwatch timing so drift cannot accumulate, all ports opened once,
+  all-notes-off on close. `-DryRun` prints the timetable; `-Only violin1,cello` a subset.
+- **`probes/analyze_balance.py`** — slices the REC-track recording by the timetable: finds the
+  recording's start from the first onset (20 dB over the 5th-percentile floor), refines every
+  note to its local onset (−0.1 … +0.4 s window), takes the loudest 1 s RMS in the note,
+  flat and K-weighted (BS.1770's shelf + high-pass as a magnitude response in the FFT
+  domain — numpy only, no scipy on this machine). Per instrument: the mean of the three
+  pitches at 127 (and at 64, and the 127−64 difference, and the spread across pitches);
+  **trim = target − level127, target = the quietest instrument** (cuts only, nothing can
+  clip) or `--target -18`. Writes `bank/balance.json` with provenance.
+
+**Self-test** (a synthetic recording from the timetable — sine bursts with known gains
+0 / −6 / +3 / −9 / −8.5 / −4 / −12 dB, a −80 dB floor, the probe starting 2.345 s into the
+file): all seven trims recovered exactly (±0.0 dB), the start detected at 2.34 s (10 ms
+hops). The K-weighted path first came out 46.8 dB low — the FFT-domain RMS was normalized
+by N twice; fixed (Parseval, one-sided, de-windowed) and re-run: within 0.5 dB of flat for
+mid-band tones, +1.5 dB on the highest ones as the shelf intends.
+
+**Gotchas met:** PowerShell 5.1 reads a BOM-less `.ps1` as ANSI — em dashes inside strings
+broke the parser; the probe and the analyzer are pure ASCII now. Python printing "−" and "→"
+to the cp1252 console raised UnicodeEncodeError — the analyzer reconfigures stdout to UTF-8.
+
+**The run, for the composer (over CRD, Reaper on WASAPI shared):** arm the REC track
+(output-stereo), record; `.\probes\balance_probe.ps1` from the repo root; stop after "done";
+`python probes\analyze_balance.py <that wav>`; type the TRIM column into each track's volume
+field. Then the trims are written into `sandbox/instruments.js` (`balanceDb`) and
+SAMPLER_QUIRKS, and the rack file re-saved.
