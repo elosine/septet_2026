@@ -1839,3 +1839,25 @@ the source's level at +21 while REC read +20; a job may start its own defer loop
 so note timing from outside stops mattering; `TrackFX_SetOffline` true/false re-instantiates a
 plugin from its state (UVI needs ~30 s to reload 16 parts). PLAN 0k.3 ☑; 0k.4's flute lane
 exists (`Flute strikes`, send flute 3/4 → child, post-FX pre-fader, 0 dB).
+
+## §60. 0k.4: B applied — the faders, two strike lanes, the recipe
+
+- **Faders (A, the violins' level), set through the bridge in one job:** Flute SI2 −21 ·
+  Fluteb SI2 −21 · Bass Clarinet XS −9 · Piano Kontakt +7 · Piano PP2 +7 · Vn1 0 · Vn2 0 ·
+  Va −3.5 · Vc −1 · the lanes 0. Recorded in the recipe as `balanceDb` per instrument.
+- **The flute lane:** UVI Part 13 (Pizzicato = the written tongue ram) → `$Engine/Out 2` by
+  text → plugin pins 3/4 → track channels 3/4 → a post-FX pre-fader send → `Flute strikes`
+  (0 dB, index 3). Proven with meters (§59).
+- **The bass-clarinet lane:** `bcl_strike_slot.lua` run by the composer inside the instance:
+  the multi had 4 instruments (slot 1 "Bass Clarinet" on [A] 1, output 0), the script loaded
+  the same `.nki` into slot 5 (index 512), named it "Bass Clarinet STRIKE", MIDI channel 5,
+  output st.2, 0 dB — read back exactly. `jobs/strike_lane.lua` built `BassCl strikes` (index
+  6, channels 3/4 → lane, 0 dB). **Slap on channel 5 → bcl ch 3/4 −15.2 / −14.2 → the lane →
+  REC and master at −15.2 (no trim on that path); senza on channel 1 → bcl ch 1/2 −8.9 → REC
+  −17.9 (the −9 fader applied); each path silent on the other.**
+- **The recipe:** `bass_clarinet.slap.channel = 5` (+ `lane`), `flute.pizzicato.lane`,
+  `balanceDb` on all seven. The app routes by channel, so the drawer's slap now plays the
+  strike slot after a page reload. The balance timetable regenerated from the recipe (the
+  slap now on channel 5) for the re-measurement of the two instruments.
+- Unsaved in Reaper until the composer's CTRL+S (the rule): the lanes, the faders, the UVI
+  routing, the Kontakt slot.

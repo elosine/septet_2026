@@ -33,7 +33,7 @@ const INSTRUMENTS = {
   // → MIDI 59–96 (manual p. 51); per-preset ranges are read from the UVI GUI at 0c, never
   // ear-scanned. Multiphonics Menu: one multiphonic per key, display C3–F5 = MIDI 60–89 (manual
   // "FLUTE Multiphonics"). Piccolo / bass flute are NOT here yet — undecided (D6; CN-2, CN-4).
-  flute: {
+  flute: { balanceDb: -21,
     label: "Flute",
     port: "Flute",
     rangeLow: 59,
@@ -73,7 +73,7 @@ const INSTRUMENTS = {
       // A12 · Flute Ordinario
       { key: "ord",             label: "Ordinario",                  preset: "Flute Ordinario",             channel: 12, rangeLow: 60, rangeHigh: 96 },   // A12 screenshot: no red keys; white C3→C6 (60–96); B2 grey (the manual's B3 extension is not in this patch); no tan
       // A13 · Flute Pizzicato
-      { key: "pizzicato",       label: "Pizzicato",                  preset: "Flute Pizzicato",  notate: "tongue ram",             channel: 13, rangeLow: 60, rangeHigh: 84 },   // A13 screenshot: no red keys; white C3→C5 native (60–84); tan below C3 and above C5 (stretched)   // NOTATES AS TONGUE RAM (composer, 2026-09-04: "pizzicato sounds loud in sample, just note that we'll notate this as tongue ram") — the SI2 pizzicato sample stands in for the written tongue ram; RUNNING_LOG §44
+      { key: "pizzicato",       label: "Pizzicato",                  preset: "Flute Pizzicato",  notate: "tongue ram", lane: "Flute strikes",             channel: 13, rangeLow: 60, rangeHigh: 84 },   // A13 screenshot: no red keys; white C3→C5 native (60–84); tan below C3 and above C5 (stretched)   // NOTATES AS TONGUE RAM (composer, 2026-09-04: "pizzicato sounds loud in sample, just note that we'll notate this as tongue ram") — the SI2 pizzicato sample stands in for the written tongue ram; RUNNING_LOG §44
       // A14 · Flute Play & Sing KS
       { key: "play_sing",       label: "Play and Sing (sung C4)",    preset: "Flute Play & Sing KS",        channel: 14, ks: 36, rangeLow: 60, rangeHigh: 96 },   // A14 screenshot: red C1; C#1 not red; tan C#1–B2 (37–59) below; white from C3 (60), right end cut in the frame (top provisional 96)
       { key: "play_sing_unison",label: "Play and Sing Unison",       preset: "Flute Play & Sing KS",        channel: 14, ks: 37, rangeLow: 60, rangeHigh: 96 },   // C#1 — verify
@@ -112,7 +112,7 @@ const INSTRUMENTS = {
   //   the four slides — CC#0 122 + the function key, then CC#0 118 to leave the mode.
   // Started from piece #3 sandbox/instruments.js `bass_clarinet_xs` (13 starter presets); the FULL menu
   // the deep map is #3/docs/XSAMPLE_BASSCL_map.md. Floor rule: never send below MIDI 34.
-  bass_clarinet: {
+  bass_clarinet: { balanceDb: -9,
     label: "Bass Clarinet",
     port: "BassCl",
     rangeLow: 34,   // floor rule: never send below MIDI 34 (keyswitch/function zone)
@@ -129,7 +129,7 @@ const INSTRUMENTS = {
       { key: "stac_vel_mwshape", label: "Staccato Velocity MW Shape (#3)", channel: 1, cc0: 2, rangeLow: 34, rangeHigh: 65, mw: true },   // standard zone assumed (composer sends only the ones that differ)
       { key: "stac2_mwshape", label: "Staccato 2 MW Shape (#4)", channel: 1, cc0: 3, rangeLow: 34, rangeHigh: 65, mw: true },   // standard zone assumed
       { key: "flutter_mw", label: "Flutter Tongue MW (#5)", channel: 1, cc0: 4, rangeLow: 34, rangeHigh: 60, mw: true },   // GUI high C4 — the flutter-tongue sample presets stop a fourth short (screenshot, R5)
-      { key: "slap", label: "Slap Tongue Velocity (#6)", channel: 1, cc0: 5, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d, GUI-read 2026-08-08
+      { key: "slap", label: "Slap Tongue Velocity (#6)", channel: 5, cc0: 5, rangeLow: 34, rangeHigh: 65, lane: "BassCl strikes" },   // STRIKE SLOT (2026-09-04, PLAN 0k.4 / B): a second copy of the instrument on [A] 5 → Kontakt output st.2 → the "BassCl strikes" Reaper lane, own gain; built by reaper/kontakt/bcl_strike_slot.lua; RUNNING_LOG §60   // #3 map §6d, GUI-read 2026-08-08
       { key: "gliss_undef", label: "Glissando Undefined MW Shape (#7)", channel: 1, cc0: 6, rangeLow: 34, rangeHigh: 42, mw: true },   // GUI A#0–F#1 (screenshot, R5): the narrow gesture zone
       { key: "undef_tones", label: "Undefined Tones Velocity (#8)", channel: 1, cc0: 7, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d (Trigger off, Timer 0)
       { key: "key_noises", label: "Key Noises Velocity (#9)", channel: 1, cc0: 8, rangeLow: 34, rangeHigh: 65 },   // #3 map §6d
@@ -166,7 +166,7 @@ const INSTRUMENTS = {
   // CC64 pedal) · plucked ch 2 (Spitfire, added at R6) · harmonics ch 3 (+ch 4 second layer; CC21 pitch shift, 19.048 cents/step,
   // 85 ms CC lead; sounding cap MIDI 101) · muted ch 5. Preparations are TECHNIQUES of one
   // piano track. Plucked piano had no library in #2 ("TBD"); the septet has Spitfire's, on ch 2.
-  piano: {
+  piano: { balanceDb: 7,
     label: "Piano",
     port: "Piano",
     rangeLow: 21,
@@ -194,10 +194,10 @@ const INSTRUMENTS = {
   // them. Keyswitch zone = the bass clarinet's (green 21–23 function keys, red 24–33 bank slots,
   // all reachable by CC#0 — never sent as notes); the blue key at the very top is the Preset /
   // Phrase Mode switch (manual: A#7, or CC#0 126/127). Channels per D11: 1 main · 2–4 curve A/B/C.
-  violin1: { label: "Violin 1", port: "Vn1", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
-  violin2: { label: "Violin 2", port: "Vn2", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
-  viola:   { label: "Viola",    port: "Va",  rangeLow: 48, rangeHigh: 93,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 48, 93) },
-  cello:   { label: "Cello",    port: "Vc",  rangeLow: 36, rangeHigh: 83,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 36, 83) },
+  violin1: { balanceDb: 0, label: "Violin 1", port: "Vn1", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
+  violin2: { balanceDb: 0, label: "Violin 2", port: "Vn2", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
+  viola:   { balanceDb: -3.5, label: "Viola",    port: "Va",  rangeLow: 48, rangeHigh: 93,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 48, 93) },
+  cello:   { balanceDb: -1, label: "Cello",    port: "Vc",  rangeLow: 36, rangeHigh: 83,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 36, 83) },
 };
 
 // Per-preset zones read from the GUI as the composer uses a preset (his rule at R8: "there are too many
