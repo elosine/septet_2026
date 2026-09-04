@@ -39,7 +39,7 @@ const METAL = () => (typeof META_LAYER !== 'undefined' ? META_LAYER : root.META_
 const INST = () => (typeof INSTRUMENTS !== 'undefined' ? INSTRUMENTS : (root.INSTRUMENTS || {}));
 
 const DB_URL = '/bank/scattered_strikes.json';
-const STORE = 'septet.strikeDrawer.v1';
+const STORE = 'septet.strikeDrawer.v2';
 const TAKES = 'septet.strikeTakes.v1';
 const LEAD_MS = 250, CC0_LEAD_MS = 30;
 const SPAN = { lo: 36, hi: 96 };        // the ensemble's span on screen (cello C2 … flute C7)
@@ -87,7 +87,7 @@ function foldInto(pitch, lo, hi) {
 const D = {
     el: null, body: null, db: null, seq: null, strike: null,
     voices: [], slots: [], ph: null, base: 0, prev: null, pickerLane: null,
-    cfg: { strikeId: null, show88: false, rowH: 7, voicing: 'original', vSeed: 1, clusterOct: 0,
+    cfg: { strikeId: null, show88: false, rowH: 0, full: true, heightPx: 0, voicing: 'original', vSeed: 1, clusterOct: 0,
            timeX: 1, shape: 'played', amount: 1, jitterMs: 0, rSeed: 1, order: 'played', oSeed: 1, simMs: 60,
            durX: 1, dynX: 1, flatten: false, mayFold: false, topLock: -1, bottomLock: -1, oSeedShuffle: 1, zoomPxPerMs: 0 },
 
@@ -103,6 +103,13 @@ const D = {
         host.parentNode.insertBefore(btn, host.nextSibling);
         this.restore();
         this.build();
+        const tab = document.createElement('div');
+        tab.id = 'strikesTab'; tab.textContent = 'STRIKES \u25B4';
+        tab.title = 'open the strikes drawer';
+        tab.style.cssText = 'position:fixed;right:14px;bottom:0;z-index:8999;background:#4a3a12;color:#e8cf9a;border:1px solid #C9A05A;border-bottom:none;border-radius:6px 6px 0 0;padding:2px 12px;cursor:pointer;font:12px system-ui,sans-serif;letter-spacing:.06em';
+        tab.addEventListener('click', () => this.toggle(true));
+        document.body.appendChild(tab);
+        window.addEventListener('resize', () => { if (this.el && this.el.style.display !== 'none') this.render(); });
         const e = E_();
         if (e) { const prev = e.onStop; e.onStop = () => { if (prev) try { prev(); } catch (x) {} this.onStopped(); }; }
     },
@@ -124,7 +131,8 @@ const D = {
               '<button id="skReload" style="' + btn + '" title="re-read bank/scattered_strikes.json">&#8635; db</button>' +
               '<button id="skRescan" style="' + btn + '" title="re-ingest the source save into the database (tools/strike_db.js via the server)">rescan</button>' +
               '<label title="the 60 ms simultaneity threshold — live">sim <input id="skSim" type="number" min="5" max="500" step="5" style="width:46px;' + inp + '"> ms</label>' +
-              '<button id="skZ1" style="' + btn + '">Z1</button><button id="skZ2" style="' + btn + '">Z2</button><button id="skZ3" style="' + btn + '">Z3</button>' +
+              '<button id="skZ0" style="' + btn + '" title="fit the keyboard to the drawer">fit</button><button id="skZ1" style="' + btn + '">Z1</button><button id="skZ2" style="' + btn + '">Z2</button><button id="skZ3" style="' + btn + '">Z3</button>' +
+              '<button id="skFull" style="' + btn + '" title="full page height / half">&#8597; full</button>' +
               '<label title="widen the keyboard to the piano\'s 88 keys"><input id="sk88" type="checkbox"> 88</label>' +
               '<span id="skClose" style="cursor:pointer;color:#888;font-size:14px;padding:0 4px">&#10005;</span>' +
             '</div>' +
@@ -159,6 +167,7 @@ const D = {
             '</div>';
         document.body.appendChild(d);
         this.el = d; this.body = d.querySelector('#skBody');
+        this.applyHeight();
         // wiring
         const q = s => d.querySelector(s);
         q('#skClose').addEventListener('click', () => this.toggle(false));
@@ -167,6 +176,8 @@ const D = {
         q('#skSeqSel').addEventListener('change', e => this.selectSeq(e.target.value));
         q('#skSim').addEventListener('change', e => { this.cfg.simMs = clamp(+e.target.value || 60, 5, 500); this.save(); this.render(); });
         q('#sk88').addEventListener('change', e => { this.cfg.show88 = e.target.checked; this.save(); this.render(); });
+        q('#skZ0').addEventListener('click', () => { this.cfg.rowH = 0; this.save(); this.render(); });
+        q('#skFull').addEventListener('click', () => { this.cfg.full = !this.cfg.full; this.save(); this.applyHeight(); this.render(); });
         q('#skZ1').addEventListener('click', () => { this.cfg.rowH = 6; this.save(); this.render(); });
         q('#skZ2').addEventListener('click', () => { this.cfg.rowH = 9; this.save(); this.render(); });
         q('#skZ3').addEventListener('click', () => { this.cfg.rowH = 12; this.save(); this.render(); });
@@ -188,8 +199,8 @@ const D = {
         // resize handle
         let drag = null;
         q('#skHandle').addEventListener('mousedown', e => { drag = { y: e.clientY, h: d.getBoundingClientRect().height }; e.preventDefault(); });
-        document.addEventListener('mousemove', e => { if (!drag) return; const h = clamp(drag.h + (drag.y - e.clientY), 220, window.innerHeight - 60); d.style.height = h + 'px'; this.render(); });
-        document.addEventListener('mouseup', () => { drag = null; });
+        document.addEventListener('mousemove', e => { if (!drag) return; const h = clamp(drag.h + (drag.y - e.clientY), 220, window.innerHeight); d.style.height = h + 'px'; this.cfg.full = false; this.cfg.heightPx = h; this.render(); });
+        document.addEventListener('mouseup', () => { if (drag) this.save(); drag = null; });
         // SPACE inside the drawer = hear orchestrated / stop; never the score's transport
         d.addEventListener('keydown', ev => {
             if (ev.code === 'Space' && !ev.target.matches('input, select, textarea')) {
@@ -207,6 +218,17 @@ const D = {
         q('#skFlat').checked = !!this.cfg.flatten;
         this.fillTakes();
     },
+    applyHeight() {
+        const full = this.cfg.full !== false;
+        this.el.style.height = full ? '100vh' : ((this.cfg.heightPx || 0) >= 220 ? this.cfg.heightPx + 'px' : '58vh');
+        const b = this.el.querySelector('#skFull'); if (b) b.innerHTML = full ? '&#8597; half' : '&#8597; full';
+    },
+    // the keyboard's row height: explicit (Z1–Z3) or fitted to the drawer's body
+    rh() {
+        if (this.cfg.rowH > 0) return this.cfg.rowH;
+        const R = this.range(), bh = this.body ? this.body.clientHeight : 0;
+        return clamp(Math.floor((bh - 6) / (R.hi - R.lo + 1)), 5, 16);
+    },
 
     preflight() {
         const C = C_(), e = E_(), bad = [];
@@ -223,6 +245,7 @@ const D = {
         this.el.style.display = show ? 'flex' : 'none';
         const b = document.getElementById('strikesBtn');
         if (b) { b.style.background = show ? '#4a3a12' : ''; b.style.color = show ? '#e8cf9a' : ''; }
+        const tab = document.getElementById('strikesTab'); if (tab) tab.style.display = show ? 'none' : '';
         if (!show) { const e = E_(); if (e) e.panic(); return; }
         const bad = this.preflight();
         this.el.focus();
@@ -463,7 +486,7 @@ const D = {
     },
 
     // ------------------------------------------------------------------ render
-    keyY(midi) { const R = this.range(); return (R.hi - midi) * this.cfg.rowH; },
+    keyY(midi) { const R = this.range(); return (R.hi - midi) * this.rh(); },
     render() {
         if (!this.strike) return;
         this.applyOrder();
@@ -472,7 +495,7 @@ const D = {
     },
     pcColor(pc) { const pcs = [...new Set(this.voices.map(v => v.pc))].sort((a, b) => a - b); return PC_PALETTE[pcs.indexOf(pc) % PC_PALETTE.length]; },
     renderKeyboard() {
-        const R = this.range(), h = this.cfg.rowH, svg = this.el.querySelector('#skKb');
+        const R = this.range(), h = this.rh(), svg = this.el.querySelector('#skKb');
         const rows = R.hi - R.lo + 1, H = rows * h + 4;
         svg.setAttribute('height', H); svg.style.height = H + 'px';
         let s = '';
@@ -572,7 +595,7 @@ const D = {
     },
     renderRhythm() {
         const wrap = this.el.querySelector('#skRhyWrap'), svg = this.el.querySelector('#skRhy');
-        const R = this.range(), h = this.cfg.rowH, rows = R.hi - R.lo + 1, H = rows * h + 4;
+        const R = this.range(), h = this.rh(), rows = R.hi - R.lo + 1, H = rows * h + 4;
         const W = Math.max(300, wrap.clientWidth - 4);
         svg.setAttribute('height', H); svg.style.height = H + 'px'; svg.setAttribute('width', W);
         const timed = this.timed(); const pat = this.pattern();

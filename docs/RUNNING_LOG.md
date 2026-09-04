@@ -1361,3 +1361,22 @@ the strings); K's lock; M / P the harmony collection and the Messiaen sets (inde
 PLAN 1d); N harmony swap by voice rank; the snapshot API beyond takes-in-localStorage;
 the `kind` field in `instruments.js` (S — tonight a name rule classifies the rosters: cello
 52 pitched / 30 fixed / 6 noise); Q's delete. NITS keeps the still-open `techs[0]` fallback.
+
+## §40. The morning test begins — the drawer goes full height, and a tab that survives the toolbar
+
+Composer, first look, with two screenshots (a wide screen and a 1920 px one): *"can't see
+strikes button in main score in smaller screen, strikes pannel only half page height can we
+make it full page height?"* On the 1920 px screen the score's toolbar wraps and the panel
+buttons (Pulse · MT · Strikes) land on a second row over the Flute lane's label.
+
+Done, verified in the pane against the composer's running server, no console errors:
+- **A fixed `STRIKES ▴` tab at the bottom-right edge of the page**, independent of the toolbar
+  (hidden while the drawer is open). The toolbar button stays.
+- **Full page height by default** (100vh); `↕ half` in the drawer header returns to 58vh; the
+  drag handle sets any height and remembers it (`cfg.full`, `cfg.heightPx`).
+- **The keyboard rows fit the drawer** (`fit`, the default; Z1–Z3 remain explicit zooms): at
+  720 px the rows come out 10 px, at 1080 px ~16 px — no more 7 px labels.
+- The saved-settings key bumped to v2 so yesterday's stored row height cannot defeat the fit.
+
+*Not done:* the toolbar's own wrapping on smaller screens (a page matter, not the drawer's) —
+NITS when it bites elsewhere.
