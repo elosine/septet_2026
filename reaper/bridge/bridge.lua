@@ -22,7 +22,7 @@ local ROOT = src:match('^@(.*)[/\\][^/\\]+$') or '.'
 local RUNTIME = reaper.GetResourcePath() .. sep .. 'bridge'
 local INBOX, OUTBOX, DONE = RUNTIME .. sep .. 'inbox', RUNTIME .. sep .. 'outbox', RUNTIME .. sep .. 'done'
 local HEART = RUNTIME .. sep .. 'heartbeat.json'
-local VERSION = '0.2 (2026-09-04) runtime in the Reaper resource folder'
+local VERSION = '0.2.1 (2026-09-04) runtime in the Reaper resource folder; reload fixed'
 
 -- one bridge only
 local stamp = tostring(os.time()) .. '-' .. tostring(math.random(1e9))
@@ -137,6 +137,7 @@ local function tick()
   if RELOAD then   -- a job returned { __reload = true }: stop this loop, start the file afresh (new code, same script instance)
     reaper.DeleteExtState('septet_bridge', 'running', false)
     reaper.ShowConsoleMsg('[bridge] reloading ' .. src:match('^@(.*)$') .. '\n')
+    RELOAD = false          -- or the fresh copy would see the flag and reload forever (RUNNING_LOG §63)
     dofile(src:match('^@(.*)$'))
     return
   end
