@@ -194,3 +194,7 @@ names a library to confirm.
   — *AI reading:* piece #6, the "Lake George" piece: three PAIRS (english horn + bassoon ·
   horn + trumpet · cello + double bass) plus percussion; its opening section built from the
   MORPH device (piece #4's morph panel, carried in this stack). Filed in the journal §7 too.
+- **2026-09-04, composer, verbatim:** *"comp note lake george: make this a delicate, quite piece with
+  very interesting textures and timbres, but continuous, not sparce"* — *AI reading:* the character of
+  piece #6: delicate and quiet, its interest in texture and timbre rather than event density — and
+  CONTINUOUS: a sustained fabric, never sparse, never pointillist.
