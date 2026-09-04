@@ -1660,3 +1660,36 @@ pin would overwrite a trim there at the first note. Useful on knobs CC7 does not
 faders. So for Kontakt: setup stays GUI once; STATIC trims can become numbers through host
 automation on a CC7-free knob; the rest of the AI-side control is Reaper's. Not needed for
 UVI (the XML route, §49). Filed in REAPER_CONTROL as mechanism 8b.
+
+## §51. Kontakt's developer features = the Kontakt Lua API — the Kontakt side becomes a script too
+
+Composer, a screenshot of Kontakt 8 → Options → Developer ("Enable developer features — Lua
+API, repacking NKRs …"): *"kontakt dev features?"*. Read the Kontakt 8 API Reference Manual
+(NI, 2024-09-26 edition; 64 pages, fetched as PDF and text-extracted) rather than guessed.
+
+**What the API does, at the MULTI level** (exact names): `load_instrument(filename, slot)`
+(an .nki into a slot; returns the index) · `set_instrument_midi_channel(idx, ch)` — *0 = omni,
+1…64 = channels 1–16 across ports A–D* (the [A] 1…4 of D11) · `set_instrument_output_channel
+(idx, ch)` ("check how many outputs are available first") · `set_instrument_volume(idx, dB)`
+(up to +12) · pan · mute · solo · tune · polyphony · name · `set_instrument_options` (key /
+velocity ranges, transpose, voice stealing) · `save_multi(filename, {mode=…})` / `load_multi`
+· `reset_multi` · `get_instrument_indices`, `get_num_instruments`, all the getters for
+read-back · multi-script and instrument-script sources get/set. Indices: 128 per slot (slot 3
+= 256). Below that, the instrument level: groups, zones, modulation — instrument building.
+
+**How a script runs:** inside Kontakt (the plugin instance too — the main menu's "Run Lua
+script…" F11, Ctrl+F11 to repeat; scripts also appear in Kontakt's Files browser and run by
+double-click or by drag-and-drop onto the rack, from Explorer as well), or as a command-line
+argument to the STANDALONE Kontakt (output to a terminal). Enabled by the Developer checkbox
+(a security note: scripts can read/write files — run only ours).
+
+**So the Kontakt setup is a script:** one Lua file per Kontakt track type (the bass clarinet,
+the piano pair, the violin ×4 curve slots, viola, cello) that loads the .nki(s) into the
+slots, sets [A] 1–4, outputs, names, volumes; run once per instance by a drag onto the rack
+(three seconds), verified by the getters printed back. The state then lives in the `.rpp` as
+before. Combined with §49 (UVI = XML) and §50 (host automation for CC7-free knobs), every
+sampler-internal step the composer did by hand this week has a scripted form; what stays
+manual is dragging one script onto each Kontakt instance and, in UVI, nothing.
+
+The manual: https://docs.native-instruments.com/pdf-guides/kontakt/Kontakt_8_API_Reference-en_260924.pdf
+(NI's document; not stored in the repo). Filed as REAPER_CONTROL mechanism 8c; PLAN 0k.5.

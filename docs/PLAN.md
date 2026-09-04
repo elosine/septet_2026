@@ -246,7 +246,11 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   `tools/reaper_job.js` (tracks · fader · child track + receive / sub-output · fx · param ·
   arm / record / stop · save · render; later midi-import); 0k.3 apply B (§47) — faders + the
   `Flute strikes` / `BassCl strikes` child tracks on sampler sub-outputs, re-measure; 0k.4 the
-  co-work protocol for GUI-only steps. *Why:* every later rack change (curve copies, strike
+  co-work protocol for GUI-only steps; **0k.5 the sampler setups as code** — UVI: the state XML
+  (§49) edited by `tools/uvi_state.js` (decode · edit · re-encode, proven by a round trip); Kontakt:
+  one Lua script per track type on the Kontakt Lua API (§51: `load_instrument`, MIDI channel,
+  output, volume, `save_multi`), dropped onto the rack once per instance; host automation for
+  CC7-free knobs (§50). co-work protocol for GUI-only steps. *Why:* every later rack change (curve copies, strike
   slots, renders, the performance-score MIDI) becomes a job with a read-back instead of a
   screenshot conversation. *Rejected:* community MCP servers (the same bridge with a Python
   stack and a fixed vocabulary); CC7 trims (reset by the app's CC7 pin); instance-master trims
