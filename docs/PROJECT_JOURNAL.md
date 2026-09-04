@@ -401,7 +401,6 @@ patches in a script file; the AI's browser pane has no Web MIDI and never fires 
 *(The composer's own to-dos and reminders. Reviewed at every session end.)*
 
 **Active:**
-- **Penn State abstract (tuba repo): due TONIGHT, Fri 4 Sept, 11:59 pm ET** — host as a doc + submit the form.
 - Decide piccolo vs bass flute when the music asks (Q1); confirm that library is installed.
 - **Test the STRIKES drawer with U1–U4** (reload the page; shift-click = solo; the slap plays the
   strike slot). Then say which next: the drawer's next features, or 0d / 0c.
@@ -411,6 +410,9 @@ patches in a script file; the AI's browser pane has no Web MIDI and never fires 
 
 - **Next piece (after the septet): the "Lake George" piece** — pairs: english horn/bassoon,
   horn/trumpet, cello/bass, + percussion; start with a morph section (composer, 2026-09-04;
-  verbatim in COMPOSITION_NOTES).
+  verbatim in COMPOSITION_NOTES). **Animated conductions** for its delicate, quiet material —
+  a pinch → lift → open hand gesture, to be captured from video and re-animated in the score
+  (composer, 2026-09-04 session 3; verbatim in COMPOSITION_NOTES).
 
 **Completed:**
+- ~~Penn State abstract (tuba repo), due Fri 4 Sept~~ — done (composer, 2026-09-04).

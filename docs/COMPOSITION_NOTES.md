@@ -198,3 +198,17 @@ names a library to confirm.
   very interesting textures and timbres, but continuous, not sparce"* — *AI reading:* the character of
   piece #6: delicate and quiet, its interest in texture and timbre rather than event density — and
   CONTINUOUS: a sustained fabric, never sparse, never pointillist.
+- **2026-09-04, composer, verbatim (session 3, at the start):** *"This is for the Lake George piece to
+  explore different types of conductions, animated conductions for delicate, quiet things. I'm
+  imagining a gesture where I... a conducting... a human conducting gesture where I with both hands
+  close my thumb and my index finger and then lift up my hands slightly and open my thumb, my finger
+  away from my thumb. My fingers away from my thumbs. Find a way with AI to either do a frame by frame
+  from video or some way to trace this gesture and then try to reanimate it."*
+  — *AI reading:* an ANIMATED CONDUCTION vocabulary for piece #6's delicate, quiet material — the
+  conductor's gesture itself as the cue, animated in the score. The first gesture: both hands, thumb
+  and index finger pinched closed → a slight lift of the hands → the fingers open away from the thumbs
+  (a release, a bloom — the natural cue for a soft entry that opens). The method: film the composer's
+  own hands, trace the gesture per frame (hand-landmark tracking — the per-frame hand pose a library
+  such as MediaPipe Hands extracts — or manual frame-by-frame tracing), then re-animate it as a
+  simplified figure in the animated score, timed to the music. Belongs to piece #6's kit; nothing to
+  build in the septet.
