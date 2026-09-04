@@ -1232,3 +1232,35 @@ under the onset they merged into, and stats; the sequence holds the inter-strike
 absolute, normalized by span and in units of the median gap, plus each gap from a strike's
 last onset to the next first. Ids are functions of the save's object ids
 (`ss-ScatteredStrikes01-wc-40`), so re-ingesting replaces rather than duplicates.
+
+## §37. PLAN 1c.2 — the STRIKES panel, v1, verified in the running app
+
+**`score/public/strike_panel.js`** (hooked after the multitempo panel in `composer.html`), in
+the multitempo panel's mould: the same anchored button, draggable window, MorphEmit MIDI glue
+(`ensureMidi` / `routeFor` / `noteOn` / `noteOff`, `panic()` the one stop path, timers in
+`E._timers`), the same absolute time base. What it does: **strike** picker from
+`bank/scattered_strikes.json` (46 entries, refetch button) → a table of the strike's notes —
+note name / midi, dt ms, velocity, and per note an **instrument** select (the seven lanes),
+an **octave** shift (−3…+3) and a **technique** select (that instrument's roster) — with
+`spread` (notes low→high across the lanes low→high, each on its plain technique, pulled into
+range by octaves) and `as played` (back to the save); **time ×**, **warp** (an exponent over
+the strike's span), **rhythm only** (every note at its redaction group's onset), loop;
+**Hear** through the rack (CC7 pinned per route, CC0 sent 30 ms before each note so per-note
+techniques work on one channel, the 250 ms cold-attack lead); **Insert @ playhead** (the
+blast-insert object shape: `groupId` on every note, the META shape on `META_LAYER`,
+`sonifyMode 'plain'`, `recVel`, `srcKind 'strike'`, undo state pushed). Out-of-range rows show
+red and are skipped.
+
+**Two bugs found by running, both the same lesson:** `Composer`, `TRACKS`, `META_LAYER` are
+script-level `const`s in `composer.html` — global LEXICAL scope, not `window` properties — so
+`root.Composer` is undefined from another file; the panel now reads them as free identifiers
+(`typeof Composer !== 'undefined' ? Composer : …`). The symptoms were lanes of −1 after
+`spread` and an Insert that quietly wrote nothing.
+
+**Verified in the running app** (the composer's own server on 5300, my browser pane): the
+button appears next to MT; the panel opens; the DB loads (46); strike #3 (20 notes, 482 ms)
+spreads over lanes 0–6 as `0:ord 1:senza_vel 2:main 3–6:senza_vel`, 0 out of range; time × 2
+puts the last onset at 964 ms (= 482 × 2); Insert at 21.81 s wrote 21 objects (20 notes,
+lanes 0–6, + 1 META shape, layer 7) under `grp-strike-3-218`; Hear reports the browser's Web
+MIDI block gracefully where MIDI is denied. The composer's listening pass is the next step;
+sequence playback (a whole sequence with its inter-strike gaps) and 1d are after.
