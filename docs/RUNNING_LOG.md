@@ -1782,3 +1782,33 @@ what was pushed, and the compressed stream back at UVI's own 105 275 bytes** —
 inflated my stream, took the state, and re-serialized it itself. That is the proof that the
 plugin accepts a rebuilt state, not merely that Reaper stored my bytes. Next: the visible
 edit (Part 13 → the second output pair), whose vocabulary is read from the XML first.
+
+## §58. 0k.3: the XML edit is LIVE and honoured — and UVI's extra outputs are silent in this instance
+
+The vocabulary, read from the plugin binary rather than guessed: UVI Workstation's output pairs
+are "Out 2" … "Out 17" (17 pairs = the 34-out VST2 build); UVI's support notes say the same
+(Main Out, Out 2, Out 3 …) and put the selector in the SETTINGS tab. The composer's Settings
+tab showed **A13 Flute Pizzicato → Out 2** after the AI's text edit — the GUI reading the
+pushed state.
+
+**Proof method for audio, built on the way:** `reaper/bridge/jobs/peakwatch.lua` — a job that
+starts its own defer loop and records each track's channel maxima (`Track_GetPeakInfo`) for
+3 s into `outbox/peakwatch.json`; launch it, fire the note from outside (timing no longer
+matters), read the file. (`Track_GetPeakHoldDB` returned the same −1.5 on every track and
+channel — not a per-channel meter; abandoned.) `jobs/flute_strikes_track.lua` built the
+**Flute strikes** child track (index 3, +21 dB accepted by `D_VOL` beyond the fader range, a
+post-FX pre-fader send flute 3/4 → child 1/2, the flute at 4 channels, its parent send 2
+channels) in 166 ms.
+
+**Results (maxima, dB):** ordinario on Main: flute ch1/2 −2.8/−3.3, REC the same, nothing on
+3/4 or the child (control) · **pizzicato on Out 2: nothing anywhere** · ordinario moved to
+Out 2 by XML: it LEFT the main out (ch1/2 silent — the edit is live) but **nothing on plugin
+outputs 3/4**, even after re-instantiating the plugin (`TrackFX_SetOffline` true/false) ·
+ordinario back on Main by XML: ch1/2 −2.8/−3.4 again. Pin mappings read back as default
+(out 3 → track ch 3, out 4 → ch 4; the plugin declares 34 outs).
+
+**So:** text edits of UVI's state work end to end; the remaining question is on the plugin /
+host side — why this VST2 instance's outputs beyond the first pair carry nothing (a Reaper
+plugin-output count still at 2 from instantiation? a UVI preference for multi-out?). Part 13
+reverted to Main so the pizzicato sounds meanwhile. Awaiting the FX window's "n/34 out"
+pin connector and UVI's preferences, from the composer's screen.
