@@ -1772,3 +1772,13 @@ registry entries rather than searched for.
 **So the bass-clarinet strike slot (0k.4) is one script:** load the .nki into a free slot,
 channel 5, output st.2, name it, done — and the four curve slots per string track (0c.7) the
 same way. PLAN 0k.2 ☑ → 0k.3 (the UVI push).
+
+## §57. 0k.3 round trip PROVEN: UVI took the pushed state and gave it back
+
+`node tools/uvi_state.js roundtrip "Flute SI2" --push`: the live chunk read through the
+bridge → XML → re-encoded (my zlib: 105 354 bytes; the header's one length field rewritten)
+→ `SetTrackStateChunk` returned **true** (142 007 bytes) → read back: **the XML identical to
+what was pushed, and the compressed stream back at UVI's own 105 275 bytes** — i.e. UVI
+inflated my stream, took the state, and re-serialized it itself. That is the proof that the
+plugin accepts a rebuilt state, not merely that Reaper stored my bytes. Next: the visible
+edit (Part 13 → the second output pair), whose vocabulary is read from the XML first.
