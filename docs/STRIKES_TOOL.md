@@ -104,7 +104,7 @@ The starting set:
   and **orchestrated** (the current assignment through the rack). Both from the same button
   row; the timing transforms apply to both.
 
-## H · The piano's part — `proposed 2026-09-03`
+## H · The piano's part — `adopted 2026-09-03`
 
 > *"Sometimes I'll want it to double — play more than the one note — or just play one note."*
 > and, on the four-way switch first proposed: *"I may want it to play all the above … It might
@@ -120,6 +120,10 @@ The starting set:
   · rest · all; "rest" recomputes after every shuffle. The shuffle assigns the six other
   players; the piano's flags persist unless a quick button is pressed. The same flag idea
   extends to double stops later (a second-note flag on a string player).
+- **Adopted, with the composer's starting rule:** *"for the shuffles, let's initially start the
+  piano with just one note, and then I could add more notes to the piano part as you suggest."*
+  So a shuffle treats the piano as one player among seven (one note), and the flags / quick
+  buttons add notes afterwards.
 ## Open questions for the composer (only what blocks the next piece)
 
 1. **"Cluster together":** chromatic — the pitch classes packed semitone-adjacent inside one
@@ -129,4 +133,4 @@ The starting set:
 ## Log
 
 - 2026-09-03 — A, B, C stated by the composer; D exists as v1. Nothing built against A–C yet.
-- 2026-09-03, later — E (orchestration panel) stated; F (ranges) proposed and adopted; G (audition modes) stated; H (the piano's role) raised, a four-way switch proposed, then replaced by the composer's push ("a different organization or logic?") with the SELECTION logic — flags per note, click-to-toggle, quick buttons.
+- 2026-09-03, later — E (orchestration panel) stated; F (ranges) proposed and adopted; G (audition modes) stated; H (the piano's role) raised, a four-way switch proposed, then replaced by the composer's push ("a different organization or logic?") with the SELECTION logic — flags per note, click-to-toggle, quick buttons — adopted; a shuffle starts the piano on one note.
