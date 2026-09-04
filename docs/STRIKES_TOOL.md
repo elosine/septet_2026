@@ -139,6 +139,60 @@ The starting set:
   first double stop is placed. Winds cannot take two; the bass clarinet's multiphonics are a
   technique, not a second note.
 
+## J · The rhythm column — `wanted 2026-09-03` (transforms proposed, awaiting the composer)
+
+> *"A third column will be the rhythms. A relatively zoomed-in view where I should be able to
+> control zoom to a certain extent. Something close to the piano keyboard, or they could just
+> be distributed equally vertically, whichever works better. And then I can do some rhythmic
+> transforms — make the rhythmic cluster looser or tighter; maybe you can suggest some
+> transforms where the actual gaps spread out in different ways, not just equally. And I
+> should be able to see this in the visual."*
+
+- *AI recommendation:* aligned with the keyboard — each onset a dot at its key's height, time
+  left→right, so pitch, onset and instrument line share a row; auto-fit the strike's span,
+  a wheel / slider to zoom closer; the 60 ms redaction groups as faint bands behind the dots.
+- *AI's proposed transforms* (note count kept; the span multiplier separate): **tighter /
+  looser** (span ×) · **shape** — where the gaps go: even · front-loaded · back-loaded · centred
+  · edges · as played · **amount** (0–1 blend between as-played and the shape) · **jitter** (± n
+  ms per onset) · **reverse** / **rotate** (the gap sequence mirrored / cycled) · **reshuffle** (a
+  new random scatter, same count and span). One menu, three sliders, two buttons; live redraw.
+- Composer on the transforms: *"the transforms sound good. I think I have to hear them first. And
+  just like with the pitch clustering or spread out, I might want to add more later once I hear
+  things."* — so: build the set, listen, extend on request (as B). The bands were drawn for him
+  (a diagram in chat, 2026-09-03): each band = the 60 ms after a kept tick; every dot inside
+  merged into that tick — gone from the rhythm, kept in the harmony.
+- **Rule (composer's question, 2026-09-03: *"what happens if I spread out the rhythm? Do the inner
+  sixty-millisecond ones get their own attack?"*): the 60 ms grouping is DERIVED from the current
+  timing after every transform, never frozen — spreading splits groups into their own ticks,
+  tightening merges more; the audio always plays every note at its own onset; "rhythm only" snaps
+  each note to its CURRENT tick. The database keeps the as-played grouping as a reference only.
+
+## K · The order of the notes — `wanted 2026-09-03`
+
+> *"I should be able to scatter the order. I think I'm mostly playing, in the original, down
+> to up, but I can scatter which notes come first, in different orders. Again, a shuffle and
+> then some sort of manual override where I can move things about."*
+
+- The decomposition: **J is the onset PATTERN** (where the ticks fall), **K is the ORDER**
+  (which note takes which tick). Each shuffles on its own.
+- Presets: as played · low → high · high → low · outside-in · inside-out · random.
+  **Shuffle** draws a new order; the ticks stay. **Manual:** drag a dot to another tick
+  (snaps to slots) or click two dots to swap; a **lock** pins a dot's slot through shuffles
+  (as the top / bottom locks do in the orchestration).
+
+## L · The model in one sentence — `confirmed 2026-09-03`
+
+> Composer: *"Can we flatten both? So the pitches get distributed — there's eleven, and any
+> pitch can go to any of the players — and then the scatter rhythm is the x axis: any of the
+> rhythmic positions can go to any of the pitches, to any of the players, not necessarily the
+> way they're shown here or the way I played them. Is that correct?"* — Yes.
+
+- **Three independent lists:** the PITCHES (the strike's harmony), the ONSETS (its rhythmic
+  positions, with the live 60 ms bands), the PLAYERS (seven). The tool pairs them; every
+  pairing is free — pitch ↔ onset (K), pitch ↔ player (E), ranges permitting (F). "As played"
+  is one pairing kept as a preset. The bands belong to the onset list alone; whatever pitch
+  lands inside one lands on that attack.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 1. **"Cluster together":** chromatic — the pitch classes packed semitone-adjacent inside one
@@ -149,3 +203,7 @@ The starting set:
 
 - 2026-09-03 — A, B, C stated by the composer; D exists as v1. Nothing built against A–C yet.
 - 2026-09-03, later — E (orchestration panel) stated; F (ranges) proposed and adopted; G (audition modes) stated; H (the piano's role) raised, a four-way switch proposed, then replaced by the composer's push ("a different organization or logic?") with the SELECTION logic — flags per note, click-to-toggle, quick buttons — adopted; a shuffle starts the piano on one note. I (double stops on the strings) wanted, same flag mechanism.
+- 2026-09-03, later — J (the rhythm column) stated; layout and a transform set proposed. Process change (composer): commits and pushes are batched every few exchanges, not per reply.
+- 2026-09-03, later — K (order of the notes) stated; presets, shuffle, drag / swap, lock.
+- 2026-09-03, later — J rule: the redaction grouping is live, re-derived after every transform.
+- 2026-09-03, later — L: the three-list model confirmed by the composer.
