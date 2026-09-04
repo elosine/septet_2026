@@ -2003,3 +2003,15 @@ row to assign it"), then click the Cello row; the note folds by octave into the 
 strike-technique range (the line shows ↓); nothing else moves. Why it was left out: the shuffle never
 misfits and `shuffle may fold` was off, so a voice that sits outside the last free player's range as
 played is dropped rather than folded; with `shuffle may fold` on it would have been folded.
+
+## §66. The migration proven with two seeded takes; the composer's four are still in the browser
+
+Composer: *"There are four c files now in the drawer. Is that okay? Will they be preserved?"* The bank
+file held 0 takes at that moment, and the server serves the new `strike_drawer.js` with
+`Cache-Control: no-store` — so the four are v1 takes in the browser's list: the page has not been
+reloaded since the fix. Proof of the path in the AI's pane: two takes seeded under the v1 key
+(`zz-ai-mig 14:05`, `zz-ai-mig-two`) → reload → status "takes moved to bank/panel_snapshots.json:
+zz-ai-mig 14-05 (was "zz-ai-mig 14:05"), zz-ai-mig-two" → both on the file, both in the list, the v1
+key gone, the `.migrated` copy present → test entries deleted through the route, the file back to an
+empty bucket. Answer: they are preserved (localStorage survives closing the browser; only clearing
+site data loses them) and they move into the committed file on the next reload — commit then.
