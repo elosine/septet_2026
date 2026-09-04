@@ -82,63 +82,25 @@
 
 ## §2 Resume Here
 
-**Last session:** *2026-09-03 (session 1, Claude Code / Fable 5.1)* — **Project opened; the
-port planned; the kit installed.**
-- Read the call; surveyed all four music repos + `live-electronics-engine`; map → §1.
-- Composer fixed the delivery format (animated score, as the tuba piece) and the three
-  phases (compose → notate → performance), with the presentation score as 2b (D2, D3).
-- Lab-journal habit adopted from `live-electronics-engine` → `RUNNING_LOG.md` (D4);
-  sketch pad opened → `COMPOSITION_NOTES.md` with the first idea (the opening).
-- Port plan written to `PLAN.md` §0 (0b–0h) with the bites-later items named; no code
-  ported yet — **awaits the composer's go on the plan.**
-
-*Same session, later:* the composer answered the four questions (RUNNING_LOG §8): strings =
-**Xsample** (D7) · push after every commit (D8) · no electronics, the live-electronics repo
-is for its journaling practice only · flute: piccolo vs bass flute undecided, same track,
-adjust when chosen. **The IR contract stated as D9** — S1 (the composer save) is the ground
-truth, the IR is derived from it and is the single source for every downstream score.
-
-*Same session, act three — **PLAN 0b DONE** (composer: "go on 0b"):* the composer score
-app and sandbox ported, re-paletted to seven instrument-keyed tracks, and **verified in the
-running app** (36/36 routes, save/version/load round trip, zero console errors, four
-panels, UI save on disk — RUNNING_LOG §9). Two defects found only by running (the literal
-eleven-lane table; the server dying on a missing-file stream), both fixed. Range-aware
-lane assignment added (`laneCanPlay`). `sandbox/instruments.js` is the seven-instrument
-skeleton, every channel/range provisional until 0e/0c. Apps: `node score/server.js` →
-http://localhost:5300/composer.html · `node sandbox/serve.js` → http://localhost:4800.
-
-*Same session, act four — after the checkpoint clear, on Fable (composer: "stay with fable
-for now"): **PLAN 0g DONE.*** The notation/IR stack — engine, registry, schema, glyph
-pipeline, extractor, validator, print + video exporters, 13 test batteries, fixtures, print
-skeleton, resvg — copied byte-exact from #4 (97 files, `cmp` 97/97) and **proven whole in
-this repo**: 11 batteries GREEN against the tuba goldens staged temporarily (not stored
-here; `notation/ir/README.md` has the recipe), 4 RED for reasons in the septet's own tables
-or the source's own stale snapshot, none in the copied code; `notate_section` →
-`ir_validate` ran end to end on a tuba window (107 events, 15 chunks, VALID);
-`export_print` wrote a 2-page PDF through Chrome headless; `export_video --probe`
-rasterized a frame through resvg; 22/22 notation routes 200 on the running server and the
-app loads (it shows "IR fetch 404" until a septet page exists — the pre-2a state).
-RUNNING_LOG §12.
-
-*Same session, act five — **PLAN 0i DONE.*** A 30-s test save with ten notes on three lanes,
-a gesture with its META shape and a marker, built in the running app with its own object
-shape and saved by its own `saveSession()`. Four extractions read: the real septet technique
-keys throw in the tuba classifier (`pizz` — by design, CL-5); the default `--parts 0-9`
-sweeps our META layer 7 in and throws on the META shape; with the classifier's keys and
-`--parts 0-6` the page is **READY and VALID** (10 events, 6 chunks; the five-note run
-promoted to `trance-stream`, one `simple-bar` at 120 bpm, error 0) and renders in the
-notation app. The D9 §5 list is written as rules in **`docs/NAMING.md` §2** — S1 is right
-as the app writes it; the two bites are pipeline-side and filed under 2a; the sounding-length
-table is 0c.6. RUNNING_LOG §13.
-
-*Same session, the rack:* **0e built, R1–R13** — eight loopMIDI ports (verified from winmm);
-`reaper/septet_rack.rpp`, ten tracks in score order, every instrument track armed / MIDI all
-channels / monitoring ON / one plugin, REC on output-stereo, read whole (RUNNING_LOG §30);
-the composer's screenshots turned every instrument's PRESET MENU into the recipe file — flute
-19 presets / 30 techniques with keyswitch notes and ranges (§20–22), bass clarinet 34 (§24),
-piano 4 (8Dio 1969 Legacy · Spitfire Plucked · PP2 harmonics · muted), strings 88 each with a
-per-preset range hook (§29); D11's four slots per Kontakt port; the gain / bypass rule
-(§26–27); CN-3, CN-4, CN-5 on the sketch pad; PLAN 0c.8, 1a, 1b from the composer.
+**Last session:** *2026-09-03, session 1 — one long day, Claude Code / Fable 5.1 (Opus was the
+plan; the composer chose "stay with fable for now")* — **the project opened, the kit ported and
+proven, the rack sounding, the first material in, and the piece's first compositional tool built:**
+- **Phase 0 nearly closed:** 0a kit · 0b composer app + sandbox ported and verified · 0g the
+  notation/IR stack proven whole · 0i a septet save extracts to a VALID page (NAMING.md §2) ·
+  0e the rack built with the composer at Reaper (eight loopMIDI ports, ten tracks, every preset
+  menu rostered with ranges, "rack works"). Open: 0c.5–0c.8, 0d, 0f, the 0h gate.
+- **Decisions D7–D11** (Xsample strings · push after every commit · the IR contract · score
+  order · channel banks by event class). Sketch pad CN-1–CN-7 (the opening; piccolo vs bass
+  flute; converging tempos; bcl/piccolo heterophony; scattered strikes; strikes → harmony →
+  tremolos; the circular cycle).
+- **The composer's first material** `scores/ScatteredStrikes01.json` → **PLAN 1c built end to
+  end** overnight: the strike database (`tools/strike_db.js` → `bank/scattered_strikes.json`,
+  46 strikes) and **the STRIKES drawer** in the composer score (`score/public/strike_drawer.js`),
+  its requirements A–T gathered in the composer's words in `docs/STRIKES_TOOL.md`, the build
+  verified in the running app (RUNNING_LOG §39). Two first-sound page bugs fixed.
+- **Lab journal** RUNNING_LOG §1–§39 written as the work happened; the composer's process rules
+  landed in HOW_WE_WORK / CLAUDE.md (batched commits, concise spaced replies, lettered options
+  inline, one step at a time, never edit the reference repos).
 
 **Next up:** **the composer's morning test of the STRIKES drawer** (PLAN 1c.2, RUNNING_LOG §39,
 `docs/STRIKES_TOOL.md`): `cd C:\Users\jwloy\GitHub\septet_2026` → `node score\server.js`
@@ -210,6 +172,15 @@ sources; verified here only when they bite.)*
    feedback storm.
 7. **Schedule playback with a ~150 ms lead** (#4) so the first note never races the
    all-notes-off before it.
+8. **Object ids are per save — never delete or replace by id alone** (this repo, 2026-09-03,
+   RUNNING_LOG §39; P5's cousin). `wc-40` exists in every score; the first Replace-in-place
+   deleted six unrelated objects from the score that happened to be open. Any tool that removes
+   objects it did not create in the same breath must first prove the loaded save is the source
+   (`pieceBase(sessionName) === source`) — and refuse otherwise.
+9. **Verify against the composer's running server; never hold his port and never save from the
+   AI's pane** (2026-09-03). The AI's browser pane has no Web MIDI and its autosave would write
+   into whatever save is open — set the session to `untitled` before any Insert test, clean up,
+   reload. A hidden pane never fires `requestAnimationFrame`: test scripts must not await one.
 
 ---
 
@@ -325,6 +296,22 @@ sources; verified here only when they bite.)*
   it stands; piano main only. Vibrato found, not remembered: width = CC4 + channel pressure
   (which one Xsample obeys is 0d's to measure); molto vibrato is a preset (CC0 2 / 70) and
   lives on the main channel. RUNNING_LOG §15–16.
+- **D12** *(2026-09-03, composer, over the requirements session — `docs/STRIKES_TOOL.md` R1–R6, L,
+  S)* — **The strikes tool is ONE full-width drawer in the composer score, built on the
+  three-list model.** Pitches (the harmony), onsets (the rhythmic positions) and players are three
+  independent lists paired freely; "as played" is one pairing; voicing presets move octaves only;
+  an articulation is a layer on a voice — the pitch stays the harmony's, the articulation's KIND
+  (pitched / fixed-pitch / noise / multiphonic) decides whether a stand-in sounds. Ranges: the
+  shuffle never produces a misfit, a hand choice folds by octave or is skipped. The 60 ms grouping
+  is re-derived after every transform, never frozen. Duration and dynamics as played, each with a
+  multiplier (and a flatten switch). The keyboard shows the ensemble's span with an `88` toggle.
+  *Why:* the composer wanted to "place different notes to different instruments" by hand AND to
+  shuffle; keeping the three lists independent makes every combination reachable without modes.
+  *Rejected:* the v1 table panel (a note list with per-row menus — no picture of the harmony);
+  a floating panel (too small for five columns — "full size drawer"); a four-way switch for the
+  piano's role (replaced, on the composer's push, by per-note flags with quick buttons);
+  freezing the redaction grouping at capture (the grouping must follow the transformed rhythm).
+
 
 ---
 
@@ -338,6 +325,15 @@ sources; verified here only when they bite.)*
 
 ---
 
+**Verifying the composer app from the AI's browser pane (2026-09-03):** the composer runs
+`node score\server.js` himself — open http://localhost:5300/composer.html with `preview_start
+{url}`, never start a second server on 5300. Before any test that mutates objects: set
+`Composer.sessionName = 'untitled'` (autosave skips it), clear `autoSaveTimer`, and remove the
+test objects after; reload the page at the end. The pane has no Web MIDI (Hear must fail with a
+status line, not an exception) and `requestAnimationFrame` never fires while it is hidden.
+
+---
+
 ## §6 Done
 
 - 2026-09-03 — **0a** PM kit installed (journal, plan, planner, lab journal, sketch pad,
@@ -345,6 +341,13 @@ sources; verified here only when they bite.)*
 - 2026-09-03 — **0b** composer module ported from piece #4 and verified live: score app
   :5300 (seven instrument-keyed lanes + META), sandbox :4800, bank skeletons, the
   seven-instrument recipe skeleton (RUNNING_LOG §9).
+- 2026-09-03 — **0g** the notation/IR stack ported byte-exact (97 files) and proven whole
+  (RUNNING_LOG §12); **0i** the S1 → IR contract proven on a septet save, NAMING.md §2 (§13).
+- 2026-09-03 — **0e** the rack: eight loopMIDI ports, `reaper/septet_rack.rpp`, every preset
+  menu rostered with ranges in `sandbox/instruments.js`, "rack works" from the composer app (§35).
+- 2026-09-03 — **1c.1** the scattered-strike database (`tools/strike_db.js`,
+  `bank/scattered_strikes.json`, §36); **1c.2** the STRIKES drawer built and verified in the
+  running app (§39) — `built`, awaiting the composer's listening pass.
 
 ---
 
@@ -355,5 +358,11 @@ sources; verified here only when they bite.)*
 **Active:**
 - Penn State abstract (tuba repo): host as a doc + submit the form by **Fri 4 Sept, 11:59 pm ET**.
 - Decide piccolo vs bass flute when the music asks (Q1); confirm that library is installed.
+- *(AI-added 2026-09-03 night, for the composer's review at the next session start:)*
+  **Test the STRIKES drawer** — restart `node score\server.js` first (the `rescan` route is new);
+  open `ScatteredStrikes01` if Replace is to be tried.
+- *(AI-added, the composer's standing reminder from the rack session:)* **check each instrument
+  plugin's gain** (unity; preset FX such as the maximizer / tilt bypassed) whenever a Kontakt or
+  UVI instrument is loaded or its preset changed — SAMPLER_QUIRKS.md has the rule.
 
 **Completed:**
