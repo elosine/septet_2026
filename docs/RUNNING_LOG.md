@@ -1911,3 +1911,15 @@ Done, awaiting one restart of the bridge by the composer (the running copy preda
 - A pane fact for the record: the Bash tool turns a doubled backslash-n in a heredoc into a real
   newline, and a backslash-b into a backspace — patches with such sequences go through a
   script file, never a heredoc.
+
+## §63. The foundation verified: the relocated bridge, and reload-from-a-job (after one bug)
+
+After the composer's restart: heartbeat alive, **bridge 0.2, runtime in `%APPDATA%\REAPERridge`**,
+the `tracks` job in 30 ms listing all 12 tracks with today's faders. The first `reload` job then
+KILLED the loop: the fresh copy, started by `dofile` inside the same Lua state, saw the global
+`RELOAD` flag still true and reloaded itself forever → "C stack overflow" (Reaper's dialog).
+Fix (0.2.1): clear the flag before the `dofile`. One more restart by the composer — the last:
+**`reload` from a job now works** (a new stamp after each: …624 → …656 → …658), a job answered
+in 31 ms in between, twice in a row. Editing `bridge.lua` is now a push and a `reload`, no
+clicks. PLAN 0k.5's foundation stands; `curve_slots.lua` waits for 0c.7. Next, at the
+composer's word: the drawer's feature update (STRIKES_TOOL U1–U4).
