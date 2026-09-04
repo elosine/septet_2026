@@ -341,6 +341,23 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   them; the noise technique's keys; the open strings) — click to hear, click to select; the
   choice is stored on the voice (the stand-in key). Out of the way until needed.
 
+## U · Feature queue from the first test — `collecting 2026-09-04`
+
+> Composer: *"collect these and I'll have you do a feature update all at once."* Each request
+> verbatim, the AI's reading beneath; built together when the composer says so.
+
+- **U1 — room between the keyboard and the players.** *"can there be a larger gap between piano
+  keyboard and instruments, cant see where the lines are drawn to"* — *AI reading:* widen the
+  keyboard column (or add a gutter column, ~120 px) so the dotted lines have length and a clear
+  landing on each player's row; land them on a small marker at the row's left edge, and
+  brighten the line of the row under the mouse.
+- **U2 — staccato as the default articulation, except the piano.** *"can we make the default
+  sound for all stacatto, no stac atto for piano so leave as is"* — *AI reading:* the drawer's
+  plain-technique preference becomes staccato-first: flute `staccato` (the Fluteb port), bass
+  clarinet `stac_vel` (Staccato Velocity #19), strings `stac_vel` (#19); the piano keeps `main`
+  (8Dio). Applies to shuffle, hand assignment and the row menus' initial value; the strike's
+  as-played state stays the piano's.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the
