@@ -1589,3 +1589,33 @@ clarinet's slap is a CC0 preset inside one Kontakt instrument, so it gets a seco
 the same instrument on a strike channel (D11 leaves 5+ free) with its own slot volume (+12
 max) — the recipe's `channel` field routes it. Recommended (2): static, D11-shaped, nothing
 to go wrong at play time. Awaiting the composer's pick.
+
+## §48. B adopted; the survey: how the AI can handle Reaper and the samplers (→ `docs/REAPER_CONTROL.md`, PLAN 0k)
+
+Composer: *"B, can we figure out how you can handle reaper instruments? lets discuss and make a
+plan first? what capabilities does ai have and what are the mechanisms, co-work? mcp? custom
+reaper scripts lua? lets do a comprehensive survey and find the best, fast and reliable and most
+functions, solutions"*.
+
+**Surveyed** (the table in REAPER_CONTROL.md §2): the `.rpp` file (proven, slow loop) · ReaScript
+Lua through a file bridge (a defer loop from `__startup.lua` polling an inbox — the whole API,
+live, ~30 ticks/s, one file to install; the pattern of Reaper Daemon and the file-mode MCP
+servers) · the web interface and OSC (triggers, thin on data) · the command line (offline
+renders) · seven community MCP servers (TwelveTake 176 tools, xDarkzx 172, bonfire via
+python-reapy, total-reaper-mcp, yeeking, mthines, wegitor — all the same bridge underneath, each
+with a Python stack and a fixed vocabulary) · MIDI to the samplers (playing and preset selection,
+not configuration) · the sampler internals (GUI-only: desktop automation or the composer's hands
+= co-work) · the plugin state blob (never).
+
+**The finding that decides the plan:** CC7 is mapped to the Kontakt slot / UVI part volume by
+default, and the app pins CC7 = 127 before every event — so a static trim on those faders is
+reset at the first note; the instance masters (piece #4's calibration knob) are GUI-only, no
+API, no number in the file. Reaper's faders and gain plugins are exact, bridge-settable,
+readable, saved as numbers. **Hence: instrument trims on the Reaper faders; a strike technique
+with its own gain on a child track fed by a sampler sub-output** (UVI part → outs 3/4; a second
+Kontakt slot on the strike channel → output st.2), set once in the GUI. Piece #4's gain-staging
+rule amended for this rack, for that reason.
+
+**Recommended:** build our own bridge (~100 lines of Lua + a Node job runner), not an MCP
+install — nothing between the AI and the API, no dependency, verifiable by read-back. Plan 0k
+in four steps (bridge · jobs · apply B · the co-work protocol). Awaiting the composer's go.

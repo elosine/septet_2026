@@ -237,6 +237,20 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   TRACK GAIN in the rack (every playback path, no app code) and as `balanceDb` in
   `sandbox/instruments.js`. *Rejected:* velocity scaling (changes the sample layer), a CC7
   offset (eats the dynamics channel). Re-run whenever a library or preset changes.
+- **0k — The Reaper bridge: ReaScript from the AI, and the co-work protocol for the samplers**
+  — `planned 2026-09-04, awaiting the composer's go` *(composer: "what capabilities does ai
+  have and what are the mechanisms … lets do a comprehensive survey and find the best, fast and
+  reliable and most functions"; the survey, the finding and the plan in
+  `docs/REAPER_CONTROL.md`; RUNNING_LOG §48)* — 0k.1 `reaper/bridge/bridge.lua` (a defer loop
+  from `__startup.lua`, inbox → pcall → outbox JSON, heartbeat) + `install.md`; 0k.2
+  `tools/reaper_job.js` (tracks · fader · child track + receive / sub-output · fx · param ·
+  arm / record / stop · save · render; later midi-import); 0k.3 apply B (§47) — faders + the
+  `Flute strikes` / `BassCl strikes` child tracks on sampler sub-outputs, re-measure; 0k.4 the
+  co-work protocol for GUI-only steps. *Why:* every later rack change (curve copies, strike
+  slots, renders, the performance-score MIDI) becomes a job with a read-back instead of a
+  screenshot conversation. *Rejected:* community MCP servers (the same bridge with a Python
+  stack and a fixed vocabulary); CC7 trims (reset by the app's CC7 pin); instance-master trims
+  (GUI-only, no number).
 ## 1. Compose — `todo` (starts the moment 0h passes; tools built per need, the #3/#4 MO)
 
 - **1a — A more fluid way to draw curves in the score** — `todo` *(composer, 2026-09-03: "todo:
