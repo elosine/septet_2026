@@ -82,74 +82,63 @@
 
 ## §2 Resume Here
 
-**Last session:** *2026-09-03, session 1 — one long day, Claude Code / Fable 5.1 (Opus was the
-plan; the composer chose "stay with fable for now")* — **the project opened, the kit ported and
-proven, the rack sounding, the first material in, and the piece's first compositional tool built:**
-- **Phase 0 nearly closed:** 0a kit · 0b composer app + sandbox ported and verified · 0g the
-  notation/IR stack proven whole · 0i a septet save extracts to a VALID page (NAMING.md §2) ·
-  0e the rack built with the composer at Reaper (eight loopMIDI ports, ten tracks, every preset
-  menu rostered with ranges, "rack works"). Open: 0c.5–0c.8, 0d, 0f, the 0h gate.
-- **Decisions D7–D11** (Xsample strings · push after every commit · the IR contract · score
-  order · channel banks by event class). Sketch pad CN-1–CN-7 (the opening; piccolo vs bass
-  flute; converging tempos; bcl/piccolo heterophony; scattered strikes; strikes → harmony →
-  tremolos; the circular cycle).
-- **The composer's first material** `scores/ScatteredStrikes01.json` → **PLAN 1c built end to
-  end** overnight: the strike database (`tools/strike_db.js` → `bank/scattered_strikes.json`,
-  46 strikes) and **the STRIKES drawer** in the composer score (`score/public/strike_drawer.js`),
-  its requirements A–T gathered in the composer's words in `docs/STRIKES_TOOL.md`, the build
-  verified in the running app (RUNNING_LOG §39). Two first-sound page bugs fixed.
-- **Lab journal** RUNNING_LOG §1–§39 written as the work happened; the composer's process rules
-  landed in HOW_WE_WORK / CLAUDE.md (batched commits, concise spaced replies, lettered options
-  inline, one step at a time, never edit the reference repos).
+**Last session:** *2026-09-04, session 2 (the morning test → a full day), Claude Code / Fable 5.1* —
+**the drawer tested and extended, the ensemble balanced by measurement, and Reaper + the samplers
+made addressable as code.**
+- **STRIKES drawer:** full page height, a tab that survives the toolbar, then the feature update
+  U1–U4 (gap + landing markers + hover-lit lines · strike defaults at flat 127 · solo · a narrower
+  rhythm strip), all verified in the running app (RUNNING_LOG §40, §64). Awaiting the composer's test.
+- **Ensemble balance (PLAN 0j):** a timetable from the recipe → `probes/balance_probe.ps1` → the
+  REC folder recording → `probes/analyze_balance.py` (400 ms momentary / 50 ms for strikes,
+  K-weighted). Anchor = the violins (D13): faders flute −21 · bcl −9 · pianos +7 · va −3.5 · vc −1;
+  the two wind strikes on their own lanes (D14). Re-measured on target (§46–47, §61).
+- **The Reaper bridge (PLAN 0k, D15):** a Lua loop in Reaper answering job files in ~30 ms; the
+  runtime machine-level (`%APPDATA%\REAPER\bridge`), a project guard, generic jobs, reload from a
+  job; UVI's state is XML (`tools/uvi_state.js`, `$Engine/Out n`), Kontakt's multi is code (the
+  Kontakt Lua API, `reaper/kontakt/*.lua`); `reaper/bridge/README.md` = the foundation for the
+  live-electronics repo and the next piece (§48–63).
+- **Decisions and notes:** the flute Pizzicato sample notates as TONGUE RAM (D16); the Lake George
+  piece (#6) on the sketch pad — pairs, percussion, a morph opening, delicate / quiet / continuous.
+- Session 1 (2026-09-03): the kit ported and proven (0a, 0b, 0g, 0i), the rack built (0e),
+  D7–D12, the drawer built (1c) — one line each in §6.
 
-**Next up:** **the composer's morning test of the STRIKES drawer** (PLAN 1c.2, RUNNING_LOG §39,
-`docs/STRIKES_TOOL.md`): `cd C:\Users\jwloy\GitHub\septet_2026` → `node score\server.js`
-(restart it once: the `rescan` route is new) → http://localhost:5300/composer.html → **Strikes**.
-Open `ScatteredStrikes01` (or its working copy) if Replace in place is to be tried — Replace
-refuses inside any other save by design. Then, from the listening: I double stops · the K lock ·
-M/N/P the harmony collection, the swap by voice rank, the Messiaen sets (= PLAN 1d) · the
-`kind` field in `sandbox/instruments.js`. Behind it, phase 0's remainder: **0d** the Xsample
-measurements, **0c.5–0c.8**, the curve copies A2–A4 in Kontakt (0c.7), the **0h** gate.
+**Next up:** **the composer's test of the drawer with U1–U4** (reload the page; the slap now plays
+the strike slot). Then, at the composer's word: the drawer's next steps (I double stops · K lock ·
+M/N/P harmony collection, swap, Messiaen = PLAN 1d), or phase 0's remainder: **0d** the Xsample
+measurements, **0c.5–0c.8** (0c.7 runs `curve_slots.lua`), **0f**, the **0h** gate → compose
+(CN-5 / CN-6 from the strikes).
 
 **NEXT STEPS · MODEL · CLEAR:**
-1. ☑ 0b · 0g · 0i · 0e DONE and pushed (RUNNING_LOG §9, §12, §13, §35).
-2. ☑ **1c.1** the strike database (§36) · ☑ **1c.2** the drawer built and verified (§39).
-   ► **The composer tests the drawer** — any model, conversation first; fix what blocks, file
-   the rest to NITS / STRIKES_TOOL statuses (`built` → `seen by the composer` → `accepted`).
-3. Then the drawer's next steps in the order the composer sets (I · K lock · M/N/P · `kind`).
-4. **0d on Fable + the composer's ear**: CC7 → dB on one Xsample string preset and the bass
-   clarinet with `probes/cc7_calibration_probe.ps1`; state rule; the dynamics recipe.
-5. 0c.5–0c.8, 0h gate → compose (CN-5/CN-6 are built from these strikes).
+1. ☑ 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1c.1 · 1c.2 (+U1–U4) DONE and pushed.
+2. ► **The composer tests the drawer** (any model; conversation first). Fix what blocks; file the
+   rest as STRIKES_TOOL statuses (`built` → `seen by the composer` → `accepted`).
+3. Then the composer's pick: the drawer's next features, or 0d / 0c on Fable with the bridge
+   (every rack change is now a job with a read-back; the samplers' setups are scripts).
+4. 0k.5 continues only when something needs it (0c.7's curve slots, the next rack).
 
-**Open at session end** *(2026-09-03 night, Fable, session closed by the AI on the composer's
-instruction "do the build … run a session end, and then I'll try the tool out in the morning" —
-written for an AI that has never seen this conversation):*
-- **Task and state:** phase 0 nearly closed (0a, 0b, 0e, 0g, 0i DONE); **PLAN 1c built end to
-  end:** `tools/strike_db.js` → `bank/scattered_strikes.json` (46 strikes from
-  `scores/ScatteredStrikes01.json`) → `score/public/strike_drawer.js`, the full-width STRIKES
-  drawer in the composer score, verified in the running app against the composer's own server
-  (RUNNING_LOG §39). The requirements A–T, each with the composer's words and a status, are
-  `docs/STRIKES_TOOL.md`. Two first-sound page bugs fixed in `composer.html`; the server gained
-  `POST /api/strikes/ingest`. The composer runs the score server himself (`node score\server.js`);
-  the AI's browser pane cannot use Web MIDI (Hear fails gracefully there) and must never save.
-- **Latest deliverable:** the drawer + the docs above + `strike_panel.js` removed.
-- **Next concrete step, as an instruction:** none for the AI before the composer has listened.
-  When the composer reports: treat each remark as a STRIKES_TOOL status change or a new lettered
-  item, fix what blocks in `strike_drawer.js` (one file; `StrikeDrawer` on `window`, the state in
-  `voices[]` / `cfg`, `render()` redraws everything; `notesFor(mode)` is the one place notes are
-  made for Hear and Insert alike), verify in the running app, log to RUNNING_LOG.
-- **Resume reads:** `docs/STRIKES_TOOL.md` (header + "The build") · `RUNNING_LOG.md` **§39** ·
-  `docs/PLAN.md` **1c** · `score/public/strike_drawer.js` header comment.
-- **Pending the composer:** the listening pass; CN-2 (piccolo vs bass flute) — not blocking.
-- **Deliberately uncommitted:** `scores/0i-test-b.json`, `scores/rack-test.json` show as
-  modified on disk from the app's own re-saves (autosave) — harmless, not staged.
+**Open at session end** *(2026-09-04 evening, Fable — for an AI that has never seen this
+conversation):*
+- **State:** the rack is saved by the composer with today's lanes, faders and routing
+  (`reaper/septet_rack.rpp` committed at this session end); the recipe carries `balanceDb`,
+  `slap.channel = 5`, `lane`, `notate`; the bridge runs from Reaper's startup script; the
+  composer runs `node score\server.js` himself; the AI's pane has no Web MIDI and never saves.
+- **How to work the rack now:** `node tools/reaper_job.js heartbeat | tracks | fader | run …`
+  (docs/REAPER_CONTROL.md, reaper/bridge/README.md); `jobs/peakwatch.lua` + a probe note = the
+  proof for routing; `tools/uvi_state.js` for UVI; a Kontakt Lua script dropped by the composer
+  for Kontakt. Never trust frozen meters before dumping mute / solo / routing (P10).
+- **Resume reads:** `docs/PLANNER.md` NOW · `docs/PLAN.md` 1c, 0j, 0k · `RUNNING_LOG.md`
+  §40–64 · `docs/STRIKES_TOOL.md` U · `docs/REAPER_CONTROL.md`.
+- **Pending the composer:** the drawer test; CN-2 (piccolo vs bass flute) — not blocking.
+- **Deliberately uncommitted:** `scores/0i-test-b.json`, `scores/rack-test.json` (the app's own
+  re-saves; harmless).
 
 **Open questions:**
-- **Q1 flute doubling instrument:** piccolo or bass flute — composer undecided; SI2 flute
-  in C is the track's instrument until then; the switch recipe is added when chosen.
-  Library for the chosen instrument to confirm then (SI2 has neither).
+- **Q1 flute doubling instrument:** piccolo or bass flute — composer undecided; SI2 flute in C
+  is the track's instrument until then.
 - **Q5 print format:** #4's tabloid is 432 mm long, past A3's 420 mm. Plan for A3 landscape.
-- *(Q2 strings → D7 · Q3 electronics → none in this piece · Q4 push → D8. Closed.)*
+- **Q6 (new):** the violins' Bartók pizz has no sample at B♭6 (90); its true top is somewhere in
+  79–89 — read from the Kontakt GUI when the range ledger is next touched. The cello's Senza
+  Vibrato is 12 dB softer at B4 than at C3 — the composer's ear decides whether that matters.
 
 **Blockers:** none.
 
@@ -181,6 +170,12 @@ sources; verified here only when they bite.)*
    AI's pane** (2026-09-03). The AI's browser pane has no Web MIDI and its autosave would write
    into whatever save is open — set the session to `untitled` before any Insert test, clean up,
    reload. A hidden pane never fires `requestAnimationFrame`: test scripts must not await one.
+10. **When downstream meters freeze at identical values, dump mute / solo / routing first**
+    (2026-09-04, RUNNING_LOG §59; P1's cousin). Six tests were read behind a muted folder parent
+    before the state dump showed `REC mute 1`.
+11. **Learn a plugin's vocabulary by diffing the GUI's change, not by guessing from strings**
+    (2026-09-04, §59). The plugin binary said "Out 2"; the state the GUI wrote said
+    `$Engine/Out 2`. One click by the composer and a diff settled an hour of hypotheses.
 
 ---
 
@@ -311,6 +306,38 @@ sources; verified here only when they bite.)*
   a floating panel (too small for five columns — "full size drawer"); a four-way switch for the
   piano's role (replaced, on the composer's push, by per-note flags with quick buttons);
   freezing the redaction grouping at capture (the grouping must follow the transformed rhythm).
+- **D13** *(2026-09-04, composer)* — **The ensemble balance anchors on the violins, by
+  measurement.** One probe run (every instrument's plain technique × 3 pitches × velocity 127 /
+  64, recorded on the REC folder), the loudest 400 ms K-weighted RMS per note, trims = the
+  violins' level minus each instrument's; applied as Reaper track faders (flute −21 · bcl −9 ·
+  pianos +7 · va −3.5 · vc −1 · vn 0) and recorded as `balanceDb` in the recipe. *Why:* the
+  composer's ear ("flute sounds quite loud") wanted "a 127 flute the same perceived loudness as a
+  127 violin", data-based; the violins as anchor keeps the mockup at a normal level. *Rejected:*
+  anchoring on the quietest (the piano — everything −7…−28 dB); velocity scaling (changes the
+  sample layer); CC7 offsets (the app pins CC7 = 127 per event, and CC7 is the dynamics channel);
+  the tuba rule's sampler-master trims (GUI-only, no number in the file — amended for this rack).
+- **D14** *(2026-09-04, composer: "B")* — **A strike articulation that needs its own loudness gets
+  its own lane:** a separate sampler output into a child Reaper track with its own fader, fed by a
+  post-FX pre-fader send of the plugin's outputs 3/4. The flute's Pizzicato part → UVI `Out 2` →
+  `Flute strikes`; the bass clarinet's slap → a second Kontakt slot on [A] 5 → output st.2 →
+  `BassCl strikes`; the recipe routes by channel. Measured: the tongue ram lands level with the
+  Bartók pizz. *Rejected:* CC7 per technique (cuts only, eats the dynamics range, a stray note
+  is loud).
+- **D15** *(2026-09-04, composer: "lets do a comprehensive survey and find the best, fast and
+  reliable and most functions")* — **Reaper and the samplers are handled as code, through our own
+  bridge, not an MCP server.** A Lua loop inside Reaper (from `__startup.lua`) answers job files in
+  ~30 ms with the whole ReaScript API; its runtime is machine-level so every project uses it; UVI's
+  state is XML edited by `tools/uvi_state.js`; Kontakt's multi is built by scripts on the Kontakt
+  Lua API (developer features on); host automation for CC7-free knobs when a static sampler knob
+  is wanted; the composer's hands only for what none of these reach. *Why:* every rack change
+  becomes a job with a read-back instead of a screenshot conversation; the same foundation
+  serves the live-electronics project and the next piece. *Rejected:* the seven community MCP
+  servers (the same bridge underneath, a Python stack and a fixed vocabulary each); computer-use
+  as the primary path (slow, medium reliability).
+- **D16** *(2026-09-04, composer)* — **The flute's SI2 Pizzicato sample stands in for the written
+  TONGUE RAM** ("pizzicato sounds loud in sample, just note that we'll notate this as tongue
+  ram"): `notate: "tongue ram"` on `flute.pizzicato` — the first technique → notation mapping
+  field, read by the notation layer at 2a. The patch's own tongue-ram keyswitch is unverified.
 
 
 ---
@@ -334,6 +361,18 @@ status line, not an exception) and `requestAnimationFrame` never fires while it 
 
 ---
 
+**Working the rack through the bridge (2026-09-04):** `node tools/reaper_job.js heartbeat` first
+(alive? which project?). Read before writing (`tracks`, `chunk`). Write, then read back in the
+same job. Prove routing with `jobs/peakwatch.lua` + a probe note (`probes/port_note_probe.ps1`),
+never by ear over CRD. Sampler internals: UVI by `tools/uvi_state.js` (decode → edit → `--push`
+→ read back; the output token is `$Engine/Out n`); Kontakt by a Lua script the composer drops on
+the rack (`reaper/kontakt/*.lua`, a JSON read-back in `reaper/kontakt/out/`). After editing
+`bridge.lua`: `node tools/reaper_job.js reload`. The composer's CTRL+S is the truth; the bridge
+never saves unasked. Gotchas: the Bash tool rewrites `\n` and `\b` inside heredocs — put
+patches in a script file; the AI's browser pane has no Web MIDI and never fires rAF while hidden.
+
+---
+
 ## §6 Done
 
 - 2026-09-03 — **0a** PM kit installed (journal, plan, planner, lab journal, sketch pad,
@@ -348,6 +387,12 @@ status line, not an exception) and `requestAnimationFrame` never fires while it 
 - 2026-09-03 — **1c.1** the scattered-strike database (`tools/strike_db.js`,
   `bank/scattered_strikes.json`, §36); **1c.2** the STRIKES drawer built and verified in the
   running app (§39) — `built`, awaiting the composer's listening pass.
+- 2026-09-04 — **1c.2 U1–U4** the drawer's first feature update, verified (§64); the drawer full
+  height + tab (§40).
+- 2026-09-04 — **0j** the ensemble balance measured and applied (D13, D14; §41–47, §60–61);
+  `bank/balance.json`, `bank/balance_fl_bcl.json`.
+- 2026-09-04 — **0k.1–0k.4 + the foundation of 0k.5** the Reaper bridge, UVI as XML, Kontakt as
+  Lua, the two strike lanes, `reaper/bridge/README.md` (D15; §48–63).
 
 ---
 
@@ -356,11 +401,10 @@ status line, not an exception) and `requestAnimationFrame` never fires while it 
 *(The composer's own to-dos and reminders. Reviewed at every session end.)*
 
 **Active:**
-- Penn State abstract (tuba repo): host as a doc + submit the form by **Fri 4 Sept, 11:59 pm ET**.
+- **Penn State abstract (tuba repo): due TONIGHT, Fri 4 Sept, 11:59 pm ET** — host as a doc + submit the form.
 - Decide piccolo vs bass flute when the music asks (Q1); confirm that library is installed.
-- *(AI-added 2026-09-03 night, for the composer's review at the next session start:)*
-  **Test the STRIKES drawer** — restart `node score\server.js` first (the `rescan` route is new);
-  open `ScatteredStrikes01` if Replace is to be tried.
+- **Test the STRIKES drawer with U1–U4** (reload the page; shift-click = solo; the slap plays the
+  strike slot). Then say which next: the drawer's next features, or 0d / 0c.
 - *(AI-added, the composer's standing reminder from the rack session:)* **check each instrument
   plugin's gain** (unity; preset FX such as the maximizer / tilt bypassed) whenever a Kontakt or
   UVI instrument is loaded or its preset changed — SAMPLER_QUIRKS.md has the rule.

@@ -15,7 +15,7 @@ on every port from the composer app** (`rack-test`, RUNNING_LOG §35). The first
 in: `scores/ScatteredStrikes01.json` (577 piano strikes, 73 s). Next: **PLAN 1c** (the
 scattered-strike database + reorchestration panel, from that file), 0d (the Xsample
 measurements), the rest of 0c (0c.5–0c.8), 0h gate. Still open in the rack: the three
-curve copies (A2–A4) per Kontakt track, added when the curve routing is wired (0c.7). **► NOW: PLAN 0k.1 — the Reaper bridge** (then the Kontakt and UVI proofs, then B applied — the running order in PLAN 0k; the balance numbers in RUNNING_LOG §46–47). **PLAN 1c built:** the strike database (`bank/scattered_strikes.json`, 46 strikes) and **the STRIKES drawer in the composer score** (`Strikes` button; RUNNING_LOG §39; the requirements in `docs/STRIKES_TOOL.md`) — **the composer's morning test is next.** Nothing composed yet; the
+curve copies (A2–A4) per Kontakt track, added when the curve routing is wired (0c.7). **► NOW (2026-09-04 evening): the composer tests the STRIKES drawer with U1–U4.** Done today: the balance measured and applied (0j, D13–D14), the Reaper bridge + UVI-as-XML + Kontakt-as-Lua (0k, D15), the strike lanes; RUNNING_LOG §40–64. Then: the drawer's next features or 0d / 0c.5–0c.8 with the bridge. **PLAN 1c built:** the strike database (`bank/scattered_strikes.json`, 46 strikes) and **the STRIKES drawer in the composer score** (`Strikes` button; RUNNING_LOG §39; the requirements in `docs/STRIKES_TOOL.md`) — **the composer's morning test is next.** Nothing composed yet; the
 opening idea is on the sketch pad (CN-1); piccolo vs bass flute undecided (CN-2).
 
 ---
