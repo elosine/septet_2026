@@ -1751,3 +1751,24 @@ replaced). The API's index arithmetic confirmed (128 per slot). One bug of mine:
 `proof_write.lua` (Plucked −6 dB → read back → restored → read back, a file with both) is the
 next drag; the load proof needs the library's `.nki` path — read from Native Instruments'
 registry entries rather than searched for.
+
+## §56. 0k.2 PROVEN, all three: the Kontakt multi is code
+
+- **Write** (`proof_write.lua`, 15:09): Plucked Piano volume −0.02 → set −6.0 → read back
+  **−6.0** → restored → read back **−0.02**. `ok: true`.
+- **Load** (`proof_load.lua`, 15:08 and 15:10): `load_instrument("H:/…/Plucked Piano.nki", 0)`
+  → returned index **0** (the empty slot 1); `set_instrument_midi_channel(0, 5)` → read back
+  **5** ([A] 5); `set_instrument_output_channel(0, 1)` → read back **1** (st.2 — the output
+  section accepted a second channel); volume −3.0; instruments 2 → **3** → `remove_instrument`
+  → **2**. Every call `ok`, nothing left behind.
+- The instrument files, found on disk (the registry lists only Kontakt's own content;
+  non-Player libraries are not registered; the chunk stores paths encoded): Spitfire
+  `H:/Spitfire Audio Plucked Piano KONTAKT-iPirateU/Instruments/Plucked Piano.nki` · 8Dio
+  `H:/8Dio - 1969 Steinway Legacy Grand Piano (Kontakt)/Instrument/8DIO_1969_Legacy_Piano.nki`
+  · Xsample `C:/Users/jwloy/Documents/Xsample Sample Library/Xsample_Collection/Instruments
+  Elastic/Woodwinds/Bass Clarinet.nki` (piece #3 also kept a `Bass Clarinet BCHA.nki` in its
+  `reaper/nki_backups` — which one the septet's slot holds, the read-back will say).
+
+**So the bass-clarinet strike slot (0k.4) is one script:** load the .nki into a free slot,
+channel 5, output st.2, name it, done — and the four curve slots per string track (0c.7) the
+same way. PLAN 0k.2 ☑ → 0k.3 (the UVI push).

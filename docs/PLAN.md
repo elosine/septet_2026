@@ -245,11 +245,11 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      JSON, heartbeat) + `tools/reaper_job.js`; the AI appends the startup line to
      `%APPDATA%\REAPER\Scripts\__startup.lua`; the composer starts it once now (Actions →
      ReaScript: Load…); proof = the `tracks` job lists the rack.
-  2. ► **0k.2 the Kontakt proof** (Piano Kontakt): `reaper/kontakt/proof_readback.lua` (every
+  2. ☑ **0k.2 the Kontakt proof** (all three proven 2026-09-04, RUNNING_LOG §55–56) (Piano Kontakt): `reaper/kontakt/proof_readback.lua` (every
      slot's name / channel / output / volume → a file) · a write (Plucked −6 dB, read back,
      restored) · a load (a second Plucked into a free slot on [A] 5, output 2, read back,
      removed). Composer: Options → Developer once; drag the script onto the rack.
-  3. **0k.3 the UVI proof** (Flute SI2): `tools/uvi_state.js` decode → unchanged re-encode →
+  3. ► **0k.3 the UVI proof** (Flute SI2): `tools/uvi_state.js` decode → unchanged re-encode →
      `SetTrackStateChunk` through the bridge → UVI still plays; then part 13 → outputs 3/4,
      seen in the GUI and in the track's routing.
   4. **0k.4 apply B** (§47): faders flute −21 · bcl −9 · piano +7 · vn 0 · va −3.5 · vc −1 by
