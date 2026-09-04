@@ -1214,3 +1214,21 @@ DONE**, and 0h's first check (every track sounds from the score app through its 
 passed. The composer now runs the server himself (`cd C:\Users\jwloy\GitHub\septet_2026` ·
 `node score\server.js`). Left open in the rack, by decision: one instrument per Kontakt track
 today; the three curve copies on [A] 2–4 are added when 0c.7 wires the curve routing.
+
+## §36. PLAN 1c.1 — the scattered-strike database exists
+
+**`tools/strike_db.js`** (dependency-free node) captured `scores/ScatteredStrikes01.json` into
+**`bank/scattered_strikes.json`** (201 KB). The thresholds came from the data, not a guess:
+of the 576 onset gaps, 398 are under 20 ms, 56 in 20–40, 26 in 40–60, then a thin tail, and
+the between-strike gaps sit at 0.65–4.2 s — so **strike gap 500 ms** (46 strikes; 0.3 s
+would give 58, 1 s gives 28) and **simultaneity 60 ms** (the composer's "maybe sixty"), both
+dials on the command line. Census: 46 strikes · notes per strike 2 / 10 / 35 (min / median /
+max) · 139 rhythmic onsets kept (1 / 2.5 / 9 per strike), 438 redacted into their groups ·
+strike spans 8 ms – 1.67 s (median 147 ms) · inter-strike 652 – 4164 ms (median 1489) ·
+pitches 23–105, all piano, velocities 33–127. Per strike the DB holds every note with its
+displacement three ways (ms, 0–1 of the span, units of the median kept gap), the harmony
+(midis, pitch classes, instruments), the rhythm after redaction with the redacted ids grouped
+under the onset they merged into, and stats; the sequence holds the inter-strike distances
+absolute, normalized by span and in units of the median gap, plus each gap from a strike's
+last onset to the next first. Ids are functions of the save's object ids
+(`ss-ScatteredStrikes01-wc-40`), so re-ingesting replaces rather than duplicates.
