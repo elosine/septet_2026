@@ -1,10 +1,11 @@
 -- bridge.lua — the AI's door into Reaper (PLAN 0k.1; docs/REAPER_CONTROL.md; RUNNING_LOG §48).
 --
--- A defer loop inside Reaper (~30 ticks/s). Every tick it looks in  reaper/bridge/inbox/  for the
--- oldest *.lua file, runs it under pcall, writes  reaper/bridge/outbox/<name>.json  with either
--- { ok = true, result = <what the job returned> } or { ok = false, error = <message> }, and moves
--- the job to  reaper/bridge/done/ . Once a second it writes  reaper/bridge/heartbeat.json  so the
--- other side knows Reaper is alive and which project is open.
+-- A defer loop inside Reaper (~30 ticks/s). Every tick it looks in the RUNTIME inbox — Reaper's own
+-- resource folder, %APPDATA%\REAPER\bridge\inbox, machine-level, shared by every project — for the
+-- oldest *.lua file, runs it under pcall, writes  bridge\outbox\<name>.json  with either { ok = true,
+-- result = <what the job returned> } or { ok = false, error = <message> }, and moves the job to
+-- bridge\done. Once a second it writes  bridge\heartbeat.json  so the other side knows Reaper is alive
+-- and which project is open. A job returning { __reload = true } makes the bridge restart from this file.
 --
 -- A JOB is a Lua chunk with `reaper` in scope that RETURNS its result (a table, string, number,
 -- boolean or nil). It must not loop for long: one job = one tick; nothing async.
@@ -16,9 +17,12 @@
 local sep = package.config:sub(1, 1)
 local src = debug.getinfo(1, 'S').source
 local ROOT = src:match('^@(.*)[/\\][^/\\]+$') or '.'
-local INBOX, OUTBOX, DONE = ROOT .. sep .. 'inbox', ROOT .. sep .. 'outbox', ROOT .. sep .. 'done'
-local HEART = ROOT .. sep .. 'heartbeat.json'
-local VERSION = '0.1 (2026-09-04)'
+-- the RUNTIME lives outside any repo, in Reaper's own resource folder (%APPDATA%\REAPERridge):
+-- one bridge per machine, any project's tools talk to it (docs/REAPER_CONTROL.md; README.md here)
+local RUNTIME = reaper.GetResourcePath() .. sep .. 'bridge'
+local INBOX, OUTBOX, DONE = RUNTIME .. sep .. 'inbox', RUNTIME .. sep .. 'outbox', RUNTIME .. sep .. 'done'
+local HEART = RUNTIME .. sep .. 'heartbeat.json'
+local VERSION = '0.2 (2026-09-04) runtime in the Reaper resource folder'
 
 -- one bridge only
 local stamp = tostring(os.time()) .. '-' .. tostring(math.random(1e9))
@@ -95,13 +99,14 @@ local function run_job(name)
   local t = reaper.time_precise()
   if not code then out.ok = false; out.error = 'cannot read job'
   else
-    local env = setmetatable({ job = { name = name, path = path, root = ROOT } }, { __index = _G })
+    local env = setmetatable({ job = { name = name, path = path, root = RUNTIME, code = ROOT } }, { __index = _G })
     local chunk, err = load(code, '=' .. name, 't', env)
     if not chunk then out.ok = false; out.error = 'load: ' .. tostring(err)
     else
       local ok, res = xpcall(chunk, function(e) return tostring(e) .. '\n' .. debug.traceback('', 2) end)
       out.ok = ok
       if ok then out.result = res else out.error = res end
+      if ok and type(res) == 'table' and res.__reload then RELOAD = true; out.result = { reloading = src } end
     end
   end
   out.ms = math.floor((reaper.time_precise() - t) * 1000 + 0.5)
@@ -129,6 +134,12 @@ local function tick()
     if name then run_job(name) end
   end)
   if not ok then reaper.ShowConsoleMsg('[bridge] tick error: ' .. tostring(err) .. '\n') end
+  if RELOAD then   -- a job returned { __reload = true }: stop this loop, start the file afresh (new code, same script instance)
+    reaper.DeleteExtState('septet_bridge', 'running', false)
+    reaper.ShowConsoleMsg('[bridge] reloading ' .. src:match('^@(.*)$') .. '\n')
+    dofile(src:match('^@(.*)$'))
+    return
+  end
   reaper.defer(tick)
 end
 

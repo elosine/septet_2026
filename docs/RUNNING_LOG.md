@@ -1882,3 +1882,32 @@ Clarinet STRIKE", [A] 5, output st.2) fed by post-FX pre-fader sends of channels
 recipe carries `balanceDb`, `slap.channel = 5`, `lane` on both strike techniques. PLAN 0k.4 ☑.
 What remains of 0k is 0k.5, the setup scripts as the standing way (the ×4 curve slots for
 0c.7 etc.) — not needed today.
+
+## §62. 0k.5 begun: the bridge as a foundation for every Reaper project
+
+Composer: *"ok for b also can we generalize or start the foundation for additional reaper
+projects, I'd like to do something similar for my live electronics project but it is mostly
+audio with me playing live and webbrowser or supercollider playback. then check back in and
+we'll do a the feature updates."*
+
+Done, awaiting one restart of the bridge by the composer (the running copy predates it):
+- **One bridge per machine.** `bridge.lua` 0.2 keeps its RUNTIME (inbox / outbox / done /
+  heartbeat) in Reaper's own resource folder `%APPDATA%\REAPERridge\` — outside any repo —
+  so any project's tools talk to the same bridge; the code stays in git. A job may return
+  `{ __reload = true }` and the bridge restarts from its file (no clicks after an edit).
+- **`tools/reaper_job.js`:** the runtime path from `$REAPER_BRIDGE` or `%APPDATA%`; a project
+  guard (`$REAPER_PROJECT`, default `septet_rack` — refuses to send while another project is
+  open); generic jobs added: `transport play|stop|record|pause`, `marker`, `arm`, `reload`.
+  Dependency-free: a copy per repo is the install.
+- **`reaper/bridge/README.md`:** the foundation — the shape, the install in another repo, what
+  the live-electronics project would use (arm / record / markers at cues / a level check on the
+  inputs / FX-chain read-backs; the browser and SuperCollider stay outside Reaper, their cues
+  can arrive through Reaper's OSC surface and be mirrored as markers), the rules.
+- **`reaper/kontakt/curve_slots.lua`:** the first 0k.5 script — the instrument in slot 1
+  copied into slots on [A] 2 / 3 / 4 named "… curve A/B/C" (D11's banks, for 0c.7), the
+  `.nki` chosen by slot 1's name from a table (the Xsample strings' files found on disk:
+  `Xsample_Contemporary_Solo_Strings/Contemporary Violin | Viola | Violoncello.nki`). Not run yet
+  — it runs when 0c.7 wires the curve routing.
+- A pane fact for the record: the Bash tool turns a doubled backslash-n in a heredoc into a real
+  newline, and a backslash-b into a backspace — patches with such sequences go through a
+  script file, never a heredoc.

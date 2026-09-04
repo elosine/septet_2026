@@ -8,6 +8,8 @@
 //   node tools/reaper_job.js -e "return reaper.GetAppVersion()"
 //   node tools/reaper_job.js save                            # save the project (the composer's CTRL+S)
 //   node tools/reaper_job.js chunk "Flute SI2" [out.txt]     # a track's state chunk (the plugin state inside)
+//   node tools/reaper_job.js transport play|stop|record|pause · marker "name" [pos] · arm "<track>" on|off · reload
+//   Runtime: %APPDATA%\REAPERridge (or $REAPER_BRIDGE); the project guard: $REAPER_PROJECT (default septet_rack).
 //
 // The job is written atomically into reaper/bridge/inbox/ (temp name, then rename) so the bridge
 // never reads a half file; the answer is awaited in reaper/bridge/outbox/ (default 20 s).
@@ -16,8 +18,11 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const B = path.join(ROOT, 'reaper', 'bridge');
+// the bridge RUNTIME is machine-level (one bridge per machine): %APPDATA%\REAPERridge, or $REAPER_BRIDGE
+const B = process.env.REAPER_BRIDGE || path.join(process.env.APPDATA || path.join(require('os').homedir(), 'AppData', 'Roaming'), 'REAPER', 'bridge');
 const INBOX = path.join(B, 'inbox'), OUTBOX = path.join(B, 'outbox'), HEART = path.join(B, 'heartbeat.json');
+// a project guard: refuse to send when another project is open (set per repo; '' = any)
+const EXPECT_PROJECT = process.env.REAPER_PROJECT || 'septet_rack';
 const args = process.argv.slice(2);
 const cmd = args[0];
 const luaStr = s => '"' + String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"';
@@ -49,6 +54,16 @@ for i = 0, reaper.CountTracks(0) - 1 do
 end
 error('no track named ' .. want)`,
     save: () => `reaper.Main_SaveProject(0, false); local _, p = reaper.EnumProjects(-1, ''); return { saved = p }`,
+    transport: (what) => ({ play: 'reaper.Main_OnCommand(1007, 0)', stop: 'reaper.Main_OnCommand(1016, 0)', record: 'reaper.Main_OnCommand(1013, 0)', pause: 'reaper.Main_OnCommand(1008, 0)' }[what] || `error('transport: play|stop|record|pause')`) + `; return { playState = reaper.GetPlayState(), pos = reaper.GetPlayPosition() }`,
+    marker: (name, pos) => `local p = ${pos != null ? Number(pos) : 'reaper.GetCursorPosition()'}; local id = reaper.AddProjectMarker(0, false, p, 0, ${luaStr(name || '')}, -1); return { marker = id, pos = p }`,
+    arm: (name, on) => `
+local want = ${luaStr(name)}
+for i = 0, reaper.CountTracks(0) - 1 do
+  local tr = reaper.GetTrack(0, i); local _, n = reaper.GetTrackName(tr)
+  if n == want then reaper.SetMediaTrackInfo_Value(tr, 'I_RECARM', ${on === '0' || on === 'off' ? 0 : 1}); return { track = n, arm = reaper.GetMediaTrackInfo_Value(tr, 'I_RECARM') } end
+end
+error('no track named ' .. want)`,
+    reload: () => `return { __reload = true }`,
     chunk: (name) => `
 local want = ${luaStr(name)}
 for i = 0, reaper.CountTracks(0) - 1 do
@@ -89,6 +104,7 @@ function send(code, timeoutMs = 20000) {
 (async () => {
     if (!cmd || cmd === '-h') { console.log(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 12).join('\n')); process.exit(0); }
     if (cmd === 'heartbeat') { console.log(JSON.stringify(heartbeat(), null, 1)); process.exit(0); }
+    if (EXPECT_PROJECT) { const h = heartbeat(); if (h.alive && h.project && !path.basename(h.project).startsWith(EXPECT_PROJECT)) { console.error('refusing: Reaper has ' + path.basename(h.project) + ' open, this repo expects ' + EXPECT_PROJECT + ' (set REAPER_PROJECT to override)'); process.exit(3); } }
     let code;
     if (cmd === 'run') code = fs.readFileSync(path.resolve(args[1]), 'utf8');
     else if (cmd === '-e') code = args[1];

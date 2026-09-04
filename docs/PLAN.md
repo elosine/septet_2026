@@ -256,7 +256,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      the bridge; `Flute strikes` child track on UVI outs 3/4 (+21); a second bass-clarinet
      slot on [A] 5 → output st.2 → `BassCl strikes` (+13) by a Kontakt script; recipe
      `slap.channel = 5` + `balanceDb`; re-measure `-Only flute,bass_clarinet`; SAMPLER_QUIRKS.
-  5. ► **0k.5 the setup scripts** (when next needed — the ×4 curve slots at 0c.7) — one Kontakt Lua per track type (the ×4 curve slots for
+  5. ► **0k.5 the setup scripts + the foundation for other projects** — begun 2026-09-04 (RUNNING_LOG §62: the bridge's runtime machine-level, a project guard, generic transport / marker / arm / reload jobs, `reaper/bridge/README.md` as the install guide for the live-electronics repo and the next piece, `curve_slots.lua` written for 0c.7); pending: the composer's bridge restart + verification, then the drawer's feature update (STRIKES_TOOL U1–U4) — one Kontakt Lua per track type (the ×4 curve slots for
      0c.7, the piano pair, the bass clarinet) and the UVI XML tool as the standing way to
      configure; host automation for CC7-free knobs (§50) when a static sampler knob is wanted.
   Then back to the drawer's feature update (STRIKES_TOOL U1–U4) when the composer says.
