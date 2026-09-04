@@ -104,16 +104,22 @@ The starting set:
   and **orchestrated** (the current assignment through the rack). Both from the same button
   row; the timing transforms apply to both.
 
-## H · The piano's role — `wanted`
+## H · The piano's part — `proposed 2026-09-03`
 
-> *"What do I do about the piano? Sometimes I'll want it to double — play more than the one
-> note — or just play one note."*
+> *"Sometimes I'll want it to double — play more than the one note — or just play one note."*
+> and, on the four-way switch first proposed: *"I may want it to play all the above … It might
+> just be one note. It might be some of the notes, like the top and the bottom note, or three
+> notes, whatever. It might be all, and I like the rest too. But is there a different
+> organization or logic we should try here?"*
 
-- *AI proposal (asked):* one switch with four positions — **one** (the piano is a player
-  like the others: one note) · **rest** (it takes every note nobody else has — the default
-  when a strike has more notes than players) · **all** (it plays the whole chord under the
-  orchestration: doubling) · **none** (silent). The shuffle honours the switch.
-
+- *AI proposal, the second (awaiting the composer's yes):* **the piano's part is a SELECTION
+  of notes, not a mode.** Every note of the strike carries a piano flag — the piano plays it
+  or not, independent of who else plays it; on the keyboard a ring around the dot means
+  "piano too". **Click a key to toggle** its ring (top + bottom, any three, any subset — no
+  menu). The former modes become **quick buttons** that set the flags: none · one · top+bottom
+  · rest · all; "rest" recomputes after every shuffle. The shuffle assigns the six other
+  players; the piano's flags persist unless a quick button is pressed. The same flag idea
+  extends to double stops later (a second-note flag on a string player).
 ## Open questions for the composer (only what blocks the next piece)
 
 1. **"Cluster together":** chromatic — the pitch classes packed semitone-adjacent inside one
@@ -123,4 +129,4 @@ The starting set:
 ## Log
 
 - 2026-09-03 — A, B, C stated by the composer; D exists as v1. Nothing built against A–C yet.
-- 2026-09-03, later — E (orchestration panel) stated; F (ranges) proposed and adopted; G (audition modes) stated; H (the piano's role) raised, a four-way switch proposed.
+- 2026-09-03, later — E (orchestration panel) stated; F (ranges) proposed and adopted; G (audition modes) stated; H (the piano's role) raised, a four-way switch proposed, then replaced by the composer's push ("a different organization or logic?") with the SELECTION logic — flags per note, click-to-toggle, quick buttons.
