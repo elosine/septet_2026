@@ -40,6 +40,13 @@ The starting set:
    the tight cluster placed at the bottom / the top of the register.
 6. … *more added on request while working.*
 
+**Clarified by the composer (2026-09-03):** **cluster together** = everything collapsed into the
+smallest chromatic span, the same octave if possible, and that tight cluster can be MOVED
+around the octaves (a high tight cluster, a low one …) · **high and low clusters** = two tight
+clusters, one high, one low · **spread out** = as much even pitch space between the notes as
+possible — *"you don't have to optimize it, but try to have the notes spread out"* · the menu
+is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
+
 - *AI notes:* a preset = a VOICING transform on the strike's pitch-class content (D11 of the
   tuba piece: a voicing is the pitch set only; articulation and dynamics are a separate
   layer) — the harmony stays, the octaves move. "Spread" has a precedent in
@@ -270,6 +277,70 @@ The starting set:
   to its `t0`; later the reverse (select in the score → select in the tool).
 - The Insertion strip's mini-keyboard row is reused as the harmony picker (M).
 
+## R · Decisions before the build — `2026-09-03`
+
+1. **Where it lives — a FULL-WIDTH DRAWER inside the composer score.** Composer: *"if you can
+   make it a full-size drawer, that's fine. The blast sandbox actually takes the whole screen
+   width. So it's fine to be part of the composer score, that's probably what I prefer. But the
+   other panels are small — if this could take the full page width, that would be best."*
+   A drawer that pulls up from the bottom to the page's full width and a generous height, like
+   the Insertion strip but tall; it edits the score's live objects (replace in place, insert,
+   undo).
+2. **Durations — a `duration ×` multiplier** beside the timing transforms. Composer: *"Sure, add
+   the multiplier, but chances are in the notation these will reduce to just short notes. If I
+   wanted something more heterogeneous in terms of duration, I could consider that with a
+   multiplier."* Default = as played.
+3. **Strike techniques per instrument** — became S (the articulation column + the stand-in rule).
+4. **Dynamics** — decided: **as played** (default) or **flatten**; a `dyn ×` slider beside them.
+5. **"Cluster together"** — decided: the smallest chromatic span (see B, clarified).
+6. **Keyboard range** — decided: the ENSEMBLE SPAN on screen; the piano keeps the full 88
+   available — composer: *"maybe we do the ensemble span, and for the additional notes for the
+   piano we have the option of adding something from the eighty-eight keys."* AI's expedient:
+   a small `88` toggle expands the keyboard to the full range when the piano needs it; notes
+   beyond the visible span (piano only) show as arrows at the top / bottom edge.
+
+## S · The articulation column and the stand-in rule — `adopted 2026-09-03`
+
+> *"After the instrumentation, before the rhythm panel, is column three; rhythm becomes column
+> four. I'll click on the instrument, and then I'd have a choice of articulations — the strings
+> could use the Bartók pizz or bow pressure. And just like with the cuivre in the tuba, I can
+> have semi-pitched or non-pitched — multiphonics or things like that — just stand in for that
+> pitch. There's a pluck behind the bridge, but only the open strings' pitches are available:
+> that could stand in — you wouldn't reorchestrate that pitch, it would just be the noise part."*
+
+- *Layout (AI proposal):* an articulation menu on every instrument row in column 2; click an
+  instrument → column 3 opens its full list, grouped pitched · fixed-pitch · noise ·
+  multiphonic; rhythm = column 4; `all strings → …` chord-level quick buttons (the blast
+  sandbox's `all:` row).
+- **The stand-in rule:** every voice keeps its harmony pitch (D11 of the tuba piece: an
+  articulation never edits pitch content); the articulation's KIND decides what sounds —
+  **pitched**: the pitch · **fixed-pitch** (behind the bridge, harmonics sul X): the nearest
+  available pitch, behind-the-bridge = the closest open string · **noise** (body strokes, key
+  clicks, slap, undefined sounds): stands in, the key only picks a variant · **multiphonic**
+  (bass clarinet #10 / #22, flute Multiphonics Menu): stands in; default = the multiphonic whose
+  content contains the voice's pitch class (from the 0c.8 walk). On the keyboard a stand-in
+  voice is a hollow dot with a label of what sounds ("bb pizz · open D"). The harmony record
+  never changes.
+- *Needs underneath:* a `kind` field on every technique in `sandbox/instruments.js` (pitched /
+  fixed / noise / multiphonic) and the open strings per string instrument (vn G D A E = 55 62
+  69 76 · va C G D A = 48 55 62 69 · vc C G D A = 36 43 50 57). The 2a notation classifier
+  needs the same field — written once, at 0c.
+- Composer, confirming: grouped by kind, but **every articulation visible** in the full list;
+  the menu on the instrument row, click exposes the full list. Adopted.
+
+## T · Auditioning variants: the side panel — `wanted 2026-09-03`
+
+> *"I don't necessarily want to overclutter things, but it would be good to have a quick way
+> to audition the variation. For the multiphonics, they don't really have much to do with the
+> keys — they're just triggers for a variety of multiphonics. So if I decide to put in a
+> multiphonic, it'd be good to have a side panel where I can listen to the choices and select
+> one of the multiphonics in the sample."*
+
+- When a voice gets a noise / multiphonic / fixed-pitch articulation, a side panel lists that
+  technique's variants (the multiphonic keys with their pitch content once 0c.8 has walked
+  them; the noise technique's keys; the open strings) — click to hear, click to select; the
+  choice is stored on the voice (the stand-in key). Out of the way until needed.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 1. **"Cluster together":** chromatic — the pitch classes packed semitone-adjacent inside one
@@ -286,3 +357,6 @@ The starting set:
 - 2026-09-03, later — L: the three-list model confirmed by the composer.
 - 2026-09-03, later — M (the harmony collection as a source; index proposal), N (harmony swap by voice rank), O (takes) recorded; N and O proposed.
 - 2026-09-03, later — N, O adopted; P (all Messiaen modes) and Q (linked to the score; step one = pick the strike in the sequence) recorded.
+- 2026-09-03, later — R: decisions 1 (full-width drawer in the score) and 2 (duration ×) taken; 3 (strike techniques) in discussion; 4–6 open.
+- 2026-09-03, later — S: the articulation column and the stand-in rule recorded; layout proposed; `kind` metadata named as the 0c prerequisite.
+- 2026-09-03, later — S adopted; T (variant side panel) recorded; B clarified (cluster = smallest chromatic span, movable; high+low clusters; spread out); R4 dynamics, R5, R6 (ensemble span + an 88 toggle for the piano) decided. All pre-build decisions taken.
