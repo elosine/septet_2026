@@ -124,6 +124,21 @@ The starting set:
   piano with just one note, and then I could add more notes to the piano part as you suggest."*
   So a shuffle treats the piano as one player among seven (one note), and the flags / quick
   buttons add notes afterwards.
+## I · Double stops — `wanted 2026-09-03`
+
+> *"And, yes, on the double stops."* (to the AI's note that the piano's per-note flag extends
+> to a second-note flag on a string player)
+
+- The four strings may take a second note: the same flag mechanism as the piano's — a
+  string player's row accepts two notes; on the keyboard the second note's line goes to the
+  same player. A shuffle starts every string on one note; the second is added by hand (click
+  the key, then the player) or by a quick button later if wanted.
+- *AI notes:* playability of the pair (an interval reachable on adjacent strings, both notes
+  inside the range) is checked with the same fold / skip rule as F; the check itself is the
+  string-writing knowledge from piece #1 (Xsample strings), to be written down when the
+  first double stop is placed. Winds cannot take two; the bass clarinet's multiphonics are a
+  technique, not a second note.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 1. **"Cluster together":** chromatic — the pitch classes packed semitone-adjacent inside one
@@ -133,4 +148,4 @@ The starting set:
 ## Log
 
 - 2026-09-03 — A, B, C stated by the composer; D exists as v1. Nothing built against A–C yet.
-- 2026-09-03, later — E (orchestration panel) stated; F (ranges) proposed and adopted; G (audition modes) stated; H (the piano's role) raised, a four-way switch proposed, then replaced by the composer's push ("a different organization or logic?") with the SELECTION logic — flags per note, click-to-toggle, quick buttons — adopted; a shuffle starts the piano on one note.
+- 2026-09-03, later — E (orchestration panel) stated; F (ranges) proposed and adopted; G (audition modes) stated; H (the piano's role) raised, a four-way switch proposed, then replaced by the composer's push ("a different organization or logic?") with the SELECTION logic — flags per note, click-to-toggle, quick buttons — adopted; a shuffle starts the piano on one note. I (double stops on the strings) wanted, same flag mechanism.
