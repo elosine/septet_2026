@@ -2171,3 +2171,20 @@ Restored `scores/ScatteredStrikes01.json` from `76861f2` (the last commit before
 577 objects, all on the piano layer, no groups, 0.608–73.196 s, `wc-13` present; no working copy
 existed. The composer's orchestrations of strikes #0–#2 remain in `piece-septet` and the takes. He
 restarted the server and reloaded the page (D17 live on his machine).
+
+## §72. CN-9: grace-note figures for the piccolo–bass clarinet line, and where the notation question went
+
+Composer, after the session-3 checkpoint: *"Composition note for the piccolo / bass clarinet
+interactive looping line: use — and figure out notation for — grace-note figures. See Ferneyhough,
+Transcendental Etudes, number one. Oboe part."* Filed verbatim as CN-9, the AI's reading beneath it:
+CN-4's heterophony given its surface — the loop's notes ornamented, the ornaments where the two
+players' variants of the one line diverge. The notation half — "figure out notation" — is a device
+the tuba vocabulary lacks (ord · staccato · cuivre · fortepiano · morph carry no grace notes), so it
+went onto PLAN 0g's 2a adaptation list, not NITS: phase-2 work with a real design question in it (an
+IR grace group attached to a host event, flagged in the save rather than guessed from a duration
+threshold; and the time-source rule — from the preceding or the following note — which for a
+scrolling score should be "into the host's onset", so the host stays the beat). The model to read
+from is Ferneyhough's *Etudes Transcendantales / Intermedio II* (1982–85), the first étude's oboe
+part — the attachment of the small notes, the slashed beam, the front-matter time-source rule; read
+from the score, not asserted from memory. Nothing built; the composing path (strikes #5 onward) is
+unchanged. The piccolo is named a second time (CN-4, CN-9) — CN-2 still open, not a decision.

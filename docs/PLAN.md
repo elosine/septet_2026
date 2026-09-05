@@ -210,6 +210,13 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   `notation/audio/demo-heldmax.mid`, `notation/video/`, the score-arc and demo tools
   (`extract_section`, `build_versions`, `gen_demo_heldmax_midi`), and
   `docs/NOTATION_ARCHITECTURE.md` (read in #4, cited by path).
+  **Added from the sketch pad (CN-9, 2026-09-04):** **grace-note figures** — the piccolo–bass
+  clarinet looping line (CN-4) uses them; the tuba vocabulary has none. Needs an IR grace group
+  attached to a host event (flagged in the save, not guessed from durations) · a render (small
+  notes, one slashed beam, left of the host) · the scrolling-score reading (the figure is
+  played into the host's onset — the host stays the beat). Notation model: Ferneyhough,
+  *Etudes Transcendantales* No. 1, the oboe part — read the attachment, the beam and the
+  time-source rule from the score.
 
 - **0h — Gate: phase 0 closed** — `todo` — every track sounds from the score app through
   its own port with the right technique switching; a save round-trips; the sandbox

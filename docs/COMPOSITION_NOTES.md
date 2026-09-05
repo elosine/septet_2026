@@ -228,3 +228,51 @@ names a library to confirm.
   Recording. That'll be the piano reference."* — *AI reading:* `ScatteredStrikes01` is the untouched
   recording of the 46 strikes (577 notes, 73 s), the source the drawer reads and the reference the piece
   is orchestrated against; the orchestrations live in `piece-septet`, never in the reference.
+
+---
+
+## CN-9 · 2026-09-04 — the piccolo–bass clarinet looping line: grace-note figures, after Ferneyhough
+
+> *"Composition note for the piccolo / bass clarinet interactive looping line: use — and figure
+> out notation for — grace-note figures. See Ferneyhough, Transcendental Etudes, number one.
+> Oboe part."*
+> *(dictated 2026-09-04 night, session 3, after the checkpoint; cleaned from speech-to-text,
+> content untouched)*
+
+**AI reading (not the composer's words):**
+
+- **This is CN-4's line given its surface.** The heterophony between bass clarinet and piccolo
+  (one loop, two players three octaves apart, each varying it) is now ornamented: the loop's
+  notes carry grace-note figures — flurries of small notes crowded into the host notes. In the
+  strict sense that IS heterophony: one line, decorated differently by each player at once. The
+  figures are where the two variants of the shared line diverge.
+- **The model named:** Brian Ferneyhough, *Etudes Transcendantales / Intermedio II* (1982–85,
+  mezzo-soprano · flute · oboe · cello · harpsichord; nine études, part of the *Carceri
+  d'Invenzione* cycle) — the first étude, the oboe part. What to take from it is the notation,
+  not the style. Read from the score itself, not from memory: how a group of small notes
+  attaches to its host note · the slashed beam and its direction · whether the group takes its
+  time from the note before it or the note after (the front-matter performance note settles
+  this) · how the figures sit against nested tuplets and slurs · how accidentals and
+  articulation ride on the small notes.
+- **Two halves, two places:**
+  - *Composing it (phase 1, now):* the S1 save can already carry a grace-note figure — a few
+    very short objects a few tens of ms before a host note, sharing its `groupId`; the drawer's
+    rhythm column (STRIKES_TOOL J: shape · amount · jitter, the span compressed to nothing) is
+    most of the generator. The loop itself is CN-4's reading unchanged: a captured motive on
+    two lanes with per-lane transforms, the pulse sequencer for the pulse. A figure needs a
+    technique that speaks at speed (staccato, ord) — the one-shot noises (slap, key click,
+    pizz) will not run.
+  - *Notating it (phase 2a, later):* the tuba vocabulary has no grace notes (ord · staccato ·
+    cuivre · fortepiano · morph). Needed: an IR **grace group** attached to a host event
+    (ordered pitches, no duration of its own, position before the host) — flagged explicitly
+    in the save rather than guessed from a duration threshold (one robust build, not a
+    heuristic) · a **render** — small notes under one slashed beam, left of the host, an
+    accidental per note · and the **scrolling-score reading**: in a proportional animated
+    score the group has no width of its own; "as fast as possible, into the beat" puts the
+    figure immediately left of the host, and the player plays it into the cursor's arrival.
+    For a scrolling score the natural time-source rule is therefore "from the preceding note"
+    — the host's onset stays the beat, which is what the S1 data already says when the small
+    notes sit before it. Filed on PLAN 0g's 2a adaptation list.
+- **A second signal for CN-2, still not a decision:** this idea names the piccolo again
+  (CN-4, now CN-9). If it stands, the flute doubling is piccolo and the piccolo library is the
+  one to confirm (SI2 has none).

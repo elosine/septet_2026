@@ -105,7 +105,9 @@ the samplers addressable as code (0k, D15), D16 tongue ram; RUNNING_LOG §40–6
   CN-8, §69) and `-v1.2` (five strikes, the composer's own Name version).
 - **`scores/` sorted:** `ScatteredStrikes01` = the piano reference (the raw 577-strike recording,
   restored); the hand-made copies deleted at the composer's word. §70–71.
-- Sketch pad: CN-8 (the piece begins with the strikes); for piece #6, animated conductions.
+- Sketch pad: CN-8 (the piece begins with the strikes) · CN-9 (the piccolo–bass clarinet looping line
+  uses grace-note figures; notation after Ferneyhough, *Etudes Transcendantales* No. 1 oboe → PLAN 0g's
+  2a list; RUNNING_LOG §72); for piece #6, animated conductions.
   Penn State abstract done (§7).
 
 **Next up:** the composer composes — strikes #5 onward into `piece-septet` from the drawer (`Insert @
@@ -143,7 +145,8 @@ seen this conversation):*
   (docs/REAPER_CONTROL.md, reaper/bridge/README.md); `jobs/peakwatch.lua` + a probe note = the
   proof for routing; `tools/uvi_state.js` for UVI; a Kontakt Lua script dropped by the composer
   for Kontakt. Never trust frozen meters before dumping mute / solo / routing (P10).
-- **Pending the composer:** CN-2 (piccolo vs bass flute) — not blocking.
+- **Pending the composer:** CN-2 (piccolo vs bass flute) — not blocking; the piccolo is named twice now
+  (CN-4, CN-9).
 - **Deliberately uncommitted:** nothing — `git status` is clean after this checkpoint's commit
   (`scores/*-work.json` and `scores/versions/` are gitignored by design).
 
