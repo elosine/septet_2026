@@ -126,7 +126,8 @@ seen this conversation):*
 - **Task and state:** session 3's build work is complete, verified and pushed; the composer is composing
   in the running app (his server on :5300, D17 live). Nothing is half-built.
 - **Latest deliverable:** `scores/piece-septet.json` (+ `-v1.2`) and `bank/panel_snapshots.json`
-  (16 takes), committed at this checkpoint.
+  (16 takes), committed at this checkpoint. `reaper/septet_rack.rpp` as the composer saved it at 20:47
+  (REC items rearranged, cursor moved — Reaper's own churn, no rack change intended) committed too.
 - **Next concrete step:** `/postclear`, then ask the composer what he wants: keep composing (be ready to
   fix what blocks in the drawer), the drawer's next features, or 0d. Before any commit run
   `node tools/unsaved_check.js`, then stage `scores/piece-septet*.json` and `bank/panel_snapshots.json`
