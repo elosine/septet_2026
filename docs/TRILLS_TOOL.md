@@ -68,6 +68,8 @@ pitch) may use a second row (bowed tremolo faster).
 > and a 100 ms lookahead, and is alive here. The test is now a zone with the trill embedded as a snippet (no app change),
 > proved with a fake output at 20 Hz: gaps exact to 0.2 ms. **Phase 1 follows this:** the trill object generates its snippet
 > live by the same lookup and the zone tick plays it; the plain-note path gets the same scheduling (NITS).
+> **Done (§103):** the plain-note path schedules with timestamps too, and the composer: "trill sounds much better". Phase 1
+> may realize the trill either as an embedded snippet on a zone-like object or as scheduled notes — both exact now.
 
 ## 3 · The reference curves — three META lanes
 

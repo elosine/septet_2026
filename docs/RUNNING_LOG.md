@@ -2906,3 +2906,41 @@ as the zone tick does — a page change, no data change (NITS; PLAN when he want
 is timer-scheduled (`setTimeout` from a `performance.now()` base, the CC0 led by CC0_LEAD_MS — strike_drawer.js 947–957):
 millisecond accuracy, no frames — fine as it is. The inserted strike then plays through the score's plain path, above.
 *Not done:* any change to the app (he said check in first). Awaiting his ears on the zone form.
+
+## §103. "Yes please fix the piece": the plain-note playback scheduled with Web MIDI timestamps — `tickCurvePlayback` rewritten, verified on the trill file and on the piece's own runs; "trill sounds much better"
+
+Composer: *"yes please fix the piece and I'll presume anything else in the composer score playback"* — and, of §102's zone
+form, *"trill sounds much better ty"*: the diagnosis confirmed by ear; the data (his own timing, §101) was right all along.
+
+**Built** (`score/public/composer.html`: `tickCurvePlayback` and `flushCurvePlayback`, spliced by marker from the
+scratchpad — the old function was 90 lines). The pattern of `tickZoneMidiPlayback`: every plain / KS / curve note is
+handed to Web MIDI up to 100 ms ahead with its exact timestamp on the transport's own clock — `perfAt(sec) =
+playStartTime + (sec − playStartOffset ÷ pixelsPerSecond) × 1000`, the mapping `animatePlay` runs on — the CC0 / CC7
+pre-arm 150 ms before it (or at once when the note is nearer than that), the note-off at its end (scheduled with the on
+when the note is under 2 s, else when its end enters the lookahead). The curve-following CC7 stream and the morph bend
+stay per frame — continuous controllers, not attacks. A note the playhead is already inside when play starts fires at
+once, as before; a scrub landing more than 50 ms into a short captured note no longer fires it late. On stop,
+`flushCurvePlayback` calls `clear()` on every output (Web MIDI's cancel of what is queued), closes the notes in flight —
+one whose scheduled on is still ahead is closed 5 ms after that on, which also covers an output without `clear()` — then
+the CC7 sweep as before. `_curvePreArm` is retired (kept, empty). A bug the harness caught: a note scheduled ahead is
+"before its start" for a frame or two — the first version read that as a scrub, closed it and re-scheduled it, so every
+note fired twice; now only a real jump (over half a second) counts.
+
+**Verified on the throwaway server.** Web MIDI is denied there, and the hidden pane throttles timers to about once a
+second — the first harness run stepped in 1 s jumps and the tick rightly took them for scrubs: every future harness must
+drive the tick synchronously with simulated time, as these did, or front the pane. (1) `trill0-listen` (plain notes, 1180
+on seven lanes), fake outputs on all eight ports, the transport set at 0 and ticked synchronously every 50 ms to 6.5 s:
+the 50 violin notes in the window → one note-on and one note-off each, every timestamp equal to the note's time to the
+millisecond (0.000 ms error), velocities 127 · 60 · 60 as recorded, CC0 5 (senza vib #6) and CC7 127 once per note, 150
+ms ahead; two more ons for the notes just past the window (scheduled ahead, by design); stop → `clear()` on every output,
+the two notes in flight closed, the state empty. (2) **The piece** (`piece-septet` copied as `zz-ai-piece`), the transport
+set at 66 s and ticked to 72.6 s — strikes #28 → #31, the accel runs' tails: 24 notes on all seven ports, 24 ons and 24
+offs, every timestamp exact, and the smallest onset gaps between players — 0 · 0 · 0 · 1 · 1 · 1 · 4 · 5 ms — preserved
+exactly in the scheduled times, where the frame-polled path merged them into one frame; stop clears all eight outputs;
+zero console errors in both runs. `node --check` on the page's script block after each splice. The copies and their
+working copies deleted.
+
+**For the composer:** a page change — reload; his server untouched. Everything that plays plain notes is scheduled now:
+the strikes, his captures, `trill0-listen`; the recording echo is live thru and untouched; the drawer's Hear was already
+timer-scheduled (§102). *As before:* the pre-arm is shorter than 150 ms for notes inside the first 150 ms after pressing
+play. NITS entry closed.

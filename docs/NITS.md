@@ -64,3 +64,5 @@
   independently. Chords: inaudible; the accel runs' tails (gaps under 50 ms): smeared. Fix: schedule plain notes with
   Web MIDI timestamps and a 100 ms lookahead exactly as `tickZoneMidiPlayback` does — a page change, no data change.
   Not blocking composing; do it before the demo is judged, and with the trill object (phase 1), which needs the same.
+  **Fixed the same evening (RUNNING_LOG §103):** the tick schedules every note with a timestamp and a 100 ms lookahead;
+  stop clears the queue; verified on the piece's runs #28–#31.

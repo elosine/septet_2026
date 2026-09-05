@@ -8895,6 +8895,18 @@ const Composer = {
         this._lastCurveTimeSec = currentTimeSec;
         if (prevTime == null) return;
 
+        // TIMESTAMPED SCHEDULING (composer 2026-09-05, "yes please fix the piece"; RUNNING_LOG §103).
+        // Before: a note started on the first animation frame after its onset — 0–17 ms late at 60 fps, more
+        // under load, independently per note — audibly jumpy on trills and the accel runs' tails. Now every
+        // note is handed to Web MIDI up to LOOKAHEAD_S ahead with its exact timestamp on the transport's own
+        // clock (perfAt: the mapping animatePlay uses), the CC0 / CC7 pre-arm PREARM_S before it, the
+        // note-off at its end — the pattern of tickZoneMidiPlayback (piece #2's zone tick). The curve-
+        // following CC7 stream and the morph bend stay per frame: continuous controllers, not attacks.
+        const LOOKAHEAD_S = 0.1, PREARM_S = 0.15, OFF_HORIZON_S = 2.0;
+        const nowPerf = performance.now();
+        const perfAt = (sec) => this.playStartTime + (sec - this.playStartOffset / this.pixelsPerSecond) * 1000;
+        const jumped = Math.abs(currentTimeSec - prevTime) > 0.5;   // a scrub, not a frame step
+
         this.objects.forEach(wc => {
             if (wc.type !== 'waveCurve' || wc.sonifyNote == null) return;
             const inst = this.trackInstrument(wc.layer);
@@ -8904,79 +8916,87 @@ const Composer = {
             if (!output) return;
             const ch = ((tech && tech.channel) || 1) - 1;
             const st = this._activeCurvePlayback[wc.id];
+            const audible = this.isPartAudible(wc.layer);
 
-            const PREARM_S = 0.15;   // settle CC7/KS before the attack (kills the entry bite)
-            // KS mode (composer 2026-08-12): the grain rides a keyswitched SAMPLE
-            // (cresc-cut) — latch the KS + set a STATIC level in the pre-arm, no
-            // CC7 stream during the grain; noteOff at curve end = the cut.
-            // 'ks' = keyswitched sample; 'plain' = captured note (static level,
-            // no CC7 stream) — both bypass curve-following
+            // 'ks' = keyswitched sample; 'plain' = captured note (static level, no CC7 stream) — both bypass
+            // curve-following. KS mode (composer 2026-08-12): latch the KS + a STATIC level in the pre-arm.
             const ksMode = (wc.sonifyMode === 'ks' && wc.ksNote != null) || wc.sonifyMode === 'plain';
-            const ksArm = () => {
+            const preArm = (at) => {
+                if (tech && tech.cc0 != null) output.send([0xB0 | ch, 0, tech.cc0], at);
                 if (wc.sonifyMode === 'ks' && wc.ksNote != null) {
-                    output.send([0x90 | ch, wc.ksNote, 100]);   // latch the keyswitch
-                    output.send([0x80 | ch, wc.ksNote, 0]);
+                    output.send([0x90 | ch, wc.ksNote, 100], at);   // latch the keyswitch
+                    output.send([0x80 | ch, wc.ksNote, 0], at + 1);
                 }
-                // plain (captured) notes replay exactly as monitored: full CC7,
-                // dynamics from the played velocity — not the level-curve map
-                output.send([0xB0 | ch, 7, wc.sonifyMode === 'plain' ? 127
-                    : this.curveValToCC(Math.max(...wc.nodes.map(n => n.y)) / 10)]);
+                // plain (captured) notes replay exactly as monitored: full CC7, dynamics from the played
+                // velocity — not the level-curve map
+                const cc = wc.sonifyMode === 'plain' ? 127
+                    : ksMode ? this.curveValToCC(Math.max(...wc.nodes.map(n => n.y)) / 10)
+                    : this.curveValToCC(this.evalWaveCurve(wc, 0));
+                output.send([0xB0 | ch, 7, cc], at);
             };
-            // solo gate: un-soloed parts take the outside path (clean noteOff)
-            const inside = this.isPartAudible(wc.layer)
-                && currentTimeSec >= wc.startSeconds && currentTimeSec <= wc.endSeconds;
-            if (!inside) {
-                if (st) {
-                    output.send([0x80 | ch, st.note, 0]);
+
+            // ---- a note in flight: leave, stop, or finish ----
+            if (st) {
+                const past = currentTimeSec > wc.endSeconds, before = currentTimeSec < wc.startSeconds;
+                // a note scheduled ahead is normally "before" its start for a frame or two — that is pending,
+                // not a scrub; only a jump backwards past it, a jump beyond its end, an un-solo, or an end the
+                // schedule did not cover closes it now (a note whose scheduled note-on is still ahead is
+                // closed just after that on)
+                if (!audible || (before && jumped) || (past && jumped) || (past && !st.offScheduled)) {
+                    output.send([0x80 | ch, st.note, 0], Math.max(nowPerf, st.onAt + 5));
                     delete this._activeCurvePlayback[wc.id];
+                    return;
                 }
-                if (this.isPartAudible(wc.layer) && currentTimeSec >= wc.startSeconds - PREARM_S && currentTimeSec < wc.startSeconds) {
-                    if (!this._curvePreArm[wc.id]) {
-                        if (tech && tech.cc0 != null) output.send([0xB0 | ch, 0, tech.cc0]);
-                        if (ksMode) ksArm();
-                        else output.send([0xB0 | ch, 7, this.curveValToCC(this.evalWaveCurve(wc, 0))]);
-                        this._curvePreArm[wc.id] = true;
+                if (past) { delete this._activeCurvePlayback[wc.id]; return; }   // ended on schedule
+                // the note-off of a long note: scheduled once its end enters the lookahead
+                if (!st.offScheduled && wc.endSeconds <= currentTimeSec + LOOKAHEAD_S) {
+                    output.send([0x80 | ch, st.note, 0], Math.max(nowPerf, perfAt(wc.endSeconds)));
+                    st.offScheduled = true;
+                }
+                if (currentTimeSec < wc.startSeconds) return;   // scheduled, not yet sounding: nothing to stream
+                // curve-following: the CC7 stream (rate-limited, continuous — per frame is right for it)
+                const t01 = (currentTimeSec - wc.startSeconds) / Math.max(1e-6, wc.endSeconds - wc.startSeconds);
+                const cc = ksMode ? null : this.curveValToCC(this.evalWaveCurve(wc, t01));
+                const now = performance.now();
+                if (!ksMode && cc !== st.lastCC && now - st.lastSend >= 25) {
+                    output.send([0xB0 | ch, 7, cc]);
+                    st.lastCC = cc; st.lastSend = now;
+                }
+                // PLAN 2v: a morph note carries `morphBend`, note-relative cents breakpoints against its
+                // written key. Nothing else in the score has one, so absent morphBend this block is skipped.
+                if (wc.morphBend && wc.morphBend.length) {
+                    const dt = currentTimeSec - wc.startSeconds;
+                    const bv = Math.round(this.morphBendAt(wc.morphBend, dt));
+                    if (bv !== st.lastBend) {
+                        const v = Math.max(0, Math.min(16383,
+                            Math.round(8192 + (bv / (100 * 1.99)) * 8192)));   // MEASURED range
+                        output.send([0xE0 | ch, v & 0x7F, (v >> 7) & 0x7F]);
+                        st.lastBend = bv;
+                        (this._morphBentChannels || (this._morphBentChannels = {}))[
+                            ((tech && tech.port) || inst.port || '') + '|' + ch] = true;
                     }
-                } else {
-                    delete this._curvePreArm[wc.id];
                 }
                 return;
             }
-            const t01 = (currentTimeSec - wc.startSeconds) / Math.max(1e-6, wc.endSeconds - wc.startSeconds);
-            const cc = ksMode ? null : this.curveValToCC(this.evalWaveCurve(wc, t01));
-            if (!st) {
-                if (!this._curvePreArm[wc.id]) {   // scrubbed in mid-curve: no pre-arm happened
-                    if (tech && tech.cc0 != null) output.send([0xB0 | ch, 0, tech.cc0]);
-                    if (ksMode) ksArm();
-                    else output.send([0xB0 | ch, 7, cc]);
-                }
-                output.send([0x90 | ch, wc.sonifyNote,
-                    (wc.sonifyMode === 'plain' && wc.recVel != null) ? wc.recVel : 100]);
-                delete this._curvePreArm[wc.id];
-                this._activeCurvePlayback[wc.id] = { note: wc.sonifyNote, lastCC: cc, lastSend: performance.now() };
-                return;
+
+            // ---- not yet scheduled: is it due? ----
+            if (!audible || wc.endSeconds <= currentTimeSec) return;             // muted, or already over
+            const startsAhead = wc.startSeconds > currentTimeSec && wc.startSeconds <= currentTimeSec + LOOKAHEAD_S;
+            const inside = currentTimeSec >= wc.startSeconds;                    // play started inside it, a
+            if (!startsAhead && !inside) return;                                 // scrub landed in it, or a
+            if (inside && jumped && wc.sonifyMode === 'plain' && currentTimeSec - wc.startSeconds > 0.05) return;   // frame skipped it
+            // a scrub into the middle of a short captured note does not fire it late; a long grain still does
+            const onAt = startsAhead ? perfAt(wc.startSeconds) : nowPerf;
+            preArm(Math.max(nowPerf, onAt - PREARM_S * 1000));
+            output.send([0x90 | ch, wc.sonifyNote,
+                (wc.sonifyMode === 'plain' && wc.recVel != null) ? wc.recVel : 100], onAt);
+            const rec = { note: wc.sonifyNote, onAt, lastCC: ksMode ? null : this.curveValToCC(this.evalWaveCurve(wc, 0)),
+                lastSend: nowPerf, offScheduled: false };
+            if (wc.endSeconds - wc.startSeconds <= OFF_HORIZON_S) {
+                output.send([0x80 | ch, wc.sonifyNote, 0], Math.max(onAt + 1, perfAt(wc.endSeconds)));
+                rec.offScheduled = true;
             }
-            const now = performance.now();
-            if (!ksMode && cc !== st.lastCC && now - st.lastSend >= 25) {
-                output.send([0xB0 | ch, 7, cc]);
-                st.lastCC = cc; st.lastSend = now;
-            }
-            // PLAN 2v: a morph note carries `morphBend`, note-relative cents
-            // breakpoints against its written key. Nothing else in the score has
-            // one, so absent morphBend this whole block is skipped and playback
-            // is byte-identical to before.
-            if (wc.morphBend && wc.morphBend.length) {
-                const dt = currentTimeSec - wc.startSeconds;
-                const bv = Math.round(this.morphBendAt(wc.morphBend, dt));
-                if (bv !== st.lastBend) {
-                    const v = Math.max(0, Math.min(16383,
-                        Math.round(8192 + (bv / (100 * 1.99)) * 8192)));   // MEASURED range
-                    output.send([0xE0 | ch, v & 0x7F, (v >> 7) & 0x7F]);
-                    st.lastBend = bv;
-                    (this._morphBentChannels || (this._morphBentChannels = {}))[
-                        ((tech && tech.port) || inst.port || '') + '|' + ch] = true;
-                }
-            }
+            this._activeCurvePlayback[wc.id] = rec;
         });
     },
 
@@ -9007,6 +9027,11 @@ const Composer = {
     },
 
     flushCurvePlayback() {
+        // Cancel what is queued ahead (the 100 ms lookahead of tickCurvePlayback — Web MIDI clear()), then
+        // close every note in flight; a note whose scheduled note-on is still ahead is closed just after it,
+        // which also covers an output without clear().
+        const nowPerf = performance.now();
+        Object.values(this._zoneMidiOutputs || {}).forEach(out => { if (out && typeof out.clear === 'function') { try { out.clear(); } catch (e) { } } });
         for (const [id, st] of Object.entries(this._activeCurvePlayback)) {
             const wc = this.objects.find(o => o.id === id);
             if (wc) {
@@ -9014,7 +9039,10 @@ const Composer = {
                 const tech = this.curveTechniqueFor(wc);
                 const output = inst && this._zoneMidiOutputs[((tech && tech.port) || inst.port || '').toLowerCase()];
                 const ch = ((tech && tech.channel) || 1) - 1;
-                if (output) { output.send([0x80 | ch, st.note, 0]); output.send([0xB0 | ch, 7, 127]); }
+                if (output) {
+                    const at = Math.max(nowPerf, (st.onAt || 0) + 5);
+                    output.send([0x80 | ch, st.note, 0], at); output.send([0xB0 | ch, 7, 127], at);
+                }
             }
         }
         this._activeCurvePlayback = {};
