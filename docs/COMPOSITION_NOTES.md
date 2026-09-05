@@ -580,3 +580,27 @@ names a library to confirm.
 - **Why 250 across the board:** the notation — the gravitational conductors' falling balls need that much
   between two cues on one lane, whatever the player could do.
 - **Built as STRIKES_TOOL U13** (the drawer's `accel · round robin` shape); RUNNING_LOG §91.
+
+---
+
+## CN-19 · 2026-09-05 — trills grown from the strikes: curve-driven, note by note, eating the notes they cover
+
+> *"These will be trills … like the ostinatos in the two-piano, two-percussion piece … lookup speed tables. We
+> won't be using the sample-library versions of trill and tremolo; we'll draw those in note by note using the
+> lookup tables — I'll have to listen and see which preset would be best for actualizing the trill."* · *"Create
+> three meta curves — maybe three meta windows … I just draw a bunch of points in, hit a button, and the curves
+> get drawn in, and then I can select any region and change its curvature."* · *"For any given part of any of the
+> curves, make a selection, probably in the actual tracks, and that curve segment from the reference curve will
+> appear in that track … this submodule is probably portable."* · *"One of the onsets in one of these strikes
+> launches a trill or tremolo — say strike six, when the violin hits its note, instead of the scattered-strike note
+> they use that pitch and start playing a trill, attacked, sforzando, directly into a trill, and I determine how long
+> it goes … the trill is growing from the strike."* · *"If I continue that violin trill past the next strike, detect
+> its length and delete the violin note from whatever strikes the trill is playing over … some start between strikes
+> and play across strikes … the system would know to eat the bass clarinet notes for strike eleven and twelve."* ·
+> *"Find the gaps between, say, second fifty and sixty and have some trills amongst the players that are available …
+> switching over to another instrument when that player has to do something."*
+> *(2026-09-05, session 3; speech-to-text cleaned, content untouched)*
+
+**AI reading (not the composer's words):** this is CN-1 / CN-6's "tremolos on curves" as a tool — the second material
+of the piece, born out of the first. The requirements and the vetting: RUNNING_LOG §97; the spec, once agreed, gets
+its own document (`docs/TRILLS_TOOL.md`, as STRIKES_TOOL for the strikes).

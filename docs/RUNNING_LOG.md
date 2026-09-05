@@ -2683,3 +2683,24 @@ an earlier insert of the same strike first — load the take, change, `Insert @ 
 the same start (end of #24 + the gap). Caveat named to him: if the change alters #25's length, #26 onward keep their
 old starts until each is re-inserted `after previous` in order — a "re-chain from here" button is a candidate if it
 happens often.
+
+## §97. The trill module: the composer's description (CN-19), what exists, the requirements and the vetting — talk only
+
+Composer: *"Let's work on a new module … describe in real life what I want to do, break it apart, get the requirements
+right, make a plan … vet it well."* (CN-19 verbatim.) **What exists, read from the code:** piece #2's ostinato engine is
+in the app — cells with items (pitches), phrasing ostinato / pulse, a density curve → inter-onset interval through
+`densityToIOI` (level 1 → 1000 ms … level 22 → 80 ms, exponential — the "lookup speed table"), a dynamic curve →
+velocity, jitter; realized from `zone` objects with `midiModel: 'ostinato'`, notes generated at play time, not stored.
+A trill is that with two items alternating; a tremolo one item. The META layer is one lane (`openMetaWin`), many
+shapes; curves are nodes + segments with bezier / power models and a slope; PLAN 1a already holds his drawing idea
+(extrema first, then per-segment shaping by wheel). Strikes are groups per lane; the accel runs deal players by time.
+The requirements as organized for him (R1 reference curves ×3, drawn by points · R2 the portable segment sampler ·
+R3 the trill object: pitch(es), articulation by ear, per-instrument speed table, fp attack, dynamic curve, duration ·
+R4 launch from a strike note · R5 eating the covered notes · R6 free trills · R7 the gap-filling weave · R8 notation ·
+R9 the S1 / IR contract) and the points he had not raised (the attack cannot grow from a one-shot — the launching
+note must switch articulation, or a doubling splits attack and trill between two players · the speed table's 80 ms
+floor and per-instrument limits · a per-player availability timeline shared by the eating rule and the run dealer ·
+eat by MUTE-RULE not by deletion, so re-inserts and undo survive · an eaten note as an accent inside the trill · what
+ends a trill · the fp as a built-in envelope · the trill's second pitch from the harmony (CN-6) · the trill as one
+generating object, never stored notes · a time-range selection on a lane · notation as a rate curve). Proposed step 0:
+hear it with today's ostinato zone on a violin lane to pick the articulation. Nothing built.
