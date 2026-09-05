@@ -5,24 +5,14 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ►** 2026-09-04 night (checkpoint) — **the piece is being composed in `scores/piece-septet.json`:**
-strikes #0–#16 of the piano reference (`ScatteredStrikes01`, the raw recording) as the composer
-orchestrates them in the STRIKES drawer — seven players each with their META shapes, 0.6–25.6 s —
-frozen as `piece-septet-v1.3` by his own Name version (v1.1 = the first three, CN-8, RUNNING_LOG §69; v1.2 five);
-84 takes in `bank/panel_snapshots.json`. **The save system is D17** (one rule: working copy · Save ·
-Name version · Reload; `?` in the app; live on his machine). **Immediately next (CN-15 → CN-18; the chart in RUNNING_LOG §86 →):** #17 (127 ms, evened) and #18 (gap 47.6) are in;
-the gap law ×1.5 from #17's 31.75 ms (71.4 · 107.2 · 160.7 · 241 · 362 · 542); from #20 the accelerating run —
-`accel · round robin` in the drawer: first gap = the chain's, steep 0.85, landing 45 ms, re-attack 250 ms, the players
-recycled — each strike by hand: pick · take · shape · gap · save take · `Insert @ after previous`; the original onset
-gaps kept end-to-start; lessons logged; a chain generator only if the chart earns it. **Queued at his word:** PLAN 0d as
-a bridge sweep — the strike techniques' sampled ranges and lengths measured by probe notes + the REC recording
-(RUNNING_LOG §94; the silent Bartók C7 of §93 is why); needs Reaper + the bridge + ten quiet minutes
-into the piece (`Insert @ original time` into the open piece; CN-5 → CN-6: strikes, then chosen
-harmony, then tremolos on curves); the drawer's next features at his word (I double stops · K lock ·
-M/N/P = PLAN 1d); phase 0's remainder (0d the Xsample measurements, 0c.5–0c.8, 0f, the 0h gate)
-when a strike needs it. Phase 0 so far: 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 done; the rack
-balanced (D13–D14) and addressable as code (D15). Piccolo vs bass flute undecided (CN-2).
-
+**NOW ►** 2026-09-05 evening (checkpoint) — **the piece is being composed in `scores/piece-septet.json`:** 32 strikes
+to 72.0 s (versions v1.1, v1.2, v1.3, v1.4, v1.5, v1.6-26-accelDone, v1.6; 134 takes). #0–#16 orchestrated chords; #17 evened; #18–#19 even with the gap law (×1.5
+from 31.75 ms); **#20–#26 accelerating runs** (`accel · round robin` — first gap = the chain's, steep 0.85, landing 45 ms, re-attack
+250 ms, pitches re-dealt from cycle 2; the recorded onset gaps kept end-to-start). **Immediately next:** #27 onward by hand
+(first gap 1831 · 2747 · 4120 ms — the composer may slow the law to ×1.3 here); the trill module (`TRILLS_TOOL.md`, PLAN 1e —
+spec written, step 0 a listening exercise, phase 1 on his go); the 0d bridge sweep of the strike techniques' ranges and lengths
+in his ten-minute window (RUNNING_LOG §94). Phase 0 so far: 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 done. Piccolo vs bass flute
+undecided (CN-2).
 ---
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
