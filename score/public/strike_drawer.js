@@ -93,7 +93,7 @@ const D = {
     el: null, body: null, db: null, seq: null, strike: null,
     voices: [], slots: [], ph: null, base: 0, prev: null, pickerLane: null,
     cfg: { strikeId: null, show88: false, rowH: 0, full: true, heightPx: 0, voicing: 'original', vSeed: 1, clusterOct: 0,
-           timeX: 1, shape: 'played', amount: 1, jitterMs: 0, rSeed: 1, order: 'played', oSeed: 1, simMs: 60,
+           timeX: 1, shape: 'played', amount: 1, jitterMs: 0, reverse: false, rotate: 0, rSeed: 1, order: 'played', oSeed: 1, simMs: 60,
            durX: 1, dynX: 1, flatten: true, mayFold: false, topLock: -1, bottomLock: -1, oSeedShuffle: 1, zoomPxPerMs: 0, rhythmW: 480 },
 
     // ------------------------------------------------------------------ init / build
@@ -335,7 +335,7 @@ const D = {
             dt0: n.dtMs, slot: i,
         }));
         this.slotsPlayed = s.notes.map(n => n.dtMs);      // the onset pattern as played (voice order)
-        this.cfg.voicing = 'original'; this.cfg.shape = 'played'; this.cfg.order = 'played'; this.cfg.timeX = 1; this.cfg.amount = 1; this.cfg.jitterMs = 0;
+        this.cfg.voicing = 'original'; this.cfg.order = 'played'; this.resetRhythm();
         this.asPlayedOrchestration();
         this.applyVoicing();
         this.save();
@@ -455,6 +455,9 @@ const D = {
 
     // ------------------------------------------------------------------ rhythm (J) and order (K)
     // the onset PATTERN after transforms: an array of slot times (ms), index = slot
+    // U5 (composer, 2026-09-04: "how to reset the rhythm"): the one place the rhythm goes back to as played —
+    // the button and every strike pick use it. Order and orchestration are not touched.
+    resetRhythm() { this.cfg.shape = 'played'; this.cfg.timeX = 1; this.cfg.amount = 1; this.cfg.jitterMs = 0; this.cfg.reverse = false; this.cfg.rotate = 0; },
     pattern() {
         const base = this.slotsPlayed.slice().sort((a, b) => a - b);
         const n = base.length; if (!n) return [];
@@ -657,19 +660,22 @@ const D = {
                 '<label>amount <input id="skAmt" type="range" min="0" max="1" step="0.05" style="width:64px"></label>' +
                 '<label>jitter <input id="skJit" type="number" min="0" max="500" step="5" style="' + inp + '"> ms</label>' +
                 '<div><button id="skRev" style="' + btn + '">reverse</button> <button id="skRot" style="' + btn + '">rotate</button> <button id="skRRe" style="' + btn + '">reshuffle</button></div>' +
+                '<div><button id="skRhyReset" style="' + btn + '" title="the rhythm as played: shape as played · span × 1 · jitter 0 · reverse off · rotate 0 — order and orchestration untouched; back undoes it (U5)">reset rhythm</button></div>' +
                 '<span style="color:#9a9;margin-top:4px">order</span>' +
                 '<label><select id="skOrder" style="' + inp + ';width:78px"><option value="played">as played</option><option value="lowhigh">low → high</option><option value="highlow">high → low</option><option value="outin">outside-in</option><option value="inout">inside-out</option><option value="random">random</option></select></label>' +
                 '<div><button id="skORe" style="' + btn + '">shuffle order</button></div><span style="color:#666">click two dots to swap<br>shift-click = solo</span>' +
                 '<label style="margin-top:4px">width <input id="skRhyW" type="range" min="320" max="1400" step="20" style="width:64px"></label>';
             wrap.appendChild(ctl);
             const q = sel => ctl.querySelector(sel);
-            q('#skTimeX').addEventListener('change', e => { this.cfg.timeX = clamp(+e.target.value || 1, 0.05, 20); this.save(); this.render(); });
+            q('#skTimeX').addEventListener('change', e => { this.snapshot(); this.cfg.timeX = clamp(+e.target.value || 1, 0.05, 20); this.save(); this.render(); });
             q('#skShape').addEventListener('change', e => { this.snapshot(); this.cfg.shape = e.target.value; this.save(); this.render(); });
+            q('#skAmt').addEventListener('pointerdown', () => this.snapshot());   // once per drag, not per tick
             q('#skAmt').addEventListener('input', e => { this.cfg.amount = +e.target.value; this.save(); this.render(); });
-            q('#skJit').addEventListener('change', e => { this.cfg.jitterMs = clamp(+e.target.value || 0, 0, 500); this.save(); this.render(); });
+            q('#skJit').addEventListener('change', e => { this.snapshot(); this.cfg.jitterMs = clamp(+e.target.value || 0, 0, 500); this.save(); this.render(); });
             q('#skRev').addEventListener('click', () => { this.snapshot(); this.cfg.reverse = !this.cfg.reverse; this.render(); });
             q('#skRot').addEventListener('click', () => { this.snapshot(); this.cfg.rotate = (this.cfg.rotate || 0) + 1; this.render(); });
             q('#skRRe').addEventListener('click', () => { this.snapshot(); this.cfg.rSeed++; if (this.cfg.shape === 'played') this.cfg.shape = 'random'; this.save(); this.render(); });
+            q('#skRhyReset').addEventListener('click', () => { this.snapshot(); this.resetRhythm(); this.save(); this.render(); this.setStatus('rhythm reset to as played (span × 1 · jitter 0 · reverse off · rotate 0) — back undoes it'); });
             q('#skOrder').addEventListener('change', e => { this.snapshot(); this.cfg.order = e.target.value; this.save(); this.render(); });
             q('#skORe').addEventListener('click', () => { this.snapshot(); this.cfg.oSeed++; this.cfg.order = 'random'; this.save(); this.render(); });
             q('#skRhyW').addEventListener('input', e => { this.cfg.rhythmW = +e.target.value; this.save(); this.render(); });

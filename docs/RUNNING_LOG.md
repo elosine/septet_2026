@@ -2188,3 +2188,34 @@ from is Ferneyhough's *Etudes Transcendantales / Intermedio II* (1982–85), the
 part — the attachment of the small notes, the slashed beam, the front-matter time-source rule; read
 from the score, not asserted from memory. Nothing built; the composing path (strikes #5 onward) is
 unchanged. The piccolo is named a second time (CN-4, CN-9) — CN-2 still open, not a decision.
+
+## §73. U5 built: reset rhythm — one button, the shared reset, two traps closed; the pitch question
+
+Composer: *"a"* — option A of the offer in the chat (a `reset rhythm` button, and a strike re-pick
+clearing reverse and rotate). Built in `score/public/strike_drawer.js`: `resetRhythm()` — shape as
+played · span × 1 · amount 1 · jitter 0 · reverse off · rotate 0 — called by the new button (under
+reverse · rotate · reshuffle; it snapshots first, so `back` undoes it) and by `select()` on every
+strike pick; `reverse: false, rotate: 0` added to the cfg defaults (a snapshot taken before the first
+click used to lack the keys, so `back` could not undo a first reverse or rotate — `applyState`'s
+Object.assign left them as they were); span × and jitter snapshot on change, amount once per drag
+(pointerdown, not per input tick). Order and orchestration untouched by the reset. *Rejected:* saving
+reverse / rotate to localStorage (they have no visible indicator, and a re-pick clears them anyway).
+
+**Verified on the throwaway server** (`.claude/launch.json` now carries `score-5301`: PowerShell sets
+PORT=5301 for the same `scores/` folder; nothing opened, no working copy created; the pane hidden, so
+the controls were driven by the events they listen to — change / input / pointerdown / click; zero
+console errors): strike #0 (9 notes) as played → pattern() = the as-played onsets · shape even, span ×
+2, jitter 50, reverse, rotate ×2 → pattern differs, the controls show the values · `reset rhythm` →
+cfg back to the six defaults, pattern() = as played again, the four controls read played / 1 / 0 / 1,
+status "rhythm reset to as played (…) — back undoes it" · `back` → the transformed state returns
+(shape even, ×2, 50 ms, reverse, rotate 2) · with reverse + rotate still on, strike #5 picked (21
+notes, 674 ms) → reverse false, rotate 0, shape played (trap 1 closed) · span × 3 → back → 1; jitter
+40 → back → 0; amount 0.5 → back → 1 (trap 2 closed) · a first reverse → back → off; a first rotate →
+back → 0. Page change only: the composer reloads; no server restart.
+
+**Also asked, mid-build** (composer: *"is there a way to reassign a different pitch to an already
+assigned instrument"*): answered from the code and filed as STRIKES_TOOL U6 — the drawer moves pitches
+by octave only (voicing presets; the fold); another note of the chord goes to a player by
+arm-and-click (double-click the dot, click the row; it is added to the row, the old note stays until
+moved); no hand skip, no per-voice octave nudge, no free pitch edit (that is a new harmony, M/N).
+Nothing built for it.

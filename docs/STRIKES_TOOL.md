@@ -146,7 +146,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   first double stop is placed. Winds cannot take two; the bass clarinet's multiphonics are a
   technique, not a second note.
 
-## J · The rhythm column — `built 2026-09-03 (span × · shape + amount · jitter · reverse · rotate · reshuffle; the bands re-derived live)`
+## J · The rhythm column — `built 2026-09-03 (span × · shape + amount · jitter · reverse · rotate · reshuffle; the bands re-derived live)` · `reset rhythm 2026-09-04 (U5): one button back to as played; span / amount / jitter undoable; a strike re-pick clears reverse and rotate`
 
 > *"A third column will be the rhythms. A relatively zoomed-in view where I should be able to
 > control zoom to a certain extent. Something close to the piano keyboard, or they could just
@@ -341,7 +341,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   them; the noise technique's keys; the open strings) — click to hear, click to select; the
   choice is stored on the voice (the stand-in key). Out of the way until needed.
 
-## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64)
+## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built`
 
 > Composer: *"collect these and I'll have you do a feature update all at once."* Each request
 > verbatim, the AI's reading beneath; built together when the composer says so.
@@ -373,7 +373,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   ~40 % of the drawer instead of the whole remainder (a zoom slider keeps the wide view), the
   bands drawn at true 60 ms width (thin at that zoom); the space saved goes to U1's gap.
 
-- **U5 — reset the rhythm in one click.** *Composer (2026-09-04 night): "strikes how to reset the
+- **U5 — reset the rhythm in one click — `built 2026-09-04, verified on the throwaway server (RUNNING_LOG §73)`.** *Composer (2026-09-04 night): "strikes how to reset the
   rhythm"* — *AI finding, from the code:* no one-click reset exists. As played = shape `as played` ·
   span × 1 · jitter 0 · reverse off · rotate back at 0 (amount is moot under `as played`: the blend
   is between identical patterns). Two traps: (1) re-picking a strike in the sequence resets shape /
@@ -381,6 +381,18 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   up rotated while its menu says "as played"; (2) span ×, amount and jitter changes take no snapshot,
   so `back` cannot undo them. *Proposed:* a `reset rhythm` button (the five values above), and
   `select()` clearing reverse / rotate with the rest. A page change only — a reload to take effect.
+  *Built as proposed:* `reset rhythm` under reverse · rotate · reshuffle; `resetRhythm()` shared by the
+  button and `select()`; `reverse: false, rotate: 0` in the defaults so the first click is undoable;
+  span × / jitter snapshot on change, amount once per drag. Order and orchestration untouched.
+- **U6 — a different pitch for an instrument already assigned.** *Composer (2026-09-04 night, while
+  composing): "is there a way to reassign a different pitch to an already assigned instrument"* —
+  *AI answer, from the code:* the drawer never changes a pitch CLASS — the harmony is the strike's own;
+  pitches move by octave only (the voicing presets, all voices at once; the fold into a player's range,
+  ↑↓). To give a player another note OF THE CHORD: double-click that note's dot on the keyboard ("voice X
+  armed"), then click the player's row — the voice moves there and is ADDED to what the row already
+  has; the note it had stays until it is armed and moved elsewhere. Gaps found: no hand "nobody plays
+  this note" (skip is set only by a misfit); no per-voice octave nudge by hand; no free pitch edit (a new
+  pitch class = a new harmony = M/N). *Not built — the composer's call which of the three, if any.*
 
 ## Open questions for the composer (only what blocks the next piece)
 

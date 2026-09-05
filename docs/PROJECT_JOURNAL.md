@@ -105,6 +105,9 @@ the samplers addressable as code (0k, D15), D16 tongue ram; RUNNING_LOG §40–6
   CN-8, §69) and `-v1.2` (five strikes, the composer's own Name version).
 - **`scores/` sorted:** `ScatteredStrikes01` = the piano reference (the raw 577-strike recording,
   restored); the hand-made copies deleted at the composer's word. §70–71.
+- **U5 built after the checkpoint** (`reset rhythm`: one button back to as played; span / amount / jitter
+  undoable; a strike re-pick clears reverse and rotate; verified on the throwaway server). **U6** (another
+  pitch for an assigned player) answered from the code and filed, not built. RUNNING_LOG §72–73.
 - Sketch pad: CN-8 (the piece begins with the strikes) · CN-9 (the piccolo–bass clarinet looping line
   uses grace-note figures; notation after Ferneyhough, *Etudes Transcendantales* No. 1 oboe → PLAN 0g's
   2a list; RUNNING_LOG §72); for piece #6, animated conductions.
@@ -139,7 +142,8 @@ seen this conversation):*
   only if the rack is touched.
 - **How the AI works the app:** its Browser pane opens `http://localhost:5300/composer.html` on the
   composer's server (no Web MIDI; it never edits his scores). A change to the save code is verified on a
-  throwaway server — `PORT=5301 node score/server.js`, test files `zz-ai-*`, deleted after. A server
+  throwaway server — `preview_start score-5301` (in `.claude/launch.json`: PORT=5301, the same `scores/`),
+  test files `zz-ai-*`, deleted after. A server
   change needs the composer to restart `node score\server.js`; a page change needs a reload.
 - **How to work the rack now:** `node tools/reaper_job.js heartbeat | tracks | fader | run …`
   (docs/REAPER_CONTROL.md, reaper/bridge/README.md); `jobs/peakwatch.lua` + a probe note = the
