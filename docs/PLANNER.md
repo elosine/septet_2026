@@ -10,7 +10,7 @@ to 72.0 s (versions v1.1, v1.2, v1.3, v1.4, v1.5, v1.6-26-accelDone, v1.6; 134 t
 from 31.75 ms); **#20–#31 accelerating runs** (`accel · round robin` — re-attack 250 ms, pitches re-dealt from cycle 2; #20–#26 on the ×1.5
 table with steep 0.85 and a 45 ms landing, from about #27 the composer's own first gaps and landings, #31: 256 → 11 ms; the
 recorded onset gaps kept end-to-start). **Immediately next:** #32 onward by hand; the trill module (`TRILLS_TOOL.md`, PLAN 1e —
-spec written, step 0 a listening exercise, phase 1 on his go); the 0d bridge sweep of the strike techniques' ranges and lengths
+spec written; step 0 = the listening file `scores/trill0-listen.json` (`tools/trill0_listen.js`, RUNNING_LOG §99), awaiting his ears; phase 1 on his go); the 0d bridge sweep of the strike techniques' ranges and lengths
 in his ten-minute window (RUNNING_LOG §94). Phase 0 so far: 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 done. Piccolo vs bass flute
 undecided (CN-2).
 ---

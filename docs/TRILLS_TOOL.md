@@ -133,10 +133,14 @@ animation here, it'll just say trill". The animated score shows the span; the cu
 
 ## 11 · Phases and estimates
 
-0. **Hear it — no build.** `Add Zone` on a violin lane, Model → Ostinato, two alternating pitches, a speed curve; try
-   senza vibrato, staccato, marcato; pick the articulation per instrument. Exact click-steps on request.
+0. **Hear it — no build.** *Corrected 2026-09-05 (RUNNING_LOG §99): the zone route is dead here — the zone panel routes through
+   piece #2's registry, empty in this repo — so:* `node tools/trill0_listen.js` writes `scores/trill0-listen.json`, per lane a row
+   of passages, one per candidate articulation, the two pitches alternating on a 3 s ramp from the slow rate to the fast one
+   (§2's table), the fp 127 → 60, a marker naming each. Open it from the Experiments menu, SPACE, pick the articulation per
+   instrument; judge the fp and the top speed. Edit the script's tables (candidates, rates, `DROP`), re-run, reload.
 1. **The trill object** (§2, §6, §8's option 1): the type, the per-instrument table, the fp, mute-by-rule, `mutedBy`
-   on save, the greyed drawing. About a day.
+   on save, the greyed drawing; the playability checker (the hard / soft badge) taught that a trill is one object — its notes
+   re-attack by design (RUNNING_LOG §99). About a day.
 2. **Three META lanes, tracing, the live reference, the span selection** (§3, §4). About a day; the contract note.
 3. **Launch from a strike** and `busy()` in the dealer (§5, §7). Half a day.
 4. **Free trills and edge stretching** (§4's `T` on a span; the default length). Small.
@@ -145,6 +149,7 @@ animation here, it'll just say trill". The animated score shows the span; the cu
 
 ## 12 · Open, for the composer, when reached
 
-- The trill articulation per instrument (step 0 decides).
+- The trill articulation per instrument (step 0 decides — the listening file `scores/trill0-listen.json`).
+- The fp drop level (60 in the listening file) and whether the attack needs §8's option 2 or 3 — the same listening.
 - Whether the second pitch may come from the harmony (CN-6) — a menu item once 1d exists.
 - Whether eaten notes should ever accent (default off).

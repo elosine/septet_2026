@@ -2721,3 +2721,45 @@ restores the strike exactly), the mute rule with `mutedBy` stamped on save for d
 shared with the accel dealer, the weave later, notation as `tr` + span with the curve demo-only, phases 0–6 with
 estimates, three open points. PLAN 1e added (and 1a carries his simpler-drawing words); PLANNER outline item 2 points
 to the spec. Step 0 needs no build: a zone with the ostinato model on a violin lane to choose the articulation.
+
+## §99. Trill step 0 cannot use the ostinato zone here (the registry has zero instruments) — the listening file instead (`tools/trill0_listen.js` → `scores/trill0-listen.json`)
+
+Composer (2026-09-05 evening, after the checkpoint; his pick of the three tracks): *"walk me thru trill0 pls, Will we be
+creating a new save file? And then what will we be doing in what order... and will you be generating... well, just let me
+know what you'll be generating and what I have to draw in."* Checked before writing the click-steps §98 promised: the zone
+panel's ostinato path is piece #2's whole — Player = Piano 1 / Piano 2 / Perc 1 / Perc 2, Instrument from
+`InstrumentRegistry`, which loads `docs/instrument_map.json` — zero instruments in this repo (NITS 2026-09-03: "not what
+routes MIDI here; `sandbox/instruments.js` is"), so `getZoneMidiRouting` returns null and Generate would answer "Cannot
+resolve MIDI routing"; the pitches are hands L / R on chord markers; generation is a server call. **Correction to §98 and
+to TRILLS_TOOL §11 phase 0: "no build" was wrong for the zone route** — step 0 by zone needs the registry filled (PLAN 0c)
+or the panel rewired: a build, for a listening test. Rejected. Instead the no-build route the strikes already use: plain
+`waveCurve` notes with a `technique` (`sonifyMode: 'plain'`, `recVel` = the velocity; the play engine sends the technique's
+CC0 in a 150 ms pre-arm and the note at `recVel`), written by a script into a score file of its own.
+
+**Built** `tools/trill0_listen.js` → `scores/trill0-listen.json` (an experiment in the Experiments menu; the piece untouched):
+per lane a row of passages, one per candidate articulation; a passage = the two pitches alternating (the upper chromatic
+neighbour), the rate a linear ramp over 3 s from the instrument's slow trill to its fast one (TRILLS_TOOL §2's table: Vn / Va
+6 → 14 per second · Vc 5 → 12 · Fl 6 → 13 · BCl 5 → 11 · Pno 5 → 12), held 1 s at the fast rate, the first note at 127 and
+the rest at 60 (the fp, §8 option 1); sustained articulations overlap the next note by 10 ms, short ones cut 5 ms before it;
+1.5 s between passages, 3 s between instruments; a marker on the lane at each passage start with its name. Candidates —
+strings (Vn1 · Va · Vc; Vn2 is the same library): senza vib #6 · vibrato #2 · staccato #19 · marcato stac #13 · marcato sfz
+#12 · spiccato #16; flute: ord · staccato (Fluteb) · sforzando · fortepiano · ord + a tongue ram at the attack (§8 option 3
+— possible for the flute because its strike slot is another channel; the strings' Bartók and the bass clarinet's slap share
+the channel with the sustained presets and would need a second slot); bass clarinet: senza vib #13 · staccato #19 · with
+accent #20 · secco #27 · portato #28; piano: main. Pitches mid-register: A4/B♭4 · D4/E♭4 · G3/A♭3 · E5/F5 · D3/E♭3 · C5/D♭5.
+The file: 1180 notes + 29 markers, 169.7 s; the shortest note 66 ms (staccato at 14 per second) — above the two-frame floor
+of the frame-driven note emission (a note that starts and ends inside one frame is never turned on). The library's own
+trill / tremolo presets (SI2 `trill_m2`, Xsample `trem_vel`) are left out by the composer's rule (§97); a reference row if
+he asks.
+
+**Checked:** every pitch inside its technique's range (`sandbox/instruments.js` evaluated in node), no same-pitch overlap
+within a passage (a note-off would cut its twin); loaded on the throwaway server (:5301) as a copy `zz-ai-trill0` (deleted
+after, with its working copy): 1209 objects, 29 marker labels in the DOM, zero console errors. **Seen:** the playability
+badge reads "632 hard · 519 soft" — the checker counts every trill note as a re-attack too close and the 10 ms overlaps as
+double-bookings; right for strikes, wrong for a trill — phase 1 must teach it that a trill is one object (TRILLS_TOOL §11).
+*Rejected:* a zone per passage (no routing here) · all instruments stacked at the same times (he would have to solo;
+sequential blocks need nothing) · two drop levels per passage (double the length — one constant `DROP`, re-run to change).
+
+**What the composer does:** reload, open `trill0-listen` from the Experiments menu (→ its working copy, D17), SPACE from the
+start or scrub to a marker, and answer per instrument: the articulation · whether 127 → 60 reads as fp · the top speed.
+**What he draws:** nothing — the curves come with phase 2 (three META lanes, trace then adjust). Awaiting his ears.

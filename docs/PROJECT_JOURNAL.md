@@ -104,28 +104,34 @@ proven, the rack built, the drawer built.
 - **Written, not built:** `docs/TRILLS_TOOL.md` (PLAN 1e — the trill module's spec, phases 0–6) · STRIKES_TOOL W (the curves
   of the rush) · V (processes across strikes; the chain generator only if the chart earns it) · the 0d bridge sweep of the
   strike techniques' sampled ranges and lengths (RUNNING_LOG §94), on hold for a ten-minute window.
+- **Trill step 0 built as a file, not a zone (2026-09-05 evening, after the checkpoint):** the app's ostinato zone routes through
+  piece #2's registry (empty here), so `tools/trill0_listen.js` writes `scores/trill0-listen.json` — 29 trill passages, one per
+  candidate articulation per lane, on a rate ramp with the fp 127 → 60, a marker naming each; loaded clean on :5301. Awaiting
+  the composer's ears: the articulation per instrument · the fp · the top speed. RUNNING_LOG §99.
 - D17 (the save system) live; PLAN 1b done. Journal §4 D17. NITS: the stale stand-in after a voicing change.
 
 **Next up:** the composer's pick, each morning: (a) the chain by hand from **#32** (his own first gaps and landings now; the
-×1.5 table in RUNNING_LOG §92 if he returns to it) — log the chart; (b) the trill module: step 0 (a listening exercise with today's zones — write him the exact
-click-steps), then phase 1 (the trill object) on Fable; (c) the 0d sweep when he gives the window (Reaper + the bridge).
+×1.5 table in RUNNING_LOG §92 if he returns to it) — log the chart; (b) the trill module: step 0 = he listens to `trill0-listen` (Experiments menu) and reports per instrument, then phase 1 (the trill object) on Fable; (c) the 0d sweep when he gives the window (Reaper + the bridge).
 
 **NEXT STEPS · MODEL · CLEAR:**
 1. ☑ 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1b · 1c (U1–U13b) DONE and pushed; 1e spec written.
 2. ► **The composer composes** (any model): strikes #32 onward as accel runs; fix what blocks, file the rest in STRIKES_TOOL.
-3. **TRILLS_TOOL phases 1–4** (Fable; a day each for 1 and 2) when he says go; step 0 first.
+3. **TRILLS_TOOL phases 1–4** (Fable; a day each for 1 and 2) when he says go; step 0's file is ready — his ears first.
 4. **0d sweep** (Fable, with the bridge) in his window; 0c / 0h after.
 
 **Open at session end** *(2026-09-05 evening, Fable — mid-session checkpoint, for an AI that has never seen this conversation):*
 - **Task and state:** the build work of session 3 is complete, verified and pushed; nothing is half-built. The composer is
   composing in the running app (his server on :5300; the page reloaded after every drawer change; the server unchanged today).
-- **Latest deliverable:** `docs/TRILLS_TOOL.md` (the spec, no code) and the drawer as of U13b in `score/public/strike_drawer.js`;
+- **Latest deliverable:** `scores/trill0-listen.json` + `tools/trill0_listen.js` (trill step 0, RUNNING_LOG §99); before it
+  `docs/TRILLS_TOOL.md` (the spec, no code) and the drawer as of U13b in `score/public/strike_drawer.js`;
   `scores/piece-septet.json` + versions + `bank/panel_snapshots.json` committed at this checkpoint.
-- **Next concrete step:** `/postclear`, then ask the composer where he is — composing #32 onward (the default; the ×1.5 table is
-  RUNNING_LOG §92 if wanted — he has been choosing his own gaps since about #27), the trill module's step 0, or the 0d window. Before any commit run
+- **Next concrete step:** the composer listens to `trill0-listen` (Experiments menu, after a reload; SPACE from the start or
+  scrub to a marker) and reports per instrument: the articulation · whether 127 → 60 reads as fp · the top speed. The AI writes the
+  answers into TRILLS_TOOL §8 / §12 and `bank/trill_speed.json`, then phase 1 (the trill object) on his go. Composing #32 onward
+  continues at his pace (his own gaps since about #27; the ×1.5 table is RUNNING_LOG §92). Before any commit run
   `node tools/unsaved_check.js`; stage `scores/piece-septet*.json` and `bank/panel_snapshots.json` if he has worked.
 - **Resume reads:** `docs/PLANNER.md` NOW · `docs/STRIKES_TOOL.md` U11–U13b, V, W · `docs/TRILLS_TOOL.md` if the trill work
-  starts · `RUNNING_LOG.md` §86–98 (the chart of the chain and the trill talk) · `docs/REAPER_CONTROL.md` only for the 0d sweep.
+  starts · `RUNNING_LOG.md` §86–99 (the chart of the chain, the trill talk, step 0's file) · `docs/REAPER_CONTROL.md` only for the 0d sweep.
 - **How the AI works the app:** its Browser pane opens `http://localhost:5300/composer.html` on the composer's server (no Web
   MIDI; it never edits his scores). A change to the app is verified on a throwaway server — `preview_start score-5301` (in
   `.claude/launch.json`: PORT=5301, the same `scores/`), the session named `zz-ai-*` so the autosave writes a throwaway working
@@ -134,7 +140,7 @@ click-steps), then phase 1 (the trill object) on Fable; (c) the 0d sweep when he
 - **How to work the rack now:** `node tools/reaper_job.js heartbeat | tracks | fader | run …` (docs/REAPER_CONTROL.md);
   `jobs/peakwatch.lua` + a probe note = the proof for routing; never trust frozen meters before dumping mute / solo / routing (P10).
 - **Pending the composer:** CN-2 (piccolo vs bass flute; the piccolo named twice) — not blocking · the 0d window · the trill
-  articulation per instrument (step 0) · how the runs continue from #32 (his own numbers since about #27).
+  articulation per instrument, the fp and the top speed (step 0 — listen to `trill0-listen`) · how the runs continue from #32 (his own numbers since about #27).
 - **Deliberately uncommitted:** nothing — `git status` is clean after this checkpoint's commit (`scores/*-work.json` and
   `scores/versions/` are gitignored by design).
 
