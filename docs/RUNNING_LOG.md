@@ -2470,3 +2470,19 @@ strike exists once in the score and a law switch never leaves the old chain behi
 × ratio · + step · Fibonacci (d, 2d, 3d, 5d … from the anchor) · a custom list of ms as the escape hatch.
 Build order proposed: the ms box + `Insert @ after previous` first (per-strike, an hour), the chain panel on top
 (a few hours, assembled from load-take · set-span · notesFor · insert · replace-by-group). Nothing built.
+
+## §86. By hand first: the recipe for #18, and two findings for the chart (no precise playhead; panel edit order)
+
+Composer: *"Let's just do this whole sequence by hand, and then we'll chart how to do it and then maybe build a
+generator after that. So what do I need to do eighteen?"* Findings while writing the recipe: (1) the score has
+**no way to place the playhead at a typed time** — it moves by drag, wheel, page keys, zoom (`scrollOffset`);
+`Insert @ playhead` is therefore imprecise by hand. (2) The object panel retimes a META group shape with its
+members through `scaleGroupTo(shape, newStart, newEnd)` — an affine rescale between the two edges; a typed START
+alone compresses the strike against its fixed end. But **end first, then start, each + the same shift, is an
+exact translation** (the two ratios cancel; ±1 ms from the 3-decimal rounding per step). (3) Because the gaps are
+onset-to-onset and "end" = the last onset, start(n) = t0(n) + Σ d(k) over the stretched members before it — so the
+by-hand placement is `Insert @ original time` + a shift equal to the accumulated durations: #18 shifts by d(17) =
+0.127 s (→ 28.302), #19 by 0.127 + 0.190 = 0.317 (→ 30.120), #20 by 0.603 … — no end-of-previous lookup needed.
+The recipe given for #18 (×1.5 from #17's 127 ms → 190 ms; span × 190 ÷ 110 = 1.73; take 18-c → span × → hear →
+take 18-d → `Insert @ original time` → META shape: end + 0.127, then start 28.302 → Save). Awaiting his report
+of what bit.
