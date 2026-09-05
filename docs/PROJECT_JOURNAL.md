@@ -107,7 +107,10 @@ proven, the rack built, the drawer built.
 - **Trill step 0 built as a file, not a zone (2026-09-05 evening, after the checkpoint):** the app's ostinato zone routes through
   piece #2's registry (empty here), so `tools/trill0_listen.js` writes `scores/trill0-listen.json` — 29 trill passages, one per
   candidate articulation per lane, on a rate ramp with the fp 127 → 60, a marker naming each; loaded clean on :5301. Awaiting
-  the composer's ears: the articulation per instrument · the fp · the top speed. RUNNING_LOG §99.
+  the composer's ears: the articulation per instrument · the fp · the top speed. RUNNING_LOG §99. **Heard and rejected**
+  ("these don't sound right"): the deep dive into piece #2's ostinato timing model followed — RUNNING_LOG §100 — the
+  smoothness there is his own playing, curve-indexed; his three new trill sample files (`scores/trill_playing_samples*.json`,
+  untracked) are usable by a speed-indexed ingestion; options A (adapt) / B (re-record single-ramp bursts) put to him. CN-21.
 - D17 (the save system) live; PLAN 1b done. Journal §4 D17. NITS: the stale stand-in after a voicing change.
 
 **Next up:** the composer's pick, each morning: (a) the chain by hand from **#32** (his own first gaps and landings now; the
@@ -125,13 +128,13 @@ proven, the rack built, the drawer built.
 - **Latest deliverable:** `scores/trill0-listen.json` + `tools/trill0_listen.js` (trill step 0, RUNNING_LOG §99); before it
   `docs/TRILLS_TOOL.md` (the spec, no code) and the drawer as of U13b in `score/public/strike_drawer.js`;
   `scores/piece-septet.json` + versions + `bank/panel_snapshots.json` committed at this checkpoint.
-- **Next concrete step:** the composer listens to `trill0-listen` (Experiments menu, after a reload; SPACE from the start or
-  scrub to a marker) and reports per instrument: the articulation · whether 127 → 60 reads as fp · the top speed. The AI writes the
-  answers into TRILLS_TOOL §8 / §12 and `bank/trill_speed.json`, then phase 1 (the trill object) on his go. Composing #32 onward
-  continues at his pace (his own gaps since about #27; the ×1.5 table is RUNNING_LOG §92). Before any commit run
+- **Next concrete step:** the composer's call on RUNNING_LOG §100's options — (A) adapt his three trill sample files by a
+  speed-indexed ingestion, (B) re-record short single-ramp bursts — then the test: a drawn curve on a violin lane, the trill
+  written under it from the table by a script (the #2 lookup with stretch / smooth / speed), played in the app. **Nothing is
+  built until he says.** Then phase 1 (the trill object) on the sampled model. Composing #32 onward continues at his pace. Before any commit run
   `node tools/unsaved_check.js`; stage `scores/piece-septet*.json` and `bank/panel_snapshots.json` if he has worked.
 - **Resume reads:** `docs/PLANNER.md` NOW · `docs/STRIKES_TOOL.md` U11–U13b, V, W · `docs/TRILLS_TOOL.md` if the trill work
-  starts · `RUNNING_LOG.md` §86–99 (the chart of the chain, the trill talk, step 0's file) · `docs/REAPER_CONTROL.md` only for the 0d sweep.
+  starts · `RUNNING_LOG.md` §86–100 (the chart of the chain, the trill talk, step 0's file, the piece #2 deep dive) · `docs/REAPER_CONTROL.md` only for the 0d sweep.
 - **How the AI works the app:** its Browser pane opens `http://localhost:5300/composer.html` on the composer's server (no Web
   MIDI; it never edits his scores). A change to the app is verified on a throwaway server — `preview_start score-5301` (in
   `.claude/launch.json`: PORT=5301, the same `scores/`), the session named `zz-ai-*` so the autosave writes a throwaway working
@@ -140,7 +143,8 @@ proven, the rack built, the drawer built.
 - **How to work the rack now:** `node tools/reaper_job.js heartbeat | tracks | fader | run …` (docs/REAPER_CONTROL.md);
   `jobs/peakwatch.lua` + a probe note = the proof for routing; never trust frozen meters before dumping mute / solo / routing (P10).
 - **Pending the composer:** CN-2 (piccolo vs bass flute; the piccolo named twice) — not blocking · the 0d window · the trill
-  articulation per instrument, the fp and the top speed (step 0 — listen to `trill0-listen`) · how the runs continue from #32 (his own numbers since about #27).
+  articulation (`accent_senza_vel`, what he played his samples on?) · RUNNING_LOG §100's A / B · committing his three
+  `trill_playing_samples*` files (his takes, untracked) · how the runs continue from #32 (his own numbers since about #27).
 - **Deliberately uncommitted:** nothing — `git status` is clean after this checkpoint's commit (`scores/*-work.json` and
   `scores/versions/` are gitignored by design).
 

@@ -52,6 +52,12 @@ items whose speed table is per instrument and whose floor is not 80 ms.
 finger trill 6 → 14 per second, cello 5 → 12, flute 6 → 13, bass clarinet 5 → 11, piano 5 → 12. A tremolo (one
 pitch) may use a second row (bowed tremolo faster).
 
+> **2026-09-05 evening — under review (RUNNING_LOG §100, CN-21):** the composer heard the formula (`trill0-listen`) and
+> rejected it. The realization is to follow piece #2's ostinato timing model instead: his own trill playing
+> (`scores/trill_playing_samples*.json`, accent senza vib) indexed by speed → a per-instrument table of gaps, velocities and
+> note lengths, looked up along the curve with stretch / smooth / speed; the rate table above becomes the fallback. His
+> decision on the samples (adapt / re-record) pending; nothing built.
+
 ## 3 · The reference curves — three META lanes
 
 - The META layer becomes three: A, B, C — three lanes, each toggled like today's META window, each holding one

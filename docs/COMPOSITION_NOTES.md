@@ -624,3 +624,19 @@ its own document (`docs/TRILLS_TOOL.md`, as STRIKES_TOOL for the strikes).
 **AI reading:** written straight into `docs/TRILLS_TOOL.md` §1 as the decisions; the spec follows them. The one
 musical point to carry: the rate curve is a demo device — the score says *tr* over a span; the players' own speed is
 the real one.
+
+---
+
+## CN-21 · 2026-09-05 — "these don't sound right": the trill's timing must come from playing, not a formula
+
+> *"These don't sound right. So can you do a deeper dive into the two piano, two percussion piece, and see how we actually
+> realize those curves for that. Those sound a lot smoother. And then I made some new ones, but I can't remember if I played
+> together with a graphic curve for the two piano piece. So if that's the case, then we can draw some curves, and I can play
+> along with those if that's easier. But the ones I made were trill playing samples and then a viola version and a cello
+> version … Either you or I will draw a curve and then apply the slope from the curve to the trill speed. We need to figure
+> out how that was done, how those samples are being applied."*
+> *(2026-09-05, session 3, evening; speech-to-text cleaned, content untouched)*
+
+**AI reading (not the composer's words):** the trill's realization changes model — from a rate table (TRILLS_TOOL §2) to
+piece #2's human-sampled timing: his own trill playing, indexed by speed, looked up along the curve. The findings and the
+options are RUNNING_LOG §100; his decision pending.

@@ -2763,3 +2763,69 @@ sequential blocks need nothing) · two drop levels per passage (double the lengt
 **What the composer does:** reload, open `trill0-listen` from the Experiments menu (→ its working copy, D17), SPACE from the
 start or scrub to a marker, and answer per instrument: the articulation · whether 127 → 60 reads as fp · the top speed.
 **What he draws:** nothing — the curves come with phase 2 (three META lanes, trace then adjust). Awaiting his ears.
+
+## §100. "These don't sound right": the deep dive into piece #2's ostinato realization, the composer's new trill samples, and what this repo actually has — research only, nothing built
+
+Composer (2026-09-05 evening, after hearing `trill0-listen`): *"These don't sound right. So can you do a deeper dive into the
+two piano, two percussion piece, and see how we actually realize those curves … Those sound a lot smoother. And then I made
+some new ones, but I can't remember if I played together with a graphic curve for the two piano piece … the ones I made were
+trill playing samples and then a viola version and a cello version … please don't just go ahead and make things before
+checking in with me … nail down the methodology, how those were made, and why those sound much smoother … let's talk about
+the new samples that I made, if I need to redo them or if we can still use the old ones, or we can adapt these new ones. And
+then we'll do a test. Either you or I will draw a curve and then apply the slope from the curve to the trill speed."*
+
+**How piece #2 did it** (`docs/OSTINATO_TIMING_MODEL.md`, its decision #13 of 2026-03-28; `lilypond_code/ingest_ostinato.js`,
+`generate_ostinato_midi.js`; its `server.js` 783 / 1021 / 1038): the composer played six ostinato bursts of ~6.5 s on the
+keyboard, each one ramp along a linear 0 → 1 curve (slow-soft → fast-loud). The ingestion splits bursts at silences over
+500 ms, groups notes within 30 ms into attacks, and tags every attack with its **curve position = its time within the
+burst, normalized first onset → last onset**, its gap to the next attack, its average velocity, its note count and note
+durations — pitch-agnostic. Generation walks the drawn curve: at each moment it reads the curve's height (0–10 → 0–1), takes
+the attacks whose curve position lies within ±0.05 of it (cycling through them in turn, so a plateau is not one value
+looped), and uses that attack's gap, velocity and durations; three knobs on the gap, in a fixed order — `stretch`
+(asymmetric, anchored at the burst's fastest gap: the slow parts stretch, the fast peaks stay), `smooth` (a blend toward the
+local average — the cure for the long-short stutter within a pair), `speed` (uniform); durations capped at 0.9 × gap; one
+random burst per generation. First ostinato's values: smooth 0.7, speed 1.2, stretch 1.5. **The graphic curve was linear by
+construction:** displayed or not, each burst IS the 0 → 1 ramp — what matters is that a burst runs once from the slowest to
+the fastest.
+
+**Why it sounds smoother than `trill0-listen`:** everything the generator emits — gap, velocity, note length — is the
+composer's own playing at that curve height: the gaps carry his micro-variation, the velocity rises with the speed as he
+played it, the note lengths shorten as he speeds up, and the window cycling keeps a plateau alive. `trill0-listen` was a
+formula: a linear rate ramp, strict alternation, one velocity (60) after a 127 spike, note lengths cut to the gap, nothing
+coupled to anything — and a range starting at 6 per second where his own trills open near 3–4 per second. Rejected on
+hearing, rightly.
+
+**His new samples** (`scores/trill_playing_samples.json`, `-viola.json`, `-cello.json`, saved 20:09 / 20:12 / 20:15,
+untracked): recorded with the score-lane capture (`Rec`; the capture technique `accent_senza_vel` on all three; plain
+`waveCurve` notes with `recVel` and the real key-down length; **no curve drawn in any file — nothing was played along to**).
+Violin 1: 709 notes, three bursts of 25 / 45 / 42 s on C5–D5, F5–G5, B5–C6 · viola: 558 notes, two bursts of 46 / 51 s on
+E3–F3, C4–D4 · cello: 593 notes, two bursts of 62 / 45 s on E2–F2, B2–C3. The bursts are long and wavy — several
+accelerations and relaxations each, not one ramp (first / middle / last mean gaps all 140–190 ms; one violin burst and one
+cello burst read as a single accelerando, the rest rise and fall). Gaps 58–85 ms at the fastest (12–17 per second), 250–360
+ms at the slowest openings (3–4 per second); velocities 41–123; note lengths 65–440 ms. **Indexed by local speed** (a 7-gap
+window, normalized per burst slowest → fastest) the playing is strongly coupled — violin, by speed quintile: mean gap 238 →
+180 → 148 → 121 → 108 ms · mean velocity 67 → 71 → 81 → 96 → 107 · mean length 182 → 127 → 103 → 92 → 80 ms; viola 262 → 112
+ms · 78 → 112 · 194 → 83 ms; cello 287 → 118 ms · 74 → 98 · 260 → 90 ms. The long-short stutter within a pair: 16–20 % of
+the gap.
+
+**What this repo has:** the generator handler was copied into `score/server.js` (`handleGenerateOstinato`, the algorithm
+inline) and the piano DB into `bank/ostinato_timing_db_2p2p.json` — but the three helpers it calls (`OSTINATO_DB_PATH`,
+`parseOstinatoCurve`, `evaluateOstinatoCurve`) were dropped in the tuba port (#4's server lacks them; #2's has them), so the
+route throws before reading anything: a dead copy. The zone panel is piece #2's (players Piano 1 / 2, Perc 1 / 2; hands L /
+R; the registry with zero instruments, §99). Nothing in the transport plays a zone's snippet here — only the panel's Test
+Play. The ingestion script is not here at all (#2's reads .mid; the captures here are score JSON). Piece #2 also has a
+single-note model (`ingest_pizz_tremolo.js`: repeated notes, IOI sampling, fixed shapes); the ostinato model is the one to
+follow — its curve-indexed lookup is what he asked for.
+
+**Options put to the composer — nothing built:** (A) **adapt the new samples**: index every note by its local speed instead
+of its time on a ramp — a per-instrument table "curve height → the gaps, velocities and lengths he actually played at that
+speed"; uses all 1,860 notes; immune to the wavy bursts; the coupling above comes free. A new ingestion (score JSON in, the
+#2 DB format out, `curvePosition` := speed level). (B) **re-record in the proven protocol**: 6–10 bursts per instrument,
+each ONE ramp slowest → fastest (and soft → loud), more than half a second of silence between bursts; ingest as piece #2
+did. Minutes to record; the pipeline verified there. (C) use them as they are with #2's time-on-ramp ingestion — wrong: a
+wavy 45 s burst maps speed onto time falsely. Recommended: A, with B as a ten-minute cross-check if wanted. **The test**
+proposed: he draws a curve on a violin lane (or I write one into a file); a script reads the curve and writes the trill under
+it as plain notes from the speed-indexed table (the same lookup, stretch / smooth / speed as #2); he plays it in the app. No
+app change for the test; the trill object of phase 1 then does the same live. Also his to settle: `accent_senza_vel` as the
+trill articulation (what he played on) · whether the three sample files are committed (his takes, untracked). Awaiting his
+call.
