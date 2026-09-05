@@ -62,6 +62,12 @@ pitch) may use a second row (bowed tremolo faster).
 > role lo / hi, his lengths and velocities); `tools/curve_eval.js` (the app's curve math ported, matched to the app);
 > `tools/trill_curve_gen.js` → `scores/trill-curve-test.json` (a 45 s smooth curve on violin 1 with his timing under it);
 > `tools/score_to_midi.js` → `midi/` (his captures as .mid, to audition articulations). Awaiting his ears.
+>
+> **2026-09-05, later still — "still jumpy" → the playback path (RUNNING_LOG §102):** plain notes are frame-polled
+> (`tickCurvePlayback`); piece #2's zone tick (`tickZoneMidiPlayback`) schedules an embedded snippet with Web MIDI timestamps
+> and a 100 ms lookahead, and is alive here. The test is now a zone with the trill embedded as a snippet (no app change),
+> proved with a fake output at 20 Hz: gaps exact to 0.2 ms. **Phase 1 follows this:** the trill object generates its snippet
+> live by the same lookup and the zone tick plays it; the plain-note path gets the same scheduling (NITS).
 
 ## 3 · The reference curves — three META lanes
 

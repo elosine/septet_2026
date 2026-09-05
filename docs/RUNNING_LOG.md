@@ -2865,3 +2865,44 @@ instead) · normalizing the speed per burst (#2's convention) — per instrument
 rate in every burst. **To listen:** reload, Experiments → `trill-curve-test`, SPACE from the start. To change: one flag
 each — `--smooth`, `--stretch`, `--speed`, `--seed`, `--roles off`, `--pitch`, `--dur`, or `--from` a score with his own
 curve drawn on the lane. His three sample files committed at his word (b9d68ee). Awaiting his ears.
+
+## §102. "Still sounds quite jumpy": the playback path was the culprit — frame-polled notes vs piece #2's timestamped zone tick; the trill test rewritten as an embedded MIDI snippet; the piece and the drawer answered
+
+Composer: *"still sounds quite jumpy, what was done for 2piano to make that one smooth, different playback? embedded midi?
+this one is not going to work"* · *"and then is there any impact on the main piece piece-septet, does that midi need to be
+reformatted?"* · *"how about the strikes drawer? is it ok as is since no animation?"*
+
+**Found.** Two playback paths exist in composer.html, both ticked from the animation loop (`animatePlay` →
+`tickZoneMidiPlayback`, `tickMotivePlayback`, `tickCurvePlayback`). (1) **Plain notes** (`tickCurvePlayback`): each frame,
+every note object is tested — inside its span and not yet sounding → note-on now; outside → note-off now. A note therefore
+starts on the first frame after its onset: a delay of 0 → 16.7 ms at 60 fps, more when the page drops frames (a scrolling
+SVG with hundreds of objects), drawn independently per note; note-offs the same. At a trill's 100–150 ms gaps that is a
+10–15 % wobble on every gap — "jumpy". The strikes, the composer's captures and both trill files go this way. (2) **Zone
+snippets** (`tickZoneMidiPlayback` — piece #2's; MIDI_PREVIEW_ZONE.md item 7): a zone carries `midiSnippet { events:
+{onsetMs, notes, velocity, durations} | {onsetMs, _cc, _ccValue}, port, channel }`; once the playhead enters the zone, the
+tick hands every event up to 100 ms ahead to `output.send(msg, performance.now() + delay)` — a Web MIDI timestamp the
+browser delivers to the millisecond whatever the frame rate. The port is looked up by name in the Web MIDI outputs (the
+same table the strikes use: `vn1`); nothing from the registry. That is what made piece #2 smooth — "embedded MIDI", as the
+composer guessed. The tick is alive here; nothing had fed it.
+
+**Done:** `tools/trill_curve_gen.js` now writes the trill as ONE zone with the snippet embedded (`--as zone`, the default;
+`--as notes` keeps the plain form): CC7 127 and the technique's CC0 (accent senza vib = 9) at the zone's start, the first
+note 200 ms later, port `Vn1` channel 1 from `sandbox/instruments.js`; `zoneFunction: 'midiPreview'` so the panel offers
+M / S. `scores/trill-curve-test.json` regenerated: 3 objects — the curve, the marker, the zone zn-3 (1.8 → 47.5 s, 331
+events). **Verified on the throwaway server** (`zz-ai-trill-curve`, deleted after): Web MIDI is denied in the in-app
+browser and its animation loop pauses while the pane is hidden (the first run produced no ticks at all — a finding for
+every future harness), so the tick was driven by hand at 20 Hz — three times coarser than a frame — against a fake `vn1`
+output recording every send with its timestamp: 30 note-ons and 30 note-offs in 7.5 s, CC7 then CC0 first, the notes and
+velocities identical to the snippet, the scheduled gaps equal to the snippet's to **0.2 ms at worst** (249.3 vs 249.1 ·
+215.1 vs 215.1 · 232.9 vs 232.9 …), the durations exact (173 / 134 / 148 ms), each event handed over 51–99 ms before its
+time; zero console errors. The tick rate does not touch the timing — that is the proof. `midi/trill-curve-test.mid`
+exported as the second A/B (Reaper, sample-accurate, the same 329 notes).
+
+**The piece (his question):** `piece-septet.json` needs no reformatting — the file is data; the IR reads the file; the MIDI
+export writes the file's times. What suffers is the demo PLAYBACK of plain notes: every strike note carries the same frame
+delay — inaudible on a chord, proportionally large on the accel runs' tails (gaps under 50 ms; #31 lands at 11 ms, where
+two notes inside one frame fire together). The cure is one function: schedule plain notes with timestamps and a lookahead
+as the zone tick does — a page change, no data change (NITS; PLAN when he wants it). **The drawer (his question):** `Hear`
+is timer-scheduled (`setTimeout` from a `performance.now()` base, the CC0 led by CC0_LEAD_MS — strike_drawer.js 947–957):
+millisecond accuracy, no frames — fine as it is. The inserted strike then plays through the score's plain path, above.
+*Not done:* any change to the app (he said check in first). Awaiting his ears on the zone form.

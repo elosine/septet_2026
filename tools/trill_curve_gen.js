@@ -62,16 +62,39 @@ while (t < span) {
   t += gap / 1000; k++;
 }
 
-// the file
+// the file — two forms (RUNNING_LOG §102):
+//   --as zone  (default): ONE zone object with the trill EMBEDDED as a MIDI snippet ({onsetMs, notes, velocity, durations},
+//              port, channel; CC7 127 + the technique's CC0 200 ms ahead of the first note). The transport's zone tick
+//              (tickZoneMidiPlayback — piece #2's) schedules every event with a Web MIDI timestamp and a 100 ms lookahead:
+//              millisecond timing, independent of the animation frame. Nothing is read from the registry.
+//   --as notes: plain waveCurve notes, one per trill note — drawn individually, but played by the frame-polled path
+//              (tickCurvePlayback), which quantizes every onset to the next animation frame: audibly jumpy for a trill.
+const vm = require('vm');
+const INSTR = vm.runInNewContext(fs.readFileSync(path.join(ROOT, 'sandbox', 'instruments.js'), 'utf8') + '\n;INSTRUMENTS', { console });
+const ins = INSTR[instKey], tq = (ins.techniques || []).find(t => t.key === inst.technique) || ins.techniques[0];
+const port = tq.port || ins.port, channel = tq.channel || 1, cc0 = tq.cc0;
+const form = A.as || 'zone', PRE = 0.2;   // seconds of lead for the CC messages before the first note
 const out = score || Object.assign({}, stub, { objects: [], metadata: { created: new Date().toISOString(), modified: new Date().toISOString() }, viewport: { pixelsPerSecond: 50, scrollOffset: 0 } });
-let id = out.nextId || 1; const r3 = x => Math.round(x * 1000) / 1000;
+let id = out.nextId || 1; const r3 = x => Math.round(x * 1000) / 1000, rd1 = x => Math.round(x * 10) / 10;
 const groupId = 'grp-trill-curve-' + stub.tracks[layer].short.toLowerCase() + '-' + Math.round(curve.startSeconds * 10);
-const label = 'trill · ' + stub.tracks[layer].short + ' · ' + inst.technique + ' · smooth ' + smooth + ' · stretch ' + stretch + ' · speed ' + speed + ' · seed ' + (A.seed || 1);
+const label = 'trill · ' + stub.tracks[layer].short + ' · ' + inst.technique + ' · smooth ' + smooth + ' · stretch ' + stretch + ' · speed ' + speed + ' · seed ' + (A.seed || 1) + ' · ' + form;
 if (!curve.id) { curve.id = 'wc-' + (id++); curve.groupId = groupId; out.objects.push(curve); }
 out.objects.push({ id: 'mk-' + (id++), type: 'marker', layer, time: r3(curve.startSeconds), label, color: '#F04B00', groupId, performanceNotes: label, properties: {} });
-for (const n of notes) out.objects.push({ id: 'wc-' + (id++), type: 'waveCurve', layer, groupId, startSeconds: r3(n.t), endSeconds: r3(n.t + n.len),
-  nodes: [{ pos: 0, y: 10, smooth: 0.25 }, { pos: 1, y: 10, smooth: 0.25 }], segments: [{ model: 'power', slope: 0 }], color: '#387ED3', fillMode: 'bottom', opacity: 0.55,
-  performanceNotes: label, properties: {}, srcKind: 'trill', sonifyNote: n.pitch, technique: inst.technique, sonifyMode: 'plain', recVel: n.vel });
+if (form === 'zone') {
+  const t0 = curve.startSeconds - PRE;
+  const events = [{ onsetMs: 0, _cc: 7, _ccValue: 127 }];
+  if (cc0 != null) events.push({ onsetMs: 0, _cc: 0, _ccValue: cc0 });
+  for (const n of notes) events.push({ onsetMs: rd1((n.t - t0) * 1000), notes: [n.pitch], velocity: n.vel, durations: [rd1(n.len * 1000)] });
+  out.objects.push({ id: 'zn-' + (id++), type: 'zone', layer, groupId, startTime: r3(t0), endTime: r3(curve.endSeconds + 0.5),
+    player: '', instrument: '', zoneFunction: 'midiPreview', midiModel: '', ostinatoParams: { smooth, speed, stretch }, chordMarkers: [], ratioMarkers: [],
+    ratioSourceZoneId: '', ratioGroup: '', responseDelayMs: 0, jitterMs: 0, driftFactor: 0,
+    midiSnippet: { port, channel, events, technique: inst.technique, source: 'tools/trill_curve_gen.js', generatedAt: new Date().toISOString() },
+    color: '#387ED3', opacity: 0.35, yOffset: 0.5, zoneHeight: 0.3, performanceNotes: label, properties: {} });
+} else {
+  for (const n of notes) out.objects.push({ id: 'wc-' + (id++), type: 'waveCurve', layer, groupId, startSeconds: r3(n.t), endSeconds: r3(n.t + n.len),
+    nodes: [{ pos: 0, y: 10, smooth: 0.25 }, { pos: 1, y: 10, smooth: 0.25 }], segments: [{ model: 'power', slope: 0 }], color: '#387ED3', fillMode: 'bottom', opacity: 0.55,
+    performanceNotes: label, properties: {}, srcKind: 'trill', sonifyNote: n.pitch, technique: inst.technique, sonifyMode: 'plain', recVel: n.vel });
+}
 out.nextId = id;
 const outPath = path.resolve(A.out || path.join(ROOT, 'scores', 'trill-curve-test.json'));
 fs.writeFileSync(outPath, JSON.stringify(out, null, 1));

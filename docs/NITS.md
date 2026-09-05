@@ -59,3 +59,8 @@
   the T panel — indistinguishable after the fact). Noise techniques barely care; fixed-pitch ones (open
   strings) would. Fix at the next drawer pass: recompute on a pitch change unless picked by hand (a
   `standInByHand` flag). Not blocking — the row always shows the key that will sound.
+- **Plain-note playback is frame-polled** (`tickCurvePlayback`; 2026-09-05, RUNNING_LOG §102): a note starts on the
+  first animation frame after its onset (0–16.7 ms at 60 fps, more under load), note-offs likewise, each note
+  independently. Chords: inaudible; the accel runs' tails (gaps under 50 ms): smeared. Fix: schedule plain notes with
+  Web MIDI timestamps and a 100 ms lookahead exactly as `tickZoneMidiPlayback` does — a page change, no data change.
+  Not blocking composing; do it before the demo is judged, and with the trill object (phase 1), which needs the same.

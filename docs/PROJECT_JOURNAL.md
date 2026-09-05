@@ -114,7 +114,11 @@ proven, the rack built, the drawer built.
   **A chosen and built** (RUNNING_LOG §101): `tools/trill_ingest.js` → `bank/trill_timing_db.json` · `tools/score_to_midi.js` →
   `midi/` · `tools/curve_eval.js` (the app's curve math ported, matched to the app) · `tools/trill_curve_gen.js` →
   `scores/trill-curve-test.json` (a 45 s smooth curve on violin 1, his timing under it; the written rate tracks the curve within
-  0.1 per second). The samples committed at his word. Awaiting his ears.
+  0.1 per second). The samples committed at his word. **Then "still jumpy" → the playback path found (RUNNING_LOG §102):**
+  plain notes are frame-polled; piece #2's zone tick schedules an embedded snippet with Web MIDI timestamps and is alive here —
+  the test rewritten as a zone with the trill embedded (no app change), proved by a fake output at 20 Hz: gaps exact to
+  0.2 ms. `midi/trill-curve-test.mid` for Reaper. The piece's strikes share the frame polling (NITS); the drawer's Hear is
+  timer-scheduled and fine. Awaiting his ears.
 - D17 (the save system) live; PLAN 1b done. Journal §4 D17. NITS: the stale stand-in after a voicing change.
 
 **Next up:** the composer's pick, each morning: (a) the chain by hand from **#32** (his own first gaps and landings now; the
@@ -133,13 +137,15 @@ proven, the rack built, the drawer built.
   `scores/trill0-listen.json` (§99, rejected on hearing);
   `docs/TRILLS_TOOL.md` (the spec, no code) and the drawer as of U13b in `score/public/strike_drawer.js`;
   `scores/piece-septet.json` + versions + `bank/panel_snapshots.json` committed at this checkpoint.
-- **Next concrete step:** the composer listens to `trill-curve-test` (reload; Experiments menu; SPACE) and to the MIDI exports
-  through other articulations in Reaper, and reports. The knobs are flags on `tools/trill_curve_gen.js` (`--smooth --stretch
-  --speed --seed --roles off --pitch --dur`, or `--from` a score with his own drawn curve on the lane); re-run, he reloads. Then
-  phase 1: the trill object realizes the same lookup live in the app. Composing #32 onward continues at his pace. Before any commit run
+- **Next concrete step:** the composer listens to `trill-curve-test` in its zone form (reload; Experiments menu; SPACE — a zone
+  box on violin 1, the notes embedded) and / or `midi/trill-curve-test.mid` in Reaper, and reports. If smooth: phase 1 = the
+  trill object generating that snippet live (the lookup in the browser, the zone tick playing it), and the plain-note path
+  scheduled the same way for the strikes (NITS) when he wants. If not: the data (the lookup, smooth / roles) is next. The knobs
+  are flags on `tools/trill_curve_gen.js` (`--smooth --stretch --speed --seed --roles off --pitch --dur --as notes`, or
+  `--from` a score with his own drawn curve). Composing #32 onward continues at his pace. Before any commit run
   `node tools/unsaved_check.js`; stage `scores/piece-septet*.json` and `bank/panel_snapshots.json` if he has worked.
 - **Resume reads:** `docs/PLANNER.md` NOW · `docs/STRIKES_TOOL.md` U11–U13b, V, W · `docs/TRILLS_TOOL.md` if the trill work
-  starts · `RUNNING_LOG.md` §86–101 (the chart of the chain, the trill talk, step 0's file, the piece #2 deep dive, option A built) · `docs/REAPER_CONTROL.md` only for the 0d sweep.
+  starts · `RUNNING_LOG.md` §86–102 (the chart of the chain, the trill talk, step 0's file, the piece #2 deep dive, option A built, the playback path) · `docs/REAPER_CONTROL.md` only for the 0d sweep.
 - **How the AI works the app:** its Browser pane opens `http://localhost:5300/composer.html` on the composer's server (no Web
   MIDI; it never edits his scores). A change to the app is verified on a throwaway server — `preview_start score-5301` (in
   `.claude/launch.json`: PORT=5301, the same `scores/`), the session named `zz-ai-*` so the autosave writes a throwaway working
