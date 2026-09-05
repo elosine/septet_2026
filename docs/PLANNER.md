@@ -5,18 +5,17 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ►** 2026-09-04 night — **the piece has a file: `scores/piece-septet.json`** (frozen as
-`piece-septet-v1.1`): strikes #0–#2 of ScatteredStrikes01 as the composer orchestrated them in the
-STRIKES drawer, seven players each with their META shapes, 0.6–3.5 s; the 554 raw piano chords
-that followed are gone (CN-8, RUNNING_LOG §69). **The save system is D17** (one rule: working copy
-· Save · Name version · Reload; `?` in the app). **The drawer** (PLAN 1c.2) is in the composer's
-hands: takes live in `bank/panel_snapshots.json` (eight so far), `Insert @ original time` writes a
-strike into any open score. **Next:** strikes #3 onward into the piece (CN-5 → CN-6: strikes, then
-chosen harmony, then tremolos on curves); the drawer's next features at the composer's word (I
-double stops · K lock · M/N/P = PLAN 1d); phase 0's remainder (0d the Xsample measurements,
-0c.5–0c.8, 0f, the 0h gate) when a strike needs it. Phase 0 so far: 0a · 0b · 0e · 0g · 0i · 0j ·
-0k.1–0k.4 done; the rack `reaper/septet_rack.rpp` balanced (D13–D14) and addressable as code
-(D15, the bridge). Piccolo vs bass flute undecided (CN-2).
+**NOW ►** 2026-09-04 night (checkpoint) — **the piece is being composed in `scores/piece-septet.json`:**
+strikes #0–#4 of the piano reference (`ScatteredStrikes01`, the raw recording) as the composer
+orchestrates them in the STRIKES drawer — seven players each with their META shapes, 0.6–6.7 s —
+frozen as `piece-septet-v1.2` by his own Name version (v1.1 = the first three, CN-8, RUNNING_LOG §69);
+16 takes in `bank/panel_snapshots.json`. **The save system is D17** (one rule: working copy · Save ·
+Name version · Reload; `?` in the app; live on his machine). **Immediately next:** strikes #5 onward
+into the piece (`Insert @ original time` into the open piece; CN-5 → CN-6: strikes, then chosen
+harmony, then tremolos on curves); the drawer's next features at his word (I double stops · K lock ·
+M/N/P = PLAN 1d); phase 0's remainder (0d the Xsample measurements, 0c.5–0c.8, 0f, the 0h gate)
+when a strike needs it. Phase 0 so far: 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 done; the rack
+balanced (D13–D14) and addressable as code (D15). Piccolo vs bass flute undecided (CN-2).
 
 ---
 

@@ -83,67 +83,68 @@
 ## §2 Resume Here
 
 **Last session:** *2026-09-04, session 2 (the morning test → a full day), Claude Code / Fable 5.1* —
-**the drawer tested and extended, the ensemble balanced by measurement, and Reaper + the samplers
-made addressable as code.**
-- **STRIKES drawer:** full page height, a tab that survives the toolbar, then the feature update
-  U1–U4 (gap + landing markers + hover-lit lines · strike defaults at flat 127 · solo · a narrower
-  rhythm strip), all verified in the running app (RUNNING_LOG §40, §64). Awaiting the composer's test.
-- **Ensemble balance (PLAN 0j):** a timetable from the recipe → `probes/balance_probe.ps1` → the
-  REC folder recording → `probes/analyze_balance.py` (400 ms momentary / 50 ms for strikes,
-  K-weighted). Anchor = the violins (D13): faders flute −21 · bcl −9 · pianos +7 · va −3.5 · vc −1;
-  the two wind strikes on their own lanes (D14). Re-measured on target (§46–47, §61).
-- **The Reaper bridge (PLAN 0k, D15):** a Lua loop in Reaper answering job files in ~30 ms; the
-  runtime machine-level (`%APPDATA%\REAPER\bridge`), a project guard, generic jobs, reload from a
-  job; UVI's state is XML (`tools/uvi_state.js`, `$Engine/Out n`), Kontakt's multi is code (the
-  Kontakt Lua API, `reaper/kontakt/*.lua`); `reaper/bridge/README.md` = the foundation for the
-  live-electronics repo and the next piece (§48–63).
-- **Decisions and notes:** the flute Pizzicato sample notates as TONGUE RAM (D16); the Lake George
-  piece (#6) on the sketch pad — pairs, percussion, a morph opening, delicate / quiet / continuous.
+the drawer tested and extended (U1–U4), the ensemble balanced by measurement (0j, D13–D14), Reaper +
+the samplers addressable as code (0k, D15), D16 tongue ram; RUNNING_LOG §40–64; one line each in §6.
 - Session 1 (2026-09-03): the kit ported and proven (0a, 0b, 0g, 0i), the rack built (0e),
-  D7–D12, the drawer built (1c) — one line each in §6.
+  D7–D12, the drawer built (1c) — §6.
 
-**Next up:** **the composer's test of the drawer with U1–U4** (reload the page; the slap now plays
-the strike slot). Then, at the composer's word: the drawer's next steps (I double stops · K lock ·
-M/N/P harmony collection, swap, Messiaen = PLAN 1d), or phase 0's remainder: **0d** the Xsample
-measurements, **0c.5–0c.8** (0c.7 runs `curve_slots.lua`), **0f**, the **0h** gate → compose
-(CN-5 / CN-6 from the strikes).
+**This session (2026-09-04 evening → night, session 3, Claude Code / Fable 5.1) — checkpointed mid-session:**
+- **The drawer's takes in the repo (O v2):** `bank/panel_snapshots.json`, bucket `strikes`, through the
+  panels' snapshot route; the browser's v1 takes migrated once; `×` deletes. 16 takes so far (four per
+  strike, 00–04). SPACE belongs to the drawer while it is open (the score's select-blur rule had handed
+  it to the transport). RUNNING_LOG §65–66.
+- **D17 — the save system as ONE rule (PLAN 1b done):** every open through a working copy (autosave
+  there, never the file) · Save / CTRL+S writes the file · Name version freezes `<name>-v<label>` ·
+  Reload drops the unsaved edits · a `?` hint strip · `tools/unsaved_check.js` before every commit ·
+  names may carry dots · a deleted remembered name binds nothing. Save as next / Variant / Restore are
+  gone. Live on the composer's machine (server restarted, page reloaded). §67–68, §70.
+- **Q v2:** `Insert @ 0.61 s (original)` writes a strike at its own time into whatever score is open;
+  originals replaced only where they truly exist. §68.
+- **The piece has a file:** `scores/piece-septet.json` — strikes #0–#4 orchestrated from the drawer
+  (40 objects, 0.6–6.7 s); frozen as `-v1.1` (three strikes, built by the AI from `ScatteredStrikes01a-3`,
+  CN-8, §69) and `-v1.2` (five strikes, the composer's own Name version).
+- **`scores/` sorted:** `ScatteredStrikes01` = the piano reference (the raw 577-strike recording,
+  restored); the hand-made copies deleted at the composer's word. §70–71.
+- Sketch pad: CN-8 (the piece begins with the strikes); for piece #6, animated conductions.
+  Penn State abstract done (§7).
 
-**This session (2026-09-04, session 3, Fable) — in progress:** the composer asked whether the drawer's takes
-are saved and committed → **takes moved to `bank/panel_snapshots.json` (O v2); his four browser takes (00-a, 00-b,
-01-a, 01-b) migrated on his reload and are committed.** The SPACE bug (the drawer's SPACE went to the score's
-transport after any select change) fixed and verified: SPACE belongs to the drawer while it is open.
-RUNNING_LOG §65. **D17 — the save system rebuilt (PLAN 1b done):** one rule — working copy · Save ·
-Name version · Reload — hints in the app (`?`), `tools/unsaved_check.js` at session end; **needs the
-composer's server restarted** (`node score\server.js`) and the page reloaded. **Q v2:** `Insert @
-original time` writes a strike at its own time into any open score. RUNNING_LOG §67–68.
-**The first piece file:** `piece-septet` (+ frozen `piece-septet-v1.1`) — strikes #0–#2 orchestrated,
-the 554 raw piano chords removed, from `ScatteredStrikes01a-3` (CN-8, RUNNING_LOG §69).
+**Next up:** the composer composes — strikes #5 onward into `piece-septet` from the drawer (`Insert @
+original time` into the open piece; a take per strike; Name version at milestones), CN-5 → CN-6.
+At his word: the drawer's next features (I double stops · K lock · M/N/P harmony collection = PLAN 1d)
+or phase 0's remainder (0d the Xsample measurements · 0c.5–0c.8 · 0f · the 0h gate).
 
 **NEXT STEPS · MODEL · CLEAR:**
-1. ☑ 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1c.1 · 1c.2 (+U1–U4) DONE and pushed.
-2. ► **The composer tests the drawer** (any model; conversation first). Fix what blocks; file the
-   rest as STRIKES_TOOL statuses (`built` → `seen by the composer` → `accepted`).
+1. ☑ 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1b · 1c.1 · 1c.2 (+U1–U4, O v2, Q v2) DONE and pushed.
+2. ► **The composer composes with the drawer into `piece-septet`** (any model; conversation first).
+   Fix what blocks; file the rest as STRIKES_TOOL statuses (`built` → `seen by the composer` → `accepted`).
 3. Then the composer's pick: the drawer's next features, or 0d / 0c on Fable with the bridge
-   (every rack change is now a job with a read-back; the samplers' setups are scripts).
+   (every rack change is a job with a read-back; the samplers' setups are scripts).
 4. 0k.5 continues only when something needs it (0c.7's curve slots, the next rack).
 
-**Open at session end** *(2026-09-04 evening, Fable — for an AI that has never seen this
-conversation):*
-- **State:** the rack is saved by the composer with today's lanes, faders and routing
-  (`reaper/septet_rack.rpp` committed at this session end); the recipe carries `balanceDb`,
-  `slap.channel = 5`, `lane`, `notate`; the bridge runs from Reaper's startup script; the
-  composer runs `node score\server.js` himself; the AI's pane has no Web MIDI and never saves.
+**Open at session end** *(2026-09-04 night, Fable — mid-session checkpoint, for an AI that has never
+seen this conversation):*
+- **Task and state:** session 3's build work is complete, verified and pushed; the composer is composing
+  in the running app (his server on :5300, D17 live). Nothing is half-built.
+- **Latest deliverable:** `scores/piece-septet.json` (+ `-v1.2`) and `bank/panel_snapshots.json`
+  (16 takes), committed at this checkpoint.
+- **Next concrete step:** `/postclear`, then ask the composer what he wants: keep composing (be ready to
+  fix what blocks in the drawer), the drawer's next features, or 0d. Before any commit run
+  `node tools/unsaved_check.js`, then stage `scores/piece-septet*.json` and `bank/panel_snapshots.json`
+  if he has worked — the piece and the takes are committed at every wrap.
+- **Resume reads:** `docs/PLANNER.md` NOW · `docs/NAMING.md` §1 (D17, the save rule) ·
+  `docs/STRIKES_TOOL.md` O, Q, U · `RUNNING_LOG.md` §65–71 · journal §4 D17 · `docs/REAPER_CONTROL.md`
+  only if the rack is touched.
+- **How the AI works the app:** its Browser pane opens `http://localhost:5300/composer.html` on the
+  composer's server (no Web MIDI; it never edits his scores). A change to the save code is verified on a
+  throwaway server — `PORT=5301 node score/server.js`, test files `zz-ai-*`, deleted after. A server
+  change needs the composer to restart `node score\server.js`; a page change needs a reload.
 - **How to work the rack now:** `node tools/reaper_job.js heartbeat | tracks | fader | run …`
   (docs/REAPER_CONTROL.md, reaper/bridge/README.md); `jobs/peakwatch.lua` + a probe note = the
   proof for routing; `tools/uvi_state.js` for UVI; a Kontakt Lua script dropped by the composer
   for Kontakt. Never trust frozen meters before dumping mute / solo / routing (P10).
-- **Resume reads:** `docs/PLANNER.md` NOW · `docs/PLAN.md` 1c, 0j, 0k · `RUNNING_LOG.md`
-  §40–64 · `docs/STRIKES_TOOL.md` U · `docs/REAPER_CONTROL.md`.
-- **Pending the composer:** the drawer test; CN-2 (piccolo vs bass flute) — not blocking.
-- **`scores/` is clean and committed:** `ScatteredStrikes01` = **the piano reference** (the raw 577-strike
-  recording, restored at the composer's word, §71), `piece-septet` + `-v1.1`, the stubs and test saves. The composer's hand-made copies
-  (`-og`, `a`, `a-2`, `a-3`, `septet001`) were deleted at his word (RUNNING_LOG §70). The raw
-  577-strike recording lives in git history (`76861f2:scores/ScatteredStrikes01.json`).
+- **Pending the composer:** CN-2 (piccolo vs bass flute) — not blocking.
+- **Deliberately uncommitted:** nothing — `git status` is clean after this checkpoint's commit
+  (`scores/*-work.json` and `scores/versions/` are gitignored by design).
 
 **Open questions:**
 - **Q1 flute doubling instrument:** piccolo or bass flute — composer undecided; SI2 flute in C
