@@ -38,7 +38,7 @@ balanced (D13–D14) and addressable as code (D15). Piccolo vs bass flute undeci
    CN-1's single attack is one strike among them. **Next section @ 27.76 s** (CN-14): one strike re-struck,
    its spacing evened, each re-strike longer (his example ×1.5 from 100 ms), accelerating toward its last
    impulse once long enough to hear — to build at his word (STRIKES_TOOL V, SPREAD). Then straight into
-2. **CURVE-BASED TREMOLOS** · each entry is a fortepiano (attacked, then continuing in
+2. **CURVE-BASED TREMOLOS** (the tool: `TRILLS_TOOL.md`, PLAN 1e — spec 2026-09-05) · each entry is a fortepiano (attacked, then continuing in
    tremolo); the tremolo shaped by a curve (open: which parameter the curve drives —
    speed, amplitude, pitch spread, or several); **the tremolo fork** (CN-11): the tremolos become
    their own branch, expanded like the strikes —

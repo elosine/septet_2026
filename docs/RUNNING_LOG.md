@@ -2704,3 +2704,20 @@ eat by MUTE-RULE not by deletion, so re-inserts and undo survive · an eaten not
 ends a trill · the fp as a built-in envelope · the trill's second pitch from the harmony (CN-6) · the trill as one
 generating object, never stored notes · a time-range selection on a lane · notation as a rate curve). Proposed step 0:
 hear it with today's ostinato zone on a violin lane to pick the articulation. Nothing built.
+
+## §98. The trill module's decisions taken; the spec written (docs/TRILLS_TOOL.md, PLAN 1e) — no code
+
+Composer (CN-20): intuitive, few controls · curve drawing simpler than piece #2's wave-curve object — trace, then
+adjust · the attack a listening exercise (velocity · CC7 · a brief second voice), not laboured · eat by rule, with an
+easy revert (audition and change of mind) · the curve segment ends the trill · upper chromatic neighbour · speed
+limits not a concern (demo MIDI; the players read "trill") · the fp envelope per instrument, a thing that works ·
+three META lanes · *"go ahead with the plan, spec — just writing, no coding yet."* Written: `docs/TRILLS_TOOL.md` — the
+picture, the decisions, the trill object (a `zone` with `midiModel: 'trill'`, realized at play / export on the
+ostinato engine with a per-instrument speed table and a fp envelope), three META lanes with trace-then-adjust drawing
+(a contract change, "layers ≥ tracks.length are META", to be written into NAMING at build), the live curve reference as
+the portable sampler (an object reads the curve it names over its own span; "bake" for a copy), SHIFT-drag to mark a
+span on a lane, `T` to trill, launch from a strike note (the launching note muted by its own trill, so removal
+restores the strike exactly), the mute rule with `mutedBy` stamped on save for downstream tools, `busy(lane, t)`
+shared with the accel dealer, the weave later, notation as `tr` + span with the curve demo-only, phases 0–6 with
+estimates, three open points. PLAN 1e added (and 1a carries his simpler-drawing words); PLANNER outline item 2 points
+to the spec. Step 0 needs no build: a zone with the ostinato model on a violin lane to choose the articulation.

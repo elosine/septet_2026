@@ -287,6 +287,9 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   fitted through them), then per-segment shaping: click a segment to select it, the wheel bends
   its slope (vertical = curvature / exponent, horizontal = where the bend sits), click elsewhere
   to release; the wheel's gain per notch calibrated so one notch is a visible, repeatable step.
+  *Composer, 2026-09-05:* *"my curve idea was just an idea … there was the wave-curve object from the two-percussion
+  piece — essentially, just too many controls … a simpler version of that, where I can trace a long curve and then make
+  some adjustments along the way"* — the design in `TRILLS_TOOL.md` §3: trace, simplify to a few nodes, three gestures.
 - **1b — Revisit the save-file logic; simplify, make it more logical** — `done 2026-09-04 (D17 — one rule: working copy · Save · Name version · Reload, hints in the app, tools/unsaved_check.js at session end; RUNNING_LOG §67–68)` *(composer,
   2026-09-03: "todo: revisit save file logic, try to simplify/make more logical")* — the
   inherited chain (canonical `piece-sNN` · `-work` autosave copy · `Save as next` · `Variant` ·
@@ -315,6 +318,14 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   assignment ("I can choose to place different notes to different instruments"). *Why:* CN-5
   and CN-6 are built from these strikes; the database makes a strike reusable material rather
   than a one-off.
+- **1e — The trill module: trills grown from the strikes, on reference curves** — `spec 2026-09-05, no code`
+  *(composer, CN-19: "one of the onsets in one of these strikes launches a trill … attacked, sforzando, directly into a
+  trill … the system would know to eat the bass clarinet notes for strike eleven and twelve")* — the spec is
+  `docs/TRILLS_TOOL.md`: the trill object on the ostinato engine with per-instrument speed tables and a fp envelope ·
+  three META lanes with trace-then-adjust drawing · the live curve reference (portable) · launch from a strike note ·
+  eat by mute-rule · one availability model shared with the accel dealer · the weave later · notation as `tr` + span.
+  Phases 0–6 there; step 0 is a listening exercise with today's zones. *Why:* CN-1 / CN-6's tremolos on curves are
+  the piece's second material, and the composer wants them to grow out of the strikes (CN-19).
 - **1d — The harmony database, gathered from all the pieces** — `todo` *(composer, same
   breath: "collect up a harmony database from all my pieces … the two piano two percussion
   piece where I have things called chord shapes, and then in the tuba piece … blasts … gather

@@ -604,3 +604,23 @@ names a library to confirm.
 **AI reading (not the composer's words):** this is CN-1 / CN-6's "tremolos on curves" as a tool — the second material
 of the piece, born out of the first. The requirements and the vetting: RUNNING_LOG §97; the spec, once agreed, gets
 its own document (`docs/TRILLS_TOOL.md`, as STRIKES_TOOL for the strikes).
+
+---
+
+## CN-20 · 2026-09-05 — the trill module's rules, decided
+
+> *"As a general rule, I would like things to be intuitive and easy to use, maybe not have too many controls."* ·
+> *"There was the wave-curve object from the two-percussion piece — essentially, just too many controls … a simpler
+> version, where I can trace a long curve and then make some adjustments along the way."* · *"I wouldn't mind trying
+> to see if there isn't a blend between one patch for the attack and another patch for the continuing trill … or we
+> use CC7 or velocity to simulate the attack … sneakily have a single instrument have two voices for a brief
+> moment … we don't have to over-labor this … ultimately we'll notate this."* · *"Eat by rule, not by deletion — I
+> agree … I'll want to audition and change my mind, so we'll need a facile way to readjust."* · *"The curve segment
+> will end the trill. Second pitch: upper chromatic neighbour, but eventually other options."* · *"The speed limit
+> isn't too much of a concern — these are demos … the live performers aren't following any animation here, it'll just
+> say trill."* · *"Let's figure out how to build the fp envelope per instrument — a thing that works."* · *"Three
+> lanes is better."*
+
+**AI reading:** written straight into `docs/TRILLS_TOOL.md` §1 as the decisions; the spec follows them. The one
+musical point to carry: the rate curve is a demo device — the score says *tr* over a span; the players' own speed is
+the real one.
