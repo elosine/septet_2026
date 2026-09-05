@@ -2452,3 +2452,21 @@ the META shape's end), the chain's anchor (#17's 127 ms → #18 = 190, or #18's 
 replace-on-reinsert. Numbers with #17 as anchor and end = last onset: #18 190 ms @ 28.302 · #19 286 @ 30.121 ·
 #20 429 @ 32.323 · #21 643 @ 33.501 (rhythm audible from here) · #22 964 @ 35.022 · #23 1447 @ 36.856 ·
 #24 2170 @ 39.076, ending 41.25 s. Nothing built.
+
+## §85. The A/B requirement: laws must be switchable and revertible; the chain panel as the answer (no build)
+
+Composer: *"a; 2 — this is fine, but let's just make sure we can, if we decide on a different spread, like
+Fibonacci or something like that, revert and then try that, and also jump back and forth, A/B it … I'll create the
+chain at one point five, listen to it, and then I'll say I wanna hear what Fibonacci sounds like … Maybe there's some
+efficiencies there too, since we kind of know how we're gonna generate this … And can you explain what three is.
+Let's continue to discuss, no build yet."* Decisions so far: end = the last onset; anchor = #17 (127 ms). The
+A/B changes the build's shape: under the per-strike U11 alone a law switch is ~3 clicks × 7 strikes, twice; the
+chain is a pure function of (anchor as inserted · law · member range · each member's newest take), so it should
+be generated as a whole — one click per law — which is STRIKES_TOOL V's SPREAD built as a chain panel (design
+written into V today). Revert and archive come free from D17: Save before a law, Reload to drop it, Name version
+to keep each law (`v1.5` = ×1.5, `v1.6` = Fibonacci …). Choice 3 explained to the composer: replace-on-reinsert =
+the tool removes the earlier insert of the same strike (found by its group) before writing the new one, so a
+strike exists once in the score and a law switch never leaves the old chain behind. Laws proposed for the menu:
+× ratio · + step · Fibonacci (d, 2d, 3d, 5d … from the anchor) · a custom list of ms as the escape hatch.
+Build order proposed: the ms box + `Insert @ after previous` first (per-strike, an hour), the chain panel on top
+(a few hours, assembled from load-take · set-span · notesFor · insert · replace-by-group). Nothing built.

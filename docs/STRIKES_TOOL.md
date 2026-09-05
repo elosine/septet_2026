@@ -464,7 +464,16 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   *"take this as a note for now, and then we'll build it"*) · SCALE (each strike one step higher, order low → high through the registers) ·
   ACCEL / DECEL (the strikes' onsets on a CN-3 ramp, each strike's own rhythm shaped to match) · LADDER
   (the same pitch classes re-voiced one step up per strike, the top voice wrapping to the bottom at the
-  softest dynamic — the Shepard–Risset staircase in strikes). (3) **Answering blocks** — a chain of
+  softest dynamic — the Shepard–Risset staircase in strikes). **SPREAD designed in detail 2026-09-04 (CN-16,
+  RUNNING_LOG §85), awaiting the composer's go — a chain panel in the drawer:** anchor = a strike already in the
+  score (#17) · members = a range (#18 → #24) · each member's material = the newest take of that strike (its
+  orchestration, order and shape; a newer take changes it) · law = a menu: × ratio [1.5] · + step [ms] · Fibonacci ·
+  custom list of ms · end rule = the last onset · `build chain` (re)generates every member into the open score in
+  order — duration by the law, start = end(n−1) + the recorded onset gap, replace-on-reinsert per strike — and
+  prints the table (member · ms · start) to the status and the log; switching the law and rebuilding is the A/B;
+  D17 gives the archive (Save before a law, Reload to revert, Name version per law); `play chain` parks the
+  playhead on the anchor and plays. U11's ms box and `Insert @ after previous` are its per-strike pieces and stay
+  usable alone. (3) **Answering blocks** — a chain of
   strikes alternating two sub-ensembles. Within one strike, order (K) · shape (J) · voicing (B) · locks
   and assign (E, F) already do each of these by hand; a chain is a take per strike today.
 
