@@ -2413,3 +2413,28 @@ slap + Piano), F6 (Piano) last — 9 notes from 5 voices: U10's doublings were u
 built, and the piano's doublings ride along. Lesson for the plan: the strike-in-the-score is the check —
 the drawer's numbers and the score's agree to the millisecond; reading the order off the rhythm strip (dots
 left → right, hover for slot) was enough, no tool needed. Takes: 88 (17-a … 17-d).
+
+## §83. #17's duration; five expansion strategies for #18 → #24 with the numbers; the span × cap bites at #22
+
+Composer: *"total dur of 17; and what kind of duration expansion strategies to explore?"* — #17 as inserted:
+first onset 27.153 → last onset 27.280 = **127 ms** (the recorded span, kept by `even` at span × 1); the META
+shape runs to 27.389 (236 ms) because it includes the last note's sounding length. Proposed definition for the
+plan: a strike's duration = first onset → last onset, and "ends" in the gap rule = the last onset (the note
+lengths are the samplers', not composed). Five progressions from d(#18) = 110 ms (his likely span × 1), each
+strike's mean gap against the ~60 ms threshold (R = heard as rhythm), and the span × the drawer would need:
+
+| | #18 (13n) | #19 (17n) | #20 (14n) | #21 (8n) | #22 (6n) | #23 (11n) | #24 (6n) | section +
+|---|---|---|---|---|---|---|---|---|
+| ×1.5 | 110 | 165 | 248 | 371 | 557 R | 835 R | 1253 R | +2.29 s
+| ×1.618 | 110 | 178 | 288 | 466 R | 754 R | 1220 R | 1974 R | +3.02 s
+| ×2 | 110 | 220 | 440 | 880 R | 1760 R | 3520 R | 7040 R | +6.93 s
+| +110 | 110 | 220 | 330 | 440 R | 550 R | 660 R | 770 R | +2.31 s
+| Fibonacci | 110 | 110 | 220 | 330 | 550 R | 880 R | 1430 R | +2.20 s
+
+Original gaps #18→#24 sum to 6.815 s; "section +" is what the durations add on top (×1.5: #24 starts 37.28,
+ends 38.53). Rejected as a strategy: scaling each strike's OWN recorded span by a growing factor — the recorded
+spans run 13 → 622 ms in no order, so the result is not monotonic ("each successive strike wider" fails).
+**The constraint found:** span × is capped at 20 (input max and clamp). #22 is 13 ms as played and #24 26 ms:
+557 ms at #22 is ×43, 1253 ms at #24 is ×48 — unreachable under every strategy; even ×20 gives #22 only 260
+ms. So build candidate A (a `span = ___ ms` box, or at least a raised cap) stops being a convenience at #22 and
+becomes necessary. Not built — the composer asked to talk first.
