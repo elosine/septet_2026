@@ -989,7 +989,7 @@ const D = {
     // ------------------------------------------------------------------ misc
     save() { try { localStorage.setItem(STORE, JSON.stringify(this.cfg)); } catch (e) {} },
     restore() { try { const s = JSON.parse(localStorage.getItem(STORE) || 'null'); if (s) Object.assign(this.cfg, s); } catch (e) {} },
-    setStatus(msg, bad) { const s = this.el.querySelector('#skStatus'); s.textContent = msg; s.style.color = bad ? '#e88' : '#9a9'; },
+    setStatus(msg, bad) { const s = this.el.querySelector('#skStatus'); s.textContent = msg; s.title = msg; s.style.color = bad ? '#e88' : '#9a9'; },   // the header line truncates — hover for the whole message (composer, 2026-09-04: "where to find status")
 };
 
 root.StrikeDrawer = D;

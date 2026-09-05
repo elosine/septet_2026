@@ -2508,3 +2508,14 @@ original again → one group, "replaced the earlier #17 (6 objects)". **Observat
 shuffle left the slot-0 note of #18 and #19 unassigned, so their first SOUNDING notes sat 32 / 18 ms after the
 strike's start (the META start is the nominal start; the chain's end is the last sounding onset). In the
 composer's use every note is placed, so nominal and sounding coincide — but the rule is now explicit.
+
+## §88. Step 2 done: #18 in at 28.302, 190 ms; the status line found; #19's numbers
+
+Composer: *"where to find status; duration of 19? and then will it be good for insert@after prev or do we need to
+do something first?"* His score (saved 14:44): `grp-strike-18-283a` — 7 notes, first onset 28.302, last 28.492,
+190 ms, META 28.302 → 28.542 — exactly the plan's numbers, by `Insert @ after previous` on take 18-c stretched
+with the ms box. The status line is the header's one-line text right of "STRIKES"; it truncates with an ellipsis
+when the message is long (the after-previous message is long), which is why he did not find it — `setStatus` now
+also sets `title`, so hovering shows the whole message (a page change; his next reload). #19: 127 × 1.5² = 285.75
+→ 286 ms; ready for `Insert @ after previous` once #19 itself is orchestrated, ordered, evened and set to 286 in
+the drawer (a take 19-a first); expected "#19 → 30.120 s = end of #18 (28.492) + onset gap 1.628".
