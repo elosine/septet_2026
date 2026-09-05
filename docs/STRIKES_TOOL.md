@@ -174,7 +174,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   tightening merges more; the audio always plays every note at its own onset; "rhythm only" snaps
   each note to its CURRENT tick. The database keeps the as-played grouping as a reference only.
 
-## K · The order of the notes — `built 2026-09-03 (presets · shuffle · click two dots to swap; lock not yet)`
+## K · The order of the notes — `built 2026-09-03 (presets · shuffle · click two dots to swap; lock not yet)` · `2026-09-04: the two-dot swap FIXED — it had never held (every render re-derived the slots from as played); the menu now shows "by hand"; seeds + history per U8`
 
 > *"I should be able to scatter the order. I think I'm mostly playing, in the original, down
 > to up, but I can scatter which notes come first, in different orders. Again, a shuffle and
@@ -341,7 +341,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   them; the noise technique's keys; the open strings) — click to hear, click to select; the
   choice is stored on the voice (the stand-in key). Out of the way until needed.
 
-## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built` · `U7 built 2026-09-04` (RUNNING_LOG §74)
+## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built` · `U7 built 2026-09-04` (RUNNING_LOG §74) · `U8 built 2026-09-04` (RUNNING_LOG §76)
 
 > Composer: *"collect these and I'll have you do a feature update all at once."* Each request
 > verbatim, the AI's reading beneath; built together when the composer says so.
@@ -402,6 +402,16 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   note takes the technique its new row already plays (before, a hand-assigned note always got the
   instrument's default, whatever the row's menu said). The status line says what moved where; `back`
   undoes it. The arm message states the rule.
+- **U8 — the seed, visible and re-clickable — `built 2026-09-04, verified on the throwaway server (RUNNING_LOG §76)`.**
+  *Composer (2026-09-04 night): "For the rhythm order. and the random shuffle order. Can I have the seed? And can I
+  have a way to go back to previous seeds? So, for example, every time I hit shuffle order, maybe there's a row or a
+  table of previous shuffles. It just collects, say, five or ten, and then I can click them instead of having to
+  type it in. I can just click on previous seeds."* — *Built, the same way for all four random buttons* (shuffle
+  order · reshuffle rhythm · shuffle orchestration · reshuffle voicing): `seed [n]` — the current seed in a small
+  number box (a typed seed applies) — followed by the last eight seeds as chips, newest first, the current one
+  lit; a chip click has that shuffle back exactly (same seed, same strike, same locks = same result); a new
+  shuffle takes max(seen) + 1, so it never repeats a seed still in the row; `back` undoes a chip click. The
+  histories live in the drawer's saved config and travel with takes. Cap 8 (the composer said five or ten).
 
 ## Open questions for the composer (only what blocks the next piece)
 

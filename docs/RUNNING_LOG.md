@@ -2262,3 +2262,36 @@ technique (Bass Cl.: E3 + slap); how a slap is drawn is a 2a notation rule not y
 pitch for the transposing bass clarinet is also 2a (the IR holds sounding pitch). Decision: *"We can
 leave it"* — the swap status line will not name the fold. The stale stand-in (E3 where a fresh one would
 be E4) is filed to NITS.
+
+## §76. U8 built: seeds visible, eight chips of history, a typed seed; and the two-dot swap that had never held
+
+Composer: *"For the rhythm order. and the random shuffle order. Can I have the seed? And can I have a way to
+go back to previous seeds? … a row or a table of previous shuffles. It just collects, say, five or ten, and
+then I can click them instead of having to type it in."* Four random buttons in the drawer each already had
+a seed in cfg (`oSeed` order · `rSeed` rhythm · `oSeedShuffle` orchestration · `vSeed` voicing), every
+result a pure function of seed + state — so "go back" is just "set the seed again". Built one mechanism
+for all four: `seedChips(key)` renders `seed [n]` (a number box; change applies) + the history as chips
+(newest first, the current lit, cap SEED_KEEP = 8); `useSeed(key, n)` sets the seed, notes it in
+`cfg.seedHist[key]`, and does what the button did (order → random; rhythm shape → random if as played;
+`shuffleOrch()`; `applyVoicing()`); `nextSeed(key)` = max(current, history) + 1, so a shuffle after a
+chip click never re-serves a seed still visible; the four button handlers route through it; `renderSeeds()`
+runs at the end of every render (the orchestration header's chips are inline in its own HTML, the other
+three fill fixed containers). Histories live in cfg → localStorage and in takes. *Rejected:* random large
+seeds (unreadable chips; sequential numbers are the composer's "previous seeds" in the order he made
+them); one shared history (each button's row must mean that button).
+
+**Verified on the throwaway server** (`score-5301`; nothing opened; the pane hidden, so real DOM events;
+zero console errors): all four rows present with the current seed as the only chip · orchestration shuffle
+×3 → seeds 2, 3, 4, chips [4 3 2 1], 4 lit · chip 2 → seed 2 and the lanes identical to what seed 2 gave
+the first time, chips [2 4 3 1], 2 lit · shuffle → 5 (not a repeat) · typed 42 → seed 42 in the row;
+shuffle → 43 · chip 3 then `back` → the seed and the lanes before the click · order shuffle ×2 → slots
+differ; chip 2 → the seed-2 slots, order random · rhythm reshuffle ×2 → chip 2 → the seed-2 pattern, shape
+random · voicing reshuffle → chips [2 1] · ten shuffles → history length 8.
+
+**Found by the same test (K, "click two dots to swap"): the swap had never held.** The dot handler swapped
+the two slots and set `order = 'manual'`, then `render()` → `applyOrder()` → the switch's default re-derived
+every slot from "as played" — the swap undone before it was drawn; the order menu, with no "manual" option,
+went blank. Measured pre-fix: slots 7/1 → 0/1 after the second click, `swapped: false`. Fix: `applyOrder`
+returns at once for `manual`; the menu gains "by hand". Post-fix: the two slots swap and the onsets swap
+with them, the state survives a render, the menu shows "by hand", `back` undoes it, a shuffle afterwards
+leaves manual for random, a strike pick resets to as played. Page change only — the composer reloads.

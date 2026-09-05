@@ -51,6 +51,7 @@ const BLACK = [1, 3, 6, 8, 10];
 const PC_PALETTE = ['#ffd479', '#7ec9a8', '#8ea9c9', '#c98a8a', '#b58ec9', '#d4c25e',
                     '#69b7c9', '#c9986e', '#96c96e', '#c96ea8', '#8a8ac9', '#e0e0e0'];
 const nm = m => NAMES[((m % 12) + 12) % 12] + (Math.floor(m / 12) - 1);
+const SEED_KEEP = 8;   // U8: how many earlier seeds each random button keeps as chips
 const OPEN_STRINGS = { violin1: [55, 62, 69, 76], violin2: [55, 62, 69, 76], viola: [48, 55, 62, 69], cello: [36, 43, 50, 57] };
 const PLAIN_PREF = ['ord', 'main', 'senza_vel', 'senza_mw', 'staccato'];
 // U2 (composer, 2026-09-04): the default articulation of a strike — flute pizzicato (the written tongue
@@ -157,6 +158,7 @@ const D = {
               ['original', 'spread', 'cluster', 'low', 'high', 'highlow'].map(v => '<button class="skV" data-v="' + v + '" style="' + btn + '">' + ({ original: 'original', spread: 'spread out', cluster: 'cluster', low: 'cluster low', high: 'cluster high', highlow: 'high + low' })[v] + '</button>').join('') +
               '<label title="the tight cluster moved by octaves">oct <input id="skClOct" type="number" min="-3" max="3" step="1" style="width:40px;' + inp + '"></label>' +
               '<button id="skVRe" style="' + btn + '" title="a different realization of the same voicing preset">reshuffle voicing</button>' +
+              '<span id="skSeedV"></span>' +
               '<span style="color:#555">|</span>' +
               '<button id="skHearP" style="' + btn + '">Hear piano</button><button id="skHearO" style="' + btn + ';color:#e8cf9a">Hear orchestrated</button><button id="skStop" style="' + btn + '">Stop</button>' +
               '<label>dur &times; <input id="skDurX" type="number" min="0.1" max="20" step="0.1" style="width:44px;' + inp + '"></label>' +
@@ -193,7 +195,7 @@ const D = {
         q('#skZ3').addEventListener('click', () => { this.cfg.rowH = 12; this.save(); this.render(); });
         d.querySelectorAll('.skV').forEach(b => b.addEventListener('click', () => { this.snapshot(); this.cfg.voicing = b.dataset.v; this.applyVoicing(); this.save(); this.render(); }));
         q('#skClOct').addEventListener('change', e => { this.snapshot(); this.cfg.clusterOct = clamp(+e.target.value || 0, -3, 3); this.applyVoicing(); this.save(); this.render(); });
-        q('#skVRe').addEventListener('click', () => { this.snapshot(); this.cfg.vSeed++; this.applyVoicing(); this.save(); this.render(); });
+        q('#skVRe').addEventListener('click', () => { this.snapshot(); this.useSeed('vSeed', this.nextSeed('vSeed')); this.save(); this.render(); });
         q('#skHearP').addEventListener('click', () => this.play('piano'));
         q('#skHearO').addEventListener('click', () => this.play('orch'));
         q('#skStop').addEventListener('click', () => { const e = E_(); if (e) e.panic(); this.onStopped(); });
@@ -457,6 +459,34 @@ const D = {
     // the onset PATTERN after transforms: an array of slot times (ms), index = slot
     // U5 (composer, 2026-09-04: "how to reset the rhythm"): the one place the rhythm goes back to as played —
     // the button and every strike pick use it. Order and orchestration are not touched.
+    // U8 (composer, 2026-09-04: "Can I have the seed? And can I have a way to go back to previous seeds? … a row or
+    // a table of previous shuffles … I can just click on previous seeds"): every random button shows its seed, keeps the
+    // last SEED_KEEP seeds as clickable chips (newest first, the current one lit), and takes a typed seed. A new shuffle
+    // always uses max(seen) + 1, so it never repeats a seed still in the row. The histories live in cfg (saved, in takes).
+    seedHist(key) { const h = this.cfg.seedHist || (this.cfg.seedHist = {}); if (!Array.isArray(h[key])) h[key] = []; return h[key]; },
+    noteSeed(key) { const h = this.seedHist(key), n = this.cfg[key]; const i = h.indexOf(n); if (i >= 0) h.splice(i, 1); h.unshift(n); if (h.length > SEED_KEEP) h.length = SEED_KEEP; },
+    nextSeed(key) { return Math.max(this.cfg[key] || 0, ...this.seedHist(key)) + 1; },
+    useSeed(key, n) {
+        n = Math.max(1, Math.round(+n || 1)); this.cfg[key] = n; this.noteSeed(key);
+        if (key === 'oSeed') this.cfg.order = 'random';
+        else if (key === 'rSeed') { if (this.cfg.shape === 'played') this.cfg.shape = 'random'; }
+        else if (key === 'oSeedShuffle') this.shuffleOrch();
+        else if (key === 'vSeed') this.applyVoicing();
+    },
+    seedChips(key) {
+        const h = this.seedHist(key); if (!h.length) this.noteSeed(key);
+        const cur = this.cfg[key];
+        const b = 'background:#2a2a30;color:#ddd;border:1px solid #555;border-radius:3px;padding:0 3px;font-size:10px;cursor:pointer;line-height:14px';
+        return '<span class="skSeeds" style="display:inline-flex;flex-wrap:wrap;gap:2px;align-items:center;font-size:10px;color:#9a9" title="the seed of this shuffle — click an earlier one to have it back, or type one">seed ' +
+            '<input class="skSeedIn" data-key="' + key + '" type="number" min="1" step="1" value="' + cur + '" style="width:38px;background:#111114;color:#ddd;border:1px solid #444;padding:0 2px;font-size:10px">' +
+            h.map(n => '<button class="skSeed" data-key="' + key + '" data-n="' + n + '" style="' + b + (n === cur ? ';background:#e8cf9a;color:#222' : '') + '">' + n + '</button>').join('') + '</span>';
+    },
+    renderSeeds() {
+        const put = (id, key) => { const el = this.el.querySelector(id); if (el) el.innerHTML = this.seedChips(key); };
+        put('#skSeedV', 'vSeed'); put('#skSeedO', 'oSeed'); put('#skSeedR', 'rSeed');   // the orchestration header's chips are inline in renderOrch
+        this.el.querySelectorAll('.skSeed').forEach(b => b.addEventListener('click', ev => { ev.stopPropagation(); this.snapshot(); this.useSeed(b.dataset.key, +b.dataset.n); this.save(); this.render(); }));
+        this.el.querySelectorAll('.skSeedIn').forEach(i => i.addEventListener('change', ev => { ev.stopPropagation(); this.snapshot(); this.useSeed(i.dataset.key, +i.value); this.save(); this.render(); }));
+    },
     resetRhythm() { this.cfg.shape = 'played'; this.cfg.timeX = 1; this.cfg.amount = 1; this.cfg.jitterMs = 0; this.cfg.reverse = false; this.cfg.rotate = 0; },
     pattern() {
         const base = this.slotsPlayed.slice().sort((a, b) => a - b);
@@ -484,6 +514,7 @@ const D = {
     },
     // the ORDER: which voice takes which slot (K)
     applyOrder() {
+        if (this.cfg.order === 'manual') return;   // K fix (2026-09-04): a by-hand dot swap sets the slots itself; every render used to re-derive them from "as played" and undo it
         const vs = this.voices; const n = vs.length;
         const byPitch = [...vs].sort((a, b) => a.pitch - b.pitch);
         const played = [...vs].sort((a, b) => a.dt0 - b.dt0);
@@ -516,7 +547,7 @@ const D = {
     render() {
         if (!this.strike) return;
         this.applyOrder();
-        this.renderKeyboard(); this.renderOrch(); this.renderPicker(); this.renderRhythm();
+        this.renderKeyboard(); this.renderOrch(); this.renderPicker(); this.renderRhythm(); this.renderSeeds();
         requestAnimationFrame(() => this.renderLines());
     },
     pcColor(pc) { const pcs = [...new Set(this.voices.map(v => v.pc))].sort((a, b) => a - b); return PC_PALETTE[pcs.indexOf(pc) % PC_PALETTE.length]; },
@@ -558,7 +589,7 @@ const D = {
         const btn = 'background:#2a2a30;color:#ddd;border:1px solid #555;border-radius:3px;padding:1px 6px;font-size:11px;cursor:pointer';
         const opts = sel => '<option value="-1">—</option>' + T.map((t, i) => '<option value="' + i + '"' + (i === sel ? ' selected' : '') + '>' + t.label + '</option>').join('');
         let s = '<div style="display:flex;gap:6px;align-items:center;padding:4px 6px;border-bottom:1px solid #333;flex-wrap:wrap">' +
-            '<button id="skShuffle" style="' + btn + ';color:#e8cf9a">shuffle</button>' +
+            '<button id="skShuffle" style="' + btn + ';color:#e8cf9a">shuffle</button>' + this.seedChips('oSeedShuffle') +
             '<label title="off: played registers only; on: the shuffle may fold a pitch class by octave into any player"><input id="skFold" type="checkbox"' + (this.cfg.mayFold ? ' checked' : '') + '> may fold</label>' +
             '<label>top → <select id="skTop" style="' + inp + '">' + opts(this.cfg.topLock) + '</select></label>' +
             '<label>bottom → <select id="skBot" style="' + inp + '">' + opts(this.cfg.bottomLock) + '</select></label>' +
@@ -580,7 +611,7 @@ const D = {
         });
         s += '</div>';
         box.innerHTML = s;
-        box.querySelector('#skShuffle').addEventListener('click', () => { this.snapshot(); this.cfg.oSeedShuffle++; this.shuffleOrch(); this.save(); this.render(); });
+        box.querySelector('#skShuffle').addEventListener('click', () => { this.snapshot(); this.useSeed('oSeedShuffle', this.nextSeed('oSeedShuffle')); this.save(); this.render(); });
         box.querySelector('#skFold').addEventListener('change', e => { this.cfg.mayFold = e.target.checked; this.save(); });
         box.querySelector('#skTop').addEventListener('change', e => { this.cfg.topLock = +e.target.value; this.save(); });
         box.querySelector('#skBot').addEventListener('change', e => { this.cfg.bottomLock = +e.target.value; this.save(); });
@@ -672,9 +703,10 @@ const D = {
                 '<label>jitter <input id="skJit" type="number" min="0" max="500" step="5" style="' + inp + '"> ms</label>' +
                 '<div><button id="skRev" style="' + btn + '">reverse</button> <button id="skRot" style="' + btn + '">rotate</button> <button id="skRRe" style="' + btn + '">reshuffle</button></div>' +
                 '<div><button id="skRhyReset" style="' + btn + '" title="the rhythm as played: shape as played · span × 1 · jitter 0 · reverse off · rotate 0 — order and orchestration untouched; back undoes it (U5)">reset rhythm</button></div>' +
+                '<div id="skSeedR"></div>' +
                 '<span style="color:#9a9;margin-top:4px">order</span>' +
-                '<label><select id="skOrder" style="' + inp + ';width:78px"><option value="played">as played</option><option value="lowhigh">low → high</option><option value="highlow">high → low</option><option value="outin">outside-in</option><option value="inout">inside-out</option><option value="random">random</option></select></label>' +
-                '<div><button id="skORe" style="' + btn + '">shuffle order</button></div><span style="color:#666">click two dots to swap<br>shift-click = solo</span>' +
+                '<label><select id="skOrder" style="' + inp + ';width:78px"><option value="played">as played</option><option value="manual">by hand</option><option value="lowhigh">low → high</option><option value="highlow">high → low</option><option value="outin">outside-in</option><option value="inout">inside-out</option><option value="random">random</option></select></label>' +
+                '<div><button id="skORe" style="' + btn + '">shuffle order</button></div><div id="skSeedO"></div><span style="color:#666">click two dots to swap<br>shift-click = solo</span>' +
                 '<label style="margin-top:4px">width <input id="skRhyW" type="range" min="320" max="1400" step="20" style="width:64px"></label>';
             wrap.appendChild(ctl);
             const q = sel => ctl.querySelector(sel);
@@ -685,10 +717,10 @@ const D = {
             q('#skJit').addEventListener('change', e => { this.snapshot(); this.cfg.jitterMs = clamp(+e.target.value || 0, 0, 500); this.save(); this.render(); });
             q('#skRev').addEventListener('click', () => { this.snapshot(); this.cfg.reverse = !this.cfg.reverse; this.render(); });
             q('#skRot').addEventListener('click', () => { this.snapshot(); this.cfg.rotate = (this.cfg.rotate || 0) + 1; this.render(); });
-            q('#skRRe').addEventListener('click', () => { this.snapshot(); this.cfg.rSeed++; if (this.cfg.shape === 'played') this.cfg.shape = 'random'; this.save(); this.render(); });
+            q('#skRRe').addEventListener('click', () => { this.snapshot(); this.useSeed('rSeed', this.nextSeed('rSeed')); this.save(); this.render(); });
             q('#skRhyReset').addEventListener('click', () => { this.snapshot(); this.resetRhythm(); this.save(); this.render(); this.setStatus('rhythm reset to as played (span × 1 · jitter 0 · reverse off · rotate 0) — back undoes it'); });
             q('#skOrder').addEventListener('change', e => { this.snapshot(); this.cfg.order = e.target.value; this.save(); this.render(); });
-            q('#skORe').addEventListener('click', () => { this.snapshot(); this.cfg.oSeed++; this.cfg.order = 'random'; this.save(); this.render(); });
+            q('#skORe').addEventListener('click', () => { this.snapshot(); this.useSeed('oSeed', this.nextSeed('oSeed')); this.save(); this.render(); });
             q('#skRhyW').addEventListener('input', e => { this.cfg.rhythmW = +e.target.value; this.save(); this.render(); });
         }
         ctl.querySelector('#skRhyW').value = this.cfg.rhythmW || 480; ctl.querySelector('#skTimeX').value = this.cfg.timeX; ctl.querySelector('#skShape').value = this.cfg.shape; ctl.querySelector('#skAmt').value = this.cfg.amount; ctl.querySelector('#skJit').value = this.cfg.jitterMs; ctl.querySelector('#skOrder').value = this.cfg.order;

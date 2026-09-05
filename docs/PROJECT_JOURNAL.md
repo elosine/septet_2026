@@ -109,7 +109,8 @@ the samplers addressable as code (0k, D15), D16 tongue ram; RUNNING_LOG §40–6
   undoable; a strike re-pick clears reverse and rotate; verified on the throwaway server). **U6** (another
   pitch for an assigned player) answered from the code and filed, not built; **U7 built** — the
   two-click assign now REPLACES (the row's note swaps back to the armed note's old player, or to nobody;
-  shift-click adds; the row's technique carried). RUNNING_LOG §72–74.
+  shift-click adds; the row's technique carried); **U8 built** — every random button shows its seed with
+  eight clickable earlier seeds and a typed seed; **K's two-dot swap fixed** (it had never held). RUNNING_LOG §72–76.
 - Sketch pad: CN-8 (the piece begins with the strikes) · CN-9 (the piccolo–bass clarinet looping line
   uses grace-note figures; notation after Ferneyhough, *Etudes Transcendantales* No. 1 oboe → PLAN 0g's
   2a list; RUNNING_LOG §72); for piece #6, animated conductions.
