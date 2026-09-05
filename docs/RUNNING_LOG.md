@@ -2400,3 +2400,16 @@ score; to change a duration, delete the strike's META shape and re-insert. Lesso
 after previous` — start = end of the last inserted strike + the original gap to this one; the arithmetic is the
 error-prone step. (C) re-insert replaces the earlier insert of the same strike (found by group) instead of adding.
 (D) the SPREAD chain generator (STRIKES_TOOL V) — only if the bespoke example shows the rules hold.
+
+## §82. The working plan, step 1 done: #17 evened and inserted (takes 17-a … 17-d); doublings used at once
+
+Composer: *"saved as 17-d, i shuffled seed 73 for 17-c, inserted in score"* — after the talk-through of the
+steps (load 17-b → read the order in the rhythm strip → `order` shuffle → `shape` even → hear → save take →
+`Insert @ original time`). What landed in `piece-septet` (his Save, then a Name version `v1.4`): group
+`grp-strike-17-271r` at 27.153 s — five onsets at 27.153 · 27.185 · 27.216 · 27.248 · 27.280 (32 ms apart:
+the `even` shape over the recorded 127 ms span, exactly as computed), the META shape 27.153 → 27.389. Order
+by seed 73: F#3 first (Viola AND Cello), then C5 (Violin 1 + Flute + Piano), D4 (Violin 2), E2 (Bass Cl.
+slap + Piano), F6 (Piano) last — 9 notes from 5 voices: U10's doublings were used within the hour of being
+built, and the piano's doublings ride along. Lesson for the plan: the strike-in-the-score is the check —
+the drawer's numbers and the score's agree to the millisecond; reading the order off the rhythm strip (dots
+left → right, hover for slot) was enough, no tool needed. Takes: 88 (17-a … 17-d).

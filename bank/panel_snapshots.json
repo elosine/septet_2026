@@ -17484,6 +17484,447 @@
             }
           ]
         }
+      },
+      "17-b": {
+        "saved": "2026-09-05T13:58:05.781Z",
+        "comment": "strike #17 · ScatteredStrikes01",
+        "state": {
+          "strikeId": "ss-ScatteredStrikes01-wc-232",
+          "cfg": {
+            "strikeId": "ss-ScatteredStrikes01-wc-232",
+            "show88": false,
+            "rowH": 0,
+            "full": true,
+            "heightPx": 0,
+            "voicing": "spread",
+            "vSeed": 8,
+            "clusterOct": 1,
+            "timeX": 1,
+            "shape": "played",
+            "amount": 1,
+            "jitterMs": 0,
+            "reverse": false,
+            "rotate": 0,
+            "rSeed": 5,
+            "order": "random",
+            "oSeed": 71,
+            "simMs": 60,
+            "durX": 1,
+            "dynX": 1,
+            "flatten": true,
+            "mayFold": false,
+            "topLock": -1,
+            "bottomLock": -1,
+            "oSeedShuffle": 218,
+            "zoomPxPerMs": 0,
+            "rhythmW": 700,
+            "seedHist": {
+              "oSeedShuffle": [
+                218,
+                217,
+                216,
+                215,
+                214,
+                213,
+                212,
+                211
+              ],
+              "vSeed": [
+                8
+              ],
+              "oSeed": [
+                71,
+                70,
+                69,
+                68,
+                67,
+                66,
+                65,
+                64
+              ],
+              "rSeed": [
+                5
+              ]
+            }
+          },
+          "voices": [
+            {
+              "i": 0,
+              "pitch": 89,
+              "lane": 2,
+              "fold": 0,
+              "tech": "main",
+              "standIn": null,
+              "piano": false,
+              "solo": false,
+              "slot": 0,
+              "skip": false,
+              "also": []
+            },
+            {
+              "i": 1,
+              "pitch": 54,
+              "lane": 5,
+              "fold": 0,
+              "tech": "gettato_vel",
+              "standIn": null,
+              "piano": false,
+              "solo": false,
+              "slot": 3,
+              "skip": false,
+              "also": [
+                {
+                  "lane": 6,
+                  "tech": "gettato_vel",
+                  "fold": 0,
+                  "standIn": null,
+                  "skip": false
+                }
+              ]
+            },
+            {
+              "i": 2,
+              "pitch": 62,
+              "lane": 4,
+              "fold": 0,
+              "tech": "bartok_vel",
+              "standIn": null,
+              "piano": false,
+              "solo": false,
+              "slot": 1,
+              "skip": false,
+              "also": []
+            },
+            {
+              "i": 3,
+              "pitch": 72,
+              "lane": 3,
+              "fold": 0,
+              "tech": "bartok_vel",
+              "standIn": null,
+              "piano": true,
+              "solo": false,
+              "slot": 4,
+              "skip": false,
+              "also": [
+                {
+                  "lane": 0,
+                  "tech": "pizzicato",
+                  "fold": 0,
+                  "standIn": null,
+                  "skip": false
+                }
+              ]
+            },
+            {
+              "i": 4,
+              "pitch": 40,
+              "lane": 1,
+              "fold": 0,
+              "tech": "slap",
+              "standIn": 40,
+              "piano": true,
+              "solo": false,
+              "slot": 2,
+              "skip": false,
+              "also": []
+            }
+          ]
+        }
+      },
+      "17-c": {
+        "saved": "2026-09-05T14:02:50.952Z",
+        "comment": "strike #17 · ScatteredStrikes01",
+        "state": {
+          "strikeId": "ss-ScatteredStrikes01-wc-232",
+          "cfg": {
+            "strikeId": "ss-ScatteredStrikes01-wc-232",
+            "show88": false,
+            "rowH": 0,
+            "full": true,
+            "heightPx": 0,
+            "voicing": "spread",
+            "vSeed": 8,
+            "clusterOct": 1,
+            "timeX": 1,
+            "shape": "played",
+            "amount": 1,
+            "jitterMs": 0,
+            "reverse": false,
+            "rotate": 0,
+            "rSeed": 5,
+            "order": "random",
+            "oSeed": 73,
+            "simMs": 60,
+            "durX": 1,
+            "dynX": 1,
+            "flatten": true,
+            "mayFold": false,
+            "topLock": -1,
+            "bottomLock": -1,
+            "oSeedShuffle": 218,
+            "zoomPxPerMs": 0,
+            "rhythmW": 700,
+            "seedHist": {
+              "oSeedShuffle": [
+                218,
+                217,
+                216,
+                215,
+                214,
+                213,
+                212,
+                211
+              ],
+              "vSeed": [
+                8
+              ],
+              "oSeed": [
+                73,
+                72,
+                71,
+                70,
+                69,
+                68,
+                67,
+                66
+              ],
+              "rSeed": [
+                5
+              ]
+            }
+          },
+          "voices": [
+            {
+              "i": 0,
+              "pitch": 89,
+              "lane": 2,
+              "fold": 0,
+              "tech": "main",
+              "standIn": null,
+              "piano": false,
+              "solo": false,
+              "slot": 4,
+              "skip": false,
+              "also": []
+            },
+            {
+              "i": 1,
+              "pitch": 54,
+              "lane": 5,
+              "fold": 0,
+              "tech": "gettato_vel",
+              "standIn": null,
+              "piano": false,
+              "solo": false,
+              "slot": 0,
+              "skip": false,
+              "also": [
+                {
+                  "lane": 6,
+                  "tech": "gettato_vel",
+                  "fold": 0,
+                  "standIn": null,
+                  "skip": false
+                }
+              ]
+            },
+            {
+              "i": 2,
+              "pitch": 62,
+              "lane": 4,
+              "fold": 0,
+              "tech": "bartok_vel",
+              "standIn": null,
+              "piano": false,
+              "solo": false,
+              "slot": 2,
+              "skip": false,
+              "also": []
+            },
+            {
+              "i": 3,
+              "pitch": 72,
+              "lane": 3,
+              "fold": 0,
+              "tech": "bartok_vel",
+              "standIn": null,
+              "piano": true,
+              "solo": false,
+              "slot": 1,
+              "skip": false,
+              "also": [
+                {
+                  "lane": 0,
+                  "tech": "pizzicato",
+                  "fold": 0,
+                  "standIn": null,
+                  "skip": false
+                }
+              ]
+            },
+            {
+              "i": 4,
+              "pitch": 40,
+              "lane": 1,
+              "fold": 0,
+              "tech": "slap",
+              "standIn": 40,
+              "piano": true,
+              "solo": false,
+              "slot": 3,
+              "skip": false,
+              "also": []
+            }
+          ]
+        }
+      },
+      "17-d": {
+        "saved": "2026-09-05T14:03:28.830Z",
+        "comment": "strike #17 · ScatteredStrikes01",
+        "state": {
+          "strikeId": "ss-ScatteredStrikes01-wc-232",
+          "cfg": {
+            "strikeId": "ss-ScatteredStrikes01-wc-232",
+            "show88": false,
+            "rowH": 0,
+            "full": true,
+            "heightPx": 0,
+            "voicing": "spread",
+            "vSeed": 8,
+            "clusterOct": 1,
+            "timeX": 1,
+            "shape": "even",
+            "amount": 1,
+            "jitterMs": 0,
+            "reverse": false,
+            "rotate": 0,
+            "rSeed": 5,
+            "order": "random",
+            "oSeed": 73,
+            "simMs": 60,
+            "durX": 1,
+            "dynX": 1,
+            "flatten": true,
+            "mayFold": false,
+            "topLock": -1,
+            "bottomLock": -1,
+            "oSeedShuffle": 218,
+            "zoomPxPerMs": 0,
+            "rhythmW": 700,
+            "seedHist": {
+              "oSeedShuffle": [
+                218,
+                217,
+                216,
+                215,
+                214,
+                213,
+                212,
+                211
+              ],
+              "vSeed": [
+                8
+              ],
+              "oSeed": [
+                73,
+                72,
+                71,
+                70,
+                69,
+                68,
+                67,
+                66
+              ],
+              "rSeed": [
+                5
+              ]
+            }
+          },
+          "voices": [
+            {
+              "i": 0,
+              "pitch": 89,
+              "lane": 2,
+              "fold": 0,
+              "tech": "main",
+              "standIn": null,
+              "piano": false,
+              "solo": false,
+              "slot": 4,
+              "skip": false,
+              "also": []
+            },
+            {
+              "i": 1,
+              "pitch": 54,
+              "lane": 5,
+              "fold": 0,
+              "tech": "gettato_vel",
+              "standIn": null,
+              "piano": false,
+              "solo": false,
+              "slot": 0,
+              "skip": false,
+              "also": [
+                {
+                  "lane": 6,
+                  "tech": "gettato_vel",
+                  "fold": 0,
+                  "standIn": null,
+                  "skip": false
+                }
+              ]
+            },
+            {
+              "i": 2,
+              "pitch": 62,
+              "lane": 4,
+              "fold": 0,
+              "tech": "bartok_vel",
+              "standIn": null,
+              "piano": false,
+              "solo": false,
+              "slot": 2,
+              "skip": false,
+              "also": []
+            },
+            {
+              "i": 3,
+              "pitch": 72,
+              "lane": 3,
+              "fold": 0,
+              "tech": "bartok_vel",
+              "standIn": null,
+              "piano": true,
+              "solo": false,
+              "slot": 1,
+              "skip": false,
+              "also": [
+                {
+                  "lane": 0,
+                  "tech": "pizzicato",
+                  "fold": 0,
+                  "standIn": null,
+                  "skip": false
+                }
+              ]
+            },
+            {
+              "i": 4,
+              "pitch": 40,
+              "lane": 1,
+              "fold": 0,
+              "tech": "slap",
+              "standIn": 40,
+              "piano": true,
+              "solo": false,
+              "slot": 3,
+              "skip": false,
+              "also": []
+            }
+          ]
+        }
       }
     }
   }
