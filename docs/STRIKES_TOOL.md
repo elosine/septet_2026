@@ -86,7 +86,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
 - *AI notes:* the lines are SVG over both panels; each instrument row also lists its note(s)
   and technique (the v1 selects move here).
 
-## F · Ranges — `built 2026-09-03 (adopted; the shuffle never misfits, hand choices fold ↑↓ or ✕)`
+## F · Ranges — `built 2026-09-03 (adopted; the shuffle never misfits, hand choices fold ↑↓ or ✕)` · `hand assign 2026-09-04 (U7): a plain click on a row REPLACES — the row's note swaps back to the armed note's old player (or nobody); shift-click adds; each note takes its new row's current technique`
 
 > *"What happens when the ranges don't fit? … I don't want things to be too fiddly."* — the
 > AI's proposal, adopted by the composer ("Those are good suggestions. Let's adopt those."):
@@ -341,7 +341,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   them; the noise technique's keys; the open strings) — click to hear, click to select; the
   choice is stored on the voice (the stand-in key). Out of the way until needed.
 
-## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built`
+## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built` · `U7 built 2026-09-04` (RUNNING_LOG §74)
 
 > Composer: *"collect these and I'll have you do a feature update all at once."* Each request
 > verbatim, the AI's reading beneath; built together when the composer says so.
@@ -393,6 +393,15 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   has; the note it had stays until it is armed and moved elsewhere. Gaps found: no hand "nobody plays
   this note" (skip is set only by a misfit); no per-voice octave nudge by hand; no free pitch edit (a new
   pitch class = a new harmony = M/N). *Not built — the composer's call which of the three, if any.*
+  *→ U7 (below) makes the two-click assign replace instead of add.*
+- **U7 — hand assign replaces, not adds — `built 2026-09-04, verified on the throwaway server (RUNNING_LOG §74)`.**
+  *Composer (2026-09-04 night, having tried U6's two-click assign): "I tried this, but it added two lines
+  to the instrument. The previous one didn't go away."* — *Built:* a plain click on a player row now
+  REPLACES: the note(s) the row had go to the armed note's old player — or to nobody if it had none — so
+  the chord stays whole and nothing is silently dropped; shift-click ADDS (the double-stop case, I). Each
+  note takes the technique its new row already plays (before, a hand-assigned note always got the
+  instrument's default, whatever the row's menu said). The status line says what moved where; `back`
+  undoes it. The arm message states the rule.
 
 ## Open questions for the composer (only what blocks the next piece)
 

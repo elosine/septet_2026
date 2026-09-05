@@ -2219,3 +2219,27 @@ by octave only (voicing presets; the fold); another note of the chord goes to a 
 arm-and-click (double-click the dot, click the row; it is added to the row, the old note stays until
 moved); no hand skip, no per-voice octave nudge, no free pitch edit (that is a new harmony, M/N).
 Nothing built for it.
+
+## §74. U7: the hand assign replaces — the swap, the row's technique, shift adds
+
+Composer, having tried the two-click assign the AI had just described: *"I tried this, but it added two
+lines to the instrument. The previous one didn't go away."* — his expectation (replace) is the better rule
+for "give this player a different pitch"; the add was how F's two-click assign had been built (RUNNING_LOG
+§65: the case then was hooking an unassigned voice in). *Options weighed:* (a) the displaced note goes to
+NOBODY — a note of the chord silently dropped; (b) the displaced note SWAPS to the armed note's old player
+(or to nobody when the armed note had none) — nothing lost, one status line says what moved; (c) keep add.
+Built (b) as the plain click, (c) on shift-click (the double-stop case, STRIKES_TOOL I, will want add).
+Found on the way: `assign()` always gave a hand-assigned note the instrument's DEFAULT technique
+(`defaultTech` = the U2 strike default), whatever the row's menu said — a row set to another articulation
+would silently hold mixed techniques after a hand assign. Now a note takes its new row's current technique
+(the swapped-back note takes the armed note's old one); `assign(v, lane, tech)`.
+
+**Verified on the throwaway server** (`preview_start score-5301`; nothing opened, no working copy; the
+pane hidden, so the real handlers were fired by dispatched dblclick / click events; zero console errors):
+strike #0 shuffled → G2 on Bass Cl. (slap), A#5 alone on Flute (pizzicato) · the Flute row's menu set to
+Aeolian & Ord → its voice follows · G2 armed (status: "…it plays this note instead of what it had (that
+note swaps back) · shift-click adds") → plain click on Flute → G2 → Flute with `aeolian_and_ord`, A#5 →
+Bass Cl. with `slap`, one voice on the Flute, status "G2 → Flute · A#5 → Bass Cl. (swapped) · shift-click
+adds instead of replacing" · `back` → both where they were · shift-click → both on the Flute, "(added)" ·
+G2 made unassigned, armed, plain click on Flute → G2 → Flute, A#5 → nobody, status says "→ nobody
+(swapped)". Page change only — the composer reloads.

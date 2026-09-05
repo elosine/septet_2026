@@ -439,7 +439,7 @@ const D = {
         // the piano plays what it was given (one note); any leftover voice is silent until flagged
         this.voices.forEach(v => { if (v.lane >= 0 && T[v.lane].instKey === 'piano') v.piano = true; });
     },
-    assign(v, lane) { v.lane = lane; v.fold = 0; v.standIn = null; if (lane >= 0) { v.tech = this.defaultTech(lane); if (!this.fitVoice(v)) v.skip = true; } },
+    assign(v, lane, tech) { v.lane = lane; v.fold = 0; v.standIn = null; if (lane >= 0) { v.tech = tech || this.defaultTech(lane); if (!this.fitVoice(v)) v.skip = true; } },   // tech: the row's current technique, if it has one (U7)
     pianoQuick(k) {
         const vs = [...this.voices].sort((a, b) => a.pitch - b.pitch);
         const T = TRK(); const pianoLane = T.findIndex(t => t.instKey === 'piano');
@@ -589,12 +589,23 @@ const D = {
         box.querySelectorAll('.skRowName').forEach(el => el.addEventListener('click', () => { const lane = +el.parentNode.dataset.lane; this.pickerLane = this.pickerLane === lane ? null : lane; this.render(); }));
         box.querySelectorAll('.skSolo').forEach(el => el.addEventListener('click', ev => { ev.stopPropagation(); const lane = +el.dataset.lane; const mine = this.voices.filter(v => v.lane === lane); if (!mine.length) return; this.snapshot(); const on = !mine.every(v => v.solo); mine.forEach(v => { v.solo = on; }); this.render(); }));
         box.querySelectorAll('.skRow').forEach(row => { row.addEventListener('mouseenter', () => { this.hoverLane = +row.dataset.lane; this.renderLines(); }); row.addEventListener('mouseleave', () => { this.hoverLane = null; this.renderLines(); }); });
-        // drop a voice on a player: click a dot on the keyboard, then a row (two-click assign)
+        // drop a voice on a player: click a dot on the keyboard, then a row (two-click assign).
+        // U7 (composer, 2026-09-04: "it added two lines to the instrument. The previous one didn't go away"): a plain
+        // click REPLACES — the note(s) the player had go to the armed note's old player (or to nobody), so the chord
+        // stays whole and nothing is lost; each note takes the technique its new row already plays. Shift-click ADDS.
         box.querySelectorAll('.skRow').forEach(row => row.addEventListener('click', ev => {
             if (ev.target.tagName === 'SELECT' || ev.target.tagName === 'BUTTON' || ev.target.classList.contains('skRowName')) return;
             if (this.pendingVoice == null) return;
             const v = this.voices[this.pendingVoice]; this.pendingVoice = null;
-            this.snapshot(); this.assign(v, +row.dataset.lane); this.render();
+            const lane = +row.dataset.lane, from = v.lane, fromTech = v.tech, T = TRK();
+            const rowTech = (this.voices.find(o => o !== v && o.lane === lane) || {}).tech || null;
+            const there = ev.shiftKey ? [] : this.voices.filter(o => o !== v && o.lane === lane);
+            this.snapshot();
+            there.forEach(o => this.assign(o, from, from >= 0 ? fromTech : null));
+            this.assign(v, lane, rowTech);
+            const name = l => l >= 0 && T[l] ? T[l].label : 'nobody';
+            this.setStatus(nm(v.pitch) + ' → ' + name(lane) + (there.length ? ' · ' + there.map(o => nm(o.pitch)).join(' ') + ' → ' + name(from) + ' (swapped)' : (ev.shiftKey ? ' (added)' : '')) + ' · shift-click adds instead of replacing');
+            this.render();
         }));
     },
     renderPicker() {
@@ -691,7 +702,7 @@ const D = {
             this.render();
         }));
         // a keyboard dot click also arms "assign to the next clicked player"
-        this.el.querySelectorAll('#skKb .skDot').forEach(dd => dd.addEventListener('dblclick', ev => { ev.stopPropagation(); this.pendingVoice = +dd.dataset.i; this.setStatus('voice ' + nm(this.voices[this.pendingVoice].pitch) + ' armed — click a player row to assign it'); }));
+        this.el.querySelectorAll('#skKb .skDot').forEach(dd => dd.addEventListener('dblclick', ev => { ev.stopPropagation(); this.pendingVoice = +dd.dataset.i; this.setStatus('voice ' + nm(this.voices[this.pendingVoice].pitch) + ' armed — click a player row: it plays this note instead of what it had (that note swaps back) · shift-click adds'); }));
     },
     renderLines() {
         const svg = this.el.querySelector('#skLines'), body = this.body;
