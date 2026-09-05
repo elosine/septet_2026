@@ -548,3 +548,35 @@ names a library to confirm.
 - **The chain placement is unchanged:** start(n) = end(n−1) + the recorded onset gap; with the gap law the
   section stretches further (all-onsets version: #24 ends near 46.9 s; sounding-only: much less, since a
   strike then has at most 7 onsets unless the piano takes the rest).
+
+---
+
+## CN-18 · 2026-09-05 — the accelerating run: fixed steepness, fixed landing, the first gap by the chain; the players in a round robin
+
+> *"I actually don't want the acceleration to slow down at the end … I want each subsequent one to sound like
+> it's taking longer, so maybe it's slower in the beginning, but I want the rush at the end to sound just as
+> urgent each time."* · *"Let's build a round robin cycle so we can recycle the players into a longer sequence
+> … as the ensemble returns, we then randomize the pitches, but the ones I've already chosen … shuffle to
+> completion."* · *"Pitch on player is fine. However, we need a fail-safe … no player is playing another note in
+> too short an amount of time."* · *"Let's just do two hundred and fifty milliseconds across the board, because
+> the mechanism I'll use to notate this will be the gravitational conductors, and those bouncing balls are
+> less effective when you're doing two successive ones rather quickly."* · *"If we have to settle into the same
+> loop, then we just let the player play the shuffled note, in an octave displacement if necessary."*
+> *(2026-09-04 night → 05, session 3, several messages; speech-to-text cleaned, content untouched)*
+
+**AI reading (not the composer's words):**
+
+- **The model in one line:** a ball dropped from higher each time — same bounce, more bounces. Three numbers
+  fixed: the steepness (each gap 0.85 of the one before), the landing (the last gap 45 ms), the re-attack
+  rule (a player never twice within 250 ms). One number moving: the first gap, the chain's ×1.5 (107 · 161 ·
+  241 · 362 · 542). The count of notes follows — 7 · 9 · 12 · 14 · 17 — and so does the duration, 0.44 → 3.3 s;
+  the last gaps are the same milliseconds at the same rate every time, which is the urgency he asked to keep.
+- **The round robin supplies the notes:** the strike's orchestration is a deck of cards, pitch on player, in
+  his order; cycle 1 plays the deck; every later cycle reshuffles it and plays it through, no reshuffle
+  mid-deck; the last cycle stops at the count. The 250 ms rule is checked against the onset times, which are
+  known before dealing, so it is a guarantee; a rotation of seven players at a 45 ms floor gives 315 ms and
+  never conflicts, so the fallback always exists: the players in his order, the pitches shuffled and folded
+  by octave into each player's range. In the slow head the order is free; in the rush it tends to the rotation.
+- **Why 250 across the board:** the notation — the gravitational conductors' falling balls need that much
+  between two cues on one lane, whatever the player could do.
+- **Built as STRIKES_TOOL U13** (the drawer's `accel · round robin` shape); RUNNING_LOG §91.

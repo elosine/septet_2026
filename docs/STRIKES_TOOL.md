@@ -341,7 +341,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   them; the noise technique's keys; the open strings) — click to hear, click to select; the
   choice is stored on the voice (the stand-in key). Out of the way until needed.
 
-## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built` · `U7 built 2026-09-04` (RUNNING_LOG §74) · `U8 built 2026-09-04` (RUNNING_LOG §76) · `U9 built 2026-09-04` (RUNNING_LOG §77) · `U10 built 2026-09-04` (RUNNING_LOG §81) · `U11 built 2026-09-04` (RUNNING_LOG §87) · `U12 built 2026-09-04` (RUNNING_LOG §90)
+## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built` · `U7 built 2026-09-04` (RUNNING_LOG §74) · `U8 built 2026-09-04` (RUNNING_LOG §76) · `U9 built 2026-09-04` (RUNNING_LOG §77) · `U10 built 2026-09-04` (RUNNING_LOG §81) · `U11 built 2026-09-04` (RUNNING_LOG §87) · `U12 built 2026-09-04` (RUNNING_LOG §90) · `U13 built 2026-09-05` (RUNNING_LOG §91)
 
 > Composer: *"collect these and I'll have you do a feature update all at once."* Each request
 > verbatim, the AI's reading beneath; built together when the composer says so.
@@ -462,6 +462,22 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   the rhythm as it will sound and sets the duration from it (gap × (onsets − 1)). Reverse now mirrors within the
   pattern's own span. The strip's tooltip names a dot nobody plays. The mode lives in the drawer's config (takes,
   back); `reset rhythm` leaves it alone. *Not built:* a `gap = previous × ratio` button — the composer types it.
+- **U13 — `accel · round robin`: the accelerating run with the players recycled — `built 2026-09-05 (CN-18), verified
+  on the throwaway server (RUNNING_LOG §91)`.** *Composer: "each subsequent one … slower in the beginning, but I want
+  the rush at the end to sound just as urgent each time … build a round robin cycle so we can recycle the players …
+  two hundred and fifty milliseconds across the board … if we have to settle into the same loop, the player plays the
+  shuffled note, in an octave displacement if necessary."* — *Built:* a shape `accel · round robin` in the shape menu.
+  With it on, the gap box is the FIRST gap; `steep` (0.85) is the fraction each gap is of the one before; `→ last`
+  (45 ms) is the landing; the count of notes follows (the last gap lands exactly on the floor, the fraction adjusted
+  a little); the ms box shows the duration and is read-only. Cards = the sounding notes in slot order, pitch on
+  player (a doubled note is one card with two players, the piano flag adds the piano). Cycle 1 = the composer's order;
+  each later cycle = a shuffle that satisfies `re-attack ≥` (250 ms) against the known onset times — every order is
+  tried for ≤ 7 cards — or, when none fits, the rotation of players in his order with the pitches shuffled and folded
+  by octave into each player's range (noise / fixed techniques take their stand-in). A seed row for the cycle
+  shuffles. The readout: notes · gaps · ms · steep · what each cycle did (⚠ where even the rotation re-attacks too
+  soon) · the tail check (players × floor ≥ re-attack, or the floor to raise to). The strip draws the run (a
+  fallback cycle dashed); Hear and Insert follow it; `Hear piano` stays the chord as played; `Insert @ after
+  previous` measures the run's last onset as before.
 
 ## V · Processes across strikes — `wanted 2026-09-04 (CN-10) — not built; nothing blocks composing the first of each by hand`
 
@@ -478,7 +494,10 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   re-strike's span grows, his example ×1.5 from 100 ms (100 · 150 · 225 …), the law open; even spacing until
   the span is long enough to hear, then accelerating toward the last impulse (`back-loaded`, graded by
   `amount`); open: the gap between re-strikes, the orchestration per re-strike, the dynamic; starts @ 27.76 s;
-  *"take this as a note for now, and then we'll build it"*) · SCALE (each strike one step higher, order low → high through the registers) ·
+  *"take this as a note for now, and then we'll build it"*; **2026-09-05: the per-strike pieces exist — U11 (duration / gap,
+  `Insert @ after previous`), U12 (rests drop), U13 (the accelerating run with the round robin); the law became the gap
+  law (CN-17) and the run (CN-18); the chain across strikes is still driven by hand, one strike at a time — the chart
+  in RUNNING_LOG §86 → decides whether a generator is built**) · SCALE (each strike one step higher, order low → high through the registers) ·
   ACCEL / DECEL (the strikes' onsets on a CN-3 ramp, each strike's own rhythm shaped to match) · LADDER
   (the same pitch classes re-voiced one step up per strike, the top voice wrapping to the bottom at the
   softest dynamic — the Shepard–Risset staircase in strikes). **SPREAD designed in detail 2026-09-04 (CN-16,

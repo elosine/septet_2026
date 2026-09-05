@@ -2555,3 +2555,34 @@ drop off → 13-slot grid, gaps 71.4 · 23.8 · 23.8 · 23.8 · 71.4 · 23.8 (th
 equal · Hear piano → 13 notes on 13 onsets · `Insert @ after previous` → first 28.302, gaps 48 · 47 · 48 · 47 · 48 ·
 48 (the score rounds onsets to the millisecond, so 47.6 alternates) · `reset rhythm` → drop stays, as played of
 the seven survivors = 87 ms, gap 14.5 · the tooltip of an unplayed dot. Page change only — the composer reloads.
+
+## §91. U13 built: `accel · round robin` — the accelerating run with the players recycled (CN-18)
+
+Composer: *"ok good to go, build it ty"* after the talk of §89–90's aftermath (CN-18: fixed steepness, fixed
+landing, the first gap by the chain, a round robin of the players, 250 ms re-attack across the board, the
+rotation-with-shuffled-pitches fallback). Built in `strike_drawer.js` as a shape: `accelUnits()` (cards = the
+sounding notes in slot order, pitch on player; a doubled note one card with two players; the piano flag adds the
+piano), `realize(P, player)` (fold by octave into the technique's range; noise / fixed → stand-in),
+`accelSeq()` (memoized on its inputs): k = ⌊ln(floor ÷ g1) ÷ ln(steep)⌋ + 1 gaps, the fraction re-fitted so the
+last gap is exactly the floor; cycle 1 = the composer's order; each later cycle = a permutation satisfying the
+re-attack rule against the onset times (all 5040 tried for ≤ 7 cards, 3000 random draws above), else the rotation
+with shuffled pitches (`shuffled(pitches, rnd)`), folds counted, violations counted and flagged; `permutations()`
+(Heap). `notesFor` emits one note per player per card; `Hear piano` untouched; the strip draws the run (dashed for
+a fallback cycle); the ms box becomes read-only (the duration), the gap box the first gap; a seed row (`aSeed`);
+the readout names each cycle's mode and the tail check (players × floor vs re-attack). *Rejected:* cloning
+voices per repeat (the voice ↔ onset identity again); a greedy dealer (paints itself into a corner two notes
+before the end — the full search is trivial at seven cards).
+
+**Verified on the throwaway server** (`zz-ai-chain`, deleted; real DOM events; zero console errors) — #20
+shuffled to 7 sounding: first gap 107.2 → 7 notes · 6 gaps · 435 ms · steep 0.841 · gaps 107.2 → 45 · one cycle ·
+tail 7 × 45 = 315 ≥ 250 ✓ · ms box 435 read-only · 7 dots; 241 → 12 notes · 1314 ms · cycles own/7 + shuffled/5 ·
+0 re-attacks under 250 · Hear = 12 notes; 542 → 17 notes · 3296 ms · own/7 + shuffled/7 + shuffled/3 · 0
+violations; a new seed → cycle 1 identical, cycle 2 re-dealt, chips [2 1]; floor 30 → "tail 7 × 30 = 210 < 250 ✗
+— raise the floor to 36 or add a player"; re-attack 300 and 400 → still shuffled without violation (the partial
+last cycle is short — the tail line is the warning for a full cycle); re-attack 2000 (impossible) → cycles 2–3 fall
+back to the rotation: the players in the composer's order, the same pitch set, 4 pitches moved, 1 folded (Vn2: own
+80, dealt 43 → sounds 55), every note in its player's range, 10 dashed dots, ⚠5 and ⚠3 flagged; `Hear piano` = 14
+notes (the chord as recorded); `Insert @ original time` → 7 notes, gaps 107 · 90 · 76 · 64 · 53 · 45; `reset
+rhythm` → shape played, the block hidden, the ms box enabled. Page change only — the composer reloads.
+**For #20:** pick · load its take · shape `accel · round robin` · gap 107.2 · steep 0.85 · → last 45 · re-attack
+250 · save take · `Insert @ after previous`.

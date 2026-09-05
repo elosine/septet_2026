@@ -10,10 +10,11 @@ strikes #0–#16 of the piano reference (`ScatteredStrikes01`, the raw recording
 orchestrates them in the STRIKES drawer — seven players each with their META shapes, 0.6–25.6 s —
 frozen as `piece-septet-v1.3` by his own Name version (v1.1 = the first three, CN-8, RUNNING_LOG §69; v1.2 five);
 84 takes in `bank/panel_snapshots.json`. **The save system is D17** (one rule: working copy · Save ·
-Name version · Reload; `?` in the app; live on his machine). **Immediately next (CN-15; the working plan in RUNNING_LOG §81):** #17 into its normal spot (27.15 s); from #18 the
-expanded chain by hand in the drawer — even spacing, spans growing by a progression found by ear, the original gaps
-kept end-to-start, accelerating once audible; the orchestration decided in the drawer first; notes and lessons logged
-as we go; a build (STRIKES_TOOL V; candidates ranked in §81) only if the example earns it
+Name version · Reload; `?` in the app; live on his machine). **Immediately next (CN-15 → CN-18; the chart in RUNNING_LOG §86 →):** #17 (127 ms, evened) and #18 (gap 47.6) are in;
+the gap law ×1.5 from #17's 31.75 ms (71.4 · 107.2 · 160.7 · 241 · 362 · 542); from #20 the accelerating run —
+`accel · round robin` in the drawer: first gap = the chain's, steep 0.85, landing 45 ms, re-attack 250 ms, the players
+recycled — each strike by hand: pick · take · shape · gap · save take · `Insert @ after previous`; the original onset
+gaps kept end-to-start; lessons logged; a chain generator only if the chart earns it
 into the piece (`Insert @ original time` into the open piece; CN-5 → CN-6: strikes, then chosen
 harmony, then tremolos on curves); the drawer's next features at his word (I double stops · K lock ·
 M/N/P = PLAN 1d); phase 0's remainder (0d the Xsample measurements, 0c.5–0c.8, 0f, the 0h gate)
