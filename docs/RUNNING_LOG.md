@@ -2598,3 +2598,19 @@ on the throwaway server** (zero console errors): #22 shuffled, accel at 362 → 
 the composer's pitches, cycle 2 moves 6 of 7 pitches to other players, the pitch set unchanged, every note inside its
 player's range, 1 folded; the switch off → 0 moved; `back` restores the switch. The composer's chain today: #17
 (evened) · #18 (gap 47.6) · #19 (71.4) in the piece; #20 next at 107.2 under accel.
+
+## §93. A silent violin 2 note at 44.72: a Bartók pizz C7, above the sample's top — the technique gets a range
+
+Composer (with a screenshot of the object at 44.72 s): *"this one isn't sounding vln2 can you look into it pls"*.
+In his score: `wc-836`, Violin 2, C7 (MIDI 96), `bartok_vel`, 125 ms, in `grp-strike-25-447a` — the accel run of
+#25 (5.0 s). Journal Q6 (2026-09-04) had already found that the violins' Bartók pizz has no sample at B♭6 (90) and
+that its true top lies in 79–89; C7 is well above it, so Kontakt had nothing to play. Why the drawer allowed it:
+`bartok_vel` had no range of its own, so `techRange` fell back to the violin's 55–101 and the re-deal's fold
+(`realize`) accepted 96. Fix: `vnRanges()` (the violins' per-preset zone table, R8) gains `bartok_vel: [55, 85]`
+— 85 (C#6) provisional: the same strike has a Violin 2 C#6 at 48.34 the composer did not flag; 90 and 96 are
+silent; the true top is 85–89, to be read from the Kontakt GUI. Checked in node: violin2 bartok_vel now 55–85; C7
+folds to C6 (84), C#6 stays. The page loads instruments.js from disk on every request — a reload, no restart. To
+mend the note in the score: reload → pick #25 → load its take → `Insert @ after previous` (same seed → the same
+deal; the C7 card now sounds as C6; timing identical, nothing after it moves) — or set the note to C6 in the panel.
+Viola and cello Bartók tops remain unmeasured (Q6 updated). Lesson for the chart: a re-dealt pitch can climb into
+a technique's unsampled top; every one-shot technique used by the runs needs its sampled range on record (PLAN 0d).

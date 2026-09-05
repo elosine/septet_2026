@@ -176,8 +176,10 @@ seen this conversation):*
 - **Q1 flute doubling instrument:** piccolo or bass flute — composer undecided; SI2 flute in C
   is the track's instrument until then.
 - **Q5 print format:** #4's tabloid is 432 mm long, past A3's 420 mm. Plan for A3 landscape.
-- **Q6 (new):** the violins' Bartók pizz has no sample at B♭6 (90); its true top is somewhere in
-  79–89 — read from the Kontakt GUI when the range ledger is next touched. The cello's Senza
+- **Q6:** the violins' Bartók pizz has no sample at B♭6 (90) nor at C7 (96 — silent in the composer's strike #25,
+  2026-09-05); its top is now set to 85 (C#6) in `vnRanges()` provisionally, so the drawer folds above it; confirm
+  C#6 sounds, and read the true top (85–89) from the Kontakt GUI when convenient. Viola and cello Bartók tops
+  are unmeasured (they use the instrument's full range). The cello's Senza
   Vibrato is 12 dB softer at B4 than at C3 — the composer's ear decides whether that matters.
 
 **Blockers:** none.

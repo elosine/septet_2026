@@ -202,7 +202,7 @@ const INSTRUMENTS = {
 
 // Per-preset zones read from the GUI as the composer uses a preset (his rule at R8: "there are too many
 // presets, let's get ranges as I use them"). Violin: #7 Arco Open Strings `G2–E4` = 55–76 (2026-09-03).
-function vnRanges() { return { arco_open_vel: [55, 76] }; }   // hoisted, like xsStringTechs — the table above runs first
+function vnRanges() { return { arco_open_vel: [55, 76], bartok_vel: [55, 85] }; }   // Bartók top 85 (C#6) provisional, 2026-09-05: C7 (96) silent in the composer's strike #25, B♭6 (90) silent at 0j (journal Q6); the true top is 85–89 — raise it if a higher note is heard   // hoisted, like xsStringTechs — the table above runs first
 // The composer's practice (R8): the VELOCITY presets by default — the MW ones "sound different" and are
 // chosen deliberately; under D11 that keeps most string material on the main channel.
 // The one Xsample string roster, instantiated per instrument (fresh arrays, so per-instrument
