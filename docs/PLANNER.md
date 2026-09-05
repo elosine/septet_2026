@@ -5,18 +5,18 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ►** 2026-09-03 — phase 0 (setup). 0b done (composer app :5300, sandbox :4800);
-0g done (the notation/IR stack here, proven whole — RUNNING_LOG §12); **0i done: a septet
-save written by the app extracts to a VALID page** — the S1 conventions are in
-`docs/NAMING.md` §2, the two bites (technique vocabulary, META layer) filed under 2a
-(RUNNING_LOG §13). **0e DONE:** eight loopMIDI ports, the rack `reaper/septet_rack.rpp` (ten tracks in score
-order), every instrument's full preset menu in `sandbox/instruments.js`, and **the rack sounds
-on every port from the composer app** (`rack-test`, RUNNING_LOG §35). The first material is
-in: `scores/ScatteredStrikes01.json` (577 piano strikes, 73 s). Next: **PLAN 1c** (the
-scattered-strike database + reorchestration panel, from that file), 0d (the Xsample
-measurements), the rest of 0c (0c.5–0c.8), 0h gate. Still open in the rack: the three
-curve copies (A2–A4) per Kontakt track, added when the curve routing is wired (0c.7). **► NOW (2026-09-04 evening): the composer tests the STRIKES drawer with U1–U4.** Done today: the balance measured and applied (0j, D13–D14), the Reaper bridge + UVI-as-XML + Kontakt-as-Lua (0k, D15), the strike lanes; RUNNING_LOG §40–64. Then: the drawer's next features or 0d / 0c.5–0c.8 with the bridge. **PLAN 1c built:** the strike database (`bank/scattered_strikes.json`, 46 strikes) and **the STRIKES drawer in the composer score** (`Strikes` button; RUNNING_LOG §39; the requirements in `docs/STRIKES_TOOL.md`) — **the composer's morning test is next.** Nothing composed yet; the
-opening idea is on the sketch pad (CN-1); piccolo vs bass flute undecided (CN-2).
+**NOW ►** 2026-09-04 night — **the piece has a file: `scores/piece-septet.json`** (frozen as
+`piece-septet-v1.1`): strikes #0–#2 of ScatteredStrikes01 as the composer orchestrated them in the
+STRIKES drawer, seven players each with their META shapes, 0.6–3.5 s; the 554 raw piano chords
+that followed are gone (CN-8, RUNNING_LOG §69). **The save system is D17** (one rule: working copy
+· Save · Name version · Reload; `?` in the app). **The drawer** (PLAN 1c.2) is in the composer's
+hands: takes live in `bank/panel_snapshots.json` (eight so far), `Insert @ original time` writes a
+strike into any open score. **Next:** strikes #3 onward into the piece (CN-5 → CN-6: strikes, then
+chosen harmony, then tremolos on curves); the drawer's next features at the composer's word (I
+double stops · K lock · M/N/P = PLAN 1d); phase 0's remainder (0d the Xsample measurements,
+0c.5–0c.8, 0f, the 0h gate) when a strike needs it. Phase 0 so far: 0a · 0b · 0e · 0g · 0i · 0j ·
+0k.1–0k.4 done; the rack `reaper/septet_rack.rpp` balanced (D13–D14) and addressable as code
+(D15, the bridge). Piccolo vs bass flute undecided (CN-2).
 
 ---
 

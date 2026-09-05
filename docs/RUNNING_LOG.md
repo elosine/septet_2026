@@ -2111,3 +2111,30 @@ a bug; hence the resize listener.
 **To take effect on the composer's machine:** restart `node score\server.js` (the server changed)
 and reload the page. His four saves from today (`septet001`, `ScatteredStrikes01-og`, `-a`, `-a-2`)
 and the modified `ScatteredStrikes01` are his to sort under the new rule; untouched here.
+
+## §69. The first piece file: three orchestrated strikes, the raw piano chords removed
+
+Composer (session 3, evening): *"the save file called scattered strikes zero one a dash three.
+Could you remove all the piano struck cords from that one? So just keep the first three strikes.
+and then save it as a piece. I forgot how we were naming the pieces, but this will be the first
+iteration."* Also: *"Let's get rid of the banner … I just don't wanna give up the real estate …
+Oh, I see. The banner goes away. Okay. Never mind … So just leave it."* — the `?` strip stays,
+hidden by his click, remembered per browser. And *"did I need to restart the server?"* — yes:
+`score/server.js` changed (dots in names, the unsaved-edits report); until the restart a name with
+a dot (`piece-septet-v1.1`) lists but does not load, and the "unsaved edits" tag never shows.
+
+**What was in `ScatteredStrikes01a-3.json`** (20:11, the same size and minute as the composer's
+`ScatteredStrikes01.json` — a copy saved through the old page): 578 objects, all `waveCurve`, no
+markers — 24 in the three strike groups `grp-strike-0-6r` / `-1-18r` / `-2-32r` (seven notes on the
+seven lanes + one META shape each; strikes #0–#2 replaced in place by the composer earlier today)
+and 554 raw piano strikes on layer 2 from 4.632 s onward (strikes #3 …). Nothing else on any lane.
+
+**Done:** `scores/piece-septet.json` = the 24 group objects (0.608–3.465 s), `metadata.provenance`
+naming the source, the groups kept and the 554 removed; `scores/piece-septet-v1.1.json` the
+identical frozen first iteration (D17: `-v<label>`; the composer said "the first iteration"). Written
+directly (the composer's server is the pre-D17 one until he restarts; the name has no dot).
+**Verified in the running app** (his server, the AI's pane, zero console errors): `piece-septet`
+opens as `piece-septet-work`, 24 objects, three per lane on all eight layers, zero raw piano objects
+left, the three groups; the Piece menu lists `piece-septet` with `piece-septet-v1.1` indented under
+it. Sketch pad: CN-8. The composer's other saves from today (`septet001`, `ScatteredStrikes01-og`,
+`-a`, `-a-2`, `-a-3`, the edited `ScatteredStrikes01`) stay his to sort — uncommitted here.

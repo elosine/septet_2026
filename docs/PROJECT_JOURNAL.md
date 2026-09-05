@@ -116,6 +116,8 @@ RUNNING_LOG §65. **D17 — the save system rebuilt (PLAN 1b done):** one rule �
 Name version · Reload — hints in the app (`?`), `tools/unsaved_check.js` at session end; **needs the
 composer's server restarted** (`node score\server.js`) and the page reloaded. **Q v2:** `Insert @
 original time` writes a strike at its own time into any open score. RUNNING_LOG §67–68.
+**The first piece file:** `piece-septet` (+ frozen `piece-septet-v1.1`) — strikes #0–#2 orchestrated,
+the 554 raw piano chords removed, from `ScatteredStrikes01a-3` (CN-8, RUNNING_LOG §69).
 
 **NEXT STEPS · MODEL · CLEAR:**
 1. ☑ 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1c.1 · 1c.2 (+U1–U4) DONE and pushed.
@@ -416,6 +418,11 @@ patches in a script file; the AI's browser pane has no Web MIDI and never fires 
   `bank/balance.json`, `bank/balance_fl_bcl.json`.
 - 2026-09-04 — **0k.1–0k.4 + the foundation of 0k.5** the Reaper bridge, UVI as XML, Kontakt as
   Lua, the two strike lanes, `reaper/bridge/README.md` (D15; §48–63).
+
+- 2026-09-04 — **the first piece file:** `scores/piece-septet.json` (+ `piece-septet-v1.1`), the
+  three orchestrated strikes from the drawer, the raw piano chords removed (CN-8, RUNNING_LOG §69);
+  **1b** the save system rebuilt as one rule (D17, §67–68); **1c.2** the drawer's takes in the repo
+  (O v2, §65–66) and `Insert @ original time` (Q v2, §68).
 
 ---
 

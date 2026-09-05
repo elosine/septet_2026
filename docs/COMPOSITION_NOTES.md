@@ -212,3 +212,15 @@ names a library to confirm.
   such as MediaPipe Hands extracts — or manual frame-by-frame tracing), then re-animate it as a
   simplified figure in the animated score, timed to the music. Belongs to piece #6's kit; nothing to
   build in the septet.
+
+## CN-8 · 2026-09-04 — the piece begins: the first three strikes, orchestrated
+
+- **Composer, verbatim (session 3, evening):** *"the save file called scattered strikes zero one a
+  dash three. Could you remove all the piano struck cords from that one? So just keep the first
+  three strikes. and then save it as a piece. I forgot how we were naming the pieces, but this will
+  be the first iteration."*
+  — *AI reading:* the piece's first file is born from the scattered-strike experiment: strikes #0,
+  #1 and #2 as the composer orchestrated them in the drawer (seven players each, with their META
+  shapes), and nothing else — the 554 raw piano chords that followed are dropped. `piece-septet`
+  is the running file; `piece-septet-v1.1` the frozen first iteration (D17 naming). CN-5 / CN-6
+  (strikes, then chosen harmony, then tremolos on curves) is the road from here.
