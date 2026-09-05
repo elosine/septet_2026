@@ -99,7 +99,7 @@ const D = {
     el: null, body: null, db: null, seq: null, strike: null,
     voices: [], slots: [], ph: null, base: 0, prev: null, pickerLane: null,
     cfg: { strikeId: null, show88: false, rowH: 0, full: true, heightPx: 0, voicing: 'original', vSeed: 1, clusterOct: 0,
-           timeX: 1, shape: 'played', amount: 1, jitterMs: 0, reverse: false, rotate: 0, rSeed: 1, dropRests: true, aFirst: 100, aRatio: 0.85, aFloor: 45, aMin: 250, aSeed: 1, order: 'played', oSeed: 1, simMs: 60,
+           timeX: 1, shape: 'played', amount: 1, jitterMs: 0, reverse: false, rotate: 0, rSeed: 1, dropRests: true, aFirst: 100, aRatio: 0.85, aFloor: 45, aMin: 250, aSeed: 1, aRedeal: true, order: 'played', oSeed: 1, simMs: 60,
            durX: 1, dynX: 1, flatten: true, mayFold: false, topLock: -1, bottomLock: -1, oSeedShuffle: 1, zoomPxPerMs: 0, rhythmW: 480 },
 
     // ------------------------------------------------------------------ init / build
@@ -536,7 +536,7 @@ const D = {
     },
     accelSeq() {
         const c = this.cfg; const units = this.accelUnits(); const n = units.length;
-        const key = JSON.stringify([c.aFirst, c.aRatio, c.aFloor, c.aMin, c.aSeed, c.durX, units.map(u => [u.v.i, u.pitch, u.players.map(x => x.lane + ':' + x.tech)])]);
+        const key = JSON.stringify([c.aFirst, c.aRatio, c.aFloor, c.aMin, c.aSeed, c.aRedeal, c.durX, units.map(u => [u.v.i, u.pitch, u.players.map(x => x.lane + ':' + x.tech)])]);
         if (this._accel && this._accel.key === key) return this._accel.out;
         const g1 = Math.max(1, +c.aFirst || 1), floor = Math.max(1, +c.aFloor || 45), r0 = clamp(+c.aRatio || 0.85, 0.5, 0.99), minMs = Math.max(0, +c.aMin || 0);
         let k = g1 <= floor ? 1 : Math.floor(Math.log(floor / g1) / Math.log(r0)) + 1; k = Math.max(1, k);
@@ -560,7 +560,7 @@ const D = {
                 else { for (let a = 0; a < 3000 && !order; a++) { const perm = shuffled(units, rnd); if (checkPerm(perm.slice(0, len), times)) { order = perm.slice(0, len); mode = 'shuffled'; } } }
                 if (!order) { order = units.slice(0, len); mode = 'rotation'; }
             }
-            const pitches = mode === 'rotation' ? shuffled(units.map(u => u.pitch), rnd) : null;
+            const pitches = (cyc > 0 && (mode === 'rotation' || c.aRedeal)) ? shuffled(units.map(u => u.pitch), rnd) : null;   // U13b: the pitch set dealt afresh from cycle 2 (always in the rotation, else it would loop)
             let folded = 0, viol = 0;
             order.forEach((u, j) => {
                 const t = times[j], P = pitches ? pitches[j] : u.pitch;
@@ -569,11 +569,11 @@ const D = {
                 out.events.push({ pos: pos + j, onMs: t, cycle: cyc, mode, unit: u, pitch: P, notes });
                 mark(u, t, last);
             });
-            out.cycles.push({ cycle: cyc, len, mode, folded, viol });
+            out.cycles.push({ cycle: cyc, len, mode, folded, viol, redealt: !!pitches });
             pos += len; cyc++;
         }
         const tail = n * floor, feas = tail >= minMs;
-        const cycText = out.cycles.map(x => (x.cycle + 1) + ': ' + (x.mode === 'own' ? 'your order' : x.mode === 'shuffled' ? 'shuffled ok' : 'rotation, pitches shuffled' + (x.folded ? ', ' + x.folded + ' folded' : '')) + (x.viol ? ' ⚠ ' + x.viol + ' re-attack' + (x.viol > 1 ? 's' : '') + ' < ' + minMs : '')).join(' · ');
+        const cycText = out.cycles.map(x => (x.cycle + 1) + ': ' + (x.mode === 'own' ? 'your order' : x.mode === 'shuffled' ? 'shuffled ok' + (x.redealt ? ', pitches re-dealt' : '') : 'rotation, pitches re-dealt') + (x.folded ? ', ' + x.folded + ' folded' : '') + (x.viol ? ' ⚠ ' + x.viol + ' re-attack' + (x.viol > 1 ? 's' : '') + ' < ' + minMs : '')).join(' · ');
         out.info = N + ' notes · ' + k + ' gaps · ' + Math.round(out.total) + ' ms · steep ' + r.toFixed(3) + '<br>cycles ' + cycText + '<br>tail ' + n + ' × ' + floor + ' = ' + tail + (feas ? ' ≥ ' + minMs + ' ✓' : ' < ' + minMs + ' ✗ — raise the floor to ' + Math.ceil(minMs / n) + ' or add a player');
         this._accel = { key, out }; return out;
     },
@@ -827,6 +827,7 @@ const D = {
                 '<label title="each gap is this fraction of the one before (the count of notes follows; the last gap lands exactly on → last, so the fraction is adjusted a little)">steep <input id="skASteep" type="number" min="0.5" max="0.99" step="0.01" style="' + inp + '"></label>' +
                 '<label title="the last gap — the landing">→ last <input id="skAFloor" type="number" min="5" step="1" style="' + inp + '"> ms</label>' +
                 '<label title="no player attacks twice within this time; a cycle that cannot be shuffled under it falls back to the rotation of players with the pitches shuffled (folded into range)">re-attack ≥ <input id="skAMin" type="number" min="0" step="10" style="' + inp + '"> ms</label>' +
+                '<label title="U13b (composer, 2026-09-05: \"can we scramble the pitches after the round robin\"): checked — from cycle 2 on, the pitch set is dealt afresh to the players (folded into range), whether the instrument order is shuffled or repeats; unchecked — each player keeps its own pitch, only the order changes"><input id="skARedeal" type="checkbox"> re-deal pitches after cycle 1</label>' +
                 '<div id="skSeedA"></div>' +
                 '<div id="skAInfo" style="color:#9a9;white-space:normal;line-height:1.3"></div>' +
                 '</div>' +
@@ -854,6 +855,7 @@ const D = {
             q('#skASteep').addEventListener('change', e => { this.snapshot(); this.cfg.aRatio = clamp(+e.target.value || 0.85, 0.5, 0.99); this.save(); this.render(); });
             q('#skAFloor').addEventListener('change', e => { this.snapshot(); this.cfg.aFloor = clamp(+e.target.value || 45, 5, 5000); this.save(); this.render(); });
             q('#skAMin').addEventListener('change', e => { this.snapshot(); this.cfg.aMin = clamp(+e.target.value || 0, 0, 5000); this.save(); this.render(); });
+            q('#skARedeal').addEventListener('change', e => { this.snapshot(); this.cfg.aRedeal = !!e.target.checked; this.save(); this.render(); });
             q('#skSpanMs').addEventListener('change', e => {
                 if (this.cfg.shape === 'accel') { this.setStatus('in accel the gap box sets the first gap — the duration follows from steep and → last'); this.render(); return; }
                 // U11 (composer, 2026-09-04: "an extra millisecond box next to span so we can dial in the exact duration"):
@@ -877,7 +879,7 @@ const D = {
         }
         { const A = this.cfg.shape === 'accel' ? this.accelSeq() : null; const acc = ctl.querySelector('#skAccel'); acc.style.display = A ? 'flex' : 'none';
           const gapBox = ctl.querySelector('#skGapMs'), msBox = ctl.querySelector('#skSpanMs');
-          if (A) { gapBox.value = +(+this.cfg.aFirst).toFixed(1); msBox.value = Math.round(A.total); ctl.querySelector('#skASteep').value = this.cfg.aRatio; ctl.querySelector('#skAFloor').value = this.cfg.aFloor; ctl.querySelector('#skAMin').value = this.cfg.aMin; ctl.querySelector('#skAInfo').innerHTML = A.info; gapBox.title = 'accel: the FIRST gap of the run — the chain\'s value'; }
+          if (A) { gapBox.value = +(+this.cfg.aFirst).toFixed(1); msBox.value = Math.round(A.total); ctl.querySelector('#skASteep').value = this.cfg.aRatio; ctl.querySelector('#skAFloor').value = this.cfg.aFloor; ctl.querySelector('#skAMin').value = this.cfg.aMin; ctl.querySelector('#skARedeal').checked = !!this.cfg.aRedeal; ctl.querySelector('#skAInfo').innerHTML = A.info; gapBox.title = 'accel: the FIRST gap of the run — the chain\'s value'; }
           else { const pp = this.pat(); const m = pp.length, last = m ? pp[m - 1] : 0; msBox.value = Math.round(last); gapBox.value = m > 1 ? +(last / (m - 1)).toFixed(1) : 0; gapBox.title = 'the mean gap between the onsets that sound; type a gap and the duration follows: gap × (onsets − 1)'; }
           msBox.disabled = !!A; ctl.querySelector('#skDrop').checked = !!this.cfg.dropRests; }
         ctl.querySelector('#skRhyW').value = this.cfg.rhythmW || 480; ctl.querySelector('#skTimeX').value = +(+this.cfg.timeX).toFixed(3); ctl.querySelector('#skShape').value = this.cfg.shape; ctl.querySelector('#skAmt').value = this.cfg.amount; ctl.querySelector('#skJit').value = this.cfg.jitterMs; ctl.querySelector('#skOrder').value = this.cfg.order;

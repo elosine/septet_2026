@@ -477,7 +477,10 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   shuffles. The readout: notes · gaps · ms · steep · what each cycle did (⚠ where even the rotation re-attacks too
   soon) · the tail check (players × floor ≥ re-attack, or the floor to raise to). The strip draws the run (a
   fallback cycle dashed); Hear and Insert follow it; `Hear piano` stays the chord as played; `Insert @ after
-  previous` measures the run's last onset as before.
+  previous` measures the run's last onset as before. **U13b (2026-09-05, composer: "can we scramble the pitches after the
+  round robin?"):** a switch `re-deal pitches after cycle 1`, on by default — from cycle 2 the pitch set is dealt afresh to
+  the players (folded into range) whether the instrument order is shuffled or repeats; off = each player keeps its own
+  pitch and only the order changes (the rotation fallback always re-deals, else it would loop).
 
 ## V · Processes across strikes — `wanted 2026-09-04 (CN-10) — not built; nothing blocks composing the first of each by hand`
 

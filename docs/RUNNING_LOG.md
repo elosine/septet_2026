@@ -2586,3 +2586,15 @@ notes (the chord as recorded); `Insert @ original time` → 7 notes, gaps 107 ·
 rhythm` → shape played, the block hidden, the ms box enabled. Page change only — the composer reloads.
 **For #20:** pick · load its take · shape `accel · round robin` · gap 107.2 · steep 0.85 · → last 45 · re-attack
 250 · save take · `Insert @ after previous`.
+
+## §92. U13b: the pitches re-dealt from cycle 2 (a switch, on by default)
+
+Composer: *"Can we scramble the pitches after the round robin, or is that already happening? … even if we need to
+repeat the same order of instruments."* It was not: a later cycle shuffled the CARDS (pitch on player), so the order
+changed but each player kept its pitch; only the rotation fallback re-dealt. Built: `cfg.aRedeal` (default true) and
+the checkbox `re-deal pitches after cycle 1`; the dealer now shuffles the pitch set for every cycle after the first
+when the switch is on (and always in the rotation); folds counted; the readout says "pitches re-dealt". **Verified
+on the throwaway server** (zero console errors): #22 shuffled, accel at 362 → 14 notes in three cycles; cycle 1 keeps
+the composer's pitches, cycle 2 moves 6 of 7 pitches to other players, the pitch set unchanged, every note inside its
+player's range, 1 folded; the switch off → 0 moved; `back` restores the switch. The composer's chain today: #17
+(evened) · #18 (gap 47.6) · #19 (71.4) in the piece; #20 next at 107.2 under accel.
