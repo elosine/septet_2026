@@ -94,7 +94,7 @@ const D = {
     el: null, body: null, db: null, seq: null, strike: null,
     voices: [], slots: [], ph: null, base: 0, prev: null, pickerLane: null,
     cfg: { strikeId: null, show88: false, rowH: 0, full: true, heightPx: 0, voicing: 'original', vSeed: 1, clusterOct: 0,
-           timeX: 1, shape: 'played', amount: 1, jitterMs: 0, reverse: false, rotate: 0, rSeed: 1, order: 'played', oSeed: 1, simMs: 60,
+           timeX: 1, shape: 'played', amount: 1, jitterMs: 0, reverse: false, rotate: 0, rSeed: 1, dropRests: true, order: 'played', oSeed: 1, simMs: 60,
            durX: 1, dynX: 1, flatten: true, mayFold: false, topLock: -1, bottomLock: -1, oSeedShuffle: 1, zoomPxPerMs: 0, rhythmW: 480 },
 
     // ------------------------------------------------------------------ init / build
@@ -509,10 +509,14 @@ const D = {
         this.el.querySelectorAll('.skSeedIn').forEach(i => i.addEventListener('change', ev => { ev.stopPropagation(); this.snapshot(); this.useSeed(i.dataset.key, +i.value); this.save(); this.render(); }));
     },
     resetRhythm() { this.cfg.shape = 'played'; this.cfg.timeX = 1; this.cfg.amount = 1; this.cfg.jitterMs = 0; this.cfg.reverse = false; this.cfg.rotate = 0; },
-    pattern() {
-        const base = this.slotsPlayed.slice().sort((a, b) => a - b);
+    // U12 (composer, 2026-09-04, decision A: "the gap between the notes heard"): keep = the slots that sound, in order;
+    // the pattern is then built over those onsets only — the silent ones leave the rhythm instead of standing as rests.
+    // S is the recorded span either way, so the strike keeps its length until the ms / gap box says otherwise.
+    pattern(keep) {
+        const all = this.slotsPlayed.slice().sort((a, b) => a - b);
+        const S = all.length ? (all[all.length - 1] - all[0] || 0) : 0;
+        const base = keep ? keep.map(k => all[k]).filter(x => x != null) : all;
         const n = base.length; if (!n) return [];
-        const S = base[n - 1] - base[0] || 0;
         const rnd = mulberry32(this.cfg.rSeed * 48611 + 5);
         let shaped;
         const u = i => n > 1 ? i / (n - 1) : 0;
@@ -528,7 +532,7 @@ const D = {
         const played = base.map(t => t - base[0]);
         const a = clamp(this.cfg.amount, 0, 1);
         let out = shaped.map((t, i) => (1 - a) * played[i] + a * t);
-        if (this.cfg.reverse) out = out.map(t => S - t).sort((x, y) => x - y);
+        if (this.cfg.reverse) { const L = out.length ? out[out.length - 1] : 0; out = out.map(t => L - t).sort((x, y) => x - y); }   // mirrored within its own span, so the first onset stays at 0
         if (this.cfg.rotate) { const gaps = out.slice(1).map((t, i) => t - out[i]); if (gaps.length) { const g = gaps.slice(this.cfg.rotate % gaps.length).concat(gaps.slice(0, this.cfg.rotate % gaps.length)); out = [0]; g.forEach(x => out.push(out[out.length - 1] + x)); } }
         if (this.cfg.jitterMs) { const jr = mulberry32(this.cfg.rSeed * 31 + 9); out = out.map(t => Math.max(0, t + (jr() * 2 - 1) * this.cfg.jitterMs)); }
         return out.map(t => t * this.cfg.timeX);
@@ -551,9 +555,16 @@ const D = {
         }
         seq.forEach((v, i) => { v.slot = i; });
     },
-    timed() {
-        const pat = this.pattern();
-        return this.voices.map(v => ({ v, onMs: pat[v.slot] != null ? pat[v.slot] : 0, durMs: Math.max(30, v.durMs * this.cfg.durX) }));
+    sounds(v) { return !!v.piano || this.reals(v).some(r => !r.skip); },                    // somebody plays it
+    keptSlots() { return this.voices.filter(v => this.sounds(v)).sort((a, b) => a.slot - b.slot).map(v => v.slot); },
+    pat(all) { return (all || !this.cfg.dropRests) ? this.pattern() : this.pattern(this.keptSlots()); },   // the rhythm as it will sound
+    timed(all) {
+        const dur = v => Math.max(30, v.durMs * this.cfg.durX);
+        const full = this.pattern();
+        if (all || !this.cfg.dropRests) return this.voices.map(v => ({ v, onMs: full[v.slot] != null ? full[v.slot] : 0, durMs: dur(v) }));
+        const sounding = this.voices.filter(v => this.sounds(v)).sort((a, b) => a.slot - b.slot);
+        const pat = this.pattern(sounding.map(v => v.slot)); const rank = new Map(sounding.map((v, k) => [v, k]));
+        return this.voices.map(v => ({ v, onMs: rank.has(v) ? pat[rank.get(v)] : (full[v.slot] != null ? full[v.slot] : 0), durMs: dur(v) }));
     },
     bands() {
         // live regrouping at simMs over the current pattern (J)
@@ -723,7 +734,7 @@ const D = {
         // dots
         const r = Math.max(2.5, h * 0.42); const anySolo = this.voices.some(v => v.solo);
         timed.forEach(q => { const v = q.v, cy = this.keyY(v.pitch) + h / 2, col = this.pcColor(v.pc); if (v.pitch < R.lo || v.pitch > R.hi) return;
-            s += '<circle class="skRDot" data-i="' + v.i + '" cx="' + X(q.onMs) + '" cy="' + cy + '" r="' + r + '" fill="' + (this.reals(v).length || v.piano ? col : 'none') + '" stroke="' + (v.solo ? '#fff' : col) + '" stroke-width="' + (v.solo ? 2.5 : 1.5) + '" opacity="' + (anySolo && !v.solo ? 0.35 : 1) + '" style="cursor:pointer"' + (this.swapFirst === v.i ? ' stroke-dasharray="2 2"' : '') + '><title>' + nm(v.pitch) + ' @ ' + Math.round(q.onMs) + ' ms · slot ' + v.slot + '</title></circle>'; });
+            s += '<circle class="skRDot" data-i="' + v.i + '" cx="' + X(q.onMs) + '" cy="' + cy + '" r="' + r + '" fill="' + (this.reals(v).length || v.piano ? col : 'none') + '" stroke="' + (v.solo ? '#fff' : col) + '" stroke-width="' + (v.solo ? 2.5 : 1.5) + '" opacity="' + (anySolo && !v.solo ? 0.35 : 1) + '" style="cursor:pointer"' + (this.swapFirst === v.i ? ' stroke-dasharray="2 2"' : '') + '><title>' + nm(v.pitch) + ' @ ' + Math.round(q.onMs) + ' ms · slot ' + v.slot + (this.cfg.dropRests && !this.sounds(v) ? ' · nobody plays it — out of the rhythm' : '') + '</title></circle>'; });
         svg.innerHTML = s;
         // controls (HTML, over the strip's left margin)
         let ctl = wrap.querySelector('#skRhyCtl');
@@ -735,6 +746,8 @@ const D = {
             ctl.innerHTML = '<span style="color:#9a9">rhythm</span>' +
                 '<label>span × <input id="skTimeX" type="number" min="0.01" step="0.05" style="' + inp + '"></label>' +
                 '<label title="U11: first onset → last onset of the strike as shaped now; type a duration and span × follows">= <input id="skSpanMs" type="number" min="1" step="1" style="' + inp + '"> ms</label>' +
+                '<label title="U12: the mean gap between the onsets that sound; type a gap and the duration follows: gap × (onsets − 1)">gap <input id="skGapMs" type="number" min="0.1" step="0.1" style="' + inp + '"> ms</label>' +
+                '<label title="U12: checked — a note nobody plays leaves the rhythm and the sounding notes are spaced by themselves; unchecked — it stays as a rest on the recorded grid"><input id="skDrop" type="checkbox"> drop rests</label>' +
                 '<label>shape <select id="skShape" style="' + inp + ';width:64px"><option value="played">as played</option><option value="even">even</option><option value="front">front-loaded</option><option value="back">back-loaded</option><option value="centre">centre</option><option value="edges">edges</option><option value="random">random</option></select></label>' +
                 '<label>amount <input id="skAmt" type="range" min="0" max="1" step="0.05" style="width:64px"></label>' +
                 '<label>jitter <input id="skJit" type="number" min="0" max="500" step="5" style="' + inp + '"> ms</label>' +
@@ -748,10 +761,17 @@ const D = {
             wrap.appendChild(ctl);
             const q = sel => ctl.querySelector(sel);
             q('#skTimeX').addEventListener('change', e => { this.snapshot(); this.cfg.timeX = clamp(+e.target.value || 1, 0.01, 10000); this.save(); this.render(); });   // U11: the ×20 cap is gone (#22 is 13 ms as played)
+            q('#skGapMs').addEventListener('change', e => {
+                const g = Math.max(0.1, +e.target.value || 0); const pp = this.pat(); const m = pp.length; const last = m ? pp[m - 1] : 0;
+                if (m < 2) { this.setStatus('one sounding onset — there is no gap to set', true); this.render(); return; }
+                const unit = this.cfg.timeX ? last / this.cfg.timeX : 0; if (!unit) { this.render(); return; }
+                this.snapshot(); this.cfg.timeX = clamp((g * (m - 1)) / unit, 0.01, 10000); this.save(); this.render();
+            });
+            q('#skDrop').addEventListener('change', e => { this.snapshot(); this.cfg.dropRests = !!e.target.checked; this.save(); this.render(); });
             q('#skSpanMs').addEventListener('change', e => {
                 // U11 (composer, 2026-09-04: "an extra millisecond box next to span so we can dial in the exact duration"):
                 // the box is the real first→last onset of the current pattern; typing a duration sets span × so the pattern lands on it
-                const want = Math.max(1, +e.target.value || 0); const pp = this.pattern(); const last = pp.length ? pp[pp.length - 1] : 0;
+                const want = Math.max(1, +e.target.value || 0); const pp = this.pat(); const last = pp.length ? pp[pp.length - 1] : 0;
                 const unit = this.cfg.timeX ? last / this.cfg.timeX : 0;
                 if (!unit) { this.setStatus('this strike has no span to stretch (a single onset)', true); this.render(); return; }
                 this.snapshot(); this.cfg.timeX = clamp(want / unit, 0.01, 10000); this.save(); this.render();
@@ -768,7 +788,7 @@ const D = {
             q('#skORe').addEventListener('click', () => { this.snapshot(); this.useSeed('oSeed', this.nextSeed('oSeed')); this.save(); this.render(); });
             q('#skRhyW').addEventListener('input', e => { this.cfg.rhythmW = +e.target.value; this.save(); this.render(); });
         }
-        { const pp = this.pattern(); ctl.querySelector('#skSpanMs').value = pp.length ? Math.round(pp[pp.length - 1]) : 0; }
+        { const pp = this.pat(); const m = pp.length, last = m ? pp[m - 1] : 0; ctl.querySelector('#skSpanMs').value = Math.round(last); ctl.querySelector('#skGapMs').value = m > 1 ? +(last / (m - 1)).toFixed(1) : 0; ctl.querySelector('#skDrop').checked = !!this.cfg.dropRests; }
         ctl.querySelector('#skRhyW').value = this.cfg.rhythmW || 480; ctl.querySelector('#skTimeX').value = +(+this.cfg.timeX).toFixed(3); ctl.querySelector('#skShape').value = this.cfg.shape; ctl.querySelector('#skAmt').value = this.cfg.amount; ctl.querySelector('#skJit').value = this.cfg.jitterMs; ctl.querySelector('#skOrder').value = this.cfg.order;
         // dots: click one, then another = swap their slots; a dot on the keyboard then a player row = assign
         svg.querySelectorAll('.skRDot').forEach(dd => dd.addEventListener('click', ev => {
@@ -808,7 +828,7 @@ const D = {
     notesFor(mode) {
         const T = TRK(); const pianoLane = T.findIndex(t => t.instKey === 'piano');
         const out = []; const anySolo = this.voices.some(v => v.solo);
-        this.timed().forEach(q => {
+        this.timed(mode === 'piano').forEach(q => {   // Hear piano = the whole chord as played, rests or not
             const v = q.v; const vel = clamp(Math.round((this.cfg.flatten ? 127 : v.vel) * this.cfg.dynX), 1, 127);
             if (anySolo && !v.solo) return;                       // U3: while anything is soloed, only the soloed voices sound
             if (mode === 'piano') { out.push({ lane: pianoLane, tech: plainTech(this.instOf(pianoLane)), midi: v.pitch, vel, onMs: q.onMs, durMs: q.durMs }); return; }

@@ -146,7 +146,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   first double stop is placed. Winds cannot take two; the bass clarinet's multiphonics are a
   technique, not a second note.
 
-## J · The rhythm column — `built 2026-09-03 (span × · shape + amount · jitter · reverse · rotate · reshuffle; the bands re-derived live)` · `reset rhythm 2026-09-04 (U5): one button back to as played; span / amount / jitter undoable; a strike re-pick clears reverse and rotate`
+## J · The rhythm column — `built 2026-09-03 (span × · shape + amount · jitter · reverse · rotate · reshuffle; the bands re-derived live)` · `reset rhythm 2026-09-04 (U5): one button back to as played; span / amount / jitter undoable; a strike re-pick clears reverse and rotate` · `U11–U12 2026-09-04: = ms and gap ms boxes; drop rests (the sounding notes spaced by themselves)`
 
 > *"A third column will be the rhythms. A relatively zoomed-in view where I should be able to
 > control zoom to a certain extent. Something close to the piano keyboard, or they could just
@@ -341,7 +341,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   them; the noise technique's keys; the open strings) — click to hear, click to select; the
   choice is stored on the voice (the stand-in key). Out of the way until needed.
 
-## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built` · `U7 built 2026-09-04` (RUNNING_LOG §74) · `U8 built 2026-09-04` (RUNNING_LOG §76) · `U9 built 2026-09-04` (RUNNING_LOG §77) · `U10 built 2026-09-04` (RUNNING_LOG §81) · `U11 built 2026-09-04` (RUNNING_LOG §87)
+## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built` · `U7 built 2026-09-04` (RUNNING_LOG §74) · `U8 built 2026-09-04` (RUNNING_LOG §76) · `U9 built 2026-09-04` (RUNNING_LOG §77) · `U10 built 2026-09-04` (RUNNING_LOG §81) · `U11 built 2026-09-04` (RUNNING_LOG §87) · `U12 built 2026-09-04` (RUNNING_LOG §90)
 
 > Composer: *"collect these and I'll have you do a feature update all at once."* Each request
 > verbatim, the AI's reading beneath; built together when the composer says so.
@@ -452,6 +452,16 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   earlier insert of the same strike (group prefix `grp-strike-<n>-`), so a strike exists once in a score; the
   group suffix says how it was placed (`r` original time · `a` after previous · none = playhead). The `prev × ratio`
   button was not built — the composer types the duration.
+- **U12 — rests leave the rhythm; a gap box — `built 2026-09-04 (decision A, "a yes"), verified on the throwaway
+  server (RUNNING_LOG §90)`.** *Composer (CN-17): "it's actually the gaps between the onsets that need to expand"*;
+  on the three readings of "gap" put to him (between the notes heard · the recorded grid with rests · the piano
+  takes the leftovers) he chose the first. — *Built:* `drop rests` (checked by default): a note nobody plays leaves
+  the rhythm and the sounding notes are spaced by themselves — `pattern(keep)` builds the same shapes over the
+  sounding slots only, the recorded span kept as the strike's length; unchecked = the recorded grid with rests, as
+  before. `Hear piano` always plays the whole chord. A `gap = ___ ms` box beside the ms box shows the mean gap of
+  the rhythm as it will sound and sets the duration from it (gap × (onsets − 1)). Reverse now mirrors within the
+  pattern's own span. The strip's tooltip names a dot nobody plays. The mode lives in the drawer's config (takes,
+  back); `reset rhythm` leaves it alone. *Not built:* a `gap = previous × ratio` button — the composer types it.
 
 ## V · Processes across strikes — `wanted 2026-09-04 (CN-10) — not built; nothing blocks composing the first of each by hand`
 

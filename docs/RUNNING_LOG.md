@@ -2536,3 +2536,22 @@ spaces only sounding voices; ~15 lines, not built) vs the recorded grid with res
 built); (3) the law per strike typed (×1.5 / Fibonacci …) — the chain panel later. Replace procedure sketched:
 pick #18 → load 18-c → set the gap (or the duration it implies) → save take 18-e → `Insert @ after previous`
 (replaces the earlier #18 at the same 28.302, #17 unchanged) → Save. Nothing built.
+
+## §90. U12 built: rests leave the rhythm (decision A); the gap box
+
+Composer: *"a yes, clarify b/c pls"* — A: the gap is between the notes heard; the gap box: yes. Built in
+`strike_drawer.js`: `pattern(keep)` — the same shapes (even · front · back · centre · edges · random · as played)
+over a chosen subset of the recorded onsets, the recorded span S kept as the strike's length, "as played" measured
+from the first surviving onset; `sounds(v)` (a realization that is not skipped, or the piano flag), `keptSlots()`,
+`pat(all)` = the rhythm as it will sound; `timed(all)` spaces the sounding voices by their slot rank and leaves the
+silent ones on the full pattern (they do not sound); `notesFor('piano')` passes `all` so Hear piano is the whole
+chord. `cfg.dropRests` defaults to true (old takes, lacking the key, inherit the default on load). UI: `drop
+rests` checkbox, `gap [ ] ms` (mean gap = last ÷ (m − 1); typing g → duration g × (m − 1) → span ×), the ms box
+and the sync read the effective pattern; reverse mirrors within the pattern's own span (the first onset stays at
+0); the strip's tooltip says "nobody plays it — out of the rhythm". **Verified on the throwaway server** (session
+`zz-ai-chain`, working copy deleted; zero console errors): #18 shuffled → 13 voices, 7 sounding → pat length 7,
+ms 110, gap 18.3 (= 110 ÷ 6), Hear gaps six × 18.3 · gap typed 47.6 → ms 286, span × 2.596, gaps six × 47.6 ·
+drop off → 13-slot grid, gaps 71.4 · 23.8 · 23.8 · 23.8 · 71.4 · 23.8 (the rests back) · `back` → drop on, gaps
+equal · Hear piano → 13 notes on 13 onsets · `Insert @ after previous` → first 28.302, gaps 48 · 47 · 48 · 47 · 48 ·
+48 (the score rounds onsets to the millisecond, so 47.6 alternates) · `reset rhythm` → drop stays, as played of
+the seven survivors = 87 ms, gap 14.5 · the tooltip of an unplayed dot. Page change only — the composer reloads.
