@@ -2327,3 +2327,23 @@ strike among them; v0 → v1; two new open questions: the partition, and which h
 the tool needs into STRIKES_TOOL V (sub-ensemble shuffle · chains: scale / accel–decel / ladder · answering
 blocks) — wanted, not built, nothing blocks composing the first by hand. PLANNER NOW refreshed (#0–#16,
 v1.3, 84 takes). Nothing built.
+
+## §79. CN-11 · CN-12 · CN-13 filed: the tremolo fork, the spreads' expansion, the Risset as rows over curves
+
+Composer, three notes in one message, mid-composing: the tremolo figures *"will become their own fork as
+well, and that'll expand in a like way … turning into fugues, and then stretto, and then accelerations and
+decelerations … stacked on top of each other, and also speeding up and slowing down vibrato"* (CN-11;
+speech-to-text "strato" → stretto, "vibrada" → vibrato); *"start with a tight spread, and then each
+successive strike will have a wider spread … spread out from the start … treat the first impact as number
+one … expand those other ones forward in time"* (CN-12); *"give each player a tone row … I'll give them a
+curve, and they're expected to complete the tone row by the end of the curve … even spacing as much as
+possible … performer jitter … from completely even, like pulsed, to relatively random, like non-periodic"*
+(CN-13). Routed: the form into the PLANNER outline (item 1 gains the spreads' expansion and the rows-over-
+curves reading of the ladder; items 2–3 gain the tremolo fork: fugue → stretto → stacked accel/decel →
+vibrato rate); the SPREAD chain (span × per strike from the first onset — exactly what `span ×` already
+does for one strike) at the head of STRIKES_TOOL V's chain list, the least design and first to build; the
+two notation devices — *the row over a curve* (pitches once, a span curve, a spacing instruction even →
+irregular, a direction) and *the vibrato-rate ramp* — onto PLAN 0g's 2a adaptation list beside CN-9's
+grace-note figures. Observation recorded in CN-12/13: the composer's three drawn controls (curve length =
+speed, placement = overlap, jitter = regularity) are the tuba piece's META-curve grammar applied to a
+written row. Nothing built.

@@ -429,7 +429,8 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
 - *AI reading of the tool needs, in order:* (1) **a shuffle confined to a sub-ensemble** — pick the
   players (strings · winds + piano · high · low · any set); the shuffle assigns only within them, the
   rest stay empty or keep what they have. (2) **Chains across strikes** — from a chosen strike, generate
-  the next N as a process: SCALE (each strike one step higher, order low → high through the registers) ·
+  the next N as a process: SPREAD (CN-12 — span × growing per strike, anchored at the first impact; the
+  least design in it, the first to build) · SCALE (each strike one step higher, order low → high through the registers) ·
   ACCEL / DECEL (the strikes' onsets on a CN-3 ramp, each strike's own rhythm shaped to match) · LADDER
   (the same pitch classes re-voiced one step up per strike, the top voice wrapping to the bottom at the
   softest dynamic — the Shepard–Risset staircase in strikes). (3) **Answering blocks** — a chain of

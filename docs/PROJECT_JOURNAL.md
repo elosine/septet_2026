@@ -116,7 +116,10 @@ the samplers addressable as code (0k, D15), D16 tongue ram; RUNNING_LOG §40–6
   uses grace-note figures; notation after Ferneyhough, *Etudes Transcendantales* No. 1 oboe → PLAN 0g's
   2a list; RUNNING_LOG §72) · CN-10 (the opening expanded into ensemble processes — scales through the
   ensemble, one accel/decel spread over the players, antiphonal blocks, CN-7's cycle as a Risset ladder →
-  PLANNER outline v1, STRIKES_TOOL V; §78); for piece #6, animated conductions.
+  PLANNER outline v1, STRIKES_TOOL V; §78) · CN-11 (the tremolo fork: fugue → stretto → stacked accel/decel →
+  vibrato rate) · CN-12 (the spreads' expansion, anchored at the first impact → V's SPREAD chain) · CN-13 (the
+  Risset as tone rows over curves, performer jitter periodic → non-periodic → the 2a list; §79); for piece #6,
+  animated conductions.
   Penn State abstract done (§7).
 
 **Next up:** the composer composes — strikes #5 onward into `piece-septet` from the drawer (`Insert @

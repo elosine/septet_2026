@@ -216,7 +216,10 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   notes, one slashed beam, left of the host) · the scrolling-score reading (the figure is
   played into the host's onset — the host stays the beat). Notation model: Ferneyhough,
   *Etudes Transcendantales* No. 1, the oboe part — read the attachment, the beam and the
-  time-source rule from the score.
+  time-source rule from the score. **Added (CN-11, CN-13, 2026-09-04):** *the row over a curve* — a
+  tone row written once, a curve or duration line for its span, a spacing instruction (even → irregular,
+  "performer jitter"), a direction; and a *vibrato-rate ramp* (speeding up / slowing down) as a written
+  line or text.
 
 - **0h — Gate: phase 0 closed** — `todo` — every track sounds from the score app through
   its own port with the right technique switching; a save round-trips; the sandbox

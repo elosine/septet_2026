@@ -324,3 +324,94 @@ names a library to confirm.
 - **On the form:** this fills in PLANNER outline item 1. The opening is no longer "one attack": it is
   the scattered strikes expanded into ensemble processes, out of which CN-6's chosen harmony and CN-1's
   tremolos on curves emerge. CN-3's converging tempos and CN-7's cycle both live inside the opening.
+
+---
+
+## CN-11 · 2026-09-04 — the tremolo fork: tremolos → fugue → stretto → stacked accel/decel → vibrato rate
+
+> *"And then the tremolo figures that will take over the initial section will become their own fork
+> as well, and that'll expand in a like way. So these tremolo figures turning into fugues, and then
+> stretto, and then accelerations and decelerations — or acceleration and deceleration stacked on
+> top of each other — and also speeding up and slowing down vibrato."*
+> *(dictated 2026-09-04 night, session 3; speech-to-text cleaned: "strato" read as stretto, "vibrada"
+> as vibrato; content untouched)*
+
+**AI reading (not the composer's words):**
+
+- **A second branch, built like the first.** CN-10 expanded the strikes into ensemble processes; the
+  tremolos that take over from them (CN-1, CN-6) get the same treatment — a "fork" of the form that
+  grows by its own processes rather than by contrast. The chain named: tremolo figures → fugue (CN-1's
+  tremolo fugue) → **stretto** (the entries overlapping ever closer — the fugue tightening) →
+  **accelerations and decelerations**, singly or **stacked** (one player's accelerando against another's
+  rallentando, or a slow ramp under a fast one — CN-3's converging tempos, now layered) → **vibrato
+  rate** as a parameter that speeds up and slows down.
+- **Tremolo and vibrato are one family here:** both are oscillations with a rate; the tremolo's rate
+  is already curve-driven (CN-1, CN-6), and the vibrato's rate becomes one too. In the libraries the
+  strings' vibrato is a modwheel dimension (Xsample: Vibrato Velocity + MW) and the flute has the
+  ordinario-to-flatterzunge morphs — a rate ramp is a CC curve, which the score app's curve channels
+  (D11) already send. For the players, a vibrato that speeds up or slows down is an ordinary written
+  instruction (a wavy line widening or narrowing, or text).
+- **Stretto and stacked ramps are notation questions, not sound questions:** overlapping fugal entries
+  in a proportional animated score are overlapping curves; two ramps stacked are two players' cursors
+  at different speeds — CN-3's bouncing balls, which the animated format was built for.
+
+---
+
+## CN-12 · 2026-09-04 — the scattered spreads' expansion: each strike wider than the last, from the first impact
+
+> *"And then the scattered spreads' expansion. So start with a tight spread, and then each successive
+> strike will have a wider spread. And spread out from the start — or try different strategies, but
+> probably spread out from the start. In other words, in the original scattered spread, treat the
+> first impact as number one and then the rest of them through time, and then expand those other
+> ones forward in time for the next one, and for the next one."*
+
+**AI reading (not the composer's words):**
+
+- **The "spread" is the strike's span in time** — how far its notes scatter after the first impact
+  (the 46 recorded strikes span roughly 170–700 ms each). The process: a chain of strikes whose spans
+  grow — tight, then wider, then wider — anchored at the first attack: impact #1 stays where it is,
+  the rest are pushed later, more with each strike. "Spread out from the start" = anchor the first
+  onset and stretch forward; the alternatives he leaves open (anchor the centre, anchor the last,
+  scale both ways) are the "different strategies".
+- **The drawer already does one step of it:** the rhythm column's `span ×` (J) multiplies every onset
+  measured from the first — exactly "from the start" — so a chain is span × 1.0, 1.5, 2.0 … applied to
+  successive strikes. That makes it the first chain type to build in STRIKES_TOOL V (SPREAD), and the
+  one with the least design in it: one number per strike, or a growth curve over the chain.
+- **Heard result:** the opening's chords loosen into arpeggios and then into lines — the scattered
+  strike becomes CN-10's climbing scale by degrees. The two notes are one process seen twice.
+
+---
+
+## CN-13 · 2026-09-04 — the Risset as tone rows over curves; performer jitter from periodic to non-periodic
+
+> *"And for the Risset: give each player a tone row, and they can play legato, upwards or downwards —
+> let's say, for example, upwards — and then I'll give them a curve, and they're expected to complete
+> the tone row by the end of the curve. And then I can control how quickly rows are completed, and I
+> would give instructions as to even spacing as much as possible. And then I can have these overlap
+> in different ways. There could also be a possibility of performer jitter, so they can play it from
+> completely even — like pulsed — to relatively random, like non-periodic. So the spectrum is periodic
+> to non-periodic?"*
+
+**AI reading (not the composer's words):**
+
+- **The ladder's rungs are rows, not strikes.** Each player gets a tone row (an ascending line, legato)
+  and a curve; the row must be complete when the curve ends, its notes as evenly spaced as the player
+  can manage — so the curve's length IS the row's speed, and the composer paces the ascent by drawing.
+  Rows in staggered, overlapping curves are the Shepard–Risset staircase of CN-10: while one player's
+  row finishes at the top, another's is starting at the bottom, and the whole never stops climbing.
+- **This is the tuba piece's grammar again:** a META curve governing a texture's pacing (the tuba's
+  density and level curves), here governing how fast a written row is consumed. The animated score is
+  the natural instrument for it — the player watches the curve run and distributes the row across it.
+  In the app: a curve object on the player's lane carrying the row's pitches; the sandbox's pulse
+  sequencer could audition it by placing the notes evenly along the curve.
+- **"Performer jitter" is a notated parameter with two ends:** periodic (pulsed, metronomic spacing) ↔
+  non-periodic (irregular, random-like spacing) — the drawer's jitter (J, ± n ms) as a performance
+  instruction rather than a computed value. It is exactly the spectrum his question names, and it can
+  itself be curve-driven (jitter growing across the row) or fixed per row.
+- **Notation, for 2a:** a new device — *the row over a curve*: the pitches written once (small notes or
+  a row box), a curve or duration line for the span, the spacing instruction (even → irregular, as text
+  or a gradient), the direction. Filed on PLAN 0g's 2a adaptation list beside the grace-note figures
+  (CN-9); CN-11's vibrato-rate ramp goes there too.
+- **What the piece gains:** three parameters the composer controls by drawing — the row's speed (curve
+  length), the overlap (curve placement), the regularity (jitter) — per player, legible in the animated
+  score; and the notation carries the same three, so the performance score says what the animation shows.

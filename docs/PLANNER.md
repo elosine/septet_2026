@@ -27,12 +27,16 @@ balanced (D13–D14) and addressable as code (D15). Piccolo vs bass flute undeci
    orchestrated one by one in the drawer (#0–#16 by 2026-09-04 night), then as ensemble processes:
    climbing scales through the ensemble · one accel/decel spread across the players (CN-3's ramps) ·
    antiphonal blocks from sub-ensembles · circular chord cycles as a Risset ladder through the registers
-   (CN-7). CN-1's single attack is one strike among them. Then straight into
+   (CN-7; CN-13: per-player tone rows completed over curves, performer jitter periodic → non-periodic) ·
+   **the spreads' expansion** (CN-12): each strike's span wider than the last, anchored at its first impact.
+   CN-1's single attack is one strike among them. Then straight into
 2. **CURVE-BASED TREMOLOS** · each entry is a fortepiano (attacked, then continuing in
    tremolo); the tremolo shaped by a curve (open: which parameter the curve drives —
-   speed, amplitude, pitch spread, or several)
+   speed, amplitude, pitch spread, or several); **the tremolo fork** (CN-11): the tremolos become
+   their own branch, expanded like the strikes —
 3. **TREMOLO FUGUE** · the tremolo material treated fugally (staggered entries across the
-   seven voices — subject/answer relations to be defined)
+   seven voices — subject/answer relations to be defined) → **stretto** → accelerations and
+   decelerations, singly or stacked (CN-3 layered) → **vibrato rate** speeding up and slowing down (CN-11)
 4. **→ DENSITY-BUILD SOUND MASS** · the fugue resolves into a density build like the tuba
    piece (its recipes: `CURVE_DATABASE.md` MAXDENSE-1 / BUILD-1 in #4)
 5. *(the rest: open)*
