@@ -2157,3 +2157,17 @@ copy — so `openScore` of a name that is on disk neither as a file nor as a wor
 "Error: Score not found" and a session bound to a non-existent file's working copy). Verified in the
 AI's pane: remembered `ScatteredStrikes01a-3` → the message, session `untitled`, nothing remembered,
 0 objects; then `piece-septet` opens normally (24). Zero console errors.
+
+## §71. ScatteredStrikes01 restored to the raw recording — the piano reference
+
+Composer: *"could you restore scattered strike zero one to the original Recording. That'll be the
+piano reference."* Earlier in the same breath he had asked for each strike as a META object so a
+drag in the META window moves the whole strike — then: *"I didn't realize those were already meta
+shapes, so no action needed"* (the drawer's inserts carry a META shape per group; `composer.html`
+retimes every member on a shape drag and time-scales them on an edge drag). No META work done; the
+strike database was confirmed on the way to cover all 577 notes of the recording in its 46 strikes.
+
+Restored `scores/ScatteredStrikes01.json` from `76861f2` (the last commit before today's replace):
+577 objects, all on the piano layer, no groups, 0.608–73.196 s, `wc-13` present; no working copy
+existed. The composer's orchestrations of strikes #0–#2 remain in `piece-septet` and the takes. He
+restarted the server and reloaded the page (D17 live on his machine).

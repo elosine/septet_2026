@@ -224,3 +224,7 @@ names a library to confirm.
   shapes), and nothing else — the 554 raw piano chords that followed are dropped. `piece-septet`
   is the running file; `piece-septet-v1.1` the frozen first iteration (D17 naming). CN-5 / CN-6
   (strikes, then chosen harmony, then tremolos on curves) is the road from here.
+- **2026-09-04, composer, verbatim (later):** *"could you restore scattered strike zero one to the original
+  Recording. That'll be the piano reference."* — *AI reading:* `ScatteredStrikes01` is the untouched
+  recording of the 46 strikes (577 notes, 73 s), the source the drawer reads and the reference the piece
+  is orchestrated against; the orchestrations live in `piece-septet`, never in the reference.

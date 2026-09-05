@@ -140,8 +140,8 @@ conversation):*
 - **Resume reads:** `docs/PLANNER.md` NOW · `docs/PLAN.md` 1c, 0j, 0k · `RUNNING_LOG.md`
   §40–64 · `docs/STRIKES_TOOL.md` U · `docs/REAPER_CONTROL.md`.
 - **Pending the composer:** the drawer test; CN-2 (piccolo vs bass flute) — not blocking.
-- **`scores/` is clean and committed:** `ScatteredStrikes01` (the experiment: strikes #0–#2 orchestrated,
-  the rest raw), `piece-septet` + `-v1.1`, the stubs and test saves. The composer's hand-made copies
+- **`scores/` is clean and committed:** `ScatteredStrikes01` = **the piano reference** (the raw 577-strike
+  recording, restored at the composer's word, §71), `piece-septet` + `-v1.1`, the stubs and test saves. The composer's hand-made copies
   (`-og`, `a`, `a-2`, `a-3`, `septet001`) were deleted at his word (RUNNING_LOG §70). The raw
   577-strike recording lives in git history (`76861f2:scores/ScatteredStrikes01.json`).
 
