@@ -373,6 +373,15 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   ~40 % of the drawer instead of the whole remainder (a zoom slider keeps the wide view), the
   bands drawn at true 60 ms width (thin at that zoom); the space saved goes to U1's gap.
 
+- **U5 — reset the rhythm in one click.** *Composer (2026-09-04 night): "strikes how to reset the
+  rhythm"* — *AI finding, from the code:* no one-click reset exists. As played = shape `as played` ·
+  span × 1 · jitter 0 · reverse off · rotate back at 0 (amount is moot under `as played`: the blend
+  is between identical patterns). Two traps: (1) re-picking a strike in the sequence resets shape /
+  order / span / amount / jitter but NOT reverse and rotate — a rotated strike #3 makes strike #5 come
+  up rotated while its menu says "as played"; (2) span ×, amount and jitter changes take no snapshot,
+  so `back` cannot undo them. *Proposed:* a `reset rhythm` button (the five values above), and
+  `select()` clearing reverse / rotate with the rest. A page change only — a reload to take effect.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the
