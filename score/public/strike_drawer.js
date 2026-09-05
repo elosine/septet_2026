@@ -172,9 +172,13 @@ const D = {
               '<button id="skInsert" style="' + btn + '" title="write the strike at the playhead as a gesture (groupId + META shape)">Insert @ playhead</button>' +
               '<button id="skAtTime" style="' + btn + '" title="write the strike into WHATEVER score is open, at the time it was played (no need to open its source save); original notes found there are replaced">Insert @ original time</button>' +
               '<button id="skBack" style="' + btn + '" title="one step back">back</button>' +
-              '<input id="skTakeName" placeholder="take name" style="width:90px;' + inp + '"><button id="skTakeSave" style="' + btn + '">save take</button>' +
+              // U9 (composer, 2026-09-04: "can we make return save, the save take button drifted to the other end of the
+              // screen"): the take controls are one group that wraps as a unit, and ENTER in the box saves.
+              '<span id="skTakeGrp" style="display:inline-flex;gap:4px;align-items:center;white-space:nowrap">' +
+              '<input id="skTakeName" placeholder="take name — ENTER saves" style="width:130px;' + inp + '"><button id="skTakeSave" style="' + btn + '">save take</button>' +
               '<select id="skTakeSel" style="max-width:130px;' + inp + '"><option value="">load take…</option></select>' +
               '<button id="skTakeDel" title="delete the take named in the box (asks first)" style="' + btn + '">&times;</button>' +
+              '</span>' +
               '<span id="skPlayhead" style="display:none;color:#e8cf9a">&#9654;</span>' +
             '</div>';
         document.body.appendChild(d);
@@ -208,6 +212,7 @@ const D = {
         q('#skAtTime').addEventListener('click', () => this.insert(true));
         q('#skBack').addEventListener('click', () => this.back());
         q('#skTakeSave').addEventListener('click', () => this.saveTake());
+        q('#skTakeName').addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); ev.stopPropagation(); this.saveTake(); });   // U9
         q('#skTakeSel').addEventListener('change', e => { if (e.target.value) this.loadTake(e.target.value); e.target.value = ''; });
         q('#skTakeDel').addEventListener('click', () => this.deleteTake());
         // resize handle

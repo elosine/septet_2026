@@ -235,7 +235,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   silent; with FEWER: the surplus players fall silent. Every harmony, the played one included,
   goes through the same path — there is no special case.
 
-## O · Not losing work: takes — `built 2026-09-03 (v1: takes in the browser's localStorage + one-level back)` · `v2 2026-09-04: takes in bank/panel_snapshots.json (bucket strikes) through /api/snapshots, committed with the repo; the v1 browser takes migrated once on the next reload; × deletes the named take (asks first)`
+## O · Not losing work: takes — `built 2026-09-03 (v1: takes in the browser's localStorage + one-level back)` · `v2 2026-09-04: takes in bank/panel_snapshots.json (bucket strikes) through /api/snapshots, committed with the repo; the v1 browser takes migrated once on the next reload; × deletes the named take (asks first)` · `U9 2026-09-04: ENTER in the take box saves; the take controls wrap as one group`
 
 > *"I don't want to lose work. Say I take the original, orchestrate, find a rhythm, listen —
 > then I decide I want to listen to it in a different harmony. It may not fit the orchestration,
@@ -341,7 +341,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   them; the noise technique's keys; the open strings) — click to hear, click to select; the
   choice is stored on the voice (the stand-in key). Out of the way until needed.
 
-## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built` · `U7 built 2026-09-04` (RUNNING_LOG §74) · `U8 built 2026-09-04` (RUNNING_LOG §76)
+## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built` · `U7 built 2026-09-04` (RUNNING_LOG §74) · `U8 built 2026-09-04` (RUNNING_LOG §76) · `U9 built 2026-09-04` (RUNNING_LOG §77)
 
 > Composer: *"collect these and I'll have you do a feature update all at once."* Each request
 > verbatim, the AI's reading beneath; built together when the composer says so.
@@ -412,6 +412,12 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   lit; a chip click has that shuffle back exactly (same seed, same strike, same locks = same result); a new
   shuffle takes max(seen) + 1, so it never repeats a seed still in the row; `back` undoes a chip click. The
   histories live in the drawer's saved config and travel with takes. Cap 8 (the composer said five or ten).
+- **U9 — ENTER saves a take; the take controls stay together — `built 2026-09-04, verified on the throwaway
+  server (RUNNING_LOG §77)`.** *Composer (2026-09-04 night): "in the save take text box, can we make return save,
+  the save take button drifted to the other end of the screen"* — *Cause:* U8's voicing seed row widened the
+  footer and its wrap split the take box from its button. *Built:* the box, `save take`, `load take…` and `×` are
+  one no-wrap group, so they move together; ENTER in the box saves (the same `saveTake()` as the button); the
+  placeholder says so.
 
 ## Open questions for the composer (only what blocks the next piece)
 

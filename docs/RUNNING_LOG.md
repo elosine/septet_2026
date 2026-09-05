@@ -2295,3 +2295,18 @@ went blank. Measured pre-fix: slots 7/1 → 0/1 after the second click, `swapped
 returns at once for `manual`; the menu gains "by hand". Post-fix: the two slots swap and the onsets swap
 with them, the state survives a render, the menu shows "by hand", `back` undoes it, a shuffle afterwards
 leaves manual for random, a strike pick resets to as played. Page change only — the composer reloads.
+
+## §77. U9: ENTER saves a take; the take controls wrap as one group (a U8 side effect undone)
+
+Composer: *"in the save take text box, can we make return save, the save take button drifted to the other
+end of the screen"*. The drift was U8's: the voicing seed row (`#skSeedV`) widened the drawer's footer, and
+the footer's `flex-wrap` broke between the take box and its button. Built: the four take controls (box ·
+save take · load take… · ×) in one `inline-flex; white-space:nowrap` span so they wrap as a unit; a keydown
+handler on the box — ENTER → `preventDefault`, `stopPropagation`, `saveTake()` (the button's own method);
+the placeholder reads "take name — ENTER saves". Checked first that nothing else in the page reacts to ENTER
+from that box: composer.html's only ENTER handler is the chord picker's, scoped to its own element.
+**Verified on the throwaway server** (`score-5301`; the pane hidden, so real keydown events; `saveTake`
+replaced by a counting spy for the test so no take touched the shared `bank/panel_snapshots.json`; zero
+console errors): the group exists in the footer with exactly the four controls, no-wrap · ENTER in the box
+→ saveTake called once, default prevented · another key → not called · the button's click → called. The
+bank file holds none of the AI's test names. Page change only — the composer reloads.
