@@ -640,3 +640,16 @@ the real one.
 **AI reading (not the composer's words):** the trill's realization changes model — from a rate table (TRILLS_TOOL §2) to
 piece #2's human-sampled timing: his own trill playing, indexed by speed, looked up along the curve. The findings and the
 options are RUNNING_LOG §100; his decision pending.
+
+---
+
+## CN-22 · 2026-09-05 — phase 1 go; the whole step; audition the interval first
+
+> *"a, go ahead with phase 1 lets do whole step as default and lets build into the plan an easy way to audition different
+> intervals before inserting a trill and selecting the interval for the trill"*
+> *(2026-09-05, session 3, night; typed)*
+
+**AI reading (not the composer's words):** two changes to TRILLS_TOOL §1 — the second pitch defaults to the **upper whole
+step** (was the chromatic neighbour); and the trill's panel gets an interval row that plays a short trill on each interval
+at the click (his own timing, the lane's technique) and sets the trill's interval — audition, then choose, then the trill
+sounds with it. Phase 1 (the trill object) built on that: RUNNING_LOG §104.

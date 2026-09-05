@@ -36,31 +36,11 @@ if (A.from) {
     performanceNotes: 'trill curve · long smooth (the speed: 0 = his slowest, 10 = his fastest)', properties: {} };
 }
 
-// the table: every attack he played, pooled across his bursts, by role
-const all = inst.samples.flatMap(s => s.attacks).filter(a => a.gapToNextMs != null);
-const pool = { lo: all.filter(a => a.role === 'lo'), hi: all.filter(a => a.role === 'hi'), any: all };
-for (const k in pool) pool[k].sort((a, b) => a.curvePosition - b.curvePosition);
-const minGap = Math.min(...all.map(a => a.gapToNextMs));
-let lastRegion = -1; const cyc = { lo: 0, hi: 0, any: 0 };
-function pick(level, role) {
-  const arr = pool[role]; let near = arr.filter(a => Math.abs(a.curvePosition - level) <= WINDOW);
-  if (!near.length) near = [arr.reduce((b, a) => Math.abs(a.curvePosition - level) < Math.abs(b.curvePosition - level) ? a : b, arr[0])];
-  const region = Math.round(level / WINDOW);
-  if (region !== lastRegion) { lastRegion = region; for (const k in cyc) cyc[k] = Math.floor(rnd() * 1e6); }
-  const a = near[cyc[role]++ % near.length]; return { a, near };
-}
-
-// the walk
-const notes = []; let t = 0, k = 0; const span = curve.endSeconds - curve.startSeconds;
-while (t < span) {
-  const level = Math.max(0, Math.min(1, CE.getYAtTime(curve, curve.startSeconds + t) / 10));
-  const role = roles ? (k % 2 === 0 ? 'lo' : 'hi') : 'any', { a, near } = pick(level, role);
-  let gap = minGap + (a.gapToNextMs - minGap) * stretch;
-  if (smooth > 0) { const local = near.reduce((s, x) => s + x.gapToNextMs, 0) / near.length; gap += (minGap + (local - minGap) * stretch - gap) * smooth; }
-  gap = Math.max(20, gap * speed);
-  notes.push({ t: curve.startSeconds + t, len: Math.min(a.noteDurationsMs[0], gap * 1.8) / 1000, vel: a.avgVelocity, pitch: pitch + (k % 2), level, gap });
-  t += gap / 1000; k++;
-}
+// the walk — the same engine the score page runs (score/public/trill_engine.js; RUNNING_LOG §104)
+const TE = require('../score/public/trill_engine.js');
+const interval = A.interval != null ? +A.interval : 2;   // semitones; the upper whole step by default (CN-22)
+const notes = TE.generate({ table: inst, levelAt: sec => CE.getYAtTime(curve, sec) / 10, start: curve.startSeconds, end: curve.endSeconds,
+  pitch, interval, smooth, stretch, speed, seed: +(A.seed || 1), roles, accent: A.accent !== 'off', attackVel: 127 }).notes;
 
 // the file — two forms (RUNNING_LOG §102):
 //   --as zone  (default): ONE zone object with the trill EMBEDDED as a MIDI snippet ({onsetMs, notes, velocity, durations},
@@ -81,14 +61,12 @@ const label = 'trill · ' + stub.tracks[layer].short + ' · ' + inst.technique +
 if (!curve.id) { curve.id = 'wc-' + (id++); curve.groupId = groupId; out.objects.push(curve); }
 out.objects.push({ id: 'mk-' + (id++), type: 'marker', layer, time: r3(curve.startSeconds), label, color: '#F04B00', groupId, performanceNotes: label, properties: {} });
 if (form === 'zone') {
-  const t0 = curve.startSeconds - PRE;
-  const events = [{ onsetMs: 0, _cc: 7, _ccValue: 127 }];
-  if (cc0 != null) events.push({ onsetMs: 0, _cc: 0, _ccValue: cc0 });
-  for (const n of notes) events.push({ onsetMs: rd1((n.t - t0) * 1000), notes: [n.pitch], velocity: n.vel, durations: [rd1(n.len * 1000)] });
-  out.objects.push({ id: 'zn-' + (id++), type: 'zone', layer, groupId, startTime: r3(t0), endTime: r3(curve.endSeconds + 0.5),
+  // the zone starts where the curve starts; the snippet declares its CC lead (leadMs) and the zone tick starts that early
+  const events = TE.snippetEvents(notes, curve.startSeconds - PRE, cc0);
+  out.objects.push({ id: 'zn-' + (id++), type: 'zone', layer, groupId, startTime: r3(curve.startSeconds), endTime: r3(curve.endSeconds + 0.5),
     player: '', instrument: '', zoneFunction: 'midiPreview', midiModel: '', ostinatoParams: { smooth, speed, stretch }, chordMarkers: [], ratioMarkers: [],
     ratioSourceZoneId: '', ratioGroup: '', responseDelayMs: 0, jitterMs: 0, driftFactor: 0,
-    midiSnippet: { port, channel, events, technique: inst.technique, source: 'tools/trill_curve_gen.js', generatedAt: new Date().toISOString() },
+    midiSnippet: { port, channel, leadMs: PRE * 1000, events, technique: inst.technique, source: 'tools/trill_curve_gen.js', count: notes.length, generatedAt: new Date().toISOString() },
     color: '#387ED3', opacity: 0.35, yOffset: 0.5, zoneHeight: 0.3, performanceNotes: label, properties: {} });
 } else {
   for (const n of notes) out.objects.push({ id: 'wc-' + (id++), type: 'waveCurve', layer, groupId, startSeconds: r3(n.t), endSeconds: r3(n.t + n.len),
@@ -100,7 +78,7 @@ const outPath = path.resolve(A.out || path.join(ROOT, 'scores', 'trill-curve-tes
 fs.writeFileSync(outPath, JSON.stringify(out, null, 1));
 
 // the report: per 5 s, the curve's level, the rate his table implies, the rate written, the mean velocity and length
-console.log('wrote', path.relative(ROOT, outPath), '—', notes.length, 'notes,', r3(curve.startSeconds), '→', r3(curve.endSeconds), 's on', stub.tracks[layer].label, '(' + inst.technique + '), pitches', pitch + '/' + (pitch + 1), '— table rate', r0, '→', r1, 'per second');
+console.log('wrote', path.relative(ROOT, outPath), '—', notes.length, 'notes,', r3(curve.startSeconds), '→', r3(curve.endSeconds), 's on', stub.tracks[layer].label, '(' + inst.technique + '), pitches', pitch + '/' + (pitch + interval), '— table rate', r0, '→', r1, 'per second');
 console.log(' window s | level | rate implied | rate written | vel | len ms');
 for (let w = curve.startSeconds; w < curve.endSeconds; w += 5) {
   const d = notes.filter(n => n.t >= w && n.t < w + 5); if (!d.length) continue; const m = f => d.reduce((s, n) => s + f(n), 0) / d.length;

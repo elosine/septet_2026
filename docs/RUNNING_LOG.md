@@ -2944,3 +2944,57 @@ working copies deleted.
 the strikes, his captures, `trill0-listen`; the recording echo is live thru and untouched; the drawer's Hear was already
 timer-scheduled (§102). *As before:* the pre-arm is shorter than 150 ms for notes inside the first 150 ms after pressing
 play. NITS entry closed.
+
+## §104. TRILLS_TOOL phase 1 built: the trill object in the score — his timing table live along the lane's curve, the interval audition row, the eating rule, exact playback; verified on the piece
+
+Composer (CN-22): *"a, go ahead with phase 1 lets do whole step as default and lets build into the plan an easy way to
+audition different intervals before inserting a trill and selecting the interval for the trill"*.
+
+**Design, in the app's own terms** (the least new machinery): a trill is a `zone` with `midiModel: 'trill'` and a `trill`
+block — `pitch · interval (signed semitones; +2 by default) · technique (the table's: accent senza vib) · accent (on;
+attackVel 127) · curveId · level (0.5 when no curve) · eat (on) · smooth 0.7 · stretch 1 · speed 1 · seed 1 · roles (on) ·
+launchedFrom`. Its notes are generated in the browser by `score/public/trill_engine.js` — one module for the page and the
+node tools (`tools/trill_curve_gen.js` now requires it): the §101 lookup — the curve's height on its lane is the speed
+level; the attacks he played within ±0.05 of it cycled in turn, matched by role; stretch → smooth → speed; his lengths and
+velocities; the first note at the accent velocity — and embedded as the zone's `midiSnippet` (`leadMs` 150: the zone tick
+starts that early and sends CC7 127 and the technique's CC0 before the first note; the tick learned `leadMs` today). The
+snippet is rebuilt at every play start (`startPlay` → `regenerateTrills`), on Hear and on every panel change, so the curve
+is always current; the save carries the last snippet (data, not truth — the `trill` block is the truth). No registry: the
+port, channel and CC0 come from `sandbox/instruments.js` through the lane's technique, as the strikes do; violin 2, the
+flute, the bass clarinet and the piano borrow violin 1's timing (pitch-agnostic) until sampled — the panel says so.
+
+**Creation:** `Add Trill` in the toolbar or `T` — over the selected curve (its span and lane), from the selected note
+(its pitch and start, 4 s; the note becomes the attack and is eaten; `launchedFrom` set — phase 3's launch in its simplest
+form), or 4 s from the playhead on the active lane; the pitch defaults to this player's nearest note at or before the
+start (his strike note), else the middle of the range; both notes of the pair folded by octave into the technique's range.
+**The panel** (the zone panel, MIDI Model = Trill): Pitch, with the note names · **Interval — m2 M2 m3 M3 P4 TT P5 m6 M6
+as chips: a click plays two seconds of the trill on that interval at mid speed (his timing, the lane's technique, the
+accent) AND takes it; `↑ above / ↓ below`** · Technique (the lane's menu) · Accent and its velocity · Curve (the lane's
+curve it follows, or a flat level box) · Eat notes · Feel (smooth stretch speed seed) · Timing (which table, its rate
+range, the note count, the port) · `▶ hear` — the whole trill as it will play, timestamped, a toggle. Auditions go through
+the same timestamped path, one at a time; stop cancels the queue and closes the pair.
+
+**The eating rule (§6):** a plain note that STARTS under a trill on its own lane is skipped by the plain-note tick
+(`trillCovers`), drawn at opacity 0.15, and stamped `mutedBy` = the trill's id at regeneration (for the IR and the
+notation); the zone's **M** silences the trill and gives the notes back (`trillCovers` ignores a muted trill; the stamps
+go); a deleted trill clears its stamps and redraws its lane; the part's S buttons apply to zones now too. The zone's label
+reads `tr A3–B3 (M2) · accent_senza_vel · 28 notes`.
+
+**Verified on the throwaway server** (a copy of the piece; fake outputs; synchronous ticks; zero console errors
+throughout): the page loads with the engine, the button and the table; `createTrill` at 44 s on violin 1 → a zone 44 →
+48 s, pitch 57 (A3, the strike just before it), interval 2, accent senza vib, 28 notes, port Vn1 ch 1, leadMs 150, CC7 /
+CC0 9 then the first note at +150 ms at 127; the panel with its 9 chips and Hear; the one note under it (D5 at 46.224)
+stamped and drawn at 0.15 where its neighbours are 0.55; a chip (m3) → 14 note-ons over 1.9 s on 57 / 60 with the CC
+lead, the interval taken, the label updated, stop → the two note-offs and CC7 127; Hear → all 28; the transport simulated
+from 43.5 s → the trill's notes scheduled by the zone tick, the eaten note not scheduled, the other lanes' strikes
+unaffected; M → covers false and the stamps cleared, back on unmute; delete → gone, no stamps, the lane redrawn; a real
+click on `Add Trill` and on the M3 chip → a trill at 44 s, interval 4, "tr A3–C#4 (M3)", 14 notes on 57 / 61, the chip
+lit. The engine in node: violin 1 at mid speed for 4 s → 28 notes, A4 / B4 alternating, the accent first; the stand-ins
+resolved; `tools/trill_curve_gen.js` on the engine reproduces the 329-note test (the zone form now starts at the curve's
+start with `leadMs`; `--interval` and `--accent off` added). *Found on the way:* the hidden pane's timers and animation
+loop pause — every harness drives the ticks synchronously (§103); the zone tick schedules from `performance.now()` plus
+the delay, which a compressed simulation cannot time-check (its accuracy stands from §102's real-time run). *Not in phase
+1:* a launched note's edit does not move its trill; a moved trill re-stamps at the next regeneration (play start or the
+panel); the three META lanes and the simpler drawing (phase 2); `busy()` in the accel dealer (phase 3); the weave (5);
+notation (6). **For the composer:** reload (a page change; the server untouched) — draw a curve on a violin lane, T over
+it, click intervals, ▶ hear, SPACE.

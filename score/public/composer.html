@@ -443,6 +443,8 @@
     <span style="color:#ccc">|</span>
     <button id="zoneBtn">Add Zone</button>
     <span style="color:#ccc">|</span>
+    <button id="trillBtn" title="Add Trill (T): over the selected curve, from the selected note (its pitch, 4 s — the note becomes the attack), or 4 s from the playhead on the active lane. Then click an interval to hear it and take it.">Add Trill</button>
+    <span style="color:#ccc">|</span>
     <button id="lwBtn">Add Line Wedge</button>
     <span style="color:#ccc">|</span>
     <select id="motiveSelect"><option value="">— motives —</option></select>
@@ -478,6 +480,7 @@
 <div id="propertyPanel"></div>
 
 <script src="/sandbox/instruments.js"></script>
+<script src="/trill_engine.js"></script>
 <script src="/compiler.js"></script>
 <!-- PLAN 2v morphing chords. morph.js is the PURE engine (also runs in node
      under tools/test_morph.js); morph_emit.js owns all morph MIDI including the
@@ -1382,6 +1385,7 @@ const Composer = {
     contentGroups: [],
 
     init() {
+        this.loadTrillDb();   // the trill timing table (TRILLS_TOOL phase 1)
         // Cache DOM
         // Septet: the lane table follows TRACKS (one lane per track + META at index
         // META_LAYER) instead of a literal list of ten — the literal left lanes 7..9
@@ -1419,6 +1423,7 @@ const Composer = {
         document.getElementById('wcDrawBtn').addEventListener('click', () => this.createWaveCurve());
         document.getElementById('markerBtn').addEventListener('click', () => this.createMarker());
         document.getElementById('zoneBtn').addEventListener('click', () => this.createZone());
+        document.getElementById('trillBtn').addEventListener('click', () => this.createTrill());
         document.getElementById('lwBtn').addEventListener('click', () => this.createLineWedge());
         const mpBtn = document.getElementById('motivePlaceBtn');
         if (mpBtn) mpBtn.addEventListener('click', () => {
@@ -2012,6 +2017,7 @@ const Composer = {
     },
 
     startPlay() {
+        this.regenerateTrills();   // every trill fresh from its curve (TRILLS_TOOL phase 1)
         this.isPlaying = true;
         this.playStartTime = performance.now();
         this.playStartOffset = this.scrollOffset;
@@ -2074,6 +2080,13 @@ const Composer = {
                     const playheadX = window.innerWidth / 2;
                     this.spliceCurveAt(sel, playheadX);
                 }
+                return;
+            }
+
+            // T = add a trill (TRILLS_TOOL phase 1, composer 2026-09-05)
+            if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.altKey && !e.target.matches('input, textarea, select')) {
+                e.preventDefault();
+                this.createTrill();
                 return;
             }
 
@@ -4178,6 +4191,7 @@ const Composer = {
         hl.style.display = 'none';
         hl.style.pointerEvents = 'none';
 
+        const eaten = wc.sonifyNote != null && typeof this.trillCovers === 'function' && this.trillCovers(wc.layer, wc.startSeconds);   // under a trill: silent, faint
         const { lineD, filledD } = this.generateWCPath(wc);
         const p = document.createElementNS(svgNS, 'path');
         if (wc.fillMode === 'line' || !filledD) {
@@ -4185,13 +4199,13 @@ const Composer = {
             p.setAttribute('fill', 'none');
             p.setAttribute('stroke', wc.color);
             p.setAttribute('stroke-width', '2');
-            p.setAttribute('opacity', String(wc.opacity ?? 0.8));
+            p.setAttribute('opacity', String(eaten ? 0.15 : (wc.opacity ?? 0.8)));
         } else {
             p.setAttribute('d', filledD);
             p.setAttribute('fill', wc.color);
             p.setAttribute('stroke', wc.color);
             p.setAttribute('stroke-width', '1');
-            p.setAttribute('opacity', String(wc.opacity ?? 0.8));
+            p.setAttribute('opacity', String(eaten ? 0.15 : (wc.opacity ?? 0.8)));
         }
         p.style.pointerEvents = 'none';
 
@@ -5205,6 +5219,7 @@ const Composer = {
             this.pushUndoState();
             for (const obj of targets) {
                 if (!obj) continue;
+                if (obj.type === 'zone' && obj.midiModel === 'trill') { this.clearMutedBy(obj.id); this._trillLaneToRerender = obj.layer; }
                 const idx = this.objects.indexOf(obj);
                 if (idx >= 0) {
                     if (obj._els) {
@@ -5215,6 +5230,7 @@ const Composer = {
                     this.objects.splice(idx, 1);
                 }
             }
+            if (this._trillLaneToRerender != null) { this.rerenderLaneNotes(this._trillLaneToRerender); this._trillLaneToRerender = null; }
             this.deselectAll();
             this.markDirty();
         }
@@ -5321,9 +5337,10 @@ const Composer = {
                     html += '<button id="ppMidiSolo" style="font-size:10px;font-weight:bold;padding:2px 8px;border:1px solid #555;border-radius:3px;cursor:pointer;' + zSolo + '">S</button>';
                     html += '</div>';
                     html += this.ppRow('MIDI Model', 'select', 'midiModel', obj.midiModel || '', '',
-                        [['','— Model —'],['ostinato','Ostinato'],['accelDecel','Accel/Decel'],['oneShot','One-Shot'],['asr','ASR'],['flocking','Flocking'],['threeBody','Three-Body'],['seeAllThePeople','See All the People'],['imitation','Imitation']]);
+                        [['','— Model —'],['trill','Trill'],['ostinato','Ostinato'],['accelDecel','Accel/Decel'],['oneShot','One-Shot'],['asr','ASR'],['flocking','Flocking'],['threeBody','Three-Body'],['seeAllThePeople','See All the People'],['imitation','Imitation']]);
+                    if (obj.midiModel === 'trill') html += this.renderTrillPanel(obj);
                     // Single-performer models: show Player/Instrument at zone level
-                    if (obj.midiModel && obj.midiModel !== 'flocking' && obj.midiModel !== 'threeBody' && obj.midiModel !== 'seeAllThePeople') {
+                    if (obj.midiModel && obj.midiModel !== 'trill' && obj.midiModel !== 'flocking' && obj.midiModel !== 'threeBody' && obj.midiModel !== 'seeAllThePeople') {
                         html += this.ppRow('Player', 'select', 'player', obj.player || '', '',
                             [['','— Player —'],['piano1','Piano 1'],['piano2','Piano 2'],['perc1','Perc 1'],['perc2','Perc 2']]);
                         html += this.ppRow('Instrument', 'select', 'instrument', obj.instrument || '', '',
@@ -6539,6 +6556,7 @@ const Composer = {
         }
 
         // Zone chord marker controls
+        if (obj.type === 'zone' && obj.midiModel === 'trill') this.bindTrillPanel(panel, obj);
         if (obj.type === 'zone' && obj.midiModel === 'ostinato') {
             // Click to select a chord marker
             panel.querySelectorAll('.pp-chord-marker').forEach(el => {
@@ -8349,6 +8367,10 @@ const Composer = {
     },
 
     renderZone(zone) {
+        if (zone.midiModel === 'trill' && !this._trillRerendering) {   // the notes under it drawn faint (TRILLS_TOOL §6)
+            this._trillRerendering = true;
+            try { this.rerenderLaneNotes(zone.layer); } finally { this._trillRerendering = false; }
+        }
         if (zone._els) {
             if (zone._els.group && typeof zone._els.group.remove === 'function') zone._els.group.remove();
         }
@@ -8395,7 +8417,7 @@ const Composer = {
 
         // Label
         const label = document.createElementNS(svgNS, 'text');
-        let labelText = [zone.player, zone.instrument].filter(Boolean).join(' — ') || zone.id;
+        let labelText = zone.midiModel === 'trill' ? this.trillLabel(zone) : ([zone.player, zone.instrument].filter(Boolean).join(' — ') || zone.id);
         if (isMuted) labelText = '[M] ' + labelText;
         if (isSolod) labelText = '[S] ' + labelText;
         label.setAttribute('x', x + 6); label.setAttribute('y', ry + 16);
@@ -8889,6 +8911,300 @@ const Composer = {
         return techs.find(t => t.key === wc.technique) || techs[0] || null;
     },
 
+    // ========== TRILLS (TRILLS_TOOL phase 1 — composer 2026-09-05; RUNNING_LOG §104) ==========
+    // A trill is a zone with midiModel 'trill' and a `trill` block: { pitch, interval, technique, accent, attackVel,
+    // curveId, level, eat, smooth, stretch, speed, seed, roles, launchedFrom }. Its notes are generated at play start
+    // (and on Hear) from the composer's own timing table (bank/trill_timing_db.json, his trill playing indexed by
+    // speed) along the curve on its lane, embedded as the zone's midiSnippet, and played by tickZoneMidiPlayback with
+    // Web MIDI timestamps. While it sounds, this player's plain notes that START under it are muted at play time —
+    // never deleted — and drawn faint; `mutedBy` stamps them for downstream tools. The zone's M button silences the
+    // trill AND gives the notes back: the A/B. The interval row plays a short trill on each interval at the click
+    // and takes it (CN-22). Default interval: the upper whole step (CN-22).
+    _trillDb: null,
+    _trillDbLoading: null,
+    _trillAud: null,
+
+    loadTrillDb() {
+        if (this._trillDb) return Promise.resolve(this._trillDb);
+        if (!this._trillDbLoading) {
+            this._trillDbLoading = fetch('/bank/trill_timing_db.json').then(r => r.json())
+                .then(db => { this._trillDb = db; return db; })
+                .catch(e => { console.warn('[trill] timing table not loaded:', e); this._trillDbLoading = null; return null; });
+        }
+        return this._trillDbLoading;
+    },
+
+    trillTable(layer) {
+        const t = TRACKS[layer];
+        if (!t || !this._trillDb || typeof TrillEngine === 'undefined') return null;
+        return TrillEngine.pickTable(this._trillDb, t.instKey);
+    },
+
+    // defaults for a new trill on a lane: the table's articulation (his samples), the upper whole step, the accent
+    // on, the pitch = this player's nearest note at or before the start (his strike note) or the middle of the range
+    trillDefaults(layer, startSec) {
+        const inst = this.trackInstrument(layer), tbl = this.trillTable(layer);
+        const techs = this.trackTechniques(layer) || [];
+        const wanted = tbl && tbl.table && tbl.table.technique;
+        const tech = techs.find(q => q.key === wanted) ? wanted
+            : (techs.find(q => /^(accent_senza_vel|senza_vel|ord|main)$/.test(q.key)) || techs[0] || {}).key;
+        let pitch = null, best = -Infinity;
+        this.objects.forEach(o => {
+            if (o.type === 'waveCurve' && o.sonifyNote != null && o.layer === layer && o.startSeconds <= startSec + 0.01
+                && o.startSeconds > best && startSec - o.startSeconds < 8) { best = o.startSeconds; pitch = o.sonifyNote; }
+        });
+        if (pitch == null) pitch = inst ? Math.round((inst.rangeLow + inst.rangeHigh) / 2) : 69;
+        return { pitch, interval: 2, technique: tech, accent: true, attackVel: 127, curveId: '', level: 0.5, eat: true,
+            smooth: 0.7, stretch: 1, speed: 1, seed: 1, roles: true, launchedFrom: null };
+    },
+
+    ensureTrill(zone) {
+        if (!zone.trill) zone.trill = this.trillDefaults(zone.layer, zone.startTime);
+        return zone.trill;
+    },
+
+    // Add Trill (button, or T): over the selected curve (its span and lane), from the selected note (its pitch and
+    // start, 4 s — the note becomes the attack and is eaten), or 4 s from the playhead on the active lane
+    createTrill() {
+        const sel = this.selectedObject;
+        let layer = this.activeLane, start = null, end = null, fromNote = null, curve = null;
+        if (sel && sel.type === 'waveCurve' && sel.layer < META_LAYER) {
+            layer = sel.layer;
+            if (sel.sonifyNote == null) { curve = sel; start = sel.startSeconds; end = sel.endSeconds; }
+            else { fromNote = sel; start = sel.startSeconds; end = start + 4; }
+        }
+        if (start == null) { const t = Math.max(0, this.getTimeAtPlayhead()); start = t; end = t + 4; }
+        if (layer == null || layer >= META_LAYER) layer = 3;
+        const zone = this.createZone({ layer, startTime: Math.round(start * 1000) / 1000, endTime: Math.round(end * 1000) / 1000,
+            zoneFunction: 'midiPreview', midiModel: 'trill', color: '#F04B00', opacity: 0.3, zoneHeight: 0.3, yOffset: 0.5,
+            performanceNotes: 'trill' });
+        zone.trill = this.trillDefaults(layer, start);
+        if (fromNote) { zone.trill.pitch = fromNote.sonifyNote; zone.trill.launchedFrom = fromNote.id; }
+        if (curve) zone.trill.curveId = curve.id;
+        this.regenerateTrill(zone);
+        this.renderZone(zone);
+        this.rerenderLaneNotes(layer);
+        this.showPropertyPanel();
+        this.markDirty();
+        this.saveStatus.textContent = 'trill on ' + TRACKS[layer].label + ' ' + zone.startTime.toFixed(2) + ' → ' + zone.endTime.toFixed(2) + ' s — click an interval to hear it and take it; ▶ hear plays the trill; T adds another';
+        return zone;
+    },
+
+    // the curve the trill reads: the one it names, else the first drawn curve on its lane that overlaps it
+    trillCurve(zone) {
+        const t = zone.trill || {};
+        const all = this.objects.filter(o => o.type === 'waveCurve' && o.sonifyNote == null && o.layer === zone.layer
+            && o.endSeconds > zone.startTime && o.startSeconds < zone.endTime);
+        return (t.curveId && all.find(o => o.id === t.curveId)) || all[0] || null;
+    },
+
+    trillLevelFn(zone) {
+        const c = this.trillCurve(zone);
+        if (c) return sec => this.getYAtTime(c, sec) / 10;
+        const lv = Math.max(0, Math.min(1, zone.trill && zone.trill.level != null ? +zone.trill.level : 0.5));
+        return () => lv;
+    },
+
+    trillRouting(zone) {
+        const inst = this.trackInstrument(zone.layer);
+        if (!inst) return null;
+        const techs = this.trackTechniques(zone.layer) || [];
+        const tech = techs.find(q => q.key === (zone.trill && zone.trill.technique)) || techs[0] || {};
+        return { port: tech.port || inst.port, channel: tech.channel || 1, cc0: tech.cc0, tech, inst };
+    },
+
+    // both notes of the pair inside the technique's range, by octave
+    trillPitchInRange(zone, r) {
+        const t = zone.trill;
+        const lo = r.tech.rangeLow != null ? r.tech.rangeLow : r.inst.rangeLow, hi = r.tech.rangeHigh != null ? r.tech.rangeHigh : r.inst.rangeHigh;
+        let p = Math.round(t.pitch), q = p + t.interval;
+        if (lo != null && hi != null) {
+            while (Math.min(p, q) < lo) { p += 12; q += 12; }
+            while (Math.max(p, q) > hi && Math.min(p, q) - 12 >= lo) { p -= 12; q -= 12; }
+        }
+        return p;
+    },
+
+    // the trill's notes → the zone's snippet (the CC7 / CC0 lead 150 ms before the first note: the snippet declares
+    // leadMs and the zone tick starts that early); the notes under it stamped mutedBy
+    regenerateTrill(zone) {
+        const t = this.ensureTrill(zone), tbl = this.trillTable(zone.layer), r = this.trillRouting(zone);
+        if (!tbl || !r) {
+            if (!this._trillDb) this.loadTrillDb().then(db => {
+                if (db && this.objects.includes(zone)) { this.regenerateTrill(zone); this.renderZone(zone); if (this.selectedObject === zone) this.showPropertyPanel(); }
+            });
+            return null;
+        }
+        const LEAD_MS = 150;
+        const pitch = this.trillPitchInRange(zone, r);
+        const g = TrillEngine.generate({ table: tbl.table, levelAt: this.trillLevelFn(zone), start: zone.startTime, end: zone.endTime,
+            pitch, interval: t.interval, smooth: t.smooth, stretch: t.stretch, speed: t.speed, seed: t.seed, roles: t.roles,
+            accent: t.accent, attackVel: t.attackVel });
+        zone.midiSnippet = { port: r.port, channel: r.channel, leadMs: LEAD_MS,
+            events: TrillEngine.snippetEvents(g.notes, zone.startTime - LEAD_MS / 1000, r.cc0),
+            technique: t.technique, source: 'trill', table: tbl.key, standIn: tbl.standIn, count: g.notes.length,
+            rateRange: g.rateRange, generatedAt: new Date().toISOString() };
+        this.stampMutedBy(zone);
+        return zone.midiSnippet;
+    },
+
+    regenerateTrills() {
+        let n = 0;
+        this.objects.forEach(o => { if (o.type === 'zone' && o.midiModel === 'trill') { this.regenerateTrill(o); n++; } });
+        return n;
+    },
+
+    // the eating rule (TRILLS_TOOL §6): a plain note that starts under a sounding trill on its own lane is silent
+    trillCovers(layer, t) {
+        return this.objects.some(o => o.type === 'zone' && o.midiModel === 'trill' && o.layer === layer && !o.midiMute
+            && (!o.trill || o.trill.eat !== false) && t >= o.startTime && t < o.endTime);
+    },
+
+    stampMutedBy(zone) {
+        this.objects.forEach(o => {
+            if (o.type !== 'waveCurve' || o.sonifyNote == null || o.layer !== zone.layer) return;
+            const under = !zone.midiMute && (!zone.trill || zone.trill.eat !== false) && o.startSeconds >= zone.startTime && o.startSeconds < zone.endTime;
+            if (under) o.mutedBy = zone.id; else if (o.mutedBy === zone.id) delete o.mutedBy;
+        });
+    },
+
+    clearMutedBy(zoneId) {
+        this.objects.forEach(o => { if (o.mutedBy === zoneId) delete o.mutedBy; });
+    },
+
+    rerenderLaneNotes(layer) {
+        this.objects.forEach(o => { if (o.type === 'waveCurve' && o.sonifyNote != null && o.layer === layer) this.renderWaveCurve(o); });
+    },
+
+    trillLabel(zone) {
+        const t = zone.trill || {};
+        if (t.pitch == null) return 'trill';
+        const iv = (TrillEngine.INTERVALS.find(x => x[0] === Math.abs(t.interval || 0)) || [0, Math.abs(t.interval || 0) + ' st'])[1];
+        return 'tr ' + TrillEngine.noteName(t.pitch) + '–' + TrillEngine.noteName(t.pitch + (t.interval || 0)) + ' (' + iv + (t.interval < 0 ? ' ↓' : '') + ') · '
+            + (t.technique || '') + (zone.midiSnippet && zone.midiSnippet.count != null ? ' · ' + zone.midiSnippet.count + ' notes' : '');
+    },
+
+    // ---- auditions: timestamped, like the zone tick; one at a time ----
+    stopTrillAudition() {
+        const a = this._trillAud;
+        if (!a) return;
+        this._trillAud = null;
+        clearTimeout(a.timer);
+        try { if (typeof a.out.clear === 'function') a.out.clear(); } catch (e) { }
+        const now = performance.now();
+        a.pitches.forEach(p => a.out.send([0x80 | a.ch, p, 0], now));
+        a.out.send([0xB0 | a.ch, 7, 127], now);
+        if (a.btn && a.btn.isConnected) a.btn.textContent = a.label;
+    },
+
+    async playTrillEvents(zone, events, btn, label) {
+        if (!this._zoneMidiInited) await this.initZoneMidi();
+        const r = this.trillRouting(zone);
+        const out = r && this._zoneMidiOutputs[(r.port || '').toLowerCase()];
+        if (!out) { this.saveStatus.textContent = 'trill: no MIDI output "' + (r && r.port) + '" — is the rack up?'; return; }
+        this.stopTrillAudition();
+        const ch = r.channel - 1, now = performance.now() + 5, pitches = new Set();
+        let last = 0;
+        events.forEach(e => {
+            const at = now + e.onsetMs;
+            if (e._cc != null) { out.send([0xB0 | ch, e._cc, e._ccValue != null ? e._ccValue : 0], at); return; }
+            e.notes.forEach((p, i) => {
+                pitches.add(p);
+                out.send([0x90 | ch, p, Math.max(1, Math.min(127, Math.round(e.velocity)))], at);
+                out.send([0x80 | ch, p, 0], at + (e.durations[i] || 100));
+                last = Math.max(last, e.onsetMs + (e.durations[i] || 100));
+            });
+        });
+        const a = { out, ch, pitches: [...pitches], btn, label: label || (btn && btn.textContent) };
+        if (btn) btn.textContent = '■ stop';
+        a.timer = setTimeout(() => { if (this._trillAud === a) { this._trillAud = null; if (btn && btn.isConnected) btn.textContent = a.label; } }, last + 80);
+        this._trillAud = a;
+    },
+
+    hearTrill(zone, btn) {
+        if (this._trillAud) { this.stopTrillAudition(); return; }
+        const snip = this.regenerateTrill(zone);
+        if (!snip) { this.saveStatus.textContent = 'trill: the timing table is still loading — try again'; return; }
+        this.renderZone(zone);
+        this.playTrillEvents(zone, snip.events, btn, '▶ hear');
+    },
+
+    // an interval chip: take the interval, and hear two seconds of the trill on it at mid speed
+    auditionTrillInterval(zone, semis) {
+        const t = this.ensureTrill(zone);
+        this.pushUndoStateDebounced(300);
+        t.interval = semis;
+        this.regenerateTrill(zone);
+        this.renderZone(zone);
+        this.markDirty();
+        const tbl = this.trillTable(zone.layer), r = this.trillRouting(zone);
+        if (!tbl || !r) return;
+        const pitch = this.trillPitchInRange(zone, r);
+        const g = TrillEngine.generate({ table: tbl.table, levelAt: () => 0.5, start: 0, end: 2.0, pitch, interval: t.interval,
+            smooth: t.smooth, stretch: t.stretch, speed: t.speed, seed: t.seed, roles: t.roles, accent: t.accent, attackVel: t.attackVel });
+        this.playTrillEvents(zone, TrillEngine.snippetEvents(g.notes, -0.15, r.cc0), null, null);
+    },
+
+    // ---- the panel section (inside the zone panel when midiModel is 'trill') ----
+    renderTrillPanel(obj) {
+        const t = this.ensureTrill(obj), tbl = this.trillTable(obj.layer), curve = this.trillCurve(obj), r = this.trillRouting(obj);
+        const techs = this.trackTechniques(obj.layer) || [];
+        const nn = m => TrillEngine.noteName(m);
+        let h = '<div class="pp-section"><h5>Trill</h5>';
+        h += '<div class="pp-row"><label>Pitch</label><input type="number" data-trill="pitch" value="' + t.pitch + '" step="1" min="21" max="108" style="width:56px">'
+            + ' <span style="font-size:11px;color:#666">' + nn(t.pitch) + ' → ' + nn(t.pitch + t.interval) + '</span></div>';
+        h += '<div class="pp-row"><label>Interval</label><span>' + TrillEngine.INTERVALS.map(([s, n]) =>
+            '<button class="tr-int" data-semis="' + s + '" title="hear it, and take it" style="font-size:10px;padding:1px 5px;margin:1px;cursor:pointer;'
+            + (Math.abs(t.interval) === s ? 'background:#F04B00;color:#fff;border-color:#F04B00;' : '') + '">' + n + '</button>').join('')
+            + ' <button class="tr-dir" title="upper or lower neighbour" style="font-size:10px;padding:1px 6px;margin-left:4px;cursor:pointer">' + (t.interval < 0 ? '↓ below' : '↑ above') + '</button></span></div>';
+        h += '<div class="pp-row"><label>Technique</label><select data-trill="technique">' + techs.map(q =>
+            '<option value="' + q.key + '"' + (q.key === t.technique ? ' selected' : '') + '>' + q.label + '</option>').join('') + '</select></div>';
+        h += '<div class="pp-row"><label>Accent</label><input type="checkbox" data-trill="accent"' + (t.accent ? ' checked' : '') + '>'
+            + ' <span style="font-size:10px;color:#666">first note at</span> <input type="number" data-trill="attackVel" value="' + t.attackVel + '" min="1" max="127" style="width:48px"></div>';
+        h += '<div class="pp-row"><label>Curve</label><span style="font-size:11px;color:' + (curve ? '#4A90D9' : '#999') + '">'
+            + (curve ? curve.id + ' on this lane — its height is the speed' : 'none on this lane — a flat level') + '</span>'
+            + (curve ? '' : ' <input type="number" data-trill="level" value="' + t.level + '" step="0.05" min="0" max="1" style="width:52px">') + '</div>';
+        h += '<div class="pp-row"><label>Eat notes</label><input type="checkbox" data-trill="eat"' + (t.eat !== false ? ' checked' : '') + '>'
+            + ' <span style="font-size:10px;color:#666">this player\'s notes under the trill fall silent; M gives them back</span></div>';
+        h += '<div class="pp-row"><label>Feel</label><span style="font-size:10px">smooth <input type="number" data-trill="smooth" value="' + t.smooth + '" step="0.1" min="0" max="1" style="width:44px">'
+            + ' stretch <input type="number" data-trill="stretch" value="' + t.stretch + '" step="0.1" min="0.2" max="3" style="width:44px">'
+            + ' speed <input type="number" data-trill="speed" value="' + t.speed + '" step="0.05" min="0.3" max="3" style="width:44px">'
+            + ' seed <input type="number" data-trill="seed" value="' + t.seed + '" step="1" min="1" style="width:44px"></span></div>';
+        const snip = obj.midiSnippet;
+        h += '<div class="pp-row"><label>Timing</label><span style="font-size:10px;color:#666">'
+            + (tbl ? (tbl.standIn ? tbl.key + "'s table (no samples of its own yet)" : 'his ' + tbl.key + ' table') + ' · '
+                + (tbl.table.rateRange || []).map(x => (+x).toFixed(1)).join(' → ') + ' per second' : 'table loading…')
+            + (snip && snip.count != null ? ' · ' + snip.count + ' notes' : '') + (r ? ' · ' + r.port + ' ch ' + r.channel : '') + '</span></div>';
+        h += '<div style="margin-top:4px"><button id="ppTrillHear" style="font-size:11px;padding:3px 10px;background:#43A047;color:#fff;border:1px solid #4CAF50;border-radius:3px;cursor:pointer">▶ hear</button>'
+            + ' <span style="font-size:10px;color:#888">the whole trill, as it will play</span></div>';
+        h += '</div>';
+        return h;
+    },
+
+    bindTrillPanel(panel, obj) {
+        panel.querySelectorAll('.tr-int').forEach(b => b.addEventListener('click', () => {
+            const s = +b.dataset.semis, t = this.ensureTrill(obj);
+            this.auditionTrillInterval(obj, t.interval < 0 ? -s : s);
+            this.showPropertyPanel();
+        }));
+        const dir = panel.querySelector('.tr-dir');
+        if (dir) dir.addEventListener('click', () => { const t = this.ensureTrill(obj); this.auditionTrillInterval(obj, -t.interval); this.showPropertyPanel(); });
+        panel.querySelectorAll('[data-trill]').forEach(el => el.addEventListener('change', () => {
+            const key = el.dataset.trill, t = this.ensureTrill(obj);
+            this.pushUndoStateDebounced(300);
+            if (el.type === 'checkbox') t[key] = el.checked;
+            else if (el.type === 'number') { const v = parseFloat(el.value); if (!isNaN(v)) t[key] = key === 'pitch' || key === 'seed' || key === 'attackVel' ? Math.round(v) : v; }
+            else t[key] = el.value;
+            this.regenerateTrill(obj);
+            this.renderZone(obj);
+            this.rerenderLaneNotes(obj.layer);
+            this.markDirty();
+            if (key === 'pitch' || key === 'technique' || key === 'eat') this.showPropertyPanel();
+        }));
+        const hear = panel.querySelector('#ppTrillHear');
+        if (hear) hear.addEventListener('click', () => this.hearTrill(obj, hear));
+    },
+
     tickCurvePlayback(currentTimeSec) {
         if (!this._zoneMidiInited) return;
         const prevTime = this._lastCurveTimeSec;
@@ -8981,6 +9297,7 @@ const Composer = {
 
             // ---- not yet scheduled: is it due? ----
             if (!audible || wc.endSeconds <= currentTimeSec) return;             // muted, or already over
+            if (this.trillCovers(wc.layer, wc.startSeconds)) return;              // under a trill: eaten (TRILLS_TOOL §6)
             const startsAhead = wc.startSeconds > currentTimeSec && wc.startSeconds <= currentTimeSec + LOOKAHEAD_S;
             const inside = currentTimeSec >= wc.startSeconds;                    // play started inside it, a
             if (!startsAhead && !inside) return;                                 // scrub landed in it, or a
@@ -12469,10 +12786,11 @@ const Composer = {
         this.objects.forEach(obj => {
             if (obj.type !== 'zone' || !obj.midiSnippet || !obj.midiSnippet.events || obj.midiSnippet.events.length === 0) return;
             if (obj.midiMute && !obj.midiSolo) return;
+            if (!this.isPartAudible(obj.layer)) return;   // the part's S buttons apply to zones too
             if (hasSolo && !obj.midiSolo) return;
 
             const snippet = obj.midiSnippet;
-            const zoneStart = obj.startTime;
+            const zoneStart = obj.startTime - ((snippet.leadMs || 0) / 1000);   // a snippet may start early (a trill's CC lead)
             const zoneEnd = obj.endTime;
 
             // If playhead just entered this zone

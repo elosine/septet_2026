@@ -18,7 +18,8 @@ or tremolo presets. The performers will read "trill" and a span; the curve is fo
 - **Eat by rule, not by deletion.** A trill mutes what falls under it on its own player, at play time. Remove or
   shorten the trill and the notes are back. Nothing is ever deleted by a trill.
 - **The curve segment ends the trill.** The trill's span is its length; the curve is read over that span.
-- **Second pitch:** the upper chromatic neighbour by default; other options later (the harmony of CN-6 among them).
+- **Second pitch:** the upper whole step by default (CN-22, 2026-09-05 — was the chromatic neighbour); the panel's interval
+  row auditions and takes any interval m2 → M6, above or below; the harmony of CN-6 later.
 - **Speed limits** are not a concern: demo MIDI must sound plausible, the players play within their own limits.
 - **The fp envelope** is built in per instrument — "a thing that works", not laboured over; the notation covers it.
 - **Three META lanes** for the three reference curves, not colours in one lane.
@@ -70,6 +71,11 @@ pitch) may use a second row (bowed tremolo faster).
 > live by the same lookup and the zone tick plays it; the plain-note path gets the same scheduling (NITS).
 > **Done (§103):** the plain-note path schedules with timestamps too, and the composer: "trill sounds much better". Phase 1
 > may realize the trill either as an embedded snippet on a zone-like object or as scheduled notes — both exact now.
+>
+> **Built (§104, phase 1):** the object is a zone with `midiModel: 'trill'` and a `trill` block { pitch, interval, technique,
+> accent, attackVel, curveId, level, eat, smooth, stretch, speed, seed, roles, launchedFrom }, its notes embedded as the zone's
+> snippet by `score/public/trill_engine.js` (shared with the tools) at every play start; `curveRef` A / B / C waits for phase 2;
+> the fp = the accent (the first note at attackVel, then his velocities).
 
 ## 3 · The reference curves — three META lanes
 
@@ -157,7 +163,9 @@ animation here, it'll just say trill". The animated score shows the span; the cu
    of passages, one per candidate articulation, the two pitches alternating on a 3 s ramp from the slow rate to the fast one
    (§2's table), the fp 127 → 60, a marker naming each. Open it from the Experiments menu, SPACE, pick the articulation per
    instrument; judge the fp and the top speed. Edit the script's tables (candidates, rates, `DROP`), re-run, reload.
-1. **The trill object** (§2, §6, §8's option 1): the type, the per-instrument table, the fp, mute-by-rule, `mutedBy`
+1. **The trill object — built 2026-09-05 (RUNNING_LOG §104): `Add Trill` / T, a zone with `midiModel: 'trill'`, the interval
+   audition row (CN-22), the accent, the eating rule with M as the A/B, `score/public/trill_engine.js`; the badge never sees a
+   trill's notes (they live in the snippet), so there was nothing to teach it.** As specified (§2, §6, §8's option 1): the type, the per-instrument table, the fp, mute-by-rule, `mutedBy`
    on save, the greyed drawing; the playability checker (the hard / soft badge) taught that a trill is one object — its notes
    re-attack by design (RUNNING_LOG §99). The realization = the table lookup of `tools/trill_curve_gen.js` (his timing from
    `bank/trill_timing_db.json`), not the rate table (§101). About a day.
@@ -169,7 +177,8 @@ animation here, it'll just say trill". The animated score shows the span; the cu
 
 ## 12 · Open, for the composer, when reached
 
-- The trill articulation per instrument (step 0 decides — the listening file `scores/trill0-listen.json`).
-- The fp drop level (60 in the listening file) and whether the attack needs §8's option 2 or 3 — the same listening.
+- The trill articulation per instrument: accent senza vib for the strings (his samples); the winds and the piano when sampled
+  (they borrow violin 1's timing until then).
+- The attack: option 1 built (the accent knob, 127 by default); options 2 / 3 if his ear asks.
 - Whether the second pitch may come from the harmony (CN-6) — a menu item once 1d exists.
 - Whether eaten notes should ever accent (default off).
