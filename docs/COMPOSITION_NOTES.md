@@ -494,3 +494,28 @@ names a library to confirm.
   span × 0.24), the start of each strike is arithmetic, and a re-insert adds rather than replaces. The
   working plan and the build candidates ranked by that friction: RUNNING_LOG §81. Nothing built yet —
   the example first, the lessons logged as they come.
+
+---
+
+## CN-16 · 2026-09-04 — ×1.5 chosen; the onset gap placed at the end of the previous strike, from #17 on
+
+> *"Let's start with times one point five. So then back to eighteen. I have the even version saved as
+> eighteen dash c — this is with the orchestration I want and the order I want it. So I guess maybe in the
+> drawer we need a way to expand it to whatever the next duration is. So spread it out. And then a method
+> to calculate the gap between seventeen and eighteen — let's just call it the onset gap. So the difference
+> between twenty-seven point one five and twenty-eight point one eight, and then place that gap at the end
+> of seventeen, and then that will be the new onset time for eighteen, the spread-out version. And then
+> I'll be able to insert it at that time. So let's just talk first. What do you think this should look like?"*
+
+**AI reading (not the composer's words):**
+
+- **The chain's law is fixed: ×1.5.** And the gap rule now starts one strike earlier than CN-15 said: #17
+  (evened, 127 ms, at 27.153) is the chain's anchor; #18 no longer sits at its recorded 28.175 but at
+  end(#17) + the onset gap (28.175 − 27.153 = 1.022 s). With "end" = the last onset (27.280): #18 starts at
+  **28.302**. In general start(n) = end(n−1) + [t0(n) − t0(n−1)]: the recorded gaps survive, measured from
+  where the stretched strike stops.
+- **Two anchors are possible for the durations** and only the composer can pick: from #17's 127 ms → #18 =
+  190 · #19 = 286 · #20 = 429 · #21 = 643 · #22 = 964 · #23 = 1447 · #24 = 2170 ms (rhythm audible from
+  #21); or #18 = 110 as member one → 165 · 248 · 371 · 557 … (audible from #22, RUNNING_LOG §83).
+- **The orchestration is settled per strike before the stretch** (take 18-c) — so the tool must touch only
+  two numbers: the duration and the insert time. Proposed shape: STRIKES_TOOL U11.

@@ -2438,3 +2438,17 @@ spans run 13 → 622 ms in no order, so the result is not monotonic ("each succe
 557 ms at #22 is ×43, 1253 ms at #24 is ×48 — unreachable under every strategy; even ×20 gives #22 only 260
 ms. So build candidate A (a `span = ___ ms` box, or at least a raised cap) stops being a convenience at #22 and
 becomes necessary. Not built — the composer asked to talk first.
+
+## §84. U11 designed: the chain step in the drawer — talked through before any build
+
+Composer (CN-16): ×1.5 chosen; #18's evened, orchestrated, ordered version saved as take 18-c; *"we need a way
+to expand it to whatever the next duration is … a method to calculate the gap between seventeen and eighteen —
+the onset gap … place that gap at the end of seventeen … let's just talk first. What do you think this should
+look like?"* The AI's proposal, as filed in STRIKES_TOOL U11: a `= ___ ms` twin for span × (the ×20 cap
+removed with it), a `ratio [1.5]` + `prev × ratio` button reading the previous strike's duration from the
+open score, and `Insert @ after previous` doing end(n−1) + [t0(n) − t0(n−1)] with the arithmetic in the status
+line and replace-on-reinsert. Three choices put to the composer: what "end" means (last onset recommended vs
+the META shape's end), the chain's anchor (#17's 127 ms → #18 = 190, or #18's 110 → #19 = 165), and
+replace-on-reinsert. Numbers with #17 as anchor and end = last onset: #18 190 ms @ 28.302 · #19 286 @ 30.121 ·
+#20 429 @ 32.323 · #21 643 @ 33.501 (rhythm audible from here) · #22 964 @ 35.022 · #23 1447 @ 36.856 ·
+#24 2170 @ 39.076, ending 41.25 s. Nothing built.
