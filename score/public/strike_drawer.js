@@ -338,7 +338,7 @@ const D = {
         { const at = this.el.querySelector('#skAtTime'); if (at) at.textContent = 'Insert @ ' + s.t0.toFixed(2) + ' s (original)'; }
         this.voices = s.notes.map((n, i) => ({
             id: n.objectId, i, pitch0: n.midi, pc: ((n.midi % 12) + 12) % 12, pitch: n.midi,
-            lane: -1, fold: 0, tech: null, standIn: null, piano: false, solo: false, vel: n.vel != null ? n.vel : 100, durMs: n.durMs || 100,
+            lane: -1, also: [], fold: 0, tech: null, standIn: null, piano: false, solo: false, vel: n.vel != null ? n.vel : 100, durMs: n.durMs || 100,
             dt0: n.dtMs, slot: i,
         }));
         this.slotsPlayed = s.notes.map(n => n.dtMs);      // the onset pattern as played (voice order)
@@ -355,7 +355,7 @@ const D = {
     asPlayedOrchestration() {
         // as played: every voice on its recorded lane (the piano), no player assignment yet
         const T = TRK();
-        this.voices.forEach(v => { const n = this.strike.notes[v.i]; const lane = T.findIndex(t => t.instKey === n.instKey); v.lane = -1; v.piano = lane >= 0 && T[lane].instKey === 'piano'; v.tech = null; v.fold = 0; v.standIn = null; });
+        this.voices.forEach(v => { const n = this.strike.notes[v.i]; const lane = T.findIndex(t => t.instKey === n.instKey); v.lane = -1; v.also = []; v.piano = lane >= 0 && T[lane].instKey === 'piano'; v.tech = null; v.fold = 0; v.standIn = null; });
     },
 
     // ------------------------------------------------------------------ voicing presets (B)
@@ -397,40 +397,54 @@ const D = {
             }
         }
         // a voiced pitch may no longer fit its player: re-fold
-        vs.forEach(v => { if (v.lane >= 0) this.fitVoice(v); });
+        vs.forEach(v => { if (v.lane >= 0) this.fitVoice(v); (v.also || []).forEach(r => this.fitReal(v, r)); });
     },
 
     // ------------------------------------------------------------------ orchestration (E, F)
     instOf(lane) { const T = TRK(); return lane >= 0 && T[lane] ? INST()[T[lane].instKey] : null; },
     // U2: the strike default for a player, if its roster has it; else the plain technique
     defaultTech(lane) { const T = TRK(), inst = this.instOf(lane); if (!inst) return null; const want = T[lane] && STRIKE_DEFAULT[T[lane].instKey]; if (want && (inst.techniques || []).some(q => q.key === want)) return want; return plainTech(inst); },
-    techOf(v) { const inst = this.instOf(v.lane); return inst ? ((inst.techniques || []).find(t => t.key === v.tech) || null) : null; },
-    fitVoice(v) {
+    techOf(v) { return this.techOfR(v); },
+    techOfR(r) { const inst = this.instOf(r.lane); return inst ? ((inst.techniques || []).find(t => t.key === r.tech) || null) : null; },
+    fitVoice(v) { return this.fitReal(v, v); },
+    // U10 (composer, 2026-09-04: "two instruments can play the same note, but not the other way around"): a voice is
+    // realized on its primary player (the voice's own lane / tech / fold / standIn / skip) and on any number of
+    // doublings in v.also, each { lane, tech, fold, standIn, skip }. r is either the voice itself or one of v.also.
+    fitReal(v, r) {
         // F: fold by octave into the player's (technique's) range; fixed-pitch / noise / multiphonic → stand-in
-        const inst = this.instOf(v.lane); if (!inst) { v.fold = 0; v.standIn = null; return true; }
-        const tech = this.techOf(v); const kind = kindOf(tech);
+        const inst = this.instOf(r.lane); if (!inst) { r.fold = 0; r.standIn = null; return true; }
+        const tech = this.techOfR(r); const kind = kindOf(tech);
         const [lo, hi] = techRange(inst, tech);
         if (kind === 'pitched') {
-            v.standIn = null;
+            r.standIn = null;
             const f = foldInto(v.pitch, lo, hi);
-            if (!f) { v.fold = 0; v.skip = true; return false; }
-            v.fold = f.oct; v.skip = false; return true;
+            if (!f) { r.fold = 0; r.skip = true; return false; }
+            r.fold = f.oct; r.skip = false; return true;
         }
-        v.fold = 0; v.skip = false;
-        if (v.standIn == null) v.standIn = this.defaultStandIn(v, inst, tech, kind, lo, hi);
+        r.fold = 0; r.skip = false;
+        if (r.standIn == null) r.standIn = this.defaultStandIn(v.pitch, r.lane, inst, tech, kind, lo, hi);
         return true;
     },
-    defaultStandIn(v, inst, tech, kind, lo, hi) {
-        const T = TRK(); const key = T[v.lane] && T[v.lane].instKey;
-        if (kind === 'fixed' && OPEN_STRINGS[key]) { const os = OPEN_STRINGS[key]; return os.reduce((a, b) => Math.abs(b - v.pitch) < Math.abs(a - v.pitch) ? b : a); }
-        const f = foldInto(v.pitch, lo, hi); return f ? f.pitch : lo;
+    defaultStandIn(pitch, lane, inst, tech, kind, lo, hi) {
+        const T = TRK(); const key = T[lane] && T[lane].instKey;
+        if (kind === 'fixed' && OPEN_STRINGS[key]) { const os = OPEN_STRINGS[key]; return os.reduce((a, b) => Math.abs(b - pitch) < Math.abs(a - pitch) ? b : a); }
+        const f = foldInto(pitch, lo, hi); return f ? f.pitch : lo;
     },
-    soundingPitch(v) { return v.standIn != null ? v.standIn : (v.pitch + 12 * v.fold); },
+    soundingPitch(v) { return this.soundingPitchR(v, v); },
+    soundingPitchR(v, r) { return r.standIn != null ? r.standIn : (v.pitch + 12 * r.fold); },
+    reals(v) { const out = []; if (v.lane >= 0) out.push(v); (v.also || []).forEach(r => out.push(r)); return out; },          // every player that has this note
+    onLane(lane) { const out = []; this.voices.forEach(v => this.reals(v).forEach(r => { if (r.lane === lane) out.push({ v, r }); })); return out; },
+    dropReal(v, r) {                                                                                                          // this player no longer plays the note
+        if (r !== v) { const k = (v.also || []).indexOf(r); if (k >= 0) v.also.splice(k, 1); return; }
+        const nx = (v.also || []).shift();
+        if (nx) Object.assign(v, { lane: nx.lane, tech: nx.tech, fold: nx.fold, standIn: nx.standIn, skip: !!nx.skip });
+        else { v.lane = -1; v.fold = 0; v.standIn = null; v.skip = false; }
+    },
 
     shuffleOrch() {
         const T = TRK(); const n = T.length; const rnd = mulberry32(this.cfg.oSeedShuffle * 104729 + 3);
         const vs = [...this.voices].sort((a, b) => a.pitch - b.pitch);
-        vs.forEach(v => { v.lane = -1; v.fold = 0; v.standIn = null; v.skip = false; v.piano = false; });
+        vs.forEach(v => { v.lane = -1; v.also = []; v.fold = 0; v.standIn = null; v.skip = false; v.piano = false; });
         const free = new Set([...Array(n).keys()]);
         const give = (v, lane) => { v.lane = lane; v.tech = this.defaultTech(lane); this.fitVoice(v); free.delete(lane); };
         const fits = (v, lane) => { const inst = this.instOf(lane); if (!inst) return false; const tk = this.defaultTech(lane); const [lo, hi] = techRange(inst, (inst.techniques || []).find(t => t.key === tk)); return this.cfg.mayFold ? !!foldInto(v.pitch, lo, hi) : (v.pitch >= lo && v.pitch <= hi); };
@@ -601,12 +615,12 @@ const D = {
             '<button id="skAsPlayed" style="' + btn + '" title="back to the piano, as played">as played</button></div>';
         s += '<div id="skRows" style="flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-around">';
         T.forEach((t, lane) => {
-            const inst = INST()[t.instKey]; const mine = this.voices.filter(v => v.lane === lane);
+            const inst = INST()[t.instKey]; const here = this.onLane(lane); const mine = here.map(h => h.v);
             const techs = (inst && inst.techniques) || [];
             const groups = {}; techs.forEach(tq => { const k = kindOf(tq); (groups[k] = groups[k] || []).push(tq); });
-            const cur = mine.length ? (mine[0].tech || this.defaultTech(lane)) : this.defaultTech(lane);
+            const cur = here.length ? (here[0].r.tech || this.defaultTech(lane)) : this.defaultTech(lane);
             const menu = '<select class="skTech" data-lane="' + lane + '" style="' + inp + '">' + ['pitched', 'fixed', 'noise', 'multiphonic'].filter(k => groups[k]).map(k => '<optgroup label="' + k + '">' + groups[k].map(tq => '<option value="' + tq.key + '"' + (tq.key === cur ? ' selected' : '') + '>' + tq.label + '</option>').join('') + '</optgroup>').join('') + '</select>';
-            const notes = mine.map(v => '<span style="color:' + this.pcColor(v.pc) + '">' + nm(this.soundingPitch(v)) + (v.fold ? (v.fold > 0 ? '↑' : '↓') : '') + (v.standIn != null ? '*' : '') + (v.skip ? ' ✕' : '') + '</span>').join(' ');
+            const notes = here.map(({ v, r }) => '<span class="skChip" data-i="' + v.i + '" data-r="' + (r === v ? 'p' : v.also.indexOf(r)) + '" title="click: take ' + nm(v.pitch) + ' off this player" style="cursor:pointer;color:' + this.pcColor(v.pc) + '">' + nm(this.soundingPitchR(v, r)) + (r.fold ? (r.fold > 0 ? '↑' : '↓') : '') + (r.standIn != null ? '*' : '') + (r.skip ? ' ✕' : '') + '</span>').join(' ');
             const soloed = mine.length > 0 && mine.every(v => v.solo);
             s += '<div class="skRow" data-lane="' + lane + '" style="display:flex;gap:6px;align-items:center;padding:1px 6px;' + (this.pickerLane === lane ? 'background:rgba(201,160,90,.15)' : '') + '">' +
                 '<span class="skLand" style="flex:none;width:8px;height:8px;border-radius:50%;background:' + (mine.length ? '#e8cf9a' : '#444') + '" title="the lines land here"></span>' +
@@ -621,26 +635,41 @@ const D = {
         box.querySelector('#skTop').addEventListener('change', e => { this.cfg.topLock = +e.target.value; this.save(); });
         box.querySelector('#skBot').addEventListener('change', e => { this.cfg.bottomLock = +e.target.value; this.save(); });
         box.querySelector('#skAsPlayed').addEventListener('click', () => { this.snapshot(); this.asPlayedOrchestration(); this.render(); });
-        box.querySelectorAll('.skTech').forEach(sel => sel.addEventListener('change', e => { const lane = +sel.dataset.lane; this.snapshot(); this.voices.filter(v => v.lane === lane).forEach(v => { v.tech = e.target.value; v.standIn = null; this.fitVoice(v); }); this.render(); }));
+        box.querySelectorAll('.skTech').forEach(sel => sel.addEventListener('change', e => { const lane = +sel.dataset.lane; this.snapshot(); this.onLane(lane).forEach(({ v, r }) => { r.tech = e.target.value; r.standIn = null; this.fitReal(v, r); }); this.render(); }));
         box.querySelectorAll('.skRowName').forEach(el => el.addEventListener('click', () => { const lane = +el.parentNode.dataset.lane; this.pickerLane = this.pickerLane === lane ? null : lane; this.render(); }));
-        box.querySelectorAll('.skSolo').forEach(el => el.addEventListener('click', ev => { ev.stopPropagation(); const lane = +el.dataset.lane; const mine = this.voices.filter(v => v.lane === lane); if (!mine.length) return; this.snapshot(); const on = !mine.every(v => v.solo); mine.forEach(v => { v.solo = on; }); this.render(); }));
+        box.querySelectorAll('.skSolo').forEach(el => el.addEventListener('click', ev => { ev.stopPropagation(); const lane = +el.dataset.lane; const mine = this.onLane(lane).map(h => h.v); if (!mine.length) return; this.snapshot(); const on = !mine.every(v => v.solo); mine.forEach(v => { v.solo = on; }); this.render(); }));
         box.querySelectorAll('.skRow').forEach(row => { row.addEventListener('mouseenter', () => { this.hoverLane = +row.dataset.lane; this.renderLines(); }); row.addEventListener('mouseleave', () => { this.hoverLane = null; this.renderLines(); }); });
         // drop a voice on a player: click a dot on the keyboard, then a row (two-click assign).
         // U7 (composer, 2026-09-04: "it added two lines to the instrument. The previous one didn't go away"): a plain
         // click REPLACES — the note(s) the player had go to the armed note's old player (or to nobody), so the chord
         // stays whole and nothing is lost; each note takes the technique its new row already plays. Shift-click ADDS.
+        // U10 (composer, 2026-09-04: "one instrument can't play two notes … two instruments can play the same note"):
+        // a plain click gives the row the armed note and takes the row's own note(s) off it — to NOBODY, not to another
+        // player; the armed note stays wherever else it already is (a doubling). Shift-click keeps what the row had.
+        // Without an armed note, a click on a note in a row takes that note off that player.
         box.querySelectorAll('.skRow').forEach(row => row.addEventListener('click', ev => {
             if (ev.target.tagName === 'SELECT' || ev.target.tagName === 'BUTTON' || ev.target.classList.contains('skRowName')) return;
-            if (this.pendingVoice == null) return;
+            const lane = +row.dataset.lane, T = TRK(); const name = l => l >= 0 && T[l] ? T[l].label : 'nobody';
+            if (this.pendingVoice == null) {
+                const chip = ev.target.closest && ev.target.closest('.skChip'); if (!chip) return;
+                const v = this.voices[+chip.dataset.i]; if (!v) return;
+                const r = chip.dataset.r === 'p' ? v : v.also[+chip.dataset.r]; if (!r) return;
+                this.snapshot(); this.dropReal(v, r);
+                const still = this.reals(v).map(x => name(x.lane));
+                this.setStatus(nm(v.pitch) + ' taken off ' + name(lane) + (still.length ? ' · still on ' + still.join(', ') : ' · nobody plays it now'));
+                this.render(); return;
+            }
             const v = this.voices[this.pendingVoice]; this.pendingVoice = null;
-            const lane = +row.dataset.lane, from = v.lane, fromTech = v.tech, T = TRK();
-            const rowTech = (this.voices.find(o => o !== v && o.lane === lane) || {}).tech || null;
-            const there = ev.shiftKey ? [] : this.voices.filter(o => o !== v && o.lane === lane);
+            if (this.reals(v).some(r => r.lane === lane)) { this.setStatus(nm(v.pitch) + ' is already on ' + name(lane)); this.render(); return; }
+            const first = this.onLane(lane)[0]; const rowTech = first ? first.r.tech : null;
+            const there = ev.shiftKey ? [] : this.onLane(lane).filter(h => h.v !== v);
             this.snapshot();
-            there.forEach(o => this.assign(o, from, from >= 0 ? fromTech : null));
-            this.assign(v, lane, rowTech);
-            const name = l => l >= 0 && T[l] ? T[l].label : 'nobody';
-            this.setStatus(nm(v.pitch) + ' → ' + name(lane) + (there.length ? ' · ' + there.map(o => nm(o.pitch)).join(' ') + ' → ' + name(from) + ' (swapped)' : (ev.shiftKey ? ' (added)' : '')) + ' · shift-click adds instead of replacing');
+            there.forEach(({ v: o, r }) => this.dropReal(o, r));
+            if (v.lane < 0) this.assign(v, lane, rowTech);
+            else { const r = { lane, tech: rowTech || this.defaultTech(lane), fold: 0, standIn: null, skip: false }; (v.also = v.also || []).push(r); if (!this.fitReal(v, r)) r.skip = true; }
+            const elsewhere = this.reals(v).filter(r => r.lane !== lane).map(r => name(r.lane));
+            const gone = [...new Set(there.map(h => nm(h.v.pitch)))];
+            this.setStatus(nm(v.pitch) + ' → ' + name(lane) + (elsewhere.length ? ' (also on ' + elsewhere.join(', ') + ')' : '') + (gone.length ? ' · ' + gone.join(' ') + ' → nobody' : '') + ' · shift-click keeps what the row had · click a note in a row to take it off');
             this.render();
         }));
     },
@@ -648,10 +677,10 @@ const D = {
         const box = this.el.querySelector('#skPick');
         if (this.pickerLane == null) { box.style.display = 'none'; return; }
         const lane = this.pickerLane, T = TRK(), inst = INST()[T[lane].instKey];
-        const mine = this.voices.filter(v => v.lane === lane);
+        const here = this.onLane(lane); const mine = here.map(h => h.v);
         const techs = (inst && inst.techniques) || [];
         const groups = {}; techs.forEach(tq => { const k = kindOf(tq); (groups[k] = groups[k] || []).push(tq); });
-        const cur = mine.length ? mine[0].tech : null;
+        const cur = here.length ? here[0].r.tech : null;
         let s = '<div style="color:#e8cf9a;margin-bottom:4px">' + T[lane].label + ' · articulations</div>';
         ['pitched', 'fixed', 'noise', 'multiphonic'].forEach(k => {
             if (!groups[k]) return;
@@ -663,12 +692,12 @@ const D = {
             if (kind !== 'pitched') {
                 const [lo, hi] = techRange(inst, tech);
                 const keys = kind === 'fixed' && OPEN_STRINGS[T[lane].instKey] ? OPEN_STRINGS[T[lane].instKey] : [...Array(Math.max(0, Math.min(40, hi - lo + 1))).keys()].map(i => lo + i);
-                s += '<div style="color:#9a9;margin:6px 0 2px">variants · click = select, ▶ = hear</div>' + keys.map(k => '<div style="display:flex;gap:4px"><span class="skVar" data-k="' + k + '" style="cursor:pointer;flex:1;' + (mine[0].standIn === k ? 'color:#e8cf9a' : '') + '">' + nm(k) + ' <span style="color:#666">' + k + '</span></span><span class="skVarHear" data-k="' + k + '" style="cursor:pointer;color:#9fd3db">&#9654;</span></div>').join('');
+                s += '<div style="color:#9a9;margin:6px 0 2px">variants · click = select, ▶ = hear</div>' + keys.map(k => '<div style="display:flex;gap:4px"><span class="skVar" data-k="' + k + '" style="cursor:pointer;flex:1;' + (here[0].r.standIn === k ? 'color:#e8cf9a' : '') + '">' + nm(k) + ' <span style="color:#666">' + k + '</span></span><span class="skVarHear" data-k="' + k + '" style="cursor:pointer;color:#9fd3db">&#9654;</span></div>').join('');
             }
         }
         box.innerHTML = s; box.style.display = '';
-        box.querySelectorAll('.skPickT').forEach(el => el.addEventListener('click', () => { this.snapshot(); mine.forEach(v => { v.tech = el.dataset.key; v.standIn = null; this.fitVoice(v); }); this.render(); }));
-        box.querySelectorAll('.skVar').forEach(el => el.addEventListener('click', () => { this.snapshot(); mine.forEach(v => { v.standIn = +el.dataset.k; }); this.render(); }));
+        box.querySelectorAll('.skPickT').forEach(el => el.addEventListener('click', () => { this.snapshot(); here.forEach(({ v, r }) => { r.tech = el.dataset.key; r.standIn = null; this.fitReal(v, r); }); this.render(); }));
+        box.querySelectorAll('.skVar').forEach(el => el.addEventListener('click', () => { this.snapshot(); here.forEach(({ r }) => { r.standIn = +el.dataset.k; }); this.render(); }));
         box.querySelectorAll('.skVarHear').forEach(el => el.addEventListener('click', () => this.hearOne(lane, cur, +el.dataset.k)));
     },
     renderRhythm() {
@@ -692,7 +721,7 @@ const D = {
         // dots
         const r = Math.max(2.5, h * 0.42); const anySolo = this.voices.some(v => v.solo);
         timed.forEach(q => { const v = q.v, cy = this.keyY(v.pitch) + h / 2, col = this.pcColor(v.pc); if (v.pitch < R.lo || v.pitch > R.hi) return;
-            s += '<circle class="skRDot" data-i="' + v.i + '" cx="' + X(q.onMs) + '" cy="' + cy + '" r="' + r + '" fill="' + (v.lane >= 0 || v.piano ? col : 'none') + '" stroke="' + (v.solo ? '#fff' : col) + '" stroke-width="' + (v.solo ? 2.5 : 1.5) + '" opacity="' + (anySolo && !v.solo ? 0.35 : 1) + '" style="cursor:pointer"' + (this.swapFirst === v.i ? ' stroke-dasharray="2 2"' : '') + '><title>' + nm(v.pitch) + ' @ ' + Math.round(q.onMs) + ' ms · slot ' + v.slot + '</title></circle>'; });
+            s += '<circle class="skRDot" data-i="' + v.i + '" cx="' + X(q.onMs) + '" cy="' + cy + '" r="' + r + '" fill="' + (this.reals(v).length || v.piano ? col : 'none') + '" stroke="' + (v.solo ? '#fff' : col) + '" stroke-width="' + (v.solo ? 2.5 : 1.5) + '" opacity="' + (anySolo && !v.solo ? 0.35 : 1) + '" style="cursor:pointer"' + (this.swapFirst === v.i ? ' stroke-dasharray="2 2"' : '') + '><title>' + nm(v.pitch) + ' @ ' + Math.round(q.onMs) + ' ms · slot ' + v.slot + '</title></circle>'; });
         svg.innerHTML = s;
         // controls (HTML, over the strip's left margin)
         let ctl = wrap.querySelector('#skRhyCtl');
@@ -739,7 +768,7 @@ const D = {
             this.render();
         }));
         // a keyboard dot click also arms "assign to the next clicked player"
-        this.el.querySelectorAll('#skKb .skDot').forEach(dd => dd.addEventListener('dblclick', ev => { ev.stopPropagation(); this.pendingVoice = +dd.dataset.i; this.setStatus('voice ' + nm(this.voices[this.pendingVoice].pitch) + ' armed — click a player row: it plays this note instead of what it had (that note swaps back) · shift-click adds'); }));
+        this.el.querySelectorAll('#skKb .skDot').forEach(dd => dd.addEventListener('dblclick', ev => { ev.stopPropagation(); this.pendingVoice = +dd.dataset.i; this.setStatus('voice ' + nm(this.voices[this.pendingVoice].pitch) + ' armed — click a player row: it plays this note (what it had goes to nobody; the note stays wherever else it is) · shift-click keeps what the row had'); }));
     },
     renderLines() {
         const svg = this.el.querySelector('#skLines'), body = this.body;
@@ -749,15 +778,15 @@ const D = {
         svg.setAttribute('width', body.scrollWidth); svg.setAttribute('height', body.scrollHeight);
         svg.style.width = body.scrollWidth + 'px'; svg.style.height = body.scrollHeight + 'px';
         let s = '';
-        this.voices.forEach(v => {
-            if (v.lane < 0) return;
-            const dot = kb.querySelector('.skDot[data-i="' + v.i + '"]'); const row = rows[v.lane];
+        const pairs = []; this.voices.forEach(v => this.reals(v).forEach(r => pairs.push({ v, r })));   // U10: a line per player that has the note
+        pairs.forEach(({ v, r }) => {
+            const dot = kb.querySelector('.skDot[data-i="' + v.i + '"]'); const row = rows[r.lane];
             if (!dot || !row) return;
             const land = row.querySelector('.skLand') || row;
             const a = dot.getBoundingClientRect(), b = land.getBoundingClientRect();
             const x1 = a.left + a.width - bb.left + body.scrollLeft, y1 = a.top + a.height / 2 - bb.top + body.scrollTop;
             const x2 = b.left + b.width / 2 - bb.left + body.scrollLeft, y2 = b.top + b.height / 2 - bb.top + body.scrollTop;
-            const hot = this.hoverLane === v.lane, dim = this.hoverLane != null && !hot;
+            const hot = this.hoverLane === r.lane, dim = this.hoverLane != null && !hot;
             s += '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + this.pcColor(v.pc) + '" stroke-width="' + (hot ? 2.2 : 1) + '" stroke-dasharray="' + (hot ? '5 3' : '3 3') + '" opacity="' + (hot ? 1 : dim ? 0.3 : 0.8) + '"/>';
         });
         svg.innerHTML = s;
@@ -771,8 +800,8 @@ const D = {
             const v = q.v; const vel = clamp(Math.round((this.cfg.flatten ? 127 : v.vel) * this.cfg.dynX), 1, 127);
             if (anySolo && !v.solo) return;                       // U3: while anything is soloed, only the soloed voices sound
             if (mode === 'piano') { out.push({ lane: pianoLane, tech: plainTech(this.instOf(pianoLane)), midi: v.pitch, vel, onMs: q.onMs, durMs: q.durMs }); return; }
-            if (v.lane >= 0 && !v.skip) out.push({ lane: v.lane, tech: v.tech || plainTech(this.instOf(v.lane)), midi: this.soundingPitch(v), vel, onMs: q.onMs, durMs: q.durMs });
-            if (v.piano && v.lane !== pianoLane) out.push({ lane: pianoLane, tech: plainTech(this.instOf(pianoLane)), midi: v.pitch, vel, onMs: q.onMs, durMs: q.durMs });
+            this.reals(v).forEach(r => { if (!r.skip) out.push({ lane: r.lane, tech: r.tech || plainTech(this.instOf(r.lane)), midi: this.soundingPitchR(v, r), vel, onMs: q.onMs, durMs: q.durMs }); });   // U10: one note per player that has it
+            if (v.piano && !this.reals(v).some(r => r.lane === pianoLane)) out.push({ lane: pianoLane, tech: plainTech(this.instOf(pianoLane)), midi: v.pitch, vel, onMs: q.onMs, durMs: q.durMs });
         });
         return out;
     },
@@ -858,11 +887,11 @@ const D = {
     },
 
     // ------------------------------------------------------------------ back / takes (O)
-    state() { return JSON.parse(JSON.stringify({ strikeId: this.cfg.strikeId, cfg: this.cfg, voices: this.voices.map(v => ({ i: v.i, pitch: v.pitch, lane: v.lane, fold: v.fold, tech: v.tech, standIn: v.standIn, piano: v.piano, solo: !!v.solo, slot: v.slot, skip: !!v.skip })) })); },
+    state() { return JSON.parse(JSON.stringify({ strikeId: this.cfg.strikeId, cfg: this.cfg, voices: this.voices.map(v => ({ i: v.i, pitch: v.pitch, lane: v.lane, fold: v.fold, tech: v.tech, standIn: v.standIn, piano: v.piano, solo: !!v.solo, slot: v.slot, skip: !!v.skip, also: (v.also || []).map(r => ({ lane: r.lane, tech: r.tech, fold: r.fold, standIn: r.standIn, skip: !!r.skip })) })) })); },
     applyState(st) {
         if (!st || !this.strike || st.strikeId !== this.strike.id) { if (st && st.strikeId && this.db && this.db.strikes[st.strikeId]) { this.select(st.strikeId); } if (!st || st.strikeId !== (this.strike && this.strike.id)) return; }
         Object.assign(this.cfg, st.cfg); this.cfg.strikeId = this.strike.id;
-        st.voices.forEach(sv => { const v = this.voices[sv.i]; if (!v) return; Object.assign(v, { pitch: sv.pitch, lane: sv.lane, fold: sv.fold, tech: sv.tech, standIn: sv.standIn, piano: sv.piano, solo: !!sv.solo, slot: sv.slot, skip: sv.skip }); });
+        st.voices.forEach(sv => { const v = this.voices[sv.i]; if (!v) return; Object.assign(v, { pitch: sv.pitch, lane: sv.lane, fold: sv.fold, tech: sv.tech, standIn: sv.standIn, piano: sv.piano, solo: !!sv.solo, slot: sv.slot, skip: sv.skip, also: (sv.also || []).map(r => ({ lane: r.lane, tech: r.tech, fold: r.fold, standIn: r.standIn, skip: !!r.skip })) }); });
         this.writeFields(); this.render();
     },
     snapshot() { this.prev = this.state(); },

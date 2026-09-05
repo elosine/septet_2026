@@ -86,7 +86,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
 - *AI notes:* the lines are SVG over both panels; each instrument row also lists its note(s)
   and technique (the v1 selects move here).
 
-## F · Ranges — `built 2026-09-03 (adopted; the shuffle never misfits, hand choices fold ↑↓ or ✕)` · `hand assign 2026-09-04 (U7): a plain click on a row REPLACES — the row's note swaps back to the armed note's old player (or nobody); shift-click adds; each note takes its new row's current technique`
+## F · Ranges — `built 2026-09-03 (adopted; the shuffle never misfits, hand choices fold ↑↓ or ✕)` · `hand assign 2026-09-04 (U7 → U10): a plain click on a row gives it the armed note — what the row had goes to nobody, the note stays wherever else it is (a doubling); shift-click keeps the row's note; click a note in a row to take it off; each realization takes its row's current technique`
 
 > *"What happens when the ranges don't fit? … I don't want things to be too fiddly."* — the
 > AI's proposal, adopted by the composer ("Those are good suggestions. Let's adopt those."):
@@ -341,7 +341,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   them; the noise technique's keys; the open strings) — click to hear, click to select; the
   choice is stored on the voice (the stand-in key). Out of the way until needed.
 
-## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built` · `U7 built 2026-09-04` (RUNNING_LOG §74) · `U8 built 2026-09-04` (RUNNING_LOG §76) · `U9 built 2026-09-04` (RUNNING_LOG §77)
+## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built` · `U7 built 2026-09-04` (RUNNING_LOG §74) · `U8 built 2026-09-04` (RUNNING_LOG §76) · `U9 built 2026-09-04` (RUNNING_LOG §77) · `U10 built 2026-09-04` (RUNNING_LOG §81)
 
 > Composer: *"collect these and I'll have you do a feature update all at once."* Each request
 > verbatim, the AI's reading beneath; built together when the composer says so.
@@ -401,7 +401,8 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   the chord stays whole and nothing is silently dropped; shift-click ADDS (the double-stop case, I). Each
   note takes the technique its new row already plays (before, a hand-assigned note always got the
   instrument's default, whatever the row's menu said). The status line says what moved where; `back`
-  undoes it. The arm message states the rule.
+  undoes it. The arm message states the rule. *Superseded by U10 (2026-09-04): the row's old note goes to
+  nobody, not to the armed note's old player, and the armed note stays where it was — a doubling.*
 - **U8 — the seed, visible and re-clickable — `built 2026-09-04, verified on the throwaway server (RUNNING_LOG §76)`.**
   *Composer (2026-09-04 night): "For the rhythm order. and the random shuffle order. Can I have the seed? And can I
   have a way to go back to previous seeds? So, for example, every time I hit shuffle order, maybe there's a row or a
@@ -418,6 +419,19 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   footer and its wrap split the take box from its button. *Built:* the box, `save take`, `load take…` and `×` are
   one no-wrap group, so they move together; ENTER in the box saves (the same `saveTake()` as the button); the
   placeholder says so.
+- **U10 — a note may be on several players; a player holds one note — `built 2026-09-04, verified on the
+  throwaway server (RUNNING_LOG §81)`.** *Composer (2026-09-04 night): "if [an] instrument was assigned a note,
+  and I want to assign a different note to it, it would replace. But that's just on the instrument side. So in
+  other words, one instrument can't play two notes. However, it is on the notes side too. It's okay. We fix
+  that. So in other words, two instruments can play the same note, but not the other way around. So I still
+  want it so that one instrument isn't assigned to [two] notes, but I want to be able to assign the same note
+  to multiple instruments."* — *Built:* a voice keeps its primary player and gains doublings (`v.also`, each
+  with its own technique · fold · stand-in); arm a note, click a row → the row plays it (the note stays
+  wherever else it is) and what the row had goes to NOBODY (never to another player — U7's swap-back is
+  gone); shift-click keeps what the row had; click a note in a row to take it off that player; every player
+  that has the note gets a line, a chip, its own articulation from its row's menu and its own fold (a G2 on
+  the cello doubles onto the flute as G4↑); Hear and Insert emit one note per player; `back` and takes carry
+  the doublings; a shuffle or a strike pick clears them.
 
 ## V · Processes across strikes — `wanted 2026-09-04 (CN-10) — not built; nothing blocks composing the first of each by hand`
 

@@ -111,7 +111,9 @@ the samplers addressable as code (0k, D15), D16 tongue ram; RUNNING_LOG §40–6
   two-click assign now REPLACES (the row's note swaps back to the armed note's old player, or to nobody;
   shift-click adds; the row's technique carried); **U8 built** — every random button shows its seed with
   eight clickable earlier seeds and a typed seed; **K's two-dot swap fixed** (it had never held); **U9 built** —
-  ENTER in the take box saves, the take controls wrap as one group. RUNNING_LOG §72–77.
+  ENTER in the take box saves, the take controls wrap as one group; **U10 built** — a note may sit on several
+  players (doublings), a player holds one note, the displaced note goes to nobody, U7's swap-back gone. RUNNING_LOG
+  §72–81.
 - Sketch pad: CN-8 (the piece begins with the strikes) · CN-9 (the piccolo–bass clarinet looping line
   uses grace-note figures; notation after Ferneyhough, *Etudes Transcendantales* No. 1 oboe → PLAN 0g's
   2a list; RUNNING_LOG §72) · CN-10 (the opening expanded into ensemble processes — scales through the
@@ -120,7 +122,9 @@ the samplers addressable as code (0k, D15), D16 tongue ram; RUNNING_LOG §40–6
   vibrato rate) · CN-12 (the spreads' expansion, anchored at the first impact → V's SPREAD chain) · CN-13 (the
   Risset as tone rows over curves, performer jitter periodic → non-periodic → the 2a list; §79) · CN-14 (next
   section @ 27.76 s: one strike re-struck, evened, each re-strike longer ×1.5, accelerating within itself once
-  audible — V's SPREAD spec, to build at his word; §80); for piece #6, animated conductions.
+  audible — V's SPREAD spec, to build at his word; §80) · CN-15 (the working plan for #17 onward: #18 begins the chain, even →
+  accelerating, the original gaps kept end-to-start, orchestration in the drawer first; §81); for piece #6, animated
+  conductions.
   Penn State abstract done (§7).
 
 **Next up:** the composer composes — strikes #5 onward into `piece-septet` from the drawer (`Insert @

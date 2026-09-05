@@ -455,3 +455,42 @@ names a library to confirm.
 - **For the tools:** this is STRIKES_TOOL V's SPREAD chain, now with its numbers — the first chain to
   build, at his word ("we'll build it"). For the page (2a): an accelerating strike is a feathered beam
   in conventional notation; the animated score shows the onsets as they are.
+
+---
+
+## CN-15 · 2026-09-04 — the working plan for #17 onward: #18 begins the expanded chain, gaps kept end-to-start
+
+> *"I'll be working on strike number seventeen. So that will go in — actually, that will go in its normal
+> spot, but then we'll start with eighteen on the expanded rhythm. So I think we'll make eighteen even. The
+> first strike will come at its normal time, twenty-eight point one eight, the first note, and then it'll
+> expand from there. We can try an acceleration, but the first few might be — the total duration might be
+> too small. So I guess I need to figure out what the duration progression should be, but I have to hear
+> it first. So let's try some duration progressions, and then maybe I'll make adjustments. And then after
+> that, nineteen. Let's keep the gaps between them the same. Let's try that. So the difference between
+> eighteen and nineteen — nineteen will begin that much after eighteen ends, because it'll have a duration
+> now. And, etcetera: nineteen will end, and the difference between nineteen and twenty — so that's
+> twenty-nine point eight and thirty-one point seven two — will be the gap between the end of nineteen and
+> the beginning of twenty. And then each of those progressively will be the even-spaced but accelerating.
+> And I'll use the drawer to decide on the orchestration before we put those in. So let's just talk for
+> now. We'll make that fix, and then let's talk and see how to proceed. Make a workflow — a working plan —
+> but also make a plan plan and see if we need to build anything. But the whole thing: let's take notes,
+> learn lessons, and build a structure later if necessary, if deemed necessary."*
+
+**AI reading (not the composer's words):**
+
+- **CN-14 refined:** not one strike re-struck but the successive recorded strikes #18, #19, #20 … each
+  stretched — even spacing first, accelerating toward the last impulse once long enough to hear — with
+  durations growing by a progression to be found by ear; and the original onset-to-onset gaps kept
+  **end-to-start**, so the section drifts later by the accumulated durations. #17 stays as recorded.
+- **The numbers, from the database:** #17 27.153 s (5 notes, 127 ms) · #18 28.175 (13, 110 ms) · #19 29.803
+  (17, 622 ms) · #20 31.720 (14, 213 ms) · #21 32.469 (8, 49 ms) · #22 33.347 (6, 13 ms) · #23 34.217
+  (11, 147 ms) · #24 34.990 (6, 26 ms). Original gaps from #18: 1.628 · 1.917 · 0.749 · 0.878 · 0.870 ·
+  0.773 · 1.074 s. Rule: start(n) = end(n−1) + gap(n−1 → n); end(n) = start(n) + d(n).
+- **A first progression to hear, his ×1.5 from 100 ms:** d = 100 · 150 · 225 · 338 · 506 · 759 · 1139 ms →
+  starts 28.175 · 29.903 · 31.970 · 32.944 · 34.160 · 35.536 · 37.068 s. Where it becomes rhythm: the mean
+  gap clears ~60 ms only at #22 (6 notes over 506 ms). To hear an acceleration early, try #21–#22 first,
+  or a steeper law (×2: 100 · 200 · 400 · 800 · 1600 — audible by #21).
+- **Where the friction will be, by hand:** span × is a ratio (d ÷ the as-played span: #19 at 150 ms is
+  span × 0.24), the start of each strike is arithmetic, and a re-insert adds rather than replaces. The
+  working plan and the build candidates ranked by that friction: RUNNING_LOG §81. Nothing built yet —
+  the example first, the lessons logged as they come.

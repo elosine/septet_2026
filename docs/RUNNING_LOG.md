@@ -2366,3 +2366,37 @@ the gap between re-strikes, the orchestration per re-strike, the dynamic. Routed
 the NOW line (the next section @ 27.76 s); V's SPREAD entry carries the spec; PLAN 2a gains feathered beams
 for a strike that accelerates within itself. Not built — *"take this as a note for now, and then we'll
 build it."*
+
+## §81. U10 built: doublings (a note on several players, a player with one note); the working plan for #17 onward; the build candidates
+
+Composer: *"one instrument can't play two notes. However, it is on the notes side too. It's okay. We fix that.
+… two instruments can play the same note, but not the other way around."* U7's swap-back was the note-side
+replace he did not want. **Built (U10):** the voice model gains `also` — doublings, each `{ lane, tech, fold,
+standIn, skip }` — beside the primary player; `fitReal(v, r)` generalizes `fitVoice` (the voice is its own primary
+realization), `reals(v)` / `onLane(lane)` / `dropReal(v, r)` are the three helpers; `notesFor` emits one note per
+realization (Hear and Insert alike); rows list every realization on their lane as clickable chips; the row menu
+and the T panel set the realization's technique; lines fan out per realization; `state()` carries `also` (back,
+takes); shuffle, as-played and a strike pick clear it. The two-click assign: a plain click gives the row the
+armed note and drops what the row had to NOBODY (never to another player), the armed note stays wherever else it
+is; shift-click keeps the row's note; a chip click takes a note off that player; an "already on" guard.
+*Rejected:* cloning voices for doublings (breaks the voice ↔ onset identity that slots, back and takes rest on).
+**Verified on the throwaway server** (`score-5301`; real DOM events; zero console errors): G2 on Bass Cl. armed →
+Flute (holding G#5) → G2 on both (Bass Cl. as G2* slap stand-in, Flute as G4↑ folded +2), G#5 → nobody, Hear emits
+G2 twice (lanes 1 and 0) and no G#5 · the Flute menu → Aeolian & Ord changes only the doubling's technique · back
+right after → the doubling gone, G#5 back on the Flute · shift-click with a third note → the row holds both · chip
+click → "taken off Flute · still on Bass Cl.", then off Bass Cl. → "nobody plays it now" · "G2 is already on
+Cello" guard · state round trip keeps `also` · shuffle clears · lines drawn = realizations (8 = 8). Page change
+only — the composer reloads.
+
+**The working plan (CN-15), by hand with the drawer as it is — one strike at a time, logged as it goes:**
+1. #17 → orchestrate → `Insert @ original time` (27.153 s). 2. #18: shape `even` · span × = d18 ÷ 110 ms (100 ms
+→ 0.91) · orchestrate · `Insert @ original time` (the first note at 28.175, the rest expand forward). 3. #19: shape
+`even` · span × = d19 ÷ 622 ms · orchestrate · playhead to end(#18) + 1.628 s · `Insert @ playhead`. 4. #20 …:
+the same with the next gap (1.917 · 0.749 · 0.878 · 0.870 · 0.773 · 1.074 s), the shape to `back-loaded` (the
+accelerando toward the last impulse) once the mean gap clears ~60 ms, `amount` to grade it. 5. Listen in the
+score; to change a duration, delete the strike's META shape and re-insert. Lessons and numbers → this log.
+**Build candidates, ranked by the friction they remove (none built — "let's just talk for now"):** (A) a
+`span = ___ ms` box beside span × — the composer thinks in durations, the drawer in ratios; trivial. (B) `Insert @
+after previous` — start = end of the last inserted strike + the original gap to this one; the arithmetic is the
+error-prone step. (C) re-insert replaces the earlier insert of the same strike (found by group) instead of adding.
+(D) the SPREAD chain generator (STRIKES_TOOL V) — only if the bespoke example shows the rules hold.
