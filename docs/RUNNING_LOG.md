@@ -2243,3 +2243,22 @@ Bass Cl. with `slap`, one voice on the Flute, status "G2 → Flute · A#5 → Ba
 adds instead of replacing" · `back` → both where they were · shift-click → both on the Flute, "(added)" ·
 G2 made unassigned, armed, plain click on Flute → G2 → Flute, A#5 → nobody, status says "→ nobody
 (swapped)". Page change only — the composer reloads.
+
+## §75. Confirmed: what the drawer plays is what the score gets and what the IR notates
+
+Composer (with a screenshot — Violin 2 showing `C4↑` for the chord's C3, Bass Cl. `E3*` for its E5):
+*"How is the transposition working here? … violin two can't play that c three. So what am I actually
+hearing?"* then *"Just confirm for me that I'm hearing in the playback what I'll eventually notate … the
+c three on the piano key is pointing to the violin, the playback is playing c four, and that's what will
+get notated."* — Yes, one chain, read from the code: `notesFor('orch')` builds the realized list with
+`midi: soundingPitch(v)` (= pitch + 12 × fold, or the stand-in); `Hear orchestrated` (line 746) and
+`Insert` (784) both consume that same list; the insert writes `sonifyNote: n.midi` on the score object;
+the extractor's IR event takes `pitch.midi` from `sonifyNote` (extract_core.js 254). So the violin's C4
+is heard, saved and notated as C4 — there is no transposition anywhere, only the F fold by octave (pitch
+class kept) into the player's technique range, marked ↑↓ on the row; the keyboard dot stays where the
+chord has the note. `Hear piano` and the piano-flag doublings use the unfolded `v.pitch` — the piano
+plays the chord as played. A `*` note (noise / fixed-pitch stand-in) carries the stand-in key + the
+technique (Bass Cl.: E3 + slap); how a slap is drawn is a 2a notation rule not yet written; written
+pitch for the transposing bass clarinet is also 2a (the IR holds sounding pitch). Decision: *"We can
+leave it"* — the swap status line will not name the fold. The stale stand-in (E3 where a fresh one would
+be E4) is filed to NITS.
