@@ -7,9 +7,9 @@
 
 **NOW ►** 2026-09-05 evening (checkpoint) — **the piece is being composed in `scores/piece-septet.json`:** 32 strikes
 to 72.0 s (versions v1.1, v1.2, v1.3, v1.4, v1.5, v1.6-26-accelDone, v1.6; 134 takes). #0–#16 orchestrated chords; #17 evened; #18–#19 even with the gap law (×1.5
-from 31.75 ms); **#20–#26 accelerating runs** (`accel · round robin` — first gap = the chain's, steep 0.85, landing 45 ms, re-attack
-250 ms, pitches re-dealt from cycle 2; the recorded onset gaps kept end-to-start). **Immediately next:** #27 onward by hand
-(first gap 1831 · 2747 · 4120 ms — the composer may slow the law to ×1.3 here); the trill module (`TRILLS_TOOL.md`, PLAN 1e —
+from 31.75 ms); **#20–#31 accelerating runs** (`accel · round robin` — re-attack 250 ms, pitches re-dealt from cycle 2; #20–#26 on the ×1.5
+table with steep 0.85 and a 45 ms landing, from about #27 the composer's own first gaps and landings, #31: 256 → 11 ms; the
+recorded onset gaps kept end-to-start). **Immediately next:** #32 onward by hand; the trill module (`TRILLS_TOOL.md`, PLAN 1e —
 spec written, step 0 a listening exercise, phase 1 on his go); the 0d bridge sweep of the strike techniques' ranges and lengths
 in his ten-minute window (RUNNING_LOG §94). Phase 0 so far: 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 done. Piccolo vs bass flute
 undecided (CN-2).

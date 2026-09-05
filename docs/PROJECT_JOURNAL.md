@@ -89,8 +89,9 @@ proven, the rack built, the drawer built.
 **This session (2026-09-04 evening → 2026-09-05 evening, session 3, Claude Code / Fable 5.1) — checkpointed mid-session:**
 - **The piece is being composed:** `scores/piece-septet.json` — 32 strikes, 312 objects, to 72.0 s; named versions
   v1.1, v1.2, v1.3, v1.4, v1.5, v1.6-26-accelDone, v1.6; 134 takes in `bank/panel_snapshots.json`. Strikes #0–#16 are orchestrated chords; #17 evened (127 ms);
-  #18–#19 even with the gap law (×1.5 from #17's 31.75 ms: 47.6 · 71.4); **#20–#26 are accelerating runs** (`accel · round
-  robin`, first gap = the chain's 107 → 1221 ms, steep 0.85, landing 45 ms, re-attack 250 ms, pitches re-dealt from cycle 2).
+  #18–#19 even with the gap law (×1.5 from #17's 31.75 ms: 47.6 · 71.4); **#20–#31 are accelerating runs** (`accel · round
+  robin`, re-attack 250 ms, pitches re-dealt from cycle 2; #20–#26 on the ×1.5 table 107 → 1221 ms with steep 0.85 and a 45 ms
+  landing; from about #27 the composer set his own first gaps and landings — #31 opens at 256 ms and lands at 11 ms).
   The original onset gaps are kept end-to-start (`Insert @ after previous`). RUNNING_LOG §81–92 is the chart of the by-hand chain.
 - **The drawer grew by twelve features at the composer's word** (STRIKES_TOOL U5–U13b): reset rhythm · replace-on-assign →
   doublings (a note on several players, a player with one note) · seeds visible with eight chips · ENTER saves a take · the ms
@@ -105,13 +106,13 @@ proven, the rack built, the drawer built.
   strike techniques' sampled ranges and lengths (RUNNING_LOG §94), on hold for a ten-minute window.
 - D17 (the save system) live; PLAN 1b done. Journal §4 D17. NITS: the stale stand-in after a voicing change.
 
-**Next up:** the composer's pick, each morning: (a) the chain by hand from **#27** (first gap 1831 ms; he may slow the law to
-×1.3 here) — log the chart; (b) the trill module: step 0 (a listening exercise with today's zones — write him the exact
+**Next up:** the composer's pick, each morning: (a) the chain by hand from **#32** (his own first gaps and landings now; the
+×1.5 table in RUNNING_LOG §92 if he returns to it) — log the chart; (b) the trill module: step 0 (a listening exercise with today's zones — write him the exact
 click-steps), then phase 1 (the trill object) on Fable; (c) the 0d sweep when he gives the window (Reaper + the bridge).
 
 **NEXT STEPS · MODEL · CLEAR:**
 1. ☑ 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1b · 1c (U1–U13b) DONE and pushed; 1e spec written.
-2. ► **The composer composes** (any model): strikes #27 onward as accel runs; fix what blocks, file the rest in STRIKES_TOOL.
+2. ► **The composer composes** (any model): strikes #32 onward as accel runs; fix what blocks, file the rest in STRIKES_TOOL.
 3. **TRILLS_TOOL phases 1–4** (Fable; a day each for 1 and 2) when he says go; step 0 first.
 4. **0d sweep** (Fable, with the bridge) in his window; 0c / 0h after.
 
@@ -120,8 +121,8 @@ click-steps), then phase 1 (the trill object) on Fable; (c) the 0d sweep when he
   composing in the running app (his server on :5300; the page reloaded after every drawer change; the server unchanged today).
 - **Latest deliverable:** `docs/TRILLS_TOOL.md` (the spec, no code) and the drawer as of U13b in `score/public/strike_drawer.js`;
   `scores/piece-septet.json` + versions + `bank/panel_snapshots.json` committed at this checkpoint.
-- **Next concrete step:** `/postclear`, then ask the composer where he is — composing #27 onward (the default; the gap table is
-  RUNNING_LOG §92 → 1831 · 2747 · 4120 ms), the trill module's step 0, or the 0d window. Before any commit run
+- **Next concrete step:** `/postclear`, then ask the composer where he is — composing #32 onward (the default; the ×1.5 table is
+  RUNNING_LOG §92 if wanted — he has been choosing his own gaps since about #27), the trill module's step 0, or the 0d window. Before any commit run
   `node tools/unsaved_check.js`; stage `scores/piece-septet*.json` and `bank/panel_snapshots.json` if he has worked.
 - **Resume reads:** `docs/PLANNER.md` NOW · `docs/STRIKES_TOOL.md` U11–U13b, V, W · `docs/TRILLS_TOOL.md` if the trill work
   starts · `RUNNING_LOG.md` §86–98 (the chart of the chain and the trill talk) · `docs/REAPER_CONTROL.md` only for the 0d sweep.
@@ -133,7 +134,7 @@ click-steps), then phase 1 (the trill object) on Fable; (c) the 0d sweep when he
 - **How to work the rack now:** `node tools/reaper_job.js heartbeat | tracks | fader | run …` (docs/REAPER_CONTROL.md);
   `jobs/peakwatch.lua` + a probe note = the proof for routing; never trust frozen meters before dumping mute / solo / routing (P10).
 - **Pending the composer:** CN-2 (piccolo vs bass flute; the piccolo named twice) — not blocking · the 0d window · the trill
-  articulation per instrument (step 0) · whether the chain law slows at #27.
+  articulation per instrument (step 0) · how the runs continue from #32 (his own numbers since about #27).
 - **Deliberately uncommitted:** nothing — `git status` is clean after this checkpoint's commit (`scores/*-work.json` and
   `scores/versions/` are gitignored by design).
 
