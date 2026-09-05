@@ -2614,3 +2614,24 @@ mend the note in the score: reload → pick #25 → load its take → `Insert @ 
 deal; the C7 card now sounds as C6; timing identical, nothing after it moves) — or set the note to C6 in the panel.
 Viola and cello Bartók tops remain unmeasured (Q6 updated). Lesson for the chart: a re-dealt pitch can climb into
 a technique's unsampled top; every one-shot technique used by the runs needs its sampled range on record (PLAN 0d).
+
+## §94. Assessed, on hold: measuring the strike techniques' sampled ranges and lengths by the Reaper bridge (= PLAN 0d)
+
+Composer, after §93's silent C7: *"Can you assess whether you can locate the ranges yourself given the new Reaper
+automation? please just discuss first before doing anything."* then *"Hold for a bit, but just remember, log the
+process."* Assessment: yes, with pieces that already exist and were used once — MIDI to the samplers by PowerShell →
+winmm → the loopMIDI ports (`probes/balance_probe.ps1` with a schedule JSON: notes, CC0 presets, keyswitches), the
+REC track recording the pass (bridge jobs arm / stop; never `save`), numpy analysis of the recording
+(`probes/analyze_*.py`; `analyze_sample_lengths.py` exists) — this is how Q6 found B♭6 silent during the balance run
+(§46). The plan agreed for when he gives a window: (1) a control note per technique in mid-range — silence there =
+routing / mute, stop (P10); (2) the sweep — every key of each strike technique inside the instrument's playing zone
+(never the keyswitch zone below 34), vel 127, one note per ~0.5 s, the preset selected before each note with the
+balance probe's timing — violins `bartok_vel`, viola / cello `gettato_vel` + `bartok_vel`, bass clarinet `slap`,
+flute `pizzicato` (UVI, tongue ram), plus any technique his takes use (to be listed from the score first); (3) read:
+per technique the keys that sounded / were silent → the range; per sounding key the ring → the length; (4) apply:
+the ranges into the recipes' per-preset tables (as `vnRanges()` today), the lengths into `bank/sample_lengths.json`
+(the extractor's rows, NAMING §2.7). Live-meter peakwatch is the fallback for a handful of pitches; the Kontakt GUI's
+key colours by desktop automation would give ranges without lengths and is untested on Reaper. Needs from him:
+Reaper open with the rack, the bridge alive (heartbeat checked first), ten quiet minutes (the probes sound through
+his samplers; monitors down if he likes). Estimate: one to two hours with the analysis and verification. On hold
+until he says when.

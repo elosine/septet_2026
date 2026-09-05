@@ -168,7 +168,8 @@ seen this conversation):*
   proof for routing; `tools/uvi_state.js` for UVI; a Kontakt Lua script dropped by the composer
   for Kontakt. Never trust frozen meters before dumping mute / solo / routing (P10).
 - **Pending the composer:** CN-2 (piccolo vs bass flute) — not blocking; the piccolo is named twice now
-  (CN-4, CN-9).
+  (CN-4, CN-9). **A window for the 0d bridge sweep** (RUNNING_LOG §94): Reaper + the bridge + ten quiet minutes; the
+  plan is written, nothing started.
 - **Deliberately uncommitted:** nothing — `git status` is clean after this checkpoint's commit
   (`scores/*-work.json` and `scores/versions/` are gitignored by design).
 

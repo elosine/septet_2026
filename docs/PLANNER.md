@@ -14,7 +14,9 @@ Name version · Reload; `?` in the app; live on his machine). **Immediately next
 the gap law ×1.5 from #17's 31.75 ms (71.4 · 107.2 · 160.7 · 241 · 362 · 542); from #20 the accelerating run —
 `accel · round robin` in the drawer: first gap = the chain's, steep 0.85, landing 45 ms, re-attack 250 ms, the players
 recycled — each strike by hand: pick · take · shape · gap · save take · `Insert @ after previous`; the original onset
-gaps kept end-to-start; lessons logged; a chain generator only if the chart earns it
+gaps kept end-to-start; lessons logged; a chain generator only if the chart earns it. **Queued at his word:** PLAN 0d as
+a bridge sweep — the strike techniques' sampled ranges and lengths measured by probe notes + the REC recording
+(RUNNING_LOG §94; the silent Bartók C7 of §93 is why); needs Reaper + the bridge + ten quiet minutes
 into the piece (`Insert @ original time` into the open piece; CN-5 → CN-6: strikes, then chosen
 harmony, then tremolos on curves); the drawer's next features at his word (I double stops · K lock ·
 M/N/P = PLAN 1d); phase 0's remainder (0d the Xsample measurements, 0c.5–0c.8, 0f, the 0h gate)
