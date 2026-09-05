@@ -2635,3 +2635,32 @@ key colours by desktop automation would give ranges without lengths and is untes
 Reaper open with the rack, the bridge alive (heartbeat checked first), ten quiet minutes (the probes sound through
 his samplers; monitors down if he likes). Estimate: one to two hours with the analysis and verification. On hold
 until he says when.
+
+## §95. The accel run works; the variations mapped (talk only)
+
+Composer: *"the accel process … works pretty good. Now let's talk about the variations. So I guess the main one is
+the feel or the algorithm for the acceleration. What other ones are there?"* The AI's map, ten axes, each with what
+exists and what a build would add — offered for him to pick from, nothing built:
+(A) **the curve** — geometric (constant ratio, what is built: a steady push) · linear (constant subtraction: a push
+that eases) · late rush (flat head, steep tail) · S-curve (even → accelerate → the last gaps nearly equal, a roll
+landing) · two-phase (an even head at the chain's gap + a fixed rush) · with performer jitter (CN-13) growing toward
+either end · the reverse (a ritardando opening out); (B) **the landing** — the floor fixed (built) · descending over
+the section (more crunch each time) · tied to the first gap · a tutti chord on the last impulse (CN-1's attack);
+(C) **first gap and count** — the chain law ×1.5 with the count following (built) · a fixed count with the ratio
+following · a fixed duration; (D) **the dealing** — his order → shuffles under 250 ms → the rotation (built) · re-deal
+pitches (built) · order presets per cycle: low → high through the ensemble (CN-10's climbing scale), high → low,
+outside-in (registers converging), by family (antiphonal blocks) · constrained shuffles (no two of a family adjacent);
+(E) **the pitches across cycles** — the same set (built) · a step up per cycle with the top wrapping (the Risset
+ladder, CN-10/13) · inversion / retrograde of the set · the set thinning to one note (a focus) or growing by the piano
+flag · the harmony changing at a boundary (CN-6); (F) **dynamics** — flat 127 (built) · a crescendo into the landing ·
+a decrescendo (the rungs fading, CN-13) · accents on cycle boundaries; (G) **technique across the run** — fixed per
+row (built) · a change per cycle (pizz → Bartók → gettato; noise → pitched) · a family crossfade (strings → winds by
+biasing the deal); (H) **held notes** — one-shots (built) · sustained techniques whose notes hold to the end: an
+accelerating run of entries becomes a cluster that thickens (CN-1's density build from the strikes' own machinery);
+(I) **between strikes** — the recorded gaps kept (the rule) · shrinking (the strikes accelerate into one another: CN-14
+at the section's scale) · growing (release) · overlapping runs (polyphony of runs) · accelerating and decelerating
+strikes alternating (a breathing); (J) **into the tremolo** — the floor pushed under the separate-attack threshold
+(gaps 30 → 15 ms) turns the run's landing into a tremolo: CN-7's "acceleration ends in a strike or a tremolo" as one
+control, the seam to the tremolo section. Cheapest to build with the most audible change: a `curve` menu (A), a
+dynamics ramp (F), the ladder step per cycle (E), a floor per strike (B). The chain law and the gaps between strikes
+(C, I) are compositional choices needing no build.
