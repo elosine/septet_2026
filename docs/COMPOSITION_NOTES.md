@@ -415,3 +415,43 @@ names a library to confirm.
 - **What the piece gains:** three parameters the composer controls by drawing — the row's speed (curve
   length), the overlap (curve placement), the regularity (jitter) — per player, legible in the animated
   score; and the notation carries the same three, so the performance score says what the animation shows.
+
+---
+
+## CN-14 · 2026-09-04 — next section @ 27.76 s: one strike re-struck, evened, each re-strike longer, then accelerating within itself
+
+> *"Next section @ 27.76. Take one of the strikes, even out the spacing, and then expand the total
+> duration of the strike with every re-strike. So the first one, let's say, lasts one hundred
+> milliseconds. The next one would be longer. We'll decide on an algorithm for that, or a spread. So
+> let's say one fifty, and then the next one is two twenty-five, etcetera. For the first one, we'll do
+> even spacing, and then successive ones, I want to accelerate. So the first one is even spacing. Or
+> I should say, when we get to a certain total duration, we can do an acceleration. I think the first
+> few will be — the duration will be too short to hear any kind of acceleration. But, eventually,
+> they'll accelerate: a strike within a strike. So the spaces won't be even anymore, but they'll be
+> progressively shorter to the last impulse of the strike. Just take this as a note for now, and then
+> we'll build it."*
+> *(dictated 2026-09-04 night, session 3; speech-to-text cleaned: "restreiche" read as re-strike, "no"
+> as note; content untouched)*
+
+**AI reading (not the composer's words):**
+
+- **A section made of one strike.** From 27.76 s (the first 17 strikes end at 25.61 s), a single strike
+  is chosen, its onsets evened out, and struck again and again; each re-strike lasts longer than the
+  last. His example is a geometric growth, ×1.5: 100 → 150 → 225 → 338 → 506 → 759 → 1139 → 1709 →
+  2563 ms — nine re-strikes to reach two and a half seconds. The law is left open ("an algorithm, or a
+  spread"): geometric, additive, or a drawn curve over the chain.
+- **Even, then accelerating.** The early re-strikes are evenly spaced; once a re-strike is long enough
+  for its inner rhythm to be heard, the spacing turns into an accelerando toward the LAST impulse —
+  "a strike within a strike": the re-strike's own ending becomes an attack. In the drawer's terms the
+  spacing goes from shape `even` to `back-loaded` (sparse, then dense — J), and `amount` could grade
+  the change in rather than switch it.
+- **Where the threshold falls, roughly:** separate attacks read as separate once gaps clear ~60 ms —
+  the drawer's own grouping rule. For a 9-note strike that is a span of ~0.5 s (the 5th re-strike
+  under ×1.5 from 100 ms); for a 21-note strike like #5, ~1.2 s (the 7th). Until then the re-strike is
+  heard as a chord that thickens, which is its own effect — the composer's "too short to hear" is right.
+- **Open, for the build:** the growth law · the gap BETWEEN re-strikes (even, shrinking, or a curve —
+  not said) · whether the orchestration is fixed across the chain or re-shuffled per re-strike · the
+  dynamic (does the chain grow or stay). The chosen strike itself is his.
+- **For the tools:** this is STRIKES_TOOL V's SPREAD chain, now with its numbers — the first chain to
+  build, at his word ("we'll build it"). For the page (2a): an accelerating strike is a feathered beam
+  in conventional notation; the animated score shows the onsets as they are.

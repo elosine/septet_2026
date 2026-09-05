@@ -118,8 +118,9 @@ the samplers addressable as code (0k, D15), D16 tongue ram; RUNNING_LOG §40–6
   ensemble, one accel/decel spread over the players, antiphonal blocks, CN-7's cycle as a Risset ladder →
   PLANNER outline v1, STRIKES_TOOL V; §78) · CN-11 (the tremolo fork: fugue → stretto → stacked accel/decel →
   vibrato rate) · CN-12 (the spreads' expansion, anchored at the first impact → V's SPREAD chain) · CN-13 (the
-  Risset as tone rows over curves, performer jitter periodic → non-periodic → the 2a list; §79); for piece #6,
-  animated conductions.
+  Risset as tone rows over curves, performer jitter periodic → non-periodic → the 2a list; §79) · CN-14 (next
+  section @ 27.76 s: one strike re-struck, evened, each re-strike longer ×1.5, accelerating within itself once
+  audible — V's SPREAD spec, to build at his word; §80); for piece #6, animated conductions.
   Penn State abstract done (§7).
 
 **Next up:** the composer composes — strikes #5 onward into `piece-septet` from the drawer (`Insert @

@@ -430,7 +430,11 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   players (strings · winds + piano · high · low · any set); the shuffle assigns only within them, the
   rest stay empty or keep what they have. (2) **Chains across strikes** — from a chosen strike, generate
   the next N as a process: SPREAD (CN-12 — span × growing per strike, anchored at the first impact; the
-  least design in it, the first to build) · SCALE (each strike one step higher, order low → high through the registers) ·
+  least design in it, the first to build — **CN-14 gives its spec:** from ONE strike, spacing evened; each
+  re-strike's span grows, his example ×1.5 from 100 ms (100 · 150 · 225 …), the law open; even spacing until
+  the span is long enough to hear, then accelerating toward the last impulse (`back-loaded`, graded by
+  `amount`); open: the gap between re-strikes, the orchestration per re-strike, the dynamic; starts @ 27.76 s;
+  *"take this as a note for now, and then we'll build it"*) · SCALE (each strike one step higher, order low → high through the registers) ·
   ACCEL / DECEL (the strikes' onsets on a CN-3 ramp, each strike's own rhythm shaped to match) · LADDER
   (the same pitch classes re-voiced one step up per strike, the top voice wrapping to the bottom at the
   softest dynamic — the Shepard–Risset staircase in strikes). (3) **Answering blocks** — a chain of

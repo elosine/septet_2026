@@ -10,7 +10,8 @@ strikes #0–#16 of the piano reference (`ScatteredStrikes01`, the raw recording
 orchestrates them in the STRIKES drawer — seven players each with their META shapes, 0.6–25.6 s —
 frozen as `piece-septet-v1.3` by his own Name version (v1.1 = the first three, CN-8, RUNNING_LOG §69; v1.2 five);
 84 takes in `bank/panel_snapshots.json`. **The save system is D17** (one rule: working copy · Save ·
-Name version · Reload; `?` in the app; live on his machine). **Immediately next:** strikes #17 onward, and the opening as ensemble processes (CN-10)
+Name version · Reload; `?` in the app; live on his machine). **Immediately next:** strikes #17 onward, and the opening as ensemble processes (CN-10); the next section @
+27.76 s is CN-14's re-strike chain — STRIKES_TOOL V's SPREAD, built at his word
 into the piece (`Insert @ original time` into the open piece; CN-5 → CN-6: strikes, then chosen
 harmony, then tremolos on curves); the drawer's next features at his word (I double stops · K lock ·
 M/N/P = PLAN 1d); phase 0's remainder (0d the Xsample measurements, 0c.5–0c.8, 0f, the 0h gate)
@@ -29,7 +30,9 @@ balanced (D13–D14) and addressable as code (D15). Piccolo vs bass flute undeci
    antiphonal blocks from sub-ensembles · circular chord cycles as a Risset ladder through the registers
    (CN-7; CN-13: per-player tone rows completed over curves, performer jitter periodic → non-periodic) ·
    **the spreads' expansion** (CN-12): each strike's span wider than the last, anchored at its first impact.
-   CN-1's single attack is one strike among them. Then straight into
+   CN-1's single attack is one strike among them. **Next section @ 27.76 s** (CN-14): one strike re-struck,
+   its spacing evened, each re-strike longer (his example ×1.5 from 100 ms), accelerating toward its last
+   impulse once long enough to hear — to build at his word (STRIKES_TOOL V, SPREAD). Then straight into
 2. **CURVE-BASED TREMOLOS** · each entry is a fortepiano (attacked, then continuing in
    tremolo); the tremolo shaped by a curve (open: which parameter the curve drives —
    speed, amplitude, pitch spread, or several); **the tremolo fork** (CN-11): the tremolos become

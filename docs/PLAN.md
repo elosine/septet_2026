@@ -219,7 +219,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   time-source rule from the score. **Added (CN-11, CN-13, 2026-09-04):** *the row over a curve* — a
   tone row written once, a curve or duration line for its span, a spacing instruction (even → irregular,
   "performer jitter"), a direction; and a *vibrato-rate ramp* (speeding up / slowing down) as a written
-  line or text.
+  line or text; *feathered beams* for a strike that accelerates within itself (CN-14).
 
 - **0h — Gate: phase 0 closed** — `todo` — every track sounds from the score app through
   its own port with the right technique switching; a save round-trips; the sandbox

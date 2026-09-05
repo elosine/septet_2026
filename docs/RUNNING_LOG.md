@@ -2347,3 +2347,22 @@ irregular, a direction) and *the vibrato-rate ramp* — onto PLAN 0g's 2a adapta
 grace-note figures. Observation recorded in CN-12/13: the composer's three drawn controls (curve length =
 speed, placement = overlap, jitter = regularity) are the tuba piece's META-curve grammar applied to a
 written row. Nothing built.
+
+## §80. CN-14 filed: the next section @ 27.76 s — one strike re-struck, each re-strike longer, then accelerating
+
+Composer: *"next section @ 27.76 Take one of the strikes, even out the spacing. and then expand the total
+duration of the strike with every restreiche. So the first one, let's say, lasts one hundred milliseconds.
+The next one would be longer. We'll decide on a algorithm for that or a spread. So let's say one fifty,
+and then the next one is two twenty five, etcetera. … when we get to a certain total duration, we can do an
+acceleration … eventually, they'll accelerate in a strike within a strike … progressively shorter to the
+last impulse of the strike. Just take this as a no for now, and then we'll build it."* Filed verbatim as
+CN-14 ("restreiche" → re-strike, "no" → note). It is STRIKES_TOOL V's SPREAD chain with its numbers: one
+strike, spacing evened, span ×1.5 per re-strike from 100 ms (nine re-strikes to 2.56 s), even until the
+span is audible as rhythm, then accelerating toward the last impulse (= shape `back-loaded`, gradable by
+`amount`). The AI's threshold estimate written into the note: separate attacks once gaps clear ~60 ms (the
+drawer's own grouping rule) — a span of ~0.5 s for a 9-note strike (the 5th re-strike), ~1.2 s for a
+21-note one (the 7th); before that the re-strike is a thickening chord. Open for the build: the growth law,
+the gap between re-strikes, the orchestration per re-strike, the dynamic. Routed: PLANNER outline item 1 and
+the NOW line (the next section @ 27.76 s); V's SPREAD entry carries the spec; PLAN 2a gains feathered beams
+for a strike that accelerates within itself. Not built — *"take this as a note for now, and then we'll
+build it."*
