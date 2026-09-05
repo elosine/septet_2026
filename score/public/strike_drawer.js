@@ -171,6 +171,7 @@ const D = {
               '<span style="color:#555">|</span>' +
               '<button id="skInsert" style="' + btn + '" title="write the strike at the playhead as a gesture (groupId + META shape)">Insert @ playhead</button>' +
               '<button id="skAtTime" style="' + btn + '" title="write the strike into WHATEVER score is open, at the time it was played (no need to open its source save); original notes found there are replaced">Insert @ original time</button>' +
+              '<button id="skAfter" style="' + btn + '" title="U11: write the strike after the PREVIOUS strike as it stands in the open score — start = its last onset + the recorded onset gap between the two; an earlier insert of this strike is replaced">Insert @ after previous</button>' +
               '<button id="skBack" style="' + btn + '" title="one step back">back</button>' +
               // U9 (composer, 2026-09-04: "can we make return save, the save take button drifted to the other end of the
               // screen"): the take controls are one group that wraps as a unit, and ENTER in the box saves.
@@ -210,6 +211,7 @@ const D = {
         d.querySelectorAll('.skPno').forEach(b => b.addEventListener('click', () => { this.snapshot(); this.pianoQuick(b.dataset.k); this.render(); }));
         q('#skInsert').addEventListener('click', () => this.insert(false));
         q('#skAtTime').addEventListener('click', () => this.insert(true));
+        q('#skAfter').addEventListener('click', () => this.insert('after'));
         q('#skBack').addEventListener('click', () => this.back());
         q('#skTakeSave').addEventListener('click', () => this.saveTake());
         q('#skTakeName').addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); ev.stopPropagation(); this.saveTake(); });   // U9
@@ -731,7 +733,8 @@ const D = {
             const inp = 'background:#111114;color:#ddd;border:1px solid #444;padding:0 2px;font-size:10px;width:52px';
             const btn = 'background:#2a2a30;color:#ddd;border:1px solid #555;border-radius:3px;padding:0 4px;font-size:10px;cursor:pointer';
             ctl.innerHTML = '<span style="color:#9a9">rhythm</span>' +
-                '<label>span × <input id="skTimeX" type="number" min="0.05" max="20" step="0.05" style="' + inp + '"></label>' +
+                '<label>span × <input id="skTimeX" type="number" min="0.01" step="0.05" style="' + inp + '"></label>' +
+                '<label title="U11: first onset → last onset of the strike as shaped now; type a duration and span × follows">= <input id="skSpanMs" type="number" min="1" step="1" style="' + inp + '"> ms</label>' +
                 '<label>shape <select id="skShape" style="' + inp + ';width:64px"><option value="played">as played</option><option value="even">even</option><option value="front">front-loaded</option><option value="back">back-loaded</option><option value="centre">centre</option><option value="edges">edges</option><option value="random">random</option></select></label>' +
                 '<label>amount <input id="skAmt" type="range" min="0" max="1" step="0.05" style="width:64px"></label>' +
                 '<label>jitter <input id="skJit" type="number" min="0" max="500" step="5" style="' + inp + '"> ms</label>' +
@@ -744,7 +747,15 @@ const D = {
                 '<label style="margin-top:4px">width <input id="skRhyW" type="range" min="320" max="1400" step="20" style="width:64px"></label>';
             wrap.appendChild(ctl);
             const q = sel => ctl.querySelector(sel);
-            q('#skTimeX').addEventListener('change', e => { this.snapshot(); this.cfg.timeX = clamp(+e.target.value || 1, 0.05, 20); this.save(); this.render(); });
+            q('#skTimeX').addEventListener('change', e => { this.snapshot(); this.cfg.timeX = clamp(+e.target.value || 1, 0.01, 10000); this.save(); this.render(); });   // U11: the ×20 cap is gone (#22 is 13 ms as played)
+            q('#skSpanMs').addEventListener('change', e => {
+                // U11 (composer, 2026-09-04: "an extra millisecond box next to span so we can dial in the exact duration"):
+                // the box is the real first→last onset of the current pattern; typing a duration sets span × so the pattern lands on it
+                const want = Math.max(1, +e.target.value || 0); const pp = this.pattern(); const last = pp.length ? pp[pp.length - 1] : 0;
+                const unit = this.cfg.timeX ? last / this.cfg.timeX : 0;
+                if (!unit) { this.setStatus('this strike has no span to stretch (a single onset)', true); this.render(); return; }
+                this.snapshot(); this.cfg.timeX = clamp(want / unit, 0.01, 10000); this.save(); this.render();
+            });
             q('#skShape').addEventListener('change', e => { this.snapshot(); this.cfg.shape = e.target.value; this.save(); this.render(); });
             q('#skAmt').addEventListener('pointerdown', () => this.snapshot());   // once per drag, not per tick
             q('#skAmt').addEventListener('input', e => { this.cfg.amount = +e.target.value; this.save(); this.render(); });
@@ -757,7 +768,8 @@ const D = {
             q('#skORe').addEventListener('click', () => { this.snapshot(); this.useSeed('oSeed', this.nextSeed('oSeed')); this.save(); this.render(); });
             q('#skRhyW').addEventListener('input', e => { this.cfg.rhythmW = +e.target.value; this.save(); this.render(); });
         }
-        ctl.querySelector('#skRhyW').value = this.cfg.rhythmW || 480; ctl.querySelector('#skTimeX').value = this.cfg.timeX; ctl.querySelector('#skShape').value = this.cfg.shape; ctl.querySelector('#skAmt').value = this.cfg.amount; ctl.querySelector('#skJit').value = this.cfg.jitterMs; ctl.querySelector('#skOrder').value = this.cfg.order;
+        { const pp = this.pattern(); ctl.querySelector('#skSpanMs').value = pp.length ? Math.round(pp[pp.length - 1]) : 0; }
+        ctl.querySelector('#skRhyW').value = this.cfg.rhythmW || 480; ctl.querySelector('#skTimeX').value = +(+this.cfg.timeX).toFixed(3); ctl.querySelector('#skShape').value = this.cfg.shape; ctl.querySelector('#skAmt').value = this.cfg.amount; ctl.querySelector('#skJit').value = this.cfg.jitterMs; ctl.querySelector('#skOrder').value = this.cfg.order;
         // dots: click one, then another = swap their slots; a dot on the keyboard then a player row = assign
         svg.querySelectorAll('.skRDot').forEach(dd => dd.addEventListener('click', ev => {
             const i = +dd.dataset.i;
@@ -850,8 +862,27 @@ const D = {
         const notes = this.notesFor('orch');
         if (!notes.length) { this.setStatus('nothing to insert — shuffle or assign first', true); return; }
         let t = +C.getTimeAtPlayhead().toFixed(3);
-        let replaceMsg = '';
-        if (replace) {
+        let replaceMsg = '', afterMsg = '';
+        if (replace === 'after') {
+            // U11 (composer, 2026-09-04: "calculate the gap between seventeen and eighteen — the onset gap — and place that gap
+            // at the end of the seventeen in the score; that will be the new onset time for eighteen"): the previous strike as
+            // it stands in the OPEN score (its last onset = its end) + the recorded onset gap t0(n) − t0(n−1) from the database.
+            const prev = Object.values(this.db.strikes).find(x => x.index === this.strike.index - 1);
+            if (!prev) { this.setStatus('no previous strike in the database', true); return; }
+            const pp = 'grp-strike-' + prev.index + '-', ML = METAL();
+            const prevNotes = C.objects.filter(o => o.groupId && String(o.groupId).startsWith(pp) && o.layer !== ML && o.sonifyNote != null);
+            if (!prevNotes.length) { this.setStatus('#' + prev.index + ' is not in this score — insert it first (@ original time or @ after previous)', true); return; }
+            const end = Math.max(...prevNotes.map(o => +o.startSeconds || 0)), gap = this.strike.t0 - prev.t0;
+            t = +(end + gap).toFixed(3);
+            afterMsg = ' = end of #' + prev.index + ' (' + end.toFixed(3) + ') + onset gap ' + gap.toFixed(3);
+        }
+        // choice 3 (composer, 2026-09-04: replace on re-insert = yes): a strike exists once in a score — an earlier insert of
+        // this strike, in any mode, is removed before the new one is written
+        C.pushUndoState();
+        { const mine = 'grp-strike-' + this.strike.index + '-'; const before0 = C.objects.length;
+          C.objects = C.objects.filter(o => !(o.groupId && String(o.groupId).startsWith(mine)));
+          const older = before0 - C.objects.length; if (older) replaceMsg += ' · replaced the earlier #' + this.strike.index + ' (' + older + ' objects)'; }
+        if (replace === true) {
             // Q v2 (composer, 2026-09-04: "have the time code carry with the strike … it'll put it in its
             // original time, but I don't have to open the scattered strikes 01 save file"): the strike is
             // written at its own t0 into WHATEVER score is open. Originals are removed only where they truly
@@ -861,12 +892,11 @@ const D = {
             const want = new Map(this.strike.notes.map(nn => [nn.objectId, nn]));
             const isOriginal = o => { const nn = want.get(o.id); return !!nn && o.layer === nn.layer && o.sonifyNote === nn.midi && Math.abs((+o.startSeconds || 0) - (this.strike.t0 + nn.dtMs / 1000)) < 0.025; };
             const before = C.objects.length;
-            C.pushUndoState();
             C.objects = C.objects.filter(o => !isOriginal(o));
             const gone = before - C.objects.length;
-            replaceMsg = gone ? (' · replaced ' + gone + ' original notes') : ' · no originals in this score';
-        } else C.pushUndoState();
-        const group = 'grp-strike-' + this.strike.index + '-' + Math.floor(t * 10) + (replace ? 'r' : '');
+            replaceMsg += gone ? (' · replaced ' + gone + ' original notes') : ' · no originals in this score';
+        }
+        const group = 'grp-strike-' + this.strike.index + '-' + Math.floor(t * 10) + (replace === true ? 'r' : replace === 'after' ? 'a' : '');
         let maxEnd = t;
         notes.forEach(n => {
             const start = t + n.onMs / 1000, dur = n.durMs / 1000; maxEnd = Math.max(maxEnd, start + dur);
@@ -883,7 +913,7 @@ const D = {
         C.lastInsertGroup = group;
         if (typeof C.openMetaWin === 'function') C.openMetaWin();
         C.renderAll(); C.markDirty();
-        this.setStatus('inserted ' + notes.length + ' notes at ' + t.toFixed(2) + ' s' + (replace ? ' (original time)' : ' (playhead)') + ' as ' + group + replaceMsg);
+        this.setStatus((replace === 'after' ? '#' + this.strike.index + ' → ' + t.toFixed(3) + ' s' + afterMsg + ' · ' : '') + 'inserted ' + notes.length + ' notes at ' + t.toFixed(3) + ' s' + (replace === true ? ' (original time)' : replace === 'after' ? ' (after previous)' : ' (playhead)') + ' as ' + group + replaceMsg);
     },
 
     // ------------------------------------------------------------------ back / takes (O)

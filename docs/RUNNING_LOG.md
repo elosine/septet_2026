@@ -2486,3 +2486,25 @@ by-hand placement is `Insert @ original time` + a shift equal to the accumulated
 The recipe given for #18 (×1.5 from #17's 127 ms → 190 ms; span × 190 ÷ 110 = 1.73; take 18-c → span × → hear →
 take 18-d → `Insert @ original time` → META shape: end + 0.127, then start 28.302 → Save). Awaiting his report
 of what bit.
+
+## §87. U11 built: the ms box and `Insert @ after previous`; replace on re-insert everywhere
+
+Composer: *"ok good to go"* after the list (§86 talk): a millisecond box beside span ×, and a button that places the
+strike after the previous one by the recorded onset gap; nothing else. Built in `strike_drawer.js`: `#skSpanMs` =
+the pattern's last onset (real, as shaped: shape · reverse · rotate · jitter · span ×), typing a value sets
+`cfg.timeX` = value ÷ (last ÷ timeX); the span × clamp 0.05–20 becomes 0.01–10000. `insert('after')`: the previous
+strike (index − 1) from the database; its group in the open score (`grp-strike-<n−1>-` prefix), end = max
+startSeconds of its sounding notes; t = end + (t0(n) − t0(n−1)); refuses with a message if the previous strike is
+not in the score. Choice 3 applied to every insert mode: objects with the strike's own group prefix are removed
+before writing (`C.pushUndoState()` once, before any removal). Group suffix: `r` original · `a` after · none playhead.
+**Verified on the throwaway server** (session named `zz-ai-chain` so the autosave wrote a throwaway working copy,
+deleted after; real DOM events; zero console errors): #17 @ original → last onset 27.280 · #18 shuffled, even, the
+box reads 110, typed 190 → span × 1.7273, pattern last 190 → `after previous` → META at 28.302 = 27.280 + 1.022,
+last onset 28.492, status "#18 → 28.302 s = end of #17 (27.280) + onset gap 1.022 · inserted 7 notes …" · a second
+click → one #18 group, the object count unchanged, "replaced the earlier #18 (8 objects)" · #19 at 286 ms → META
+30.120 = 28.492 + 1.628, last 30.406 · #21 with no #20 in the score → "#20 is not in this score — insert it first",
+nothing written · #22 (13 ms) typed 5000 → span × 385, pattern 5000; reset rhythm → the box back to 13 · #17 @
+original again → one group, "replaced the earlier #17 (6 objects)". **Observation for the chart:** the test's random
+shuffle left the slot-0 note of #18 and #19 unassigned, so their first SOUNDING notes sat 32 / 18 ms after the
+strike's start (the META start is the nominal start; the chain's end is the last sounding onset). In the
+composer's use every note is placed, so nominal and sounding coincide — but the rule is now explicit.

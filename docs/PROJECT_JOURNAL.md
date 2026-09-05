@@ -112,8 +112,9 @@ the samplers addressable as code (0k, D15), D16 tongue ram; RUNNING_LOG §40–6
   shift-click adds; the row's technique carried); **U8 built** — every random button shows its seed with
   eight clickable earlier seeds and a typed seed; **K's two-dot swap fixed** (it had never held); **U9 built** —
   ENTER in the take box saves, the take controls wrap as one group; **U10 built** — a note may sit on several
-  players (doublings), a player holds one note, the displaced note goes to nobody, U7's swap-back gone. RUNNING_LOG
-  §72–81.
+  players (doublings), a player holds one note, the displaced note goes to nobody, U7's swap-back gone; **U11 built** — `= ms` beside span ×
+  (cap gone) and `Insert @ after previous` (end of the previous strike + the recorded onset gap; every insert
+  replaces an earlier insert of the same strike). RUNNING_LOG §72–87.
 - Sketch pad: CN-8 (the piece begins with the strikes) · CN-9 (the piccolo–bass clarinet looping line
   uses grace-note figures; notation after Ferneyhough, *Etudes Transcendantales* No. 1 oboe → PLAN 0g's
   2a list; RUNNING_LOG §72) · CN-10 (the opening expanded into ensemble processes — scales through the

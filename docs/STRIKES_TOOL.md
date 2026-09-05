@@ -341,7 +341,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   them; the noise technique's keys; the open strings) — click to hear, click to select; the
   choice is stored on the voice (the stand-in key). Out of the way until needed.
 
-## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built` · `U7 built 2026-09-04` (RUNNING_LOG §74) · `U8 built 2026-09-04` (RUNNING_LOG §76) · `U9 built 2026-09-04` (RUNNING_LOG §77) · `U10 built 2026-09-04` (RUNNING_LOG §81) · `U11 designed 2026-09-04, awaiting the composer's choices`
+## U · Feature queue from the first test — `U1–U4 built 2026-09-04, awaiting the composer's test` (RUNNING_LOG §64) · `U5 built 2026-09-04` (RUNNING_LOG §73) · `U6 asked, not built` · `U7 built 2026-09-04` (RUNNING_LOG §74) · `U8 built 2026-09-04` (RUNNING_LOG §76) · `U9 built 2026-09-04` (RUNNING_LOG §77) · `U10 built 2026-09-04` (RUNNING_LOG §81) · `U11 built 2026-09-04` (RUNNING_LOG §87)
 
 > Composer: *"collect these and I'll have you do a feature update all at once."* Each request
 > verbatim, the AI's reading beneath; built together when the composer says so.
@@ -432,8 +432,8 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   that has the note gets a line, a chip, its own articulation from its row's menu and its own fold (a G2 on
   the cello doubles onto the flute as G4↑); Hear and Insert emit one note per player; `back` and takes carry
   the doublings; a shuffle or a strike pick clears them.
-- **U11 — the chain step: a duration in ms, and `Insert @ after previous` — `designed 2026-09-04 (CN-16), not
-  built; the composer's choices pending`.** *Composer: "we need a way to expand it to whatever the next duration
+- **U11 — the chain step: a duration in ms, and `Insert @ after previous` — `built 2026-09-04 (his choices: end =
+  the last onset · anchor #17 · replace on re-insert), verified on the throwaway server (RUNNING_LOG §87)`.** *Composer: "we need a way to expand it to whatever the next duration
   is. So spread it out. And then a method to calculate the gap between seventeen and eighteen — let's just call
   it the onset gap … place that gap at the end of seventeen, and then that will be the new onset time for
   eighteen."* — *Proposed:* (1) in the rhythm column, `span ×` gains a twin `= ___ ms` (first onset → last onset;
@@ -445,6 +445,13 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   onset gap 1.022"); if n−1 is not in the score it says so and offers the original time. *Open (his):* "end" =
   the last onset (recommended — the ring is the sampler's) or the META shape's end (+109 ms at #17); the chain's
   anchor — #17 at 127 ms (→ #18 190) or #18 at 110 (→ #19 165); replace-on-reinsert (recommended).
+  *Built:* `= ___ ms` beside span × — the real first→last onset of the pattern as shaped (shape, reverse, rotate,
+  jitter included); typing sets span ×; the ×20 cap is gone (#22's 13 ms stretch to 5 s = ×385). `Insert @ after
+  previous`: the previous strike's group in the open score → its last SOUNDING onset (an unassigned note does not
+  count) + the recorded onset gap → the insert time; the status prints the sum. Every insert mode now replaces an
+  earlier insert of the same strike (group prefix `grp-strike-<n>-`), so a strike exists once in a score; the
+  group suffix says how it was placed (`r` original time · `a` after previous · none = playhead). The `prev × ratio`
+  button was not built — the composer types the duration.
 
 ## V · Processes across strikes — `wanted 2026-09-04 (CN-10) — not built; nothing blocks composing the first of each by hand`
 
