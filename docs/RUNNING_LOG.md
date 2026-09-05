@@ -2061,3 +2061,53 @@ Experiments. Options put: A version naming (`-v1.5`, dots allowed by one server 
 text) · B category by prefix (recommended) or by a checkbox · C Restore removed (recommended) or
 renamed "backups" · D open-with-unsaved-edits: no dialog, open the working copy and say
 "unsaved edits from HH:MM — Save or Reload".
+
+## §68. D17 built: the save system as one rule, with hints; Q v2: the strike carries its time
+
+Composer: *"Let's try it. Um, can you maybe put in some hints or something like that? So reminders
+… how to use the save system. And then this is related but separate. The strikes replace in place
+… I have to load the one called scattered strikes o one every time, and then replace in place and
+then save it as a different one. Maybe have the time code carry with the strike. And then whatever
+save file's open, it can insert at that time code associated with that strike … if I choose number
+ten, which is at fifteen point one eight seconds, and I say replace in place or maybe you can
+rename the button, like, insert in original time or something like that, something more brief."*
+(The §67 options went by his "let's try it": A dots allowed, B the prefix, C Restore removed,
+D no dialog on open — the recommendations.)
+
+**The build.** `score/server.js`: names may carry dots (never `..`, never a leading dot);
+`listScores` reports each file's working copy as CONTENT (`work: {modified, differs, orphan}` —
+`metadata` times and the viewport stripped before comparing, because a Save writes the file from
+the same state the copy had). `score/public/composer.html` (build `b37-save`): the toolbar is
+Save · Name version · Reload · ? · Piece · Experiments; every open (`openScore`) goes through
+`<name>-work` — a working copy that differs from its file is resumed with "unsaved edits in X from
+HH:MM — Save keeps them, Reload drops them" (no dialog); `saveSession` writes the file (+ snapshot)
+and discards the working copy; `autosave` writes the working copy only; `reloadScore` asks once,
+discards, reopens; `saveVersion` prompts with the next label (1.1, 1.2 … from the existing `-vN.M`
+names), saves the file being edited and writes `<base>-v<label>` (refused if it exists); a `?`
+strip under the top bar carries the rule in one line (remembered per browser; the lane container
+moves down by its height, recomputed on resize); the Experiments menu lists a base with its versions
+indented beneath it, "· unsaved edits" tagged. `tools/unsaved_check.js`: the session-end question,
+exit 1 when anything is unsaved. `strike_drawer.js`: `Replace in place` → `Insert @ 0.61 s
+(original)` (the label carries the strike's t0); it writes at t0 into whatever score is open and
+removes originals only where they truly exist (id + layer + pitch + onset within 25 ms) — the source
+guard is gone. *Rejected:* a checkbox for "this is the piece" (the prefix is visible in the folder and
+already what the tools know); keeping Restore under another name (a menu nobody could remember).
+
+**Verified on a throwaway server (port 5301, the same `scores/` folder, test files `zz-ai-*`
+deleted after; zero console errors):** open → `zz-ai-exp-work`, the box shows `zz-ai-exp`, the
+strip on, the retired buttons gone · an edit → 5 s → the working copy on disk (`differs: true`), the
+file still 0 objects, the menu tagged "· unsaved edits" · Save → the file 1 object, one snapshot,
+the working copy gone, "Saved zz-ai-exp · 20:05" · edit → Reload → objects back to 1, the working
+copy gone · Name version → suggested 1.1 → `zz-ai-exp-v1.1` frozen, listed indented under its base,
+a second 1.1 refused, the next suggestion 1.2 · opening the version → `zz-ai-exp-v1.1-work` · edit,
+autosave, reopen → "unsaved edits in zz-ai-exp from 20:06 — Save keeps them, Reload drops them",
+dirty, 2 objects; Reload → 1. Drawer: strike #0 into `zz-ai-exp` → 7 notes + the META shape at
+0.608 s, "no originals in this score"; into a copy of the COMMITTED ScatteredStrikes01 (the working
+tree's copy had already had strike #0 replaced by the composer today) → "replaced 9 original notes",
+none of wc-13 … wc-21 left, 577 − 9 + 8 = 576. `unsaved_check` clean after the cleanup. The hidden
+Browser pane reports a 0 × 0 viewport, so the strip measured 1080 px tall there — an artifact, not
+a bug; hence the resize listener.
+
+**To take effect on the composer's machine:** restart `node score\server.js` (the server changed)
+and reload the page. His four saves from today (`septet001`, `ScatteredStrikes01-og`, `-a`, `-a-2`)
+and the modified `ScatteredStrikes01` are his to sort under the new rule; untouched here.

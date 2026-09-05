@@ -112,7 +112,10 @@ measurements, **0c.5–0c.8** (0c.7 runs `curve_slots.lua`), **0f**, the **0h** 
 are saved and committed → **takes moved to `bank/panel_snapshots.json` (O v2); his four browser takes (00-a, 00-b,
 01-a, 01-b) migrated on his reload and are committed.** The SPACE bug (the drawer's SPACE went to the score's
 transport after any select change) fixed and verified: SPACE belongs to the drawer while it is open.
-RUNNING_LOG §65. The drawer test continues.
+RUNNING_LOG §65. **D17 — the save system rebuilt (PLAN 1b done):** one rule — working copy · Save ·
+Name version · Reload — hints in the app (`?`), `tools/unsaved_check.js` at session end; **needs the
+composer's server restarted** (`node score\server.js`) and the page reloaded. **Q v2:** `Insert @
+original time` writes a strike at its own time into any open score. RUNNING_LOG §67–68.
 
 **NEXT STEPS · MODEL · CLEAR:**
 1. ☑ 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1c.1 · 1c.2 (+U1–U4) DONE and pushed.
@@ -344,6 +347,20 @@ sources; verified here only when they bite.)*
   TONGUE RAM** ("pizzicato sounds loud in sample, just note that we'll notate this as tongue
   ram"): `notate: "tongue ram"` on `flute.pizzicato` — the first technique → notation mapping
   field, read by the notation layer at 2a. The patch's own tongue-ram keyswitch is unverified.
+- **D17** *(2026-09-04, composer: "It's a bit too complex for me … I do want some sort of auto save
+  … I don't want to have it override … I want to be able to keep kind of a running version … give it
+  a name … let's try it")* — **The save system: ONE rule for every score, piece or experiment.**
+  Opening a score puts you in its working copy (`<name>-work`, gitignored; autosave writes there);
+  the file changes only on Save (+ a silent snapshot); "Name version" saves the file and freezes
+  `<name>-v<label>` (committed, never overwritten); "Reload" drops the working copy; the `piece-`
+  prefix alone decides the menu (Piece / Experiments). Hints: a `?` strip in the app. Session end:
+  `tools/unsaved_check.js` before the commit. *Why:* piece #4's D10 protected `piece-*` names only,
+  so the experiments — where the composing actually happened — were autosaved in place, and the
+  four verbs (Save · Save as next · Variant · Restore) could not be remembered between sessions.
+  Reaper's model (the file only on Save, backups out of sight) is the precedent. *Rejected:* Word's
+  AutoSave-into-the-file (the override the composer named); a numbering chain (`sNN`, load-bearing
+  nowhere); two folders (one folder, one prefix, is the whole rule); a Restore menu (the snapshots
+  stay as the AI's net). RUNNING_LOG §67–68.
 
 
 ---

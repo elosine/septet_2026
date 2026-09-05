@@ -73,7 +73,7 @@ The rules, adopted from `live-electronics-engine` (its CLAUDE.md and `docs/journ
 ## Apps (after PLAN 0b lands)
 
 - **Composer score:** `node score/server.js` → http://localhost:5300/composer.html
-  (7 instrument-keyed tracks + META; saving per piece #3's D8/D10 as inherited by #4)
+  (7 instrument-keyed tracks + META; saving per D17 — working copy · Save · Name version · Reload; `docs/NAMING.md` §1)
 - **Sandbox:** `node sandbox/serve.js` → http://localhost:4800
 - **Notation workshop:** carried over with the port, NOT adapted until phase 2 (PLAN 0g / 2a).
 - **Ports** (loopMIDI, case-sensitive) — decided in PLAN 0e; 5300/4800 are distinct from

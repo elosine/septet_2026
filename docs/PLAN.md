@@ -277,13 +277,13 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   fitted through them), then per-segment shaping: click a segment to select it, the wheel bends
   its slope (vertical = curvature / exponent, horizontal = where the bend sits), click elsewhere
   to release; the wheel's gain per notch calibrated so one notch is a visible, repeatable step.
-- **1b — Revisit the save-file logic; simplify, make it more logical** — `todo` *(composer,
+- **1b — Revisit the save-file logic; simplify, make it more logical** — `done 2026-09-04 (D17 — one rule: working copy · Save · Name version · Reload, hints in the app, tools/unsaved_check.js at session end; RUNNING_LOG §67–68)` *(composer,
   2026-09-03: "todo: revisit save file logic, try to simplify/make more logical")* — the
   inherited chain (canonical `piece-sNN` · `-work` autosave copy · `Save as next` · `Variant` ·
   `Restore` snapshots, NAMING.md §1) is three pieces' accretion; design the septet's own rule set
   before the first real save (`piece-s01`), so no file is ever renamed after the fact. *Why:*
   autosave has eaten a score in every previous piece; the logic must be obvious to be safe.
-- **1c — The scattered-strike database + the reorchestration panel** — `doing 2026-09-03` *(1c.1 `tools/strike_db.js` + `bank/scattered_strikes.json` done, RUNNING_LOG §36; **1c.2 the STRIKES drawer `score/public/strike_drawer.js` built and verified in the running app, §39** — the requirements A–T with statuses in `docs/STRIKES_TOOL.md`; O v2 2026-09-04 — takes in `bank/panel_snapshots.json`, SPACE owned by the drawer while open, RUNNING_LOG §65; **the composer's listening pass is next**, then double stops, the K lock, the harmony collection + Messiaen (M/N/P, = 1d) and the `kind` field in the recipes)* *(composer,
+- **1c — The scattered-strike database + the reorchestration panel** — `doing 2026-09-03` *(1c.1 `tools/strike_db.js` + `bank/scattered_strikes.json` done, RUNNING_LOG §36; **1c.2 the STRIKES drawer `score/public/strike_drawer.js` built and verified in the running app, §39** — the requirements A–T with statuses in `docs/STRIKES_TOOL.md`; O v2 2026-09-04 — takes in `bank/panel_snapshots.json`, SPACE owned by the drawer while open, RUNNING_LOG §65; Q v2 — `Insert @ original time` into any open score, §68; **the composer's listening pass is next**, then double stops, the K lock, the harmony collection + Messiaen (M/N/P, = 1d) and the `kind` field in the recipes)* *(composer,
   2026-09-03, on his first material save "scattered strike 01"; RUNNING_LOG §33 has the words)*
   — the piece's first compositional tool, in the piece #2 ostinato-timing-DB mould
   (`bank/ostinato_timing_db_2p2p.json`: ingestions with provenance, per-sample stats, two

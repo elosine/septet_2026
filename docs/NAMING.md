@@ -11,16 +11,24 @@
 | Pattern | What it is |
 |---|---|
 | `septet` | the day-one canonical stub — the default session so a cold start opens without a 404 (RUNNING_LOG §10). Not the piece. |
-| `piece-<snn>` | **a piece score** — the piece itself, one timeline; `piece-s01` is the first real save (piece #4's chain: "Save as next" promotes `piece-sNN-work` → `piece-sNN+1`; "Variant" saves `piece-sNNa`, `-b` …) |
+| `piece-<anything>` | **the piece** — any name starting `piece-` lives in the Piece menu (D17: no numbering chain any more; a milestone is a named version, e.g. `piece-septet-v1.5`) |
+| `<name>-v<label>` | **a named version** — a frozen copy written by "Name version" beside its base file (`ScatteredStrikes01-v1.5`); never overwritten; committed; listed with its base in the menus |
+| `<name>-work` | **the working copy** — every open goes through one; autosave writes here, never the file; gitignored; discarded on Save and on Reload, so one that differs from its file = unsaved edits |
 | `cont-<family>-<nnn>` | a single shape / container, if the container way of working returns; families grow as needed |
 | `0i-test`, `0i-test-b` | the PLAN 0i proof saves (RUNNING_LOG §13) — test material, kept as evidence; never part of the piece |
 | everything else | research archive — frozen experiment renders; never overwritten |
 
-- The save system is piece #4's (its NAMING.md §"The save system"): Piece menu = `piece-*`,
-  working copies (`-work`, autosaved, gitignored) protect the canonical file, "Restore" lists
-  the capped snapshots in `scores/versions/` (gitignored).
+- **The save system (D17, composer 2026-09-04; RUNNING_LOG §67–68) — one rule for every score,
+  piece or experiment:** open a score → you are in its working copy (autosave lives there; the file
+  changes only on Save) · **Save / CTRL+S** when it's good · **Name version** when a chunk is done
+  (saves the file AND freezes `<name>-v<label>`; the next label is suggested: 1.1, 1.2 …) · **Reload**
+  if it went wrong (drops the unsaved edits; asks once). The `?` button shows this line in the app.
+  Piece #4's "Save as next" / "Variant" / "Restore" are gone; the Save snapshots in `scores/versions/`
+  (cap 20, gitignored) remain as a silent net the AI can dig into on request.
 - Everything in `scores/` **is committed** except `*-work.json` and `versions/` — autosave
-  has eaten a score in every previous piece and git is the only net under it.
+  has eaten a score in every previous piece and git is the only net under it. At session end
+  `node tools/unsaved_check.js` lists working copies that hold edits their file does not; the AI
+  asks before the commit.
 
 ## 2. The S1 conventions the IR reads (D9 §5, proved at 0i)
 

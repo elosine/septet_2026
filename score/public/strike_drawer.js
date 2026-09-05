@@ -168,7 +168,7 @@ const D = {
               ['none', 'one', 'topbot', 'rest', 'all'].map(k => '<button class="skPno" data-k="' + k + '" style="' + btn + '">' + ({ none: 'none', one: 'one', topbot: 'top+bottom', rest: 'rest', all: 'all' })[k] + '</button>').join('') +
               '<span style="color:#555">|</span>' +
               '<button id="skInsert" style="' + btn + '" title="write the strike at the playhead as a gesture (groupId + META shape)">Insert @ playhead</button>' +
-              '<button id="skReplace" style="' + btn + '" title="replace the original strike in the score, at its own time">Replace in place</button>' +
+              '<button id="skAtTime" style="' + btn + '" title="write the strike into WHATEVER score is open, at the time it was played (no need to open its source save); original notes found there are replaced">Insert @ original time</button>' +
               '<button id="skBack" style="' + btn + '" title="one step back">back</button>' +
               '<input id="skTakeName" placeholder="take name" style="width:90px;' + inp + '"><button id="skTakeSave" style="' + btn + '">save take</button>' +
               '<select id="skTakeSel" style="max-width:130px;' + inp + '"><option value="">load take…</option></select>' +
@@ -203,7 +203,7 @@ const D = {
         q('#skSoloOff').addEventListener('click', () => { this.snapshot(); this.voices.forEach(v => { v.solo = false; }); this.render(); });
         d.querySelectorAll('.skPno').forEach(b => b.addEventListener('click', () => { this.snapshot(); this.pianoQuick(b.dataset.k); this.render(); }));
         q('#skInsert').addEventListener('click', () => this.insert(false));
-        q('#skReplace').addEventListener('click', () => this.insert(true));
+        q('#skAtTime').addEventListener('click', () => this.insert(true));
         q('#skBack').addEventListener('click', () => this.back());
         q('#skTakeSave').addEventListener('click', () => this.saveTake());
         q('#skTakeSel').addEventListener('change', e => { if (e.target.value) this.loadTake(e.target.value); e.target.value = ''; });
@@ -328,6 +328,7 @@ const D = {
         this.strike = s; this.cfg.strikeId = id; this.prev = null;
         this.el.querySelectorAll('.skSeqRow').forEach(r => { r.style.background = r.dataset.id === id ? 'rgba(201,160,90,.25)' : ''; });
         // voices as played; the as-played pairing: voice i ↔ its own onset
+        { const at = this.el.querySelector('#skAtTime'); if (at) at.textContent = 'Insert @ ' + s.t0.toFixed(2) + ' s (original)'; }
         this.voices = s.notes.map((n, i) => ({
             id: n.objectId, i, pitch0: n.midi, pc: ((n.midi % 12) + 12) % 12, pitch: n.midi,
             lane: -1, fold: 0, tech: null, standIn: null, piano: false, solo: false, vel: n.vel != null ? n.vel : 100, durMs: n.durMs || 100,
@@ -766,17 +767,21 @@ const D = {
         const notes = this.notesFor('orch');
         if (!notes.length) { this.setStatus('nothing to insert — shuffle or assign first', true); return; }
         let t = +C.getTimeAtPlayhead().toFixed(3);
+        let replaceMsg = '';
         if (replace) {
-            // object ids are per save (wc-40 exists in every score) — replace only inside the strike's
-            // own source save or its working copy, never by id alone
-            const base = typeof C.pieceBase === 'function' ? C.pieceBase(C.sessionName) : String(C.sessionName);
-            if (base !== this.strike.source) { this.setStatus('replace refused: the loaded score is "' + C.sessionName + '", this strike comes from "' + this.strike.source + '" — open that save (or its working copy) first', true); return; }
-            const ids = new Set(this.voices.map(v => v.id));
+            // Q v2 (composer, 2026-09-04: "have the time code carry with the strike … it'll put it in its
+            // original time, but I don't have to open the scattered strikes 01 save file"): the strike is
+            // written at its own t0 into WHATEVER score is open. Originals are removed only where they truly
+            // exist — same id AND lane AND pitch AND onset (within 25 ms) — never by id alone (wc-40 exists in
+            // every score). In the source save or a copy of it that replaces them; elsewhere it just inserts.
+            t = this.strike.t0;
+            const want = new Map(this.strike.notes.map(nn => [nn.objectId, nn]));
+            const isOriginal = o => { const nn = want.get(o.id); return !!nn && o.layer === nn.layer && o.sonifyNote === nn.midi && Math.abs((+o.startSeconds || 0) - (this.strike.t0 + nn.dtMs / 1000)) < 0.025; };
             const before = C.objects.length;
             C.pushUndoState();
-            C.objects = C.objects.filter(o => !ids.has(o.id));
-            t = this.strike.t0;
-            this.setStatus('replaced ' + (before - C.objects.length) + ' original notes at ' + t.toFixed(2) + ' s');
+            C.objects = C.objects.filter(o => !isOriginal(o));
+            const gone = before - C.objects.length;
+            replaceMsg = gone ? (' · replaced ' + gone + ' original notes') : ' · no originals in this score';
         } else C.pushUndoState();
         const group = 'grp-strike-' + this.strike.index + '-' + Math.floor(t * 10) + (replace ? 'r' : '');
         let maxEnd = t;
@@ -795,7 +800,7 @@ const D = {
         C.lastInsertGroup = group;
         if (typeof C.openMetaWin === 'function') C.openMetaWin();
         C.renderAll(); C.markDirty();
-        if (!replace) this.setStatus('inserted ' + notes.length + ' notes at ' + t.toFixed(2) + ' s as ' + group);
+        this.setStatus('inserted ' + notes.length + ' notes at ' + t.toFixed(2) + ' s' + (replace ? ' (original time)' : ' (playhead)') + ' as ' + group + replaceMsg);
     },
 
     // ------------------------------------------------------------------ back / takes (O)

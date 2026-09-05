@@ -328,21 +328,28 @@
 <div id="topBar">
     <label>Session:</label>
     <input type="text" id="sessionName" value="septet" />
-    <button id="saveBtn" title="save now + take a restore snapshot">Save</button>
-    <button id="saveNextBtn" title="promote this working copy to the next piece save" style="display:none">Save as next &#9656;</button>
-    <button id="variantBtn" title="save a lettered variant (a, b, c) and keep editing where you are">Variant</button>
+    <button id="saveBtn" title="Save (CTRL+S): write the file. Until then your edits live only in the working copy.">Save</button>
+    <button id="versionBtn" title="Name version: save the file AND freeze a copy under a label you choose (1.5 &#8594; name-v1.5). A frozen copy is never overwritten.">Name version</button>
+    <button id="reloadBtn" title="Reload: drop the unsaved edits and go back to the file as last saved.">Reload</button>
+    <button id="hintBtn" title="show / hide the save rules" style="padding:2px 6px">?</button>
     <span style="opacity:.35">&#9474;</span>
     <span style="color:#888; font-size:11px">open:</span>
-    <select id="pieceSelect" title="the piece itself (piece-* saves, newest first) - opens a PROTECTED working copy"><option value="">-- Piece --</option></select>
-    <select id="loadSelect" title="everything else: experiments, sandboxes, takes"><option value="">-- Scores --</option></select>
-    <select id="restoreSel" title="restore a snapshot taken at an explicit Save"><option value="">-- Restore --</option></select>
+    <select id="pieceSelect" title="the piece: every piece-* save and its named versions - opens a working copy"><option value="">-- Piece --</option></select>
+    <select id="loadSelect" title="everything else: experiments and their named versions - opens a working copy"><option value="">-- Experiments --</option></select>
     <button id="loadBtn" style="display:none">Load</button>
     <span style="opacity:.35">&#9474;</span>
     <span id="saveStatus">Ready</span>
-    <span id="buildTag" style="color:#7a8; font-size:11px" title="code build loaded in this page">b36-insertion</span>
+    <span id="buildTag" style="color:#7a8; font-size:11px" title="code build loaded in this page">b37-save</span>
     <span style="flex:1 1 auto"></span>
     <button id="conflictBadge" title="playability: notes double-booked on one player (red) or too close to re-attack (amber). Click to resolve." style="display:none; background:#4a1414; color:#ff8080; font-family:Consolas,monospace">&#9888; 0</button>
     <button id="blastsBtn" title="insertion strip: pick a source, flip through a list, audition, insert at the playhead">Insertion</button>
+</div>
+<!-- D17 (composer 2026-09-04: "put in some hints ... reminders how to use the save system"): one line,
+     toggled by the ? button, remembered per browser; the lane container moves down while it shows -->
+<div id="saveHints" style="display:none; position:fixed; top:32px; left:0; right:0; z-index:99; background:#fff8e6; border-bottom:1px solid #e0c274; color:#5a4a1a; font-size:11px; padding:3px 12px; line-height:1.5">
+  <b>Saving:</b> open a score &#8594; you are in its <b>working copy</b> (autosave lives there; the file changes only on Save) &#183;
+  <b>Save / CTRL+S</b> when it's good &#183; <b>Name version</b> when a chunk is done (freezes a copy, e.g. <i>-v1.5</i>) &#183;
+  <b>Reload</b> if it went wrong (drops the unsaved edits) &#183; a name starting <i>piece-</i> lives in the Piece menu, everything else in Experiments.
 </div>
 
 <span id="timeDisplay" style="display:none">0.00</span>
@@ -1629,15 +1636,15 @@ const Composer = {
             name = name.trim() || suggested;
             if (existing.has(name)) name = this.uniqueSessionName(name, existing);
             this.sessionNameInput.value = name;
-            this.sessionName = name;
-            this.boundName = name;
+            this.sessionName = name + '-work'; this.boundName = this.sessionName;   // D17: the file appears on Save
             this.pushUndoState();
             this.objects.forEach(o => { if (o._els && o._els.group) o._els.group.remove(); });
             this.objects = [];
             this.markers = [];
             this.deselectAll();
             this.renderAll();
-            this.saveStatus.textContent = `New score: ${name}`;
+            this.saveStatus.textContent = `New score: ${name} — Save creates the file`;
+            this.updateSessionBadge();
             this.markDirty();
         });
         this.propertyPanel = document.getElementById('propertyPanel');
@@ -1677,45 +1684,17 @@ const Composer = {
         // Auto-load last session from localStorage; fresh browsers fall back
         // to the most recently modified score on the server
         const last = localStorage.getItem('composerLastSession');
-        if (last && this.isPieceName(last)) {
-            // a canonical piece name must go through openPiece, or autosave
-            // would write straight into the piece file
-            this.sessionNameInput.value = last;
-            this.refreshSessionList().then(() => this.openPiece(last));
-        } else if (last) {
-            this.sessionNameInput.value = last;
-            this.loadSession(last).then(() => {
-                // resuming a working copy: keep the promote button available
-                if (this.isWorkName(this.sessionName)) {
-                    const b = document.getElementById('saveNextBtn');
-                    if (b) b.style.display = '';
-                    this.saveStatus.textContent = 'resumed ' + this.sessionName;
-                }
-                this.updateSessionBadge();
-            });
+        if (last) {
+            // D17: every open goes through the working copy, whatever the name
+            this.sessionNameInput.value = this.pieceBase(last);
+            this.openScore(this.pieceBase(last));
         } else {
             fetch('/api/composer/list').then(r => r.json()).then(result => {
                 if (result.success && result.sessions.length) {
-                    const newest = result.sessions[0].name;
+                    const newest = result.sessions.map(s => s.name).find(n => !this.isWorkName(n));
+                    if (!newest) return;
                     this.sessionNameInput.value = newest;
-                    // SAME GUARD AS THE localStorage BRANCH ABOVE. This one was
-                    // missing: on a fresh browser (new profile, cleared storage,
-                    // a preview pane) this fallback calls loadSession directly,
-                    // so if the server's first listed score happens to be a
-                    // canonical `piece-*` save it gets BOUND, and the first
-                    // dirty edit autosaves into the piece file. That is exactly
-                    // what D10 exists to prevent, and the protection was one
-                    // branch wide instead of two.
-                    // (Found 2026-08-17 by reading this path before opening a
-                    // verification tab. NOT observed firing — the tab had
-                    // localStorage and took the branch above, and the list API
-                    // does not in fact return the newest piece first. So this
-                    // is a closed hole, not a diagnosed incident.)
-                    if (this.isPieceName(newest)) {
-                        this.refreshSessionList().then(() => this.openPiece(newest));
-                    } else {
-                        this.loadSession(newest).then(() => this.updateSessionBadge());
-                    }
+                    this.openScore(newest);
                 }
             }).catch(() => {});
         }
@@ -2202,37 +2181,28 @@ const Composer = {
         this.saveBtn.addEventListener('click', () => this.saveSession(true));
         this.loadBtn.addEventListener('click', () => {
             const name = this.loadSelect.value;
-            if (name) this.loadSession(name);
+            if (name) this.openScore(name);
         });
-        // palette: picking an entry loads the SAME file the Load menu serves.
-        // Keep the chosen entry DISPLAYED and blur the select, so SPACE plays
-        // instead of re-opening the dropdown (composer fix 2026-08-14).
+        // D17: BOTH menus open through a working copy. Keep the chosen entry DISPLAYED and blur
+        // the select, so SPACE plays instead of re-opening the dropdown (composer fix 2026-08-14).
         const pieceSel = document.getElementById('pieceSelect');
         if (pieceSel) pieceSel.addEventListener('change', async function () {
-            const n = this.value;
-            this.blur();
-            if (n) await Composer.openPiece(n);
+            const n = this.value; this.blur();
+            if (n) await Composer.openScore(n);
         });
         this.loadSelect.addEventListener('change', async function () {
             const n = this.value; this.blur();
-            if (n) { await Composer.loadSession(n); Composer.updateSessionBadge(); }
+            if (n) await Composer.openScore(n);
         });
-        const nextB = document.getElementById('saveNextBtn');
-        if (nextB) nextB.addEventListener('click', () => this.saveAsNext());
-        const varB = document.getElementById('variantBtn');
-        if (varB) varB.addEventListener('click', () => this.saveVariant());
-        const restSel = document.getElementById('restoreSel');
-        if (restSel) restSel.addEventListener('change', async function () {
-            const f = this.value; this.blur(); this.value = '';
-            if (!f) return;
-            if (!confirm('Restore this snapshot? Current unsaved state will be replaced.')) return;
-            const r = await fetch('/api/composer/version-load/' + encodeURIComponent(f)).then(x => x.json());
-            if (r.success) {
-                Composer.restoreData(r.data);
-                Composer.saveStatus.textContent = 'restored snapshot ' + f.replace(/^.*_v/, '');
-                Composer.markDirty();
-            }
-        });
+        const verB = document.getElementById('versionBtn');
+        if (verB) verB.addEventListener('click', () => this.saveVersion());
+        const relB = document.getElementById('reloadBtn');
+        if (relB) relB.addEventListener('click', () => this.reloadScore());
+        const hintB = document.getElementById('hintBtn');
+        if (hintB) hintB.addEventListener('click', () => this.toggleHints());
+        this.toggleHints(localStorage.getItem('composerSaveHints') !== 'off');
+        // the strip may wrap to two lines on a narrower window: keep the lane offset honest
+        window.addEventListener('resize', () => { const h = document.getElementById('saveHints'); if (h) this.toggleHints(h.style.display !== 'none'); });
 
         // (Palette / Working menus retired 2026-08-14 — the Load menu covers
         // every score, and blast material now lives in the sandbox + Blasts
@@ -2915,33 +2885,38 @@ const Composer = {
         return base + '-' + n;
     },
 
-    async saveSession(makeVersion = false) {
-        let name = this.sessionNameInput.value.trim() || 'septet';
-        if (name !== this.boundName) {
+    // D17: Save writes the FILE (the name in the box, never a -work name) and takes a snapshot; the
+    // session stays in the working copy, which is discarded here so that "a -work file that differs
+    // from its file" always means unsaved edits (server listScores / tools/unsaved_check.js).
+    async saveSession(makeVersion = true) {
+        let base = this.pieceBase(this.sessionNameInput.value.trim() || 'septet');
+        if (base !== this.pieceBase(this.boundName || '')) {
+            // a new name typed in the box = save as that name, never over an existing file
             const existing = await this.fetchSessionNames();
-            if (existing.has(name)) {
-                name = this.uniqueSessionName(name, existing);
-                this.sessionNameInput.value = name;
+            if (existing.has(base)) {
+                base = this.uniqueSessionName(base, existing);
+                this.sessionNameInput.value = base;
             }
         }
-        this.sessionName = name;
+        const oldWork = this.sessionName;
         const data = this.collectData();
-
         this.saveStatus.textContent = 'Saving...';
-
         try {
             const resp = await fetch('/api/composer/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, data, makeVersion })
+                body: JSON.stringify({ name: base, data, makeVersion: true })
             });
             const result = await resp.json();
             if (result.success) {
                 this.isDirty = false;
-                this.boundName = name;
-                this.saveStatus.textContent = `Saved: ${name}`;
-                if (makeVersion) this.refreshRestore();
-                localStorage.setItem('composerLastSession', name);
+                this.sessionName = base + '-work'; this.boundName = this.sessionName;
+                this.sessionNameInput.value = base;
+                if (this.isWorkName(oldWork)) await this.discardWork(oldWork);
+                if (this.sessionName !== oldWork) await this.discardWork(this.sessionName);
+                this.saveStatus.textContent = 'Saved ' + base + ' · ' + this.fmtTime(new Date());
+                localStorage.setItem('composerLastSession', base);
+                this.updateSessionBadge();
                 this.refreshSessionList();
             } else {
                 this.saveStatus.textContent = `Error: ${result.error}`;
@@ -2950,6 +2925,21 @@ const Composer = {
             this.saveStatus.textContent = 'Save failed';
             console.error('Save error:', err);
         }
+    },
+
+    // D17: autosave writes the WORKING COPY only — the file is never touched by it
+    async autosave() {
+        const base = this.pieceBase(this.sessionNameInput.value.trim() || 'septet');
+        const work = base + '-work';
+        try {
+            const r = await fetch('/api/composer/save', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: work, data: this.collectData(), makeVersion: false }) }).then(x => x.json());
+            if (r.success) {
+                this.sessionName = work; this.boundName = work;
+                this.saveStatus.textContent = 'unsaved edits · autosaved to the working copy ' + this.fmtTime(new Date()) + ' · Save writes ' + base;
+                this.updateSessionBadge();
+            }
+        } catch (e) {}
     },
 
     async loadSession(name) {
@@ -2970,7 +2960,7 @@ const Composer = {
                 }
                 this.isDirty = false;
                 this.saveStatus.textContent = `Loaded: ${name}`;
-                localStorage.setItem('composerLastSession', name);
+                localStorage.setItem('composerLastSession', this.pieceBase(name));
             } else {
                 this.saveStatus.textContent = `Error: ${result.error}`;
             }
@@ -2983,98 +2973,89 @@ const Composer = {
     // (Palette methods retired 2026-08-14 — superseded by the Load menu and
     //  the Blasts strip. score/palette.json + /api/composer/palette remain.)
 
-    // ================= SAVE SYSTEM (composer 2026-08-14) =================
-    // Piece files are protected by a WORKING COPY: opening piece-sNN puts you in
-    // piece-sNN-work, autosave writes there, and the canonical save is never
-    // touched. "Save as next" promotes the work copy to piece-sNN+1.
+    // ================= SAVE SYSTEM (D17, composer 2026-09-04; RUNNING_LOG §68) =================
+    // ONE rule for every score, piece or experiment: opening a score puts you in its WORKING COPY
+    // (<name>-work, gitignored) and autosave writes there; the file changes only on Save.
+    // "Name version" freezes a copy (<name>-v<label>) in the same act as a Save. "Reload" drops
+    // the working copy. The 2026-08-14 machinery (Save as next / Variant / Restore, piece-* only)
+    // is gone; the Save snapshots in scores/versions/ remain as a silent net.
     isPieceName(n) { return /^piece-/.test(n) && !/-work$/.test(n); },
     isWorkName(n) { return /-work$/.test(n); },
     pieceBase(n) { return String(n).replace(/-work$/, ''); },
-
-    // piece-s07b -> {stem:'piece-s', num:7, letter:'b'}
-    parsePiece(n) {
-        const m = /^piece-s(\d+)([a-z]*)(?:-(\d+))?$/.exec(this.pieceBase(n));
-        return m ? { num: +m[1], letter: m[2] || '' } : null;
-    },
-    nextPieceName(list) {
-        const nums = list.map(n => this.parsePiece(n)).filter(Boolean).map(p => p.num);
-        const next = (nums.length ? Math.max.apply(null, nums) : 0) + 1;
-        return 'piece-s' + String(next).padStart(2, '0');
-    },
-    sortPieces(names) {
-        return names.slice().sort((a, b) => {
-            const pa = this.parsePiece(a), pb = this.parsePiece(b);
-            if (!pa || !pb) return a.localeCompare(b);
-            return (pb.num - pa.num) || pb.letter.localeCompare(pa.letter);
-        });
+    isVersionName(n) { return /-v[0-9][0-9A-Za-z._-]*$/.test(this.pieceBase(n)); },
+    versionBase(n) { return this.pieceBase(n).replace(/-v[0-9][0-9A-Za-z._-]*$/, ''); },
+    fmtTime(d) { return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); },
+    workInfo(base) { const s = (this._allScores || []).find(x => x.name === base); return s && s.work; },
+    async discardWork(work) {
+        try { await fetch('/api/composer/discard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: work }) }); } catch (e) {}
     },
 
-    async openPiece(name) {
-        const work = this.pieceBase(name) + '-work';
-        // an existing working copy holds unpromoted edits — never clobber it silently
-        const existing = (this._allScores || []).some(s => s.name === work);
-        if (existing) {
-            const resume = confirm('A working copy of ' + name + ' exists (unpromoted edits).\n\n' +
-                'OK = resume that working copy\nCancel = start fresh from ' + name + ' (working copy is overwritten)');
-            if (resume) {
-                await this.loadSession(work);
-                document.getElementById('saveNextBtn').style.display = '';
-                this.saveStatus.textContent = 'resumed ' + work;
-                this.updateSessionBadge();
-                this.refreshRestore();
-                return;
-            }
-        }
-        // load the canonical, then divert the session to its working copy
-        await this.loadSession(name);
-        this.sessionNameInput.value = work;
-        this.sessionName = work;
-        this.boundName = work;
-        this.saveStatus.textContent = 'working on ' + name + ' \u25b8 ' + work;
-        document.getElementById('saveNextBtn').style.display = '';
-        this.updateSessionBadge();
-        this.refreshRestore();
-    },
-
-    async saveAsNext() {
+    // open ANY score through its working copy; unsaved edits in an existing working copy are
+    // resumed and announced — Save keeps them, Reload drops them (no dialog)
+    async openScore(name) {
+        const base = this.pieceBase(name), work = base + '-work';
+        await this.refreshSessionList();
         const all = (this._allScores || []).map(s => s.name);
-        const target = this.nextPieceName(all);
-        const data = this.collectData();
-        const r = await fetch('/api/composer/save', { method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: target, data, makeVersion: true }) }).then(x => x.json());
-        if (!r.success) { this.saveStatus.textContent = 'save failed'; return; }
-        const work = this.sessionName;
-        if (this.isWorkName(work)) {
-            await fetch('/api/composer/discard', { method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: work }) });
+        let info = this.workInfo(base);
+        if (!info && all.includes(work) && !all.includes(base)) info = { orphan: true, differs: true, modified: '' };
+        if (info && (info.differs || info.orphan)) {
+            await this.loadSession(work);
+            this.sessionNameInput.value = base;
+            this.isDirty = true;
+            this.saveStatus.textContent = (info.orphan ? base + ' was never saved' : 'unsaved edits in ' + base) +
+                (info.modified ? ' from ' + this.fmtTime(new Date(info.modified)) : '') + ' — Save keeps them, Reload drops them';
+        } else {
+            await this.loadSession(base);
+            this.sessionName = work; this.boundName = work;
+            this.sessionNameInput.value = base;
+            this.saveStatus.textContent = 'working copy of ' + base + ' — autosave lives here; the file changes only on Save';
         }
-        this.sessionNameInput.value = target;
-        this.sessionName = target; this.boundName = target;
-        this.isDirty = false;
-        this.saveStatus.textContent = 'Saved: ' + target;
-        document.getElementById('saveNextBtn').style.display = 'none';
+        localStorage.setItem('composerLastSession', base);
         this.updateSessionBadge();
+    },
+
+    async reloadScore() {
+        const base = this.pieceBase(this.sessionNameInput.value.trim() || this.sessionName || '');
+        if (!base) return;
+        const all = (this._allScores || []).map(s => s.name);
+        if (!all.includes(base)) { this.saveStatus.textContent = base + ' has never been saved — nothing to reload to (Save creates the file)'; return; }
+        if (this.isDirty && !confirm('Drop the unsaved edits and reload ' + base + ' as last saved?')) return;
+        clearTimeout(this.autoSaveTimer);
+        await this.discardWork(base + '-work');
+        await this.openScore(base);
+        this.saveStatus.textContent = 'reloaded ' + base + ' as last saved — the unsaved edits are gone';
+    },
+
+    // the milestone: Save the file being edited AND freeze a copy under the composer's label
+    async saveVersion() {
+        const cur = this.pieceBase(this.sessionNameInput.value.trim() || this.sessionName || 'septet');
+        const base = this.versionBase(cur);
+        const all = (this._allScores || []).map(s => s.name);
+        const re = new RegExp('^' + base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '-v(\\d+)\\.(\\d+)$');
+        let major = 1, minor = 0;
+        all.forEach(nm => { const m = re.exec(nm); if (m && (+m[1] > major || (+m[1] === major && +m[2] > minor))) { major = +m[1]; minor = +m[2]; } });
+        const label = prompt('Name this version of ' + base + ' (the file ' + cur + ' is saved too):', major + '.' + (minor + 1));
+        if (label == null) return;
+        const lab = label.trim();
+        if (!/^[0-9A-Za-z][0-9A-Za-z._-]{0,30}$/.test(lab)) { this.saveStatus.textContent = 'not frozen: a label is letters, digits, dots, hyphens (1.5 · 2 · 1.5a) — got "' + lab + '"'; return; }
+        const target = base + '-v' + lab;
+        if (all.includes(target)) { this.saveStatus.textContent = target + ' already exists — a frozen version is never overwritten; pick another label'; return; }
+        this.sessionNameInput.value = cur;
+        await this.saveSession(true);
+        const r = await fetch('/api/composer/save', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: target, data: this.collectData(), makeVersion: false }) }).then(x => x.json());
+        if (!r.success) { this.saveStatus.textContent = 'version save failed: ' + (r.error || '?'); return; }
+        this.saveStatus.textContent = target + ' frozen · ' + cur + ' saved · ' + this.fmtTime(new Date()) + ' (still editing ' + cur + ')';
         this.refreshSessionList();
     },
 
-    async saveVariant() {
-        const base = this.pieceBase(this.sessionName);
-        const p = this.parsePiece(base);
-        if (!p) { this.saveStatus.textContent = 'variants are for piece saves'; return; }
-        const all = (this._allScores || []).map(s => s.name);
-        const stem = 'piece-s' + String(p.num).padStart(2, '0');
-        let letter = 'a';
-        while (all.includes(stem + letter)) letter = String.fromCharCode(letter.charCodeAt(0) + 1);
-        const target = stem + letter;
-        const data = this.collectData();
-        const r = await fetch('/api/composer/save', { method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: target, data, makeVersion: true }) }).then(x => x.json());
-        if (!r.success) { this.saveStatus.textContent = 'variant save failed'; return; }
-        this.saveStatus.textContent = 'Variant saved: ' + target + ' (still editing ' + this.sessionName + ')';
-        this.refreshSessionList();
+    toggleHints(force) {
+        const h = document.getElementById('saveHints'); if (!h) return;
+        const show = force != null ? !!force : h.style.display === 'none';
+        h.style.display = show ? '' : 'none';
+        try { localStorage.setItem('composerSaveHints', show ? 'on' : 'off'); } catch (e) {}
+        const b = document.getElementById('hintBtn'); if (b) { b.style.background = show ? '#fff8e6' : ''; b.style.borderColor = show ? '#e0c274' : ''; }
+        const lc = document.getElementById('laneContainer'); if (lc) lc.style.top = show ? (32 + h.offsetHeight) + 'px' : '32px';
     },
 
     // MEASURED one-shot sample lengths (probe 2026-08-15, bank/sample_lengths.json).
@@ -3105,41 +3086,21 @@ const Composer = {
         return fallback;
     },
 
-    // makes the protection state obvious at a glance
+    // D17: one state — the working copy of a file (gold). Red only if something bound the session
+    // straight to a file, which the new paths never do.
     updateSessionBadge() {
         const inp = this.sessionNameInput;
         if (!inp) return;
         const n = this.sessionName || '';
-        const btn = document.getElementById('saveNextBtn');
         if (this.isWorkName(n)) {
             inp.style.background = '#4a3a12'; inp.style.color = '#ffd479'; inp.style.borderColor = '#B8860B';
-            inp.title = 'working copy - ' + this.pieceBase(n) + ' is protected from autosave';
-            if (btn) btn.style.display = '';
-        } else if (this.isPieceName(n)) {
+            inp.title = 'working copy of ' + this.pieceBase(n) + ' - autosave lives here; the file changes only on Save';
+        } else if (n && n !== 'untitled') {
             inp.style.background = '#5a2020'; inp.style.color = '#ffb4b4'; inp.style.borderColor = '#a44';
-            inp.title = 'editing the piece file DIRECTLY - autosave writes here. Re-open it from the Piece menu for a protected working copy.';
-            if (btn) btn.style.display = 'none';
+            inp.title = 'bound straight to the file ' + n + ' - autosave would write it. Re-open it from a menu.';
         } else {
-            inp.style.background = ''; inp.style.color = ''; inp.style.borderColor = '';
-            inp.title = '';
-            if (btn) btn.style.display = 'none';
+            inp.style.background = ''; inp.style.color = ''; inp.style.borderColor = ''; inp.title = '';
         }
-    },
-
-    async refreshRestore() {
-        const sel = document.getElementById('restoreSel');
-        if (!sel) return;
-        try {
-            const r = await fetch('/api/composer/versions/' + encodeURIComponent(this.sessionName)).then(x => x.json());
-            sel.innerHTML = '<option value="">-- Restore --</option>';
-            (r.versions || []).forEach(f => {
-                const o = document.createElement('option');
-                o.value = f;
-                const ts = (f.match(/_v(.+)\.json$/) || [])[1] || f;
-                o.textContent = ts.replace('T', ' ').replace(/-/g, ':').slice(0, 16).replace(':', '-').replace(':', '-');
-                sel.appendChild(o);
-            });
-        } catch (e) {}
     },
 
     async refreshSessionList() {
@@ -3148,23 +3109,24 @@ const Composer = {
             const result = await resp.json();
             if (result.success) {
                 this._allScores = result.sessions;
-                const pieceSel = document.getElementById('pieceSelect');
-                const pieces = this.sortPieces(result.sessions.map(s => s.name).filter(n => this.isPieceName(n)));
-                if (pieceSel) {
-                    pieceSel.innerHTML = '<option value="">-- Piece --</option>';
-                    pieces.forEach(n => {
+                const shown = result.sessions.filter(s => !this.isWorkName(s.name));
+                // D17: a base name and its named versions sit together, the newest family first
+                const key = nm => this.versionBase(nm);
+                const fam = {}; shown.forEach(s => { const b = key(s.name); fam[b] = Math.max(fam[b] || 0, +new Date(s.modified)); });
+                const sorted = shown.slice().sort((a, b) => (fam[key(b.name)] - fam[key(a.name)]) || key(a.name).localeCompare(key(b.name)) || a.name.localeCompare(b.name, undefined, { numeric: true }));
+                const fill = (sel, first, rows) => {
+                    if (!sel) return;
+                    sel.innerHTML = '<option value="">' + first + '</option>';
+                    rows.forEach(s => {
                         const o = document.createElement('option');
-                        o.value = n; o.textContent = n;
-                        pieceSel.appendChild(o);
+                        o.value = s.name;
+                        const tag = s.work && (s.work.differs || s.work.orphan) ? ' · unsaved edits' : '';
+                        o.textContent = (this.isVersionName(s.name) ? ' ' : '') + s.name + ' (' + new Date(s.modified).toLocaleDateString() + ')' + tag;
+                        sel.appendChild(o);
                     });
-                }
-                this.loadSelect.innerHTML = '<option value="">-- Scores --</option>';
-                result.sessions.filter(s => !this.isPieceName(s.name) && !this.isWorkName(s.name)).forEach(s => {
-                    const opt = document.createElement('option');
-                    opt.value = s.name;
-                    opt.textContent = `${s.name} (${new Date(s.modified).toLocaleDateString()})`;
-                    this.loadSelect.appendChild(opt);
-                });
+                };
+                fill(document.getElementById('pieceSelect'), '-- Piece --', sorted.filter(s => this.isPieceName(s.name)));
+                fill(this.loadSelect, '-- Experiments --', sorted.filter(s => !this.isPieceName(s.name)));
             }
         } catch (err) {
             console.error('Error refreshing session list:', err);
@@ -3183,7 +3145,7 @@ const Composer = {
         clearTimeout(this.autoSaveTimer);
         this.autoSaveTimer = setTimeout(() => {
             if (this.isDirty && this.sessionName !== 'untitled') {
-                this.saveSession();
+                this.autosave();                       // D17: the working copy, never the file
             }
         }, 5000);
     },

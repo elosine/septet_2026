@@ -259,7 +259,7 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   27 pitch sets) enter the collection as harmonies, tagged `messiaen m3/F` etc. More notes
   than players → N's attrition: the shuffle drops at random, or the piano's flags take the rest.
 
-## Q · Linked to the score — `built 2026-09-03 (pick in the sequence, playhead follows, Insert @ playhead, Replace in place — only inside the source save; delete not yet)`
+## Q · Linked to the score — `built 2026-09-03 (pick in the sequence, playhead follows, Insert @ playhead; delete not yet)` · `v2 2026-09-04: Insert @ original time — the strike carries its own time into WHATEVER score is open; originals replaced only where they truly exist (id + lane + pitch + onset), so the source save never has to be opened`
 
 > *"In the tuba composer score there's the Insertion pull-down. Instead of this, integrate
 > that into the sandbox somehow, and have the thing I'm working on in the sandbox linked to
@@ -387,8 +387,9 @@ Start: `cd C:\Users\jwloy\GitHub\septet_2026` → `node score\server.js` (restar
   numbers in RUNNING_LOG §39.
 - **Not yet:** I double stops · K lock · M harmony collection + index · N harmony swap · P Messiaen
   · the `kind` field in `sandbox/instruments.js` (0c).
-- **Rules worth knowing while testing:** Replace works only with the strike's source save (or its
-  `-work` copy) open — ids repeat across saves; Insert goes to the playhead of whatever is open.
+- **Rules worth knowing while testing:** `Insert @ 15.18 s (original)` writes the strike at its own
+  time into whatever score is open and replaces its original notes only where they truly exist (the
+  source save or a copy of it); `Insert @ playhead` goes to the playhead of whatever is open.
   SPACE while the drawer is open = hear / stop, wherever the focus is (the score's transport never gets
   it; a text box keeps its spaces). Takes live in `bank/panel_snapshots.json` (O v2) and are committed at
   each wrap; a take name is 1–64 letters, digits, dot, underscore, space or hyphen.
@@ -410,3 +411,4 @@ Start: `cd C:\Users\jwloy\GitHub\septet_2026` → `node score\server.js` (restar
 - 2026-09-04, morning — the composer's first look: a `STRIKES ▴` tab at the page's bottom edge (the toolbar wraps on smaller screens), the drawer full page height by default with `↕ half`, keyboard rows fitted to the drawer. RUNNING_LOG §40.
 - 2026-09-04, evening — **U1–U4 built** in one update (composer: "then build all 4 pls"): a gap column between keyboard and players with the lines landing on a marker per row and the hovered row's lines brightened (U1); the strike defaults flute pizzicato · bcl slap · violins Bartók · viola/cello gettato · piano main, and `flat 127` on by default (U2); solo — shift-click a dot (keyboard or rhythm), `S` per player row, `solo off` in the footer; while anything is soloed only the soloed voices sound (U3); the rhythm strip at 480 px by default with a width slider 320–1400, the saved space to the gap (U4). Verified in the running app, no console errors. RUNNING_LOG §64.
 - 2026-09-04, session 3 — **O v2 + the SPACE bug** (composer: "yes lets keep those save files as well, also I've saved 2 already lets try to preserve them" · "I hit space to play, that was working But then at some point, it started playing the main score"): takes moved from the browser to `bank/panel_snapshots.json` through the panels' snapshot route (bucket `strikes`), with a one-time migration of the v1 localStorage takes, the server's name rule checked in the drawer, and a `×` delete; SPACE re-routed — a window capture-phase listener owns SPACE while the drawer is open, because the score's blur-every-select-on-change rule dropped the focus to the page body and the score's own SPACE handler took over. Reproduced, fixed and verified in the running app (RUNNING_LOG §65). Also answered: an instrument left out by the shuffle is hooked back in by hand — double-click the dot, click the player's row; the note folds by octave into range (↓ / ↑); nothing else moves (F, the two-click assign).
+- 2026-09-04, session 3 — **Q v2** (composer: "have the time code carry with the strike … whatever save file's open, it can insert at that time code … rename the button, like, insert in original time"): `Replace in place` → `Insert @ 0.61 s (original)` — the label carries the strike's t0; it writes at t0 into whatever score is open, removing originals only where they truly exist (id + layer + pitch + onset within 25 ms), so the source guard is gone. Verified: into an empty score → 7 notes + META at 0.608 s, "no originals in this score"; into a copy of the committed ScatteredStrikes01 → "replaced 9 original notes". RUNNING_LOG §68. Built alongside D17 (the save system).

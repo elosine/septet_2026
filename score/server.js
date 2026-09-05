@@ -1,11 +1,16 @@
 // Composer score server — septet 2026 (ported from piece #4, 2026-09-03; journal D1/D5)
 // Zero-dependency Node http server. Port 5300.
 //
-// Saving protocol (see docs/PROJECT_JOURNAL.md):
-//   - Canonical score: scores/<name>.json (committed to git at musical milestones)
-//   - Versions: scores/versions/<name>_v<timestamp>.json — written ONLY on explicit
-//     save (Save button / CTRL+S), rolling cap of 20 per score, gitignored.
-//   - Autosave (5s debounce in the UI) writes the canonical file with no version copy.
+// Saving protocol (D17, composer 2026-09-04 — docs/NAMING.md §1, RUNNING_LOG §68):
+//   - The file: scores/<name>.json — changes ONLY on an explicit Save (button / CTRL+S).
+//   - The working copy: scores/<name>-work.json — every open goes through one; autosave
+//     (5 s debounce in the UI) writes THERE, never the file. Gitignored. Discarded on Save
+//     and on Reload, so "a -work file that differs from its file" = unsaved edits (listScores
+//     reports it; tools/unsaved_check.js asks about it at session end).
+//   - A named version: scores/<name>-v<label>.json — a frozen copy written by "Name version"
+//     (the file is saved in the same act). Never overwritten. Committed.
+//   - Snapshots: scores/versions/<name>_v<timestamp>.json — taken at every explicit Save,
+//     rolling cap of 20 per score, gitignored: the silent net (no menu; the AI digs on request).
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -36,7 +41,8 @@ const MIME = {
     '.md': 'text/plain; charset=utf-8'
 };
 
-const safe = name => String(name).replace(/[^a-zA-Z0-9_-]/g, '_');
+// dots allowed (D17: version labels such as -v1.5); never `..` and never a leading dot
+const safe = name => String(name).replace(/[^a-zA-Z0-9_.-]/g, '_').replace(/\.{2,}/g, '.').replace(/^\.+/, '');
 
 // ---- score persistence ----
 
@@ -67,12 +73,40 @@ function pruneVersions(name) {
     }
 }
 
+// D17: what a working copy holds against its file — compared as content, not as mtime
+// (a Save writes the file from the same state the working copy had; times alone would lie).
+function scoreEssence(json) {
+    try {
+        const d = JSON.parse(json);
+        if (d && d.metadata) { delete d.metadata.modified; delete d.metadata.created; }
+        if (d) delete d.viewport;                          // scroll / zoom is not an edit
+        return JSON.stringify(d);
+    } catch (e) { return json; }
+}
+function workState(base) {
+    const wf = path.join(SCORES_DIR, `${base}-work.json`), bf = path.join(SCORES_DIR, `${base}.json`);
+    const st = fs.statSync(wf);
+    const orphan = !fs.existsSync(bf);                     // never saved: the file does not exist yet
+    let differs = true;
+    if (!orphan) {
+        try { differs = scoreEssence(fs.readFileSync(wf, 'utf8')) !== scoreEssence(fs.readFileSync(bf, 'utf8')); }
+        catch (e) { differs = true; }
+    }
+    return { modified: st.mtime.toISOString(), differs, orphan };
+}
 function listScores() {
-    return fs.readdirSync(SCORES_DIR)
-        .filter(f => f.endsWith('.json'))
+    const files = fs.readdirSync(SCORES_DIR).filter(f => f.endsWith('.json'));
+    const names = new Set(files.map(f => f.replace(/\.json$/, '')));
+    return files
         .map(f => {
+            const name = f.replace(/\.json$/, '');
             const st = fs.statSync(path.join(SCORES_DIR, f));
-            return { name: f.replace(/\.json$/, ''), filename: f, modified: st.mtime.toISOString(), size: st.size };
+            const row = { name, filename: f, modified: st.mtime.toISOString(), size: st.size };
+            // a file with a working copy: say whether the copy holds unsaved edits
+            if (!/-work$/.test(name) && names.has(name + '-work')) row.work = workState(name);
+            // a working copy with no file: the score was never saved
+            if (/-work$/.test(name) && !names.has(name.replace(/-work$/, ''))) row.work = workState(name.replace(/-work$/, ''));
+            return row;
         })
         .sort((a, b) => new Date(b.modified) - new Date(a.modified));
 }
