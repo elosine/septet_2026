@@ -52,3 +52,10 @@
   keyboard and no outputs until one of them fires. Fix: call `initZoneMidi()` once on load
   (or on the first user gesture / focus), so the keyboard and playback are live immediately.
   Workaround meanwhile: click CC7 Reset (or press Play once) after every reload.
+- **A stand-in survives a voicing change in the STRIKES drawer** (2026-09-04, seen in the composer's
+  screenshot: Bass Cl. `E3*` for an E5 voice, where a fresh stand-in would be E4 — one octave down into
+  the slap preset's 34–65). `fitVoice` computes `standIn` only when it is null, so `applyVoicing`'s
+  re-fit keeps the stand-in chosen for the voice's earlier pitch (or the variant the composer picked in
+  the T panel — indistinguishable after the fact). Noise techniques barely care; fixed-pitch ones (open
+  strings) would. Fix at the next drawer pass: recompute on a pitch change unless picked by hand (a
+  `standInByHand` flag). Not blocking — the row always shows the key that will sound.
