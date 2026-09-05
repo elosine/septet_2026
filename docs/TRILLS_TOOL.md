@@ -57,6 +57,11 @@ pitch) may use a second row (bowed tremolo faster).
 > (`scores/trill_playing_samples*.json`, accent senza vib) indexed by speed → a per-instrument table of gaps, velocities and
 > note lengths, looked up along the curve with stretch / smooth / speed; the rate table above becomes the fallback. His
 > decision on the samples (adapt / re-record) pending; nothing built.
+>
+> **2026-09-05, later — option A built (RUNNING_LOG §101):** `tools/trill_ingest.js` → `bank/trill_timing_db.json` (speed-indexed,
+> role lo / hi, his lengths and velocities); `tools/curve_eval.js` (the app's curve math ported, matched to the app);
+> `tools/trill_curve_gen.js` → `scores/trill-curve-test.json` (a 45 s smooth curve on violin 1 with his timing under it);
+> `tools/score_to_midi.js` → `midi/` (his captures as .mid, to audition articulations). Awaiting his ears.
 
 ## 3 · The reference curves — three META lanes
 
@@ -146,7 +151,8 @@ animation here, it'll just say trill". The animated score shows the span; the cu
    instrument; judge the fp and the top speed. Edit the script's tables (candidates, rates, `DROP`), re-run, reload.
 1. **The trill object** (§2, §6, §8's option 1): the type, the per-instrument table, the fp, mute-by-rule, `mutedBy`
    on save, the greyed drawing; the playability checker (the hard / soft badge) taught that a trill is one object — its notes
-   re-attack by design (RUNNING_LOG §99). About a day.
+   re-attack by design (RUNNING_LOG §99). The realization = the table lookup of `tools/trill_curve_gen.js` (his timing from
+   `bank/trill_timing_db.json`), not the rate table (§101). About a day.
 2. **Three META lanes, tracing, the live reference, the span selection** (§3, §4). About a day; the contract note.
 3. **Launch from a strike** and `busy()` in the dealer (§5, §7). Half a day.
 4. **Free trills and edge stretching** (§4's `T` on a span; the default length). Small.

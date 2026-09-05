@@ -2829,3 +2829,39 @@ it as plain notes from the speed-indexed table (the same lookup, stretch / smoot
 app change for the test; the trill object of phase 1 then does the same live. Also his to settle: `accent_senza_vel` as the
 trill articulation (what he played on) · whether the three sample files are committed (his takes, untracked). Awaiting his
 call.
+
+## §101. Option A built and the curve test made: the speed-indexed trill table from the composer's playing, the MIDI export, the ported curve evaluator, `trill-curve-test` — verified loading on :5301
+
+Composer: *"a, and then can you give me a midi file from the trills_playing_samples file, most likely it will be accent senza
+vib but I'll use the file to try some others; sure commit the sample files. and the test good, you can make a long-ish,
+smooth curve and let me listen to it."*
+
+**Built, in order.** (1) `tools/trill_ingest.js` → `bank/trill_timing_db.json` — piece #2's DB shape with one change:
+`curvePosition` = the speed level — each note's local rate (1000 ÷ the mean of ±3 gaps) mapped 0 → 1 across the
+instrument's played range (the 2nd–98th percentiles of the local rates; rate-linear, so half-height is half-way between his
+slowest and his fastest in notes per second) — plus `role` lo / hi (which note of the pair) and the real key-down length;
+bursts split at silences over 500 ms, one sample per burst, pooled per instrument at generation. The ranges: violin 1
+3.73 → 9.83 per second · viola 3.23 → 10.14 · cello 2.99 → 9.40. By speed quintile, the violin: gap 237 → 180 → 148 → 124 →
+108 ms · velocity 67 → 71 → 80 → 95 → 106 · length 180 → 126 → 104 → 93 → 80 ms (viola and cello the same shape, in the
+tool's printout). (2) `tools/score_to_midi.js` → `midi/trill_playing_samples.mid` (+ `-viola`, `-cello`): format 1, 480 ppq,
+120 bpm, one named track per lane, channel 1, no CC0 / CC7 (the articulation is chosen in the sampler), the score's own
+times; parsed back: 709 / 558 / 593 notes, first onsets and velocities identical to the score files. (3) `tools/curve_eval.js`
+— the app's `computeYAtT` / `computeSegY` / `getYAtPos` / `getYAtTime` ported, node smoothing included; checked against the
+running app at two points of the test curve: 5.013 and 9.086 on both sides. (4) `tools/trill_curve_gen.js` →
+`scores/trill-curve-test.json`: piece #2's lookup (window ±0.05, the nearby attacks cycled, a seeded start per region;
+stretch anchored at his fastest gap → smooth toward the local mean → speed) with the role matched — a lo note draws from
+his lo gaps, a hi note from his hi, so his long-short finger pattern is kept (`--roles off` pools them; smooth then kills
+the stutter as in #2); the note length his, capped at 1.8 × gap; the velocity his; pitches 69 / 70 (A4 / B♭4). The built-in
+curve: 45 s from 2 s on violin 1, nodes (0, 1) (0.3, 8) (0.5, 4.5) (0.75, 10) (1, 1.5), sigmoid segments of slope 0.5,
+node smoothing 0.6 — a slow opening, a swell, an easing, the rush to the top, the long relaxation; smooth 0.7, stretch 1,
+speed 1, seed 1. **The output:** 329 notes; per 5 s window, the rate written against the rate the curve implies: 5.1 / 5.1
+· 6.7 / 6.8 · 8.2 / 8.1 · 7.7 / 7.7 · 6.8 / 6.9 · 7.9 / 8.0 · 9.3 / 9.2 · 8.1 / 8.2 · 5.8 / 5.8 per second — the velocity 70
+→ 105 → 74 and the length 138 → 80 → 122 ms following; shortest note 66 ms, smallest gap 94 ms; no same-pitch overlap.
+
+**Verified on the throwaway server** (a copy `zz-ai-trill-curve`, deleted after with its working copy): 331 objects, the
+curve drawn as a line on the violin 1 lane, the marker labelled, zero console errors; the playability badge "151 soft"
+(re-attacks — expected for a trill, §99). *Rejected:* the Bash heredoc for the generator (cut at ~8 KB; the file tool
+instead) · normalizing the speed per burst (#2's convention) — per instrument keeps the curve's height meaning the same
+rate in every burst. **To listen:** reload, Experiments → `trill-curve-test`, SPACE from the start. To change: one flag
+each — `--smooth`, `--stretch`, `--speed`, `--seed`, `--roles off`, `--pitch`, `--dur`, or `--from` a score with his own
+curve drawn on the lane. His three sample files committed at his word (b9d68ee). Awaiting his ears.

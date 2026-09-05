@@ -16,6 +16,8 @@
 | `<name>-work` | **the working copy** — every open goes through one; autosave writes here, never the file; gitignored; discarded on Save and on Reload, so one that differs from its file = unsaved edits |
 | `cont-<family>-<nnn>` | a single shape / container, if the container way of working returns; families grow as needed |
 | `0i-test`, `0i-test-b` | the PLAN 0i proof saves (RUNNING_LOG §13) — test material, kept as evidence; never part of the piece |
+| `trill_playing_samples`, `-viola`, `-cello` | the composer's trill captures (2026-09-05, score-lane `Rec` on accent senza vib) — the source of `bank/trill_timing_db.json`; committed, never overwritten |
+| `trill-*` | trill tests written by `tools/trill_curve_gen.js` (a curve + his timing under it); `trill0-listen` = the rejected formula file (RUNNING_LOG §99) |
 | everything else | research archive — frozen experiment renders; never overwritten |
 
 - **The save system (D17, composer 2026-09-04; RUNNING_LOG §67–68) — one rule for every score,
@@ -29,6 +31,9 @@
   has eaten a score in every previous piece and git is the only net under it. At session end
   `node tools/unsaved_check.js` lists working copies that hold edits their file does not; the AI
   asks before the commit.
+- **`midi/`** — Standard MIDI exports of captures (`tools/score_to_midi.js`: one named track per lane, channel 1, no CC0 /
+  CC7), for auditioning articulations in Reaper. **`bank/trill_timing_db.json`** — the trill timing table
+  (`tools/trill_ingest.js`), rebuilt from the capture files; committed (RUNNING_LOG §101).
 
 ## 2. The S1 conventions the IR reads (D9 §5, proved at 0i)
 
