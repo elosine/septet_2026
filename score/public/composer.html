@@ -66,28 +66,33 @@
        Full-width so the shared scroll transform keeps its content timeline-locked;
        semi-transparent so the parts underneath stay visible; draggable vertically
        via its label strip; hidden until draw mode / stamp opens it. */
-    #laneMeta {
+    .metaLane {
         top: 22%; height: 30%; background: rgba(247,245,239,0.55); z-index: 40;
         border-top: 1px dashed #8a6d3b; border-bottom: 1px dashed #8a6d3b;
         box-shadow: 0 2px 10px rgba(0,0,0,0.12); display: none;
     }
-    #laneMeta.open { display: block; }
+    .metaLane.open { display: block; }
     /* Click-through when not drawing: the parts underneath stay fully editable.
        Window chrome + its own curve hit-paths/handles re-enable themselves. */
-    #laneMeta { pointer-events: none; }
-    #laneMeta.drawing { pointer-events: auto; }
-    #laneMeta .contentGroup circle, #laneMeta .contentGroup rect { pointer-events: auto; }
-    #laneMeta .laneLabel {
+    .metaLane { pointer-events: none; }
+    .metaLane.drawing { pointer-events: auto; }
+    .metaLane .contentGroup circle, .metaLane .contentGroup rect { pointer-events: auto; }
+    .metaLane .laneLabel {
         color: #8a6d3b; pointer-events: auto; cursor: ns-resize;
         background: rgba(247,245,239,0.85); padding: 1px 5px; border-radius: 2px;
     }
-    #laneMeta .metaClose {
+    .metaLane .metaClose {
         position: absolute; right: 6px; top: 1px; z-index: 3; cursor: pointer;
         color: #8a6d3b; font-size: 13px; background: transparent; border: none;
         pointer-events: auto;
     }
     #drawBtn.on { background: #8a6d3b; color: #fff; }
-    #metaBtn.on { background: #8a6d3b; color: #fff; }
+    #metaBtn.on, #metaBtnB.on, #metaBtnC.on { background: #8a6d3b; color: #fff; }
+    /* META B and C (TRILLS_TOOL phase 2): their own resting height and colour */
+    #laneMetaB { top: 38%; border-color: #2F6FA8; }
+    #laneMetaB .laneLabel, #laneMetaB .metaClose { color: #2F6FA8; }
+    #laneMetaC { top: 54%; border-color: #7B3FA0; }
+    #laneMetaC .laneLabel, #laneMetaC .metaClose { color: #7B3FA0; }
     #recBtn.armed { background: #8c2f2f; border-color: #c05050; color: #fff; }
     #recLaneSel, #recTechSel { width: 90px !important; }
     /* Per-part solo (composer 2026-08-12): S in each lane; ALT+click = exclusive */
@@ -407,8 +412,18 @@
         <span class="laneLabel">Cello</span>
         <svg xmlns="http://www.w3.org/2000/svg"><g class="tickGroup"></g><g class="contentGroup"></g></svg>
     </div>
-    <div class="lane" id="laneMeta">
-        <span class="laneLabel">META — draw window (drag ↕)</span>
+    <div class="lane metaLane" id="laneMeta">
+        <span class="laneLabel">META A — draw window (drag ↕)</span>
+        <button class="metaClose" title="Hide draw window">✕</button>
+        <svg xmlns="http://www.w3.org/2000/svg"><g class="tickGroup"></g><g class="contentGroup"></g></svg>
+    </div>
+    <div class="lane metaLane" id="laneMetaB">
+        <span class="laneLabel">META B — draw window (drag ↕)</span>
+        <button class="metaClose" title="Hide draw window">✕</button>
+        <svg xmlns="http://www.w3.org/2000/svg"><g class="tickGroup"></g><g class="contentGroup"></g></svg>
+    </div>
+    <div class="lane metaLane" id="laneMetaC">
+        <span class="laneLabel">META C — draw window (drag ↕)</span>
         <button class="metaClose" title="Hide draw window">✕</button>
         <svg xmlns="http://www.w3.org/2000/svg"><g class="tickGroup"></g><g class="contentGroup"></g></svg>
     </div>
@@ -460,7 +475,9 @@
     </select>
     <button id="stampBtn">Stamp → META</button>
     <button id="cc7ResetBtn" title="All-notes-off + CC7=127 on every port/channel">CC7 Reset</button>
-    <button id="metaBtn" title="Show/hide the META draw window">META</button>
+    <button id="metaBtn" title="Show/hide META A — the strikes' shapes and reference curve A">META A</button>
+    <button id="metaBtnB" title="Show/hide META B — reference curve B">B</button>
+    <button id="metaBtnC" title="Show/hide META C — reference curve C">C</button>
     <span style="color:#ccc">|</span>
     <select id="recLaneSel" title="record target part"></select>
     <select id="recTechSel" title="capture technique"></select>
@@ -1320,6 +1337,11 @@ const TRACKS = [
 // META drawing layer index (the floating draw window = lanes[META_LAYER]).
 // Septet layout (layoutVersion 3): META = 7. Piece #4 had META = 10 (v2), its v1 had 7.
 const META_LAYER = 7;
+// TRILLS_TOOL phase 2 (2026-09-05): three META lanes — 7 = A (the strikes' shapes and reference curve A), 8 = B, 9 = C.
+// Contract (NAMING §2.2): layers >= tracks.length are META.
+const META_LAYERS = [7, 8, 9];
+const META_NAMES = { 7: 'A', 8: 'B', 9: 'C' };
+const META_COLORS = { 7: '#2E8B57', 8: '#2F6FA8', 9: '#7B3FA0' };
 
 const Composer = {
     // Shared color palette — workshop colors (from index.html --clr-* vars)
@@ -1390,7 +1412,7 @@ const Composer = {
         // Septet: the lane table follows TRACKS (one lane per track + META at index
         // META_LAYER) instead of a literal list of ten — the literal left lanes 7..9
         // null and put META at index 10, which broke init on the first load (0b.4).
-        this.lanes = [...TRACKS.map((_, i) => 'lane' + (i + 1)), 'laneMeta'].map(id => document.getElementById(id));
+        this.lanes = [...TRACKS.map((_, i) => 'lane' + (i + 1)), 'laneMeta', 'laneMetaB', 'laneMetaC'].map(id => document.getElementById(id));   // META A, B, C (phase 2)
         this.tickGroups = this.lanes.map(l => l.querySelector('.tickGroup'));
         this.contentGroups = this.lanes.map(l => l.querySelector('.contentGroup'));
         this.sessionNameInput = document.getElementById('sessionName');
@@ -1483,13 +1505,14 @@ const Composer = {
         window.addEventListener('keyup', (e) => { if (e.key === 'Alt') document.body.classList.remove('altdown'); });
         window.addEventListener('blur', () => document.body.classList.remove('altdown'));
 
-        // ---- META window toggle (discoverability, composer 2026-08-13) ----
-        const metaBtn = document.getElementById('metaBtn');
-        if (metaBtn) metaBtn.addEventListener('click', () => {
-            const w = this.lanes[META_LAYER];
-            if (w.classList.contains('open')) this.closeMetaWin();
-            else this.openMetaWin();
-            metaBtn.classList.toggle('on', w.classList.contains('open'));
+        // ---- META window toggles: A, B, C (TRILLS_TOOL phase 2; A was the one META button, composer 2026-08-13) ----
+        [['metaBtn', META_LAYER], ['metaBtnB', 8], ['metaBtnC', 9]].forEach(([id, L]) => {
+            const b = document.getElementById(id);
+            if (!b) return;
+            b.addEventListener('click', () => {
+                const w = this.lanes[L];
+                if (w.classList.contains('open')) this.closeMetaWin(L); else this.openMetaWin(L);
+            });
         });
 
         // ---- CC7 Reset button (composer 2026-08-13: the stuck-quiet cure) ----
@@ -1565,69 +1588,73 @@ const Composer = {
             this.lanes[i].appendChild(b);
         }
 
-        // ---- Freehand-with-fit (META floating draw window) ----
+        // ---- Freehand-with-fit: the META draw windows A, B, C (TRILLS_TOOL phase 2, composer 2026-09-05) ----
+        // Draw mode arms every OPEN META window; a sketch lands on the window it is drawn in. Each window has
+        // its own chrome: ✕ hides it (and leaves draw mode when none stays open), the label strip drags it.
         this.drawMode = false;
         const drawBtn = document.getElementById('drawBtn');
+        const setDrawing = (on) => META_LAYERS.forEach(L => this.lanes[L].classList.toggle('drawing', on && this.lanes[L].classList.contains('open')));
+        this._setMetaDrawing = setDrawing;
         if (drawBtn) drawBtn.addEventListener('click', () => {
             this.drawMode = !this.drawMode;
             drawBtn.classList.toggle('on', this.drawMode);
-            this.lanes[META_LAYER].classList.toggle('drawing', this.drawMode);
-            if (this.drawMode) this.openMetaWin();
+            if (this.drawMode && !META_LAYERS.some(L => this.lanes[L].classList.contains('open'))) this.openMetaWin(META_LAYER);
+            setDrawing(this.drawMode);
         });
-        const metaLane = this.lanes[META_LAYER];
-        // Window chrome: ✕ hides (and exits draw mode); label strip drags vertically.
-        metaLane.querySelector('.metaClose').addEventListener('click', () => {
-            this.closeMetaWin();
-            if (this.drawMode) { this.drawMode = false; drawBtn?.classList.remove('on'); }
-            metaLane.classList.remove('drawing');
+        META_LAYERS.forEach(L => {
+            const metaLane = this.lanes[L];
+            metaLane.querySelector('.metaClose').addEventListener('click', () => {
+                this.closeMetaWin(L);
+                if (this.drawMode && !META_LAYERS.some(K => this.lanes[K].classList.contains('open'))) { this.drawMode = false; drawBtn?.classList.remove('on'); }
+            });
+            metaLane.querySelector('.laneLabel').addEventListener('mousedown', (e) => {
+                e.preventDefault(); e.stopPropagation();
+                const contRect = document.getElementById('laneContainer').getBoundingClientRect();
+                const startY = e.clientY, startTop = metaLane.offsetTop;
+                const winH = metaLane.offsetHeight;
+                const onMove = (ev) => {
+                    const top = Math.max(0, Math.min(contRect.height - winH, startTop + ev.clientY - startY));
+                    metaLane.style.top = top + 'px';
+                };
+                const onUp = () => {
+                    window.removeEventListener('mousemove', onMove);
+                    window.removeEventListener('mouseup', onUp);
+                    this.renderAll();   // lane geometry moved under the curves
+                };
+                window.addEventListener('mousemove', onMove);
+                window.addEventListener('mouseup', onUp);
+            });
+            let sketch = null;
+            metaLane.addEventListener('mousedown', (e) => {
+                if (!this.drawMode || e.button !== 0) return;
+                e.preventDefault(); e.stopPropagation();
+                sketch = [];
+                const svgNS = 'http://www.w3.org/2000/svg';
+                const ov = document.createElementNS(svgNS, 'svg');
+                ov.style.cssText = 'position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:999';
+                const pl = document.createElementNS(svgNS, 'polyline');
+                pl.setAttribute('fill', 'none');
+                pl.setAttribute('stroke', META_COLORS[L]);
+                pl.setAttribute('stroke-width', '2');
+                pl.setAttribute('stroke-dasharray', '4 3');
+                ov.appendChild(pl);
+                document.body.appendChild(ov);
+                const move = (ev) => {
+                    sketch.push({ x: ev.clientX, y: ev.clientY });
+                    pl.setAttribute('points', sketch.map(p => p.x + ',' + p.y).join(' '));
+                };
+                const up = () => {
+                    window.removeEventListener('mousemove', move);
+                    window.removeEventListener('mouseup', up);
+                    ov.remove();
+                    this.fitSketch(sketch, L);
+                    sketch = null;
+                };
+                window.addEventListener('mousemove', move);
+                window.addEventListener('mouseup', up);
+                sketch.push({ x: e.clientX, y: e.clientY });
+            }, true);
         });
-        metaLane.querySelector('.laneLabel').addEventListener('mousedown', (e) => {
-            e.preventDefault(); e.stopPropagation();
-            const contRect = document.getElementById('laneContainer').getBoundingClientRect();
-            const startY = e.clientY, startTop = metaLane.offsetTop;
-            const winH = metaLane.offsetHeight;
-            const onMove = (ev) => {
-                const top = Math.max(0, Math.min(contRect.height - winH, startTop + ev.clientY - startY));
-                metaLane.style.top = top + 'px';
-            };
-            const onUp = () => {
-                window.removeEventListener('mousemove', onMove);
-                window.removeEventListener('mouseup', onUp);
-                this.renderAll();   // lane geometry moved under the curves
-            };
-            window.addEventListener('mousemove', onMove);
-            window.addEventListener('mouseup', onUp);
-        });
-        let sketch = null;
-        metaLane.addEventListener('mousedown', (e) => {
-            if (!this.drawMode || e.button !== 0) return;
-            e.preventDefault(); e.stopPropagation();
-            sketch = [];
-            const svgNS = 'http://www.w3.org/2000/svg';
-            const ov = document.createElementNS(svgNS, 'svg');
-            ov.style.cssText = 'position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:999';
-            const pl = document.createElementNS(svgNS, 'polyline');
-            pl.setAttribute('fill', 'none');
-            pl.setAttribute('stroke', '#2E8B57');
-            pl.setAttribute('stroke-width', '2');
-            pl.setAttribute('stroke-dasharray', '4 3');
-            ov.appendChild(pl);
-            document.body.appendChild(ov);
-            const move = (ev) => {
-                sketch.push({ x: ev.clientX, y: ev.clientY });
-                pl.setAttribute('points', sketch.map(p => `${p.x},${p.y}`).join(' '));
-            };
-            const up = () => {
-                window.removeEventListener('mousemove', move);
-                window.removeEventListener('mouseup', up);
-                ov.remove();
-                this.fitSketch(sketch);
-                sketch = null;
-            };
-            window.addEventListener('mousemove', move);
-            window.addEventListener('mouseup', up);
-            sketch.push({ x: e.clientX, y: e.clientY });
-        }, true);
 
         const clearBtn = document.getElementById('clearAllBtn');
         if (clearBtn) clearBtn.addEventListener('click', async () => {
@@ -1873,9 +1900,14 @@ const Composer = {
 
         container.addEventListener('mousedown', (e) => {
             if (this.drawMode) return;   // freehand capture owns the mouse
+            // SHIFT-drag on empty lane space = mark a span for a trill (TRILLS_TOOL phase 2)
+            if (e.shiftKey && e.button === 0 && e.target.closest('.lane') && !e.target.closest('.composerObject') && !e.target.closest('.metaLane')) {
+                if (this.beginSpanSelect(e)) { e.preventDefault(); return; }
+            }
             // Only drag with middle mouse or left mouse on empty space
             if (e.button === 1 || (e.button === 0 && e.target.closest('.lane') && !e.target.closest('.composerObject'))) {
                 dragging = true;
+                if (this.spanSel) this.clearSpanSel();   // a plain click elsewhere clears a marked span
                 dragStartX = e.clientX;
                 dragStartOffset = this.scrollOffset;
                 container.style.cursor = 'grabbing';
@@ -2083,6 +2115,9 @@ const Composer = {
                 return;
             }
 
+            // ESC = clear a marked span (TRILLS_TOOL phase 2)
+            if (e.key === 'Escape' && this.spanSel) { this.clearSpanSel(); this.saveStatus.textContent = 'span cleared'; return; }
+
             // T = add a trill (TRILLS_TOOL phase 1, composer 2026-09-05)
             if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.altKey && !e.target.matches('input, textarea, select')) {
                 e.preventDefault();
@@ -2233,7 +2268,7 @@ const Composer = {
         const stripEls = (key, val) => key === '_els' ? undefined : val;
         return JSON.parse(JSON.stringify({
             version: 1,
-            layoutVersion: 3,   // septet: 7 instrument lanes, META = layer 7 (piece #4 v2: ten tubas, META 10)
+            layoutVersion: 4,   // septet: 7 instrument lanes, META = layers 7 (A), 8 (B), 9 (C) — TRILLS_TOOL phase 2; v3 had one META lane at 7 (piece #4 v2: ten tubas, META 10)
             tracks: TRACKS,
             assets: this.assets || {},
             metadata: {
@@ -2263,7 +2298,7 @@ const Composer = {
         if (data.layoutVersion === 2) {
             // A ten-lane tuba-piece save (piece #4). Layers >= META_LAYER have no lane here.
             // Loaded anyway and SAID so — never silently dropped (AI_METHODOLOGY rule 3).
-            const stray = this.objects.filter(o => o.layer > META_LAYER).length;
+            const stray = this.objects.filter(o => o.layer > META_LAYERS[META_LAYERS.length - 1]).length;
             console.warn('[restoreData] layoutVersion 2 (ten-lane tuba save): ' + stray + ' object(s) sit above lane ' + META_LAYER + ' and will not render; convert before use');
         }
         this.markers = (data.markers || []).map(m => { delete m._els; return m; });
@@ -2579,7 +2614,7 @@ const Composer = {
     revealObject(o) {
         if (!o) return;
         const t = (o.startSeconds != null ? o.startSeconds : o.time) || 0;
-        if (o.layer === META_LAYER && this.openMetaWin) this.openMetaWin();
+        if (o.layer >= META_LAYER && this.openMetaWin) this.openMetaWin(o.layer);
         this.scrollOffset = Math.max(0, t * this.pixelsPerSecond - 120);
         this.applyScroll();
         this.renderAll();
@@ -2875,6 +2910,7 @@ const Composer = {
             else if (obj.type === 'zone') this.renderZone(obj);
             else if (obj.type === 'motive') this.renderMotive(obj);
         }
+        this.drawSpanSel();   // a marked span survives the re-render (phase 2)
         // conflict wash is re-applied after every full render (the element cache
         // was just rebuilt, so the marks went with it)
         this.scheduleConflictRefresh();
@@ -2968,9 +3004,7 @@ const Composer = {
                 this.restoreData(result.data);
                 // scores that carry META shapes open the META window on load
                 // (otherwise the shapes exist but are invisible)
-                if (this.objects.some(o => o.type === 'waveCurve' && o.layer === META_LAYER)) {
-                    this.openMetaWin();
-                }
+                META_LAYERS.forEach(L => { if (this.objects.some(o => o.type === 'waveCurve' && o.layer === L)) this.openMetaWin(L); });
                 this.isDirty = false;
                 this.saveStatus.textContent = `Loaded: ${name}`;
                 localStorage.setItem('composerLastSession', this.pieceBase(name));
@@ -3175,10 +3209,11 @@ const Composer = {
 
     // ========== FREEHAND FIT (sketch -> clean node curve on META) ==========
 
-    fitSketch(raw) {
+    fitSketch(raw, layer) {
+        const L = (layer != null && META_LAYERS.includes(layer)) ? layer : META_LAYER;
         if (!raw || raw.length < 3) return;
-        const laneRect = this.lanes[META_LAYER].getBoundingClientRect();
-        const dims = this.getLaneDims(META_LAYER);
+        const laneRect = this.lanes[L].getBoundingClientRect();
+        const dims = this.getLaneDims(L);
         // client coords -> (time, y01); enforce monotonic time
         let pts = raw.map(p => ({
             t: this.clientXToTime(p.x),
@@ -3208,14 +3243,51 @@ const Composer = {
         const keep = this.rdp(norm, eps);
         const nodes = keep.map(p => ({ pos: Math.round(p.u * 1000) / 1000, y: Math.round(p.v * 100) / 10, smooth: 0.35 }));
         nodes[0].pos = 0; nodes[nodes.length - 1].pos = 1;
-        const segments = [];
-        for (let i = 0; i < nodes.length - 1; i++) segments.push({ model: 'bezier', slope: 0 });
-        this.createWaveCurve({
-            startSeconds: Math.max(0, Math.round(t0 * 100) / 100),
-            endSeconds: Math.round(t1 * 100) / 100,
-            layer: META_LAYER, nodes, segments, color: '#2E8B57', opacity: 0.5
+        const t0s = Math.max(0, Math.round(t0 * 100) / 100), t1s = Math.round(t1 * 100) / 100;
+
+        // TRILLS_TOOL phase 2 (composer: "trace a long curve and then make some adjustments along the way"): a trace over
+        // a region of the lane's reference curve REPLACES that region — the new nodes splice in between their first and
+        // last time; the rest of the old curve stays, its bends included. One reference curve per lane grows this way.
+        const old = this.objects.filter(o => o.type === 'waveCurve' && o.layer === L && !o.groupId && o.sonifyNote == null
+            && !o.isContainer && o.endSeconds > t0s && o.startSeconds < t1s);
+        const entries = nodes.map(n => ({ t: t0s + n.pos * (t1s - t0s), y: n.y, smooth: n.smooth, seg: { model: 'bezier', slope: 0 } }));
+        if (old.length) {
+            this.pushUndoState();
+            for (const o of old) {
+                const dur = o.endSeconds - o.startSeconds;
+                const tOf = i => o.startSeconds + o.nodes[i].pos * dur;
+                const inside = t => t >= t0s - 0.05 && t <= t1s + 0.05;
+                o.nodes.forEach((n, i) => {
+                    const t = tOf(i);
+                    if (inside(t)) return;                                    // under the trace: replaced
+                    const nextKept = i < o.nodes.length - 1 && !inside(tOf(i + 1));
+                    const seg = nextKept ? JSON.parse(JSON.stringify(o.segments[Math.min(i, o.segments.length - 1)] || { model: 'bezier', slope: 0 }))
+                        : { model: 'bezier', slope: 0 };                    // the join to the trace is plain
+                    entries.push({ t, y: n.y, smooth: n.smooth ?? 0.35, seg });
+                });
+                if (o._els && o._els.group) o._els.group.remove();
+                this.elementCache.delete(o.id);
+                const idx = this.objects.indexOf(o); if (idx >= 0) this.objects.splice(idx, 1);
+            }
+        }
+        entries.sort((a, b) => a.t - b.t);
+        const dedup = [entries[0]];
+        for (const e of entries.slice(1)) if (e.t - dedup[dedup.length - 1].t > 0.02) dedup.push(e);
+        const S = dedup[0].t, E = dedup[dedup.length - 1].t;
+        if (E - S < 0.5) return;
+        const mNodes = dedup.map(e => ({ pos: Math.round(((e.t - S) / (E - S)) * 1000) / 1000, y: e.y, smooth: e.smooth }));
+        mNodes[0].pos = 0; mNodes[mNodes.length - 1].pos = 1;
+        const mSegs = dedup.slice(0, -1).map(e => e.seg);
+        const wc = this.createWaveCurve({
+            startSeconds: Math.round(S * 100) / 100, endSeconds: Math.round(E * 100) / 100,
+            layer: L, nodes: mNodes, segments: mSegs, color: META_COLORS[L], opacity: 0.5
         });
+        wc.curveName = META_NAMES[L];
         this.deselectAll();   // no panel pop on draw (composer request)
+        this.saveStatus.textContent = 'curve ' + META_NAMES[L] + (old.length
+            ? ' — ' + t0s.toFixed(1) + ' → ' + t1s.toFixed(1) + ' s retraced (' + mNodes.length + ' nodes now)'
+            : ' — ' + mNodes.length + ' nodes, ' + S.toFixed(1) + ' → ' + E.toFixed(1) + ' s')
+            + ' · click it to adjust: drag a node · drag a diamond to bend · double-click a node to remove it · double-click the curve to add one';
     },
 
     rdp(points, eps) {
@@ -3259,9 +3331,13 @@ const Composer = {
     // The META draw window overlays the instrument lanes — it claims hits only in
     // draw mode, so ordinary clicks fall through to the parts underneath.
     getLaneFromY(clientY) {
-        if (this.drawMode) {
-            const r = this.lanes[META_LAYER].getBoundingClientRect();
-            if (clientY >= r.top && clientY <= r.bottom) return META_LAYER;
+        if (this.drawMode) {   // the open META windows claim hits in draw mode, the topmost (C over B over A) first
+            for (let k = META_LAYERS.length - 1; k >= 0; k--) {
+                const L = META_LAYERS[k], w = this.lanes[L];
+                if (!w.classList.contains('open')) continue;
+                const r = w.getBoundingClientRect();
+                if (clientY >= r.top && clientY <= r.bottom) return L;
+            }
         }
         for (let i = 0; i < META_LAYER; i++) {
             const r = this.lanes[i].getBoundingClientRect();
@@ -3486,16 +3562,23 @@ const Composer = {
         return !!wc && wc.type === 'waveCurve' && wc.sonifyNote != null && wc.layer < META_LAYER;
     },
 
-    openMetaWin() {
-        const w = this.lanes[META_LAYER];
+    metaBtnFor(L) { return document.getElementById(L === META_LAYER ? 'metaBtn' : L === 8 ? 'metaBtnB' : 'metaBtnC'); },
+
+    openMetaWin(layer) {   // A by default; B and C since TRILLS_TOOL phase 2
+        const L = (layer != null && META_LAYERS.includes(layer)) ? layer : META_LAYER;
+        const w = this.lanes[L];
         if (!w.classList.contains('open')) {
             w.classList.add('open');
+            if (this.drawMode) w.classList.add('drawing');
             this.generateTicks(); this.renderAll(); this.applyScroll();   // geometry was display:none
         }
+        const b = this.metaBtnFor(L); if (b) b.classList.add('on');
     },
 
-    closeMetaWin() {
-        this.lanes[META_LAYER].classList.remove('open');
+    closeMetaWin(layer) {
+        const L = (layer != null && META_LAYERS.includes(layer)) ? layer : META_LAYER;
+        this.lanes[L].classList.remove('open', 'drawing');
+        const b = this.metaBtnFor(L); if (b) b.classList.remove('on');
     },
 
     // Convert client X to time in seconds
@@ -4140,14 +4223,14 @@ const Composer = {
             const rSeg = segments[i] || { model: 'bezier', slope: 0 };
             const lT = leftLen > 0 ? Math.min(1, (lb - nodes[i - 1].pos) / leftLen) : 0;
             const rT = rightLen > 0 ? Math.min(1, (rb - nodes[i].pos) / rightLen) : 0;
-            const yL = this.computeYAtT(lSeg.model, lSeg.slope, nodes[i-1].y/10, nodes[i].y/10, lT) * 10;
-            const yR = this.computeYAtT(rSeg.model, rSeg.slope, nodes[i].y/10, nodes[i+1].y/10, rT) * 10;
+            const yL = this.computeSegY(lSeg, nodes[i-1].y/10, nodes[i].y/10, lT) * 10;
+            const yR = this.computeSegY(rSeg, nodes[i].y/10, nodes[i+1].y/10, rT) * 10;
             const eps = Math.max(radius * 0.01, 1e-6);
             const lTe = leftLen > 0 ? Math.min(1, (lb + eps - nodes[i-1].pos) / leftLen) : 0;
-            const yLp = this.computeYAtT(lSeg.model, lSeg.slope, nodes[i-1].y/10, nodes[i].y/10, lTe) * 10;
+            const yLp = this.computeSegY(lSeg, nodes[i-1].y/10, nodes[i].y/10, lTe) * 10;
             const slopeL = (yLp - yL) / eps;
             const rTe = rightLen > 0 ? Math.max(0, (rb - eps - nodes[i].pos) / rightLen) : 0;
-            const yRm = this.computeYAtT(rSeg.model, rSeg.slope, nodes[i].y/10, nodes[i+1].y/10, rTe) * 10;
+            const yRm = this.computeSegY(rSeg, nodes[i].y/10, nodes[i+1].y/10, rTe) * 10;
             const slopeR = (yR - yRm) / eps;
             const m0 = slopeL * zw, m1 = slopeR * zw;
             const u2 = u * u, u3 = u2 * u;
@@ -4158,7 +4241,7 @@ const Composer = {
                 const segLen = nodes[i + 1].pos - nodes[i].pos;
                 const segT = segLen > 0 ? (pos - nodes[i].pos) / segLen : 0;
                 const seg = segments[i] || { model: 'bezier', slope: 0 };
-                return this.computeYAtT(seg.model, seg.slope, nodes[i].y/10, nodes[i+1].y/10, segT) * 10;
+                return this.computeSegY(seg, nodes[i].y/10, nodes[i+1].y/10, segT) * 10;
             }
         }
         return nodes[nodes.length - 1].y;
@@ -4420,6 +4503,18 @@ const Composer = {
                 this.renderNodeHandles(wc);
                 this.showPropertyPanel();
                 this.startNodeDrag(wc, idx, e);
+            });
+            c.addEventListener('dblclick', (e) => {   // double-click a node = remove it (interior only) — TRILLS_TOOL phase 2
+                e.stopPropagation(); e.preventDefault();
+                if (idx > 0 && idx < wc.nodes.length - 1) {
+                    this.pushUndoState();
+                    wc.nodes.splice(idx, 1);
+                    wc.segments.splice(Math.min(idx, wc.segments.length - 1), 1);
+                    this.selectedNodeIdx = -1;
+                    this.updateWCRendering(wc);
+                    this.renderNodeHandles(wc);
+                    this.markDirty();
+                }
             });
             c.addEventListener('wheel', (e) => {
                 if (e.ctrlKey) return;
@@ -4868,7 +4963,7 @@ const Composer = {
         if (obj._els && obj._els.highlight) obj._els.highlight.style.display = '';
         if (obj.type === 'waveCurve') {
             // a selected META shape draws on top so its handles are never buried
-            if (obj.layer === META_LAYER) this.bringMetaToFront(obj);
+            if (obj.layer >= META_LAYER) this.bringMetaToFront(obj);
             this.renderNodeHandles(obj);
         }
         if (obj.type === 'lineWedge') this.renderLWNodeHandles(obj);
@@ -5271,7 +5366,7 @@ const Composer = {
                 html += this.ppRow('Fill', 'select', 'fillMode', obj.fillMode, '', ['line', 'bottom', 'top']);
                 html += this.ppRow('Opacity', 'number', 'opacity', obj.opacity, 'step="0.05" min="0" max="1"');
                 html += this.ppRow('Track', 'select', 'layer', obj.layer, '',
-                    TRACKS.map((t, i) => [String(i), t.label]).concat([[String(META_LAYER), 'META']]));
+                    TRACKS.map((t, i) => [String(i), t.label]).concat(META_LAYERS.map(L => [String(L), 'META ' + META_NAMES[L]])));
                 html += this.ppRow('Sound note (MIDI, blank=off)', 'number', 'sonifyNote', obj.sonifyNote != null ? obj.sonifyNote : '', 'step="1" min="0" max="127"');
                 {
                     const wcTechs = this.trackTechniques(obj.layer);
@@ -8954,7 +9049,7 @@ const Composer = {
                 && o.startSeconds > best && startSec - o.startSeconds < 8) { best = o.startSeconds; pitch = o.sonifyNote; }
         });
         if (pitch == null) pitch = inst ? Math.round((inst.rangeLow + inst.rangeHigh) / 2) : 69;
-        return { pitch, interval: 2, technique: tech, accent: true, attackVel: 127, curveId: '', level: 0.5, eat: true,
+        return { pitch, interval: 2, technique: tech, accent: true, attackVel: 127, curveId: '', curveRef: 'auto', level: 0.5, eat: true,
             smooth: 0.7, stretch: 1, speed: 1, seed: 1, roles: true, launchedFrom: null };
     },
 
@@ -8968,7 +9063,8 @@ const Composer = {
     createTrill() {
         const sel = this.selectedObject;
         let layer = this.activeLane, start = null, end = null, fromNote = null, curve = null;
-        if (sel && sel.type === 'waveCurve' && sel.layer < META_LAYER) {
+        if (this.spanSel) { layer = this.spanSel.layer; start = this.spanSel.start; end = this.spanSel.end; this.clearSpanSel(); }   // a marked span first (phase 2)
+        else if (sel && sel.type === 'waveCurve' && sel.layer < META_LAYER) {
             layer = sel.layer;
             if (sel.sonifyNote == null) { curve = sel; start = sel.startSeconds; end = sel.endSeconds; }
             else { fromNote = sel; start = sel.startSeconds; end = start + 4; }
@@ -8998,11 +9094,12 @@ const Composer = {
         return (t.curveId && all.find(o => o.id === t.curveId)) || all[0] || null;
     },
 
-    trillLevelFn(zone) {
-        const c = this.trillCurve(zone);
-        if (c) return sec => this.getYAtTime(c, sec) / 10;
+    trillLevelFn(zone) {   // the live reference (phase 2): A / B / C read over the trill's own span, its lane's curve, or a flat level
         const lv = Math.max(0, Math.min(1, zone.trill && zone.trill.level != null ? +zone.trill.level : 0.5));
-        return () => lv;
+        const r = this.trillRefResolved(zone);
+        if (r.kind === 'flat' || !r.curves.length) return () => lv;
+        const curves = r.curves;
+        return sec => this.curvesLevelAt(curves, sec, lv);
     },
 
     trillRouting(zone) {
@@ -9161,9 +9258,14 @@ const Composer = {
             '<option value="' + q.key + '"' + (q.key === t.technique ? ' selected' : '') + '>' + q.label + '</option>').join('') + '</select></div>';
         h += '<div class="pp-row"><label>Accent</label><input type="checkbox" data-trill="accent"' + (t.accent ? ' checked' : '') + '>'
             + ' <span style="font-size:10px;color:#666">first note at</span> <input type="number" data-trill="attackVel" value="' + t.attackVel + '" min="1" max="127" style="width:48px"></div>';
-        h += '<div class="pp-row"><label>Curve</label><span style="font-size:11px;color:' + (curve ? '#4A90D9' : '#999') + '">'
-            + (curve ? curve.id + ' on this lane — its height is the speed' : 'none on this lane — a flat level') + '</span>'
-            + (curve ? '' : ' <input type="number" data-trill="level" value="' + t.level + '" step="0.05" min="0" max="1" style="width:52px">') + '</div>';
+        const ref = this.trillRefResolved(obj), refSel = t.curveRef || 'auto';
+        const refStatus = ref.kind === 'flat' ? 'flat level' : (ref.name === 'lane' ? "this lane's curve " + (ref.curves[0] ? ref.curves[0].id : '')
+            : 'curve ' + ref.name + (ref.curves.length ? ' (' + ref.curves.length + ' piece' + (ref.curves.length > 1 ? 's' : '') + ' under this span)' : ' — nothing drawn under this span: flat'));
+        h += '<div class="pp-row"><label>Curve</label><span>' + ['auto', 'A', 'B', 'C', 'lane', 'flat'].map(k =>
+            '<button class="tr-ref" data-ref="' + k + '" title="what the trill reads for its speed, live" style="font-size:10px;padding:1px 5px;margin:1px;cursor:pointer;' + (refSel === k ? 'background:#4A90D9;color:#fff;border-color:#4A90D9;' : '') + '">' + k + '</button>').join('')
+            + ' <span style="font-size:10px;color:#666">' + (ref.auto ? 'auto → ' : '') + refStatus + '</span>'
+            + (ref.kind === 'flat' ? ' <input type="number" data-trill="level" value="' + t.level + '" step="0.05" min="0" max="1" style="width:52px">'
+                : ' <button class="tr-bake" title="a copy of the reference as this trill\'s own curve on its lane, to edit alone" style="font-size:10px;padding:1px 5px;cursor:pointer">bake</button>') + '</div>';
         h += '<div class="pp-row"><label>Eat notes</label><input type="checkbox" data-trill="eat"' + (t.eat !== false ? ' checked' : '') + '>'
             + ' <span style="font-size:10px;color:#666">this player\'s notes under the trill fall silent; M gives them back</span></div>';
         h += '<div class="pp-row"><label>Feel</label><span style="font-size:10px">smooth <input type="number" data-trill="smooth" value="' + t.smooth + '" step="0.1" min="0" max="1" style="width:44px">'
@@ -9189,6 +9291,12 @@ const Composer = {
         }));
         const dir = panel.querySelector('.tr-dir');
         if (dir) dir.addEventListener('click', () => { const t = this.ensureTrill(obj); this.auditionTrillInterval(obj, -t.interval); this.showPropertyPanel(); });
+        panel.querySelectorAll('.tr-ref').forEach(b => b.addEventListener('click', () => {
+            const t = this.ensureTrill(obj); this.pushUndoStateDebounced(300); t.curveRef = b.dataset.ref;
+            this.regenerateTrill(obj); this.renderZone(obj); this.markDirty(); this.showPropertyPanel();
+        }));
+        const bake = panel.querySelector('.tr-bake');
+        if (bake) bake.addEventListener('click', () => { this.bakeTrillCurve(obj); this.regenerateTrill(obj); this.renderZone(obj); this.markDirty(); this.showPropertyPanel(); });
         panel.querySelectorAll('[data-trill]').forEach(el => el.addEventListener('change', () => {
             const key = el.dataset.trill, t = this.ensureTrill(obj);
             this.pushUndoStateDebounced(300);
@@ -9203,6 +9311,90 @@ const Composer = {
         }));
         const hear = panel.querySelector('#ppTrillHear');
         if (hear) hear.addEventListener('click', () => this.hearTrill(obj, hear));
+    },
+
+    // ========== SPAN SELECTION + THE LIVE CURVE REFERENCE (TRILLS_TOOL phase 2, composer 2026-09-05; RUNNING_LOG §105) ==========
+    spanSel: null,
+
+    // SHIFT-drag on empty lane space marks a time range on that player (§4); T makes a trill there; ESC clears
+    beginSpanSelect(e) {
+        const layer = this.getLaneFromY(e.clientY);
+        if (layer == null || layer >= META_LAYER) return false;
+        const t0 = Math.max(0, this.clientXToTime(e.clientX));
+        this.clearSpanSel();
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const dims = this.getLaneDims(layer);
+        const r = document.createElementNS(svgNS, 'rect');
+        r.setAttribute('class', 'spanSel'); r.setAttribute('y', dims.top); r.setAttribute('height', dims.height);
+        r.setAttribute('fill', 'rgba(240,75,0,0.14)'); r.setAttribute('stroke', '#F04B00'); r.setAttribute('stroke-dasharray', '4 3');
+        r.style.pointerEvents = 'none';
+        this.contentGroups[layer].appendChild(r);
+        const upd = (t1) => { const a = Math.min(t0, t1), b = Math.max(t0, t1); r.setAttribute('x', a * this.pixelsPerSecond); r.setAttribute('width', Math.max(1, (b - a) * this.pixelsPerSecond)); return [a, b]; };
+        upd(t0);
+        const onMove = (ev) => upd(Math.max(0, this.clientXToTime(ev.clientX)));
+        const onUp = (ev) => {
+            window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp);
+            const [a, b] = upd(Math.max(0, this.clientXToTime(ev.clientX)));
+            if (b - a < 0.2) { r.remove(); return; }
+            this.spanSel = { layer, start: Math.round(a * 1000) / 1000, end: Math.round(b * 1000) / 1000, el: r };
+            this.saveStatus.textContent = 'span on ' + TRACKS[layer].label + ' ' + a.toFixed(2) + ' → ' + b.toFixed(2) + ' s — T for a trill there (ESC clears)';
+        };
+        window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
+        return true;
+    },
+
+    clearSpanSel() { if (this.spanSel && this.spanSel.el) this.spanSel.el.remove(); this.spanSel = null; },
+
+    drawSpanSel() {   // after a full re-render (the content groups were just cleared)
+        const s = this.spanSel; if (!s) return;
+        const svgNS = 'http://www.w3.org/2000/svg', dims = this.getLaneDims(s.layer);
+        const r = document.createElementNS(svgNS, 'rect');
+        r.setAttribute('class', 'spanSel'); r.setAttribute('x', s.start * this.pixelsPerSecond); r.setAttribute('width', Math.max(1, (s.end - s.start) * this.pixelsPerSecond));
+        r.setAttribute('y', dims.top); r.setAttribute('height', dims.height);
+        r.setAttribute('fill', 'rgba(240,75,0,0.14)'); r.setAttribute('stroke', '#F04B00'); r.setAttribute('stroke-dasharray', '4 3'); r.style.pointerEvents = 'none';
+        this.contentGroups[s.layer].appendChild(r); s.el = r;
+    },
+
+    // the reference curves on a lane: drawn curves — never a gesture's META shape, a note, or a container
+    refCurvesOn(layer, start, end) {
+        return this.objects.filter(o => o.type === 'waveCurve' && o.layer === layer && !o.groupId && o.sonifyNote == null && !o.isContainer
+            && (start == null || (o.endSeconds > start && o.startSeconds < end))).sort((a, b) => a.startSeconds - b.startSeconds);
+    },
+
+    // the height (0–1) of a set of curves at a time: the curve covering it, else the nearest edge, else the fallback
+    curvesLevelAt(curves, sec, fallback) {
+        if (!curves.length) return fallback;
+        const c = curves.find(o => sec >= o.startSeconds && sec <= o.endSeconds);
+        if (c) return this.getYAtTime(c, sec) / 10;
+        let best = null, bd = Infinity;
+        for (const o of curves) { const d = sec < o.startSeconds ? o.startSeconds - sec : sec - o.endSeconds; if (d < bd) { bd = d; best = o; } }
+        return best ? this.getYAtTime(best, sec < best.startSeconds ? best.startSeconds : best.endSeconds) / 10 : fallback;
+    },
+
+    // what a trill reads (§4, live): its choice — A / B / C over its own span, its lane's curve, or a flat level —
+    // or, on 'auto', A if anything is drawn under it there, else the lane's curve, else flat
+    trillRefResolved(zone) {
+        const t = zone.trill || {}, ref = t.curveRef || 'auto';
+        const meta = name => { const L = META_LAYERS.find(K => META_NAMES[K] === name); return L == null ? null : { kind: 'meta', name, layer: L, curves: this.refCurvesOn(L, zone.startTime, zone.endTime) }; };
+        const lane = () => { const all = this.refCurvesOn(zone.layer, zone.startTime, zone.endTime); const pick = (t.curveId && all.find(o => o.id === t.curveId)) || all[0]; return { kind: 'lane', name: 'lane', layer: zone.layer, curves: pick ? [pick] : [] }; };
+        if (ref === 'flat') return { kind: 'flat', name: 'flat', curves: [] };
+        if (ref === 'lane') return lane();
+        if (ref === 'A' || ref === 'B' || ref === 'C') return meta(ref);
+        const a = meta('A'); if (a && a.curves.length) return Object.assign(a, { auto: true });
+        const l = lane(); if (l.curves.length) return Object.assign(l, { auto: true });
+        return { kind: 'flat', name: 'flat', curves: [], auto: true };
+    },
+
+    // bake: the live reference becomes the trill's own curve on its lane (§4 — for a trill that must be edited alone)
+    bakeTrillCurve(zone) {
+        const r = this.trillRefResolved(zone); if (r.kind === 'flat' || !r.curves.length) return null;
+        const lv = this.trillLevelFn(zone), span = zone.endTime - zone.startTime, n = Math.max(2, Math.min(40, Math.round(span / 0.5) + 1));
+        const nodes = Array.from({ length: n }, (_, i) => ({ pos: Math.round((i / (n - 1)) * 1000) / 1000, y: Math.round(lv(zone.startTime + (i / (n - 1)) * span) * 100) / 10, smooth: 0.35 }));
+        const wc = this.createWaveCurve({ startSeconds: zone.startTime, endSeconds: zone.endTime, layer: zone.layer, nodes,
+            segments: nodes.slice(0, -1).map(() => ({ model: 'bezier', slope: 0 })), color: '#F04B00', opacity: 0.5, performanceNotes: 'baked from curve ' + r.name });
+        const t = this.ensureTrill(zone); t.curveRef = 'lane'; t.curveId = wc.id;
+        this.selectObject(zone);
+        return wc;
     },
 
     tickCurvePlayback(currentTimeSec) {

@@ -92,6 +92,11 @@ pitch) may use a second row (bowed tremolo faster).
   region replaces that region (the new trace splices in between its first and last x). PLAN 1a is this.
 - The curves persist in the save like any object (a `waveCurve` on its META lane with `curveName: 'A'`).
 
+> **Built 2026-09-05 (RUNNING_LOG §105):** three META lanes A / B / C (layers 7 · 8 · 9; `META A · B · C` buttons, each its own
+> window); the trace → RDP fit existed; added: re-trace splicing (a sketch over a region replaces that region, the rest keeps its
+> bends), `curveName`, double-click a node to remove it; the three adjust gestures were already there (node drag, the diamond
+> bends a segment, double-click the curve adds a node). Also fixed: `getYAtPos` now reads a bent (`ctrl`) segment as drawn.
+
 ## 4 · The sampler — portable
 
 - **Live reference, not a copy.** An object that names a curve (`curveRef`) reads that curve's height over its own
@@ -103,6 +108,12 @@ pitch) may use a second row (bowed tremolo faster).
 - **Selecting a span on a lane:** SHIFT-drag on empty lane space marks a time range on that lane (the app selects
   objects today; this is the one new gesture). With a span marked: `T` → a trill on that player over that span,
   reading curve A (or the curve chosen in a small A / B / C selector on the lane header).
+
+> **Built 2026-09-05 (RUNNING_LOG §105):** the trill's Curve row — `auto · A · B · C · lane · flat` chips with a status line;
+> `auto` = A if drawn under the trill, else its lane's curve, else flat; A / B / C read over the trill's own span at absolute time
+> (the covering curve, else the nearest edge); regenerated at every play start; `bake` copies the reference into the trill's own
+> lane curve. SHIFT-drag on empty lane space marks a span, T makes the trill there, ESC or a plain click clears it. The
+> lane-header selector was not built — the chips do it.
 
 ## 5 · Launch from a strike
 
@@ -169,7 +180,8 @@ animation here, it'll just say trill". The animated score shows the span; the cu
    on save, the greyed drawing; the playability checker (the hard / soft badge) taught that a trill is one object — its notes
    re-attack by design (RUNNING_LOG §99). The realization = the table lookup of `tools/trill_curve_gen.js` (his timing from
    `bank/trill_timing_db.json`), not the rate table (§101). About a day.
-2. **Three META lanes, tracing, the live reference, the span selection** (§3, §4). About a day; the contract note.
+2. **Three META lanes, tracing, the live reference, the span selection** (§3, §4) — **built 2026-09-05 (RUNNING_LOG §105);**
+   the contract written into NAMING §2.2.
 3. **Launch from a strike** and `busy()` in the dealer (§5, §7). Half a day.
 4. **Free trills and edge stretching** (§4's `T` on a span; the default length). Small.
 5. **The weave** (§9). A day, after the hand-made ones have taught the rules.

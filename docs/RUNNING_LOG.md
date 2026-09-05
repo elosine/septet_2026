@@ -2998,3 +2998,48 @@ the delay, which a compressed simulation cannot time-check (its accuracy stands 
 panel); the three META lanes and the simpler drawing (phase 2); `busy()` in the accel dealer (phase 3); the weave (5);
 notation (6). **For the composer:** reload (a page change; the server untouched) — draw a curve on a violin lane, T over
 it, click intervals, ▶ hear, SPACE.
+
+## §105. TRILLS_TOOL phase 2 built: three META lanes (A, B, C), trace-then-adjust with re-trace splicing, the trill's live curve reference with bake, SHIFT-drag spans — and the curve reader made to read bends as drawn
+
+Composer: *"good for phase 2"*.
+
+**What already existed** (found before writing a line): the freehand sketch → smoothed, RDP-simplified node curve on the
+META window (`fitSketch`, the fit-strength menu); the three adjust gestures of the spec — drag a node, drag the green
+diamond at a segment's middle to bend it (`startSegmentDrag` → the `ctrl` model, a free control point), ALT-click a node
+to remove it, double-click the curve to add one. "Trace, then adjust" was two thirds built; phase 2 added the rest.
+
+**Built** (`score/public/composer.html`, 32 splices by exact anchor): (1) **three META lanes** — `#laneMeta` (A),
+`#laneMetaB`, `#laneMetaC`, layers 7 · 8 · 9 (`META_LAYERS`, `META_NAMES`, `META_COLORS`); the one META button became
+`META A · B · C`; each window has its own ✕ and label-drag; draw mode arms every open window and a sketch lands on the
+window it is drawn in (C over B over A where they overlap); a score with curves on B or C opens those windows on load;
+the panel's Track menu lists META A / B / C; the strikes' shapes stay on A (the drawer's `METAL()` untouched);
+`layoutVersion` 4 — v3 files load unchanged, A is still 7. (2) **Re-trace splicing:** a sketch over a region of a lane's
+reference curve replaces that region — the new nodes splice in between their first and last time, the old nodes outside
+stay with their bends; one curve per lane grows this way; every traced curve carries `curveName` A / B / C. (3)
+**Double-click a node removes it** (ALT-click kept). (4) **The bug on the way:** `getYAtPos` — the reader behind
+`getYAtTime`, which the trill, the tools and the drawn-shape sampling use — evaluated segments through `computeYAtT`,
+which knows no `ctrl` model; the diamond writes `ctrl`; so a bent segment was DRAWN bent (`generateWCPath` uses
+`computeSegY`) but READ straight. `getYAtPos` now reads through `computeSegY`; `tools/curve_eval.js` already did. (5)
+**The live reference (§4):** the trill's `curveRef` — `auto · A · B · C · lane · flat` as chips in its panel with a status
+line ("auto → curve B (1 piece under this span)", "nothing drawn under this span: flat"); `auto` = A if anything is drawn
+under the trill on A, else its lane's curve, else the flat level; A / B / C are read over the trill's own span at
+absolute time — the curve covering the moment, else the nearest edge; regenerated at every play start, so redrawing the
+curve moves every trill on it; `bake` copies the reference into the trill's own curve on its lane and switches it to
+`lane`. (6) **SHIFT-drag on empty lane space marks a span** (an orange dashed box that survives a re-render), `T` makes
+the trill there, ESC or a plain click clears it.
+
+**Verified on the throwaway server** (a copy of the piece; synthetic sketches and mouse events; zero console errors):
+the piece opens META A by itself (its shapes); META B opens 185 px tall; a 60-point sketch on B → one curve, 40 → 50 s,
+7 nodes, `curveName` B; a second sketch over 44 → 47 s at full height → still one curve 40 → 50 s, its height at 45.5 s
+0.77 → 0.90, at 41 s unchanged (0.455); a span 42 → 48 s on violin 1 by SHIFT-drag → `T` → the trill there, the span
+cleared; `auto` → flat (nothing on A, nothing on the lane); the B chip → the trill reads B — its level function returns
+exactly the curve's height (0.543 at 42 s, 0.900 at 45.5 s) — and its 52 notes run at a 138 ms mean gap where the curve
+is low and 107 ms where it is high; `bake` → a 13-node copy on violin 1 matching B (0.90 at 45.5 s), the reference now
+`lane`; a second span + ESC → cleared; a `ctrl` segment read through `getYAtPos` = `computeSegY` (6.95 = 6.95). The
+screenshot: META A and B over the lanes, the panel's Curve row, the baked curve under the trill.
+
+*Not in phase 2:* the A / B / C selector on the lane header (the panel's chips do it); the wheel-on-segment shaping of
+PLAN 1a (the diamond does it — 1a closed); the extractor's classifier still says META = layer 10 (PLAN 2a, NAMING §2.2's
+note). **NAMING §2.2, the contract:** layers ≥ `tracks.length` are META — 7 = A (the strikes' shapes and reference
+curve A), 8 = B, 9 = C. **For the composer:** reload; `META A · B · C` at the bottom; ✎ Draw, then trace on an open
+window; click the curve to adjust; SHIFT-drag a span on a player, T; the trill's Curve row chooses what it reads.

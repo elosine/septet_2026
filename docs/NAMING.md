@@ -43,15 +43,15 @@ on; the composer app writes every one of them today. **Change the app and these 
 or not at all.**
 
 1. **Tracks are instrument-keyed.** `tracks[i] = { id, label, short, instKey }`,
-   `layoutVersion: 3`. `instKey` names the recipe in `sandbox/instruments.js`. Part
+   `layoutVersion: 4` (v3 = one META lane at 7; v4 = three — TRILLS_TOOL phase 2). `instKey` names the recipe in `sandbox/instruments.js`. Part
    numbers in the IR are the track indices 0–6 (flute 0 · bass clarinet 1 · piano 2 ·
    violin 1 3 · violin 2 4 · viola 5 · cello 6).
 2. **One layer convention, fixed:** sounding objects sit on layers `0 … tracks.length-1`;
-   **META shapes sit on layer `tracks.length` (= 7, `META_LAYER`) and never carry
-   `sonifyNote`.** The app's own discriminator ("a lane curve without `sonifyNote` is not
+   **layers ≥ `tracks.length` are META — 7 = A (`META_LAYER`: the gestures' shapes and reference curve A),
+   8 = B, 9 = C (TRILLS_TOOL phase 2, RUNNING_LOG §105) — and META objects never carry `sonifyNote`.** The app's own discriminator ("a lane curve without `sonifyNote` is not
    sound") is the rule. *Pipeline note (PLAN 2a):* `classify.js` still says META = layer
    10, the tuba layout; until it derives the META layer from `tracks.length`, run
-   `notate_section.js --parts 0-6` — the default `0-9` sweeps layer 7 into the parts and
+   `notate_section.js --parts 0-6` — the default `0-9` sweeps layers 7–9 into the parts and
    the classifier throws on the META shape (RUNNING_LOG §13, run C).
 3. **Every sounding object carries `sonifyNote` (MIDI) and `technique`.** The technique
    key is the recipe key from `sandbox/instruments.js` — the same string is the IR event's
