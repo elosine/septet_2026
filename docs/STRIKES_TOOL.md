@@ -419,6 +419,23 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   one no-wrap group, so they move together; ENTER in the box saves (the same `saveTake()` as the button); the
   placeholder says so.
 
+## V · Processes across strikes — `wanted 2026-09-04 (CN-10) — not built; nothing blocks composing the first of each by hand`
+
+> Composer (CN-10): *"climbing scales through the ensemble; or acceleration or deceleration as one
+> unit but spread out across the ensemble; blocks of strikes that answer each other from
+> sub-ensembles? … circular chord strikes in cycles, and a kind of Risset ladder throughout the
+> ensemble."*
+
+- *AI reading of the tool needs, in order:* (1) **a shuffle confined to a sub-ensemble** — pick the
+  players (strings · winds + piano · high · low · any set); the shuffle assigns only within them, the
+  rest stay empty or keep what they have. (2) **Chains across strikes** — from a chosen strike, generate
+  the next N as a process: SCALE (each strike one step higher, order low → high through the registers) ·
+  ACCEL / DECEL (the strikes' onsets on a CN-3 ramp, each strike's own rhythm shaped to match) · LADDER
+  (the same pitch classes re-voiced one step up per strike, the top voice wrapping to the bottom at the
+  softest dynamic — the Shepard–Risset staircase in strikes). (3) **Answering blocks** — a chain of
+  strikes alternating two sub-ensembles. Within one strike, order (K) · shape (J) · voicing (B) · locks
+  and assign (E, F) already do each of these by hand; a chain is a take per strike today.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the

@@ -276,3 +276,51 @@ names a library to confirm.
 - **A second signal for CN-2, still not a decision:** this idea names the piccolo again
   (CN-4, now CN-9). If it stands, the flute doubling is piccolo and the piccolo library is the
   one to confirm (SI2 has none).
+
+---
+
+## CN-10 · 2026-09-04 — the opening expanded: strikes as ensemble processes
+
+> *"Composition note. So expand the opening scattered strikes — treating the ensemble, or
+> sub-ensembles. So, for example, climbing scales through the ensemble; or acceleration or
+> deceleration as one unit but spread out across the ensemble; blocks of strikes that answer
+> each other from sub-ensembles? And that rejoins my earlier prompt about circular chord strikes
+> in cycles, and a kind of Risset ladder throughout the ensemble."*
+> *(dictated 2026-09-04 night, session 3, while composing — 17 strikes in the piece; speech-to-text
+> cleaned: "court" read as chord, "rizay" as Risset; content untouched)*
+
+**AI reading (not the composer's words):**
+
+- **The unit grows.** So far a strike is one orchestrated chord (CN-5; CN-8: the piece begins with
+  them). This note makes the strike a member of a larger gesture that runs THROUGH the ensemble —
+  a line handed player to player — instead of being struck by the ensemble at once. Four devices:
+  1. **Climbing scales through the ensemble** — successive notes on successive players by register
+     (cello → viola → violin 2 → violin 1 → piccolo; bass clarinet and piano where the line passes
+     their zone): a hocketed ascent. Inside one strike the drawer has it already — order `low → high`
+     (K), an even or shaped rhythm (J), a spread voicing (B); across strikes it is each strike one
+     step above the last.
+  2. **Acceleration / deceleration as one unit, spread across the ensemble** — one rallentando or
+     accelerando whose attacks are distributed among the players, heard as a single gesture. The
+     rhythm column's `front-loaded` (dense, then sparse = slowing) and `back-loaded` (sparse, then
+     dense = quickening) ARE this for one strike's notes; across strikes it is CN-3's ramp laid over a
+     chain of strikes — CN-3's bouncing ball and curve would notate it.
+  3. **Blocks of strikes that answer each other from sub-ensembles** — antiphony: strings against
+     winds + piano, high against low, any partition. The drawer's locks (top → / bottom →) and the
+     two-click assign build a block by hand; a shuffle confined to a chosen sub-ensemble is the
+     missing tool (STRIKES_TOOL V, not built).
+  4. **Circular chord strikes in cycles + a Risset ladder through the ensemble** — CN-7's cycle given
+     its pitch engine. "Risset ladder" is the composer's phrase for the Shepard–Risset staircase: every
+     step climbs, yet the whole never leaves its range, because a voice that reaches the top fades and
+     re-enters at the bottom. In strikes: each strike of the cycle re-voices the same pitch classes one
+     step higher; the voice that crosses the top wraps to the bottom of the ensemble (piccolo → cello)
+     at the softest dynamic and climbs again; the middle register carries the weight. The instruments'
+     registers are the rungs — "throughout the ensemble" is literal. The drawer's voicing moves pitch
+     classes by octave (B) and folds into range (F): the ladder's mechanism one strike at a time. A
+     chain ("next = the previous voicing one step up, the top voice wrapping") is the tool to want.
+- **What this asks of the tools, in order of need:** nothing new to compose the first of each by
+  hand (order · shape · voicing · locks · assign exist per strike); then a sub-ensemble shuffle; then
+  chains across strikes (scale · accel/decel · ladder) — a strike-sequence generator, which is also
+  CN-7's state machine given its first states. Filed as STRIKES_TOOL V, not built.
+- **On the form:** this fills in PLANNER outline item 1. The opening is no longer "one attack": it is
+  the scattered strikes expanded into ensemble processes, out of which CN-6's chosen harmony and CN-1's
+  tremolos on curves emerge. CN-3's converging tempos and CN-7's cycle both live inside the opening.

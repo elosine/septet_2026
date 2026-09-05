@@ -2310,3 +2310,20 @@ replaced by a counting spy for the test so no take touched the shared `bank/pane
 console errors): the group exists in the footer with exactly the four controls, no-wrap · ENTER in the box
 → saveTake called once, default prevented · another key → not called · the button's click → called. The
 bank file holds none of the AI's test names. Page change only — the composer reloads.
+
+## §78. CN-10 filed: the opening expanded into ensemble processes; the tool needs routed to STRIKES_TOOL V
+
+Composer, mid-composing (17 strikes in the piece): *"So expand the opening scattered strikes. So treating
+the ensemble or sub sub ensembles. So, for example, climbing scales through the ensemble or acceleration
+or deceleration as one unit but spread out across the ensemble. blocks of strikes that answer each other
+from subensembles? and that rejoins my earlier prompt about circular court strikes in cycles and a kind of
+rizay ladder throughout the ensemble."* Filed verbatim as CN-10 (speech-to-text read: "court" → chord,
+"rizay" → Risset; the composer's "Risset ladder" = the Shepard–Risset staircase in strikes). The AI's
+reading: four devices (a scale through the registers · one accel/decel spread over the players ·
+antiphonal blocks from sub-ensembles · CN-7's circular cycle as a Risset ladder), each already makeable
+for ONE strike with the drawer's order · shape · voicing · locks, none yet across strikes. Routed: the form
+into the PLANNER outline (item 1 rewritten — the opening is the strikes expanded, CN-1's single attack one
+strike among them; v0 → v1; two new open questions: the partition, and which harmony the ladder runs on);
+the tool needs into STRIKES_TOOL V (sub-ensemble shuffle · chains: scale / accel–decel / ladder · answering
+blocks) — wanted, not built, nothing blocks composing the first by hand. PLANNER NOW refreshed (#0–#16,
+v1.3, 84 takes). Nothing built.

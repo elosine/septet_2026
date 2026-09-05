@@ -114,7 +114,9 @@ the samplers addressable as code (0k, D15), D16 tongue ram; RUNNING_LOG §40–6
   ENTER in the take box saves, the take controls wrap as one group. RUNNING_LOG §72–77.
 - Sketch pad: CN-8 (the piece begins with the strikes) · CN-9 (the piccolo–bass clarinet looping line
   uses grace-note figures; notation after Ferneyhough, *Etudes Transcendantales* No. 1 oboe → PLAN 0g's
-  2a list; RUNNING_LOG §72); for piece #6, animated conductions.
+  2a list; RUNNING_LOG §72) · CN-10 (the opening expanded into ensemble processes — scales through the
+  ensemble, one accel/decel spread over the players, antiphonal blocks, CN-7's cycle as a Risset ladder →
+  PLANNER outline v1, STRIKES_TOOL V; §78); for piece #6, animated conductions.
   Penn State abstract done (§7).
 
 **Next up:** the composer composes — strikes #5 onward into `piece-septet` from the drawer (`Insert @
