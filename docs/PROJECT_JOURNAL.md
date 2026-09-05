@@ -117,7 +117,9 @@ the samplers addressable as code (0k, D15), D16 tongue ram; RUNNING_LOG §40–6
   replaces an earlier insert of the same strike); **U12 built** — `drop rests` (the sounding notes spaced by
   themselves, decision A of CN-17) and a `gap ms` box; **U13 built** — `accel · round robin`: the accelerating run
   (first gap · steep · landing → the count follows) with the players recycled under a 250 ms re-attack rule and the
-  rotation-with-shuffled-pitches fallback (CN-18). RUNNING_LOG §72–91.
+  rotation-with-shuffled-pitches fallback (CN-18); re-deal pitches (U13b); the violins' Bartók top 85 (§93); META group
+  shapes labelled with their strike (§96); the curve menu planned as STRIKES_TOOL W; the 0d bridge sweep planned (§94).
+  RUNNING_LOG §72–96.
 - Sketch pad: CN-8 (the piece begins with the strikes) · CN-9 (the piccolo–bass clarinet looping line
   uses grace-note figures; notation after Ferneyhough, *Etudes Transcendantales* No. 1 oboe → PLAN 0g's
   2a list; RUNNING_LOG §72) · CN-10 (the opening expanded into ensemble processes — scales through the

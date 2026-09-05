@@ -2664,3 +2664,22 @@ strikes alternating (a breathing); (J) **into the tremolo** — the floor pushed
 control, the seam to the tremolo section. Cheapest to build with the most audible change: a `curve` menu (A), a
 dynamics ramp (F), the ladder step per cycle (E), a floor per strike (B). The chain law and the gaps between strikes
 (C, I) are compositional choices needing no build.
+
+## §96. The strike's name on its META shape; the curves-of-the-rush plan filed (W); the insert is the replace
+
+Composer: *"Just the curve. Everything else is fine or can be organized with the controls … keep a note or a plan so that
+if we do another one of these, we can build the different curves, the feel of the rush … in the main score, in the
+meta shapes, can I get a label for which number strike they come from? … if I want to replace one, I can just pull up a
+take for strike 25, make some changes, and use insert after previous, and it'll replace it. Or is there a replace
+button?"* Three answers. (1) STRIKES_TOOL W written: the curve menu to build when a strike asks for it — linear · late
+rush · S-curve · two-phase · jitter · reverse — one `gapsFor()` function, the first gap / landing / re-attack rule
+untouched; the chain law between strikes stays typed by hand. (2) Built in `composer.html` `renderWaveCurve`: a META
+group shape draws `metaShapeLabel(wc)` ("strike #25" — the performanceNotes prefix, or the group's marker label) as a
+small text at its top-left, inside the shape's own SVG group, so it moves and stretches with the shape; part lanes
+untouched. **Verified on the throwaway server** (zero console errors): #17 and #18 inserted → "strike #17" / "strike #18"
+at x = start × pixelsPerSecond + 3; the #18 shape retimed by `scaleGroupTo` (+0.5 s) → the label follows; no label on
+any part lane. Page change — a reload. (3) No replace button is needed: since choice 3 (§87) every insert mode removes
+an earlier insert of the same strike first — load the take, change, `Insert @ after previous`, and #25 is replaced at
+the same start (end of #24 + the gap). Caveat named to him: if the change alters #25's length, #26 onward keep their
+old starts until each is re-inserted `after previous` in order — a "re-chain from here" button is a candidate if it
+happens often.

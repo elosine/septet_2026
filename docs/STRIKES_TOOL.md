@@ -516,6 +516,28 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   strikes alternating two sub-ensembles. Within one strike, order (K) · shape (J) · voicing (B) · locks
   and assign (E, F) already do each of these by hand; a chain is a take per strike today.
 
+## W · The curves of the rush — `planned 2026-09-05, not built; the composer: "just the curve … keep a note or a plan so that if we do another one of these, we can build the different curves, the feel of the rush"`
+
+> The accel run (U13) has one curve: geometric — each gap a fixed fraction of the one before. When a strike wants a
+> different feel, the `accel` block gains a `curve` menu; the first gap, the landing and the re-attack rule stay as
+> they are, so every curve lands the same way and the round robin is untouched. The gap's progression between strikes
+> (the chain law, ×1.5) stays manual — typed per strike (RUNNING_LOG §95).
+
+- **geometric** (built) — a steady push; the gaps shrink by a constant ratio.
+- **linear** — each gap shorter by the same milliseconds; a push that eases as it goes (the ratio grows toward the end).
+- **late rush** — a flat head, a steep tail: the gaps stay near the first gap, then collapse (a power curve on the gap
+  index, exponent > 1); the hesitation-then-fall.
+- **S-curve** — even, then accelerating, then the last two or three gaps nearly equal: a roll that lands rather than
+  crashes (an ease-in-out on the same first / last gaps).
+- **two-phase** — an even head at the first gap for k gaps, then a fixed geometric rush to the landing (the "knee" of
+  RUNNING_LOG §89).
+- **jitter** — any curve above with performer jitter (CN-13): each gap randomized by ± a percentage, the amount fixed
+  or growing toward one end; seeded like the other shuffles.
+- **reverse** — the same curves run backwards (a ritardando opening out) — for the tremolo material later.
+- *Implementation note:* one function `gapsFor(curve, g1, floor, k, params)` returning the k gaps; the count k for a
+  curve = the smallest k that reaches the floor within the curve's own law (linear and S need k given, or a duration);
+  the readout shows the curve's name; the strip and Hear follow as now.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the

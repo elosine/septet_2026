@@ -4260,6 +4260,25 @@ const Composer = {
 
         g.appendChild(hp);
 
+        // The strike's number on its META shape (composer, 2026-09-05: "in the meta shapes, can I get a label for which
+        // number strike they come from") — every META group shape shows its name at its top-left, drawn with the shape
+        // so it moves and stretches with it. The name is metaShapeLabel: the group's marker label if any, else the
+        // shape's performanceNotes prefix ("strike #25").
+        if (wc.layer === META_LAYER && wc.groupId) {
+            const dims = this.getLaneDims(wc.layer);
+            const top = dims.bottom - (Math.max(...wc.nodes.map(nd => nd.y)) / 10) * dims.height;
+            const t = document.createElementNS(svgNS, 'text');
+            t.setAttribute('class', 'metaShapeLabel');
+            t.setAttribute('x', wc.startSeconds * this.pixelsPerSecond + 3);
+            t.setAttribute('y', top + 11);
+            t.setAttribute('font-size', '10');
+            t.setAttribute('fill', '#3a2a08');
+            t.setAttribute('font-family', 'system-ui, sans-serif');
+            t.style.pointerEvents = 'none';
+            t.textContent = this.metaShapeLabel(wc);
+            g.appendChild(t);
+        }
+
         this.elementCache.set(wc.id, g);
         wc._els = { group: g, path: p, hitPath: hp, highlight: hl, nodeHandles: [] };
         cg.appendChild(g);
