@@ -519,3 +519,32 @@ names a library to confirm.
   #21); or #18 = 110 as member one → 165 · 248 · 371 · 557 … (audible from #22, RUNNING_LOG §83).
 - **The orchestration is settled per strike before the stretch** (take 18-c) — so the tool must touch only
   two numbers: the duration and the insert time. Proposed shape: STRIKES_TOOL U11.
+
+---
+
+## CN-17 · 2026-09-04 — the gaps between onsets expand, not the total duration
+
+> *"So I think the duration was the wrong approach. We'll keep the first two for now unless I decide to change
+> the whole scheme. But I think it's actually the gaps between the onsets that need to expand. Well, actually,
+> we might as well be consistent and expand eighteen then too. So then we'll have the initial gaps between the
+> onsets in seventeen, and then I guess we'll expand those by one point five — or if we tried different
+> versions, Fibonacci, etcetera — for eighteen and then for nineteen, because some have more onsets than
+> others. So let's talk first how to do this and then develop a procedure to replace eighteen with the
+> updated version."*
+
+**AI reading (not the composer's words):**
+
+- **The law moves from the whole to the pulse.** Strikes have 5 to 17 onsets; a total-duration law makes a
+  17-note strike three times denser than a 5-note one at the same length. A gap law keeps one expanding pulse
+  through the section: gap(#17) = 127 ÷ 4 = 31.75 ms, then ×1.5 per strike → 47.6 · 71.4 · 107 · 161 · 241 ·
+  362 · 542 ms; each strike's duration follows from its own onset count. The rhythm is heard as rhythm from
+  #19 (71 ms), one strike earlier than under the duration law.
+- **A finding in #18 as inserted:** 13 recorded onsets, 7 of them played (his own rule: a player holds one
+  note; 7 players) — so the `even` grid has six silent slots and the heard gaps are 47 · 32 · 48 · 31 · 16 ·
+  16 ms, multiples of the 16 ms grid, not even. #17 was even only because all five notes were placed (with
+  doublings). Under a gap law this decision comes first: is the gap between the notes HEARD (silent slots
+  dropped from the rhythm — a tool switch, not built), or the recorded grid with rests kept (as now), or
+  every leftover note given to the piano by its flag so all 13 sound?
+- **The chain placement is unchanged:** start(n) = end(n−1) + the recorded onset gap; with the gap law the
+  section stretches further (all-onsets version: #24 ends near 46.9 s; sounding-only: much less, since a
+  strike then has at most 7 onsets unless the piano takes the rest).

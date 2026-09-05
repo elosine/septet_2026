@@ -2519,3 +2519,20 @@ when the message is long (the after-previous message is long), which is why he d
 also sets `title`, so hovering shows the whole message (a page change; his next reload). #19: 127 × 1.5² = 285.75
 → 286 ms; ready for `Insert @ after previous` once #19 itself is orchestrated, ordered, evened and set to 286 in
 the drawer (a take 19-a first); expected "#19 → 30.120 s = end of #18 (28.492) + onset gap 1.628".
+
+## §89. The gap law replaces the duration law (CN-17); #18's even grid is not even as heard
+
+Composer (CN-17): the gaps between onsets should expand ×1.5 per strike, not the total duration; #18 to be redone
+consistently; talk first, then a procedure to replace #18. Read from his score: #17 sounds even (9 notes on 5
+onsets, gaps 32 · 31 · 32 · 32 ms — every note placed, with doublings); **#18 does not** — 7 notes on 7 of 13
+even slots, heard gaps 47 · 32 · 48 · 31 · 16 · 16 ms. Cause: `pattern()` spaces ALL voices (slots), and a voice
+nobody plays keeps its slot as a rest; with 13 notes, 7 players and "a player holds one note", six rests are
+forced unless the piano flag takes the leftovers. Gap-law table from 31.75 ms (all recorded onsets counted):
+#18 47.6 ms → 572 ms · #19 71.4 (R) → 1143 · #20 107 → 1393 · #21 161 → 1125 · #22 241 → 1206 · #23 362 → 3617 ·
+#24 542 → 2712; chain starts 28.302 · 30.502 · 33.561 · 35.704 · 37.707 · 39.782 · 44.172; end 46.88 s. Decisions
+put to the composer: (1) gaps between the notes heard (a `rests: drop` switch in the rhythm column — the pattern
+spaces only sounding voices; ~15 lines, not built) vs the recorded grid with rests vs piano-flag the leftovers;
+(2) a `gap = ___ ms` box beside the ms box (duration = gap × (onsets − 1), shows the current mean gap; trivial, not
+built); (3) the law per strike typed (×1.5 / Fibonacci …) — the chain panel later. Replace procedure sketched:
+pick #18 → load 18-c → set the gap (or the duration it implies) → save take 18-e → `Insert @ after previous`
+(replaces the earlier #18 at the same 28.302, #17 unchanged) → Save. Nothing built.
