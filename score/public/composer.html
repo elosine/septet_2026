@@ -2961,6 +2961,7 @@ const Composer = {
                 this.isDirty = false;
                 this.saveStatus.textContent = `Loaded: ${name}`;
                 localStorage.setItem('composerLastSession', this.pieceBase(name));
+                return true;
             } else {
                 this.saveStatus.textContent = `Error: ${result.error}`;
             }
@@ -2968,6 +2969,7 @@ const Composer = {
             this.saveStatus.textContent = 'Load failed';
             console.error('Load error:', err);
         }
+        return false;
     },
 
     // (Palette methods retired 2026-08-14 — superseded by the Load menu and
@@ -2998,6 +3000,14 @@ const Composer = {
         const all = (this._allScores || []).map(s => s.name);
         let info = this.workInfo(base);
         if (!info && all.includes(work) && !all.includes(base)) info = { orphan: true, differs: true, modified: '' };
+        if (!all.includes(base) && !all.includes(work)) {
+            // the remembered name was deleted from scores/ — say so, forget it, bind nothing
+            this.saveStatus.textContent = base + ' is not on disk any more — pick a score from a menu';
+            localStorage.removeItem('composerLastSession');
+            this.sessionName = 'untitled'; this.boundName = 'untitled';
+            this.updateSessionBadge();
+            return;
+        }
         if (info && (info.differs || info.orphan)) {
             await this.loadSession(work);
             this.sessionNameInput.value = base;

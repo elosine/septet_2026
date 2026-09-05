@@ -2138,3 +2138,22 @@ opens as `piece-septet-work`, 24 objects, three per lane on all eight layers, ze
 left, the three groups; the Piece menu lists `piece-septet` with `piece-septet-v1.1` indented under
 it. Sketch pad: CN-8. The composer's other saves from today (`septet001`, `ScatteredStrikes01-og`,
 `-a`, `-a-2`, `-a-3`, the edited `ScatteredStrikes01`) stay his to sort — uncommitted here.
+
+## §70. The experiment folder sorted: the original kept, the copies deleted; a deleted name is harmless
+
+Composer: *"Keep the original, delete the a, a-2, a-3, og and septet001 copies"*. Checked first:
+all five were untracked (never committed — the delete is permanent, so listed before it ran),
+`ScatteredStrikes01` tracked. Deleted: `ScatteredStrikes01a`, `-a-2`, `-a-3`, `-og`, `septet001`
+(and its one Save snapshot). Kept and committed as it stands: `ScatteredStrikes01` — 578 objects,
+strikes #0–#2 replaced by the composer's orchestrations (24 group objects), the rest raw; the
+untouched 577-strike recording is in git history (`76861f2`). Of the two test saves the old autosave
+re-saved in place, `0i-test-b` differs from HEAD only in its timestamps, while `rack-test` grew from
+12 to 33 objects during the rack sessions of 2026-09-04 (01:58) — both committed as they stand, once,
+to clean the tree; under D17 autosave never touches a file again.
+
+The page remembers the last opened name per browser, and the composer's could now be a deleted
+copy — so `openScore` of a name that is on disk neither as a file nor as a working copy now says
+"X is not on disk any more — pick a score from a menu", forgets the name and binds nothing (before:
+"Error: Score not found" and a session bound to a non-existent file's working copy). Verified in the
+AI's pane: remembered `ScatteredStrikes01a-3` → the message, session `untitled`, nothing remembered,
+0 objects; then `piece-septet` opens normally (24). Zero console errors.
