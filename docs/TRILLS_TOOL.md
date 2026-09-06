@@ -85,7 +85,8 @@ pitch) may use a second row (bowed tremolo faster).
 > deterministic samplers (flute, piano) the velocity picks the layer just above the target and a CC7 trim, sent 1 ms before the
 > note, takes the rest; on the round-robin samplers the averaged curve is inverted and CC7 stays 127. The trill's first note (the
 > attack) keeps its own velocity and no trim. The trill panel's `All trills` row converts every trill in the score at once —
-> `→ ordinary voice`, `→ curve velocity` — one undo step each, the strikes untouched (§121).
+> `→ ordinary voice`, `→ curve velocity` — one undo step each, the strikes untouched (§121); `attack → [articulation] apply` (§139): the first
+> note's articulation on every trill whose instrument has it, the others skipped and named (the bass clarinet has no marcato sfz).
 
 ## 3 · The reference curves — three META lanes
 
@@ -228,7 +229,7 @@ animation here, it'll just say trill". The animated score shows the span; the cu
    (from phase 1) + the zone's `1 2 3`, the sampled curve drawn in the zone, the panel on P, the attack's articulation / length /
    velocity (CN-27), overlap warnings; the dealer skips a trilling player at insert (the simplest form — a re-deal later if wanted).
 4. **Free trills and edge stretching** (§4's `T` on a span; the default length) — **built 2026-09-06 (RUNNING_LOG §111):** the
-   default length to the player's next strike note, else 2 s; a stretch or a drag regenerates the trill at once; T on a span and T
+   default length to 0.17 s before the player's next strike note (§139; was: to the note itself), else 2 s; a stretch or a drag regenerates the trill at once; T on a span and T
    at the playhead were phases 1–2's.
 5. **The weave** (§9). A day, after the hand-made ones have taught the rules.
 6. **Notation** in 2a.

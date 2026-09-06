@@ -23,7 +23,7 @@
 - **The save system (D17, composer 2026-09-04; RUNNING_LOG §67–68) — one rule for every score,
   piece or experiment:** open a score → you are in its working copy (autosave lives there; the file
   changes only on Save) · **Save / CTRL+S** when it's good · **Name version** when a chunk is done
-  (saves the file AND freezes `<name>-v<label>`; the next label is suggested: 1.1, 1.2 …) · **Reload**
+  (saves the file AND freezes `<name>-v<label>`; the next label is suggested: 1.1, 1.2 … — a name with a suffix, `v1.10-preAccelNear105`, counts as its number, RUNNING_LOG §139; the AI's snapshots carry the current number with a suffix, never a new one) · **Reload**
   if it went wrong (drops the unsaved edits; asks once). The `?` button shows this line in the app.
   Piece #4's "Save as next" / "Variant" / "Restore" are gone; the Save snapshots in `scores/versions/`
   (cap 20, gitignored) remain as a silent net the AI can dig into on request.

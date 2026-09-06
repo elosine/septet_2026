@@ -3132,15 +3132,23 @@ const Composer = {
         this.saveStatus.textContent = 'reloaded ' + base + ' as last saved — the unsaved edits are gone';
     },
 
+    // the next label: one past the highest vN.N among the base's versions — a name with a suffix (v1.10-preAccelNear105,
+    // v1.8-startTrills) counts as its number too (composer 2026-09-06: "the save numbers, suggestions still aren't advancing
+    // correctly"; RUNNING_LOG §139). The AI's own snapshots carry the composer's current number with a suffix, never a new one.
+    nextVersionLabel(base, all) {
+        const names = all || (this._allScores || []).map(s => s.name);
+        const re = new RegExp('^' + base.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + '-v(\\d+)\\.(\\d+)(?:[^0-9].*)?$');
+        let major = 1, minor = 0;
+        names.forEach(nm => { const m = re.exec(nm); if (m && (+m[1] > major || (+m[1] === major && +m[2] > minor))) { major = +m[1]; minor = +m[2]; } });
+        return major + '.' + (minor + 1);
+    },
+
     // the milestone: Save the file being edited AND freeze a copy under the composer's label
     async saveVersion() {
         const cur = this.pieceBase(this.sessionNameInput.value.trim() || this.sessionName || 'septet');
         const base = this.versionBase(cur);
         const all = (this._allScores || []).map(s => s.name);
-        const re = new RegExp('^' + base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '-v(\\d+)\\.(\\d+)$');
-        let major = 1, minor = 0;
-        all.forEach(nm => { const m = re.exec(nm); if (m && (+m[1] > major || (+m[1] === major && +m[2] > minor))) { major = +m[1]; minor = +m[2]; } });
-        const label = prompt('Name this version of ' + base + ' (the file ' + cur + ' is saved too):', major + '.' + (minor + 1));
+        const label = prompt('Name this version of ' + base + ' (the file ' + cur + ' is saved too):', this.nextVersionLabel(base, all));
         if (label == null) return;
         const lab = label.trim();
         if (!/^[0-9A-Za-z][0-9A-Za-z._-]{0,30}$/.test(lab)) { this.saveStatus.textContent = 'not frozen: a label is letters, digits, dots, hyphens (1.5 · 2 · 1.5a) — got "' + lab + '"'; return; }
@@ -9241,8 +9249,11 @@ const Composer = {
             if (o.startSeconds <= start + ((gid && o.groupId) ? 0.001 : 0.06)) return;
             if (!nx || o.startSeconds < nx.startSeconds) nx = o;
         });
-        const end = Math.round((nx ? nx.startSeconds : start + 2) * 1000) / 1000;
-        return { end, why: nx ? 'to the next strike note' : '2 s — no later strike note on this player' };
+        // composer 2026-09-06: "make it end point one seven seconds before the next articulation begins" (RUNNING_LOG §139) — the lead
+        // below; a floor of 0.2 s keeps a trill from vanishing when the next note is very near
+        const LEAD = 0.17;
+        const end = Math.round((nx ? Math.max(start + 0.2, nx.startSeconds - LEAD) : start + 2) * 1000) / 1000;
+        return { end, why: nx ? LEAD + ' s before the next strike note' : '2 s — no later strike note on this player' };
     },
 
     // after a drag or a stretch (phase 4): the snippet, the label's count and the mutedBy stamps follow the new span at once
@@ -9254,22 +9265,42 @@ const Composer = {
     // 1g items 3–4, the batch (composer 2026-09-06: "have those items been converted … just the trills, leave the strikes"): every
     // trill in the score onto its instrument's ordinary voice and / or the curve velocity mode; attacks, spans, pitches, curves kept;
     // the strikes never touched; one undo step
+    // the articulations any lane offers, one entry per key, the lanes that have it named (the strings share theirs)
+    attackBatchOptions() {
+        const ab = { flute: 'fl', bass_clarinet: 'bcl', piano: 'pf', violin1: 'vn1', violin2: 'vn2', viola: 'va', cello: 'vc' };
+        const byKey = new Map();
+        for (let layer = 0; layer < META_LAYER; layer++) { const tr = TRACKS[layer]; const inst = this.trackInstrument(layer); if (!tr || !inst) continue;
+            (inst.techniques || []).forEach(q => { const e = byKey.get(q.key) || { label: q.label, lanes: [] }; e.lanes.push(ab[tr.instKey] || tr.instKey); byKey.set(q.key, e); }); }
+        const rows = [...byKey.entries()].sort((a, b) => b[1].lanes.length - a[1].lanes.length || a[1].label.localeCompare(b[1].label));
+        const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+        return '<option value="">same as trill</option>' + rows.map(([k, e]) => '<option value="' + esc(k) + '">' + esc(e.label) + ' &#183; ' + e.lanes.join(' ') + '</option>').join('');
+    },
     convertAllTrills(what) {
         const zs = this.objects.filter(o => o.type === 'zone' && o.midiModel === 'trill');
         if (!zs.length) { this.saveStatus.textContent = 'no trills in this score'; return { trills: 0, voice: 0, curve: 0 }; }
         this.pushUndoState();
-        let nv = 0, nc = 0;
+        let nv = 0, nc = 0; const na = { set: 0, skipped: 0, lanes: {}, missing: {}, warn: 0 };
+        const attackLabel = what.attack ? (() => { for (let L = 0; L < META_LAYER; L++) { const q = (((this.trackInstrument(L) || {}).techniques) || []).find(x => x.key === what.attack); if (q) return q.label; } return what.attack; })() : 'same as trill';
         zs.forEach(z => {
             const t = this.ensureTrill(z);
             if (what.voice) { const o = this.ordinaryTech(z.layer); if (o && t.technique !== o.key) { t.technique = o.key; nv++; } }
             if (what.curve) { if (t.velMode !== 'curve') { t.velMode = 'curve'; nc++; } if (t.velLo == null) t.velLo = 65; if (t.velHi == null) t.velHi = 127; }
+            if (what.attack != null) {   // 2026-09-06: the first note's articulation, where the instrument has it
+                const key = what.attack || ''; const inst = this.trackInstrument(z.layer); const lane = (TRACKS[z.layer] || {}).instKey || ('lane ' + z.layer);
+                const has = !key || ((inst && inst.techniques) || []).some(q => q.key === key);
+                if (has) { if ((t.attackTech || '') !== key) { t.attackTech = key; na.set++; na.lanes[lane] = (na.lanes[lane] || 0) + 1; } }
+                else { na.skipped++; na.missing[lane] = (na.missing[lane] || 0) + 1; }
+            }
             this.regenerateTrill(z); this.renderZone(z);
+            if (what.attack != null && z._attackNoSample) na.warn++;
         });
         this.markDirty();
         if (this.selectedObject && this.selectedObject.midiModel === 'trill') this.showPropertyPanel();
         this.saveStatus.textContent = zs.length + ' trills' + (what.voice ? ' · ' + nv + ' moved to the ordinary voice' : '') + (what.curve ? ' · ' + nc + ' switched to the curve velocity' : '')
+            + (what.attack != null ? ' · attack → ' + attackLabel + ' on ' + na.set + (Object.keys(na.lanes).length ? ' (' + Object.entries(na.lanes).map(([k, v]) => k + ' ' + v).join(', ') + ')' : '')
+                + (na.skipped ? ' · ' + na.skipped + ' skipped: no such articulation on ' + Object.keys(na.missing).join(', ') : '') + (na.warn ? ' · ⚠ ' + na.warn + ' without a sample at the pitch' : '') : '')
             + ' — the strikes untouched; Save when it sounds right, undo restores';
-        return { trills: zs.length, voice: nv, curve: nc };
+        return { trills: zs.length, voice: nv, curve: nc, attack: na };
     },
 
     // the curve the trill reads: the one it names, else the first drawn curve on its lane that overlaps it
@@ -9531,6 +9562,10 @@ const Composer = {
             + '<button class="tr-all-voice" title="every trill in the score onto its instrument&#8217;s ordinary voice (the attack articulation kept)" style="font-size:10px;padding:1px 6px;cursor:pointer">&#8594; ordinary voice</button>'
             + ' <button class="tr-all-curve" title="every trill in the score follows its curve, 65 &#8594; 127 in the ensemble&#8217;s scale (the attack kept)" style="font-size:10px;padding:1px 6px;cursor:pointer;margin-left:4px">&#8594; curve velocity</button>'
             + ' <span style="font-size:10px;color:#666">the strikes untouched &#183; undo restores</span></div>';
+        // composer 2026-09-06 ("change the initial note articulation to marcato sfz in a batch"; RUNNING_LOG §139): the attack
+        // articulation of every trill whose instrument has the chosen technique; the lanes without it are skipped and named
+        h += '<div class="pp-row"><label></label><span style="font-size:10px">attack &#8594; <select class="tr-all-attack" style="max-width:230px;font-size:10px">' + this.attackBatchOptions() + '</select>'
+            + ' <button class="tr-all-attack-go" title="every trill on an instrument that has this articulation takes it as its first note; the instruments without it are skipped and named; the trill&#8217;s own voice is untouched" style="font-size:10px;padding:1px 6px;cursor:pointer;margin-left:4px">apply</button></span></div>';
         h += '</div>';
         return h;
     },
@@ -9566,6 +9601,8 @@ const Composer = {
         const allV = panel.querySelector('.tr-all-voice'), allC = panel.querySelector('.tr-all-curve');
         if (allV) allV.addEventListener('click', () => this.convertAllTrills({ voice: true }));
         if (allC) allC.addEventListener('click', () => this.convertAllTrills({ curve: true }));
+        const allA = panel.querySelector('.tr-all-attack-go'), allASel = panel.querySelector('.tr-all-attack');
+        if (allA && allASel) allA.addEventListener('click', () => this.convertAllTrills({ attack: allASel.value }));
     },
 
     // ========== SPAN SELECTION + THE LIVE CURVE REFERENCE (TRILLS_TOOL phase 2, composer 2026-09-05; RUNNING_LOG §105) ==========

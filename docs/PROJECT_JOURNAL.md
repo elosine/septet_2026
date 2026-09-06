@@ -134,7 +134,7 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   the recording's items removed, cursor to 0); the probe kit: `tools/balance_schedule.js` (--sweep, --sweep2, --proof
   [--repeat], --held, --ranges) → `probes/balance_probe.ps1` → `probes/analyze_balance.py` (--sweep, --proof, --ranges,
   --bank, --tol); the self-tests `probes/selftest_sweep.py` / `selftest_ranges.py`.
-- **Pending the composer:** his hands on the run's dials at 107.81 s (1h; the calibration ladder on his go) · his verdict on the trills at the new loudness and on a crescendo drawn on a note · the cello's
+- **Pending the composer:** his hands on the run's dials at 107.81 s (1h; the calibration ladder on his go) · the attack batch run by him on his open score (§139: strings → marcato sfz; the bass clarinet's articulation his to pick) · his verdict on the trills at the new loudness and on a crescendo drawn on a note · the cello's
   attack (the marcato has a sample at G#5; lengthen the attack ms if it still does not register) · "the range walk" (his
   reminder, meaning unconfirmed) · the plucked piano silent in the rack (NITS) · the 0j piano trim +7 vs +5.3 (NITS; the remap
   absorbs it) · CN-2 (piccolo vs bass flute) · Q6 closed by the measurement (the Bartók tops) · Q7 (the low-C bass clarinet).

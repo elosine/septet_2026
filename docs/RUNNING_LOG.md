@@ -3955,3 +3955,47 @@ pitches from the whole strike (24), 41 folded · tail 7 × 80 = 560 ≥ 250 ✓"
 fl:F4 pf:D3 bcl:D4 vn2:B3 …; free + the cards → five pitch classes, 272 ms, 27 folds; round robin + the whole strike → 15 laps, ten
 pitch classes, 302 ms; the re-deal box enabled in the robin; an insert in free + strike → 102 notes at 107.807 s. The page change
 needs his hard reload. **For him:** `deal` free · `pitches` the whole strike, with gap 500 · → last 80 · = 20000 · run curve · curve 0.
+
+## §139. Three of his asks in one chunk: the accel recipe as numbers; the Name-version suggestion counts suffixed names; the All-trills attack batch; a free trill ends 0.17 s before the next strike note
+
+Composer, with the panel open on gap 500 · = 18000 · run curve · curve 0 · → last 100 · deal free · pitches the whole strike: *"can you give
+me the full recipe for the accel from the last one, just the numbers I need to change in a bulleted list in order; then the save
+numbers, suggestions still aren't advancing correctly; are you able to make all the trills using the xsample, violins, viola, cello
+bass clarinet, change the initial note articulation to marcato sfz in a batch?"* — then: *"when I put a trill in free, I think there's
+something that makes it end just before the next articulation or at the next articulation for that instrument. Can you make it end
+point one seven seconds before the next articulation? begins."*
+
+**The recipe:** against his panel only two numbers differ from the last suggestion: `=` 20000 and `→ last` 80 (or keep 18000 and
+change only `→ last`). **The suggestion, diagnosed in the code** (`saveVersion`): the next label was read from names matching
+`-vN.N` exactly, so `v1.10-preAccelNear105`, `v1.12-preTrillFix`, `v1.15-newAccel` (his own numbering, typed by hand because the
+suggestion stood still) did not count and 1.10 was offered again. **Fixed:** `nextVersionLabel(base, all)` — a `-vN.N` prefix
+followed by anything but a digit counts as its number; on his list the suggestion is now 1.16, on plain-only lists it is what it was.
+The AI's own snapshots keep the rule of 475abc9: the composer's current number with a suffix, never a new number. **The batch:** the
+All-trills row of the trill panel gains `attack → [articulation] apply` — the list is every articulation any lane offers, one entry
+per key, the lanes that have it named ("Marcato sfz Velocity (#12) · vn1 vn2 va vc", 149 entries, "same as trill" first);
+`convertAllTrills({ attack: key })` sets the first note's articulation on every trill whose instrument has the key, skips and names
+the rest, counts the ⚠ (no sample at the pitch), one undo step. **The bass clarinet has no marcato sfz in its library** — the
+Xsample bass clarinet's nearest are With Accent Velocity (#20), Staccato Velocity (#19), Secco (#27): his to choose, a second apply.
+**The free trill's end** (`trillDefaultEnd`, phase 4): 0.17 s before the player's next strike note (a 0.2 s floor on the trill's
+length), the readout saying so; 2 s when there is no later note, as before.
+
+**Verified on the copy** (his saved score of 18:35; the working copy of 18:46 is newer — his unsaved edits; nothing of his touched):
+`nextVersionLabel` → 1.16 on his list, 1.10 on a plain-only list; the batch → 11 set (vn1 3, vn2 3, va 3, vc 2 — two cello trills
+already had it), 10 skipped (flute 4, bass clarinet 3, piano 3), 0 ⚠, the status line naming all of it; `attack → same as trill` →
+13 reset; the trill end on three lanes → exactly 0.17 s before the next note (violin 1: 52.839 before 53.009; violin 2: 44.554 before
+44.724; cello: 46.633 before 46.803), no later note → 2 s; no console errors. The panel row itself, clicked in the rendered panel (the P-key override set after the selection): the same 11 set and 10 skipped, then the reset to same-as-trill gives 13 back; the panel re-renders after each batch. Page changes — his hard reload; then the batch is his to run
+on the open score (no file edit by the AI, since his working copy holds unsaved edits: Save would have overwritten a file batch).
+
+## §140. "a simple list each instrument on its own line with its assigned pitch and midi note number … and an alternate" — strike #3 read from his take 03-d; violin 1's assigned A6 is above the Bartók top
+
+Composer, with the drawer open on a strike (the screenshot: the header "…3 · ScatteredStrikes01 · saved 2026-09-05 00:28"): the list
+asked for, assigned note + MIDI, and one alternate per instrument from the strike's own notes within the instrument's range.
+
+**Read:** the header and the seven dashed lines match take `03-d` (strike #3, wc-40, saved 00:28): flute A#4 70 (pizzicato) · bass
+clarinet D#4 63 (slap) · piano F2 41 · violin 1 A6 93 (Bartók) · violin 2 F5 77 (Bartók) · viola A4 69 (gettato) · cello E3 52
+(gettato). The strike's 19 distinct pitches: A5 81 · F4 65 · A6 93 · G#4 68 · G6 91 · B5 83 · A4 69 · G4 67 · F#6 90 · F#4 66 · D#4 63 ·
+F2 41 · B4 71 · G#5 80 · A#4 70 · F#5 78 · F3 53 · E3 52 · F5 77. **Flagged:** violin 1's A6 (93) is above the Bartók's measured top E6
+(88; §122) — it is the note folded in the saved score at §123 (strike #3 at 4.64 s); the take still holds 93. **The alternates given**
+(each in its instrument's measured range, none assigned to anyone in the take, all from the strike): flute B4 71 · bass clarinet F3 53
+· piano G6 91 (the note no string reaches) · violin 1 A5 81 (A6 folded an octave, in the strike itself) · violin 2 G#5 80 · viola F#4
+66 · cello F4 65. If the drawer shows a different take, the lines in the picture were read as the tie-breaker.
