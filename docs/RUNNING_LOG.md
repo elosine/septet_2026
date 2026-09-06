@@ -3269,3 +3269,52 @@ normalized trill loudness (the played velocities run 41–123 by speed, §100 �
 **His question, answered:** to add points before a curve's start or after its end — select the curve (a click on its line with
 Points off; or any dot added to it with Points on selects it), then in Points mode click beyond either end: the curve extends to that
 dot at once (§110's rule); with nothing selected the same click starts a new curve.
+
+## §112. "Violin 2 trill … sounds like still bartok pizz": the nudged trill had let go of its attack note — a 60 ms eating window, a trill's drag keeps its start, the articulation switch arbitrated on a shared slot (the tail, the lead); the cello's attack put back to him
+
+Composer: *"violin 2 trill is not using accent senze vib, sounds like still bartok pizz"* · then *"first attack note not functioning
+for cello"* · and, mid-way, the Lake George note (COMPOSITION_NOTES, 2026-09-06).
+
+**Found, in his working copy** (`piece-septet-work.json`, read, never written): six trills; the Vn2 one (zn-964, 67.85 → 68.65)
+launched from the Bartók note wc-925 at **67.827** — the only launching note of the six without a `mutedBy` stamp; its snippet
+right (port Vn2, CC0 9 = accent senza vib). The zone had been nudged: a zone's body or left-edge drag snaps to a 50 ms grid, so a
+1 px touch moved the start from 67.827 to 67.85, 23 ms past the note — off the eating rule (onsets ≥ the start). The un-eaten
+Bartók note then played through the plain path, whose CC0 pre-arm goes out at most ~100 ms before the note (the lookahead is
+100 ms, so "150 ms before" is always "at once") — AFTER the trill's own CC0 at start − 150 ms: the slot sat on Bartók when the
+trill's notes came and stayed there, the whole trill pizz. The Vn1 trill beside it sits exactly on its note (67.847) and was fine.
+Two more holes of the same kind, seen in the code: (a) the player's next strike note — exactly at the trill's end since phase 4 —
+sends its CC0 ~100 ms before its onset, under the trill's last notes; (b) a same-player note 60–150 ms before a trill (a run's
+re-deal) fires its note-on after the trill's CC0 lead and would take the trill's articulation.
+
+**Built** (`composer.html`, 11 splices): (1) **the eating window** `TRILL_EAT_PRE_S` = 0.06 — a note starting up to 60 ms BEFORE a
+trill is its attack and is eaten too (`trillCovers`, `stampMutedBy`; the strike DB's simultaneity window, his "maybe sixty") — a
+nudge never un-eats the attack, moving the trill clearly later gives the note back; (2) a trill's body drag keeps its sub-grid
+start (`origStart + round(dt)` in 50 ms steps) — a touch moves nothing; (3) the plain tick's `lateSwitch`: while a trill sounds
+on the same slot (port + channel, its lead included) anywhere in the 150 ms before a plain note, that note's CC0 / CC7 go
+`TRILL_SWITCH_LEAD_MS` = 12 ms before it (the engine's own switch-back lead), not ~100; (4) the trill's lead `trillLeadMs`: 150 ms,
+shortened to land 1 ms after a same-slot note that starts inside the lead but outside the eating window; (5) `stampMutedBy` clears
+the trill's stamps on every lane first, and `renderZone` re-renders the lane a trill was last drawn on — a lane change gives the
+old lane its notes back.
+
+**Verified on the throwaway server** (a copy of his working copy, `zz-ai-eat`; fake outputs on the eight ports; the transport
+simulated with `performance.now` patched to the transport clock and both ticks driven synchronously every 20 ms; zero console
+errors; the copies deleted): the note at 67.827 covered and stamped by the trill at 67.85; 67.4 → 69.0 on Vn2: CC7 127 + CC0 9 at
+67.700, the trill's notes 81 / 83 from 67.85, **no CC0 79 and no note-on at 67.827**, then the next strike note's CC0 79 at 68.778 =
+12 ms before its onset (68.79); the trill's end set on that note (phase 4's default): its notes to 68.714, the switch at 68.778, the
+Bartók at 68.79; a Bartók note added 100 ms before the trill: not covered, the lead 99 ms, the sequence CC0 79 @67.66 · its note-on
+@67.75 · CC0 9 @67.76 · the trill's attack @67.85; the body drag: 1 px → the start unchanged (67.85), +0.15 s → 68.00, back → 67.85;
+a lane change: the Vn2 stamp cleared, the cello's note under it stamped and faint (0.15), the Vn2 note back to 0.55, and the
+reverse. *Harness artefact, not the app:* with the pane hidden every lane's rect collapses and `getLaneFromY` falls through to lane
+6 — the synthetic drag "moved" the trill to the cello; measured by state, not by rects (journal §2's rule).
+
+*Rejected:* re-sending the trill's CC0 before each of its notes (robust on a shared slot, but a foreign note within 12 ms of a trill
+note would then take the trill's articulation; unverifiable by ear here) · gluing a launched trill's start to its note (a deliberate
+move must stay possible; the window plus the offset-keeping drag cover the nudge).
+
+**The cello's attack (his second report):** the data — the cello trill (65.764 → 67.75) sits exactly on its gettato note (eaten);
+its attack is marcato sfz (CC0 11) for 100 ms at 127 on pitch 80 (G#5), the switch back to CC0 9 12 ms before the second note —
+the same events that serve the violin. Nothing in the file or the code singles out the cello; the likeliest cause is the sample:
+the cello's marcato sfz at G#5 may lie above that articulation's top (Q6's class — the Bartók tops were found silent the same way,
+§93; the cello's per-technique ranges are unmeasured: 0d). Put to him: P on the cello trill, the attack articulation to "same as
+trill" — if the first note then sounds, the marcato sample is silent there; the pitch an octave lower in the panel is the other
+test. The 0d sweep answers it for every technique.

@@ -1357,6 +1357,8 @@ const META_LAYERS = [7];
 const META_NAMES = { 7: 'META' };
 const META_COLORS = { 7: '#2E8B57' };
 const CURVE_LAYERS = [8, 9, 10];
+const TRILL_EAT_PRE_S = 0.06;      // a note starting within this BEFORE a trill is its attack and is eaten too (the strike window; RUNNING_LOG §112)
+const TRILL_SWITCH_LEAD_MS = 12;   // a plain note's CC0 next to a sounding trill on the same slot goes this late (= the engine's switch-back lead)
 const CURVE_NAMES = { 8: 'A', 9: 'B', 10: 'C' };
 const CURVE_COLORS = { 8: '#C2410C', 9: '#1D6FA5', 10: '#6D3B9E' };
 const CURVE_OVER = { 8: 4, 9: 5, 10: 6 };   // the lane each window sits on: Violin 2, Viola, Cello
@@ -8535,7 +8537,8 @@ const Composer = {
     renderZone(zone) {
         if (zone.midiModel === 'trill' && !this._trillRerendering) {   // the notes under it drawn faint (TRILLS_TOOL §6)
             this._trillRerendering = true;
-            try { this.rerenderLaneNotes(zone.layer); } finally { this._trillRerendering = false; }
+            try { this.rerenderLaneNotes(zone.layer); if (zone._renderedLayer != null && zone._renderedLayer !== zone.layer) this.rerenderLaneNotes(zone._renderedLayer); } finally { this._trillRerendering = false; }
+            zone._renderedLayer = zone.layer;   // a lane change gives the old lane its notes back (§112)
         }
         if (zone._els) {
             if (zone._els.group && typeof zone._els.group.remove === 'function') zone._els.group.remove();
@@ -8656,7 +8659,7 @@ const Composer = {
                     hasMoved = true;
                     const dx = ev.clientX - startMouseX;
                     const dtSec = dx / this.pixelsPerSecond;
-                    const newStart = Math.max(0, Math.round((origStart + dtSec) * 20) / 20);
+                    const newStart = Math.max(0, clone.midiModel === 'trill' ? origStart + Math.round(dtSec * 20) / 20 : Math.round((origStart + dtSec) * 20) / 20);
                     clone.startTime = newStart;
                     clone.endTime = newStart + dur;
                     const newLayer = this.getLaneFromY(ev.clientY);
@@ -8713,7 +8716,7 @@ const Composer = {
                 if (!lockH) {
                     const dx = ev.clientX - startMouseX;
                     const dtSec = dx / this.pixelsPerSecond;
-                    const newStart = Math.max(0, Math.round((origStart + dtSec) * 20) / 20);
+                    const newStart = Math.max(0, zone.midiModel === 'trill' ? origStart + Math.round(dtSec * 20) / 20 : Math.round((origStart + dtSec) * 20) / 20);   // a trill keeps its start on its attack note; the grid moves it in 50 ms steps (§112)
                     zone.startTime = newStart;
                     zone.endTime = newStart + dur;
                     if (zone.midiSnippet) zone.midiSnippet._stale = true;
@@ -9239,7 +9242,7 @@ const Composer = {
             });
             return null;
         }
-        const LEAD_MS = 150;
+        const LEAD_MS = this.trillLeadMs(zone, r);
         const pitch = this.trillPitchInRange(zone, r);
         const g = TrillEngine.generate({ table: tbl.table, levelAt: this.trillLevelFn(zone), start: zone.startTime, end: zone.endTime,
             pitch, interval: t.interval, smooth: t.smooth, stretch: t.stretch, speed: t.speed, seed: t.seed, roles: t.roles,
@@ -9272,13 +9275,36 @@ const Composer = {
     // the eating rule (TRILLS_TOOL §6): a plain note that starts under a sounding trill on its own lane is silent
     trillCovers(layer, t) {
         return this.objects.some(o => o.type === 'zone' && o.midiModel === 'trill' && o.layer === layer && !o.midiMute
-            && (!o.trill || o.trill.eat !== false) && t >= o.startTime && t < o.endTime);
+            && (!o.trill || o.trill.eat !== false) && t >= o.startTime - TRILL_EAT_PRE_S && t < o.endTime);
+    },
+
+    // a trill sounding on this slot (port + channel, its CC lead included) somewhere in [t0, t1) (§112)
+    trillSoundingOnSlot(portKey, ch0, t0, t1) {
+        return this.objects.some(o => o.type === 'zone' && o.midiModel === 'trill' && !o.midiMute && o.midiSnippet
+            && (o.midiSnippet.port || '').toLowerCase() === portKey && ((o.midiSnippet.channel || 1) - 1) === ch0
+            && o.startTime - (o.midiSnippet.leadMs || 0) / 1000 < t1 && o.endTime > t0);
+    },
+
+    // the trill's CC lead: 150 ms, shortened when a plain note of this player on the same slot starts inside that lead but
+    // outside the eating window (a run's re-deal) — the trill's CC0 must land after that note's note-on, or the note would
+    // take the trill's articulation (§112); never under the engine's switch lead
+    trillLeadMs(zone, r) {
+        let lead = 150;
+        const portKey = (r.port || '').toLowerCase(), ch0 = (r.channel || 1) - 1;
+        this.objects.forEach(o => {
+            if (o.type !== 'waveCurve' || o.sonifyNote == null || o.layer !== zone.layer) return;
+            const tech = this.curveTechniqueFor(o), inst = this.trackInstrument(o.layer);
+            if (((tech && tech.port) || (inst && inst.port) || '').toLowerCase() !== portKey || (((tech && tech.channel) || 1) - 1) !== ch0) return;
+            const gap = zone.startTime - o.startSeconds;
+            if (gap > TRILL_EAT_PRE_S && gap < lead / 1000) lead = Math.max(TRILL_SWITCH_LEAD_MS, Math.round(gap * 1000) - 1);
+        });
+        return lead;
     },
 
     stampMutedBy(zone) {
         this.objects.forEach(o => {
-            if (o.type !== 'waveCurve' || o.sonifyNote == null || o.layer !== zone.layer) return;
-            const under = !zone.midiMute && (!zone.trill || zone.trill.eat !== false) && o.startSeconds >= zone.startTime && o.startSeconds < zone.endTime;
+            if (o.type !== 'waveCurve' || o.sonifyNote == null) return;
+            const under = o.layer === zone.layer && !zone.midiMute && (!zone.trill || zone.trill.eat !== false) && o.startSeconds >= zone.startTime - TRILL_EAT_PRE_S && o.startSeconds < zone.endTime;
             if (under) o.mutedBy = zone.id; else if (o.mutedBy === zone.id) delete o.mutedBy;
         });
     },
@@ -9867,7 +9893,8 @@ const Composer = {
             const inst = this.trackInstrument(wc.layer);
             if (!inst) return;
             const tech = this.curveTechniqueFor(wc);
-            const output = this._zoneMidiOutputs[((tech && tech.port) || inst.port || '').toLowerCase()];
+            const portKey = ((tech && tech.port) || inst.port || '').toLowerCase();
+            const output = this._zoneMidiOutputs[portKey];
             if (!output) return;
             const ch = ((tech && tech.channel) || 1) - 1;
             const st = this._activeCurvePlayback[wc.id];
@@ -9943,7 +9970,10 @@ const Composer = {
             if (inside && jumped && wc.sonifyMode === 'plain' && currentTimeSec - wc.startSeconds > 0.05) return;   // frame skipped it
             // a scrub into the middle of a short captured note does not fire it late; a long grain still does
             const onAt = startsAhead ? perfAt(wc.startSeconds) : nowPerf;
-            preArm(Math.max(nowPerf, onAt - PREARM_S * 1000));
+            // next to a sounding trill on this slot the switch waits until just before the note — sent early it would re-arm the
+            // slot under the trill's tail (RUNNING_LOG §112); the eaten notes never reach here
+            const lateSwitch = this.trillSoundingOnSlot(portKey, ch, wc.startSeconds - PREARM_S, wc.startSeconds);
+            preArm(Math.max(nowPerf, onAt - (lateSwitch ? TRILL_SWITCH_LEAD_MS : PREARM_S * 1000)));
             output.send([0x90 | ch, wc.sonifyNote,
                 (wc.sonifyMode === 'plain' && wc.recVel != null) ? wc.recVel : 100], onAt);
             const rec = { note: wc.sonifyNote, onAt, lastCC: ksMode ? null : this.curveValToCC(this.evalWaveCurve(wc, 0)),

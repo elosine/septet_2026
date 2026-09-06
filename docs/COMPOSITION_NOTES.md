@@ -747,3 +747,13 @@ update of a trill when its source curve changes. The discussion: RUNNING_LOG §1
 **AI reading (not the composer's words):** the attack is a demo device: the trill's first note gets its own articulation,
 length and velocity in the panel (the notation will say fp or sfz); the zone's buttons are `1 2 3` only; overlapping trills
 warn; a dragged trill keeps its pitch; the curve reference is live, bake freezes. Built: RUNNING_LOG §109.
+
+### 2026-09-06 — Lake George (the next piece), the texture
+
+> *"Composition note for Lake George. Use the multitempo and phase shifting rhythms and lots of rests to create sparse
+> pointillistic counterpoint quiet."* — composer, 2026-09-06, session 4 (mid-session, while testing the trills)
+
+*AI reading (kept apart):* the tuba piece's multitempo and phase-shifting engines (present in this port: the texture / pulse /
+multitempo panels, PLAN §1's list) are the tools; the material is quiet and pointillistic — few notes, many rests, the lines
+drifting in and out of phase; the counterpoint is made of the rests as much as the notes. Goes with the pairs and the morph
+opening already noted for Lake George (2026-09-04) and the animated conductions for its quiet material.

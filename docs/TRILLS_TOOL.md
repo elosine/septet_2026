@@ -153,6 +153,12 @@ pitch) may use a second row (bowed tremolo faster).
   cleared when no trill covers them), so the extractor and the exporters skip them without knowing the rule. A final
   "bake" that deletes eaten notes is offered only as an explicit, separate action.
 
+> **Built 2026-09-06 (RUNNING_LOG §112):** the window — a note starting within 60 ms BEFORE the trill is its attack and is eaten
+> too (`TRILL_EAT_PRE_S`; a nudged trill keeps its attack note); a trill's body drag keeps its start on the note (50 ms steps from
+> where it is); on a shared sampler slot a plain note's articulation switch waits until 12 ms before the note while a trill sounds,
+> and the trill's CC lead shortens to land after a same-slot note just before it; a trill moved to another lane takes its stamps
+> and its faint notes with it.
+
 ## 7 · The availability model (shared)
 
 - One function, `busy(lane, t)`: true when a trill on that lane covers t (later: any sustained commitment). The

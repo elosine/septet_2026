@@ -103,7 +103,11 @@
 **This session (4, 2026-09-06, Claude Code / Fable 5.1, in progress):** the bend cursor only when Points is off (§111); **TRILLS_TOOL
 phase 4 built** — a trill's default length runs to its player's next strike note (else 2 s), a stretch or a drag regenerates it at
 once, a copy is not launched from the note (§111, verified, pushed); his reminders in §7 (the strikes' notes moved for playability ·
-"the range walk" · normalized trill loudness). Next: phase 5 (the weave) on his go.
+"the range walk" · normalized trill loudness). Then his *"violin 2 trill … still bartok pizz"* → **§112**: a nudged trill had let go
+of its attack note — a 60 ms eating window, the drag keeps a trill's start, the articulation switch arbitrated on a shared slot
+(the tail, the lead), a lane change carries the stamps (verified, pushed). **Open: the cello's attack** — his *"first attack note
+not functioning for cello"*: the events are right (marcato sfz 100 ms at G#5); likeliest the sample is silent there (Q6's class);
+his one-click test in §112. Lake George's texture noted (COMPOSITION_NOTES 2026-09-06). Next: phase 5 (the weave) on his go.
 
 **Next up:** the composer's pick: (a) his hands on the trills and the curve windows — what bites; then **phase 4** (free trills,
 edge stretching — small) and **phase 5** (the weave) on his go; the notation of trills at 2a. (b) The chain by hand from #32.
