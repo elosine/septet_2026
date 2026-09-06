@@ -126,7 +126,7 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   score, deleted after; the pane's hidden tab collapses rects and its console log is cumulative across loads (count the load
   blocks); drive the ticks synchronously with `performance.now` patched; this shell's heredoc collapses a double backslash —
   scripts with escapes go through the file tool; the rack through `tools/reaper_job.js` (heartbeat · tracks · fader · run · chunk),
-  a probe run = `scratchpad/probe_run.sh <schedule> <analyzer flags>` (record → play → stop with action 40667 → analyze →
+  a probe run = `bash tools/probe_run.sh <schedule> <analyzer flags>` (PROBE_SCRATCH = a scratch dir for its logs) (record → play → stop with action 40667 → analyze →
   the recording's items removed, cursor to 0); the probe kit: `tools/balance_schedule.js` (--sweep, --sweep2, --proof
   [--repeat], --held, --ranges) → `probes/balance_probe.ps1` → `probes/analyze_balance.py` (--sweep, --proof, --ranges,
   --bank, --tol); the self-tests `probes/selftest_sweep.py` / `selftest_ranges.py`.
