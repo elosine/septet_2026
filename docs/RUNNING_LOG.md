@@ -3348,3 +3348,25 @@ playhead, replace-all in the other modes — a re-take @ original time would hav
 *Harness note:* the tab's console held one `SyntaxError` — from the preview's automatic open of the page between the first splice (an
 apostrophe inside an HTML title ended the JS string) and its repair; the reload that ran the checks parsed the repaired file (the
 new functions were present) and `node --check` passes on it. Splice rule kept: no bare apostrophes inside single-quoted HTML strings.
+
+## §114. "Is there a way to duplicate trill zones?" — two ways already; the copy made ready at once; the tab's console log is cumulative (a harness lesson)
+
+Composer: *"is there a way to duplicate trill zones?"*
+
+**Answered from the code:** (1) CTRL + drag the trill's body — a copy that follows the mouse (`duplicateZone` from the body
+handler; since phase 4 the release regenerates it and drops `launchedFrom`, since §112 the drag keeps its sub-grid start);
+(2) the zone panel's **Duplicate** button — P on the trill opens the panel, the button places the copy right after the original
+(offset = its length). **Found and fixed:** through either route the copy had no notes until the next play start, Hear or panel
+change (`duplicateZone` nulls the snippet) — the label lacked the count and the notes under the copy were unstamped; one line in
+`duplicateZone`: a trill copy is regenerated before it is drawn. A copy keeps the pitch, the interval, the attack and the curve
+reference (`auto` re-resolves at the new place); it is not launched from the note; P changes its pitch.
+
+**Verified on the throwaway server** (a copy of the piece — his save now holds 10 trills; the copies deleted): the piano trill
+zn-953 (63.72 → 65.45, 17 notes) duplicated by the panel's route → zn-988 at 65.45 → 67.18, 16 notes, `launchedFrom` null, no
+overlap (adjacent), the `1 2 3` buttons, the label "tr C2–D2 (M2) · main · 16 notes", the one note under it stamped, the copy
+selected, the panel hidden (the trill rule). Every script the page serves passes `new Function` in the browser.
+
+**A harness lesson (→ journal §5 at session end):** the Browser pane's "seed" tab persists across `preview_start` / `preview_stop`,
+and `read_console_messages` returns the tab's WHOLE history — today's single `SyntaxError` (§113's broken minute) sat four page
+loads back and showed up in three later checks. Count the load blocks ("[CC7 map] loaded … Composer initialized") and read only
+the last one, or check the served scripts' syntax in the page as done here.

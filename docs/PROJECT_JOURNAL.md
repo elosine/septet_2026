@@ -111,7 +111,8 @@ his one-click test in §112. Lake George's texture noted (COMPOSITION_NOTES 2026
 chords ("morph events" from the tuba morph engine → **PLAN 1f**, todo, talk first), section 3 patterned / call-and-response strikes
 with crescendos (STRIKES_TOOL V); the planner's outline carries it, to confirm with him. His *"Insert at playhead … back in its original location"* / *"load a saved strike 32 moves the cursor to 49.42"* → **§113**: the
 drawer's pick no longer parks the playhead, `⌖ original` on request, an insert replaces only at its own time and keeps copies
-elsewhere (CN-28's recurring strikes; choice 3 narrowed). Next: phase 5 (the weave) on his go.
+elsewhere (CN-28's recurring strikes; choice 3 narrowed). Trill zones duplicate by CTRL-drag or the panel's Duplicate (P first); the copy now ready at once (§114; the tab's console log is
+cumulative — a §5 gotcha to promote). Next: phase 5 (the weave) on his go.
 
 **Next up:** the composer's pick: (a) his hands on the trills and the curve windows — what bites; then **phase 4** (free trills,
 edge stretching — small) and **phase 5** (the weave) on his go; the notation of trills at 2a. (b) The chain by hand from #32.

@@ -8528,6 +8528,7 @@ const Composer = {
         if (clone.curveSnapshot) clone.curveSnapshot = null;
         if (clone.linkedCurveId) clone.linkedCurveId = '';
         this.objects.push(clone);
+        if (clone.midiModel === 'trill') this.regenerateTrill(clone);   // a trill copy is ready at once — its notes, its label's count, its stamps (§114)
         this.renderZone(clone);
         this.selectObject(clone);
         this.markDirty();
