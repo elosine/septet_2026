@@ -3656,3 +3656,16 @@ are written above its top (E4 at 68.79, G#5 at 85.35) and fold at playback to E3
 **Verified on the throwaway page** (a copy of the piece): the recipe in the page carries the measured spans with their zones; a
 cello trill at G#5 with a Bartók attack → the label's ⚠ (no sample at Ab5), with a marcato attack → none, at C4 → none;
 `techLength` reads the new rows. **0d's remainder** (0d.3 the controller lanes, 0d.4 the controller probes) stays as it was.
+
+## §123. "Can you fold those 16 notes down for me, just the strikes" — done on the saved score, a snapshot first
+
+Composer: *"can you check the str[ikes] in my saved score and see if there are any currently in the score that are out of range?"* →
+the 16 of §122 in `scores/piece-septet.json` (saved 14:59) → *"can you fold those 16 notes down for me, just the strikes"*.
+
+**Done** (the first edit of his score by the AI, at his word): `scores/piece-septet-v1.10-beforeFold.json` written byte for byte first; then
+each of the 16 notes down by octaves until inside its technique's measured range — one octave was enough for all: violin 1 Bartók
+A6 → A5, F#6 → F#5; violin 2 Bartók C7 → C6, F#6 → F#5 (twice); viola gettato F6 → F5 (twice), A6 → A5, F#6 → F#5, G6 → G5;
+cello gettato B5 → B4 (twice), A5 → A4, F#5 → F#4, G#5 → G#4, A#5 → A#4. Proved: the same 355 objects, 16 changed, nothing but
+`sonifyNote` changed, tracks and meta identical; `range_check` after → no strike outside, only the two bass clarinet trills written
+above its top (left alone, as asked; they fold at playback). **For him:** Reload in the app before anything else — the app held
+the pre-fold state. The score files stay his, uncommitted.
