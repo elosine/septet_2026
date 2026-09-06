@@ -20,6 +20,11 @@ freely.
 - Not yet adapted to the septet's palette: the pairs (seven unlike instruments, not seven tubas), the pitch-bend range per
   instrument (Xsample: editable in ¼-tone steps; SI2 flute, the pianos: to check), the notation (phase 2a).
 
+- **The dynamics are solved for any curve-driven object (2026-09-06, PLAN 1g, RUNNING_LOG §115–120):** `score/public/velocity_remap.js` gives
+  a morph event its loudness in the ensemble's one scale — `velocityFor / cc7For` per note (attacks, trills), `heldNote / cc7ForHeight`
+  for a sustained sound (the velocity for the top of its curve, CC7 following the height), measured per instrument and register
+  (`bank/velocity_remap.json`). The morph's pitch bend rides on top; its loudness need not be designed again.
+
 ## 2 · For this piece — "morph events" (CN-28 · CN-29)
 
 His picture: **single morph events** — e.g. unison → maximum beating, "like in convergence", over a set time — then **longer

@@ -5,7 +5,7 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ►** 2026-09-06 — **the piece is composed to #31 (72 s)** in `scores/piece-septet.json`, the chain continuing by hand from #32; **the trill module's phases 0–4 and the curve windows are built, verified and pushed** (D18–D21; RUNNING_LOG §97–111) — the composer's hands next, then phase 5 (the weave) on his go; the 0d bridge sweep in his ten-minute window. Phase 0 so far: 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 done; piccolo vs bass flute (CN-2) open.
+**NOW ►** 2026-09-06 — **the piece is composed to #31 (72 s)** in `scores/piece-septet.json`, the chain continuing by hand from #32; **the trill module's phases 0–4 and the curve windows are built, verified and pushed** (D18–D21; RUNNING_LOG §97–111); **PLAN 1g done 2026-09-06 (§115–120, D23): a curve height is the same loudness on every instrument — the sweeps, the per-instrument remap with the CC7 trim, the trill's velocity switch, the ordinary voice, the notation rule, crescendos on held notes** — the composer's hands next, then phase 5 (the weave) on his go; the 0d bridge sweep in his ten-minute window. Phase 0 so far: 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 done; piccolo vs bass flute (CN-2) open.
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 

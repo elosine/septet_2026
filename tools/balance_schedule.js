@@ -37,7 +37,8 @@ const SWEEP2 = { flute: [seq(127, 20, 8), 1], piano: [seq(127, 21, 2).concat([20
 // --proof (PLAN 1g item 1, to-do 6): every instrument's ordinary voice at its middle measured register, at the bottom, the
 // middle and the top of a curve (anchor velocity 65 · 96 · 127) — each sent the velocity bank/velocity_remap.json prescribes;
 // the recording must show the seven at one level per height (within about 1.5 dB).
-const proof = args.includes('--proof');
+const held = args.includes('--held');   // 1g item 5's proof: a held note at three heights — the velocity for the top, CC7 for the height
+const proof = args.includes('--proof') || held;
 const PROOF_H = opt('proofh', '0,0.5,1').split(',').map(Number);
 const PROOF_LO = +opt('prooflo', 65), PROOF_HI = +opt('proofhi', 127);
 const REPEAT = Math.max(1, +opt('repeat', 1));   // each proof note played this many times in a row: the sampler's note-to-note scatter (round robins) averages out
@@ -63,7 +64,7 @@ const vels = opt('vels', '127,64').split(',').map(Number);
 const only = opt('only', '').split(',').filter(Boolean);
 const noStrike = args.includes('--nostrike');
 opt('strike', '').split(',').filter(Boolean).forEach(kv => { const [k, v] = kv.split('='); STRIKE_TECHS[k] = v; });
-const out = path.resolve(ROOT, opt('out', proof ? 'probes/proof_schedule.json' : sweep2 ? 'probes/sweep2_schedule.json' : sweep ? 'probes/sweep_schedule.json' : 'probes/balance_schedule.json'));
+const out = path.resolve(ROOT, opt('out', held ? 'probes/held_schedule.json' : proof ? 'probes/proof_schedule.json' : sweep2 ? 'probes/sweep2_schedule.json' : sweep ? 'probes/sweep_schedule.json' : 'probes/balance_schedule.json'));
 
 const notes = [];
 let t = leadMs, i = 0;
@@ -89,10 +90,11 @@ if (proof) {   // one note per height per instrument, the middle register, the r
         plan.push({ inst, role: 'proof', tech: tech.key });
         for (const h of PROOF_H) {
             const anchorVel = Math.round(PROOF_LO + (PROOF_HI - PROOF_LO) * h);
-            const vel = VelocityRemap.velocityFor(remapBank, inst, pitch, anchorVel);
-            const cc7 = VelocityRemap.cc7For ? VelocityRemap.cc7For(remapBank, inst, pitch, anchorVel) : 127;   // the trim (§119)
+            let vel = VelocityRemap.velocityFor(remapBank, inst, pitch, anchorVel);
+            let cc7 = VelocityRemap.cc7For ? VelocityRemap.cc7For(remapBank, inst, pitch, anchorVel) : 127;   // the trim (§119)
+            if (held) { const hn = VelocityRemap.heldNote(remapBank, inst, pitch, PROOF_HI); vel = hn.vel; cc7 = VelocityRemap.cc7ForHeight(remapBank, inst, pitch, vel, anchorVel); }   // §120
             for (let rpt = 0; rpt < REPEAT; rpt++) {
-                notes.push({ i: i++, inst, label: I.label, role: 'proof', h, anchorVel, rpt, tech: tech.key, techLabel: tech.label, port: tech.port || I.port, ch: tech.channel || 1,
+                notes.push({ i: i++, inst, label: I.label, role: held ? 'held' : 'proof', h, anchorVel, rpt, tech: tech.key, techLabel: tech.label, port: tech.port || I.port, ch: tech.channel || 1,
                              cc0: tech.cc0 != null ? tech.cc0 : null, ks: tech.ks != null ? tech.ks : null, pitch, vel, cc7, tPreMs: t - preMs, tOnMs: t, tOffMs: t + noteMs });
                 t += noteMs + gapMs;
             }

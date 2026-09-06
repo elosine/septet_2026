@@ -1,0 +1,483 @@
+{
+ "measuredAt": "2026-09-06T13:44:04",
+ "wav": "01-REC-260906_1340.wav",
+ "windowS": 0.4,
+ "weighting": "k",
+ "tolDb": 1.5,
+ "schedule": "probes/held_schedule.json",
+ "remapMeasuredAt": "2026-09-06T13:22:50",
+ "proofScale": {
+  "lo": 65,
+  "hi": 127
+ },
+ "noiseFloorDb": -85.2,
+ "offsetS": 1.63,
+ "result": {
+  "heights": [
+   {
+    "h": 0,
+    "anchorDb": -39.045,
+    "spreadDb": 1.74,
+    "instruments": [
+     {
+      "inst": "flute",
+      "label": "Flute",
+      "pitch": 78,
+      "vel": 127,
+      "n": 5,
+      "found": true,
+      "db": -38.982,
+      "sdDb": 0.004000000000002046,
+      "minDb": -38.99,
+      "maxDb": -38.98,
+      "devDb": 0.06,
+      "ok": true,
+      "notes": [
+       -38.98,
+       -38.98,
+       -38.98,
+       -38.99,
+       -38.98
+      ]
+     },
+     {
+      "inst": "bass_clarinet",
+      "label": "Bass Clarinet",
+      "pitch": 50,
+      "vel": 108,
+      "n": 5,
+      "found": true,
+      "db": -40.444,
+      "sdDb": 2.087137753000506,
+      "minDb": -43.21,
+      "maxDb": -38.26,
+      "devDb": -1.4,
+      "ok": true,
+      "notes": [
+       -38.26,
+       -39.91,
+       -42.55,
+       -38.29,
+       -43.21
+      ]
+     },
+     {
+      "inst": "piano",
+      "label": "Piano",
+      "pitch": 65,
+      "vel": 109,
+      "n": 5,
+      "found": true,
+      "db": -39.14,
+      "sdDb": 0.0063245553203355,
+      "minDb": -39.15,
+      "maxDb": -39.13,
+      "devDb": -0.09,
+      "ok": true,
+      "notes": [
+       -39.14,
+       -39.14,
+       -39.14,
+       -39.13,
+       -39.15
+      ]
+     },
+     {
+      "inst": "violin1",
+      "label": "Violin 1",
+      "pitch": 78,
+      "vel": 120,
+      "n": 5,
+      "found": true,
+      "db": -39.068,
+      "sdDb": 0.8786899339357417,
+      "minDb": -40.41,
+      "maxDb": -38.09,
+      "devDb": -0.02,
+      "ok": true,
+      "notes": [
+       -38.09,
+       -40.41,
+       -39.49,
+       -38.12,
+       -39.23
+      ]
+     },
+     {
+      "inst": "violin2",
+      "label": "Violin 2",
+      "pitch": 78,
+      "vel": 123,
+      "n": 5,
+      "found": true,
+      "db": -39.022000000000006,
+      "sdDb": 0.8395093805312719,
+      "minDb": -40.27,
+      "maxDb": -37.7,
+      "devDb": 0.02,
+      "ok": true,
+      "notes": [
+       -39.28,
+       -38.67,
+       -40.27,
+       -37.7,
+       -39.19
+      ]
+     },
+     {
+      "inst": "viola",
+      "label": "Viola",
+      "pitch": 71,
+      "vel": 127,
+      "n": 5,
+      "found": true,
+      "db": -38.7,
+      "sdDb": 0.7803588917927435,
+      "minDb": -39.4,
+      "maxDb": -37.28,
+      "devDb": 0.34,
+      "ok": true,
+      "notes": [
+       -39.28,
+       -39.4,
+       -39.08,
+       -38.46,
+       -37.28
+      ]
+     },
+     {
+      "inst": "cello",
+      "label": "Cello",
+      "pitch": 60,
+      "vel": 115,
+      "n": 5,
+      "found": true,
+      "db": -39.182,
+      "sdDb": 3.510683124407556,
+      "minDb": -42.85,
+      "maxDb": -33.18,
+      "devDb": -0.14,
+      "ok": true,
+      "notes": [
+       -33.18,
+       -38.52,
+       -42.85,
+       -38.78,
+       -42.58
+      ]
+     }
+    ]
+   },
+   {
+    "h": 0.5,
+    "anchorDb": -33.485,
+    "spreadDb": 3.03,
+    "instruments": [
+     {
+      "inst": "flute",
+      "label": "Flute",
+      "pitch": 78,
+      "vel": 127,
+      "n": 5,
+      "found": true,
+      "db": -33.227999999999994,
+      "sdDb": 0.003999999999999204,
+      "minDb": -33.23,
+      "maxDb": -33.22,
+      "devDb": 0.26,
+      "ok": true,
+      "notes": [
+       -33.23,
+       -33.23,
+       -33.23,
+       -33.22,
+       -33.23
+      ]
+     },
+     {
+      "inst": "bass_clarinet",
+      "label": "Bass Clarinet",
+      "pitch": 50,
+      "vel": 108,
+      "n": 5,
+      "found": true,
+      "db": -34.61,
+      "sdDb": 2.061960232400228,
+      "minDb": -37.11,
+      "maxDb": -32.44,
+      "devDb": -1.12,
+      "ok": true,
+      "notes": [
+       -32.5,
+       -37.11,
+       -34.04,
+       -36.96,
+       -32.44
+      ]
+     },
+     {
+      "inst": "piano",
+      "label": "Piano",
+      "pitch": 65,
+      "vel": 109,
+      "n": 5,
+      "found": true,
+      "db": -33.198,
+      "sdDb": 0.004000000000002046,
+      "minDb": -33.2,
+      "maxDb": -33.19,
+      "devDb": 0.29,
+      "ok": true,
+      "notes": [
+       -33.2,
+       -33.2,
+       -33.2,
+       -33.19,
+       -33.2
+      ]
+     },
+     {
+      "inst": "violin1",
+      "label": "Violin 1",
+      "pitch": 78,
+      "vel": 120,
+      "n": 5,
+      "found": true,
+      "db": -34.374,
+      "sdDb": 0.9013900376640516,
+      "minDb": -35.27,
+      "maxDb": -32.71,
+      "devDb": -0.89,
+      "ok": true,
+      "notes": [
+       -34.57,
+       -32.71,
+       -35.04,
+       -34.28,
+       -35.27
+      ]
+     },
+     {
+      "inst": "violin2",
+      "label": "Violin 2",
+      "pitch": 78,
+      "vel": 123,
+      "n": 5,
+      "found": true,
+      "db": -32.596,
+      "sdDb": 0.4778535340457358,
+      "minDb": -33.23,
+      "maxDb": -31.84,
+      "devDb": 0.89,
+      "ok": true,
+      "notes": [
+       -31.84,
+       -33.23,
+       -32.31,
+       -32.84,
+       -32.76
+      ]
+     },
+     {
+      "inst": "viola",
+      "label": "Viola",
+      "pitch": 71,
+      "vel": 127,
+      "n": 5,
+      "found": true,
+      "db": -33.14399999999999,
+      "sdDb": 0.6636444831383741,
+      "minDb": -33.64,
+      "maxDb": -31.89,
+      "devDb": 0.34,
+      "ok": true,
+      "notes": [
+       -33.6,
+       -33.55,
+       -33.04,
+       -33.64,
+       -31.89
+      ]
+     },
+     {
+      "inst": "cello",
+      "label": "Cello",
+      "pitch": 60,
+      "vel": 115,
+      "n": 5,
+      "found": true,
+      "db": -31.582,
+      "sdDb": 3.6521905755313484,
+      "minDb": -36.97,
+      "maxDb": -27.38,
+      "devDb": 1.9,
+      "ok": false,
+      "notes": [
+       -27.58,
+       -33.1,
+       -36.97,
+       -27.38,
+       -32.88
+      ]
+     }
+    ]
+   },
+   {
+    "h": 1,
+    "anchorDb": -29.136000000000003,
+    "spreadDb": 1.81,
+    "instruments": [
+     {
+      "inst": "flute",
+      "label": "Flute",
+      "pitch": 78,
+      "vel": 127,
+      "n": 5,
+      "found": true,
+      "db": -29.204,
+      "sdDb": 0.008000000000000007,
+      "minDb": -29.21,
+      "maxDb": -29.19,
+      "devDb": -0.07,
+      "ok": true,
+      "notes": [
+       -29.19,
+       -29.21,
+       -29.21,
+       -29.21,
+       -29.2
+      ]
+     },
+     {
+      "inst": "bass_clarinet",
+      "label": "Bass Clarinet",
+      "pitch": 50,
+      "vel": 108,
+      "n": 5,
+      "found": true,
+      "db": -29.778000000000002,
+      "sdDb": 1.7714446082223398,
+      "minDb": -33.0,
+      "maxDb": -28.1,
+      "devDb": -0.64,
+      "ok": true,
+      "notes": [
+       -29.83,
+       -28.2,
+       -29.76,
+       -33.0,
+       -28.1
+      ]
+     },
+     {
+      "inst": "piano",
+      "label": "Piano",
+      "pitch": 65,
+      "vel": 109,
+      "n": 5,
+      "found": true,
+      "db": -28.982,
+      "sdDb": 0.013266499161421101,
+      "minDb": -29.0,
+      "maxDb": -28.96,
+      "devDb": 0.15,
+      "ok": true,
+      "notes": [
+       -28.98,
+       -28.96,
+       -29.0,
+       -28.98,
+       -28.99
+      ]
+     },
+     {
+      "inst": "violin1",
+      "label": "Violin 1",
+      "pitch": 78,
+      "vel": 120,
+      "n": 5,
+      "found": true,
+      "db": -29.26,
+      "sdDb": 0.5883876273342258,
+      "minDb": -29.75,
+      "maxDb": -28.34,
+      "devDb": -0.12,
+      "ok": true,
+      "notes": [
+       -29.72,
+       -28.78,
+       -29.75,
+       -28.34,
+       -29.71
+      ]
+     },
+     {
+      "inst": "violin2",
+      "label": "Violin 2",
+      "pitch": 78,
+      "vel": 123,
+      "n": 5,
+      "found": true,
+      "db": -29.012,
+      "sdDb": 0.6988962727043256,
+      "minDb": -29.63,
+      "maxDb": -27.76,
+      "devDb": 0.12,
+      "ok": true,
+      "notes": [
+       -29.53,
+       -29.63,
+       -27.76,
+       -29.4,
+       -28.74
+      ]
+     },
+     {
+      "inst": "viola",
+      "label": "Viola",
+      "pitch": 71,
+      "vel": 127,
+      "n": 5,
+      "found": true,
+      "db": -29.444,
+      "sdDb": 0.6441614704404476,
+      "minDb": -29.95,
+      "maxDb": -28.25,
+      "devDb": -0.31,
+      "ok": true,
+      "notes": [
+       -29.91,
+       -28.25,
+       -29.83,
+       -29.28,
+       -29.95
+      ]
+     },
+     {
+      "inst": "cello",
+      "label": "Cello",
+      "pitch": 60,
+      "vel": 115,
+      "n": 5,
+      "found": true,
+      "db": -27.965999999999998,
+      "sdDb": 4.399234478861065,
+      "minDb": -32.91,
+      "maxDb": -22.84,
+      "devDb": 1.17,
+      "ok": true,
+      "notes": [
+       -32.91,
+       -22.92,
+       -28.72,
+       -22.84,
+       -32.44
+      ]
+     }
+    ]
+   }
+  ],
+  "pass": false,
+  "worstDb": 1.9
+ }
+}

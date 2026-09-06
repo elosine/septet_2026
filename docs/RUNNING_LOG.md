@@ -3554,3 +3554,36 @@ staircase with 8.5 and 3 dB steps; the violins ±1 dB round-robin scatter, the v
 — a cello trill shimmers by nature. **Harness lessons:** stop a probe recording with action 40667; the tab's console log is
 cumulative; this shell's heredoc collapses a double backslash — scripts with escapes go through the file tool; a K-weighted
 RMS must not taper the window.
+
+## §120. 1g item 5 built: a drawn crescendo balances like a trill — the held note's velocity for the top of its curve, CC7 for the height; 1g complete
+
+Composer: *"go on 5"*.
+
+**What existed:** a drawn sustained note (a `waveCurve` with `sonifyNote`, neither plain nor keyswitched) played at velocity 100 and
+streamed CC7 from its own shape through the tuba piece's CC7 map (`curveValToCC`: the level 0–10 → a 40 dB span → the tuba's
+measured CC7 points) — the same map for every instrument, measured on none of them. Only playback used it (the tick's pre-arm,
+its stream, its record); the exporters do not.
+
+**Built:** the shared module `velocity_remap.js` gains `levelFor` (the instrument's level at pitch and velocity, from the sweep's
+curves, interpolated between registers), `targetDb` (the violins' level at an anchor velocity), `cc7ForDelta` (the CC7 whose
+measured attenuation is a given cut), `heldNote` (the velocity for the top of a note's curve) and `cc7ForHeight` (the CC7 to
+stream at a height for a note sounding at that velocity) — the trill's hybrid, live. The page: `heldDyn / heldVel / heldCc7` (a
+cache per note, invalidated by pitch, layer, the curve's top and the bank's date); the tick sends the held velocity at note-on and
+streams `heldCc7(wc, height)` in the pre-arm, the record and the per-frame stream; without a remap the tuba map and velocity 100
+as before; keyswitched notes keep their static level. The scale is the ensemble's (`HELD_LO` 65 … `HELD_HI` 127) — the curve's
+top asks for the anchor's velocity at that height, the rest is CC7. The proof: `balance_schedule.js --held` (a held note per
+instrument at three heights, five repeats).
+
+**Verified in node** (piano C4: held velocity 109, CC7 86 / 108 / 127 at the bottom / middle / top; violin 1 D5: 120 and
+88 / 107 / 127; flute D5: 127 and 71 / 100 / 127 — the flute's shallow response needs the deep cut; the cello C4 115; no bank →
+null / 127) and **on the throwaway page** (a copy of the piece; a 3 s ramp 0.1 → 1.0 on the piano, violin 1 and flute lanes; fake
+outputs; the transport simulated): the note-on velocities 109 / 120 / 127, the pre-arm CC7 90 / 92 / 76, the stream at three
+moments 97·110·120 / 98·108·119 / 85·102·118 — every value equal to the module's own prediction — rising to 127 at the top;
+the fallback without a remap: velocity 100 and the tuba map's 28 → 42. **On the rack** (`01-REC-260906_1340.wav`, 105 notes): the
+held notes at the bottom / middle / top — flute +0.1 / +0.3 / −0.1 · piano −0.1 / +0.3 / +0.1 · violin 1 0.0 / −0.9 / −0.1 · violin
+2 0.0 / +0.9 / +0.1 · viola +0.3 / +0.3 / −0.3 · bass clarinet −1.4 / −1.1 / −0.6 · cello −0.1 / +1.9 / +1.2 dB from the violins;
+the cello's five notes spread 4.4 dB. Six of seven within 1.4 dB at every height; the cello within its own round robins.
+
+**1g is complete** (items 1–5). The morph events (1f) and any later curve-driven object have the two functions: velocity + CC7
+trim per note (`velocityFor / cc7For`) for attacks and trills, the held-note pair (`heldNote / cc7ForHeight`) for sustained
+sounds — MORPH_NOTES §1. Left as the samplers are: the cello's ±3.5 dB per note, the bass clarinet's ±2.

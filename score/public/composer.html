@@ -1359,6 +1359,7 @@ const META_NAMES = { 7: 'META' };
 const META_COLORS = { 7: '#2E8B57' };
 const CURVE_LAYERS = [8, 9, 10];
 const TRILL_EAT_PRE_S = 0.06;      // a note starting within this BEFORE a trill is its attack and is eaten too (the strike window; RUNNING_LOG §112)
+const HELD_LO = 65, HELD_HI = 127;   // a drawn sustained note's dynamic scale (1g item 5, §120): the ensemble's, as the trill's default
 const TRILL_SWITCH_LEAD_MS = 12;   // a plain note's CC0 next to a sounding trill on the same slot goes this late (= the engine's switch-back lead)
 const CURVE_NAMES = { 8: 'A', 9: 'B', 10: 'C' };
 const CURVE_COLORS = { 8: '#C2410C', 9: '#1D6FA5', 10: '#6D3B9E' };
@@ -9126,6 +9127,27 @@ const Composer = {
         return VelocityRemap.cc7For(this._velRemap, tr ? tr.instKey : null, pitch, anchorVel);
     },
 
+    // 1g item 5 (§120): a drawn sustained note — its velocity chosen for the TOP of its own curve, its CC7 following the height
+    // through the measured curves (the trill's hybrid, live); the tuba piece's CC7 map and velocity 100 when no remap is loaded
+    curveTop(wc) { const ys = (wc.nodes || []).map(n => +n.y).filter(y => !isNaN(y)); return Math.max(0, Math.min(1, (ys.length ? Math.max.apply(null, ys) : 10) / 10)); },
+    heldDyn(wc) {
+        const stamp = this._velRemap ? this._velRemap.measuredAt : null, hMax = this.curveTop(wc);
+        if (!this._heldCache) this._heldCache = new Map();
+        const c = this._heldCache.get(wc.id);
+        if (c && c.stamp === stamp && c.pitch === wc.sonifyNote && c.hMax === hMax && c.layer === wc.layer) return c;
+        const tr = TRACKS[wc.layer];
+        const d = this._velRemap ? VelocityRemap.heldNote(this._velRemap, tr ? tr.instKey : null, wc.sonifyNote, HELD_LO + (HELD_HI - HELD_LO) * hMax) : null;
+        const rec = { stamp, pitch: wc.sonifyNote, hMax, layer: wc.layer, vel: d ? d.vel : 100, level: d ? d.level : null };
+        this._heldCache.set(wc.id, rec);
+        return rec;
+    },
+    heldVel(wc) { return this._velRemap ? this.heldDyn(wc).vel : 100; },
+    heldCc7(wc, h) {
+        if (!this._velRemap) return this.curveValToCC(h);
+        const d = this.heldDyn(wc), tr = TRACKS[wc.layer];
+        return VelocityRemap.cc7ForHeight(this._velRemap, tr ? tr.instKey : null, wc.sonifyNote, d.vel, HELD_LO + (HELD_HI - HELD_LO) * Math.max(0, Math.min(1, h)));
+    },
+
     // the instrument's ordinary voice (1g item 4): the recipe's `ordinary`, else the balance kit's preference order
     ordinaryTech(layer) {
         const inst = this.trackInstrument(layer), techs = (inst && inst.techniques) || [];
@@ -9967,7 +9989,7 @@ const Composer = {
                 // velocity — not the level-curve map
                 const cc = wc.sonifyMode === 'plain' ? 127
                     : ksMode ? this.curveValToCC(Math.max(...wc.nodes.map(n => n.y)) / 10)
-                    : this.curveValToCC(this.evalWaveCurve(wc, 0));
+                    : this.heldCc7(wc, this.evalWaveCurve(wc, 0));   // 1g item 5: the measured curves (the tuba map without a remap)
                 output.send([0xB0 | ch, 7, cc], at);
             };
 
@@ -9992,7 +10014,7 @@ const Composer = {
                 if (currentTimeSec < wc.startSeconds) return;   // scheduled, not yet sounding: nothing to stream
                 // curve-following: the CC7 stream (rate-limited, continuous — per frame is right for it)
                 const t01 = (currentTimeSec - wc.startSeconds) / Math.max(1e-6, wc.endSeconds - wc.startSeconds);
-                const cc = ksMode ? null : this.curveValToCC(this.evalWaveCurve(wc, t01));
+                const cc = ksMode ? null : this.heldCc7(wc, this.evalWaveCurve(wc, t01));   // 1g item 5
                 const now = performance.now();
                 if (!ksMode && cc !== st.lastCC && now - st.lastSend >= 25) {
                     output.send([0xB0 | ch, 7, cc]);
@@ -10029,8 +10051,8 @@ const Composer = {
             const lateSwitch = this.trillSoundingOnSlot(portKey, ch, wc.startSeconds - PREARM_S, wc.startSeconds);
             preArm(Math.max(nowPerf, onAt - (lateSwitch ? TRILL_SWITCH_LEAD_MS : PREARM_S * 1000)));
             output.send([0x90 | ch, wc.sonifyNote,
-                (wc.sonifyMode === 'plain' && wc.recVel != null) ? wc.recVel : 100], onAt);
-            const rec = { note: wc.sonifyNote, onAt, lastCC: ksMode ? null : this.curveValToCC(this.evalWaveCurve(wc, 0)),
+                (wc.sonifyMode === 'plain' && wc.recVel != null) ? wc.recVel : (ksMode ? 100 : this.heldVel(wc))], onAt);   // 1g item 5: the velocity for the curve's top
+            const rec = { note: wc.sonifyNote, onAt, lastCC: ksMode ? null : this.heldCc7(wc, this.evalWaveCurve(wc, 0)),
                 lastSend: nowPerf, offScheduled: false };
             if (wc.endSeconds - wc.startSeconds <= OFF_HORIZON_S) {
                 output.send([0x80 | ch, wc.sonifyNote, 0], Math.max(onAt + 1, perfAt(wc.endSeconds)));

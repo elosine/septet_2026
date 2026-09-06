@@ -345,7 +345,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   document for the morph tool, this piece's adjustments and the eventual all-purpose revision; the morph event's four elements:
   pitch expansion → beating · re-breath / re-bow · crescendo · the pairs' own glissandi; short events of one breath, long ones with
   re-breaths). *Why:* section 2's material in his form of 2026-09-06.
-- **1g — Balanced dynamics for curve-driven playback: trills first, then crescendos and the morph events** — `todo 2026-09-06`
+- **1g — Balanced dynamics for curve-driven playback: trills first, then crescendos and the morph events** — `done 2026-09-06 (RUNNING_LOG §115–120; D23)`
   *(composer, 2026-09-06: "get balanced level playback through MIDI for trills using the curve shapes, and hopefully this will extend
   to other types of articulations like crescendos")*. Reordered 2026-09-06 at his word: one item at a time, the simplest terms.
   1. **Normalize the volume between instruments** — `done 2026-09-06 (§115–119)` — the bottom and the middle of the curve; the top (127) is already done by the
@@ -392,18 +392,19 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - verify on a copy of the piece: a new trill on each of the seven lanes, and a copy dragged from the flute to each other lane,
        all sending the right articulation switch. His existing tutti copies are corrected by the third to-do at their next
        regeneration (play start).
-  5. **Extend to crescendos.** *Result:* a crescendo drawn as a curve on a sustained note balances across the instruments the same
+  5. **Extend to crescendos** — `done 2026-09-06 (§120)`. *Result:* a crescendo drawn as a curve on a sustained note balances across the instruments the same
      way a trill does, through the same idea of remap; the same for the morph events' crescendo later and for any object whose
      loudness a curve drives. The to-dos:
      - settle the carrier: a held note cannot change velocity mid-note, so its crescendo rides on CC7 — what the app already streams
        from a curve on a sustained note, through the tuba piece's CC7 table;
      - ~~measure CC7 → loudness per instrument~~ — done 2026-09-06 inside item 1's sweep (the cc7 role; `bank/velocity_map.json`; §115);
-     - compute a CC7 remap per instrument anchored on the violins, so a curve height gives the same loudness whether it drives
-       velocity or CC7;
-     - the sustained-note stream reads the remap instead of the tuba table;
-     - the morph events and any later curve-driven object get the same two functions: the velocity remap for attacks and trills, the
-       CC7 remap for held sounds;
-     - check: all seven holding a note at bottom, middle and top of a curve, read the levels, within about 1.5 dB.
+     - ~~compute a CC7 remap per instrument anchored on the violins~~ — done 2026-09-06 (§120: the held note's velocity for the top of
+       its curve, CC7 for the height, live from the measured curves — `heldNote / cc7ForHeight`);
+     - ~~the sustained-note stream reads the remap instead of the tuba table~~ — done 2026-09-06 (the tick's pre-arm, record and stream;
+       the tuba map only without a remap);
+     - ~~the two functions for the morph events and any later curve-driven object~~ — done (`velocity_remap.js`; MORPH_NOTES §1);
+     - ~~check: all seven holding a note at bottom, middle and top~~ — done 2026-09-06 (§120): six of seven within 1.4 dB at every
+       height, the cello within its own scatter.
   *Why:* the piece's second material is curve-driven; if the curve's bottom is a different loudness on each instrument, no ensemble
   balance can be composed — and the rendering must never leak into the notation.
 - Sketch pad: `docs/COMPOSITION_NOTES.md` — the opening is already there (ensemble attack →

@@ -46,6 +46,59 @@
     }
     return c(at(ps[ps.length - 1]));
   }
+  // ---- the held-note hybrid (1g item 5, RUNNING_LOG §120): the velocity for the TOP of a note's curve, CC7 for the height ----
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function curveAt(pts, x, xk, yk) {   // linear between the points (sorted by xk), flat beyond the ends
+    if (!pts || !pts.length) return null;
+    if (x <= pts[0][xk]) return pts[0][yk];
+    if (x >= pts[pts.length - 1][xk]) return pts[pts.length - 1][yk];
+    for (let i = 0; i < pts.length - 1; i++) {
+      if (x >= pts[i][xk] && x <= pts[i + 1][xk]) { const s = pts[i + 1][xk] - pts[i][xk]; return lerp(pts[i][yk], pts[i + 1][yk], s > 0 ? (x - pts[i][xk]) / s : 0); }
+    }
+    return pts[pts.length - 1][yk];
+  }
+  // the level (dB, the sweep's weighting) this instrument makes at (pitch, vel) with CC7 127 — the monotone fit where it exists
+  function levelFor(bank, instKey, pitch, vel) {
+    const inst = bank && bank.instruments && instKey ? bank.instruments[instKey] : null;
+    if (!inst || !inst.pitches || !inst.pitches.length) return null;
+    const ps = inst.pitches, lv = p => curveAt(p.monotone || p.measured, vel, 'v', 'db');
+    if (pitch == null || pitch <= ps[0].pitch) return lv(ps[0]);
+    if (pitch >= ps[ps.length - 1].pitch) return lv(ps[ps.length - 1]);
+    for (let k = 0; k < ps.length - 1; k++) {
+      if (pitch >= ps[k].pitch && pitch <= ps[k + 1].pitch) { const t = (pitch - ps[k].pitch) / (ps[k + 1].pitch - ps[k].pitch); return lerp(lv(ps[k]), lv(ps[k + 1]), t); }
+    }
+    return lv(ps[ps.length - 1]);
+  }
+  // the ensemble's target level at an anchor velocity (the violins' curve, from the bank)
+  function targetDb(bank, anchorVel) {
+    if (!bank || !bank.targetDb || !bank.targetDb.length) return null;
+    const lo = bank.scale && bank.scale.lo != null ? bank.scale.lo : 65;
+    return bank.targetDb[Math.max(0, Math.min(bank.targetDb.length - 1, clampV(anchorVel) - lo))];
+  }
+  // the CC7 whose attenuation (the instrument's measured CC7 curve, dB re 127) brings a level down by -delta; 127 when nothing to trim
+  function cc7ForDelta(curve, delta) {
+    if (!curve || !curve.length || delta == null || delta >= -0.3) return 127;
+    if (delta <= curve[0].delta) return curve[0].cc7;
+    for (let i = 0; i < curve.length - 1; i++) {
+      if (delta >= curve[i].delta && delta <= curve[i + 1].delta) { const s = curve[i + 1].delta - curve[i].delta; return Math.round(lerp(curve[i].cc7, curve[i + 1].cc7, s > 1e-9 ? (delta - curve[i].delta) / s : 0)); }
+    }
+    return 127;
+  }
+  // a drawn sustained note: its velocity chosen for the top of its curve (anchorMax = the ensemble's scale at the curve's highest point)
+  function heldNote(bank, instKey, pitch, anchorMax) {
+    const inst = bank && bank.instruments && instKey ? bank.instruments[instKey] : null;
+    if (!inst) return null;
+    const vel = velocityFor(bank, instKey, pitch, anchorMax);
+    return { vel, level: levelFor(bank, instKey, pitch, vel) };
+  }
+  // the CC7 to stream at a curve height (anchorVel = the ensemble's scale at that height) for a note sounding at vel
+  function cc7ForHeight(bank, instKey, pitch, vel, anchorVel) {
+    const inst = bank && bank.instruments && instKey ? bank.instruments[instKey] : null;
+    if (!inst) return 127;
+    const L = levelFor(bank, instKey, pitch, vel), T = targetDb(bank, anchorVel);
+    if (L == null || T == null) return 127;
+    return cc7ForDelta(inst.cc7Curve, T - L);
+  }
   // what the bank says about a register's reach (for a status line): the clamp counts of the nearest measured pitch
   function reach(bank, instKey, pitch) {
     const inst = bank && bank.instruments && instKey ? bank.instruments[instKey] : null;
@@ -53,5 +106,5 @@
     const p = inst.pitches.reduce((b, q) => Math.abs(q.pitch - pitch) < Math.abs(b.pitch - pitch) ? q : b, inst.pitches[0]);
     return { pitch: p.pitch, clampedLow: p.clampedLow, clampedHigh: p.clampedHigh };
   }
-  return { velocityFor, cc7For, reach };
+  return { velocityFor, cc7For, levelFor, targetDb, cc7ForDelta, heldNote, cc7ForHeight, reach };
 });
