@@ -82,100 +82,54 @@
 
 ## §2 Resume Here
 
-**Last session:** *2026-09-04 (the morning test → a full day), session 2* — the drawer tested and extended (U1–U4), the
-ensemble balanced (0j), Reaper addressable as code (0k); RUNNING_LOG §40–64. Session 1 (2026-09-03): the kit ported and
-proven, the rack built, the drawer built.
+**Last session:** *2026-09-04 evening → 2026-09-06 early morning, session 3, Claude Code / Fable 5.1* — RUNNING_LOG §65–110.
+- **The piece:** `scores/piece-septet.json` — 32 strikes to 72.0 s (versions v1.1 → v1.6; 134 takes). #0–#16 orchestrated chords,
+  #17–#19 evened under the gap law, **#20–#31 accelerating runs** (`accel · round robin`); from about #27 his own first gaps
+  and landings; #31 opens at 256 ms and lands at 11 ms. The chain continues by hand from #32 (RUNNING_LOG §86–92 is the chart).
+- **The drawer** grew U5–U13b (STRIKES_TOOL): doublings, seeds, the ms / gap boxes, `Insert @ after previous`, drop rests, the
+  accel run with the round robin, re-deal; W (the curves of the rush) planned; V (the chain generator) only if the chart earns it.
+- **The trill module, phases 0–3 built** (PLAN 1e, `docs/TRILLS_TOOL.md`, RUNNING_LOG §97–109; CN-19 → CN-27): the trill's
+  timing is HIS OWN PLAYING — his three capture files → `bank/trill_timing_db.json` (`tools/trill_ingest.js`, speed-indexed);
+  `Add Trill` / T on a strike note (its pitch; the note becomes the attack and is eaten; M gives the notes back), the interval
+  row that auditions and takes (whole step by default), the attack note's own articulation / length / velocity (P opens the
+  panel); the curve windows A / B / C over Violin 2, Viola, Cello — points → fill → shape (a click joins a curve at once; hold
+  the line to bend it, Logic-style); the zone's `1 2 3` read A / B / C live and draw the sampled curve; SHIFT-drag spans + T;
+  the drawer skips a trilling player at insert. `score/public/trill_engine.js` is shared with the tools.
+- **Playback made exact:** every note (plain, curve, KS) and every zone snippet is scheduled with Web MIDI timestamps and a
+  100 ms lookahead (§102–103) — the frame-polled path that made the trills "jumpy" is gone; the piece's runs play as written.
+- **Found on the way:** piece #2's ostinato registry is empty here (the zone path was dead — §99–100); the plain drawing path
+  and the curve reader were blind to bent segments (fixed, §105, §107); META stays closed at load (§110).
 
-**This session (2026-09-04 evening → 2026-09-05 evening, session 3, Claude Code / Fable 5.1) — checkpointed mid-session:**
-- **The piece is being composed:** `scores/piece-septet.json` — 32 strikes, 312 objects, to 72.0 s; named versions
-  v1.1, v1.2, v1.3, v1.4, v1.5, v1.6-26-accelDone, v1.6; 134 takes in `bank/panel_snapshots.json`. Strikes #0–#16 are orchestrated chords; #17 evened (127 ms);
-  #18–#19 even with the gap law (×1.5 from #17's 31.75 ms: 47.6 · 71.4); **#20–#31 are accelerating runs** (`accel · round
-  robin`, re-attack 250 ms, pitches re-dealt from cycle 2; #20–#26 on the ×1.5 table 107 → 1221 ms with steep 0.85 and a 45 ms
-  landing; from about #27 the composer set his own first gaps and landings — #31 opens at 256 ms and lands at 11 ms).
-  The original onset gaps are kept end-to-start (`Insert @ after previous`). RUNNING_LOG §81–92 is the chart of the by-hand chain.
-- **The drawer grew by twelve features at the composer's word** (STRIKES_TOOL U5–U13b): reset rhythm · replace-on-assign →
-  doublings (a note on several players, a player with one note) · seeds visible with eight chips · ENTER saves a take · the ms
-  and gap boxes · `Insert @ after previous` · every insert replaces an earlier insert of the same strike · drop rests · the
-  accel run with the round robin, the 250 ms rule and the rotation fallback · re-deal pitches. Also: the two-dot swap fixed
-  (it had never held), the status tooltip, META group shapes labelled with their strike, the violins' Bartók top set to 85.
-- **Sketch pad CN-9 → CN-20:** grace-note figures (Ferneyhough) · the opening expanded into ensemble processes · the tremolo
-  fork · the spreads' expansion · the Risset as rows over curves · the re-strike chain → the gap law → the accelerating run
-  with the round robin (CN-14 → CN-18) · **the trill module (CN-19, CN-20)**. PLANNER outline v1.
-- **Written, not built:** `docs/TRILLS_TOOL.md` (PLAN 1e — the trill module's spec, phases 0–6) · STRIKES_TOOL W (the curves
-  of the rush) · V (processes across strikes; the chain generator only if the chart earns it) · the 0d bridge sweep of the
-  strike techniques' sampled ranges and lengths (RUNNING_LOG §94), on hold for a ten-minute window.
-- **Trill step 0 built as a file, not a zone (2026-09-05 evening, after the checkpoint):** the app's ostinato zone routes through
-  piece #2's registry (empty here), so `tools/trill0_listen.js` writes `scores/trill0-listen.json` — 29 trill passages, one per
-  candidate articulation per lane, on a rate ramp with the fp 127 → 60, a marker naming each; loaded clean on :5301. Awaiting
-  the composer's ears: the articulation per instrument · the fp · the top speed. RUNNING_LOG §99. **Heard and rejected**
-  ("these don't sound right"): the deep dive into piece #2's ostinato timing model followed — RUNNING_LOG §100 — the
-  smoothness there is his own playing, curve-indexed; his three new trill sample files (`scores/trill_playing_samples*.json`,
-  untracked) are usable by a speed-indexed ingestion; options A (adapt) / B (re-record single-ramp bursts) put to him. CN-21.
-  **A chosen and built** (RUNNING_LOG §101): `tools/trill_ingest.js` → `bank/trill_timing_db.json` · `tools/score_to_midi.js` →
-  `midi/` · `tools/curve_eval.js` (the app's curve math ported, matched to the app) · `tools/trill_curve_gen.js` →
-  `scores/trill-curve-test.json` (a 45 s smooth curve on violin 1, his timing under it; the written rate tracks the curve within
-  0.1 per second). The samples committed at his word. **Then "still jumpy" → the playback path found (RUNNING_LOG §102):**
-  plain notes are frame-polled; piece #2's zone tick schedules an embedded snippet with Web MIDI timestamps and is alive here —
-  the test rewritten as a zone with the trill embedded (no app change), proved by a fake output at 20 Hz: gaps exact to
-  0.2 ms. `midi/trill-curve-test.mid` for Reaper. The piece's strikes share the frame polling (NITS); the drawer's Hear is
-  timer-scheduled and fine. **His ears: "trill sounds much better" — then "yes please fix the piece": the plain-note path
-  rewritten to the same scheduling (§103), verified on `trill0-listen` and on the piece's runs #28–#31 (every timestamp exact;
-  the 0–5 ms tails preserved). A page change: he reloads.** **Phase 1 built (§104, CN-22):** the trill object — `Add Trill` / T,
-  a zone with the trill embedded from his timing table along the lane's curve, the interval row that auditions and takes (whole
-  step default), the accent, eat-by-rule with M as the A/B, `score/public/trill_engine.js` shared with the tools; verified on
-  a copy of the piece. **Phase 2 built the same night (§105):** META A / B / C windows, re-trace splicing on a growing
-  reference curve per lane, the trill's live `auto · A · B · C · lane · flat` reference with bake, SHIFT-drag spans + T + ESC,
-  and the curve reader fixed to read bent segments as drawn; verified on a copy of the piece. **Then the curves rebuilt to his
-  design (CN-23 → CN-25, §107):** META out of the curve path; curve windows A / B / C exactly over Violin 2, Viola, Cello;
-  points → fill → shape (hold the line to bend it, Logic-style); the green square's cause fixed. **The curve windows accepted
-  ("it works good"). Phase 3 built (§109, CN-26/27):** the zone's `1 2 3` with the sampled curve drawn in it, the panel on P, the
-  attack note's articulation / length / velocity, overlap warnings, the dealer's busy skip at insert. Awaiting his hands.
-- D17 (the save system) live; PLAN 1b done. Journal §4 D17. NITS: the stale stand-in after a voicing change.
-
-**Next up:** the composer's pick, each morning: (a) the chain by hand from **#32** (his own first gaps and landings now; the
-×1.5 table in RUNNING_LOG §92 if he returns to it) — log the chart; (b) the trill module: step 0 = he listens to `trill0-listen` (Experiments menu) and reports per instrument, then phase 1 (the trill object) on Fable; (c) the 0d sweep when he gives the window (Reaper + the bridge).
+**Next up:** the composer's pick: (a) his hands on the trills and the curve windows — what bites; then **phase 4** (free trills,
+edge stretching — small) and **phase 5** (the weave) on his go; the notation of trills at 2a. (b) The chain by hand from #32.
+(c) The 0d bridge sweep of the strike techniques' ranges and lengths in his ten-minute window (§94). Piece #2's composer runs
+at `http://localhost:5000/composer.html` (`.claude/launch.json` → `twopianos`) for comparison while he wants it.
 
 **NEXT STEPS · MODEL · CLEAR:**
-1. ☑ 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1b · 1c (U1–U13b) DONE and pushed; 1e spec written.
-2. ► **The composer composes** (any model): strikes #32 onward as accel runs; fix what blocks, file the rest in STRIKES_TOOL.
-3. **TRILLS_TOOL phases 4–5** (Fable) when he says go; phases 1–3 built (§104–109) — his test next.
+1. ☑ 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1a · 1b · 1c (U1–U13b) · 1e phases 0–3 DONE and pushed.
+2. ► **The composer composes and tests** (any model): strikes #32 onward; trills and curves on the piece; what bites → fix.
+3. **TRILLS_TOOL phases 4–5** (Fable) on his go; then the notation of trills (2a).
 4. **0d sweep** (Fable, with the bridge) in his window; 0c / 0h after.
 
-**Open at session end** *(2026-09-05 evening, Fable — mid-session checkpoint, for an AI that has never seen this conversation):*
-- **Task and state:** the build work of session 3 is complete, verified and pushed; nothing is half-built. The composer is
-  composing in the running app (his server on :5300; the page reloaded after every drawer change; the server unchanged today).
-- **Latest deliverable:** phases 1–3 of the trill module in `score/public/composer.html` (+ `trill_engine.js`, the drawer's busy
-  rule): the trill object, the interval audition, the eating rule; the curve windows A / B / C with points → fill → shape; the
-  zone's `1 2 3`, the sampled fill, the attack note, overlap warnings (RUNNING_LOG §104–109); before them the scheduled playback (§103), `scores/trill-curve-test.json` + `bank/trill_timing_db.json` + `midi/*.mid` +
-  the tools (§101); before them
-  `scores/trill0-listen.json` (§99, rejected on hearing);
-  `docs/TRILLS_TOOL.md` (the spec, no code) and the drawer as of U13b in `score/public/strike_drawer.js`;
-  `scores/piece-septet.json` + versions + `bank/panel_snapshots.json` committed at this checkpoint.
-- **Next concrete step:** the composer reloads and tries phase 3 on the piece: select a strike note, T; `1 2 3` on the zone; P for
-  the attack (marcato sfz or Bartók at 127, 200–400 ms) and the interval; drag the ends; redraw a curve and watch the trill
-  follow; he reports what bites. Then phase 4 (free trills, edge stretching — small) and phase 5 (the weave) on his go, and the
-  notation of trills in 2a. Composing #32 onward continues at his pace. Before any commit run
-  `node tools/unsaved_check.js`; stage `scores/piece-septet*.json` and `bank/panel_snapshots.json` if he has worked.
-- **Resume reads:** `docs/PLANNER.md` NOW · `docs/STRIKES_TOOL.md` U11–U13b, V, W · `docs/TRILLS_TOOL.md` (phases 1–3 built, 4–6 ahead) · `RUNNING_LOG.md` §86–109 (the chart of the chain, the trill talk, step 0's file, the piece #2 deep dive, option A built, the playback path and its fix, phases 1–3, the curve windows) · `docs/REAPER_CONTROL.md` only for the 0d sweep.
-- **How the AI works the app:** its Browser pane opens `http://localhost:5300/composer.html` on the composer's server (no Web
-  MIDI; it never edits his scores). A change to the app is verified on a throwaway server — `preview_start score-5301` (in
-  `.claude/launch.json`: PORT=5301, the same `scores/`), the session named `zz-ai-*` so the autosave writes a throwaway working
-  copy, deleted after. A server change needs the composer to restart `node score\server.js`; a page change needs a reload.
-  Bash calls over ~8 KB get cut: write patch scripts to the scratchpad and run them.
-- **How to work the rack now:** `node tools/reaper_job.js heartbeat | tracks | fader | run …` (docs/REAPER_CONTROL.md);
-  `jobs/peakwatch.lua` + a probe note = the proof for routing; never trust frozen meters before dumping mute / solo / routing (P10).
-- **Pending the composer:** CN-2 (piccolo vs bass flute; the piccolo named twice) — not blocking · the 0d window · the trill
-  articulation (`accent_senza_vel`, what he played his samples on?) · his hands on phases 1–3 (§104–109) · his ears on the piece after the reload (§103) and on the MIDI exports (§101) · how the runs continue from #32 (his own numbers since about #27).
-- **Deliberately uncommitted:** nothing — `git status` is clean after this checkpoint's commit (`scores/*-work.json` and
-  `scores/versions/` are gitignored by design).
+**Open at session end** *(2026-09-06, for an AI that has never seen this conversation):*
+- **State:** nothing half-built; everything verified on the throwaway server and pushed. The composer tests on his own server
+  (:5300; a page change needs a reload, a server change a restart — none pending).
+- **Resume reads:** `docs/PLANNER.md` NOW · `docs/TRILLS_TOOL.md` (§11 the phases and their "Built" notes) ·
+  `docs/STRIKES_TOOL.md` U11–U13b, V, W · `RUNNING_LOG.md` §97–110 (the trill module's whole arc) · `docs/REAPER_CONTROL.md`
+  only for 0d.
+- **How the AI works the app:** the Browser pane on `http://localhost:5300/composer.html` (no Web MIDI; never his scores); a
+  change is verified on `preview_start score-5301` with a `zz-ai-*` copy of a score, deleted after; the pane's hidden tab
+  pauses timers and its rect reader lies — drive ticks synchronously, measure with offsets (§103, §107); Bash calls over ~8 KB
+  get cut — scratchpad scripts, spliced by exact anchor, `node --check` on every inline block.
+- **The rack:** `node tools/reaper_job.js heartbeat | tracks | fader | run …` (docs/REAPER_CONTROL.md); peakwatch + a probe
+  note is the proof for routing (P10).
+- **Pending the composer:** CN-2 (piccolo vs bass flute) · the 0d window · his verdict on the trills' feel and the attack ·
+  Q6 (the Bartók tops).
+- **Deliberately uncommitted:** `scores/trillBuildTst.json` (his test score — "no need to commit"); two working copies hold
+  edits their files do not (`trill-curve-test`, `trillBuildTst`) — his to Save or Reload in the app (`tools/unsaved_check.js`).
 
-**Open questions:**
-- **Q1 flute doubling instrument:** piccolo or bass flute — composer undecided; SI2 flute in C is the track's instrument until
-  then (CN-4 and CN-9 name the piccolo).
-- **Q5 print format:** #4's tabloid is 432 mm long, past A3's 420 mm. Plan for A3 landscape.
-- **Q6:** the violins' Bartók pizz has no sample at B♭6 (90) nor C7 (96); its top is set to 85 (C#6) provisionally in
-  `vnRanges()` — confirm C#6 sounds; read the true top (85–89) from Kontakt; viola and cello Bartók tops unmeasured. The
-  cello's Senza Vibrato is 12 dB softer at B4 than at C3 — the composer's ear decides.
+**Open questions:** Q1 the flute doubling (piccolo vs bass flute; SI2 flute in C until then) · Q5 print format (A3 landscape;
+#4's tabloid is 432 mm) · Q6 the violins' Bartók pizz top (85 provisional; B♭6 and C7 silent; viola / cello unmeasured).
 
 **Blockers:** none.
 
@@ -389,6 +343,36 @@ sources; verified here only when they bite.)*
   AutoSave-into-the-file (the override the composer named); a numbering chain (`sNN`, load-bearing
   nowhere); two folders (one folder, one prefix, is the whole rule); a Restore menu (the snapshots
   stay as the AI's net). RUNNING_LOG §67–68.
+- **D18** *(2026-09-05, composer: "these don't sound right … those [piece #2's] sound a lot smoother" · "a" — adapt his samples)*
+  — **The trill's timing is his own playing.** His capture files (trill playing on accent senza vib; violin, viola, cello) are
+  ingested into `bank/trill_timing_db.json` with every note indexed by the speed he was playing at (a local rate mapped 0–1
+  over the instrument's range), its gap, velocity, length and role (lo / hi); a trill is generated by piece #2's lookup — the
+  curve's height is a speed level, the attacks he played at that level cycled in turn, stretch → smooth → speed. *Why:* the
+  formula (a linear rate ramp, flat velocities) was rejected by ear; piece #2's smoothness was human timing, curve-indexed.
+  *Rejected:* the rate table of the first spec; re-recording single-ramp bursts in #2's protocol (kept as an option; not
+  needed — speed-indexing takes the long wavy takes as they are). RUNNING_LOG §100–101.
+- **D19** *(2026-09-05, composer: "still sounds quite jumpy … different playback? embedded midi?" · "yes please fix the piece")*
+  — **All playback is scheduled with Web MIDI timestamps and a 100 ms lookahead.** Plain notes, curve grains and KS notes
+  (`tickCurvePlayback`) follow the zone tick's pattern; stop clears the queue. *Why:* the frame-polled path started every
+  note on the next animation frame — a 0–17 ms wobble per note, audible on trills and the runs' tails. *Rejected:* keeping the
+  frame path for the strikes (the same wobble, smaller). RUNNING_LOG §102–103.
+- **D20** *(2026-09-05, composer, CN-20 / CN-22 / CN-26 / CN-27)* — **The trill object and its rules.** A zone with the trill
+  embedded as a MIDI snippet, regenerated from its curve at every play start; the second pitch the upper whole step by default,
+  the interval auditioned by chips before it is taken; the attack = the first note with its own articulation, length and
+  velocity (the notation will say fp or sfz); eat by rule — a note of that player starting under the trill is silent and
+  faint, M gives it back, delete restores; the reference curve live (`auto · A · B · C · lane · flat`), bake freezes a copy;
+  `1 2 3` on the zone, the sampled curve drawn in it, the panel on P only; overlapping trills warn; a dragged trill keeps
+  its pitch; the drawer skips a trilling player at insert. *Rejected:* the panel on selection (too many controls in view); a
+  re-deal around busy players (needs the target time at deal time). RUNNING_LOG §104, §108–109.
+- **D21** *(2026-09-05, composer, CN-23 → CN-25: "just click to add a point … it fills the curve … hold a line and drag …
+  like Logic Pro")* — **The curve windows: points → fill → shape.** META stays the gestures' window, out of the curve path;
+  three curve windows A / B / C float exactly over Violin 2, Viola and Cello, translucent, click-through; `✒ Points` places dots
+  (a click inside a curve joins it at once; beyond an end the selected curve grows; a far click waits for `Fill`, which
+  makes a new curve), dots always visible, drag to move, double-click or ALT-click removes (ends shrink the curve; one dot
+  left collapses the line); hold the line and drag up / down to bend it — the line passes through the mouse where held; lines
+  only, several curves per window. *Why:* piece #2's object was "too many controls" and its slope wheel "too sensitive"; the
+  first phase-2 form (trace-fit + control diamonds) had a diamond that did nothing on plain curves. *Rejected:* the freehand
+  trace on the curve windows; diamonds, the wheel, slope dials; a lane-header curve selector. RUNNING_LOG §106–107, §110.
 
 
 ---
@@ -422,6 +406,15 @@ the rack (`reaper/kontakt/*.lua`, a JSON read-back in `reaper/kontakt/out/`). Af
 never saves unasked. Gotchas: the Bash tool rewrites `\n` and `\b` inside heredocs — put
 patches in a script file; the AI's browser pane has no Web MIDI and never fires rAF while hidden.
 
+**The AI's browser-pane harness, gotchas (2026-09-05, RUNNING_LOG §103, §107, §109):** a hidden or background tab pauses
+`requestAnimationFrame` and throttles timers to about once a second — drive the app's ticks synchronously with simulated
+time, never with `setInterval`; the pane's `getBoundingClientRect` can return collapsed rectangles while `offsetTop` /
+`offsetHeight` are right — measure geometry by offsets and confirm by screenshot; `MouseEvent` client coordinates are
+integers; a synthetic keydown must be dispatched on an Element (the handlers call `e.target.matches`); the console log keeps
+entries across reloads — an old error can outlive its fix, so parse every loaded script inside the page (`new Function`)
+before believing it; Web MIDI is denied — a fake output object records what the ticks would send. Bash calls over ~8 KB are
+cut mid-way — write patch scripts to the scratchpad, splice by exact anchor, and `node --check` every inline block.
+
 ---
 
 ## §6 Done
@@ -449,6 +442,11 @@ patches in a script file; the AI's browser pane has no Web MIDI and never fires 
   three orchestrated strikes from the drawer, the raw piano chords removed (CN-8, RUNNING_LOG §69);
   **1b** the save system rebuilt as one rule (D17, §67–68); **1c.2** the drawer's takes in the repo
   (O v2, §65–66) and `Insert @ original time` (Q v2, §68).
+- 2026-09-05 — **1c.2 U5–U13b** the drawer's second feature update (the gap law, the accel run with the round robin,
+  re-deal; §73–92); **the piece to #31** (72 s) as accelerating runs.
+- 2026-09-05 — **1e phases 0–3** the trill module: the timing table from the composer's own playing (D18, §100–101), the
+  scheduled playback (D19, §102–103), the trill object with the interval audition, the attack note and the eating rule (D20,
+  §104, §109), the curve windows A / B / C with points → fill → shape (D21, §105–107, §110); **1a** the curve drawing.
 
 ---
 
@@ -458,8 +456,9 @@ patches in a script file; the AI's browser pane has no Web MIDI and never fires 
 
 **Active:**
 - Decide piccolo vs bass flute when the music asks (Q1); confirm that library is installed.
-- **Test the STRIKES drawer with U1–U4** (reload the page; shift-click = solo; the slap plays the
-  strike slot). Then say which next: the drawer's next features, or 0d / 0c.
+- **Test the trills and the curve windows on the piece** (reload): T on a strike note · `1 2 3` on the zone · P for the
+  attack and the interval · `A B C`, `✒ Points`, `Fill`, hold the line to bend · SHIFT-drag a span, T. Say what bites; then
+  phases 4–5 or the chain from #32 or the 0d window.
 - *(AI-added, the composer's standing reminder from the rack session:)* **check each instrument
   plugin's gain** (unity; preset FX such as the maximizer / tilt bypassed) whenever a Kontakt or
   UVI instrument is loaded or its preset changed — SAMPLER_QUIRKS.md has the rule.
@@ -472,3 +471,4 @@ patches in a script file; the AI's browser pane has no Web MIDI and never fires 
 
 **Completed:**
 - ~~Penn State abstract (tuba repo), due Fri 4 Sept~~ — done (composer, 2026-09-04).
+- ~~Test the STRIKES drawer with U1–U4~~ — done (composer, 2026-09-04); the drawer has been composing the piece since.

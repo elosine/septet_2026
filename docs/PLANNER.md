@@ -5,15 +5,7 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ►** 2026-09-05 evening (checkpoint) — **the piece is being composed in `scores/piece-septet.json`:** 32 strikes
-to 72.0 s (versions v1.1, v1.2, v1.3, v1.4, v1.5, v1.6-26-accelDone, v1.6; 134 takes). #0–#16 orchestrated chords; #17 evened; #18–#19 even with the gap law (×1.5
-from 31.75 ms); **#20–#31 accelerating runs** (`accel · round robin` — re-attack 250 ms, pitches re-dealt from cycle 2; #20–#26 on the ×1.5
-table with steep 0.85 and a 45 ms landing, from about #27 the composer's own first gaps and landings, #31: 256 → 11 ms; the
-recorded onset gaps kept end-to-start). **Immediately next:** #32 onward by hand; the trill module (`TRILLS_TOOL.md`, PLAN 1e —
-spec written; step 0's formula file rejected on hearing; the model moves to piece #2's human-sampled timing — option A built: his three trill sample files → `bank/trill_timing_db.json`; the curve test `scores/trill-curve-test.json` as an embedded snippet — "trill sounds much better" (RUNNING_LOG §102); the plain-note playback rewritten to the same timestamped scheduling for the piece (§103); **phases 1 + 2 built (§104–107, CN-22 → CN-25): `Add Trill` / T — the trill object with the interval audition row, the accent, the eating rule; the curve windows A / B / C over Violin 2, Viola, Cello — points → fill → shape (hold the line to bend), the trill's live reference (auto · A · B · C · lane · flat, bake), SHIFT-drag spans; **phase 3 built (§109, CN-26/27): the zone's `1 2 3` with the sampled curve drawn in it, the panel on P, the attack note's articulation / length / velocity, overlap warnings, the dealer's busy skip;** his test next; then phases 4 (free trills, edge stretching) and 5 (the weave)**; his captures as `midi/*.mid` for auditioning articulations; phase 1 on his go); the 0d bridge sweep of the strike techniques' ranges and lengths
-in his ten-minute window (RUNNING_LOG §94). Phase 0 so far: 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 done. Piccolo vs bass flute
-undecided (CN-2).
----
+**NOW ►** 2026-09-06 — **the piece is composed to #31 (72 s)** in `scores/piece-septet.json`, the chain continuing by hand from #32; **the trill module's phases 0–3 and the curve windows are built, verified and pushed** (D18–D21; RUNNING_LOG §97–110) — the composer's hands next, then phases 4–5 on his go; the 0d bridge sweep in his ten-minute window. Phase 0 so far: 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 done; piccolo vs bass flute (CN-2) open.
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 
