@@ -3318,3 +3318,33 @@ the cello's marcato sfz at G#5 may lie above that articulation's top (Q6's class
 §93; the cello's per-technique ranges are unmeasured: 0d). Put to him: P on the cello trill, the attack articulation to "same as
 trill" — if the first note then sounds, the marcato sample is silent there; the pitch an octave lower in the panel is the other
 test. The 0d sweep answers it for every technique.
+
+## §113. "Insert at playhead … wants to insert back in its original location" / "load a saved strike 32 moves the cursor to 49.42": the pick parked the playhead — gone; `⌖ original` on request; an insert replaces only at its own time, copies kept (CN-28's recurring strikes)
+
+Composer: *"Strikes Drawer. Insert at playhead. Doesn't seem to be working. It wants to insert maybe back in its original location.
+I'm not sure, but not the right place."* · *"when I load a saved strike 32 it moves the cursor in the main score to 49.42"*.
+
+**Found** (`strike_drawer.js`, read): `select(id)` — the pick, reached from the sequence list and from every take load (`loadTake`
+→ `applyState` → the pick) — parked the playhead on the strike's original time (`scrollOffset = t0 × pps`; STRIKES_TOOL Q,
+2026-09-03: "pick in the sequence, playhead follows"). `insert(false)` reads `getTimeAtPlayhead()` at the click. So "scroll to
+the target, pick the strike, Insert @ playhead" wrote at the original time — the pick had moved the playhead under him; his 49.42
+is strike #32's t0 (49.417). A second rule compounded it: choice 3 of 2026-09-04 ("replace on re-insert") removed EVERY earlier
+insert of the strike, wherever it sat — a strike could not recur, which CN-28 (patterned, call-and-response strikes) needs.
+
+**Built:** (1) the pick leaves the playhead alone; (2) a `⌖ original` button beside the inserts parks it on the strike's original
+time on request (refuses while playing); (3) every insert mode replaces an earlier insert of the strike only where it sits at the
+same time (the group's first onset within 100 ms of the new t) and keeps its copies elsewhere — the status names both ("replaced
+the earlier #12 at this time" · "1 earlier copy of #12 kept elsewhere"); the Insert @ playhead title says it places a copy. Choice
+3 narrowed, not reversed: a re-take re-inserted at the same place still replaces.
+
+**Verified on the throwaway server** (a copy of the piece; the drawer opened, 135 takes; zero console errors; the copies deleted):
+the playhead at 80 s; take `32-a` loaded → strike #32 (t0 49.417), the playhead still 80; #12 picked (t0 18.774) → still 80;
+Insert @ playhead → `grp-strike-12-800` at 80, the piece's #12 at 18.774 untouched, "1 earlier copy kept elsewhere" (one card
+skipped — a flute trill at 80 s in the copy: the §109 busy rule); again → "replaced the earlier #12 at this time (7 objects)",
+still two groups; `⌖ original` → 18.774; Insert @ original time → the 18.774 group replaced (8 objects), the copy at 80 kept.
+
+*Rejected:* keeping the parking and restoring the playhead after the pick (which position is his?) · a per-mode rule (copies at the
+playhead, replace-all in the other modes — a re-take @ original time would have wiped a pattern's copies).
+*Harness note:* the tab's console held one `SyntaxError` — from the preview's automatic open of the page between the first splice (an
+apostrophe inside an HTML title ended the JS string) and its repair; the reload that ran the checks parsed the repaired file (the
+new functions were present) and `node --check` passes on it. Splice rule kept: no bare apostrophes inside single-quoted HTML strings.

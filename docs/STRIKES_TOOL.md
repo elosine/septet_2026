@@ -277,6 +277,11 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   to its `t0`; later the reverse (select in the score → select in the tool).
 - The Insertion strip's mini-keyboard row is reused as the harmony picker (M).
 
+**v3 2026-09-06 (RUNNING_LOG §113):** the pick no longer moves the playhead (his *"Insert @ playhead … back in its original
+location"*, *"load a saved strike 32 moves the cursor to 49.42"*); `⌖ original` parks it on request; an insert replaces an earlier
+insert of the strike only where it sits at the same time (within 100 ms) and keeps its copies elsewhere, in every mode — strikes
+recur (CN-28); R's choice 3 ("replace on re-insert") narrowed to the same time.
+
 ## R · Decisions before the build — `decided 2026-09-03 — all six applied in the build`
 
 1. **Where it lives — a FULL-WIDTH DRAWER inside the composer score.** Composer: *"if you can

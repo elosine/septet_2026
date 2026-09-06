@@ -109,7 +109,9 @@ of its attack note — a 60 ms eating window, the drag keeps a trill's start, th
 not functioning for cello"*: the events are right (marcato sfz 100 ms at G#5); likeliest the sample is silent there (Q6's class);
 his one-click test in §112. Lake George's texture noted (COMPOSITION_NOTES 2026-09-06). **CN-28** (2026-09-06): the form's middle — section 2 strikes with morph
 chords ("morph events" from the tuba morph engine → **PLAN 1f**, todo, talk first), section 3 patterned / call-and-response strikes
-with crescendos (STRIKES_TOOL V); the planner's outline carries it, to confirm with him. Next: phase 5 (the weave) on his go.
+with crescendos (STRIKES_TOOL V); the planner's outline carries it, to confirm with him. His *"Insert at playhead … back in its original location"* / *"load a saved strike 32 moves the cursor to 49.42"* → **§113**: the
+drawer's pick no longer parks the playhead, `⌖ original` on request, an insert replaces only at its own time and keeps copies
+elsewhere (CN-28's recurring strikes; choice 3 narrowed). Next: phase 5 (the weave) on his go.
 
 **Next up:** the composer's pick: (a) his hands on the trills and the curve windows — what bites; then **phase 4** (free trills,
 edge stretching — small) and **phase 5** (the weave) on his go; the notation of trills at 2a. (b) The chain by hand from #32.

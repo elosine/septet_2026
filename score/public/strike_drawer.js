@@ -174,7 +174,8 @@ const D = {
               '<span style="color:#9a9">piano</span>' +
               ['none', 'one', 'topbot', 'rest', 'all'].map(k => '<button class="skPno" data-k="' + k + '" style="' + btn + '">' + ({ none: 'none', one: 'one', topbot: 'top+bottom', rest: 'rest', all: 'all' })[k] + '</button>').join('') +
               '<span style="color:#555">|</span>' +
-              '<button id="skInsert" style="' + btn + '" title="write the strike at the playhead as a gesture (groupId + META shape)">Insert @ playhead</button>' +
+              '<button id="skGoto" style="' + btn + '" title="park the playhead on the original time of this strike (picking a strike no longer moves the playhead)">&#8982; original</button>' +
+              '<button id="skInsert" style="' + btn + '" title="write the strike at the playhead as a gesture (groupId + META shape) — a COPY: an earlier insert of this strike is replaced only if it sits at this same time">Insert @ playhead</button>' +
               '<button id="skAtTime" style="' + btn + '" title="write the strike into WHATEVER score is open, at the time it was played (no need to open its source save); original notes found there are replaced">Insert @ original time</button>' +
               '<button id="skAfter" style="' + btn + '" title="U11: write the strike after the PREVIOUS strike as it stands in the open score — start = its last onset + the recorded onset gap between the two; an earlier insert of this strike is replaced">Insert @ after previous</button>' +
               '<button id="skBack" style="' + btn + '" title="one step back">back</button>' +
@@ -214,6 +215,7 @@ const D = {
         q('#skFlat').addEventListener('change', e => { this.cfg.flatten = e.target.checked; this.save(); });
         q('#skSoloOff').addEventListener('click', () => { this.snapshot(); this.voices.forEach(v => { v.solo = false; }); this.render(); });
         d.querySelectorAll('.skPno').forEach(b => b.addEventListener('click', () => { this.snapshot(); this.pianoQuick(b.dataset.k); this.render(); }));
+        q('#skGoto').addEventListener('click', () => this.gotoOriginal());
         q('#skInsert').addEventListener('click', () => this.insert(false));
         q('#skAtTime').addEventListener('click', () => this.insert(true));
         q('#skAfter').addEventListener('click', () => this.insert('after'));
@@ -353,9 +355,8 @@ const D = {
         this.asPlayedOrchestration();
         this.applyVoicing();
         this.save();
-        // link to the score: park the playhead on the strike
-        const C = C_();
-        if (C && !C.isPlaying && typeof C.applyScroll === 'function') { C.scrollOffset = s.t0 * C.pixelsPerSecond; C.applyScroll(); }
+        // the pick leaves the playhead where the composer put it (2026-09-06: it used to park on the strike's original time, so a
+        // "scroll, then pick, then Insert @ playhead" landed back at the original — the ⌖ button parks it on request; RUNNING_LOG §113)
         this.render();
         this.setStatus('strike #' + s.index + ' · ' + s.t0.toFixed(2) + ' s · ' + s.stats.noteCount + ' notes · span ' + Math.round(s.spanMs) + ' ms · ' + s.source);
     },
@@ -975,6 +976,14 @@ const D = {
     stopPlayhead() { if (this.ph) { clearInterval(this.ph); this.ph = null; } const head = this.el && this.el.querySelector('#skPlayhead'); if (head) { head.style.display = 'none'; head.textContent = '▶'; } },
     onStopped() { this.stopPlayhead(); },
 
+    // ⌖ (2026-09-06, §113): park the playhead on the strike's original time — on request, never on the pick
+    gotoOriginal() {
+        const C = C_(); if (!C || !this.strike) return;
+        if (C.isPlaying) { this.setStatus('stop first', true); return; }
+        if (typeof C.applyScroll === 'function') { C.scrollOffset = this.strike.t0 * C.pixelsPerSecond; C.applyScroll(); }
+        this.setStatus('playhead at #' + this.strike.index + "'s original time " + this.strike.t0.toFixed(3) + ' s');
+    },
+
     // ------------------------------------------------------------------ insert / replace (Q)
     insert(replace) {
         const C = C_(); if (!C || !this.strike) return;
@@ -998,9 +1007,15 @@ const D = {
         // choice 3 (composer, 2026-09-04: replace on re-insert = yes): a strike exists once in a score — an earlier insert of
         // this strike, in any mode, is removed before the new one is written
         C.pushUndoState();
+        // 2026-09-06 (§113): an insert replaces an earlier insert of this strike only where it sits at the same time (within 100 ms)
+        // and keeps its copies elsewhere, so a strike can recur (CN-28: patterned, call-and-response strikes); choice 3 of
+        // 2026-09-04 ("replace on re-insert") narrowed to the same time — the status names the copies kept
         { const mine = 'grp-strike-' + this.strike.index + '-'; const before0 = C.objects.length;
-          C.objects = C.objects.filter(o => !(o.groupId && String(o.groupId).startsWith(mine)));
-          const older = before0 - C.objects.length; if (older) replaceMsg += ' · replaced the earlier #' + this.strike.index + ' (' + older + ' objects)'; }
+          const gStart = {}; C.objects.forEach(o => { if (o.groupId && String(o.groupId).startsWith(mine)) { const g = o.groupId, st = +o.startSeconds || 0; gStart[g] = g in gStart ? Math.min(gStart[g], st) : st; } });
+          const drop = g => Math.abs(gStart[g] - t) < 0.1;   // every mode: replaced where it already sits (within 100 ms), kept elsewhere
+          C.objects = C.objects.filter(o => !(o.groupId && String(o.groupId).startsWith(mine) && drop(o.groupId)));
+          const older = before0 - C.objects.length; if (older) replaceMsg += ' · replaced the earlier #' + this.strike.index + ' at this time (' + older + ' objects)';
+          const kept = Object.keys(gStart).filter(g => !drop(g)).length; if (kept) replaceMsg += ' · ' + kept + ' earlier copy' + (kept > 1 ? 'ies' : '') + ' of #' + this.strike.index + ' kept elsewhere'; }
         if (replace === true) {
             // Q v2 (composer, 2026-09-04: "have the time code carry with the strike … it'll put it in its
             // original time, but I don't have to open the scattered strikes 01 save file"): the strike is
