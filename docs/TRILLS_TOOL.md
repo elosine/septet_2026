@@ -77,6 +77,12 @@ pitch) may use a second row (bowed tremolo faster).
 > snippet by `score/public/trill_engine.js` (shared with the tools) at every play start; `curveRef` A / B / C waits for phase 2;
 > the fp = the accent (the first note at attackVel, then his velocities).
 
+> **2026-09-06 (RUNNING_LOG §115–117, PLAN 1g):** the trill's LOUDNESS — `velMode` 'curve' (new trills; the curve's height → an anchor
+> velocity between `velLo` 65 and `velHi` 127 in the ensemble's one scale, the violins', translated per instrument and register through
+> `bank/velocity_remap.json` from the sweep) or 'played' (the captures' velocities; every trill from before). The attack keeps its own
+> velocity. The default technique is the instrument's ordinary voice (the recipe's `ordinary`), and a trill that lands on a lane
+> without its technique is reset to that lane's ordinary voice at the next regeneration.
+
 ## 3 · The reference curves — three META lanes
 
 - The META layer becomes three: A, B, C — three lanes, each toggled like today's META window, each holding one

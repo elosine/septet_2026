@@ -354,7 +354,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - ~~run it in his rack and record it~~ — done 2026-09-06, driven through the bridge (`reaper/Media/01-REC-260906_1140.wav`, 357 notes; §115);
      - ~~analyze the recording~~ — done 2026-09-06: `bank/velocity_map.json` (consistent with the balance run within 1.0 dB; the ensemble at 127 within 1.8 dB; the velocity and CC7 curves per register; §115);
      - ~~compute, per instrument, the velocity that matches the violins at each curve height; save it as the remap~~ — done 2026-09-06 (`tools/velocity_remap.js` → `bank/velocity_remap.json`, per register, within 0.03 dB where reachable, the clamps counted; §116);
-     - make the app send the remapped velocity (one function: instrument + pitch + height → velocity); the trill reads it;
+     - ~~make the app send the remapped velocity~~ — done 2026-09-06 (`velocity_remap.js` shared by the page and the tools, `velocityFor(layer, pitch, anchorVel)`, the trill reads it through `velocityAt`; §117);
      - check: all seven at bottom, middle and top, read the levels — within about 1.5 dB.
      *Result:* the same curve height is the same loudness on every instrument.
   2. **The curve's meaning for the notation.** *Result:* a curve's actual heights are its dynamics — bottom ppp, top fff, a curve
@@ -366,7 +366,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - the notation line in TRILLS_TOOL §10: a trill is written as `tr` over its span, its dynamics read from its curve;
      - decision D23 in the journal, with the why: the MIDI is tweaked to sound right, the notation must not inherit the tweak;
      - a note in NOTATION_WORKFLOW: the rescaling option — the page curve at full height, the range named at its start.
-  3. **The trill's velocity switch.** *Result:* a trill's loudness follows its curve, 65 at the bottom to 127 at the top in the
+  3. **The trill's velocity switch** — `built 2026-09-06 (§117)`. *Result:* a trill's loudness follows its curve, 65 at the bottom to 127 at the top in the
      ensemble's one scale (the violins' numbers), each instrument translating it through item 1's remap; each trill has a switch,
      curve or as played, and two boxes for its own low and high; the attack keeps its own settings. (The flute audition dropped
      2026-09-06 — the probe comes first.) The to-dos:
@@ -378,7 +378,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - show the switch and the boxes in the trill's panel; the mode in the zone's label;
      - verify in node and on a copy of the piece: bottom and top of a known curve give the two numbers, the middle the middle, the
        attack unchanged, an as-played trill unchanged.
-  4. **The ordinary voice.** *Result:* a new trill plays the instrument's ordinary voice (strings Senza Vibrato #6, flute Ordinario,
+  4. **The ordinary voice** — `built 2026-09-06 (§117)`. *Result:* a new trill plays the instrument's ordinary voice (strings Senza Vibrato #6, flute Ordinario,
      bass clarinet Senza Vibrato Velocity #13, piano main); a trill copied or dragged to another lane takes that lane's voice instead
      of silently falling back to the lane's first preset, as it does today (§115). The to-dos:
      - name the ordinary voice per instrument in the recipe;

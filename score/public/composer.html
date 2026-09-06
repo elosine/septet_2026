@@ -510,6 +510,7 @@
 
 <script src="/sandbox/instruments.js"></script>
 <script src="/trill_engine.js"></script>
+<script src="/velocity_remap.js"></script>   <!-- PLAN 1g: the per-instrument velocity remap lookup (bank/velocity_remap.json) -->
 <script src="/compiler.js"></script>
 <!-- PLAN 2v morphing chords. morph.js is the PURE engine (also runs in node
      under tools/test_morph.js); morph_emit.js owns all morph MIDI including the
@@ -1428,6 +1429,7 @@ const Composer = {
 
     init() {
         this.loadTrillDb();   // the trill timing table (TRILLS_TOOL phase 1)
+        this.loadVelocityRemap();   // the per-instrument velocity remap (PLAN 1g item 1; RUNNING_LOG §116)
         // Cache DOM
         // Septet: the lane table follows TRACKS (one lane per track + META at index
         // META_LAYER) instead of a literal list of ten — the literal left lanes 7..9
@@ -9100,6 +9102,31 @@ const Composer = {
     _trillDbLoading: null,
     _trillAud: null,
 
+    // PLAN 1g item 1 (2026-09-06): the velocity each instrument is sent so a curve height sounds as loud as on the violins —
+    // bank/velocity_remap.json from the sweep (tools/velocity_remap.js); without it the anchor velocity passes through unchanged
+    loadVelocityRemap() {
+        if (this._velRemap) return Promise.resolve(this._velRemap);
+        if (!this._velRemapLoading) {
+            this._velRemapLoading = fetch('/bank/velocity_remap.json').then(r => r.json())
+                .then(b => { this._velRemap = b; return b; })
+                .catch(e => { console.warn('[velocity] remap not loaded — anchor velocities pass through:', e); this._velRemapLoading = null; return null; });
+        }
+        return this._velRemapLoading;
+    },
+
+    // the instrument (by lane) + pitch + the anchor velocity (the ensemble's one scale, the violins') → the velocity to send
+    velocityFor(layer, pitch, anchorVel) {
+        const tr = TRACKS[layer];
+        return VelocityRemap.velocityFor(this._velRemap, tr ? tr.instKey : null, pitch, anchorVel);
+    },
+
+    // the instrument's ordinary voice (1g item 4): the recipe's `ordinary`, else the balance kit's preference order
+    ordinaryTech(layer) {
+        const inst = this.trackInstrument(layer), techs = (inst && inst.techniques) || [];
+        const want = inst && inst.ordinary;
+        return (want && techs.find(q => q.key === want)) || ['ord', 'main', 'senza_vel', 'senza_mw', 'staccato'].map(k => techs.find(q => q.key === k)).find(Boolean) || techs[0] || null;
+    },
+
     loadTrillDb() {
         if (this._trillDb) return Promise.resolve(this._trillDb);
         if (!this._trillDbLoading) {
@@ -9121,19 +9148,22 @@ const Composer = {
     trillDefaults(layer, startSec) {
         const inst = this.trackInstrument(layer), tbl = this.trillTable(layer);
         const techs = this.trackTechniques(layer) || [];
-        const wanted = tbl && tbl.table && tbl.table.technique;
-        const tech = techs.find(q => q.key === wanted) ? wanted
-            : (techs.find(q => /^(accent_senza_vel|senza_vel|ord|main)$/.test(q.key)) || techs[0] || {}).key;
+        const ordTech = this.ordinaryTech(layer);   // 1g item 4 (composer 2026-09-06): the ordinary voice, not the capture's accent senza vibrato
+        const tech = ordTech ? ordTech.key : ((techs.find(q => /^(accent_senza_vel|senza_vel|ord|main)$/.test(q.key)) || techs[0] || {}).key);
         const anchor = this.trillAnchorNote(layer, startSec);
         let pitch = anchor ? anchor.sonifyNote : null;
         if (pitch == null) pitch = inst ? Math.round((inst.rangeLow + inst.rangeHigh) / 2) : 69;
         return { pitch, interval: 2, technique: tech, accent: true, attackVel: 127, attackTech: '', attackDurMs: null, curveId: '', curveRef: 'auto', level: 0.5, eat: true,
-            smooth: 0.7, stretch: 1, speed: 1, seed: 1, roles: true, launchedFrom: null };
+            smooth: 0.7, stretch: 1, speed: 1, seed: 1, roles: true, launchedFrom: null, velMode: 'curve', velLo: 65, velHi: 127 };   // 1g item 3: new trills follow the curve
     },
 
     ensureTrill(zone) {
         if (!zone.trill) zone.trill = this.trillDefaults(zone.layer, zone.startTime);
-        return zone.trill;
+        const t = zone.trill;
+        if (t.velMode == null) t.velMode = 'played';   // a trill from before 1g item 3 keeps the captures' velocities until he switches it
+        if (t.velLo == null) t.velLo = 65;
+        if (t.velHi == null) t.velHi = 127;
+        return t;
     },
 
     // Add Trill (button, or T): over the selected curve (its span and lane), from the selected note (its pitch and
@@ -9217,7 +9247,7 @@ const Composer = {
         const inst = this.trackInstrument(zone.layer);
         if (!inst) return null;
         const techs = this.trackTechniques(zone.layer) || [];
-        const tech = techs.find(q => q.key === (zone.trill && zone.trill.technique)) || techs[0] || {};
+        const tech = techs.find(q => q.key === (zone.trill && zone.trill.technique)) || this.ordinaryTech(zone.layer) || techs[0] || {};
         return { port: tech.port || inst.port, channel: tech.channel || 1, cc0: tech.cc0, tech, inst };
     },
 
@@ -9236,7 +9266,13 @@ const Composer = {
     // the trill's notes → the zone's snippet (the CC7 / CC0 lead 150 ms before the first note: the snippet declares
     // leadMs and the zone tick starts that early); the notes under it stamped mutedBy
     regenerateTrill(zone) {
-        const t = this.ensureTrill(zone), tbl = this.trillTable(zone.layer), r = this.trillRouting(zone);
+        const t = this.ensureTrill(zone), tbl = this.trillTable(zone.layer);
+        // 1g item 4: a trill that landed on another lane (a copy, a drag) may carry a technique this lane does not have — the
+        // ordinary voice then, never a silent fallback to the lane's first preset (RUNNING_LOG §115); the attack the same
+        { const techs = this.trackTechniques(zone.layer) || [];
+          if (!techs.some(q => q.key === t.technique)) { const o = this.ordinaryTech(zone.layer); if (o) { t.technique = o.key; t._techReset = true; } }
+          if (t.attackTech && !techs.some(q => q.key === t.attackTech)) t.attackTech = ''; }
+        const r = this.trillRouting(zone);
         if (!tbl || !r) {
             if (!this._trillDb) this.loadTrillDb().then(db => {
                 if (db && this.objects.includes(zone)) { this.regenerateTrill(zone); this.renderZone(zone); if (this.selectedObject === zone) this.showPropertyPanel(); }
@@ -9247,7 +9283,10 @@ const Composer = {
         const pitch = this.trillPitchInRange(zone, r);
         const g = TrillEngine.generate({ table: tbl.table, levelAt: this.trillLevelFn(zone), start: zone.startTime, end: zone.endTime,
             pitch, interval: t.interval, smooth: t.smooth, stretch: t.stretch, speed: t.speed, seed: t.seed, roles: t.roles,
-            accent: t.accent, attackVel: t.attackVel, attackDurMs: t.accent ? t.attackDurMs : null });
+            accent: t.accent, attackVel: t.attackVel, attackDurMs: t.accent ? t.attackDurMs : null,
+            // 1g item 3: the loudness from the curve — the height → an anchor velocity between the trill's low and high (the
+            // ensemble's one scale) → this instrument's velocity through the remap; 'played' keeps the captures' velocities
+            velocityAt: t.velMode === 'curve' ? (level, p) => this.velocityFor(zone.layer, p, t.velLo + (t.velHi - t.velLo) * level) : null });
         // the first note on its own articulation (CN-27: the fp / sfz attack for the demo): same slot → its CC0 first and the
         // trill's back before the second note; another slot → per-event routing
         const techs = this.trackTechniques(zone.layer) || [];
@@ -9323,7 +9362,8 @@ const Composer = {
         if (t.pitch == null) return 'trill';
         const iv = (TrillEngine.INTERVALS.find(x => x[0] === Math.abs(t.interval || 0)) || [0, Math.abs(t.interval || 0) + ' st'])[1];
         return 'tr ' + TrillEngine.noteName(t.pitch) + '–' + TrillEngine.noteName(t.pitch + (t.interval || 0)) + ' (' + iv + (t.interval < 0 ? ' ↓' : '') + ') · '
-            + (t.technique || '') + (zone.midiSnippet && zone.midiSnippet.count != null ? ' · ' + zone.midiSnippet.count + ' notes' : '')
+            + (t.technique || '') + (t.velMode === 'curve' ? ' · vel ' + (t.velLo != null ? t.velLo : 65) + '–' + (t.velHi != null ? t.velHi : 127) : ' · vel played')
+            + (zone.midiSnippet && zone.midiSnippet.count != null ? ' · ' + zone.midiSnippet.count + ' notes' : '')
             + (zone._overlap && zone._overlap.length ? ' · ⚠ overlaps ' + zone._overlap.join(', ') : '');
     },
 
@@ -9408,6 +9448,13 @@ const Composer = {
             + techs.map(q => '<option value="' + q.key + '"' + (q.key === t.attackTech ? ' selected' : '') + '>' + q.label + '</option>').join('') + '</select></div>';
         h += '<div class="pp-row"><label>Attack ms</label><input type="number" data-trill="attackDurMs" value="' + (t.attackDurMs != null ? t.attackDurMs : '') + '" min="20" max="4000" step="10" placeholder="as played" title="the first note: its length; blank = as you played it" style="width:64px">'
             + ' <span style="font-size:10px;color:#666">the first note&#8217;s length · blank = as you played</span></div>';
+        // 1g item 3 (composer 2026-09-06): the loudness from the curve, in the ensemble's one scale (the violins'); each
+        // instrument translates through the sweep's remap (bank/velocity_remap.json); 'as played' = the captures' velocities
+        h += '<div class="pp-row"><label>Velocity</label><select data-trill="velMode" title="curve: the loudness follows the curve, low at its bottom and high at its top, in the ensemble&#8217;s one scale (the violins&#8217;), each instrument translated through the measured remap; played: the captures&#8217; own velocities">'
+            + '<option value="curve"' + (t.velMode === 'curve' ? ' selected' : '') + '>follows the curve</option><option value="played"' + (t.velMode !== 'curve' ? ' selected' : '') + '>as played</option></select>'
+            + ' low <input type="number" data-trill="velLo" value="' + (t.velLo != null ? t.velLo : 65) + '" min="1" max="127" style="width:44px">'
+            + ' high <input type="number" data-trill="velHi" value="' + (t.velHi != null ? t.velHi : 127) + '" min="1" max="127" style="width:44px">'
+            + ' <span style="font-size:10px;color:#666">' + (this._velRemap ? 'remap ' + String(this._velRemap.measuredAt || '').slice(0, 10) : 'no remap — the numbers pass through') + '</span></div>';
         const ref = this.trillRefResolved(obj), refSel = t.curveRef || 'auto';
         const refStatus = ref.kind === 'flat' ? 'flat level' : (ref.name === 'lane' ? "this lane's curve " + (ref.curves[0] ? ref.curves[0].id : '')
             : 'curve ' + ref.name + (ref.curves.length ? ' (' + ref.curves.length + ' piece' + (ref.curves.length > 1 ? 's' : '') + ' under this span)' : ' — nothing drawn under this span: flat'));
@@ -9451,7 +9498,7 @@ const Composer = {
             const key = el.dataset.trill, t = this.ensureTrill(obj);
             this.pushUndoStateDebounced(300);
             if (el.type === 'checkbox') t[key] = el.checked;
-            else if (el.type === 'number') { const v = parseFloat(el.value); if (!isNaN(v)) t[key] = key === 'pitch' || key === 'seed' || key === 'attackVel' || key === 'attackDurMs' ? Math.round(v) : v; else if (el.value === '') t[key] = null; }
+            else if (el.type === 'number') { const v = parseFloat(el.value); if (!isNaN(v)) t[key] = key === 'pitch' || key === 'seed' || key === 'attackVel' || key === 'attackDurMs' || key === 'velLo' || key === 'velHi' ? Math.round(v) : v; else if (el.value === '') t[key] = null; }
             else t[key] = el.value;
             this.regenerateTrill(obj);
             this.renderZone(obj);

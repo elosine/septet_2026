@@ -50,8 +50,11 @@
       let gap = minGap + (a.gapToNextMs - minGap) * stretch;
       if (smooth > 0) { const local = near.reduce((s, x) => s + x.gapToNextMs, 0) / near.length; gap += (minGap + (local - minGap) * stretch - gap) * smooth; }
       gap = Math.max(20, gap * speed);
-      const vel = (k === 0 && o.accent) ? (o.attackVel || 127) : a.avgVelocity;
-      notes.push({ t: o.start + t, len: Math.min(a.noteDurationsMs[0], gap * 1.8) / 1000, vel, pitch: o.pitch + (k % 2 === 0 ? 0 : interval), level, gap });
+      const pitch = o.pitch + (k % 2 === 0 ? 0 : interval);
+      // the velocity: the attack's own on the first note; then the captures' (as played) or, given velocityAt(level, pitch),
+      // the curve's — PLAN 1g item 3 (2026-09-06): the height → the ensemble's scale → this instrument's remapped velocity
+      const vel = (k === 0 && o.accent) ? (o.attackVel || 127) : (o.velocityAt ? o.velocityAt(level, pitch) : a.avgVelocity);
+      notes.push({ t: o.start + t, len: Math.min(a.noteDurationsMs[0], gap * 1.8) / 1000, vel, pitch, level, gap });
       t += gap / 1000; k++;
     }
     if (o.attackDurMs > 0 && notes.length) notes[0].len = o.attackDurMs / 1000;   // the attack's own length (phase 3)

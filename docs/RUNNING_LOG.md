@@ -3454,3 +3454,34 @@ was measured; the viola 20 at A5 (82) still 1.1 dB loud; the top: the cello at B
 violins (§46's 12 dB register drop, measured again), the viola at B3 1.3 dB under, the bass clarinet at F#2 1.1 dB under, the
 flute at D5 0.6 dB under — the samples' reality; the tables send 127 there and the bank names the shortfall. The app interpolates
 between the measured pitches and holds the nearest beyond them (to-do 5, with 1g items 3 and 4).
+
+## §117. 1g items 3 and 4 and item 1's app side built: the trill's velocity from the curve through the remap, the ordinary voice, the cross-lane check — verified on a copy of his piece
+
+Composer: *"go ahead"*.
+
+**Built:** `score/public/velocity_remap.js` — the remap lookup shared by the page and the node tools (`velocityFor(bank, instKey, pitch, anchorVel)`:
+the instrument's table at the anchor velocity, interpolated between the measured registers, the nearest held beyond them; without a
+bank the anchor velocity passes through); the remap bank regenerated from anchor 20 (108 entries, so the panel's boxes work over the
+whole measured span); the page loads `bank/velocity_remap.json` at start (`loadVelocityRemap`) and offers `velocityFor(layer, pitch, anchorVel)`;
+the engine's `generate` takes `velocityAt(level, pitch)` — the attack keeps its own velocity, every later note asks the function (the
+captures' velocities when none is given); the trill block gains `velMode` ('curve' | 'played'), `velLo` 65, `velHi` 127 — new trills
+follow the curve, a trill from before keeps 'played' until he switches it (ensureTrill fills the old blocks that way); the panel's
+Velocity row (the mode, low, high, whether the remap is loaded) and the label ("vel 65–127" / "vel played"); the recipe's
+`ordinary` per instrument (flute ord · bass clarinet senza_vel · piano main · strings senza_vel), `ordinaryTech(layer)` behind it, the
+trill's default technique from it instead of the capture's accent senza vibrato; at every regeneration a technique the lane does
+not have is reset to the ordinary voice (`_techReset`) and a foreign attack articulation cleared — the routing's silent fallback to
+the lane's first preset is gone (it falls back to the ordinary voice now).
+
+**Verified in node:** the lookup (flute D5 at anchor 65 → 22, A4 → 53, C#5 between them → 39, at 127 → 127; the cello's B4 at
+127 → 127, its C3 at 65 → 62; violin 1 → itself; no bank → pass-through); the engine with `velocityAt` → every note but the
+attack at the function's value, without it the captures' velocities. **On the throwaway server** (a copy of his current save, 22
+trills; zero fresh console errors; the copies deleted): after regeneration every existing trill is 'played' and the flute's
+velocities are byte-identical; the Vn1 tutti copy's `ord` → senza_vel with the reset flag, CC0 5 sent, the label right; a new
+trill on each of the seven lanes at 110 s: the ordinary voice, curve mode, the attack 127, every later note = the remapped
+velocity for its pitch at anchor 96 (a flat mid-height) — Fl 100 · BCl 96 / 101 (its two pitches straddle a measured register)
+· Pno 85 · Vn1 99 · Vn2 97 / 98 · Va 101 · Vc 73 (its low F2 is loud); P → the Velocity row; low 40 → the velocities 95 as
+computed; the mode → played → the captures' twelve distinct velocities and the label "vel played"; a copy dragged to the cello
+→ senza_vel, the attack articulation cleared, port Vc, CC0 5.
+
+**Left for the proof (1g item 1, to-do 6):** the rack, two minutes — all seven at the bottom, the middle and the top of a
+curve through the remap, read back.

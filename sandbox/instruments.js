@@ -33,7 +33,7 @@ const INSTRUMENTS = {
   // → MIDI 59–96 (manual p. 51); per-preset ranges are read from the UVI GUI at 0c, never
   // ear-scanned. Multiphonics Menu: one multiphonic per key, display C3–F5 = MIDI 60–89 (manual
   // "FLUTE Multiphonics"). Piccolo / bass flute are NOT here yet — undecided (D6; CN-2, CN-4).
-  flute: { balanceDb: -21,
+  flute: { balanceDb: -21, ordinary: "ord",   // `ordinary` (PLAN 1g item 4, 2026-09-06): the instrument's ordinary voice — a new trill's default, the voice the sweep measured
     label: "Flute",
     port: "Flute",
     rangeLow: 59,
@@ -112,7 +112,7 @@ const INSTRUMENTS = {
   //   the four slides — CC#0 122 + the function key, then CC#0 118 to leave the mode.
   // Started from piece #3 sandbox/instruments.js `bass_clarinet_xs` (13 starter presets); the FULL menu
   // the deep map is #3/docs/XSAMPLE_BASSCL_map.md. Floor rule: never send below MIDI 34.
-  bass_clarinet: { balanceDb: -9,
+  bass_clarinet: { balanceDb: -9, ordinary: "senza_vel",
     label: "Bass Clarinet",
     port: "BassCl",
     rangeLow: 34,   // floor rule: never send below MIDI 34 (keyswitch/function zone)
@@ -166,7 +166,7 @@ const INSTRUMENTS = {
   // CC64 pedal) · plucked ch 2 (Spitfire, added at R6) · harmonics ch 3 (+ch 4 second layer; CC21 pitch shift, 19.048 cents/step,
   // 85 ms CC lead; sounding cap MIDI 101) · muted ch 5. Preparations are TECHNIQUES of one
   // piano track. Plucked piano had no library in #2 ("TBD"); the septet has Spitfire's, on ch 2.
-  piano: { balanceDb: 7,
+  piano: { balanceDb: 7, ordinary: "main",
     label: "Piano",
     port: "Piano",
     rangeLow: 21,
@@ -194,10 +194,10 @@ const INSTRUMENTS = {
   // them. Keyswitch zone = the bass clarinet's (green 21–23 function keys, red 24–33 bank slots,
   // all reachable by CC#0 — never sent as notes); the blue key at the very top is the Preset /
   // Phrase Mode switch (manual: A#7, or CC#0 126/127). Channels per D11: 1 main · 2–4 curve A/B/C.
-  violin1: { balanceDb: 0, label: "Violin 1", port: "Vn1", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
-  violin2: { balanceDb: 0, label: "Violin 2", port: "Vn2", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
-  viola:   { balanceDb: -3.5, label: "Viola",    port: "Va",  rangeLow: 48, rangeHigh: 93,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 48, 93) },
-  cello:   { balanceDb: -1, label: "Cello",    port: "Vc",  rangeLow: 36, rangeHigh: 83,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 36, 83) },
+  violin1: { balanceDb: 0, ordinary: "senza_vel", label: "Violin 1", port: "Vn1", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
+  violin2: { balanceDb: 0, ordinary: "senza_vel", label: "Violin 2", port: "Vn2", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
+  viola:   { balanceDb: -3.5, ordinary: "senza_vel", label: "Viola",    port: "Va",  rangeLow: 48, rangeHigh: 93,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 48, 93) },
+  cello:   { balanceDb: -1, ordinary: "senza_vel", label: "Cello",    port: "Vc",  rangeLow: 36, rangeHigh: 83,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 36, 83) },
 };
 
 // Per-preset zones read from the GUI as the composer uses a preset (his rule at R8: "there are too many
