@@ -366,11 +366,29 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - the notation line in TRILLS_TOOL §10: a trill is written as `tr` over its span, its dynamics read from its curve;
      - decision D23 in the journal, with the why: the MIDI is tweaked to sound right, the notation must not inherit the tweak;
      - a note in NOTATION_WORKFLOW: the rescaling option — the page curve at full height, the range named at its start.
-  3. **The trill's velocity switch.** *Result:* a trill's loudness follows its curve, 65 → 127 (curve mode, the default for new
-     trills; "as played" kept); the low and high editable per trill in the panel; the attack stays its own. Heard first on the
-     flute's passage at 85.35.
+  3. **The trill's velocity switch.** *Result:* a trill's loudness follows its curve, 65 at the bottom to 127 at the top in the
+     ensemble's one scale (the violins' numbers), each instrument translating it through item 1's remap; each trill has a switch,
+     curve or as played, and two boxes for its own low and high; the attack keeps its own settings. (The flute audition dropped
+     2026-09-06 — the probe comes first.) The to-dos:
+     - add the switch to the trill object: curve or as played; new trills start in curve mode; existing trills keep as played until
+       he switches them;
+     - add the two boxes, low and high, defaults 65 and 127, per trill;
+     - the engine computes each note's velocity from the curve height at that note, between the low and the high, then through the
+       instrument's remap from item 1 (a pass-through until the probe runs); the attack note stays out of it;
+     - show the switch and the boxes in the trill's panel; the mode in the zone's label;
+     - verify in node and on a copy of the piece: bottom and top of a known curve give the two numbers, the middle the middle, the
+       attack unchanged, an as-played trill unchanged.
   4. **The ordinary voice.** *Result:* a new trill plays the instrument's ordinary voice (strings Senza Vibrato #6, flute Ordinario,
-     bass clarinet Senza Vibrato Velocity #13, piano main), and a trill copied or dragged to another lane takes that lane's voice.
+     bass clarinet Senza Vibrato Velocity #13, piano main); a trill copied or dragged to another lane takes that lane's voice instead
+     of silently falling back to the lane's first preset, as it does today (§115). The to-dos:
+     - name the ordinary voice per instrument in the recipe;
+     - a new trill starts on that voice instead of the capture's accent senza vibrato;
+     - when a trill lands on another lane, by drag or by copy, its articulation is checked against that lane's list — not there →
+       reset to the lane's ordinary voice; the same check for the attack articulation;
+     - the panel and the label show what actually sounds, never the first entry by accident;
+     - verify on a copy of the piece: a new trill on each of the seven lanes, and a copy dragged from the flute to each other lane,
+       all sending the right articulation switch. His existing tutti copies are corrected by the third to-do at their next
+       regeneration (play start).
   5. **Extend to crescendos** (sustained notes, the morph events, any curve-driven object). *Result:* a drawn crescendo balances
      across the instruments the same way.
   *Why:* the piece's second material is curve-driven; if the curve's bottom is a different loudness on each instrument, no ensemble
