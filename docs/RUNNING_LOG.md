@@ -3370,3 +3370,67 @@ selected, the panel hidden (the trill rule). Every script the page serves passes
 and `read_console_messages` returns the tab's WHOLE history — today's single `SyntaxError` (§113's broken minute) sat four page
 loads back and showed up in three later checks. Count the load blocks ("[CC7 map] loaded … Composer initialized") and read only
 the last one, or check the served scripts' syntax in the page as done here.
+
+## §115. The volume situation, sorted one point at a time → PLAN 1g; the velocity / CC7 sweep built, run through the bridge, analyzed: the ensemble at 127 balanced within 1.8 dB, the curves below it measured
+
+Composer, in order: *"lets use ordinario as the default voice for trills; and lets use the normalized velocity table instead of the
+velocites from the played samples; the lowest volume, the lowest point in the curve should be around p though not for the
+notation … do we have a sense of what p is velocity wise? and talk first"* · *"see 76.5 in latest piece score, what level are the
+instruments at there velocitywise? data then discuss first"* · *"We did some probes to get the volume normalized … is that what is
+accounting for the velocity differences between the different instruments, or did we not use that?"* · *"I would like the lowest
+level in the curve be sixty five velocity. However … the bottom of the curve as PPP for the notation … the curve has a different
+translation to the graphic notation than it does to the MIDI"* · *"if everyone is playing at the bottom of the curve, I would like a
+balance in the ensemble … Obviously, we can't do a calibration per velocity level … what should the methodology be?"* · then the
+plan built by the method that became PLANNING_METHOD.md (one item at a time; 1g reordered at his word) · *"yes build the sweep and
+drive the transport pls ty"*.
+
+**The data at 76.5 s** (his working copy): all seven inside one 12 s tutti trill (72.8 → 84.85), velocities at that moment 57–87
+(the five that borrow violin 1's table identical: 57 61 78 69; viola 84 71 87; cello 66 81 78), never under 55 anywhere in the
+trill, the attacks 127 — the curve's bottom was mp–mf. **Found on the way:** the tutti copies kept the flute's technique key
+`ord`; on lanes without it the routing fell back silently to the lane's first preset — the strings trilling on Vibrato Velocity
+(#2), the bass clarinet on Senza Vibrato MW (#1, a modwheel preset the app never drives) → PLAN 1g item 4.
+
+**The volume chain, read from the code and the banks:** velocity per note (the captures for trills, as played for strikes, 100 for
+drawn sustained notes) · CC7 (127 for strikes and trills; the drawn curve through the tuba piece's CC7 map for sustained notes) ·
+the 0j balance trims as TRACK GAIN on the Reaper faders (flute −21 · bass clarinet −9 · piano +7 · violins 0 · viola −3.5 · cello
+−1; `balanceDb` in the recipe is the record only; the app sends nothing for them) · the samplers at unity. The trims match the
+ordinary voices at 127 and never touch velocities; the 0j data at 64 showed the slopes differ (127 → 64: flute 7.4 dB, viola 5.6,
+the rest 9.3–12.3). **Decided (→ D23 at session end):** the curve's height IS the dynamic for the notation and the IR (0 = ppp,
+1 = fff; the IR carries each curve-driven object's range as names, e.g. "p → f", so the page curve may later be redrawn at full
+height with the range named); velocity 65 → 127 in the ensemble's one scale (the violins') is the playback rendering, each
+instrument translating through a measured remap; one curve drives a trill's speed and loudness. The plan: 1g's five items.
+
+**The rack, checked live through the bridge before the run:** every fader = the file = the trims; the flute's UVI master −2.00 dB
+(his clipping fix of 2026-09-04, inside the balance measurement already); REC the folder parent, armed, output-stereo; the
+samplers' states differ from the file by a few hundred bytes (presets switched, notes played) — unreadable as gains, so the
+sweep replays the balance run's own notes first and measures consistency instead of inspecting it.
+
+**Built:** `tools/balance_schedule.js --sweep` — roles ref (the 0j notes: plain technique × 3 pitches × 127) · vel (× 8
+velocities 127 → 20) · cc7 (velocity 100 × 8 CC7 values 127 → 16), every note carrying `cc7`, the trims in force written into the
+schedule; `probes/balance_probe.ps1` sends the note's cc7; `probes/analyze_balance.py --sweep` — the reference table against
+`bank/balance.json` + the trims (tolerance 1.5 dB, the plan's own), the velocity and CC7 tables (mean of the three registers, the
+per-register rows kept), repeatability (ref vs the sweep's 127), clipping, the not-found list → `bank/velocity_map.json`;
+`probes/selftest_sweep.py` — a synthetic recording with known laws: **112 points recovered within 0.03 dB, PASS**.
+
+**The run (2026-09-06 11:40, driven by the AI):** the cursor parked at 3600 s, `transport record` through the bridge, the state
+read back = 5 (recording) before the first note, 357 notes in 747.7 s, `transport stop` → `reaper/Media/01-REC-260906_1140.wav`
+(749.4 s, 24-bit, peak −12.5 dBFS, no clipping). A first attempt never played: the log path mixed backslashes and slashes and the
+shell refused the redirect (the scratch path via `cygpath -u` since).
+
+**The results (K-weighted, 400 ms):**
+- Reference: now / expected (bank + trim) / Δ — flute −27.6 / −27.6 / 0.0 · bass clarinet −27.4 / −27.4 / 0.0 · piano −26.5 /
+  −27.4 / +0.9 · violin 1 −28.0 / −27.7 / −0.3 · violin 2 −28.3 / −27.2 / −1.0 · viola −28.0 / −27.4 / −0.6 · cello −27.5 /
+  −27.3 / −0.2 → **consistent; the ensemble's ordinary voices at 127 within 1.8 dB of each other.** Repeatability 0.31 dB.
+- Velocity → level, 127 … 20: flute −27.6 → −42.6 (15 dB, the shallow one) · bass clarinet −27.8 → −50.3 · piano −26.4 → −43.8
+  · violin 1 −28.3 → −51.4 · violin 2 −28.2 → −51.5 · viola −27.8 → −44.3 · cello −27.2 → −47.3. Two layer quirks: the piano is
+  1 dB LOUDER at 112 than at 127 and flat between 80 and 64 (all three registers); the viola at A5 (82) is louder at 64 (−28.4)
+  than at 80 (−31.8). The remap will use a monotone fit through such steps.
+- CC7 → level at velocity 100, 127 … 48: about −31 → −57 on every instrument (−19 dB at 64, −26 at 48), the floor below 32 —
+  Kontakt's and UVI's CC7 curves nearly alike, steep at the bottom.
+
+**A gotcha for §5:** `transport stop` (action 1016) after a recording opens Reaper's "save / delete recorded files" prompt,
+which blocks the bridge's loop until the composer answers — use **40667 "Transport: Stop (save all recorded media)"** to end a
+probe recording. And the heredoc rule of this shell: a double backslash arrives as one; scripts with escapes go through the file
+tool.
+
+**Next (1g item 1, to-dos 4–6):** the remap per instrument and register anchored on the violins, the app function, the proof.

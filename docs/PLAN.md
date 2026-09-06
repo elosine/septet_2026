@@ -350,9 +350,9 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   to other types of articulations like crescendos")*. Reordered 2026-09-06 at his word: one item at a time, the simplest terms.
   1. **Normalize the volume between instruments** — the bottom and the middle of the curve; the top (127) is already done by the
      instruments' individual gains (0j). The to-dos:
-     - build the probe: a timetable of each instrument's ordinary voice at eight velocities (127 → about 20), three registers;
-     - run it in his rack, about seven minutes, and record it (the 0j kit: probe → REC track);
-     - analyze the recording: a velocity → loudness table per instrument and register, saved in `bank/velocity_map.json`;
+     - ~~build the probe~~ — done 2026-09-06 (`tools/balance_schedule.js --sweep`, the player's cc7, the analyzer's sweep report, the self-test; §115);
+     - ~~run it in his rack and record it~~ — done 2026-09-06, driven through the bridge (`reaper/Media/01-REC-260906_1140.wav`, 357 notes; §115);
+     - ~~analyze the recording~~ — done 2026-09-06: `bank/velocity_map.json` (consistent with the balance run within 1.0 dB; the ensemble at 127 within 1.8 dB; the velocity and CC7 curves per register; §115);
      - compute, per instrument, the velocity that matches the violins at each curve height; save it as the remap;
      - make the app send the remapped velocity (one function: instrument + pitch + height → velocity); the trill reads it;
      - check: all seven at bottom, middle and top, read the levels — within about 1.5 dB.
@@ -394,8 +394,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      loudness a curve drives. The to-dos:
      - settle the carrier: a held note cannot change velocity mid-note, so its crescendo rides on CC7 — what the app already streams
        from a curve on a sustained note, through the tuba piece's CC7 table;
-     - measure CC7 → loudness per instrument as in item 1's sweep: a few CC7 steps on a held ordinary note, three registers (= the
-       0d.1 probe), in the same rack session as item 1;
+     - ~~measure CC7 → loudness per instrument~~ — done 2026-09-06 inside item 1's sweep (the cc7 role; `bank/velocity_map.json`; §115);
      - compute a CC7 remap per instrument anchored on the violins, so a curve height gives the same loudness whether it drives
        velocity or CC7;
      - the sustained-note stream reads the remap instead of the tuba table;

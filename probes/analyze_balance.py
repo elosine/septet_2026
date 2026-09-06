@@ -68,6 +68,86 @@ def envelope(x, sr, hop_ms=10):
     e = np.sqrt(np.mean(x[:n * hop].reshape(n, hop) ** 2, axis=1) + 1e-18)
     return 20 * np.log10(e), hop
 
+def fmt(v, sign=''):
+    if v is None: return '-'
+    return f"{v:+.1f}" if sign else f"{v:.1f}"
+
+
+def sweep_report(a, S, rows, key, floor, offset):
+    """PLAN 1g items 1 and 5 (2026-09-06): the velocity / CC7 sweep. Roles from the schedule: ref (the balance run's notes,
+    compared against bank/balance.json), vel (eight velocities), cc7 (eight CC7 values at one velocity). Per instrument and
+    register the measured level; the means printed; everything written to bank/velocity_map.json with provenance."""
+    bank = None
+    try: bank = json.load(open(os.path.join(ROOT, 'bank', 'balance.json'), encoding='utf-8'))
+    except Exception: bank = None
+    def mean(vals): return round(float(np.mean(vals)), 2) if vals else None
+    insts = {}
+    for r in rows:
+        d = insts.setdefault(r['inst'], {'label': r['label'], 'port': r['port'], 'tech': r['tech'], 'techLabel': r['techLabel'], 'ref': [], 'vel': {}, 'cc7': {}})
+        q = {'pitch': r['pitch'], 'vel': r['vel'], 'cc7': r.get('cc7', 127), 'onset': r['onset'], 'found': r['found'], 'dbFlat': r['dbFlat'], 'dbK': r['dbK'], 'peakDb': r['peakDb'], 'clip': r['clip']}
+        role = r.get('role')
+        if role == 'ref': d['ref'].append(q)
+        elif role == 'vel': d['vel'].setdefault(str(r['pitch']), []).append(q)
+        elif role == 'cc7': d['cc7'].setdefault(str(r['pitch']), []).append(q)
+    order = [k for k in S['order'] if k in insts]
+    print('\nREFERENCE - the balance run notes replayed (plain technique, three pitches, 127)\n')
+    trims = S.get('trims') or {}
+    print(f"{'instrument':14} {'now (dB)':>9} {'bank (dB)':>10} {'trim':>6} {'expected':>9} {'delta':>7}   verdict   (expected = the bank's pre-trim level + the trim on the fader)")
+    worst = 0.0
+    for k in order:
+        d = insts[k]
+        now = mean([q[key] for q in d['ref'] if q['found']])
+        bk = None
+        if bank and k in bank.get('instruments', {}):
+            bk = mean([q[key] for q in bank['instruments'][k]['notes'] if q['vel'] == 127 and q['found']])
+        trim = float(trims.get(k, 0) or 0)
+        exp = round(bk + trim, 2) if bk is not None else None
+        delta = round(now - exp, 2) if now is not None and exp is not None else None
+        d['refMeanDb'] = now; d['bankMeanDb'] = bk; d['trimDb'] = trim; d['expectedDb'] = exp; d['refDeltaDb'] = delta
+        if delta is not None: worst = max(worst, abs(delta))
+        verdict = '-' if delta is None else ('ok' if abs(delta) <= a.tol else f'OFF by more than {a.tol:.1f} dB - the chain changed since the balance run')
+        print(f"{d['label']:14} {fmt(now):>9} {fmt(bk):>10} {fmt(trim, '+'):>6} {fmt(exp):>9} {fmt(delta, '+'):>7}   {verdict}")
+    consistent = worst <= a.tol
+    print('\nreference verdict: ' + ('CONSISTENT with the balance run' if consistent else 'NOT CONSISTENT with the balance run') + f' (worst {worst:.2f} dB)')
+    for kind, label in (('vel', 'VELOCITY'), ('cc7', 'CC7')):
+        cols = (S.get('sweepVels') if kind == 'vel' else S.get('sweepCc7s')) or []
+        print(f"\n{label} -> level (dB, {a.weight}-weighted, {a.win:.1f} s window, mean of the three registers; ? = a register not found)\n")
+        print(f"{'instrument':14} " + ' '.join(f"{c:>7}" for c in cols))
+        for k in order:
+            d = insts[k]; cells = []; means = {}
+            for c in cols:
+                qs = [q for p in d[kind].values() for q in p if q[kind] == c]
+                f = [q[key] for q in qs if q['found']]
+                means[str(c)] = mean(f)
+                cells.append(('-' if not f else f"{np.mean(f):.1f}") + ('?' if len(f) < len(qs) else ''))
+            d[kind + 'MeanDb'] = means
+            print(f"{d['label']:14} " + ' '.join(f"{c:>7}" for c in cells))
+    print('\nREPEATABILITY - the reference notes against the same notes inside the velocity sweep (127)\n')
+    rep_worst = 0.0
+    for k in order:
+        d = insts[k]
+        v127 = mean([q[key] for p in d['vel'].values() for q in p if q['vel'] == 127 and q['found']])
+        dd = round(v127 - d['refMeanDb'], 2) if v127 is not None and d['refMeanDb'] is not None else None
+        d['repeatDeltaDb'] = dd
+        if dd is not None: rep_worst = max(rep_worst, abs(dd))
+        print(f"{d['label']:14} ref {fmt(d['refMeanDb']):>7}  sweep@127 {fmt(v127):>7}  delta {fmt(dd, '+'):>6}")
+    print(f'repeatability: worst {rep_worst:.2f} dB')
+    clipped = [f"{r['label']} {r['pitch']}@v{r['vel']}/cc{r.get('cc7', 127)} (peak {r['peakDb']:+.1f})" for r in rows if r['clip']]
+    if clipped: print('\nCLIPPED: ' + ', '.join(clipped))
+    else: print(f"\nno clipping: highest sample peak {max(r['peakDb'] for r in rows):+.1f} dBFS")
+    missing = [f"{r['label']} {r['pitch']}@v{r['vel']}/cc{r.get('cc7', 127)}" for r in rows if not r['found']]
+    if missing: print('\nNOT FOUND (below the floor - the instrument does not sound there): ' + ', '.join(missing))
+    outp = a.out if os.path.basename(a.out) != 'balance.json' else os.path.join(ROOT, 'bank', 'velocity_map.json')
+    out = {'measuredAt': datetime.datetime.now().isoformat(timespec='seconds'), 'wav': os.path.basename(a.wav), 'windowS': a.win, 'minDb': a.min,
+           'schedule': os.path.relpath(a.schedule, ROOT).replace(chr(92), '/'), 'scheduleGeneratedAt': S.get('generatedAt'), 'weighting': a.weight,
+           'noiseFloorDb': round(floor, 1), 'offsetS': round(offset, 3), 'sweepVels': S.get('sweepVels'), 'sweepCc7s': S.get('sweepCc7s'), 'cc7Vel': S.get('cc7Vel'),
+           'referenceBank': 'bank/balance.json' if bank else None, 'referenceConsistent': consistent, 'referenceTolDb': a.tol, 'referenceWorstDb': round(worst, 2), 'repeatWorstDb': round(rep_worst, 2),
+           'instruments': {k: insts[k] for k in order}}
+    os.makedirs(os.path.dirname(outp), exist_ok=True)
+    json.dump(out, open(outp, 'w', encoding='utf-8'), indent=1)
+    print(f'-> {os.path.relpath(outp, ROOT)}')
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('wav')
@@ -78,6 +158,8 @@ def main():
     ap.add_argument('--offset', type=float, default=None, help='recording start of the schedule, in s (default: detected from the first onset)')
     ap.add_argument('--win', type=float, default=0.4, help='RMS window in s (0.4 = momentary; 1.0 = the sustained reading)')
     ap.add_argument('--min', type=float, default=-70.0, help='a note below this level (dBFS) counts as NOT sounding')
+    ap.add_argument('--tol', type=float, default=1.5, help='sweep: the reference check tolerance in dB (PLAN 1g: within about 1.5 dB)')
+    ap.add_argument('--sweep', action='store_true', help='the velocity / CC7 sweep (tools/balance_schedule.js --sweep): the reference check against bank/balance.json, the per-instrument velocity and CC7 curves -> bank/velocity_map.json')
     a = ap.parse_args()
 
     S = json.load(open(a.schedule, encoding='utf-8'))
@@ -108,6 +190,8 @@ def main():
         rows.append(dict(n, onset=round(on, 3), found=bool(found), dbFlat=round(flat, 2), dbK=(round(kk, 2) if kk is not None else None), peakDb=round(pk, 2), clip=bool(pk >= -0.1)))
 
     key = 'dbK' if a.weight == 'k' else 'dbFlat'
+    if a.sweep:
+        sweep_report(a, S, rows, key, floor, offset); return
     insts = {}
     for r in rows:
         role = r.get('role', 'plain')

@@ -1,0 +1,4316 @@
+{
+ "measuredAt": "2026-09-06T11:57:01",
+ "wav": "01-REC-260906_1140.wav",
+ "windowS": 0.4,
+ "minDb": -70.0,
+ "schedule": "probes/sweep_schedule.json",
+ "scheduleGeneratedAt": "2026-09-06T15:54:46.666Z",
+ "weighting": "k",
+ "noiseFloorDb": -90.0,
+ "offsetS": 1.69,
+ "sweepVels": [
+  127,
+  112,
+  96,
+  80,
+  64,
+  48,
+  32,
+  20
+ ],
+ "sweepCc7s": [
+  127,
+  112,
+  96,
+  80,
+  64,
+  48,
+  32,
+  16
+ ],
+ "cc7Vel": 100,
+ "referenceBank": "bank/balance.json",
+ "referenceConsistent": true,
+ "referenceTolDb": 1.5,
+ "referenceWorstDb": 1.01,
+ "repeatWorstDb": 0.31,
+ "instruments": {
+  "flute": {
+   "label": "Flute",
+   "port": "Flute",
+   "tech": "ord",
+   "techLabel": "Ordinario",
+   "ref": [
+    {
+     "pitch": 69,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 4.69,
+     "found": true,
+     "dbFlat": -28.83,
+     "dbK": -27.65,
+     "peakDb": -22.86,
+     "clip": false
+    },
+    {
+     "pitch": 78,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 6.68,
+     "found": true,
+     "dbFlat": -29.62,
+     "dbK": -28.94,
+     "peakDb": -24.48,
+     "clip": false
+    },
+    {
+     "pitch": 87,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 8.69,
+     "found": true,
+     "dbFlat": -27.74,
+     "dbK": -26.24,
+     "peakDb": -23.56,
+     "clip": false
+    }
+   ],
+   "vel": {
+    "69": [
+     {
+      "pitch": 69,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 57.18,
+      "found": true,
+      "dbFlat": -28.82,
+      "dbK": -27.64,
+      "peakDb": -22.86,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 63.19,
+      "found": true,
+      "dbFlat": -29.81,
+      "dbK": -28.64,
+      "peakDb": -23.87,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 69.18,
+      "found": true,
+      "dbFlat": -35.63,
+      "dbK": -34.58,
+      "peakDb": -28.14,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 75.19,
+      "found": true,
+      "dbFlat": -37.18,
+      "dbK": -36.13,
+      "peakDb": -29.68,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 81.19,
+      "found": true,
+      "dbFlat": -39.25,
+      "dbK": -38.21,
+      "peakDb": -31.76,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 87.18,
+      "found": true,
+      "dbFlat": -41.94,
+      "dbK": -40.92,
+      "peakDb": -34.45,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 93.19,
+      "found": true,
+      "dbFlat": -44.41,
+      "dbK": -44.33,
+      "peakDb": -39.76,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 99.19,
+      "found": true,
+      "dbFlat": -46.24,
+      "dbK": -46.17,
+      "peakDb": -41.59,
+      "clip": false
+     }
+    ],
+    "78": [
+     {
+      "pitch": 78,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 59.19,
+      "found": true,
+      "dbFlat": -29.61,
+      "dbK": -28.94,
+      "peakDb": -24.47,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 65.19,
+      "found": true,
+      "dbFlat": -30.62,
+      "dbK": -29.94,
+      "peakDb": -25.48,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 71.18,
+      "found": true,
+      "dbFlat": -30.94,
+      "dbK": -30.06,
+      "peakDb": -24.95,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 77.19,
+      "found": true,
+      "dbFlat": -32.47,
+      "dbK": -31.64,
+      "peakDb": -26.5,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 83.19,
+      "found": true,
+      "dbFlat": -34.54,
+      "dbK": -33.72,
+      "peakDb": -28.57,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 89.19,
+      "found": true,
+      "dbFlat": -37.24,
+      "dbK": -36.39,
+      "peakDb": -31.28,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 95.18,
+      "found": true,
+      "dbFlat": -39.43,
+      "dbK": -38.47,
+      "peakDb": -34.14,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 101.19,
+      "found": true,
+      "dbFlat": -41.33,
+      "dbK": -40.38,
+      "peakDb": -36.06,
+      "clip": false
+     }
+    ],
+    "87": [
+     {
+      "pitch": 87,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 61.19,
+      "found": true,
+      "dbFlat": -27.75,
+      "dbK": -26.23,
+      "peakDb": -23.56,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 67.19,
+      "found": true,
+      "dbFlat": -28.74,
+      "dbK": -27.23,
+      "peakDb": -24.56,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 73.19,
+      "found": true,
+      "dbFlat": -30.87,
+      "dbK": -29.51,
+      "peakDb": -26.09,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 79.19,
+      "found": true,
+      "dbFlat": -32.42,
+      "dbK": -31.05,
+      "peakDb": -27.65,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 85.19,
+      "found": true,
+      "dbFlat": -34.5,
+      "dbK": -33.14,
+      "peakDb": -29.75,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 91.19,
+      "found": true,
+      "dbFlat": -37.22,
+      "dbK": -35.85,
+      "peakDb": -32.5,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 97.19,
+      "found": true,
+      "dbFlat": -41.42,
+      "dbK": -39.33,
+      "peakDb": -37.15,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 103.2,
+      "found": true,
+      "dbFlat": -43.43,
+      "dbK": -41.33,
+      "peakDb": -39.14,
+      "clip": false
+     }
+    ]
+   },
+   "cc7": {
+    "69": [
+     {
+      "pitch": 69,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 403.68,
+      "found": true,
+      "dbFlat": -35.28,
+      "dbK": -34.24,
+      "peakDb": -27.79,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 409.68,
+      "found": true,
+      "dbFlat": -37.41,
+      "dbK": -36.35,
+      "peakDb": -29.9,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 415.69,
+      "found": true,
+      "dbFlat": -40.0,
+      "dbK": -38.95,
+      "peakDb": -32.5,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 421.68,
+      "found": true,
+      "dbFlat": -43.06,
+      "dbK": -42.01,
+      "peakDb": -35.56,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 427.69,
+      "found": true,
+      "dbFlat": -46.82,
+      "dbK": -45.77,
+      "peakDb": -39.32,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 433.69,
+      "found": true,
+      "dbFlat": -51.66,
+      "dbK": -50.61,
+      "peakDb": -44.16,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 439.69,
+      "found": true,
+      "dbFlat": -58.48,
+      "dbK": -57.43,
+      "peakDb": -50.98,
+      "clip": false
+     },
+     {
+      "pitch": 69,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 445.73,
+      "found": false,
+      "dbFlat": -70.14,
+      "dbK": -69.09,
+      "peakDb": -62.64,
+      "clip": false
+     }
+    ],
+    "78": [
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 405.69,
+      "found": true,
+      "dbFlat": -30.58,
+      "dbK": -29.75,
+      "peakDb": -24.59,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 411.68,
+      "found": true,
+      "dbFlat": -32.7,
+      "dbK": -31.87,
+      "peakDb": -26.71,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 417.68,
+      "found": true,
+      "dbFlat": -35.29,
+      "dbK": -34.46,
+      "peakDb": -29.32,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 423.69,
+      "found": true,
+      "dbFlat": -38.35,
+      "dbK": -37.54,
+      "peakDb": -32.38,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 429.68,
+      "found": true,
+      "dbFlat": -42.11,
+      "dbK": -41.28,
+      "peakDb": -36.12,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 435.7,
+      "found": true,
+      "dbFlat": -46.95,
+      "dbK": -46.15,
+      "peakDb": -40.98,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 441.7,
+      "found": true,
+      "dbFlat": -53.78,
+      "dbK": -53.0,
+      "peakDb": -47.78,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 447.71,
+      "found": true,
+      "dbFlat": -65.44,
+      "dbK": -64.76,
+      "peakDb": -59.45,
+      "clip": false
+     }
+    ],
+    "87": [
+     {
+      "pitch": 87,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 407.68,
+      "found": true,
+      "dbFlat": -30.53,
+      "dbK": -29.16,
+      "peakDb": -25.75,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 413.69,
+      "found": true,
+      "dbFlat": -32.65,
+      "dbK": -31.28,
+      "peakDb": -27.86,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 419.69,
+      "found": true,
+      "dbFlat": -35.23,
+      "dbK": -33.87,
+      "peakDb": -30.46,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 425.69,
+      "found": true,
+      "dbFlat": -38.3,
+      "dbK": -36.94,
+      "peakDb": -33.53,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 431.69,
+      "found": true,
+      "dbFlat": -42.06,
+      "dbK": -40.69,
+      "peakDb": -37.28,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 437.73,
+      "found": true,
+      "dbFlat": -46.89,
+      "dbK": -45.53,
+      "peakDb": -42.12,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 443.73,
+      "found": true,
+      "dbFlat": -53.72,
+      "dbK": -52.35,
+      "peakDb": -48.94,
+      "clip": false
+     },
+     {
+      "pitch": 87,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 449.76,
+      "found": true,
+      "dbFlat": -65.37,
+      "dbK": -64.01,
+      "peakDb": -60.6,
+      "clip": false
+     }
+    ]
+   },
+   "refMeanDb": -27.61,
+   "bankMeanDb": -6.58,
+   "trimDb": -21.0,
+   "expectedDb": -27.58,
+   "refDeltaDb": -0.03,
+   "velMeanDb": {
+    "127": -27.6,
+    "112": -28.6,
+    "96": -31.38,
+    "80": -32.94,
+    "64": -35.02,
+    "48": -37.72,
+    "32": -40.71,
+    "20": -42.63
+   },
+   "cc7MeanDb": {
+    "127": -31.05,
+    "112": -33.17,
+    "96": -35.76,
+    "80": -38.83,
+    "64": -42.58,
+    "48": -47.43,
+    "32": -54.26,
+    "16": -64.39
+   },
+   "repeatDeltaDb": 0.01
+  },
+  "bass_clarinet": {
+   "label": "Bass Clarinet",
+   "port": "BassCl",
+   "tech": "senza_vel",
+   "techLabel": "Senza Vibrato Velocity (#13)",
+   "ref": [
+    {
+     "pitch": 42,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 12.19,
+     "found": true,
+     "dbFlat": -29.48,
+     "dbK": -28.8,
+     "peakDb": -22.82,
+     "clip": false
+    },
+    {
+     "pitch": 50,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 14.09,
+     "found": true,
+     "dbFlat": -25.47,
+     "dbK": -25.05,
+     "peakDb": -16.94,
+     "clip": false
+    },
+    {
+     "pitch": 57,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 16.09,
+     "found": true,
+     "dbFlat": -29.26,
+     "dbK": -28.5,
+     "peakDb": -19.95,
+     "clip": false
+    }
+   ],
+   "vel": {
+    "42": [
+     {
+      "pitch": 42,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 106.68,
+      "found": true,
+      "dbFlat": -30.08,
+      "dbK": -29.44,
+      "peakDb": -22.52,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 112.59,
+      "found": true,
+      "dbFlat": -32.41,
+      "dbK": -31.75,
+      "peakDb": -24.69,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 118.59,
+      "found": true,
+      "dbFlat": -34.85,
+      "dbK": -34.56,
+      "peakDb": -27.2,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 124.59,
+      "found": true,
+      "dbFlat": -37.75,
+      "dbK": -37.46,
+      "peakDb": -30.12,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 130.59,
+      "found": true,
+      "dbFlat": -41.96,
+      "dbK": -41.85,
+      "peakDb": -34.54,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 136.59,
+      "found": true,
+      "dbFlat": -45.83,
+      "dbK": -45.69,
+      "peakDb": -38.4,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 142.59,
+      "found": true,
+      "dbFlat": -49.25,
+      "dbK": -49.15,
+      "peakDb": -41.84,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 148.71,
+      "found": true,
+      "dbFlat": -54.18,
+      "dbK": -54.05,
+      "peakDb": -46.79,
+      "clip": false
+     }
+    ],
+    "50": [
+     {
+      "pitch": 50,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 108.59,
+      "found": true,
+      "dbFlat": -25.46,
+      "dbK": -25.04,
+      "peakDb": -17.32,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 114.59,
+      "found": true,
+      "dbFlat": -27.77,
+      "dbK": -27.42,
+      "peakDb": -18.9,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 120.59,
+      "found": true,
+      "dbFlat": -31.3,
+      "dbK": -31.0,
+      "peakDb": -23.68,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 126.59,
+      "found": true,
+      "dbFlat": -34.27,
+      "dbK": -33.98,
+      "peakDb": -26.62,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 132.59,
+      "found": true,
+      "dbFlat": -35.21,
+      "dbK": -35.32,
+      "peakDb": -29.63,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 138.59,
+      "found": true,
+      "dbFlat": -38.87,
+      "dbK": -38.98,
+      "peakDb": -33.46,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 144.7,
+      "found": true,
+      "dbFlat": -43.59,
+      "dbK": -43.69,
+      "peakDb": -37.8,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 150.7,
+      "found": true,
+      "dbFlat": -47.25,
+      "dbK": -47.36,
+      "peakDb": -41.82,
+      "clip": false
+     }
+    ],
+    "57": [
+     {
+      "pitch": 57,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 110.59,
+      "found": true,
+      "dbFlat": -29.75,
+      "dbK": -28.81,
+      "peakDb": -20.18,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 116.59,
+      "found": true,
+      "dbFlat": -31.5,
+      "dbK": -30.73,
+      "peakDb": -22.23,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 122.59,
+      "found": true,
+      "dbFlat": -31.45,
+      "dbK": -30.76,
+      "peakDb": -23.39,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 128.59,
+      "found": true,
+      "dbFlat": -34.37,
+      "dbK": -33.64,
+      "peakDb": -26.15,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 134.62,
+      "found": true,
+      "dbFlat": -37.69,
+      "dbK": -37.68,
+      "peakDb": -30.69,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 140.69,
+      "found": true,
+      "dbFlat": -41.49,
+      "dbK": -41.49,
+      "peakDb": -34.49,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 146.7,
+      "found": true,
+      "dbFlat": -45.94,
+      "dbK": -45.93,
+      "peakDb": -38.93,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 152.7,
+      "found": true,
+      "dbFlat": -49.63,
+      "dbK": -49.61,
+      "peakDb": -42.53,
+      "clip": false
+     }
+    ]
+   },
+   "cc7": {
+    "42": [
+     {
+      "pitch": 42,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 453.18,
+      "found": true,
+      "dbFlat": -34.7,
+      "dbK": -34.44,
+      "peakDb": -27.29,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 459.09,
+      "found": true,
+      "dbFlat": -37.33,
+      "dbK": -37.02,
+      "peakDb": -29.56,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 465.09,
+      "found": true,
+      "dbFlat": -41.35,
+      "dbK": -41.04,
+      "peakDb": -33.54,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 471.19,
+      "found": true,
+      "dbFlat": -46.11,
+      "dbK": -45.81,
+      "peakDb": -38.46,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 477.2,
+      "found": true,
+      "dbFlat": -51.91,
+      "dbK": -51.61,
+      "peakDb": -44.14,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 483.21,
+      "found": true,
+      "dbFlat": -59.46,
+      "dbK": -59.17,
+      "peakDb": -51.83,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 489.28,
+      "found": true,
+      "dbFlat": -69.97,
+      "dbK": -69.67,
+      "peakDb": -62.16,
+      "clip": false
+     },
+     {
+      "pitch": 42,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 495.19,
+      "found": false,
+      "dbFlat": -88.19,
+      "dbK": -87.91,
+      "peakDb": -80.55,
+      "clip": false
+     }
+    ],
+    "50": [
+     {
+      "pitch": 50,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 455.09,
+      "found": true,
+      "dbFlat": -30.78,
+      "dbK": -30.53,
+      "peakDb": -22.89,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 461.09,
+      "found": true,
+      "dbFlat": -33.88,
+      "dbK": -33.56,
+      "peakDb": -26.26,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 467.09,
+      "found": true,
+      "dbFlat": -37.86,
+      "dbK": -37.59,
+      "peakDb": -30.32,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 473.19,
+      "found": true,
+      "dbFlat": -42.81,
+      "dbK": -42.56,
+      "peakDb": -34.95,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 479.2,
+      "found": true,
+      "dbFlat": -48.42,
+      "dbK": -48.12,
+      "peakDb": -40.9,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 485.22,
+      "found": true,
+      "dbFlat": -56.13,
+      "dbK": -55.93,
+      "peakDb": -48.27,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 491.26,
+      "found": true,
+      "dbFlat": -66.66,
+      "dbK": -66.36,
+      "peakDb": -58.84,
+      "clip": false
+     },
+     {
+      "pitch": 50,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 497.19,
+      "found": false,
+      "dbFlat": -84.57,
+      "dbK": -84.28,
+      "peakDb": -77.0,
+      "clip": false
+     }
+    ],
+    "57": [
+     {
+      "pitch": 57,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 457.09,
+      "found": true,
+      "dbFlat": -30.93,
+      "dbK": -30.3,
+      "peakDb": -22.82,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 463.09,
+      "found": true,
+      "dbFlat": -34.1,
+      "dbK": -33.35,
+      "peakDb": -25.83,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 469.18,
+      "found": true,
+      "dbFlat": -38.18,
+      "dbK": -37.43,
+      "peakDb": -29.9,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 475.19,
+      "found": true,
+      "dbFlat": -42.78,
+      "dbK": -42.08,
+      "peakDb": -34.7,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 481.19,
+      "found": true,
+      "dbFlat": -48.76,
+      "dbK": -48.01,
+      "peakDb": -40.48,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 487.21,
+      "found": true,
+      "dbFlat": -56.38,
+      "dbK": -55.76,
+      "peakDb": -48.17,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 493.26,
+      "found": true,
+      "dbFlat": -66.72,
+      "dbK": -65.98,
+      "peakDb": -58.48,
+      "clip": false
+     },
+     {
+      "pitch": 57,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 499.19,
+      "found": false,
+      "dbFlat": -84.83,
+      "dbK": -84.09,
+      "peakDb": -76.57,
+      "clip": false
+     }
+    ]
+   },
+   "refMeanDb": -27.45,
+   "bankMeanDb": -18.41,
+   "trimDb": -9.0,
+   "expectedDb": -27.41,
+   "refDeltaDb": -0.04,
+   "velMeanDb": {
+    "127": -27.76,
+    "112": -29.97,
+    "96": -32.11,
+    "80": -35.03,
+    "64": -38.28,
+    "48": -42.05,
+    "32": -46.26,
+    "20": -50.34
+   },
+   "cc7MeanDb": {
+    "127": -31.76,
+    "112": -34.64,
+    "96": -38.69,
+    "80": -43.48,
+    "64": -49.25,
+    "48": -56.95,
+    "32": -67.34,
+    "16": null
+   },
+   "repeatDeltaDb": -0.31
+  },
+  "piano": {
+   "label": "Piano",
+   "port": "Piano",
+   "tech": "main",
+   "techLabel": "8Dio 1969 Legacy Piano (Steinway 1969)",
+   "ref": [
+    {
+     "pitch": 43,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 19.69,
+     "found": true,
+     "dbFlat": -23.82,
+     "dbK": -24.45,
+     "peakDb": -14.16,
+     "clip": false
+    },
+    {
+     "pitch": 65,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 21.59,
+     "found": true,
+     "dbFlat": -27.37,
+     "dbK": -25.37,
+     "peakDb": -14.8,
+     "clip": false
+    },
+    {
+     "pitch": 86,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 23.69,
+     "found": true,
+     "dbFlat": -27.4,
+     "dbK": -29.79,
+     "peakDb": -13.64,
+     "clip": false
+    }
+   ],
+   "vel": {
+    "43": [
+     {
+      "pitch": 43,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 156.19,
+      "found": true,
+      "dbFlat": -23.82,
+      "dbK": -24.46,
+      "peakDb": -14.16,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 162.19,
+      "found": true,
+      "dbFlat": -22.7,
+      "dbK": -23.31,
+      "peakDb": -13.04,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 168.18,
+      "found": true,
+      "dbFlat": -26.26,
+      "dbK": -27.09,
+      "peakDb": -14.84,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 174.19,
+      "found": true,
+      "dbFlat": -35.63,
+      "dbK": -36.3,
+      "peakDb": -26.49,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 180.18,
+      "found": true,
+      "dbFlat": -35.64,
+      "dbK": -36.3,
+      "peakDb": -26.52,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 186.19,
+      "found": true,
+      "dbFlat": -38.75,
+      "dbK": -40.09,
+      "peakDb": -29.83,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 192.18,
+      "found": true,
+      "dbFlat": -36.15,
+      "dbK": -37.41,
+      "peakDb": -27.48,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 198.18,
+      "found": true,
+      "dbFlat": -36.86,
+      "dbK": -38.18,
+      "peakDb": -28.19,
+      "clip": false
+     }
+    ],
+    "65": [
+     {
+      "pitch": 65,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 158.09,
+      "found": true,
+      "dbFlat": -27.38,
+      "dbK": -25.31,
+      "peakDb": -14.77,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 164.09,
+      "found": true,
+      "dbFlat": -26.26,
+      "dbK": -24.18,
+      "peakDb": -13.64,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 170.09,
+      "found": true,
+      "dbFlat": -29.09,
+      "dbK": -27.02,
+      "peakDb": -17.3,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 176.18,
+      "found": true,
+      "dbFlat": -35.64,
+      "dbK": -35.79,
+      "peakDb": -25.0,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 182.19,
+      "found": true,
+      "dbFlat": -35.67,
+      "dbK": -35.8,
+      "peakDb": -25.03,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 188.19,
+      "found": true,
+      "dbFlat": -38.69,
+      "dbK": -38.85,
+      "peakDb": -28.69,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 194.18,
+      "found": true,
+      "dbFlat": -41.16,
+      "dbK": -41.24,
+      "peakDb": -33.45,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 200.19,
+      "found": true,
+      "dbFlat": -41.83,
+      "dbK": -42.01,
+      "peakDb": -34.16,
+      "clip": false
+     }
+    ],
+    "86": [
+     {
+      "pitch": 86,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 160.18,
+      "found": true,
+      "dbFlat": -27.4,
+      "dbK": -29.54,
+      "peakDb": -13.64,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 166.19,
+      "found": true,
+      "dbFlat": -26.28,
+      "dbK": -28.73,
+      "peakDb": -12.52,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 172.18,
+      "found": true,
+      "dbFlat": -31.58,
+      "dbK": -33.81,
+      "peakDb": -20.14,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 178.19,
+      "found": true,
+      "dbFlat": -35.49,
+      "dbK": -37.82,
+      "peakDb": -24.07,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 184.18,
+      "found": true,
+      "dbFlat": -35.51,
+      "dbK": -37.79,
+      "peakDb": -24.09,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 190.18,
+      "found": true,
+      "dbFlat": -37.83,
+      "dbK": -40.09,
+      "peakDb": -25.93,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 196.19,
+      "found": true,
+      "dbFlat": -48.06,
+      "dbK": -50.48,
+      "peakDb": -34.26,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 202.18,
+      "found": true,
+      "dbFlat": -48.77,
+      "dbK": -51.23,
+      "peakDb": -34.96,
+      "clip": false
+     }
+    ]
+   },
+   "cc7": {
+    "43": [
+     {
+      "pitch": 43,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 502.68,
+      "found": true,
+      "dbFlat": -26.38,
+      "dbK": -27.13,
+      "peakDb": -14.99,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 508.69,
+      "found": true,
+      "dbFlat": -29.67,
+      "dbK": -30.64,
+      "peakDb": -18.26,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 514.68,
+      "found": true,
+      "dbFlat": -33.67,
+      "dbK": -34.36,
+      "peakDb": -22.28,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 520.68,
+      "found": true,
+      "dbFlat": -38.43,
+      "dbK": -39.46,
+      "peakDb": -27.03,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 526.69,
+      "found": true,
+      "dbFlat": -44.23,
+      "dbK": -45.32,
+      "peakDb": -32.84,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 532.68,
+      "found": true,
+      "dbFlat": -51.75,
+      "dbK": -52.68,
+      "peakDb": -40.34,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 538.69,
+      "found": true,
+      "dbFlat": -62.31,
+      "dbK": -63.21,
+      "peakDb": -50.91,
+      "clip": false
+     },
+     {
+      "pitch": 43,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 544.69,
+      "found": false,
+      "dbFlat": -80.34,
+      "dbK": -81.56,
+      "peakDb": -68.96,
+      "clip": false
+     }
+    ],
+    "65": [
+     {
+      "pitch": 65,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 504.59,
+      "found": true,
+      "dbFlat": -29.21,
+      "dbK": -27.22,
+      "peakDb": -17.45,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 510.59,
+      "found": true,
+      "dbFlat": -32.49,
+      "dbK": -30.5,
+      "peakDb": -20.75,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 516.68,
+      "found": true,
+      "dbFlat": -36.51,
+      "dbK": -36.71,
+      "peakDb": -24.72,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 522.68,
+      "found": true,
+      "dbFlat": -41.29,
+      "dbK": -41.31,
+      "peakDb": -29.47,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 528.67,
+      "found": true,
+      "dbFlat": -47.1,
+      "dbK": -47.16,
+      "peakDb": -35.28,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 534.68,
+      "found": true,
+      "dbFlat": -54.59,
+      "dbK": -54.65,
+      "peakDb": -42.8,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 540.68,
+      "found": true,
+      "dbFlat": -65.13,
+      "dbK": -65.39,
+      "peakDb": -53.38,
+      "clip": false
+     },
+     {
+      "pitch": 65,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 546.69,
+      "found": false,
+      "dbFlat": -83.21,
+      "dbK": -83.52,
+      "peakDb": -71.44,
+      "clip": false
+     }
+    ],
+    "86": [
+     {
+      "pitch": 86,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 506.68,
+      "found": true,
+      "dbFlat": -31.72,
+      "dbK": -34.04,
+      "peakDb": -20.29,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 512.67,
+      "found": true,
+      "dbFlat": -35.0,
+      "dbK": -36.67,
+      "peakDb": -23.54,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 518.69,
+      "found": true,
+      "dbFlat": -39.01,
+      "dbK": -41.39,
+      "peakDb": -27.57,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 524.68,
+      "found": true,
+      "dbFlat": -43.76,
+      "dbK": -45.99,
+      "peakDb": -32.32,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 530.68,
+      "found": true,
+      "dbFlat": -49.58,
+      "dbK": -51.31,
+      "peakDb": -38.14,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 536.67,
+      "found": true,
+      "dbFlat": -57.07,
+      "dbK": -59.02,
+      "peakDb": -45.63,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 542.68,
+      "found": true,
+      "dbFlat": -67.64,
+      "dbK": -69.71,
+      "peakDb": -56.19,
+      "clip": false
+     },
+     {
+      "pitch": 86,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 548.69,
+      "found": false,
+      "dbFlat": -85.81,
+      "dbK": -88.55,
+      "peakDb": -74.27,
+      "clip": false
+     }
+    ]
+   },
+   "refMeanDb": -26.54,
+   "bankMeanDb": -34.42,
+   "trimDb": 7.0,
+   "expectedDb": -27.42,
+   "refDeltaDb": 0.88,
+   "velMeanDb": {
+    "127": -26.44,
+    "112": -25.41,
+    "96": -29.31,
+    "80": -36.64,
+    "64": -36.63,
+    "48": -39.68,
+    "32": -43.04,
+    "20": -43.81
+   },
+   "cc7MeanDb": {
+    "127": -29.46,
+    "112": -32.6,
+    "96": -37.49,
+    "80": -42.25,
+    "64": -47.93,
+    "48": -55.45,
+    "32": -66.1,
+    "16": null
+   },
+   "repeatDeltaDb": 0.1
+  },
+  "violin1": {
+   "label": "Violin 1",
+   "port": "Vn1",
+   "tech": "senza_vel",
+   "techLabel": "Senza Vibrato Velocity (#6)",
+   "ref": [
+    {
+     "pitch": 67,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 27.18,
+     "found": true,
+     "dbFlat": -30.35,
+     "dbK": -27.81,
+     "peakDb": -23.48,
+     "clip": false
+    },
+    {
+     "pitch": 78,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 29.09,
+     "found": true,
+     "dbFlat": -30.96,
+     "dbK": -28.79,
+     "peakDb": -24.78,
+     "clip": false
+    },
+    {
+     "pitch": 90,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 31.09,
+     "found": true,
+     "dbFlat": -29.92,
+     "dbK": -27.47,
+     "peakDb": -22.65,
+     "clip": false
+    }
+   ],
+   "vel": {
+    "67": [
+     {
+      "pitch": 67,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 205.69,
+      "found": true,
+      "dbFlat": -31.28,
+      "dbK": -28.83,
+      "peakDb": -23.72,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 211.59,
+      "found": true,
+      "dbFlat": -31.94,
+      "dbK": -29.36,
+      "peakDb": -24.73,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 217.66,
+      "found": true,
+      "dbFlat": -36.39,
+      "dbK": -33.97,
+      "peakDb": -28.36,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 223.69,
+      "found": true,
+      "dbFlat": -37.23,
+      "dbK": -34.57,
+      "peakDb": -30.04,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 229.68,
+      "found": true,
+      "dbFlat": -42.87,
+      "dbK": -41.94,
+      "peakDb": -34.89,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 235.69,
+      "found": true,
+      "dbFlat": -46.17,
+      "dbK": -44.39,
+      "peakDb": -37.05,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 241.7,
+      "found": true,
+      "dbFlat": -50.47,
+      "dbK": -49.3,
+      "peakDb": -41.83,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 247.69,
+      "found": true,
+      "dbFlat": -53.89,
+      "dbK": -52.8,
+      "peakDb": -45.3,
+      "clip": false
+     }
+    ],
+    "78": [
+     {
+      "pitch": 78,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 207.59,
+      "found": true,
+      "dbFlat": -29.53,
+      "dbK": -27.68,
+      "peakDb": -24.32,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 213.59,
+      "found": true,
+      "dbFlat": -31.81,
+      "dbK": -30.24,
+      "peakDb": -26.35,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 219.69,
+      "found": true,
+      "dbFlat": -35.45,
+      "dbK": -33.26,
+      "peakDb": -29.17,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 225.59,
+      "found": true,
+      "dbFlat": -36.87,
+      "dbK": -35.19,
+      "peakDb": -32.0,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 231.69,
+      "found": true,
+      "dbFlat": -41.2,
+      "dbK": -38.75,
+      "peakDb": -34.07,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 237.69,
+      "found": true,
+      "dbFlat": -44.53,
+      "dbK": -42.21,
+      "peakDb": -37.58,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 243.68,
+      "found": true,
+      "dbFlat": -48.49,
+      "dbK": -46.14,
+      "peakDb": -41.45,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 249.69,
+      "found": true,
+      "dbFlat": -52.89,
+      "dbK": -50.48,
+      "peakDb": -44.95,
+      "clip": false
+     }
+    ],
+    "90": [
+     {
+      "pitch": 90,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 209.59,
+      "found": true,
+      "dbFlat": -31.31,
+      "dbK": -28.4,
+      "peakDb": -24.32,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 215.59,
+      "found": true,
+      "dbFlat": -33.17,
+      "dbK": -30.35,
+      "peakDb": -25.84,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 221.59,
+      "found": true,
+      "dbFlat": -34.89,
+      "dbK": -32.38,
+      "peakDb": -27.04,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 227.59,
+      "found": true,
+      "dbFlat": -37.74,
+      "dbK": -35.21,
+      "peakDb": -29.93,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 233.68,
+      "found": true,
+      "dbFlat": -43.52,
+      "dbK": -40.41,
+      "peakDb": -35.93,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 239.68,
+      "found": true,
+      "dbFlat": -47.67,
+      "dbK": -44.57,
+      "peakDb": -40.1,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 245.7,
+      "found": true,
+      "dbFlat": -50.88,
+      "dbK": -47.63,
+      "peakDb": -43.22,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 251.69,
+      "found": true,
+      "dbFlat": -54.0,
+      "dbK": -50.88,
+      "peakDb": -46.74,
+      "clip": false
+     }
+    ]
+   },
+   "cc7": {
+    "67": [
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 552.18,
+      "found": true,
+      "dbFlat": -35.4,
+      "dbK": -32.93,
+      "peakDb": -27.63,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 558.18,
+      "found": true,
+      "dbFlat": -37.22,
+      "dbK": -34.54,
+      "peakDb": -30.02,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 564.18,
+      "found": true,
+      "dbFlat": -43.36,
+      "dbK": -41.39,
+      "peakDb": -35.65,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 570.18,
+      "found": true,
+      "dbFlat": -48.11,
+      "dbK": -46.18,
+      "peakDb": -40.39,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 576.18,
+      "found": true,
+      "dbFlat": -53.8,
+      "dbK": -51.57,
+      "peakDb": -45.79,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 582.2,
+      "found": true,
+      "dbFlat": -61.0,
+      "dbK": -58.56,
+      "peakDb": -53.0,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 588.44,
+      "found": false,
+      "dbFlat": -71.67,
+      "dbK": -69.26,
+      "peakDb": -63.63,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 594.19,
+      "found": false,
+      "dbFlat": -87.93,
+      "dbK": -85.37,
+      "peakDb": -80.84,
+      "clip": false
+     }
+    ],
+    "78": [
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 554.09,
+      "found": true,
+      "dbFlat": -33.51,
+      "dbK": -31.83,
+      "peakDb": -28.69,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 560.09,
+      "found": true,
+      "dbFlat": -37.24,
+      "dbK": -35.27,
+      "peakDb": -31.23,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 566.18,
+      "found": true,
+      "dbFlat": -41.88,
+      "dbK": -39.73,
+      "peakDb": -35.43,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 572.19,
+      "found": true,
+      "dbFlat": -46.92,
+      "dbK": -44.73,
+      "peakDb": -40.7,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 578.2,
+      "found": true,
+      "dbFlat": -52.24,
+      "dbK": -50.18,
+      "peakDb": -45.8,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 584.2,
+      "found": true,
+      "dbFlat": -59.45,
+      "dbK": -57.45,
+      "peakDb": -53.28,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 590.49,
+      "found": false,
+      "dbFlat": -70.3,
+      "dbK": -68.23,
+      "peakDb": -63.86,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 596.19,
+      "found": false,
+      "dbFlat": -87.46,
+      "dbK": -85.61,
+      "peakDb": -82.2,
+      "clip": false
+     }
+    ],
+    "90": [
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 556.09,
+      "found": true,
+      "dbFlat": -35.42,
+      "dbK": -32.44,
+      "peakDb": -28.16,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 562.18,
+      "found": true,
+      "dbFlat": -37.13,
+      "dbK": -34.65,
+      "peakDb": -29.86,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 568.18,
+      "found": true,
+      "dbFlat": -41.47,
+      "dbK": -39.04,
+      "peakDb": -33.64,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 574.19,
+      "found": true,
+      "dbFlat": -45.96,
+      "dbK": -43.46,
+      "peakDb": -38.9,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 580.18,
+      "found": true,
+      "dbFlat": -51.73,
+      "dbK": -49.21,
+      "peakDb": -44.3,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 586.21,
+      "found": true,
+      "dbFlat": -59.26,
+      "dbK": -56.82,
+      "peakDb": -51.76,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 592.29,
+      "found": false,
+      "dbFlat": -71.04,
+      "dbK": -68.18,
+      "peakDb": -63.92,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 598.19,
+      "found": false,
+      "dbFlat": -87.98,
+      "dbK": -85.47,
+      "peakDb": -80.32,
+      "clip": false
+     }
+    ]
+   },
+   "refMeanDb": -28.02,
+   "bankMeanDb": -27.7,
+   "trimDb": 0.0,
+   "expectedDb": -27.7,
+   "refDeltaDb": -0.32,
+   "velMeanDb": {
+    "127": -28.3,
+    "112": -29.98,
+    "96": -33.2,
+    "80": -34.99,
+    "64": -40.37,
+    "48": -43.72,
+    "32": -47.69,
+    "20": -51.39
+   },
+   "cc7MeanDb": {
+    "127": -32.4,
+    "112": -34.82,
+    "96": -40.05,
+    "80": -44.79,
+    "64": -50.32,
+    "48": -57.61,
+    "32": null,
+    "16": null
+   },
+   "repeatDeltaDb": -0.28
+  },
+  "violin2": {
+   "label": "Violin 2",
+   "port": "Vn2",
+   "tech": "senza_vel",
+   "techLabel": "Senza Vibrato Velocity (#6)",
+   "ref": [
+    {
+     "pitch": 67,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 34.69,
+     "found": true,
+     "dbFlat": -29.47,
+     "dbK": -28.52,
+     "peakDb": -21.9,
+     "clip": false
+    },
+    {
+     "pitch": 78,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 36.58,
+     "found": true,
+     "dbFlat": -29.61,
+     "dbK": -27.75,
+     "peakDb": -24.21,
+     "clip": false
+    },
+    {
+     "pitch": 90,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 38.58,
+     "found": true,
+     "dbFlat": -31.47,
+     "dbK": -28.5,
+     "peakDb": -24.28,
+     "clip": false
+    }
+   ],
+   "vel": {
+    "67": [
+     {
+      "pitch": 67,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 255.19,
+      "found": true,
+      "dbFlat": -31.6,
+      "dbK": -29.15,
+      "peakDb": -23.69,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 261.08,
+      "found": true,
+      "dbFlat": -32.8,
+      "dbK": -30.35,
+      "peakDb": -25.98,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 267.08,
+      "found": true,
+      "dbFlat": -36.43,
+      "dbK": -34.05,
+      "peakDb": -28.37,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 273.19,
+      "found": true,
+      "dbFlat": -37.98,
+      "dbK": -35.53,
+      "peakDb": -31.16,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 279.08,
+      "found": true,
+      "dbFlat": -43.08,
+      "dbK": -42.07,
+      "peakDb": -34.54,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 285.18,
+      "found": true,
+      "dbFlat": -45.54,
+      "dbK": -43.42,
+      "peakDb": -36.31,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 291.2,
+      "found": true,
+      "dbFlat": -50.4,
+      "dbK": -49.41,
+      "peakDb": -42.15,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 297.19,
+      "found": true,
+      "dbFlat": -53.89,
+      "dbK": -52.85,
+      "peakDb": -45.35,
+      "clip": false
+     }
+    ],
+    "78": [
+     {
+      "pitch": 78,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 257.08,
+      "found": true,
+      "dbFlat": -29.61,
+      "dbK": -27.95,
+      "peakDb": -24.69,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 263.08,
+      "found": true,
+      "dbFlat": -32.01,
+      "dbK": -30.12,
+      "peakDb": -26.21,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 269.09,
+      "found": true,
+      "dbFlat": -35.53,
+      "dbK": -33.35,
+      "peakDb": -29.36,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 275.19,
+      "found": true,
+      "dbFlat": -36.87,
+      "dbK": -35.2,
+      "peakDb": -32.01,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 281.19,
+      "found": true,
+      "dbFlat": -41.67,
+      "dbK": -39.2,
+      "peakDb": -34.04,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 287.19,
+      "found": true,
+      "dbFlat": -45.3,
+      "dbK": -42.74,
+      "peakDb": -36.11,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 293.19,
+      "found": true,
+      "dbFlat": -49.19,
+      "dbK": -46.77,
+      "peakDb": -41.53,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 299.2,
+      "found": true,
+      "dbFlat": -52.86,
+      "dbK": -50.08,
+      "peakDb": -43.72,
+      "clip": false
+     }
+    ],
+    "90": [
+     {
+      "pitch": 90,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 259.08,
+      "found": true,
+      "dbFlat": -30.02,
+      "dbK": -27.59,
+      "peakDb": -22.42,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 265.08,
+      "found": true,
+      "dbFlat": -33.32,
+      "dbK": -30.46,
+      "peakDb": -26.23,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 271.1,
+      "found": true,
+      "dbFlat": -34.8,
+      "dbK": -32.34,
+      "peakDb": -27.0,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 277.08,
+      "found": true,
+      "dbFlat": -37.69,
+      "dbK": -35.25,
+      "peakDb": -31.11,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 283.19,
+      "found": true,
+      "dbFlat": -43.43,
+      "dbK": -40.52,
+      "peakDb": -36.4,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 289.19,
+      "found": true,
+      "dbFlat": -46.6,
+      "dbK": -43.61,
+      "peakDb": -39.6,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 295.2,
+      "found": true,
+      "dbFlat": -50.93,
+      "dbK": -47.83,
+      "peakDb": -43.34,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 301.19,
+      "found": true,
+      "dbFlat": -54.89,
+      "dbK": -51.59,
+      "peakDb": -46.96,
+      "clip": false
+     }
+    ]
+   },
+   "cc7": {
+    "67": [
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 601.68,
+      "found": true,
+      "dbFlat": -33.81,
+      "dbK": -31.19,
+      "peakDb": -26.63,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 607.68,
+      "found": true,
+      "dbFlat": -37.11,
+      "dbK": -34.55,
+      "peakDb": -29.94,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 613.68,
+      "found": true,
+      "dbFlat": -41.27,
+      "dbK": -38.71,
+      "peakDb": -34.2,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 619.68,
+      "found": true,
+      "dbFlat": -46.6,
+      "dbK": -44.14,
+      "peakDb": -39.8,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 625.68,
+      "found": true,
+      "dbFlat": -51.64,
+      "dbK": -49.08,
+      "peakDb": -44.43,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 631.7,
+      "found": true,
+      "dbFlat": -59.15,
+      "dbK": -56.54,
+      "peakDb": -51.96,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 638.0,
+      "found": true,
+      "dbFlat": -69.9,
+      "dbK": -67.34,
+      "peakDb": -62.84,
+      "clip": false
+     },
+     {
+      "pitch": 67,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 643.69,
+      "found": false,
+      "dbFlat": -88.49,
+      "dbK": -86.01,
+      "peakDb": -81.68,
+      "clip": false
+     }
+    ],
+    "78": [
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 603.59,
+      "found": true,
+      "dbFlat": -33.86,
+      "dbK": -31.93,
+      "peakDb": -28.0,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 609.59,
+      "found": true,
+      "dbFlat": -36.87,
+      "dbK": -35.26,
+      "peakDb": -31.66,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 615.69,
+      "found": true,
+      "dbFlat": -41.97,
+      "dbK": -39.8,
+      "peakDb": -35.61,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 621.69,
+      "found": true,
+      "dbFlat": -46.55,
+      "dbK": -44.45,
+      "peakDb": -40.06,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 627.69,
+      "found": true,
+      "dbFlat": -51.46,
+      "dbK": -49.86,
+      "peakDb": -46.19,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 633.7,
+      "found": true,
+      "dbFlat": -60.28,
+      "dbK": -58.11,
+      "peakDb": -54.17,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 639.99,
+      "found": false,
+      "dbFlat": -70.78,
+      "dbK": -68.58,
+      "peakDb": -64.55,
+      "clip": false
+     },
+     {
+      "pitch": 78,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 645.69,
+      "found": false,
+      "dbFlat": -87.46,
+      "dbK": -85.69,
+      "peakDb": -82.54,
+      "clip": false
+     }
+    ],
+    "90": [
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 605.59,
+      "found": true,
+      "dbFlat": -35.35,
+      "dbK": -32.38,
+      "peakDb": -28.24,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 611.59,
+      "found": true,
+      "dbFlat": -37.27,
+      "dbK": -34.76,
+      "peakDb": -29.59,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 617.69,
+      "found": true,
+      "dbFlat": -41.14,
+      "dbK": -38.69,
+      "peakDb": -33.82,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 623.68,
+      "found": true,
+      "dbFlat": -46.29,
+      "dbK": -43.84,
+      "peakDb": -38.46,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 629.69,
+      "found": true,
+      "dbFlat": -53.03,
+      "dbK": -50.14,
+      "peakDb": -46.03,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 635.7,
+      "found": true,
+      "dbFlat": -59.41,
+      "dbK": -56.87,
+      "peakDb": -51.68,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 641.8,
+      "found": true,
+      "dbFlat": -69.87,
+      "dbK": -67.44,
+      "peakDb": -62.3,
+      "clip": false
+     },
+     {
+      "pitch": 90,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 647.69,
+      "found": false,
+      "dbFlat": -89.38,
+      "dbK": -86.4,
+      "peakDb": -82.26,
+      "clip": false
+     }
+    ]
+   },
+   "refMeanDb": -28.26,
+   "bankMeanDb": -27.25,
+   "trimDb": 0.0,
+   "expectedDb": -27.25,
+   "refDeltaDb": -1.01,
+   "velMeanDb": {
+    "127": -28.23,
+    "112": -30.31,
+    "96": -33.25,
+    "80": -35.33,
+    "64": -40.6,
+    "48": -43.26,
+    "32": -48.0,
+    "20": -51.51
+   },
+   "cc7MeanDb": {
+    "127": -31.83,
+    "112": -34.86,
+    "96": -39.07,
+    "80": -44.14,
+    "64": -49.69,
+    "48": -57.17,
+    "32": -67.39,
+    "16": null
+   },
+   "repeatDeltaDb": 0.03
+  },
+  "viola": {
+   "label": "Viola",
+   "port": "Va",
+   "tech": "senza_vel",
+   "techLabel": "Senza Vibrato Velocity (#6)",
+   "ref": [
+    {
+     "pitch": 59,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 42.19,
+     "found": true,
+     "dbFlat": -30.57,
+     "dbK": -29.66,
+     "peakDb": -22.29,
+     "clip": false
+    },
+    {
+     "pitch": 71,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 44.08,
+     "found": true,
+     "dbFlat": -31.46,
+     "dbK": -29.75,
+     "peakDb": -24.51,
+     "clip": false
+    },
+    {
+     "pitch": 82,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 46.08,
+     "found": true,
+     "dbFlat": -27.29,
+     "dbK": -24.6,
+     "peakDb": -20.48,
+     "clip": false
+    }
+   ],
+   "vel": {
+    "59": [
+     {
+      "pitch": 59,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 304.69,
+      "found": true,
+      "dbFlat": -30.49,
+      "dbK": -29.6,
+      "peakDb": -21.96,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 310.58,
+      "found": true,
+      "dbFlat": -31.81,
+      "dbK": -31.02,
+      "peakDb": -23.77,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 316.58,
+      "found": true,
+      "dbFlat": -35.05,
+      "dbK": -34.14,
+      "peakDb": -26.55,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 322.58,
+      "found": true,
+      "dbFlat": -37.03,
+      "dbK": -36.24,
+      "peakDb": -28.83,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 328.58,
+      "found": true,
+      "dbFlat": -37.24,
+      "dbK": -36.75,
+      "peakDb": -28.79,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 334.58,
+      "found": true,
+      "dbFlat": -41.14,
+      "dbK": -40.68,
+      "peakDb": -32.84,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 340.58,
+      "found": true,
+      "dbFlat": -44.65,
+      "dbK": -44.17,
+      "peakDb": -36.17,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 346.58,
+      "found": true,
+      "dbFlat": -48.08,
+      "dbK": -47.68,
+      "peakDb": -39.63,
+      "clip": false
+     }
+    ],
+    "71": [
+     {
+      "pitch": 71,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 306.58,
+      "found": true,
+      "dbFlat": -31.56,
+      "dbK": -28.74,
+      "peakDb": -24.77,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 312.58,
+      "found": true,
+      "dbFlat": -33.9,
+      "dbK": -31.61,
+      "peakDb": -27.02,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 318.58,
+      "found": true,
+      "dbFlat": -35.98,
+      "dbK": -34.27,
+      "peakDb": -29.04,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 324.58,
+      "found": true,
+      "dbFlat": -39.02,
+      "dbK": -36.95,
+      "peakDb": -32.2,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 330.58,
+      "found": true,
+      "dbFlat": -38.02,
+      "dbK": -36.05,
+      "peakDb": -30.89,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 336.69,
+      "found": true,
+      "dbFlat": -41.5,
+      "dbK": -39.56,
+      "peakDb": -34.25,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 342.68,
+      "found": true,
+      "dbFlat": -44.51,
+      "dbK": -42.38,
+      "peakDb": -38.61,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 348.68,
+      "found": true,
+      "dbFlat": -48.13,
+      "dbK": -46.22,
+      "peakDb": -41.41,
+      "clip": false
+     }
+    ],
+    "82": [
+     {
+      "pitch": 82,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 308.58,
+      "found": true,
+      "dbFlat": -27.54,
+      "dbK": -25.09,
+      "peakDb": -21.13,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 314.58,
+      "found": true,
+      "dbFlat": -29.12,
+      "dbK": -26.38,
+      "peakDb": -22.19,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 320.59,
+      "found": true,
+      "dbFlat": -31.91,
+      "dbK": -29.45,
+      "peakDb": -25.48,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 326.69,
+      "found": true,
+      "dbFlat": -34.53,
+      "dbK": -31.82,
+      "peakDb": -27.72,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 332.63,
+      "found": true,
+      "dbFlat": -30.94,
+      "dbK": -28.45,
+      "peakDb": -22.72,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 338.68,
+      "found": true,
+      "dbFlat": -34.61,
+      "dbK": -32.3,
+      "peakDb": -26.42,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 344.68,
+      "found": true,
+      "dbFlat": -37.54,
+      "dbK": -35.08,
+      "peakDb": -29.45,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 350.7,
+      "found": true,
+      "dbFlat": -41.37,
+      "dbK": -39.0,
+      "peakDb": -33.3,
+      "clip": false
+     }
+    ]
+   },
+   "cc7": {
+    "59": [
+     {
+      "pitch": 59,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 651.18,
+      "found": true,
+      "dbFlat": -33.72,
+      "dbK": -32.9,
+      "peakDb": -25.34,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 657.09,
+      "found": true,
+      "dbFlat": -37.8,
+      "dbK": -36.87,
+      "peakDb": -29.58,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 663.09,
+      "found": true,
+      "dbFlat": -41.6,
+      "dbK": -40.69,
+      "peakDb": -32.84,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 669.19,
+      "found": true,
+      "dbFlat": -46.58,
+      "dbK": -45.6,
+      "peakDb": -38.39,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 675.19,
+      "found": true,
+      "dbFlat": -51.66,
+      "dbK": -50.81,
+      "peakDb": -43.04,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 681.21,
+      "found": true,
+      "dbFlat": -58.99,
+      "dbK": -58.24,
+      "peakDb": -51.01,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 687.35,
+      "found": false,
+      "dbFlat": -70.04,
+      "dbK": -69.15,
+      "peakDb": -61.16,
+      "clip": false
+     },
+     {
+      "pitch": 59,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 693.19,
+      "found": false,
+      "dbFlat": -88.5,
+      "dbK": -87.55,
+      "peakDb": -80.26,
+      "clip": false
+     }
+    ],
+    "71": [
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 653.09,
+      "found": true,
+      "dbFlat": -35.72,
+      "dbK": -33.07,
+      "peakDb": -29.11,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 659.09,
+      "found": true,
+      "dbFlat": -38.99,
+      "dbK": -36.64,
+      "peakDb": -32.11,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 665.19,
+      "found": true,
+      "dbFlat": -43.04,
+      "dbK": -40.56,
+      "peakDb": -36.27,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 671.19,
+      "found": true,
+      "dbFlat": -47.25,
+      "dbK": -45.47,
+      "peakDb": -40.47,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 677.21,
+      "found": true,
+      "dbFlat": -53.59,
+      "dbK": -50.99,
+      "peakDb": -47.07,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 683.26,
+      "found": true,
+      "dbFlat": -60.85,
+      "dbK": -59.08,
+      "peakDb": -53.81,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 689.19,
+      "found": false,
+      "dbFlat": -71.61,
+      "dbK": -69.48,
+      "peakDb": -64.75,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 695.19,
+      "found": false,
+      "dbFlat": -89.31,
+      "dbK": -86.44,
+      "peakDb": -82.22,
+      "clip": false
+     }
+    ],
+    "82": [
+     {
+      "pitch": 82,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 655.09,
+      "found": true,
+      "dbFlat": -31.35,
+      "dbK": -28.88,
+      "peakDb": -24.91,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 661.19,
+      "found": true,
+      "dbFlat": -33.37,
+      "dbK": -30.95,
+      "peakDb": -26.73,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 667.19,
+      "found": true,
+      "dbFlat": -38.57,
+      "dbK": -36.11,
+      "peakDb": -32.14,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 673.19,
+      "found": true,
+      "dbFlat": -43.42,
+      "dbK": -40.79,
+      "peakDb": -36.76,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 679.19,
+      "found": true,
+      "dbFlat": -49.14,
+      "dbK": -46.69,
+      "peakDb": -42.73,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 685.21,
+      "found": true,
+      "dbFlat": -56.77,
+      "dbK": -54.31,
+      "peakDb": -50.3,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 691.33,
+      "found": true,
+      "dbFlat": -66.07,
+      "dbK": -63.53,
+      "peakDb": -59.22,
+      "clip": false
+     },
+     {
+      "pitch": 82,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 697.19,
+      "found": false,
+      "dbFlat": -84.11,
+      "dbK": -81.63,
+      "peakDb": -77.38,
+      "clip": false
+     }
+    ]
+   },
+   "refMeanDb": -28.0,
+   "bankMeanDb": -23.91,
+   "trimDb": -3.5,
+   "expectedDb": -27.41,
+   "refDeltaDb": -0.59,
+   "velMeanDb": {
+    "127": -27.81,
+    "112": -29.67,
+    "96": -32.62,
+    "80": -35.0,
+    "64": -33.75,
+    "48": -37.51,
+    "32": -40.54,
+    "20": -44.3
+   },
+   "cc7MeanDb": {
+    "127": -31.62,
+    "112": -34.82,
+    "96": -39.12,
+    "80": -43.95,
+    "64": -49.5,
+    "48": -57.21,
+    "32": -63.53,
+    "16": null
+   },
+   "repeatDeltaDb": 0.19
+  },
+  "cello": {
+   "label": "Cello",
+   "port": "Vc",
+   "tech": "senza_vel",
+   "techLabel": "Senza Vibrato Velocity (#6)",
+   "ref": [
+    {
+     "pitch": 48,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 49.69,
+     "found": true,
+     "dbFlat": -22.38,
+     "dbK": -22.37,
+     "peakDb": -15.63,
+     "clip": false
+    },
+    {
+     "pitch": 60,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 51.59,
+     "found": true,
+     "dbFlat": -27.44,
+     "dbK": -26.78,
+     "peakDb": -21.24,
+     "clip": false
+    },
+    {
+     "pitch": 71,
+     "vel": 127,
+     "cc7": 127,
+     "onset": 53.59,
+     "found": true,
+     "dbFlat": -36.69,
+     "dbK": -33.36,
+     "peakDb": -27.94,
+     "clip": false
+    }
+   ],
+   "vel": {
+    "48": [
+     {
+      "pitch": 48,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 354.18,
+      "found": true,
+      "dbFlat": -22.32,
+      "dbK": -22.3,
+      "peakDb": -15.92,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 360.08,
+      "found": true,
+      "dbFlat": -24.03,
+      "dbK": -24.01,
+      "peakDb": -17.59,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 366.08,
+      "found": true,
+      "dbFlat": -25.98,
+      "dbK": -25.96,
+      "peakDb": -19.52,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 372.19,
+      "found": true,
+      "dbFlat": -28.13,
+      "dbK": -28.11,
+      "peakDb": -21.81,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 378.18,
+      "found": true,
+      "dbFlat": -39.95,
+      "dbK": -39.88,
+      "peakDb": -32.65,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 384.19,
+      "found": true,
+      "dbFlat": -42.56,
+      "dbK": -42.5,
+      "peakDb": -35.34,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 390.2,
+      "found": true,
+      "dbFlat": -45.41,
+      "dbK": -45.34,
+      "peakDb": -38.22,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 396.19,
+      "found": true,
+      "dbFlat": -47.86,
+      "dbK": -47.78,
+      "peakDb": -40.47,
+      "clip": false
+     }
+    ],
+    "60": [
+     {
+      "pitch": 60,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 356.08,
+      "found": true,
+      "dbFlat": -27.28,
+      "dbK": -26.66,
+      "peakDb": -21.19,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 362.08,
+      "found": true,
+      "dbFlat": -28.89,
+      "dbK": -28.27,
+      "peakDb": -22.89,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 368.08,
+      "found": true,
+      "dbFlat": -30.85,
+      "dbK": -30.24,
+      "peakDb": -24.91,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 374.08,
+      "found": true,
+      "dbFlat": -32.85,
+      "dbK": -32.27,
+      "peakDb": -27.22,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 380.08,
+      "found": true,
+      "dbFlat": -37.22,
+      "dbK": -36.72,
+      "peakDb": -30.68,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 386.19,
+      "found": true,
+      "dbFlat": -39.97,
+      "dbK": -39.47,
+      "peakDb": -33.42,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 392.18,
+      "found": true,
+      "dbFlat": -42.27,
+      "dbK": -41.8,
+      "peakDb": -35.89,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 398.19,
+      "found": true,
+      "dbFlat": -44.63,
+      "dbK": -44.15,
+      "peakDb": -38.59,
+      "clip": false
+     }
+    ],
+    "71": [
+     {
+      "pitch": 71,
+      "vel": 127,
+      "cc7": 127,
+      "onset": 358.08,
+      "found": true,
+      "dbFlat": -35.97,
+      "dbK": -32.63,
+      "peakDb": -28.26,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 112,
+      "cc7": 127,
+      "onset": 364.08,
+      "found": true,
+      "dbFlat": -37.96,
+      "dbK": -34.59,
+      "peakDb": -29.98,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 96,
+      "cc7": 127,
+      "onset": 370.08,
+      "found": true,
+      "dbFlat": -40.1,
+      "dbK": -36.77,
+      "peakDb": -31.82,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 80,
+      "cc7": 127,
+      "onset": 376.08,
+      "found": true,
+      "dbFlat": -42.6,
+      "dbK": -39.26,
+      "peakDb": -33.69,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 64,
+      "cc7": 127,
+      "onset": 382.09,
+      "found": true,
+      "dbFlat": -45.84,
+      "dbK": -42.26,
+      "peakDb": -37.0,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 48,
+      "cc7": 127,
+      "onset": 388.19,
+      "found": true,
+      "dbFlat": -48.26,
+      "dbK": -45.26,
+      "peakDb": -40.7,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 32,
+      "cc7": 127,
+      "onset": 394.19,
+      "found": true,
+      "dbFlat": -50.81,
+      "dbK": -47.56,
+      "peakDb": -42.78,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 20,
+      "cc7": 127,
+      "onset": 400.19,
+      "found": true,
+      "dbFlat": -53.46,
+      "dbK": -49.91,
+      "peakDb": -44.71,
+      "clip": false
+     }
+    ]
+   },
+   "cc7": {
+    "48": [
+     {
+      "pitch": 48,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 700.68,
+      "found": true,
+      "dbFlat": -25.49,
+      "dbK": -25.49,
+      "peakDb": -19.2,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 706.69,
+      "found": true,
+      "dbFlat": -28.8,
+      "dbK": -28.8,
+      "peakDb": -22.09,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 712.68,
+      "found": true,
+      "dbFlat": -32.76,
+      "dbK": -32.75,
+      "peakDb": -26.29,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 718.68,
+      "found": true,
+      "dbFlat": -37.56,
+      "dbK": -37.55,
+      "peakDb": -30.99,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 724.68,
+      "found": true,
+      "dbFlat": -43.37,
+      "dbK": -43.36,
+      "peakDb": -36.84,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 730.69,
+      "found": true,
+      "dbFlat": -50.92,
+      "dbK": -50.9,
+      "peakDb": -44.15,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 736.71,
+      "found": true,
+      "dbFlat": -61.42,
+      "dbK": -61.42,
+      "peakDb": -54.91,
+      "clip": false
+     },
+     {
+      "pitch": 48,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 742.69,
+      "found": false,
+      "dbFlat": -79.5,
+      "dbK": -79.48,
+      "peakDb": -72.94,
+      "clip": false
+     }
+    ],
+    "60": [
+     {
+      "pitch": 60,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 702.59,
+      "found": true,
+      "dbFlat": -30.53,
+      "dbK": -29.88,
+      "peakDb": -24.37,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 708.59,
+      "found": true,
+      "dbFlat": -33.69,
+      "dbK": -33.07,
+      "peakDb": -27.58,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 714.59,
+      "found": true,
+      "dbFlat": -37.84,
+      "dbK": -37.19,
+      "peakDb": -31.68,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 720.59,
+      "found": true,
+      "dbFlat": -42.11,
+      "dbK": -41.57,
+      "peakDb": -36.31,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 726.68,
+      "found": true,
+      "dbFlat": -48.4,
+      "dbK": -47.75,
+      "peakDb": -42.22,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 732.69,
+      "found": true,
+      "dbFlat": -55.86,
+      "dbK": -55.23,
+      "peakDb": -49.68,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 738.72,
+      "found": true,
+      "dbFlat": -66.53,
+      "dbK": -65.87,
+      "peakDb": -60.35,
+      "clip": false
+     },
+     {
+      "pitch": 60,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 744.69,
+      "found": false,
+      "dbFlat": -84.2,
+      "dbK": -83.63,
+      "peakDb": -78.49,
+      "clip": false
+     }
+    ],
+    "71": [
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 127,
+      "onset": 704.59,
+      "found": true,
+      "dbFlat": -40.97,
+      "dbK": -37.86,
+      "peakDb": -31.81,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 112,
+      "onset": 710.59,
+      "found": true,
+      "dbFlat": -42.89,
+      "dbK": -39.56,
+      "peakDb": -34.6,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 96,
+      "onset": 716.65,
+      "found": true,
+      "dbFlat": -47.17,
+      "dbK": -43.88,
+      "peakDb": -38.33,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 80,
+      "onset": 722.69,
+      "found": true,
+      "dbFlat": -52.89,
+      "dbK": -49.59,
+      "peakDb": -43.65,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 64,
+      "onset": 728.68,
+      "found": true,
+      "dbFlat": -58.39,
+      "dbK": -54.98,
+      "peakDb": -49.06,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 48,
+      "onset": 734.7,
+      "found": true,
+      "dbFlat": -66.13,
+      "dbK": -63.03,
+      "peakDb": -57.18,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 32,
+      "onset": 740.69,
+      "found": false,
+      "dbFlat": -76.49,
+      "dbK": -73.14,
+      "peakDb": -67.44,
+      "clip": false
+     },
+     {
+      "pitch": 71,
+      "vel": 100,
+      "cc7": 16,
+      "onset": 746.69,
+      "found": false,
+      "dbFlat": -94.85,
+      "dbK": -91.81,
+      "peakDb": -85.7,
+      "clip": false
+     }
+    ]
+   },
+   "refMeanDb": -27.5,
+   "bankMeanDb": -26.26,
+   "trimDb": -1.0,
+   "expectedDb": -27.26,
+   "refDeltaDb": -0.24,
+   "velMeanDb": {
+    "127": -27.2,
+    "112": -28.96,
+    "96": -30.99,
+    "80": -33.21,
+    "64": -39.62,
+    "48": -42.41,
+    "32": -44.9,
+    "20": -47.28
+   },
+   "cc7MeanDb": {
+    "127": -31.08,
+    "112": -33.81,
+    "96": -37.94,
+    "80": -42.9,
+    "64": -48.7,
+    "48": -56.39,
+    "32": -63.65,
+    "16": null
+   },
+   "repeatDeltaDb": 0.3
+  }
+ }
+}

@@ -25,6 +25,13 @@ const vm = require('vm');
 const ROOT = path.resolve(__dirname, '..');
 const args = process.argv.slice(2);
 const opt = (k, d) => { const i = args.indexOf('--' + k); return i >= 0 && args[i + 1] != null ? args[i + 1] : d; };
+// --sweep (2026-09-06, PLAN 1g item 1 + item 5): the VELOCITY / CC7 sweep — role 'ref' = the balance run's own notes (plain
+// technique, three pitches, 127: the consistency check against bank/balance.json), role 'vel' = the same at eight velocities,
+// role 'cc7' = the same at velocity 100 under eight CC7 values; every note carries cc7 (127 unless swept).
+const sweep = args.includes('--sweep');
+const SWEEP_VELS = opt('sweepvels', '127,112,96,80,64,48,32,20').split(',').map(Number);
+const SWEEP_CC7S = opt('sweepcc7', '127,112,96,80,64,48,32,16').split(',').map(Number);
+const cc7Vel = +opt('cc7vel', 100);
 
 const ORDER = ['flute', 'bass_clarinet', 'piano', 'violin1', 'violin2', 'viola', 'cello'];   // D10 score order
 const PLAIN_PREF = ['ord', 'main', 'senza_vel', 'senza_mw', 'staccato'];
@@ -36,43 +43,46 @@ const STRIKE_TECHS = { flute: 'pizzicato', bass_clarinet: 'slap', violin1: 'bart
 const src = fs.readFileSync(path.join(ROOT, 'sandbox', 'instruments.js'), 'utf8');
 const INSTRUMENTS = vm.runInNewContext(src + '\n;INSTRUMENTS;', {});
 
-const noteMs = +opt('note', 1500), gapMs = +opt('gap', 1000), leadMs = +opt('lead', 3000), instGapMs = +opt('instgap', 2000);
+const noteMs = +opt('note', sweep ? 1200 : 1500), gapMs = +opt('gap', sweep ? 800 : 1000), leadMs = +opt('lead', 3000), instGapMs = +opt('instgap', sweep ? 1500 : 2000);
 const preMs = 300;                                                       // CC7 / CC0 / keyswitch lead before each note
 const vels = opt('vels', '127,64').split(',').map(Number);
 const only = opt('only', '').split(',').filter(Boolean);
 const noStrike = args.includes('--nostrike');
 opt('strike', '').split(',').filter(Boolean).forEach(kv => { const [k, v] = kv.split('='); STRIKE_TECHS[k] = v; });
-const out = path.resolve(ROOT, opt('out', 'probes/balance_schedule.json'));
+const out = path.resolve(ROOT, opt('out', sweep ? 'probes/sweep_schedule.json' : 'probes/balance_schedule.json'));
 
 const notes = [];
 let t = leadMs, i = 0;
-const add = (inst, I, tech, role) => {
+const add = (inst, I, tech, role, velList, cc7List) => {
     const lo = tech.rangeLow != null ? tech.rangeLow : I.rangeLow, hi = tech.rangeHigh != null ? tech.rangeHigh : I.rangeHigh;
     const pitches = FRACS.map(f => Math.round(lo + (hi - lo) * f));
-    for (const vel of vels) for (const pitch of pitches) {
+    for (const cc7 of (cc7List || [127])) for (const vel of (velList || vels)) for (const pitch of pitches) {
         notes.push({ i: i++, inst, label: I.label, role, tech: tech.key, techLabel: tech.label, port: tech.port || I.port, ch: tech.channel || 1,
                      cc0: tech.cc0 != null ? tech.cc0 : null, ks: tech.ks != null ? tech.ks : null,
-                     pitch, vel, tPreMs: t - preMs, tOnMs: t, tOffMs: t + noteMs });
+                     pitch, vel, cc7, tPreMs: t - preMs, tOnMs: t, tOffMs: t + noteMs });
         t += noteMs + gapMs;
     }
     t += instGapMs;
 };
 const plan = [];
-for (const role of ['plain', 'strike']) {
+for (const role of (sweep ? ['ref', 'vel', 'cc7'] : ['plain', 'strike'])) {
     if (role === 'strike' && noStrike) continue;
     for (const inst of ORDER) {
         if (only.length && !only.includes(inst)) continue;
         const I = INSTRUMENTS[inst];
         if (!I) { console.error('no recipe for', inst); process.exit(1); }
         let tech;
-        if (role === 'plain') tech = PLAIN_PREF.map(k => I.techniques.find(q => q.key === k)).find(Boolean) || I.techniques[0];
+        if (role !== 'strike') tech = PLAIN_PREF.map(k => I.techniques.find(q => q.key === k)).find(Boolean) || I.techniques[0];
         else { const k = STRIKE_TECHS[inst]; if (!k) continue; tech = I.techniques.find(q => q.key === k); if (!tech) { console.error('no technique ' + k + ' on ' + inst); process.exit(1); } }
         plan.push({ inst, role, tech: tech.key });
-        add(inst, I, tech, role);
+        if (role === 'ref') add(inst, I, tech, role, [127], [127]);
+        else if (role === 'vel') add(inst, I, tech, role, SWEEP_VELS, [127]);
+        else if (role === 'cc7') add(inst, I, tech, role, [cc7Vel], SWEEP_CC7S);
+        else add(inst, I, tech, role);
     }
 }
 const schedule = { generatedAt: new Date().toISOString(), source: 'sandbox/instruments.js', order: ORDER.filter(k => !only.length || only.includes(k)),
-                   strikeTechs: noStrike ? {} : STRIKE_TECHS, plan, leadInMs: leadMs, preMs, noteMs, gapMs, instGapMs, vels, fracs: FRACS, totalMs: t, notes };
+                   strikeTechs: noStrike ? {} : STRIKE_TECHS, trims: Object.fromEntries(ORDER.map(k => [k, INSTRUMENTS[k] && INSTRUMENTS[k].balanceDb != null ? INSTRUMENTS[k].balanceDb : 0])), sweep, sweepVels: sweep ? SWEEP_VELS : null, sweepCc7s: sweep ? SWEEP_CC7S : null, cc7Vel: sweep ? cc7Vel : null, plan, leadInMs: leadMs, preMs, noteMs, gapMs, instGapMs, vels, fracs: FRACS, totalMs: t, notes };
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, JSON.stringify(schedule, null, 1));
 console.log('balance schedule → ' + path.relative(ROOT, out) + ' · ' + notes.length + ' notes · ' + (t / 1000).toFixed(1) + ' s');

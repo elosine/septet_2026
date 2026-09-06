@@ -65,12 +65,14 @@ try {
         $n = $e.n; $chz = $n.ch - 1
         switch ($e.kind) {
             'pre' {
-                [BalanceMidi]::Send($n.port, (0xB0 -bor $chz), 7, 127)
+                $cc7 = 127; if ($n.cc7 -ne $null) { $cc7 = [int]$n.cc7 }   # the sweep's CC7 (2026-09-06); 127 = the residue guard as before
+                [BalanceMidi]::Send($n.port, (0xB0 -bor $chz), 7, $cc7)
                 if ($n.cc0 -ne $null) { [BalanceMidi]::Send($n.port, (0xB0 -bor $chz), 0, [int]$n.cc0) }
                 if ($n.ks -ne $null) { [BalanceMidi]::Send($n.port, (0x90 -bor $chz), [int]$n.ks, 100); Start-Sleep -Milliseconds 40; [BalanceMidi]::Send($n.port, (0x80 -bor $chz), [int]$n.ks, 0) }
             }
             'on'  { [BalanceMidi]::Send($n.port, (0x90 -bor $chz), [int]$n.pitch, [int]$n.vel)
-                    Write-Host ("  {0,6:N2} s  {1,-9} {2,-7} note {3,3} vel {4,3}" -f ($e.t / 1000), $n.label, $n.port, $n.pitch, $n.vel) }
+                    $c7 = 127; if ($n.cc7 -ne $null) { $c7 = [int]$n.cc7 }
+                    Write-Host ("  {0,6:N2} s  {1,-9} {2,-7} note {3,3} vel {4,3} cc7 {5,3} {6}" -f ($e.t / 1000), $n.label, $n.port, $n.pitch, $n.vel, $c7, $n.role) }
             'off' { [BalanceMidi]::Send($n.port, (0x80 -bor $chz), [int]$n.pitch, 0) }
         }
     }
