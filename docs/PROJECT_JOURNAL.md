@@ -140,7 +140,7 @@ at `http://localhost:5000/composer.html` (`.claude/launch.json` → `twopianos`)
   edits their files do not (`trill-curve-test`, `trillBuildTst`) — his to Save or Reload in the app (`tools/unsaved_check.js`).
 
 **Open questions:** Q1 the flute doubling (piccolo vs bass flute; SI2 flute in C until then) · Q5 print format (A3 landscape;
-#4's tabloid is 432 mm) · Q6 the violins' Bartók pizz top (85 provisional; B♭6 and C7 silent; viola / cello unmeasured).
+#4's tabloid is 432 mm) · Q6 the violins' Bartók pizz top (85 provisional; B♭6 and C7 silent; viola / cello unmeasured). · **Q7** (2026-09-06, his "lowest note on bcl?"): the bass clarinet's bottom is sounding B♭1 = MIDI 34 (the low-C instrument; the Xsample zone and the recipe agree) — confirm Tempus Konnex's player has a low-C instrument; the score should say so.
 
 **Blockers:** none.
 
