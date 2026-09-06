@@ -116,8 +116,9 @@ cumulative — a §5 gotcha to promote). **CN-29** (2026-09-06): the morph tool'
 promote to §4 at session end: every morph remark goes there, the tool adjusted for the current use now, revised into an all-purpose
 tool after this piece or the next); the morph event's four elements noted for PLAN 1f. **PLAN 1g** (2026-09-06, talk of the volume situation, §115 to come): balanced dynamics for curve-driven playback — the rule (curve
 height = ppp → fff for the notation, velocity 65 → 127 for the MIDI; → D23), the trill on the ordinary voice, the velocity mode, the
-sweep in his rack window, the per-instrument remap anchored on the violins, the proof, then crescendos and the morph events. Next:
-1g's steps 1–3 on his go, then phase 5 (the weave).
+sweep in his rack window, the per-instrument remap anchored on the violins, the proof, then crescendos and the morph events. **PLANNING_METHOD.md** written from this session's way of building 1g
+(state and restate · the top line · one step at a time: goal → sub-steps → into the plan; the fixed formats). Next: 1g on his go
+(4, 3, then the rack session for 1 and 5, 2's writing any time), then phase 5 (the weave).
 
 **Next up:** the composer's pick: (a) his hands on the trills and the curve windows — what bites; then **phase 4** (free trills,
 edge stretching — small) and **phase 5** (the weave) on his go; the notation of trills at 2a. (b) The chain by hand from #32.

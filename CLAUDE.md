@@ -41,6 +41,7 @@ time comes."* Keep the conversation at the conceptual level; consult the code yo
 - **Session state, decisions:** `docs/PROJECT_JOURNAL.md` — §2 Resume Here first
 - **The lab journal:** `docs/RUNNING_LOG.md` — append-only, written as the work happens
 - **The sketch pad:** `docs/COMPOSITION_NOTES.md` — the composer's musical ideas, verbatim
+- **Building a plan item / analyzing an issue for the plan:** `docs/PLANNING_METHOD.md` — three phases, fixed formats
 - **Deferred, real but not now:** `docs/NITS.md`
 - **Working preferences & routines:** `docs/HOW_WE_WORK.md` · `docs/SESSION_PROTOCOL.md`
   · `docs/SESSION_HYGIENE.md` (clear between chunks; the docs are the handoff)

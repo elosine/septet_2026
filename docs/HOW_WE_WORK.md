@@ -24,6 +24,9 @@ Canonical procedures: `docs/SESSION_PROTOCOL.md`. The journal remembers so you d
 
 The single living plan. Stable IDs (`1c` stays `1c` forever), statuses, one-line whys.
 
+**Building a plan item, or analyzing an issue that ends up in the plan: `docs/PLANNING_METHOD.md`** (2026-09-06) — state and
+restate until the understanding is shared · the top line · one step at a time: the goal, then the sub-steps, then into the plan.
+
 **Talk to it in plain language:**
 - *"show me the plan for 1"* · *"what's left in 0?"*
 - *"what did we decide about X, and why?"* (→ journal §4)
