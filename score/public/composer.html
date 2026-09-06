@@ -92,7 +92,8 @@
        translucent, click-through except for their dots and lines; Points mode makes them catch clicks. */
     .curveLane { background: rgba(247,245,239,0.35); z-index: 39; display: none; border-top: 1px dashed; border-bottom: 1px dashed; pointer-events: none; }
     .curveLane.open { display: block; }
-    .curveLane.points { pointer-events: auto; cursor: crosshair; }
+    /* Points mode: a pencil, its tip the hotspot (composer 2026-09-05: "something with a point"); crosshair if a browser refuses it */
+    .curveLane.points { pointer-events: auto; cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24'><path d='M5 15 L17 3 L21 7 L9 19 Z' fill='%23333' stroke='%23fff' stroke-width='1'/><path d='M2 22 L5 15 L9 19 Z' fill='%23F04B00' stroke='%23fff' stroke-width='1'/></svg>") 2 22, crosshair; }
     .curveLane .contentGroup circle, .curveLane .contentGroup path.curveHit { pointer-events: auto; }
     .curveLane .laneLabel { left: auto; right: 8px; pointer-events: none; padding: 1px 5px; border-radius: 2px; background: rgba(247,245,239,0.75); font-size: 10px; }
     #laneCurveA { top: 57.1429%; height: 14.2857%; border-color: #C2410C; } #laneCurveA .laneLabel { color: #C2410C; }
