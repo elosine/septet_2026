@@ -3662,7 +3662,7 @@ cello trill at G#5 with a Bartók attack → the label's ⚠ (no sample at Ab5),
 Composer: *"can you check the str[ikes] in my saved score and see if there are any currently in the score that are out of range?"* →
 the 16 of §122 in `scores/piece-septet.json` (saved 14:59) → *"can you fold those 16 notes down for me, just the strikes"*.
 
-**Done** (the first edit of his score by the AI, at his word): `scores/piece-septet-v1.10-beforeFold.json` written byte for byte first; then
+**Done** (the first edit of his score by the AI, at his word): `scores/piece-septet-v1.9-beforeFold.json` written byte for byte first; then
 each of the 16 notes down by octaves until inside its technique's measured range — one octave was enough for all: violin 1 Bartók
 A6 → A5, F#6 → F#5; violin 2 Bartók C7 → C6, F#6 → F#5 (twice); viola gettato F6 → F5 (twice), A6 → A5, F#6 → F#5, G6 → G5;
 cello gettato B5 → B4 (twice), A5 → A4, F#5 → F#4, G#5 → G#4, A#5 → A#4. Proved: the same 355 objects, 16 changed, nothing but
@@ -3672,7 +3672,7 @@ the pre-fold state. The score files stay his, uncommitted.
 
 ## §124. "fold the two bass clarinet trills too" — done: their written pitches set to where the app already folded them
 
-Composer: *"fold the two bass clarinet trills too"*. Snapshot `scores/piece-septet-v1.11-beforeTrillFold.json` first; then the app's own fold
+Composer: *"fold the two bass clarinet trills too"*. Snapshot `scores/piece-septet-v1.9-beforeTrillFold.json` first; then the app's own fold
 (the pair by octaves into the technique's range 34–65): zn-967 at 68.79 s E4 → E3 (the pair F#3), zn-1010 at 85.35 s G#5 → G#3 (the
 pair A#3) — the sound unchanged, the labels honest now; 2 objects changed of 355; `range_check`: every note and trill inside its range.
 For him: Reload before anything else. The score files stay his, uncommitted.
