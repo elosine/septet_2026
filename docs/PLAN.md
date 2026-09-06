@@ -424,6 +424,26 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        height, the cello within its own scatter.
   *Why:* the piece's second material is curve-driven; if the curve's bottom is a different loudness on each instrument, no ensemble
   balance can be composed — and the rendering must never leak into the notation.
+- **1h — The acceleration calculator and the drawer's run dials: any feel of the rush by dialing, the math a module for every panel** — `built 2026-09-06 (RUNNING_LOG §125–129; CN-30)`
+  *(composer, 2026-09-06: "I'd like to try another variety that's more gradual … a long and gradual ramp up to the end" · "make sure we
+  have all the right dials and numbers in there so that when I am ready to calibrate a certain flow then we can" · "modularize the math
+  part of it … reuse the acceleration calculator for other types of sounds and other panels")*. The top line agreed 2026-09-06; the
+  step-by-step skipped at his word ("a simpler plan").
+  1. **The calculator module** — `built (§129)`: `score/public/accel_calc.js`, the math alone, page and tools alike — the two ends in
+     either order; the length by any one of steepness / count / duration; the shapes: geometric (U13's law, reproduced to a nanosecond),
+     curve (the tuba dial: bloom ← even → surge), S-curve, two-phase, late rush, linear ms; jitter (fixed or ramped, seeded); a hold at
+     the landing; a level ramp with its own curve; a mirror. `tools/accel_calc_check.js` (52 checks, PASS).
+  2. **The drawer reads it** — `built (§129)`: the accel block's `run` menu and its dial, `length` by steep / notes / ms with the one in
+     charge outlined, jitter, hold, mirror, vel → vel (through 1g's remap); decelerations (`→ last` above the gap); the strip, the
+     readout and Hear follow; takes from before the dials get the defaults.
+  3. **Verify and document** — `done (§129)`: on a copy of his piece with real DOM events (his take 34-a unchanged: 18 notes · 4201 ms ·
+     steep 0.842; an insert at 107.807 s exact to the millisecond); STRIKES_TOOL §W marked built; committed and pushed.
+  4. **Later, on his go:** the calibration ladder (his words → the dial's numbers, done the way the tuba's dens8 ladder was); other
+     panels adopting the module — the trills, the compiler's clouds (its own copy of the law stays until touched; NITS), the morph
+     events.
+  *Result when done:* any feel of the rush is reachable by dialing, and one calculator serves every panel that accelerates. *Why:* the
+  drawer's one shape was the crash (§125–126: half the notes in the last quarter whatever the boxes said); the piece's next section
+  (107.81 s, CN-30) wants a ramp heard all the way; a module because the same math will drive other sounds and panels.
 - Sketch pad: `docs/COMPOSITION_NOTES.md` — the opening is already there (ensemble attack →
   curve-based tremolos with fp entries → tremolo fugue → density-build sound mass).
 - Tuba engines to pull per need: `compiler.js` swell clouds and grain envelopes (present

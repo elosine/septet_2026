@@ -81,3 +81,9 @@
 - **2026-09-06 — the staccato family's rings are capped** at the ranges probe's 1.15 s window on many keys (the bass clarinet's
   staccato, the strings' staccato / spiccato / marcato staccato, the piano's harmonics): the bank's length is a lower bound there.
   A longer-slot probe of those alone if the IR ever needs the exact tail.
+- **2026-09-06 — the drawer's level ramp (PLAN 1h) sends the remapped velocity without the per-note CC7 trim** the trill engine adds
+  on the deterministic samplers (§119): on a ramped strike run the flute and the piano may sit up to one layer step loud. Add the trim
+  when the drawer's play path gets per-note CC7 (its notes are one-shots at fixed velocities today).
+- **2026-09-06 — the compiler's own accel (`compiler.js` `spec.accel`, the tuba's clouds) keeps its copy of the law** the calculator
+  now carries (`accel_calc.js`; the `raw` route reproduces it with `curveZero: −0.4`): route it through the module when the clouds are
+  next touched, so one law lives in one place.

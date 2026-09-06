@@ -98,6 +98,10 @@ own server (:5300); the AI built at his word, one chunk at a time:
   the gettato tops B6 / E6 / E5; `MEASURED_RANGES` in the recipe; `tools/range_check.js`; the trill label's attack warning.
 - **His score edited at his word (§123–124):** 16 out-of-range strike notes and the two bass clarinet trills folded down in
   `scores/piece-septet.json` (snapshots `piece-septet-v1.9-beforeFold` / `-beforeTrillFold`); the checker clean.
+- **PLAN 1h built (§125–129, CN-30):** the acceleration calculator (`score/public/accel_calc.js`, the math alone, page and tools;
+  `tools/accel_calc_check.js`, 52 checks) and the drawer's run dials — `run` (six shapes, the tuba curve dial among them), its dial, the
+  length by steep / notes / ms, jitter, hold, mirror, a level ramp through the remap, decelerations; his take 34-a unchanged. No
+  calibration (his word). **107.81 s = the next section's start** (CN-30). CN-31: Lake George's pointillistic multitempo section.
 - **Process:** `docs/PLANNING_METHOD.md` (state and restate → the top line → one step at a time: goal, sub-steps, into the plan),
   the user-level `/plan-item` skill and trigger lines; `docs/MORPH_NOTES.md` (D22, a standing practice); CN-28 (the form's
   middle: strikes with morph chords → PLAN 1f; patterned / call-and-response strikes) and CN-29 (the morph event's four elements).
@@ -106,8 +110,8 @@ own server (:5300); the AI built at his word, one chunk at a time:
 windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
 
 **NEXT STEPS · MODEL · CLEAR:**
-1. ☑ 0a · 0b · 0d · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1a · 1b · 1c (U1–U13b) · 1e phases 0–4 · 1g DONE and pushed.
-2. ► **The composer composes and tests** (any model): the trills at the new loudness, the folded strikes, the piece from #33.
+1. ☑ 0a · 0b · 0d · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1a · 1b · 1c (U1–U13b) · 1e phases 0–4 · 1g · 1h DONE and pushed.
+2. ► **The composer composes and tests** (any model): the trills at the new loudness, the folded strikes, the piece from #33; **the run's dials at 107.81 s (1h)** — the dials adjusted together on his report, the calibration ladder on his go.
 3. **TRILLS_TOOL phase 5, the weave** (Fable) on his go; **1f the morph events** (talk first, PLANNING_METHOD; MORPH_NOTES §2)
    when he reaches section 2; the notation of trills at 2a.
 4. **0c / 0h** (the recipes' completion; the phase-0 gate) when the music asks; 0d.3 / 0d.4 remain as the remainder.
@@ -115,7 +119,7 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
 **Open at session end** *(mid-session checkpoint, 2026-09-06 ~15:30, for an AI that has never seen this conversation):*
 - **Task and state:** the composer's testing pass on the piece with every tool of this session; nothing half-built; everything
   verified on the throwaway server and pushed. His app needs a hard reload (CTRL+SHIFT+R) then the app's Reload for the folds.
-- **Latest deliverable:** the folds in his saved score (§124) and 0d's ranges (§122); `bank/technique_ranges.json`.
+- **Latest deliverable:** PLAN 1h (§129) — the acceleration calculator and the drawer's run dials, verified on a copy, pushed; before it the folds (§124) and 0d's ranges (§122).
 - **Next concrete step:** read his report; for a bug, look at the data first (his working copy / the recipe / the bank), fix,
   verify on a `zz-ai-*` copy, journal, commit, push. For a planning ask, run `/plan-item` (or follow
   `docs/PLANNING_METHOD.md`) — one topic, the answer first, the goal before the method.
@@ -130,7 +134,7 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   the recording's items removed, cursor to 0); the probe kit: `tools/balance_schedule.js` (--sweep, --sweep2, --proof
   [--repeat], --held, --ranges) → `probes/balance_probe.ps1` → `probes/analyze_balance.py` (--sweep, --proof, --ranges,
   --bank, --tol); the self-tests `probes/selftest_sweep.py` / `selftest_ranges.py`.
-- **Pending the composer:** his verdict on the trills at the new loudness and on a crescendo drawn on a note · the cello's
+- **Pending the composer:** his hands on the run's dials at 107.81 s (1h; the calibration ladder on his go) · his verdict on the trills at the new loudness and on a crescendo drawn on a note · the cello's
   attack (the marcato has a sample at G#5; lengthen the attack ms if it still does not register) · "the range walk" (his
   reminder, meaning unconfirmed) · the plucked piano silent in the rack (NITS) · the 0j piano trim +7 vs +5.3 (NITS; the remap
   absorbs it) · CN-2 (piccolo vs bass flute) · Q6 closed by the measurement (the Bartók tops) · Q7 (the low-C bass clarinet).

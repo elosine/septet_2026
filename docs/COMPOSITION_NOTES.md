@@ -796,3 +796,44 @@ today — every remark about the morph tool goes there (a standing practice, in 
 now and revised into an all-purpose tool after this piece or the next. The requirement: a morph event's four elements — the
 expansion of pitch to expand beating · the re-breath / re-bow · the crescendo · the pairs, each with its own glissando — in short
 events (one breath) and long ones (with re-breaths). Nothing built; the talk comes with the section (PLAN 1f).
+
+---
+
+## CN-30 · 2026-09-06 — 107.81 s holds the next section's start; a second, more gradual acceleration for the strikes drawer
+
+> *"107.81 just hold that time for the beginning of next section; Feb, I'd like to do another acceleration in the strikes drawer.
+> And when we created it, the acceleration option, spreading out a strike in the form of an acceleration, we only had one
+> variety. So I'd like to try another variety that's more gradual. So I can't remember which one that this is potentially the
+> geometric one. where there's a long and gradual ramp up to the end. Let's discuss which one this should be or if we should
+> build several now, and then what steps are necessary to build it."*
+> *(2026-09-06, session 4, after the mid-session checkpoint; speech-to-text, content untouched — "Feb" is the transcription's,
+> read as "then")*
+
+**AI reading (not the composer's words):** two things. (1) A form marker: **107.81 s is where the next section begins** — held
+here as a number, nothing placed. (2) A request for the strikes drawer: a **second acceleration shape, more gradual than U13's**
+— a long ramp felt all the way to the end, rather than a still head and a collapse. "The geometric one" is slippery because the
+word names two different shapes in this repo: the drawer's geometric (each gap a fixed fraction of the one before — the current
+run) and the tuba compiler's "geo" (the speed growing by a fixed percentage per second — the even-sounding ramp). The talk
+follows the planning method; STRIKES_TOOL §W already lists candidate curves; which shape, and one dial or several entries, is his
+to say. The discussion: RUNNING_LOG §125.
+
+---
+
+## CN-31 · 2026-09-06 — Lake George (the next piece): the pointillistic section on multitempos, the machinery abstracted, figures per beat, the bouncing balls as each player's tempo
+
+> *"This is a composition note for the Lake George piece. and continues the idea of pointillistic section using multitempos or
+> phase shifted tempos and lots of rests. So, also, I want to abstract that machinery so I can use it in various contexts. and then
+> find a way to easily find patterns that I like. I think it's most of the way there already. And then have a way to add different
+> figures per beat. So right now it's just quarter notes, but it could be two eighth notes or a triplet or a dotted eighth and a
+> sixteenth, etcetera. And then for the Lake George piece, I'll still give them the tempo meter, uh, the bouncing balls, which will
+> give them the tempo. And each player will still be in their own tempo, but a pulsed single tempo and then can play Or I should say
+> even if there's lots of rest, they can still see the temple they're playing in."*
+> *(2026-09-06, session 4, sent while PLAN 1h was being built; speech-to-text, content untouched — "temple" read as "tempo")*
+
+**AI reading (not the composer's words):** four things for Lake George, continuing the 2026-09-06 texture note above. (1) The
+pointillistic section runs on the multitempo / phase-shifted machinery with many rests. (2) That machinery is to be abstracted, as
+the acceleration calculator was today (1h): the math apart from its panel, usable in other contexts. (3) A way to find the patterns
+he likes quickly — "most of the way there already" (the tuba's multitempo and pulse panels are in this port). (4) Figures per beat,
+not only quarter notes: two eighths, a triplet, a dotted eighth and a sixteenth, and so on. For the notation: each player keeps their
+own tempo, a single pulsed tempo shown by the bouncing balls (the gravitational conductors), so the tempo stays visible through the
+rests. Nothing planned or built — a note for the next piece's sketch pad, carried in the memory too.

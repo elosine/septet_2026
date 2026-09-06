@@ -3676,3 +3676,155 @@ Composer: *"fold the two bass clarinet trills too"*. Snapshot `scores/piece-sept
 (the pair by octaves into the technique's range 34–65): zn-967 at 68.79 s E4 → E3 (the pair F#3), zn-1010 at 85.35 s G#5 → G#3 (the
 pair A#3) — the sound unchanged, the labels honest now; 2 objects changed of 355; `range_check`: every note and trill inside its range.
 For him: Reload before anything else. The score files stay his, uncommitted.
+
+## §125. "another acceleration in the strikes drawer … another variety that's more gradual … potentially the geometric one": the run's shape read in time, the two meanings of "geometric", the tuba dial put to him
+
+Composer (CN-30, verbatim there): *"107.81 just hold that time for the beginning of next section"* · *"I'd like to do another
+acceleration in the strikes drawer … we only had one variety. So I'd like to try another variety that's more gradual. So I can't
+remember which one that this is potentially the geometric one. where there's a long and gradual ramp up to the end. Let's discuss
+which one this should be or if we should build several now, and then what steps are necessary to build it."* A planning ask →
+PLANNING_METHOD phase 1, the data first.
+
+**Read:** `strike_drawer.js` `accelSeq()` (U13, §91): each gap = steep × the one before (0.85), from the first gap to the floor (45 ms),
+k gaps computed and the ratio re-fitted so the last gap is exactly the floor — geometric PER NOTE. In time that law is a gap
+shrinking by the same milliseconds every second (g(t) = g1 − (1 − r)·t): a still head and a collapse. `compiler.js` (the tuba port):
+`spec.accel` with `gapAt(u) = gapStart · (gapEnd / gapStart)^warp(u)` over a typed duration and a one-dial `curve` (k = 4·(curve +
+ACCEL_CURVE_ZERO), bloom < 0 < surge, the zero re-centred on the composer's own "even" on 2026-08-12, dens8 ladder — his
+perceptual-linear sat at raw −0.4; the tuba COMPOSER_LOG's "can we get to ONE dial?"); the compiler's density legs call the
+equal-%-per-second growth **'geo'**. STRIKES_TOOL §W (2026-09-05, "keep a note or a plan … the different curves, the feel of the
+rush"): the candidate list — linear, late rush, S-curve, two-phase, jitter, reverse — and the implementation note (`gapsFor(curve,
+g1, floor, k, params)`; linear and S need k or a duration). CN-18: the fixed landing is the urgency he asked to keep.
+
+**The naming hazard:** "geometric" names two shapes here — the drawer's (a fixed fraction per NOTE: the crash) and the tuba's 'geo'
+(a fixed percentage per SECOND: the ramp heard all the way). His "potentially the geometric one" fits the tuba's word.
+
+**The numbers** (`scratchpad/accel_shapes.js`: the same first gap 542, last gap 45, duration 3.3 s; only the gap's path differs):
+
+| shape | notes | notes per quarter of the time | gap at ⅓ · ½ · ⅔ of the time |
+|---|---|---|---|
+| current — geometric per note (equal ms per second) | 16 | 2 / 2 / 4 / 8 | 376 · 294 · 211 ms |
+| tuba 'geo' — equal % per second (raw dial 0) | 26 | 2 / 4 / 7 / 13 | 236 · 156 · 103 |
+| tuba dial 0 — his "even" of 2026-08-12 (raw −0.4) | 35 | 3 / 5 / 11 / 16 | 149 · 97 · 70 |
+| tuba dial +0.5 — surge (a still head, then the rush) | 24 | 2 / 3 / 7 / 12 | 263 · 177 · 115 |
+| tuba dial −0.5 — bloom (the ramp early, gradual late) | 45 | 3 / 10 / 15 / 17 | 91 · 64 · 53 |
+
+The current run keeps half its notes for the last quarter and is still at 294 ms at half time — the speed has not doubled when
+half the run is gone. Every dial shape has the speed-up under way from the first third.
+
+**Caveat put with it:** the dial's zero was calibrated on long density clouds (41 → 193 s ramps, fusion above ~4/s); a 3 s run of
+single strikes ending at 22/s is another listening — the zero is a start, his ear re-decides.
+
+**Put to him (the answer first):** the run he has is the crash; what he describes is the tuba family; build ONE dial (a new shape
+`ramp` beside the current one, first gap and floor as now, the duration typed — the ms box alive again for it — the round robin
+untouched, the current shape kept because it is in the score and CN-18's landing law lives in it) rather than several menu entries.
+The one question only he can answer: the feel at 107.81 — (a) even all the way, (b) a still head then a rush, spread wider than
+now, (c) build the dial and let the ear decide (recommended). The steps (phase 2) wait for his answer. **107.81 s** held as the next
+section's start (CN-30). Nothing built.
+
+## §126. "We are able to use the current controls, or are you recommending we build some additional controls?" — measured: the boxes change the length, not the shape
+
+Composer: *"Clarify for me, please. to achieve a gradual speeding up. We are able to use the current controls, or are you recommending
+we build some additional controls into the strikes drawer?"*
+
+**Measured** (`scratchpad/accel_current_controls.js`, the drawer's own law — k gaps, the ratio re-fitted to land on the floor):
+
+| box moved | run | notes | per quarter of the time (%) | gap at half time |
+|---|---|---|---|---|
+| steep 0.85 (as built) | 3.3 s | 17 | 13 / 13 / 25 / 50 | 329 ms |
+| steep 0.90 | 4.9 s | 25 | 13 / 13 / 21 / 54 | 316 |
+| steep 0.95 | 9.9 s | 50 | 12 / 12 / 22 / 53 | 306 |
+| steep 0.98 | 24.9 s | 125 | 10 / 15 / 22 / 53 | 295 |
+| first gap 2000 (steep 0.85) | 12.9 s | 25 | 8 / 13 / 17 / 63 | 1034 |
+| → last 180 (steep 0.85) | 2.3 s | 8 | 29 / 14 / 29 / 29 | 375 |
+
+(first gap 542, → last 45 unless stated). **The finding:** the steep box scales the run's length and count and leaves the shape in
+time untouched — half the notes in the last quarter, the gap still ~300 ms at half time, whether the run is 3 s or 25 s (the law
+g(t) = g1 − (1 − r)·t is linear in time for every r; the per-quarter share depends only on g1 ÷ floor). A larger first gap makes it
+MORE back-loaded (63 % in the last quarter at 2000). Raising the landing evens the share (29 / 14 / 29 / 29 at 180) but the run never
+gets fast — the rush is gone, not spread. **Answer given:** the current controls make the run longer, not gradual; a gradual
+speeding-up is a different law, so it is one new control — a curve in the accel block (the law already in `compiler.js`), first gap
+and landing as now, the duration typed. A build, small. Offered first: steep 0.95 as a 30-second test of "longer", to hear that it
+still crashes.
+
+## §127. The strategy restated by him — controls in the drawer, then subjective language and the AI puts in the numbers — confirmed, with two refinements
+
+Composer: *"What it sounds like is that we can add some additional controls into the strikes drawer and cover most cases. So I can
+then dial in the variety of different accelerations or decelerations. And with those controls built, I can use subjective language,
+and AI can help me put in the right numbers. First, let's establish this. This is a sound strategy or were you proposing something
+different? Or is there a better approach?"*
+
+**Read back:** the same strategy as §125's proposal — one curve control in the accel block (the tuba law), the first gap and the
+landing as now, the length typed, the current shape kept; then his words → the AI's numbers. **Two refinements offered:** (1) the
+words-to-numbers step is a calibration, done as the tuba's dens8 ladder was — the AI generates a short ladder of runs along the dial,
+he names what he hears, the names become the vocabulary (a "bloom / even / surge" of the strikes); (2) decelerations come with it if
+the first and the last gap are both free — today `accelSeq` makes a single gap when the first gap ≤ the floor (`k = 1`), so a
+ritardando is not reachable now; one line of scope. **The honest limit:** a one-dial family cannot make §W's S-curve (a roll that
+lands) or the two-phase knee (a flat head at one gap, then the rush) — those need a second number; his ear decides later whether
+they are wanted. **The alternative named and set aside:** a hand-drawn curve driving the rate (piece #2's accel/decel model, a curve
+window as the trills use) — every shape reachable, but heavier per strike and worse for subjective language; it waits until the
+dial fails him. Awaiting his confirmation before the top line (phase 2).
+
+## §128. "I don't need to do too much calibration right now … I just wanna make sure we have all the right dials and numbers in there … modularize the math part": the concept fixed, the numbers listed complete, the top line put
+
+Composer: *"Okay. No. I don't need to do too much calibration right now. in fact, I don't want to spend time on that currently. I'm
+just trying to establish the concept. So I just wanna make sure we have all the right dials and numbers in there so that when I am
+ready to calibrate a certain Flow then we can. I just don't wanna leave anything out in this build. even though I suppose we can add
+it later. So just confirm this, and then I'll add some additional requirements. So it would be great if we could modularize the math
+part of it. So in other words, I can reuse the acceleration calculator for other types of sounds. and another panels. Then draw up
+the build for me if everything above checks out. and I will build the current acceleration when it's done, and we can adjust the
+dials together. I just wanna make sure the architecture is in place."*
+
+**Decided (his):** no calibration ladder now; the build carries every dial so a calibration can happen later; the math is a module —
+an acceleration calculator reusable by other sounds and panels; he builds the current run himself when it is done and the dials are
+adjusted together. **The numbers, listed complete for him** (drawn from U13, STRIKES_TOOL §W, the tuba compiler's `spec.accel`, piece
+#2's accel/decel zone, CN-13): the two ends (first gap, last gap, either order) · the length by any one of duration / count /
+steepness, the other two solved · the shape family and its dials (geometric per note = the current run; the tuba curve dial bloom ←
+even → surge; the S-curve with its landing share; the two-phase knee; the per-note linear and power shapes of §W) · jitter (a
+percentage, fixed or ramped start → end, seeded) · a hold at the landing rate · a level ramp (start, end, its own curve; a 0–1 per
+note for the remap or ignored) · a mirror (the run played backwards in time — not the same as swapping the ends). Drawer-side and
+untouched: the re-attack rule, the dealing seed, the re-deal, the round robin. **The top line put to him (phase 2):** 1 the
+calculator module · 2 the drawer reads it (the dials, the current run unchanged, decel possible, strip / readout / Hear follow) · 3
+verify on a copy and document · 4 later on his go: the calibration ladder, the other panels adopting the module. Awaiting his order.
+
+## §129. PLAN 1h built: the acceleration calculator (`score/public/accel_calc.js`) and the drawer's run dials — verified on a copy of his piece; his take 34-a unchanged
+
+Composer: *"That is good. This is a simpler plan so we can skip the step by step on this one … are you ready for the build?"* →
+*"go ahead and continue until it is ready for me to try, ty"*. The plan item written first (PLAN 1h), then the build in one chunk.
+
+**Built.** `score/public/accel_calc.js` (UMD like `velocity_remap.js`: `AccelCalc` on the page, `require` in node) — `run(spec)`: the
+two ends in either order; the length by any ONE of ratio / count / duration, the other two solved (a ratio → the count by U13's rule; a
+duration in the index domain → the nearest count, then the interior gaps scaled so the run lands exactly; in the time domain → the
+count by stepping the law, then a fixed-point solve of the gaps read at their midpoints in time, the ends exact, the interior scaled);
+the shapes (`SHAPES`, one source for the menu): geometric = U13's law verbatim · curve = the tuba dial, time domain, the `exp` warp
+k = 4·(curve + curveZero), the zero 0 here (the compiler's −0.4 is its clouds' calibration; his to set for the strikes later) · S-curve
+(the `s` warp, ease) · two-phase (`knee`, the head's share) · late rush (`power`) · linear ms (`lin` interpolation) · `raw` for the tools;
+jitter (σ per gap, fixed or ramped, mulberry32 + Box–Muller, seeded); hold (gaps or ms at the last gap); mirror (the gaps reversed);
+levels (start → end along the run's time, the tuba's level curve); `describe(res)`; `countForRatio`. `tools/accel_calc_check.js`,
+52 checks — §91's numbers reproduced (107.2 → 7 notes · 435 ms · steep 0.841; 241 → 12 · 1314; 542 → 17 · 3296), the old formula
+matched on 150 settings to 5.8e-10 ms, every shape × both directions × the three lengths with exact ends and monotone gaps, the dial's
+order (the gap at half time: bloom 61 < even 165 < surge 415 ms), the tuba zero reproducing §125's 35 notes, hold, jitter, mirror,
+levels — PASS. **The drawer** (`strike_drawer.js`): `accelSpec()` from the panel; `accelSeq()` takes its onsets from the calculator —
+the dealing, the re-attack rule and the round robin untouched, the tail check at the run's fastest gap; the accel block gains `run`
+(the shape menu), its dial row (label, range and value from the shape), `length` — steep / notes / ms with the one in charge outlined
+(type any, the other two follow; the ms box alive in accel now), jitter % → %, hold gaps, mirror, vel → vel curve (a level ramp in the
+ensemble's scale through 1g's remap per instrument, `remapVel`; blank = the strike's own velocities); `→ last` above the gap = a run
+that slows; `ACCEL_DEFAULTS` for the cfg and for takes saved before the dials (`applyState`). `composer.html` loads the module before
+the drawer. The harness lesson of §119 again, sharpened: this shell's heredoc also refuses a text carrying a quoted single letter
+(the module's shape key and this entry's error text both did) — such files go through the file tool, then `cat >>`.
+
+**Verified on the throwaway server** (:5301, `zz-ai-1h` = a copy of his piece, its working copy too, both deleted; real DOM change
+events; zero console errors in the three fresh load blocks — one old syntax error sits once in the pane's cumulative buffer, older
+than this session's loads and not from any of the page's 18 scripts, which all parse in the browser): his take `34-a` (strike #34,
+first gap 700) → 18 notes · 17 gaps · 4201 ms · geometric · steep 0.842 — the old readout's numbers — the menu filled, the dial hidden,
+steep outlined; run → curve: 18 notes · 2316 ms, the dial `curve 0 [−1 … 1]`; +0.5 → 3358 ms, the head 700 · 504 · 399; −0.5 → 1730 ms,
+700 · 110 · 95; notes → 24 (the outline moves, steep reads 0.883); ms → 3000 → 32 notes, exactly 3000; steep → 0.9 → 28 notes; jitter
+10 % (the same seed repeats), → 30 % at the end (the tail 49 · 35 · 32); hold 3 (… 45 45 45); mirror (45 45 45 45 … 136 164 700); vel
+65 → 127: 28 velocities 65 … 127, per instrument through the remap (violin 2 at 82 → 83, the piano at 86 → 109, the flute at 127 →
+115), blank → 127 again; S-curve (700 697 687 … 46 45 45), two-phase head 0.5 (700 × 13, then the rush), late rush, linear ms (700 675
+650 … 70 45), geometric; → last 1400 → a run that slows, 8 notes, steep 1.122; his settings back → 18 · 4201 · 0.842. **Insert** (curve
+0, 3000 ms) at the playhead, 107.807 s: 22 notes, every onset equal to the calculator's to 0.000 ms, status "inserted 22 notes at
+107.807 s". Nothing of his touched; the page change needs his hard reload (CTRL+SHIFT+R).
+
+**Not done, by design:** no calibration (his word: "I don't want to spend time on that currently"); the drawer's level ramp sends the
+remapped velocity without the per-note CC7 trim (NITS); the compiler's own accel keeps its copy of the law (NITS). Docs: PLAN 1h,
+STRIKES_TOOL §W built, PLANNER, journal §2, CN-30 / CN-31.

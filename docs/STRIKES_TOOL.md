@@ -525,7 +525,7 @@ recur (CN-28); R's choice 3 ("replace on re-insert") narrowed to the same time.
 and the chains (2) are section 3's material, each chain carrying a crescendo (a dynamic law per chain beside the time law); on his
 call, as the chart decides (§86).
 
-## W · The curves of the rush — `planned 2026-09-05, not built; the composer: "just the curve … keep a note or a plan so that if we do another one of these, we can build the different curves, the feel of the rush"`
+## W · The curves of the rush — `built 2026-09-06 as PLAN 1h (RUNNING_LOG §129): the acceleration calculator + the drawer's run dials` · *was: planned 2026-09-05, "just the curve … keep a note or a plan so that if we do another one of these, we can build the different curves, the feel of the rush"*
 
 > The accel run (U13) has one curve: geometric — each gap a fixed fraction of the one before. When a strike wants a
 > different feel, the `accel` block gains a `curve` menu; the first gap, the landing and the re-attack rule stay as
@@ -546,6 +546,17 @@ call, as the chart decides (§86).
 - *Implementation note:* one function `gapsFor(curve, g1, floor, k, params)` returning the k gaps; the count k for a
   curve = the smallest k that reaches the floor within the curve's own law (linear and S need k given, or a duration);
   the readout shows the curve's name; the strip and Hear follow as now.
+
+> **Built 2026-09-06 as PLAN 1h (RUNNING_LOG §125–129; CN-30):** the math is a module, `score/public/accel_calc.js` (page and tools),
+> and the drawer's accel block reads it. The list above maps onto its `run` menu: geometric (as built) · linear → `linear ms` · late
+> rush → `late rush` (its dial: the power) · S-curve → `S-curve` (the ease) · two-phase → `two-phase` (the head's share) · jitter → the
+> `jitter % → %` boxes (fixed, or ramped from the first gap to the last; the run's seed) · reverse → `mirror` (the run played backwards
+> in time), or `→ last` above the gap for a run that slows in the shape's own direction. Added beyond the list: `curve` — the tuba
+> compiler's one-dial family (the speed changes by a percentage per second; bloom ← even → surge; its calibrated zero left at 0 here,
+> the composer's to set), the length by any one of steep / notes / ms (the one in charge outlined), a `hold` at the landing, and a
+> level ramp `vel → vel` in the ensemble's scale through 1g's remap. The first gap, the landing and the re-attack rule stay as they
+> were; the round robin is untouched. The calibration of words to numbers waits for his go.
+
 
 ## Open questions for the composer (only what blocks the next piece)
 

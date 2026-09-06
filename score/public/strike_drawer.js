@@ -37,6 +37,12 @@ const E_ = () => (typeof MorphEmit !== 'undefined' ? MorphEmit : (root.MorphEmit
 const TRK = () => (typeof TRACKS !== 'undefined' ? TRACKS : (root.TRACKS || []));
 const METAL = () => (typeof META_LAYER !== 'undefined' ? META_LAYER : root.META_LAYER);
 const INST = () => (typeof INSTRUMENTS !== 'undefined' ? INSTRUMENTS : (root.INSTRUMENTS || {}));
+const AC_ = () => (typeof AccelCalc !== 'undefined' ? AccelCalc : (root.AccelCalc || null));       // 1h: the acceleration calculator (accel_calc.js)
+const VR_ = () => (typeof VelocityRemap !== 'undefined' ? VelocityRemap : (root.VelocityRemap || null));
+const DIAL_CFG = { curve: 'aCurve', ease: 'aEase', knee: 'aKnee', gamma: 'aGamma' };   // the shapes' dials → the cfg fields
+// 1h (composer, 2026-09-06, CN-30): the run's dials — the shape, its number, the length by steep / notes / ms, jitter, hold,
+// mirror, the level ramp; a take saved before them gets these, never the last strike's
+const ACCEL_DEFAULTS = { aShape: 'geometric', aLen: 'ratio', aCount: 12, aDur: 2000, aCurve: 0, aEase: 2, aKnee: 0.5, aGamma: 2, aJit: 0, aJitEnd: '', aHold: 0, aMirror: false, aVel0: '', aVel1: '', aVelCurve: 0 };
 
 const DB_URL = '/bank/scattered_strikes.json';
 const STORE = 'septet.strikeDrawer.v3';
@@ -99,7 +105,7 @@ const D = {
     el: null, body: null, db: null, seq: null, strike: null,
     voices: [], slots: [], ph: null, base: 0, prev: null, pickerLane: null,
     cfg: { strikeId: null, show88: false, rowH: 0, full: true, heightPx: 0, voicing: 'original', vSeed: 1, clusterOct: 0,
-           timeX: 1, shape: 'played', amount: 1, jitterMs: 0, reverse: false, rotate: 0, rSeed: 1, dropRests: true, aFirst: 100, aRatio: 0.85, aFloor: 45, aMin: 250, aSeed: 1, aRedeal: true, order: 'played', oSeed: 1, simMs: 60,
+           timeX: 1, shape: 'played', amount: 1, jitterMs: 0, reverse: false, rotate: 0, rSeed: 1, dropRests: true, aFirst: 100, aRatio: 0.85, aFloor: 45, aMin: 250, aSeed: 1, aRedeal: true, ...ACCEL_DEFAULTS, order: 'played', oSeed: 1, simMs: 60,
            durX: 1, dynX: 1, flatten: true, mayFold: false, topLock: -1, bottomLock: -1, oSeedShuffle: 1, zoomPxPerMs: 0, rhythmW: 480 },
 
     // ------------------------------------------------------------------ init / build
@@ -107,6 +113,7 @@ const D = {
         const host = document.getElementById('mtBtn') || document.getElementById('pulseBtn') ||
                      document.getElementById('textureBtn') || document.getElementById('morphBtn') || document.getElementById('blastsBtn');
         if (!host) { console.warn('[strikes] no button to anchor to'); return; }
+        { const C = C_(); if (C && typeof C.loadVelocityRemap === 'function') C.loadVelocityRemap(); }   // 1h: the level ramp translates through 1g's remap — fetched once, early
         const btn = document.createElement('button');
         btn.id = 'strikesBtn'; btn.textContent = 'Strikes';
         btn.title = 'the scattered-strike drawer (docs/STRIKES_TOOL.md): pick a strike in the sequence, voice it, orchestrate it, shape its rhythm, hear it, put it back in the score';
@@ -535,16 +542,26 @@ const D = {
         if (kind === 'pitched') { const f = foldInto(P, lo, hi); return f ? { midi: f.pitch, fold: f.oct, standIn: false } : null; }
         return { midi: this.defaultStandIn(P, pl.lane, inst, tech, kind, lo, hi), fold: 0, standIn: true };
     },
+    // 1h (composer, 2026-09-06, CN-30): the run's timing comes from the calculator (accel_calc.js) — the shape and its dial,
+    // the length by steep / notes / ms, jitter, hold, mirror, a level ramp; the dealing below is untouched
+    accelSpec() {
+        const c = this.cfg; const blank = v => v === '' || v == null;
+        const L = c.aLen === 'count' ? { count: +c.aCount || 2 } : c.aLen === 'duration' ? { duration: +c.aDur || 1 } : { ratio: +c.aRatio || 0.85 };
+        return { gapStart: Math.max(1, +c.aFirst || 1), gapEnd: Math.max(1, +c.aFloor || 45), length: L, shape: c.aShape || 'geometric',
+                 curve: +c.aCurve || 0, ease: +c.aEase || 2, knee: +c.aKnee || 0, gamma: +c.aGamma || 2,
+                 jitter: { pct: +c.aJit || 0, pctEnd: blank(c.aJitEnd) ? null : +c.aJitEnd, seed: +c.aSeed || 1 },
+                 hold: { gaps: +c.aHold || 0 }, mirror: !!c.aMirror,
+                 level: (!blank(c.aVel0) && !blank(c.aVel1)) ? { start: +c.aVel0, end: +c.aVel1, curve: +c.aVelCurve || 0 } : null };
+    },
     accelSeq() {
         const c = this.cfg; const units = this.accelUnits(); const n = units.length;
-        const key = JSON.stringify([c.aFirst, c.aRatio, c.aFloor, c.aMin, c.aSeed, c.aRedeal, c.durX, units.map(u => [u.v.i, u.pitch, u.players.map(x => x.lane + ':' + x.tech)])]);
+        const spec = this.accelSpec();
+        const key = JSON.stringify([spec, c.aMin, c.aRedeal, c.durX, units.map(u => [u.v.i, u.pitch, u.players.map(x => x.lane + ':' + x.tech)])]);
         if (this._accel && this._accel.key === key) return this._accel.out;
-        const g1 = Math.max(1, +c.aFirst || 1), floor = Math.max(1, +c.aFloor || 45), r0 = clamp(+c.aRatio || 0.85, 0.5, 0.99), minMs = Math.max(0, +c.aMin || 0);
-        let k = g1 <= floor ? 1 : Math.floor(Math.log(floor / g1) / Math.log(r0)) + 1; k = Math.max(1, k);
-        const r = (k > 1 && g1 > floor) ? Math.pow(floor / g1, 1 / (k - 1)) : 1;
-        const on = [0]; for (let i = 0; i < k; i++) on.push(on[on.length - 1] + g1 * Math.pow(r, i));
-        const N = on.length;
-        const out = { units: n, notes: N, gaps: k, total: on[N - 1], ratio: r, events: [], cycles: [], info: '' };
+        const AC = AC_(); const R = AC.run(spec);
+        const fastest = Math.min(spec.gapStart, spec.gapEnd), minMs = Math.max(0, +c.aMin || 0);
+        const on = R.onsets, N = on.length, k = R.gapCount;
+        const out = { units: n, notes: N, gaps: k, total: R.duration, ratio: R.ratio, calc: R, spec, events: [], cycles: [], info: '' };
         if (!n) { out.info = 'no sounding notes — assign players first'; this._accel = { key, out }; return out; }
         const rnd = mulberry32((+c.aSeed || 1) * 7727 + 29);
         const last = new Map();
@@ -567,15 +584,15 @@ const D = {
                 const t = times[j], P = pitches ? pitches[j] : u.pitch;
                 if (!fits(u, t, last)) viol++;
                 const notes = u.players.map(x => { const rz = this.realize(P, x); if (!rz) return null; if (pitches && !rz.standIn && rz.midi !== P) folded++; return { lane: x.lane, tech: x.tech, midi: rz.midi, standIn: rz.standIn }; }).filter(Boolean);
-                out.events.push({ pos: pos + j, onMs: t, cycle: cyc, mode, unit: u, pitch: P, notes });
+                out.events.push({ pos: pos + j, onMs: t, cycle: cyc, mode, unit: u, pitch: P, notes, level: R.levels ? R.levels[pos + j] : null });
                 mark(u, t, last);
             });
             out.cycles.push({ cycle: cyc, len, mode, folded, viol, redealt: !!pitches });
             pos += len; cyc++;
         }
-        const tail = n * floor, feas = tail >= minMs;
+        const tail = n * fastest, feas = tail >= minMs;   // the re-attack rule at the run's fastest gap
         const cycText = out.cycles.map(x => (x.cycle + 1) + ': ' + (x.mode === 'own' ? 'your order' : x.mode === 'shuffled' ? 'shuffled ok' + (x.redealt ? ', pitches re-dealt' : '') : 'rotation, pitches re-dealt') + (x.folded ? ', ' + x.folded + ' folded' : '') + (x.viol ? ' ⚠ ' + x.viol + ' re-attack' + (x.viol > 1 ? 's' : '') + ' < ' + minMs : '')).join(' · ');
-        out.info = N + ' notes · ' + k + ' gaps · ' + Math.round(out.total) + ' ms · steep ' + r.toFixed(3) + '<br>cycles ' + cycText + '<br>tail ' + n + ' × ' + floor + ' = ' + tail + (feas ? ' ≥ ' + minMs + ' ✓' : ' < ' + minMs + ' ✗ — raise the floor to ' + Math.ceil(minMs / n) + ' or add a player');
+        out.info = AC.describe(R, spec) + (R.fit && R.fit.residual && Math.abs(R.fit.residual) > 0.5 ? ' · fit off by ' + R.fit.residual.toFixed(1) + ' ms' : '') + '<br>cycles ' + cycText + '<br>tail ' + n + ' × ' + Math.round(fastest) + ' = ' + Math.round(tail) + (feas ? ' ≥ ' + minMs + ' ✓' : ' < ' + minMs + ' ✗ — raise the fastest gap to ' + Math.ceil(minMs / n) + ' or add a player');
         this._accel = { key, out }; return out;
     },
     resetRhythm() { this.cfg.shape = 'played'; this.cfg.timeX = 1; this.cfg.amount = 1; this.cfg.jitterMs = 0; this.cfg.reverse = false; this.cfg.rotate = 0; },
@@ -825,8 +842,16 @@ const D = {
                 '<label title="U12: checked — a note nobody plays leaves the rhythm and the sounding notes are spaced by themselves; unchecked — it stays as a rest on the recorded grid"><input id="skDrop" type="checkbox"> drop rests</label>' +
                 '<div id="skAccel" style="display:none;flex-direction:column;gap:3px;margin-top:3px;padding-top:3px;border-top:1px solid #333">' +
                 '<span style="color:#9a9" title="U13: one accelerating run — the gap box is its FIRST gap, every next gap is steep × the one before, down to → last; the notes needed are computed and the players come round again (cycle 1 in your order, later cycles shuffled under the re-attack rule, or the rotation with the pitches shuffled when no shuffle fits)">accel · round robin</span>' +
-                '<label title="each gap is this fraction of the one before (the count of notes follows; the last gap lands exactly on → last, so the fraction is adjusted a little)">steep <input id="skASteep" type="number" min="0.5" max="0.99" step="0.01" style="' + inp + '"></label>' +
-                '<label title="the last gap — the landing">→ last <input id="skAFloor" type="number" min="5" step="1" style="' + inp + '"> ms</label>' +
+                '<label title="1h: the run\'s shape — geometric: each gap a fixed fraction of the one before (a still head, then the collapse) · curve: the speed changes by a percentage per second, the dial from bloom (the change early) through even to surge (a still head, then the swell) · S-curve: even, accelerating, then the last gaps nearly equal · two-phase: a flat head, then the rush · late rush: the gaps stay near the first, then collapse · linear ms: each gap shorter by the same milliseconds">run <select id="skAShape" style="' + inp + ';width:84px"></select></label>' +
+                '<label id="skADialRow" title="the shape\'s one number"><span id="skADialName">dial</span> <input id="skADial" type="number" step="0.05" style="' + inp + '"></label>' +
+                '<span style="color:#9a9" title="the run\'s length by any ONE of the three — type one and the other two follow; the one in charge is outlined">length</span>' +
+                '<label title="the steepness: each gap about this fraction of the one before (the count of notes follows; the last gap lands exactly on → last, so the fraction is adjusted a little); for a run that slows, the same number read as its inverse">steep <input id="skASteep" type="number" min="0.5" max="0.99" step="0.01" style="' + inp + '"></label>' +
+                '<label title="the count of notes in the run; type it and steep and ms follow">notes <input id="skACount" type="number" min="2" max="500" step="1" style="' + inp + '"></label>' +
+                '<label title="the last gap — the landing (larger than the gap box = a run that slows)">→ last <input id="skAFloor" type="number" min="5" step="1" style="' + inp + '"> ms</label>' +
+                '<label title="performer jitter (CN-13): each gap moved at random by about this percentage of itself, seeded with the run\'s seed; a second number ramps the jitter from the first gap to the last (blank = the same throughout)">jitter % <input id="skAJit" type="number" min="0" max="100" step="1" style="' + inp + '"> → <input id="skAJitEnd" type="number" min="0" max="100" step="1" placeholder="same" style="' + inp + '"></label>' +
+                '<label title="extra gaps at the last gap after the ramp: the run stays at its landing speed for this many more notes">hold <input id="skAHold" type="number" min="0" max="200" step="1" style="' + inp + '"> gaps</label>' +
+                '<label title="the run played backwards in time — a rush that opens out; not the same as swapping the gap and → last, which keeps the shape\'s direction"><input id="skAMirror" type="checkbox"> mirror</label>' +
+                '<label title="a loudness ramp along the run in the ensemble\'s one scale (the violins\' velocity, as the trills: 65 = a curve\'s bottom, 127 = its top), each instrument translated through 1g\'s measured remap; blank = the strike\'s own velocities; curve: below 0 the change early, above 0 late">vel <input id="skAVel0" type="number" min="1" max="127" step="1" placeholder="as is" style="' + inp + '"> → <input id="skAVel1" type="number" min="1" max="127" step="1" placeholder="as is" style="' + inp + '"> curve <input id="skAVelCurve" type="number" min="-1" max="1" step="0.1" style="' + inp + '"></label>' +
                 '<label title="no player attacks twice within this time; a cycle that cannot be shuffled under it falls back to the rotation of players with the pitches shuffled (folded into range)">re-attack ≥ <input id="skAMin" type="number" min="0" step="10" style="' + inp + '"> ms</label>' +
                 '<label title="U13b (composer, 2026-09-05: \"can we scramble the pitches after the round robin\"): checked — from cycle 2 on, the pitch set is dealt afresh to the players (folded into range), whether the instrument order is shuffled or repeats; unchecked — each player keeps its own pitch, only the order changes"><input id="skARedeal" type="checkbox"> re-deal pitches after cycle 1</label>' +
                 '<div id="skSeedA"></div>' +
@@ -853,12 +878,23 @@ const D = {
                 this.snapshot(); this.cfg.timeX = clamp((g * (m - 1)) / unit, 0.01, 10000); this.save(); this.render();
             });
             q('#skDrop').addEventListener('change', e => { this.snapshot(); this.cfg.dropRests = !!e.target.checked; this.save(); this.render(); });
-            q('#skASteep').addEventListener('change', e => { this.snapshot(); this.cfg.aRatio = clamp(+e.target.value || 0.85, 0.5, 0.99); this.save(); this.render(); });
+            q('#skASteep').addEventListener('change', e => { this.snapshot(); this.cfg.aRatio = clamp(+e.target.value || 0.85, 0.5, 0.99); this.cfg.aLen = 'ratio'; this.save(); this.render(); });
+            // 1h: the run's shape, its dial, the length by notes, the jitter, the hold, the mirror, the level ramp
+            q('#skAShape').addEventListener('change', e => { this.snapshot(); this.cfg.aShape = e.target.value; this.save(); this.render(); });
+            q('#skADial').addEventListener('change', e => { const AC = AC_(); const sh = AC && AC.shapeOf(this.cfg.aShape); if (!sh || !sh.dial) return; this.snapshot(); this.cfg[DIAL_CFG[sh.dial.key]] = clamp(+e.target.value || 0, sh.dial.min, sh.dial.max); this.save(); this.render(); });
+            q('#skACount').addEventListener('change', e => { this.snapshot(); this.cfg.aCount = clamp(Math.round(+e.target.value || 2), 2, 500); this.cfg.aLen = 'count'; this.save(); this.render(); });
+            q('#skAJit').addEventListener('change', e => { this.snapshot(); this.cfg.aJit = clamp(+e.target.value || 0, 0, 100); this.save(); this.render(); });
+            q('#skAJitEnd').addEventListener('change', e => { this.snapshot(); this.cfg.aJitEnd = e.target.value === '' ? '' : clamp(+e.target.value || 0, 0, 100); this.save(); this.render(); });
+            q('#skAHold').addEventListener('change', e => { this.snapshot(); this.cfg.aHold = clamp(Math.round(+e.target.value || 0), 0, 200); this.save(); this.render(); });
+            q('#skAMirror').addEventListener('change', e => { this.snapshot(); this.cfg.aMirror = !!e.target.checked; this.save(); this.render(); });
+            q('#skAVel0').addEventListener('change', e => { this.snapshot(); this.cfg.aVel0 = e.target.value === '' ? '' : clamp(Math.round(+e.target.value || 1), 1, 127); this.save(); this.render(); });
+            q('#skAVel1').addEventListener('change', e => { this.snapshot(); this.cfg.aVel1 = e.target.value === '' ? '' : clamp(Math.round(+e.target.value || 1), 1, 127); this.save(); this.render(); });
+            q('#skAVelCurve').addEventListener('change', e => { this.snapshot(); this.cfg.aVelCurve = clamp(+e.target.value || 0, -1, 1); this.save(); this.render(); });
             q('#skAFloor').addEventListener('change', e => { this.snapshot(); this.cfg.aFloor = clamp(+e.target.value || 45, 5, 5000); this.save(); this.render(); });
             q('#skAMin').addEventListener('change', e => { this.snapshot(); this.cfg.aMin = clamp(+e.target.value || 0, 0, 5000); this.save(); this.render(); });
             q('#skARedeal').addEventListener('change', e => { this.snapshot(); this.cfg.aRedeal = !!e.target.checked; this.save(); this.render(); });
             q('#skSpanMs').addEventListener('change', e => {
-                if (this.cfg.shape === 'accel') { this.setStatus('in accel the gap box sets the first gap — the duration follows from steep and → last'); this.render(); return; }
+                if (this.cfg.shape === 'accel') { this.snapshot(); this.cfg.aDur = Math.max(1, +e.target.value || 1); this.cfg.aLen = 'duration'; this.save(); this.render(); return; }   // 1h: the duration as the run's length — steep and notes follow
                 // U11 (composer, 2026-09-04: "an extra millisecond box next to span so we can dial in the exact duration"):
                 // the box is the real first→last onset of the current pattern; typing a duration sets span × so the pattern lands on it
                 const want = Math.max(1, +e.target.value || 0); const pp = this.pat(); const last = pp.length ? pp[pp.length - 1] : 0;
@@ -880,9 +916,18 @@ const D = {
         }
         { const A = this.cfg.shape === 'accel' ? this.accelSeq() : null; const acc = ctl.querySelector('#skAccel'); acc.style.display = A ? 'flex' : 'none';
           const gapBox = ctl.querySelector('#skGapMs'), msBox = ctl.querySelector('#skSpanMs');
-          if (A) { gapBox.value = +(+this.cfg.aFirst).toFixed(1); msBox.value = Math.round(A.total); ctl.querySelector('#skASteep').value = this.cfg.aRatio; ctl.querySelector('#skAFloor').value = this.cfg.aFloor; ctl.querySelector('#skAMin').value = this.cfg.aMin; ctl.querySelector('#skARedeal').checked = !!this.cfg.aRedeal; ctl.querySelector('#skAInfo').innerHTML = A.info; gapBox.title = 'accel: the FIRST gap of the run — the chain\'s value'; }
-          else { const pp = this.pat(); const m = pp.length, last = m ? pp[m - 1] : 0; msBox.value = Math.round(last); gapBox.value = m > 1 ? +(last / (m - 1)).toFixed(1) : 0; gapBox.title = 'the mean gap between the onsets that sound; type a gap and the duration follows: gap × (onsets − 1)'; }
-          msBox.disabled = !!A; ctl.querySelector('#skDrop').checked = !!this.cfg.dropRests; }
+          if (A) { const c = this.cfg, AC = AC_(), Q = sel => ctl.querySelector(sel);
+            gapBox.value = +(+c.aFirst).toFixed(1); msBox.value = Math.round(A.total); Q('#skAFloor').value = c.aFloor; Q('#skAMin').value = c.aMin; Q('#skARedeal').checked = !!c.aRedeal; Q('#skAInfo').innerHTML = A.info; gapBox.title = 'accel: the FIRST gap of the run — the chain\'s value';
+            // 1h: the run's shape menu (one source: the calculator's list), its dial, the length boxes with the one in charge outlined
+            const sel = Q('#skAShape'); if (AC && sel.options.length !== AC.SHAPES.length) sel.innerHTML = AC.SHAPES.map(s => '<option value="' + s.key + '" title="' + s.note + '">' + s.label + '</option>').join(''); sel.value = c.aShape || 'geometric';
+            const sh = AC && AC.shapeOf(c.aShape); const dialRow = Q('#skADialRow'), dial = Q('#skADial');
+            if (sh && sh.dial) { dialRow.style.display = ''; Q('#skADialName').textContent = sh.dial.label; dial.min = sh.dial.min; dial.max = sh.dial.max; dial.step = sh.dial.step; dial.value = c[DIAL_CFG[sh.dial.key]]; dialRow.title = sh.note; } else dialRow.style.display = 'none';
+            Q('#skASteep').value = c.aLen === 'ratio' ? c.aRatio : +A.ratio.toFixed(3); Q('#skACount').value = c.aLen === 'count' ? c.aCount : A.notes;
+            const master = { ratio: '#skASteep', count: '#skACount', duration: '#skSpanMs' }; Object.keys(master).forEach(k => { Q(master[k]).style.outline = (c.aLen || 'ratio') === k ? '1px solid #C9A05A' : ''; });
+            Q('#skAJit').value = c.aJit || 0; Q('#skAJitEnd').value = c.aJitEnd === '' || c.aJitEnd == null ? '' : c.aJitEnd; Q('#skAHold').value = c.aHold || 0; Q('#skAMirror').checked = !!c.aMirror;
+            Q('#skAVel0').value = c.aVel0 === '' || c.aVel0 == null ? '' : c.aVel0; Q('#skAVel1').value = c.aVel1 === '' || c.aVel1 == null ? '' : c.aVel1; Q('#skAVelCurve').value = c.aVelCurve || 0; }
+          else { msBox.style.outline = ''; const pp = this.pat(); const m = pp.length, last = m ? pp[m - 1] : 0; msBox.value = Math.round(last); gapBox.value = m > 1 ? +(last / (m - 1)).toFixed(1) : 0; gapBox.title = 'the mean gap between the onsets that sound; type a gap and the duration follows: gap × (onsets − 1)'; }
+          msBox.disabled = false; ctl.querySelector('#skDrop').checked = !!this.cfg.dropRests; }   // 1h: in accel the ms box is the run's duration, typed
         ctl.querySelector('#skRhyW').value = this.cfg.rhythmW || 480; ctl.querySelector('#skTimeX').value = +(+this.cfg.timeX).toFixed(3); ctl.querySelector('#skShape').value = this.cfg.shape; ctl.querySelector('#skAmt').value = this.cfg.amount; ctl.querySelector('#skJit').value = this.cfg.jitterMs; ctl.querySelector('#skOrder').value = this.cfg.order;
         // dots: click one, then another = swap their slots; a dot on the keyboard then a player row = assign
         svg.querySelectorAll('.skRDot').forEach(dd => dd.addEventListener('click', ev => {
@@ -919,12 +964,16 @@ const D = {
     },
 
     // ------------------------------------------------------------------ hear (G)
+    remapVel(lane, midi, anchor) {   // 1h: the level ramp's number is the ensemble's scale (the violins'), translated per instrument through 1g's remap (bank/velocity_remap.json); without the bank it passes through
+        const C = C_(), VR = VR_(), T = TRK(); const a = clamp(Math.round(anchor), 1, 127); const key = T[lane] && T[lane].instKey;
+        return (VR && C && C._velRemap && key) ? VR.velocityFor(C._velRemap, key, midi, a) : a;
+    },
     notesFor(mode) {
         const T = TRK(); const pianoLane = T.findIndex(t => t.instKey === 'piano');
         if (this.cfg.shape === 'accel' && mode !== 'piano') {   // U13: the run — one note per player of each card, at the run's onsets
             const A = this.accelSeq(); const anySolo = this.voices.some(v => v.solo); const out = [];
-            A.events.forEach(ev => { const v = ev.unit.v; if (anySolo && !v.solo) return; const vel = clamp(Math.round((this.cfg.flatten ? 127 : v.vel) * this.cfg.dynX), 1, 127); const durMs = Math.max(30, v.durMs * this.cfg.durX);
-                ev.notes.forEach(nt => out.push({ lane: nt.lane, tech: nt.tech || plainTech(this.instOf(nt.lane)), midi: nt.midi, vel, onMs: ev.onMs, durMs })); });
+            A.events.forEach(ev => { const v = ev.unit.v; if (anySolo && !v.solo) return; const vel0 = clamp(Math.round((this.cfg.flatten ? 127 : v.vel) * this.cfg.dynX), 1, 127); const durMs = Math.max(30, v.durMs * this.cfg.durX);
+                ev.notes.forEach(nt => out.push({ lane: nt.lane, tech: nt.tech || plainTech(this.instOf(nt.lane)), midi: nt.midi, vel: ev.level != null ? this.remapVel(nt.lane, nt.midi, ev.level) : vel0, onMs: ev.onMs, durMs })); });   // 1h: the level ramp, when set, replaces the strike's velocity
             return out;
         }
         const out = []; const anySolo = this.voices.some(v => v.solo);
@@ -1056,7 +1105,7 @@ const D = {
     state() { return JSON.parse(JSON.stringify({ strikeId: this.cfg.strikeId, cfg: this.cfg, voices: this.voices.map(v => ({ i: v.i, pitch: v.pitch, lane: v.lane, fold: v.fold, tech: v.tech, standIn: v.standIn, piano: v.piano, solo: !!v.solo, slot: v.slot, skip: !!v.skip, also: (v.also || []).map(r => ({ lane: r.lane, tech: r.tech, fold: r.fold, standIn: r.standIn, skip: !!r.skip })) })) })); },
     applyState(st) {
         if (!st || !this.strike || st.strikeId !== this.strike.id) { if (st && st.strikeId && this.db && this.db.strikes[st.strikeId]) { this.select(st.strikeId); } if (!st || st.strikeId !== (this.strike && this.strike.id)) return; }
-        Object.assign(this.cfg, st.cfg); this.cfg.strikeId = this.strike.id;
+        Object.assign(this.cfg, ACCEL_DEFAULTS, st.cfg); this.cfg.strikeId = this.strike.id;   // 1h: a take from before the run's dials gets their defaults, not the last strike's
         st.voices.forEach(sv => { const v = this.voices[sv.i]; if (!v) return; Object.assign(v, { pitch: sv.pitch, lane: sv.lane, fold: sv.fold, tech: sv.tech, standIn: sv.standIn, piano: sv.piano, solo: !!sv.solo, slot: sv.slot, skip: sv.skip, also: (sv.also || []).map(r => ({ lane: r.lane, tech: r.tech, fold: r.fold, standIn: r.standIn, skip: !!r.skip })) }); });
         this.writeFields(); this.render();
     },
