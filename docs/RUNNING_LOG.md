@@ -3485,3 +3485,31 @@ computed; the mode → played → the captures' twelve distinct velocities and t
 
 **Left for the proof (1g item 1, to-do 6):** the rack, two minutes — all seven at the bottom, the middle and the top of a
 curve through the remap, read back.
+
+## §118. The proof (1g item 1, to-do 6), twice: single notes fail by up to 5 dB, five repeats show why — the samplers' own note-to-note scatter, a piano layer staircase, round-robin bias in the sweep's points
+
+**Built:** `tools/balance_schedule.js --proof [--repeat N]` — every instrument's ordinary voice at its middle measured register at the
+bottom, the middle and the top of a curve (anchor 65 · 96 · 127), each sent the velocity the remap prescribes, each note played N
+times in a row; `analyze_balance.py --proof` — per height the seven means, their scatter (sd, min … max), the deviation from the
+violins, the spread, PASS at 1.5 dB → `bank/velocity_proof.json`. The run script stops Reaper with action 40667 (stop and save all
+recorded media): no prompt, the bridge never blocks (§115's gotcha closed); the recording's items removed afterwards, the cursor
+back at 0.
+
+**Run 1, single notes** (`01-REC-260906_1221.wav`, 21 notes): the bottom within 1.2 dB across all seven; the middle and the top off by
+−4.4 … +5.2 dB on the cello, −3.9 on the piano, −3.6 / −1.9 on the bass clarinet, +1.6 on the viola — the cello's error flipping
+sign between heights. **Run 2, five repeats** (`01-REC-260906_1225.wav`, 105 notes): the scatter, note to note at one velocity —
+flute sd 0.00 and piano 0.02–0.06 (deterministic samplers), violin 1 0.25–0.70, violin 2 0.44–1.04, viola 0.69–1.32, bass
+clarinet 0.92–1.59, **cello 1.91–3.54 (−37.0 … −27.5 at velocity 77: a 9.5 dB range)** — the Xsample round robins' own level
+differences; the sweep's single points carry the same noise. **The means against the violins:** h = 0: within 1.5 dB except the
+viola +2.2 and the cello +1.5; h = ½: the piano **−3.4** (deterministic — a real table error: its row at C4 jumps from −35.8 at 80
+to −27.0 at 96, a velocity LAYER step, and the remap interpolated straight across it; 85 sits on the soft layer), the bass
+clarinet −1.6, the rest within 0.9; h = 1: the cello −2.0 (its sweep points at 112 / 127 were single round-robin draws), the rest
+within 0.9. Verdict FAIL at 1.5 dB, worst 3.35 — the numbers are the finding.
+
+**What it means:** the tables are right where the sampler is deterministic and smooth (the flute: 0.0 to 0.3 dB at all three
+heights); wrong inside a layer step (the piano: the eight points are too sparse to place the step); biased by ±1–2 dB where round
+robins scatter (the strings, the bass clarinet). Musically a trill's many notes average the scatter — the cello will shimmer by
+its nature, whatever the table. **The remedy, on his go:** a second sweep — dense (every 4 velocity units) for the deterministic
+piano and flute (no repeats needed, ~3 min each), and three repeats at the eight velocities for the strings and the bass clarinet
+(~19 min), averaged before the fit; the remap rebuilt; the repeated proof again (4 min). About 25 minutes of the rack, driven by
+the AI. The alternative: keep the tables as they are, ±2 dB on the means and the piano's mid-curve 3 dB soft.

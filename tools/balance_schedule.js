@@ -29,6 +29,15 @@ const opt = (k, d) => { const i = args.indexOf('--' + k); return i >= 0 && args[
 // technique, three pitches, 127: the consistency check against bank/balance.json), role 'vel' = the same at eight velocities,
 // role 'cc7' = the same at velocity 100 under eight CC7 values; every note carries cc7 (127 unless swept).
 const sweep = args.includes('--sweep');
+// --proof (PLAN 1g item 1, to-do 6): every instrument's ordinary voice at its middle measured register, at the bottom, the
+// middle and the top of a curve (anchor velocity 65 · 96 · 127) — each sent the velocity bank/velocity_remap.json prescribes;
+// the recording must show the seven at one level per height (within about 1.5 dB).
+const proof = args.includes('--proof');
+const PROOF_H = opt('proofh', '0,0.5,1').split(',').map(Number);
+const PROOF_LO = +opt('prooflo', 65), PROOF_HI = +opt('proofhi', 127);
+const REPEAT = Math.max(1, +opt('repeat', 1));   // each proof note played this many times in a row: the sampler's note-to-note scatter (round robins) averages out
+let VelocityRemap = null, remapBank = null;
+if (proof) { VelocityRemap = require(path.join(ROOT, 'score', 'public', 'velocity_remap.js')); remapBank = JSON.parse(fs.readFileSync(path.resolve(ROOT, opt('remap', 'bank/velocity_remap.json')), 'utf8')); }
 const SWEEP_VELS = opt('sweepvels', '127,112,96,80,64,48,32,20').split(',').map(Number);
 const SWEEP_CC7S = opt('sweepcc7', '127,112,96,80,64,48,32,16').split(',').map(Number);
 const cc7Vel = +opt('cc7vel', 100);
@@ -43,13 +52,13 @@ const STRIKE_TECHS = { flute: 'pizzicato', bass_clarinet: 'slap', violin1: 'bart
 const src = fs.readFileSync(path.join(ROOT, 'sandbox', 'instruments.js'), 'utf8');
 const INSTRUMENTS = vm.runInNewContext(src + '\n;INSTRUMENTS;', {});
 
-const noteMs = +opt('note', sweep ? 1200 : 1500), gapMs = +opt('gap', sweep ? 800 : 1000), leadMs = +opt('lead', 3000), instGapMs = +opt('instgap', sweep ? 1500 : 2000);
+const noteMs = +opt('note', (sweep || proof) ? 1200 : 1500), gapMs = +opt('gap', (sweep || proof) ? 800 : 1000), leadMs = +opt('lead', 3000), instGapMs = +opt('instgap', (sweep || proof) ? 1500 : 2000);
 const preMs = 300;                                                       // CC7 / CC0 / keyswitch lead before each note
 const vels = opt('vels', '127,64').split(',').map(Number);
 const only = opt('only', '').split(',').filter(Boolean);
 const noStrike = args.includes('--nostrike');
 opt('strike', '').split(',').filter(Boolean).forEach(kv => { const [k, v] = kv.split('='); STRIKE_TECHS[k] = v; });
-const out = path.resolve(ROOT, opt('out', sweep ? 'probes/sweep_schedule.json' : 'probes/balance_schedule.json'));
+const out = path.resolve(ROOT, opt('out', proof ? 'probes/proof_schedule.json' : sweep ? 'probes/sweep_schedule.json' : 'probes/balance_schedule.json'));
 
 const notes = [];
 let t = leadMs, i = 0;
@@ -65,7 +74,27 @@ const add = (inst, I, tech, role, velList, cc7List) => {
     t += instGapMs;
 };
 const plan = [];
-for (const role of (sweep ? ['ref', 'vel', 'cc7'] : ['plain', 'strike'])) {
+if (proof) {   // one note per height per instrument, the middle register, the remapped velocity
+    for (const inst of ORDER) {
+        if (only.length && !only.includes(inst)) continue;
+        const I = INSTRUMENTS[inst]; if (!I) { console.error('no recipe for', inst); process.exit(1); }
+        const tech = PLAIN_PREF.map(k => I.techniques.find(q => q.key === k)).find(Boolean) || I.techniques[0];
+        const lo = tech.rangeLow != null ? tech.rangeLow : I.rangeLow, hi = tech.rangeHigh != null ? tech.rangeHigh : I.rangeHigh;
+        const pitch = Math.round(lo + (hi - lo) * 0.5);
+        plan.push({ inst, role: 'proof', tech: tech.key });
+        for (const h of PROOF_H) {
+            const anchorVel = Math.round(PROOF_LO + (PROOF_HI - PROOF_LO) * h);
+            const vel = VelocityRemap.velocityFor(remapBank, inst, pitch, anchorVel);
+            for (let rpt = 0; rpt < REPEAT; rpt++) {
+                notes.push({ i: i++, inst, label: I.label, role: 'proof', h, anchorVel, rpt, tech: tech.key, techLabel: tech.label, port: tech.port || I.port, ch: tech.channel || 1,
+                             cc0: tech.cc0 != null ? tech.cc0 : null, ks: tech.ks != null ? tech.ks : null, pitch, vel, cc7: 127, tPreMs: t - preMs, tOnMs: t, tOffMs: t + noteMs });
+                t += noteMs + gapMs;
+            }
+        }
+        t += instGapMs;
+    }
+}
+for (const role of (proof ? [] : sweep ? ['ref', 'vel', 'cc7'] : ['plain', 'strike'])) {
     if (role === 'strike' && noStrike) continue;
     for (const inst of ORDER) {
         if (only.length && !only.includes(inst)) continue;
@@ -82,7 +111,7 @@ for (const role of (sweep ? ['ref', 'vel', 'cc7'] : ['plain', 'strike'])) {
     }
 }
 const schedule = { generatedAt: new Date().toISOString(), source: 'sandbox/instruments.js', order: ORDER.filter(k => !only.length || only.includes(k)),
-                   strikeTechs: noStrike ? {} : STRIKE_TECHS, trims: Object.fromEntries(ORDER.map(k => [k, INSTRUMENTS[k] && INSTRUMENTS[k].balanceDb != null ? INSTRUMENTS[k].balanceDb : 0])), sweep, sweepVels: sweep ? SWEEP_VELS : null, sweepCc7s: sweep ? SWEEP_CC7S : null, cc7Vel: sweep ? cc7Vel : null, plan, leadInMs: leadMs, preMs, noteMs, gapMs, instGapMs, vels, fracs: FRACS, totalMs: t, notes };
+                   strikeTechs: noStrike ? {} : STRIKE_TECHS, proof, proofH: proof ? PROOF_H : null, proofScale: proof ? { lo: PROOF_LO, hi: PROOF_HI } : null, proofRepeat: proof ? REPEAT : null, remapMeasuredAt: remapBank ? remapBank.measuredAt : null, trims: Object.fromEntries(ORDER.map(k => [k, INSTRUMENTS[k] && INSTRUMENTS[k].balanceDb != null ? INSTRUMENTS[k].balanceDb : 0])), sweep, sweepVels: sweep ? SWEEP_VELS : null, sweepCc7s: sweep ? SWEEP_CC7S : null, cc7Vel: sweep ? cc7Vel : null, plan, leadInMs: leadMs, preMs, noteMs, gapMs, instGapMs, vels, fracs: FRACS, totalMs: t, notes };
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, JSON.stringify(schedule, null, 1));
 console.log('balance schedule → ' + path.relative(ROOT, out) + ' · ' + notes.length + ' notes · ' + (t / 1000).toFixed(1) + ' s');

@@ -148,6 +148,50 @@ def sweep_report(a, S, rows, key, floor, offset):
     print(f'-> {os.path.relpath(outp, ROOT)}')
 
 
+def proof_report(a, S, rows, key, floor, offset):
+    """PLAN 1g item 1, to-do 6 (2026-09-06): at each curve height the seven instruments, each sent its remapped velocity, must
+    sit at one level - the violins' - within a.tol dB."""
+    hs = S.get('proofH') or sorted({r['h'] for r in rows})
+    anchors = ('violin1', 'violin2')
+    order = [k for k in S['order'] if any(r['inst'] == k for r in rows)]
+    result = {'heights': [], 'pass': True, 'worstDb': 0.0}
+    print(f"\nPROOF - the seven at each curve height, each at its remapped velocity ({a.weight}-weighted, {a.win:.1f} s); tolerance {a.tol:.1f} dB from the violins\n")
+    for h in hs:
+        rs = [r for r in rows if r['h'] == h]
+        anchor_vals = [float(r[key]) for r in rs if r['inst'] in anchors and r['found']]
+        anchor = float(np.mean(anchor_vals)) if anchor_vals else None
+        print(f"height {h:g} (anchor velocity {rs[0]['anchorVel'] if rs else '-'}): violins {fmt(anchor)} dB")
+        per = []
+        for k in order:
+            grp = [x for x in rs if x['inst'] == k and x['found']]
+            r = next((x for x in rs if x['inst'] == k), None)
+            if r is None: continue
+            vals = [float(x[key]) for x in grp]
+            lvl = float(np.mean(vals)) if vals else None
+            sd = float(np.std(vals)) if len(vals) > 1 else None
+            dev = round(lvl - anchor, 2) if anchor is not None and lvl is not None else None
+            ok = bool(dev is not None and abs(dev) <= a.tol)
+            if dev is not None: result['worstDb'] = max(result['worstDb'], abs(dev))
+            if not ok: result['pass'] = False
+            per.append({'inst': k, 'label': r['label'], 'pitch': r['pitch'], 'vel': r['vel'], 'n': len(vals), 'found': bool(vals), 'db': lvl, 'sdDb': sd,
+                        'minDb': (min(vals) if vals else None), 'maxDb': (max(vals) if vals else None), 'devDb': dev, 'ok': ok, 'notes': vals})
+            scatter = (f"  n {len(vals)} sd {sd:.2f} [{min(vals):.1f} .. {max(vals):.1f}]" if sd is not None else '')
+            print(f"   {r['label']:14} pitch {r['pitch']:3} sent {r['vel']:3}  level {fmt(lvl):>7}  dev {fmt(dev, '+'):>6}  {'ok' if ok else 'OFF'}{scatter}")
+        found = [p['db'] for p in per if p['found']]
+        spread = round(max(found) - min(found), 2) if len(found) > 1 else None
+        print(f"   spread {fmt(spread)} dB")
+        result['heights'].append({'h': h, 'anchorDb': anchor, 'spreadDb': spread, 'instruments': per})
+    print(f"\nproof verdict: {'PASS' if result['pass'] else 'FAIL'} - worst deviation {result['worstDb']:.2f} dB (tolerance {a.tol:.1f})")
+    clipped = [f"{r['label']} {r['pitch']}@v{r['vel']}" for r in rows if r['clip']]
+    if clipped: print('CLIPPED: ' + ', '.join(clipped))
+    outp = a.out if os.path.basename(a.out) != 'balance.json' else os.path.join(ROOT, 'bank', 'velocity_proof.json')
+    out = {'measuredAt': datetime.datetime.now().isoformat(timespec='seconds'), 'wav': os.path.basename(a.wav), 'windowS': a.win, 'weighting': a.weight, 'tolDb': a.tol,
+           'schedule': os.path.relpath(a.schedule, ROOT).replace(chr(92), '/'), 'remapMeasuredAt': S.get('remapMeasuredAt'), 'proofScale': S.get('proofScale'), 'noiseFloorDb': round(floor, 1), 'offsetS': round(offset, 3), 'result': result}
+    os.makedirs(os.path.dirname(outp), exist_ok=True)
+    json.dump(out, open(outp, 'w', encoding='utf-8'), indent=1)
+    print(f'-> {os.path.relpath(outp, ROOT)}')
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('wav')
@@ -159,6 +203,7 @@ def main():
     ap.add_argument('--win', type=float, default=0.4, help='RMS window in s (0.4 = momentary; 1.0 = the sustained reading)')
     ap.add_argument('--min', type=float, default=-70.0, help='a note below this level (dBFS) counts as NOT sounding')
     ap.add_argument('--tol', type=float, default=1.5, help='sweep: the reference check tolerance in dB (PLAN 1g: within about 1.5 dB)')
+    ap.add_argument('--proof', action='store_true', help='the remap proof (tools/balance_schedule.js --proof): the seven at each curve height, their spread and deviation from the violins -> bank/velocity_proof.json')
     ap.add_argument('--sweep', action='store_true', help='the velocity / CC7 sweep (tools/balance_schedule.js --sweep): the reference check against bank/balance.json, the per-instrument velocity and CC7 curves -> bank/velocity_map.json')
     a = ap.parse_args()
 
@@ -192,6 +237,8 @@ def main():
     key = 'dbK' if a.weight == 'k' else 'dbFlat'
     if a.sweep:
         sweep_report(a, S, rows, key, floor, offset); return
+    if a.proof:
+        proof_report(a, S, rows, key, floor, offset); return
     insts = {}
     for r in rows:
         role = r.get('role', 'plain')

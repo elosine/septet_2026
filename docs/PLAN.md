@@ -355,7 +355,10 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - ~~analyze the recording~~ — done 2026-09-06: `bank/velocity_map.json` (consistent with the balance run within 1.0 dB; the ensemble at 127 within 1.8 dB; the velocity and CC7 curves per register; §115);
      - ~~compute, per instrument, the velocity that matches the violins at each curve height; save it as the remap~~ — done 2026-09-06 (`tools/velocity_remap.js` → `bank/velocity_remap.json`, per register, within 0.03 dB where reachable, the clamps counted; §116);
      - ~~make the app send the remapped velocity~~ — done 2026-09-06 (`velocity_remap.js` shared by the page and the tools, `velocityFor(layer, pitch, anchorVel)`, the trill reads it through `velocityAt`; §117);
-     - check: all seven at bottom, middle and top, read the levels — within about 1.5 dB.
+     - check: all seven at bottom, middle and top, read the levels — within about 1.5 dB. **Run 2026-09-06 (§118), five repeats: FAIL at
+       3.4 dB worst — the piano's velocity-layer staircase (the eight sweep points too sparse), round-robin bias in the strings' and the
+       bass clarinet's single sweep points; the flute exact. Next, on his go: the second sweep (dense for the piano and flute, three
+       repeats for the rest), the remap rebuilt, the proof again.**
      *Result:* the same curve height is the same loudness on every instrument.
   2. **The curve's meaning for the notation.** *Result:* a curve's actual heights are its dynamics — bottom ppp, top fff, a curve
      rising two thirds of the way is f — and the notation never reads velocities; the IR carries every curve-driven object's dynamic
