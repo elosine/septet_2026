@@ -70,6 +70,15 @@ The rules, adopted from `live-electronics-engine` (its CLAUDE.md and `docs/journ
   composer voices goes into `docs/COMPOSITION_NOTES.md` verbatim, dated, the moment it is
   said — with the AI's reading kept separate and marked as such.
 
+## Standing practice: the morph notes (composer, 2026-09-06 — CN-29)
+
+> *"I want to institute a process where we're taking notes in a central document that will inform the eventual revision."*
+
+Every remark about the morph tool — an awkwardness, a wish, a piece-specific adjustment made, what an all-purpose tool would
+need — goes into **`docs/MORPH_NOTES.md`** §3 the moment it is said, dated, verbatim, the AI's reading marked. The tool is
+adjusted for the current use now; the file is the memory for its revision into *"an easier to use all purpose tool"* after this
+piece or the next. Not optional, never asked for — the lab journal's rule, for one tool.
+
 ## Apps (after PLAN 0b lands)
 
 - **Composer score:** `node score/server.js` → http://localhost:5300/composer.html

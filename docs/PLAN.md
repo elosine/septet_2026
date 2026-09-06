@@ -341,7 +341,10 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   events'")* — the tuba piece's morph engine (in this port: the Morph panel, `morphBend` notes, the bend in the plain tick) made
   launchable from a strike the way the trill is (TRILLS_TOOL §5: the strike's chord held and morphing into the next — each
   strike a slide, the morph the dissolve); the requirements to be talked through with him first, as the trill module was (CN-19 →
-  §97–98); consult #4's morph docs (`for_seven_tubas`) when reached. *Why:* section 2's material in his form of 2026-09-06.
+  §97–98); consult #4's morph docs (`for_seven_tubas`) when reached. **The notes: `docs/MORPH_NOTES.md`** (CN-29, 2026-09-06 — the central
+  document for the morph tool, this piece's adjustments and the eventual all-purpose revision; the morph event's four elements:
+  pitch expansion → beating · re-breath / re-bow · crescendo · the pairs' own glissandi; short events of one breath, long ones with
+  re-breaths). *Why:* section 2's material in his form of 2026-09-06.
 - Sketch pad: `docs/COMPOSITION_NOTES.md` — the opening is already there (ensemble attack →
   curve-based tremolos with fp entries → tremolo fugue → density-build sound mass).
 - Tuba engines to pull per need: `compiler.js` swell clouds and grain envelopes (present

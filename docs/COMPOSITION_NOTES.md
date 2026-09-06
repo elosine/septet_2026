@@ -774,3 +774,25 @@ strike note (TRILLS_TOOL §5): the object to design with him — PLAN 1f. **Sect
 crescendos:** the strikes as patterns, or as calls and answers between sub-ensembles (STRIKES_TOOL V's answering blocks), each
 chain carrying a crescendo. Where this leaves outline v1's tremolos → fugue → mass (after? interleaved?) is his to say; the
 planner's outline carries the note until then.
+
+---
+
+## CN-29 · 2026-09-06 — the morph section: a central notes document for the tool's revision; the morph event's four elements
+
+> *"A to do note for later when we get to the morph section. I'd like to... I'm going to be using the morph textures a lot in the
+> future for this piece and the next piece. I'd like to eventually make it an easier to use all purpose tool. But for now and maybe
+> for the next piece, will adjust it for the current use, but I want to institute a process where we're taking notes in a central
+> document that will inform the eventual revision. For this one, this piece. I want to create single morph events. Like, for
+> example, going from Unison to max beating, beating, like in convergence. over a certain amount of time. And then longer ones. So
+> I see the elements as the expansion of pitch to expand beating, the rebreath, so to speak, or rebo. and the Crescendo So a way to
+> think about these three things in the short events or also the multiple pairs. So each pair might not be following the same
+> glissando or beating glissando. So those four things, how to arrange them in short events and over longer events. I'm imagining
+> shorter events. It's no rebreath, just one breath, but ways to work in different patterns of glissando for different pairs. Like I
+> said, this is just a note. We'll tackle this in earnest when we get to the section."*
+> *(2026-09-06, session 4, mid-session; speech-to-text, content untouched — "rebo" read as "rebow")*
+
+**AI reading (not the composer's words):** a process and a first requirement at once. The process: `docs/MORPH_NOTES.md`, created
+today — every remark about the morph tool goes there (a standing practice, in CLAUDE.md), the tool adjusted for the current use
+now and revised into an all-purpose tool after this piece or the next. The requirement: a morph event's four elements — the
+expansion of pitch to expand beating · the re-breath / re-bow · the crescendo · the pairs, each with its own glissando — in short
+events (one breath) and long ones (with re-breaths). Nothing built; the talk comes with the section (PLAN 1f).
