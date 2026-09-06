@@ -389,8 +389,19 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - verify on a copy of the piece: a new trill on each of the seven lanes, and a copy dragged from the flute to each other lane,
        all sending the right articulation switch. His existing tutti copies are corrected by the third to-do at their next
        regeneration (play start).
-  5. **Extend to crescendos** (sustained notes, the morph events, any curve-driven object). *Result:* a drawn crescendo balances
-     across the instruments the same way.
+  5. **Extend to crescendos.** *Result:* a crescendo drawn as a curve on a sustained note balances across the instruments the same
+     way a trill does, through the same idea of remap; the same for the morph events' crescendo later and for any object whose
+     loudness a curve drives. The to-dos:
+     - settle the carrier: a held note cannot change velocity mid-note, so its crescendo rides on CC7 — what the app already streams
+       from a curve on a sustained note, through the tuba piece's CC7 table;
+     - measure CC7 → loudness per instrument as in item 1's sweep: a few CC7 steps on a held ordinary note, three registers (= the
+       0d.1 probe), in the same rack session as item 1;
+     - compute a CC7 remap per instrument anchored on the violins, so a curve height gives the same loudness whether it drives
+       velocity or CC7;
+     - the sustained-note stream reads the remap instead of the tuba table;
+     - the morph events and any later curve-driven object get the same two functions: the velocity remap for attacks and trills, the
+       CC7 remap for held sounds;
+     - check: all seven holding a note at bottom, middle and top of a curve, read the levels, within about 1.5 dB.
   *Why:* the piece's second material is curve-driven; if the curve's bottom is a different loudness on each instrument, no ensemble
   balance can be composed — and the rendering must never leak into the notation.
 - Sketch pad: `docs/COMPOSITION_NOTES.md` — the opening is already there (ensemble attack →
