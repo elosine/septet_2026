@@ -4349,7 +4349,19 @@ const Composer = {
         hp.style.pointerEvents = 'all';
         hp.addEventListener('mousedown', (e) => {
             e.stopPropagation(); e.preventDefault();
-            if (CURVE_LAYERS.includes(wc.layer)) { this.selectObject(wc); this.startBendDrag(wc, e); return; }   // the curve windows: hold the line to bend it
+            if (CURVE_LAYERS.includes(wc.layer)) {   // the curve windows
+                const now = performance.now(), last = this._lastLineDown;
+                this._lastLineDown = { id: wc.id, t: now, x: e.clientX, y: e.clientY };
+                const rect = this.lanes[wc.layer].getBoundingClientRect(), dims = this.getLaneDims(wc.layer);
+                const yLane = Math.max(0, Math.min(10, (1 - (e.clientY - rect.top - dims.top) / dims.height) * 10));
+                if (this.pointsMode) {   // Points: a click on the line is a dot there
+                    this.insertCurveNode(wc, Math.round(this.clientXToTime(e.clientX) * 1000) / 1000, yLane); this.selectObject(wc); return;
+                }
+                if (last && last.id === wc.id && now - last.t < 400 && Math.abs(last.x - e.clientX) < 4 && Math.abs(last.y - e.clientY) < 4) {   // a double-click on the line: a dot on it
+                    this._lastLineDown = null; this.addNodeAtClick(wc, e.clientX); this.selectObject(wc); return;
+                }
+                this.selectObject(wc); this.startBendDrag(wc, e); return;   // hold the line to bend it
+            }
             if (e.shiftKey) { this.selectObject(wc, { additive: true }); return; }
             if (this.selectedObjects.length > 1 && this.selectedObjects.includes(wc)) {
                 this.startGroupDrag(wc, e);
@@ -4368,6 +4380,7 @@ const Composer = {
         });
         hp.addEventListener('dblclick', (e) => {
             e.stopPropagation();
+            if (CURVE_LAYERS.includes(wc.layer)) return;   // the curve windows handle their double-click in mousedown
             if (this.isGrain(wc) || wc.isContainer) return;   // no node/splice tools
             if (e.shiftKey) this.spliceCurveAt(wc, e.clientX);
             else this.addNodeAtClick(wc, e.clientX);
@@ -9326,10 +9339,11 @@ const Composer = {
         h += '<div class="pp-row"><label>Technique</label><select data-trill="technique">' + techs.map(q =>
             '<option value="' + q.key + '"' + (q.key === t.technique ? ' selected' : '') + '>' + q.label + '</option>').join('') + '</select></div>';
         h += '<div class="pp-row"><label>Attack</label><input type="checkbox" data-trill="accent"' + (t.accent ? ' checked' : '') + '>'
-            + ' <span style="font-size:10px;color:#666">the first note —</span> vel <input type="number" data-trill="attackVel" value="' + t.attackVel + '" min="1" max="127" style="width:44px">'
-            + ' <select data-trill="attackTech" title="the first note\'s articulation: the fp / sfz attack for the demo"><option value=""' + (!t.attackTech ? ' selected' : '') + '>same as trill</option>'
-            + techs.map(q => '<option value="' + q.key + '"' + (q.key === t.attackTech ? ' selected' : '') + '>' + q.label + '</option>').join('') + '</select>'
-            + ' ms <input type="number" data-trill="attackDurMs" value="' + (t.attackDurMs != null ? t.attackDurMs : '') + '" min="20" max="4000" step="10" placeholder="as played" title="the first note\'s length; blank = his sampled length" style="width:64px"></div>';
+            + ' <span style="font-size:10px;color:#666">first note</span> vel <input type="number" data-trill="attackVel" value="' + t.attackVel + '" min="1" max="127" style="width:44px">'
+            + ' <select data-trill="attackTech" title="the first note: its articulation (the fp / sfz attack for the demo)" style="max-width:150px"><option value=""' + (!t.attackTech ? ' selected' : '') + '>same as trill</option>'
+            + techs.map(q => '<option value="' + q.key + '"' + (q.key === t.attackTech ? ' selected' : '') + '>' + q.label + '</option>').join('') + '</select></div>';
+        h += '<div class="pp-row"><label>Attack ms</label><input type="number" data-trill="attackDurMs" value="' + (t.attackDurMs != null ? t.attackDurMs : '') + '" min="20" max="4000" step="10" placeholder="as played" title="the first note: its length; blank = as you played it" style="width:64px">'
+            + ' <span style="font-size:10px;color:#666">the first note&#8217;s length · blank = as you played</span></div>';
         const ref = this.trillRefResolved(obj), refSel = t.curveRef || 'auto';
         const refStatus = ref.kind === 'flat' ? 'flat level' : (ref.name === 'lane' ? "this lane's curve " + (ref.curves[0] ? ref.curves[0].id : '')
             : 'curve ' + ref.name + (ref.curves.length ? ' (' + ref.curves.length + ' piece' + (ref.curves.length > 1 ? 's' : '') + ' under this span)' : ' — nothing drawn under this span: flat'));
@@ -9513,15 +9527,24 @@ const Composer = {
         const t = Math.max(0, Math.round(this.clientXToTime(clientX) * 1000) / 1000);
         const y = Math.max(0, Math.min(10, Math.round((1 - (clientY - rect.top - dims.top) / dims.height) * 100) / 10));
         const sel = this.selectedObject;
-        const curveId = (sel && sel.type === 'waveCurve' && sel.layer === L) ? sel.id : null;
+        const selCurve = (sel && sel.type === 'waveCurve' && sel.layer === L) ? sel : null;
+        // a click inside a curve's span joins that curve at once; beyond an end, the selected curve grows to it (composer
+        // 2026-09-05: the dots must connect to the line, not wait for Fill); only a click far from everything is a new dot
+        const covering = this.refCurvesOn(L).find(c => t >= c.startSeconds - 0.001 && t <= c.endSeconds + 0.001);
+        const target = covering || selCurve;
+        if (target) {
+            const i = this.insertCurveNode(target, t, y);
+            if (i != null) { this.selectObject(target); this.saveStatus.textContent = 'curve ' + CURVE_NAMES[L] + ': dot at ' + t.toFixed(2) + ' s joined ' + (covering ? 'the curve there' : 'the selected curve') + ' (' + target.nodes.length + ' dots) · keep clicking; a click beyond the end extends it'; }
+            return null;
+        }
+        const curveId = null;
         this.pushUndoState();
         const dot = { id: this.generateId('cd'), type: 'curveDot', layer: L, time: t, y, curveId };
         this.objects.push(dot);
         this.renderCurveDot(dot);
         this.markDirty();
         const pend = this.objects.filter(o => o.type === 'curveDot' && o.layer === L && (o.curveId || null) === curveId).length;
-        this.saveStatus.textContent = 'curve ' + CURVE_NAMES[L] + ': dot at ' + t.toFixed(2) + ' s, height ' + y.toFixed(1)
-            + (curveId ? ' — continues ' + curveId : ' — ' + pend + ' dot' + (pend > 1 ? 's' : '') + ' for a new curve') + ' · Fill draws the line';
+        this.saveStatus.textContent = 'curve ' + CURVE_NAMES[L] + ': ' + pend + ' dot' + (pend > 1 ? 's' : '') + ' for a new curve · Fill draws the line (to add to an existing curve, click inside it, or select it and click beyond its end)';
         return dot;
     },
 
@@ -9601,6 +9624,28 @@ const Composer = {
             ? 'filled: ' + made.map(w => 'curve ' + CURVE_NAMES[w.layer] + ' ' + w.startSeconds.toFixed(1) + ' → ' + w.endSeconds.toFixed(1) + ' s (' + w.nodes.length + ' dots)').join(' · ')
                 + ' — hold the line to bend it · drag a dot to move it · double-click a dot to remove it'
             : 'Fill: a curve needs two dots';
+    },
+
+    // a dot into a curve at a time and height: inside a segment it splits it (a bend becomes two plain halves through the
+    // new dot), beyond an end the curve grows to it; the line is redrawn at once
+    insertCurveNode(wc, t, y) {
+        const dur = wc.endSeconds - wc.startSeconds;
+        const times = wc.nodes.map(n => wc.startSeconds + n.pos * dur);
+        if (times.some(tt => Math.abs(tt - t) < 0.02)) { this.saveStatus.textContent = 'a dot is already there'; return null; }
+        this.pushUndoState();
+        let idx = times.findIndex(tt => tt > t); if (idx < 0) idx = times.length;
+        if (idx > 0 && idx < times.length) {
+            if (wc.segments[idx - 1] && wc.segments[idx - 1].model === 'ctrl') wc.segments[idx - 1] = { model: 'bezier', slope: 0 };
+            wc.segments.splice(idx, 0, { model: 'bezier', slope: 0 });
+        } else if (idx === 0) wc.segments.splice(0, 0, { model: 'bezier', slope: 0 });
+        else wc.segments.push({ model: 'bezier', slope: 0 });
+        wc.nodes.splice(idx, 0, { pos: 0, y: Math.round(y * 10) / 10, smooth: 0 }); times.splice(idx, 0, t);
+        const S = times[0], E = times[times.length - 1];
+        wc.startSeconds = Math.round(S * 1000) / 1000; wc.endSeconds = Math.round(E * 1000) / 1000;
+        wc.nodes.forEach((nd, i) => nd.pos = Math.round(((times[i] - S) / Math.max(1e-6, E - S)) * 10000) / 10000);
+        wc.nodes[0].pos = 0; wc.nodes[wc.nodes.length - 1].pos = 1;
+        this.renderWaveCurve(wc); this.markDirty(); this.refreshTrillDecor();
+        return idx;
     },
 
     // a filled curve's dots, always drawn (the window's colour); each drags, double-click / ALT-click removes

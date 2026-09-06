@@ -3190,3 +3190,31 @@ node: `attackDurMs` 400 → the first note 0.4 s and the second his; the same-sl
 **For the composer:** reload; select a strike note, T; `1 2 3` on the zone; P for the attack (try marcato sfz or Bartók at
 127, 200–400 ms) and the interval; drag the ends; redraw a curve and the trill follows. *Not built:* a re-deal around busy
 players (the skip is at insert); the pitch following the note underneath (his d: it stays).
+
+## §110. His hands on the curves and the trill panel: three fixes the same night — a Points click joins the curve at once, META closed at load, the attack length visible
+
+Composer: *"Double click does nothing. And when I tried to add points, it just adds points not connected to the curve
+line."* (with a screenshot: two loose dots beside the line) · *"For the first note, either I can't see the duration or the
+duration is not there."* · *"meta panel closed by default pls"* · *"points draw mouse icon … a pencil or arrow, something
+with a point"*.
+
+**Found and fixed** (`composer.html`): (1) a click in Points mode only queued a dot for Fill (a hollow one when a curve was
+selected) — too many steps, and the dot sat where the mouse was, off the line. Now: a click inside a curve's span
+**joins that curve at once** (the dot inserted at that time and height, the line redrawn through it, the curve selected so
+the next clicks continue); a click beyond an end with the curve selected **extends it**; only a click far from everything
+with nothing selected is a pending dot for Fill (a new curve). A click on the line in Points mode is a dot there too.
+(2) The double-click on the line was lost because the first click's selection re-drew the line's element under the mouse
+(the browser needs both clicks on the same element); the curve windows now detect it themselves — two clicks within 400
+ms and 4 px on the same line → a dot on the line; the DOM double-click is ignored there. The add-on-line routine also read
+a bent segment with the plain formula and gave the new dot smoothing: it now lands on the drawn line, unsmoothed, and a
+bent segment splits into two plain halves. (3) The Attack row overflowed the panel — the wide articulation menu pushed the
+ms box off the right edge: the length has its own row (`Attack ms`, "blank = as you played"), the menu is capped at 150 px.
+(4) META stays closed at load (the button opens it; the drawer still opens it on Insert). (5) Points mode's cursor is a
+pencil with its tip as the hotspot (a data-URI SVG, crosshair as the fallback); the Points button a nib.
+
+**Verified on the throwaway server** (a copy of the piece; synthetic clicks): a 3-dot curve 40 → 52 s on A; Points click
+at 46.5 → 4 dots, the curve selected; a click at 55 → the end 55, 5 dots; deselect, a click at 70 → a pending dot; a click
+on the line at 43 → 6 dots; two quick clicks on the line at 49 outside Points → 7 dots, 6 segments, times in order; the
+panel: rows `Attack` and `Attack ms`, the ms box inside the panel (right edge 148 of 320), the menu 150 px; META closed at
+load with 32 shapes present; the cursor accepted (a 24 × 24 image, hotspot 2 22). The composer's `scores/trillBuildTst.json`
+sits untracked, his to commit.
