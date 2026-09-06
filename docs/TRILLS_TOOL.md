@@ -136,6 +136,12 @@ pitch) may use a second row (bowed tremolo faster).
 - **Default length:** to this player's next strike note, or 2 s if none; then stretch by the zone's right edge. The
   curve is read over whatever the span becomes.
 
+> **Built 2026-09-06, phase 4 (RUNNING_LOG §111):** the default length as specified — T on a strike note (or at the playhead with
+> nothing selected) runs the trill to this player's next strike note (the first later note of another strike, by `groupId`; the
+> same strike's later notes are skipped; ungrouped notes count after 60 ms), else 2 s; the status names the rule. A drag or an edge
+> stretch regenerates the trill on mouseup (the snippet, the label's count, the `mutedBy` stamps); a copy is not launched from the
+> note. Measured on the piece: the next strike note is never nearer than 0.67 s, so no floor.
+
 ## 6 · Eating — the mute rule
 
 - At play and export: for every trill on lane L over [t0, t1], the notes on L with onsets inside (t0, t1) are muted.
@@ -200,7 +206,9 @@ animation here, it'll just say trill". The animated score shows the span; the cu
 3. **Launch from a strike** and `busy()` in the dealer (§5, §7) — **built 2026-09-05 (RUNNING_LOG §109):** T on a strike note
    (from phase 1) + the zone's `1 2 3`, the sampled curve drawn in the zone, the panel on P, the attack's articulation / length /
    velocity (CN-27), overlap warnings; the dealer skips a trilling player at insert (the simplest form — a re-deal later if wanted).
-4. **Free trills and edge stretching** (§4's `T` on a span; the default length). Small.
+4. **Free trills and edge stretching** (§4's `T` on a span; the default length) — **built 2026-09-06 (RUNNING_LOG §111):** the
+   default length to the player's next strike note, else 2 s; a stretch or a drag regenerates the trill at once; T on a span and T
+   at the playhead were phases 1–2's.
 5. **The weave** (§9). A day, after the hand-made ones have taught the rules.
 6. **Notation** in 2a.
 

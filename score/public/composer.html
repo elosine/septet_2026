@@ -95,6 +95,7 @@
     /* Points mode: a pencil, its tip the hotspot (composer 2026-09-05: "something with a point"); crosshair if a browser refuses it */
     .curveLane.points { pointer-events: auto; cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24'><path d='M5 15 L17 3 L21 7 L9 19 Z' fill='%23333' stroke='%23fff' stroke-width='1'/><path d='M2 22 L5 15 L9 19 Z' fill='%23F04B00' stroke='%23fff' stroke-width='1'/></svg>") 2 22, crosshair; }
     .curveLane .contentGroup circle, .curveLane .contentGroup path.curveHit { pointer-events: auto; }
+    .curveLane.points .contentGroup path.curveHit { cursor: inherit !important; }   /* Points on: the pencil, never the bend arrow (composer 2026-09-06) */
     .curveLane .laneLabel { left: auto; right: 8px; pointer-events: none; padding: 1px 5px; border-radius: 2px; background: rgba(247,245,239,0.75); font-size: 10px; }
     #laneCurveA { top: 57.1429%; height: 14.2857%; border-color: #C2410C; } #laneCurveA .laneLabel { color: #C2410C; }
     #laneCurveB { top: 71.4286%; height: 14.2857%; border-color: #1D6FA5; } #laneCurveB .laneLabel { color: #1D6FA5; }
@@ -8498,6 +8499,7 @@ const Composer = {
         const clone = JSON.parse(JSON.stringify(srcMarker, stripEls));
         clone.id = this.generateId('mk');
         clone.midiSnippet = null;
+        if (clone.trill) clone.trill.launchedFrom = null;   // a copy is not launched from the note (phase 4)
         delete clone._els;
         const offset = (opts && opts.timeOffset != null) ? opts.timeOffset : 0.5;
         clone.time = Math.max(0, clone.time + offset);
@@ -8514,6 +8516,7 @@ const Composer = {
         const clone = JSON.parse(JSON.stringify(srcZone, stripEls));
         clone.id = this.generateId('zn');
         clone.midiSnippet = null;
+        if (clone.trill) clone.trill.launchedFrom = null;   // a copy is not launched from the note (phase 4)
         delete clone._els;
         // Optional time offset (default: zone duration)
         const offset = (opts && opts.timeOffset != null) ? opts.timeOffset : 0;
@@ -8674,6 +8677,7 @@ const Composer = {
                     window.removeEventListener('mousemove', onCloneMove);
                     window.removeEventListener('mouseup', onCloneUp);
                     if (cloneBody) cloneBody.style.cursor = 'grab';
+                    if (hasMoved) this.trillAfterDrag(clone);
                     this.showPropertyPanel();
                     this.markDirty();
                 };
@@ -8736,6 +8740,7 @@ const Composer = {
                 window.removeEventListener('mouseup', onUp);
                 bodyHit.style.cursor = 'grab';
                 if (!hasMoved) this.undoStack.pop();
+                if (hasMoved) this.trillAfterDrag(zone);
                 this.showPropertyPanel();
                 this.markDirty();
             };
@@ -8762,6 +8767,7 @@ const Composer = {
                 window.removeEventListener('mousemove', onMove);
                 window.removeEventListener('mouseup', onUp);
                 if (!hasMoved) this.undoStack.pop();
+                if (hasMoved) this.trillAfterDrag(zone);
                 this.showPropertyPanel();
                 this.markDirty();
             };
@@ -8788,6 +8794,7 @@ const Composer = {
                 window.removeEventListener('mousemove', onMove);
                 window.removeEventListener('mouseup', onUp);
                 if (!hasMoved) this.undoStack.pop();
+                if (hasMoved) this.trillAfterDrag(zone);
                 this.showPropertyPanel();
                 this.markDirty();
             };
@@ -9113,11 +9120,8 @@ const Composer = {
         const wanted = tbl && tbl.table && tbl.table.technique;
         const tech = techs.find(q => q.key === wanted) ? wanted
             : (techs.find(q => /^(accent_senza_vel|senza_vel|ord|main)$/.test(q.key)) || techs[0] || {}).key;
-        let pitch = null, best = -Infinity;
-        this.objects.forEach(o => {
-            if (o.type === 'waveCurve' && o.sonifyNote != null && o.layer === layer && o.startSeconds <= startSec + 0.01
-                && o.startSeconds > best && startSec - o.startSeconds < 8) { best = o.startSeconds; pitch = o.sonifyNote; }
-        });
+        const anchor = this.trillAnchorNote(layer, startSec);
+        let pitch = anchor ? anchor.sonifyNote : null;
         if (pitch == null) pitch = inst ? Math.round((inst.rangeLow + inst.rangeHigh) / 2) : 69;
         return { pitch, interval: 2, technique: tech, accent: true, attackVel: 127, attackTech: '', attackDurMs: null, curveId: '', curveRef: 'auto', level: 0.5, eat: true,
             smooth: 0.7, stretch: 1, speed: 1, seed: 1, roles: true, launchedFrom: null };
@@ -9132,15 +9136,16 @@ const Composer = {
     // start, 4 s — the note becomes the attack and is eaten), or 4 s from the playhead on the active lane
     createTrill() {
         const sel = this.selectedObject;
-        let layer = this.activeLane, start = null, end = null, fromNote = null, curve = null;
+        let layer = this.activeLane, start = null, end = null, fromNote = null, curve = null, endWhy = '';
         if (this.spanSel) { layer = this.spanSel.layer; start = this.spanSel.start; end = this.spanSel.end; this.clearSpanSel(); }   // a marked span first (phase 2)
         else if (sel && sel.type === 'waveCurve' && sel.layer < META_LAYER) {
             layer = sel.layer;
             if (sel.sonifyNote == null) { curve = sel; start = sel.startSeconds; end = sel.endSeconds; }
-            else { fromNote = sel; start = sel.startSeconds; end = start + 4; }
+            else { fromNote = sel; start = sel.startSeconds; }
         }
-        if (start == null) { const t = Math.max(0, this.getTimeAtPlayhead()); start = t; end = t + 4; }
         if (layer == null || layer >= META_LAYER) layer = 3;
+        if (start == null) start = Math.max(0, this.getTimeAtPlayhead());
+        if (end == null) ({ end, why: endWhy } = this.trillDefaultEnd(layer, start, fromNote));   // phase 4: to the player's next strike note, else 2 s
         const zone = this.createZone({ layer, startTime: Math.round(start * 1000) / 1000, endTime: Math.round(end * 1000) / 1000,
             zoneFunction: 'midiPreview', midiModel: 'trill', color: '#F04B00', opacity: 0.16, zoneHeight: 0.96, yOffset: 0.5,
             performanceNotes: 'trill' });
@@ -9152,8 +9157,40 @@ const Composer = {
         this.rerenderLaneNotes(layer);
         this.showPropertyPanel();
         this.markDirty();
-        this.saveStatus.textContent = 'trill on ' + TRACKS[layer].label + ' ' + zone.startTime.toFixed(2) + ' → ' + zone.endTime.toFixed(2) + ' s — click an interval to hear it and take it; ▶ hear plays the trill; T adds another';
+        this.saveStatus.textContent = 'trill on ' + TRACKS[layer].label + ' ' + zone.startTime.toFixed(2) + ' → ' + zone.endTime.toFixed(2) + ' s' + (endWhy ? ' (' + endWhy + ')' : '') + ' — click an interval to hear it and take it; ▶ hear plays the trill; T adds another; drag the right edge to stretch';
         return zone;
+    },
+
+    // this player's nearest strike note at or before the start (within 8 s): the trill's pitch and its strike come from it
+    trillAnchorNote(layer, startSec) {
+        let a = null;
+        this.objects.forEach(o => {
+            if (o.type === 'waveCurve' && o.sonifyNote != null && o.layer === layer && o.startSeconds <= startSec + 0.01
+                && startSec - o.startSeconds < 8 && (!a || o.startSeconds > a.startSeconds)) a = o;
+        });
+        return a;
+    },
+
+    // phase 4 (TRILLS_TOOL §5): the default length — to this player's next strike note, or 2 s if none; the right edge stretches it.
+    // "Next strike" = the first later note of ANOTHER strike (its groupId differs); ungrouped notes count after 60 ms (the strike DB's
+    // simultaneity threshold). In the piece the next strike note is never nearer than 0.67 s (RUNNING_LOG §111), so no floor.
+    trillDefaultEnd(layer, start, fromNote) {
+        const anchor = fromNote || this.trillAnchorNote(layer, start), gid = (anchor && anchor.groupId) || null;
+        let nx = null;
+        this.objects.forEach(o => {
+            if (o.type !== 'waveCurve' || o.sonifyNote == null || o.layer !== layer || o === fromNote) return;
+            if (gid && o.groupId === gid) return;
+            if (o.startSeconds <= start + ((gid && o.groupId) ? 0.001 : 0.06)) return;
+            if (!nx || o.startSeconds < nx.startSeconds) nx = o;
+        });
+        const end = Math.round((nx ? nx.startSeconds : start + 2) * 1000) / 1000;
+        return { end, why: nx ? 'to the next strike note' : '2 s — no later strike note on this player' };
+    },
+
+    // after a drag or a stretch (phase 4): the snippet, the label's count and the mutedBy stamps follow the new span at once
+    trillAfterDrag(zone) {
+        if (!zone || zone.midiModel !== 'trill') return;
+        this.regenerateTrill(zone); this.renderZone(zone);
     },
 
     // the curve the trill reads: the one it names, else the first drawn curve on its lane that overlaps it

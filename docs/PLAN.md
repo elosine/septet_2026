@@ -318,7 +318,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   assignment ("I can choose to place different notes to different instruments"). *Why:* CN-5
   and CN-6 are built from these strikes; the database makes a strike reusable material rather
   than a one-off.
-- **1e — The trill module: trills grown from the strikes, on reference curves** — `phases 0–3 built 2026-09-05 (RUNNING_LOG §97–110; D18–D21); phases 4–6 ahead`
+- **1e — The trill module: trills grown from the strikes, on reference curves** — `phases 0–4 built 2026-09-05/06 (RUNNING_LOG §97–111; D18–D21); phases 5–6 ahead`
   *(composer, CN-19: "one of the onsets in one of these strikes launches a trill … attacked, sforzando, directly into a
   trill … the system would know to eat the bass clarinet notes for strike eleven and twelve")* — the spec is
   `docs/TRILLS_TOOL.md`: the trill object on the ostinato engine with per-instrument speed tables and a fp envelope ·

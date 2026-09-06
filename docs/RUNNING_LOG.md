@@ -3218,3 +3218,54 @@ on the line at 43 → 6 dots; two quick clicks on the line at 49 outside Points 
 panel: rows `Attack` and `Attack ms`, the ms box inside the panel (right edge 148 of 320), the menu 150 px; META closed at
 load with 32 shapes present; the cursor accepted (a 24 × 24 image, hotspot 2 22). The composer's `scores/trillBuildTst.json`
 sits untracked, his to commit.
+
+## §111. The bend cursor only when Points is off; TRILLS_TOOL phase 4 built: the default length to the player's next strike note, a stretch regenerates at once; his reminders; how to extend a curve's ends
+
+Composer (2026-09-06, session 4): *"when points is on and I want to at a point, the double arrow curve adjust icon is there when I
+hover over a curve. Can you make that icon, the double arrow one, on only when points is off? So it's clear when I'm adding a point
+or bending the curve. and then good for phase four."* Mid-build: *"Some to do reminders for me. Move notes in scattered strikes.
+Shift them so they are more playable, and the range walk. And how do I add points to a curve to the... from the... to the beginning
+or after the end."* · *"Another to do normalized trill loudness."* · *"and how do I add points to curve end/beginning?"*
+
+**The cursor (found, fixed):** the line's hit path sets `ns-resize` inline at render (`composer.html`, the curveHit path) — an
+inline style beats the window's `.curveLane.points` pencil, so in Points mode the line showed the bend arrow. One stylesheet rule,
+`.curveLane.points .contentGroup path.curveHit { cursor: inherit !important; }`: `!important` in the sheet outranks the inline
+style, `inherit` hands the path the window's pencil; Points off → `ns-resize` as before; no re-render on the toggle (the class
+flips already). The dots keep `move` in both modes — a third icon, for dragging a dot.
+
+**Phase 4, what it was** (TRILLS_TOOL §11 phase 4 = §4's T on a span + §5's default length, "edge stretching"): T on a span came
+with phase 2 (§105), the edge handles drag since phase 1; missing: (1) the default length — a fixed 4 s since §104, the spec says
+*to this player's next strike note, or 2 s if none*; (2) a stretch or a drag left the snippet, the label's count and the `mutedBy`
+stamps stale until the next play start (the faint drawing was live: `renderZone` re-renders the lane's notes through
+`trillCovers`); (3) a ctrl-drag copy kept `launchedFrom` = the original note. **Measured first** (a scratch script on the piece):
+per player, the gap from a strike note to that player's next strike note (a different `groupId`) — min 0.67 s (Vn2), p10 0.9–1.2 s,
+median 1.7–2.0 s, max 8–11.6 s; none under 0.5 s in 273 gaps → the spec's rule needs no floor.
+
+**Built** (`composer.html`, 10 splices by anchor, `node --check` on both script blocks): `trillAnchorNote(layer, t)` — the
+player's nearest note at or before t within 8 s (`trillDefaults` now takes its pitch from it); `trillDefaultEnd(layer, start,
+fromNote)` — the anchor is the launching note, or the anchor note at the playhead; "next strike" = the first later note of ANOTHER
+strike (its `groupId` differs — the same strike's later notes, the piano's chord or a run's re-deal, are skipped; ungrouped notes
+count after 60 ms, the strike DB's simultaneity threshold), else start + 2 s; `createTrill` uses it for T on a note and T at the
+playhead (a marked span and a selected curve keep their own ends) and the status says which ("to the next strike note" · "2 s — no
+later strike note on this player" · "drag the right edge to stretch"); `trillAfterDrag(zone)` = `regenerateTrill` + `renderZone`
+on the mouseup of the body drag, the ctrl-drag copy and both edges; both zone-copy routines clear `trill.launchedFrom`.
+
+**Verified on the throwaway server** (`zz-ai-phase4`, a copy of the piece, the tab fronted, synthetic events; zero console errors;
+the copy and its working copy deleted): the hit path's computed cursor in Points mode = the lane's pencil (`url(data:image/svg+xml…)
+2 22, crosshair`), off = `ns-resize`; T on C#6 at 43.103 (Vn1) → 43.103 → 46.224 = the next strike note, the same strike's one
+later note skipped, 25 notes, the attack note eaten, the end note not; T on the lane's last note (71.951) → 73.951, the status "2 s —
+no later strike note"; nothing selected, the playhead at 34.06 inside a Vn2 strike whose second note is at 34.441 → the trill 34.06 →
+36.25 (the next strike; 34.441 skipped; the pitch from the anchor); the right edge dragged +2 s → 46.224 → 48.20, the snippet
+regenerated at once (25 → 38 notes, a new `generatedAt`), the 3 covered notes stamped, no stale stamp, the label "38 notes"; a copy
+of a launched trill → `launchedFrom` null, its own snippet (19 notes), the overlap warning. The screenshot: the trill 43.1 → 48.2
+on Violin 1 with its label and `1 2 3`.
+
+*Rejected:* a floor on the default length (the piece never needs it — the data above; the right edge is his control) · re-rendering
+the lines on the Points toggle (a class already flips; CSS is enough) · keeping `launchedFrom` on a copy (a copy eats by its own
+span; the link is the original's).
+
+**His reminders → journal §7** (verbatim there): move the strikes' notes for playability; "the range walk" (its meaning to confirm);
+normalized trill loudness (the played velocities run 41–123 by speed, §100 — a level knob or a per-instrument target; a later phase).
+**His question, answered:** to add points before a curve's start or after its end — select the curve (a click on its line with
+Points off; or any dot added to it with Points on selects it), then in Points mode click beyond either end: the curve extends to that
+dot at once (§110's rule); with nothing selected the same click starts a new curve.

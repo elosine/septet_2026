@@ -100,6 +100,11 @@
 - **Found on the way:** piece #2's ostinato registry is empty here (the zone path was dead — §99–100); the plain drawing path
   and the curve reader were blind to bent segments (fixed, §105, §107); META stays closed at load (§110).
 
+**This session (4, 2026-09-06, Claude Code / Fable 5.1, in progress):** the bend cursor only when Points is off (§111); **TRILLS_TOOL
+phase 4 built** — a trill's default length runs to its player's next strike note (else 2 s), a stretch or a drag regenerates it at
+once, a copy is not launched from the note (§111, verified, pushed); his reminders in §7 (the strikes' notes moved for playability ·
+"the range walk" · normalized trill loudness). Next: phase 5 (the weave) on his go.
+
 **Next up:** the composer's pick: (a) his hands on the trills and the curve windows — what bites; then **phase 4** (free trills,
 edge stretching — small) and **phase 5** (the weave) on his go; the notation of trills at 2a. (b) The chain by hand from #32.
 (c) The 0d bridge sweep of the strike techniques' ranges and lengths in his ten-minute window (§94). Piece #2's composer runs
@@ -108,7 +113,7 @@ at `http://localhost:5000/composer.html` (`.claude/launch.json` → `twopianos`)
 **NEXT STEPS · MODEL · CLEAR:**
 1. ☑ 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1a · 1b · 1c (U1–U13b) · 1e phases 0–3 DONE and pushed.
 2. ► **The composer composes and tests** (any model): strikes #32 onward; trills and curves on the piece; what bites → fix.
-3. **TRILLS_TOOL phases 4–5** (Fable) on his go; then the notation of trills (2a).
+3. **TRILLS_TOOL phase 5, the weave** (Fable) on his go (phase 4 built 2026-09-06, §111); then the notation of trills (2a).
 4. **0d sweep** (Fable, with the bridge) in his window; 0c / 0h after.
 
 **Open at session end** *(2026-09-06, for an AI that has never seen this conversation):*
@@ -459,6 +464,13 @@ cut mid-way — write patch scripts to the scratchpad, splice by exact anchor, a
 - **Test the trills and the curve windows on the piece** (reload): T on a strike note · `1 2 3` on the zone · P for the
   attack and the interval · `A B C`, `✒ Points`, `Fill`, hold the line to bend · SHIFT-drag a span, T. Say what bites; then
   phases 4–5 or the chain from #32 or the 0d window.
+- **Move notes in the scattered strikes; the range walk** — *(composer, 2026-09-06, verbatim: "Some to do reminders for me.
+  Move notes in scattered strikes. Shift them so they are more playable, and the range walk.")* — the strikes' notes shifted
+  for playability; **"the range walk"** in his words, its meaning to be confirmed with him *(AI reading: either the 0d sweep of
+  each technique's sampled range, or a passage that walks each instrument's range)*.
+- **Normalized trill loudness** — *(composer, 2026-09-06, verbatim: "Another to do normalized trill loudness.")* — *(AI reading: the
+  trill's velocities are his played ones, 41–123 by speed (RUNNING_LOG §100); a loudness normalization — a level knob or a target
+  per instrument — for the trill module, phase 4b or 5, on his word)*.
 - *(AI-added, the composer's standing reminder from the rack session:)* **check each instrument
   plugin's gain** (unity; preset FX such as the maximizer / tilt bypassed) whenever a Kontakt or
   UVI instrument is loaded or its preset changed — SAMPLER_QUIRKS.md has the rule.
