@@ -110,7 +110,24 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
     notation (2a) needs the pitch content, not the trigger key.
     `oneShot` comment (NITS: the sampler does not revert; the notation rule did).
 
-- **0d — Xsample dynamics nailed: CC7 and CC state** — `todo` *(repurposed 2026-09-03:
+- **0d — The samples' true ranges and lengths, per technique in use** — `done 2026-09-06 (RUNNING_LOG §122); 0d.3 / 0d.4 remain as the remainder` *(re-scoped 2026-09-06 at the composer's
+  "now the instrument ranges, whats to be done?" · "ok go ahead with the ranges, hands off"; 0d.1's CC7 curves were measured by 1g (§115), 0d.2's
+  rule holds by construction — every event writes its own CC7; 0d.3 / 0d.4 stay below as the remainder)*. **Result when done:** for
+  every technique the piece uses, the app knows where the sample sounds (its true bottom and top) and how long a one-shot really
+  rings; a note outside is folded or flagged in the drawer and the trill panel; the extractor reads the true lengths. The steps:
+  1. fix the list: the 14 instrument-and-technique pairs in use, the drawer's strike palette, the trill attack candidates (§99's rows);
+  2. build the probe on the balance kit (`balance_schedule.js --ranges`): every semitone of each one-shot in use, every second
+     semitone of the rest, across the technique's zone at 127, each note left to ring; the analyzer measures per note whether it
+     sounded and how long it rang;
+  3. run it through the bridge, about twenty-five minutes, hands off;
+  4. analyze: the keys that sounded → the true range (gaps named); the ring → the length per key;
+  5. write the ranges into the recipe (a generated block `MEASURED_RANGES` applied at load) and the one-shots' lengths into
+     `bank/sample_lengths.json` (NAMING §2.7's rows);
+  6. the app: the drawer and the trill panel fold or flag against the true ranges (the attack articulation too), the extractor
+     reads the lengths; a list of the notes already in the piece that fall outside their technique's range.
+  **All six done 2026-09-06 (§122):** 46 techniques measured, the Bartók tops E6 / E5 / B4, the gettato tops B6 / E6 / E5, the one-shot
+  lengths in the bank, the recipe's `MEASURED_RANGES`, `tools/range_check.js` — 16 silent strike notes in the piece named for him.
+  *Was:* **0d — Xsample dynamics nailed: CC7 and CC state** — *(repurposed 2026-09-03:
   the library compare was decided by the composer → D7; what remains is his one named
   risk: "we just need to get the CC7 nailed down")*. Bounded, measured, not a survey:
   - **0d.1 — CC7 → dB curve** on one Xsample string preset and the bass clarinet, with

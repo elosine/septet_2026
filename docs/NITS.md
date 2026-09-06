@@ -71,3 +71,13 @@
   (`bank/balance_rect.json`) the piano's trim comes out +5.3 dB, not the +7 on its fader (its 127 sits 1.7 dB above the violins); the
   remap measures with the trims in force and absorbs it, so nothing is wrong in playback. Re-trim only if the strikes' balance
   (set by ear) is revisited; the strikes' K readings in `bank/balance.json` carry the same taper error for transient-rich samples.
+
+- **2026-09-06 — the Spitfire plucked piano is silent at every key** (the ranges probe, §122): the Piano port's channel 2 produced
+  nothing from A0 to C8 — not loaded, or not routed, in the rack. Nothing in the piece uses it; check when it is wanted.
+- **2026-09-06 — 16 strike notes in the piece sit above their technique's measured top** and play silent (the list in §122;
+  `node tools/range_check.js scores/<score>.json` reprints it): the composer's to fold down or re-pick in the drawer, which folds against
+  the measured ranges from now on. Two bass clarinet trills are written above its top and fold at playback; their labels show the
+  written pitch.
+- **2026-09-06 — the staccato family's rings are capped** at the ranges probe's 1.15 s window on many keys (the bass clarinet's
+  staccato, the strings' staccato / spiccato / marcato staccato, the piano's harmonics): the bank's length is a lower bound there.
+  A longer-slot probe of those alone if the IR ever needs the exact tail.

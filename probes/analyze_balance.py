@@ -150,6 +150,59 @@ def sweep_report(a, S, rows, key, floor, offset):
     print(f'-> {os.path.relpath(outp, ROOT)}')
 
 
+def ranges_report(a, S, rows, key, floor, offset):
+    """PLAN 0d (2026-09-06): per instrument and technique the keys that sounded -> the true range (gaps named), the ring per key
+    -> the one-shot lengths; bank/technique_ranges.json and the one-shot rows merged into bank/sample_lengths.json."""
+    NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+    def nm(m): return NAMES[m % 12] + str(m // 12 - 1)
+    techs = {}
+    for r in rows:
+        d = techs.setdefault((r['inst'], r['tech']), {'inst': r['inst'], 'label': r['label'], 'tech': r['tech'], 'techLabel': r['techLabel'], 'cls': r.get('cls'), 'port': r['port'], 'keys': {}})
+        d['keys'][str(r['pitch'])] = {'found': bool(r['found']), 'dbK': r['dbK'], 'peakDb': r['peakDb'], 'ringS': r.get('ringS'), 'ringCapped': r.get('ringCapped')}
+    out_ranges = {}
+    lengths_new = {}
+    print(f"\nRANGES - the keys that sounded, per technique ({a.weight}-weighted; a key counts as silent below {a.min:.0f} dBFS)\n")
+    print(f"{'instrument':14} {'technique':24} {'zone':9} {'sounds':9} {'silent keys':40} {'ring s (min / median / max)':28} capped")
+    for (inst, tech), d in techs.items():
+        ks = sorted(int(k) for k in d['keys'])
+        found = [k for k in ks if d['keys'][str(k)]['found']]
+        silent = [k for k in ks if not d['keys'][str(k)]['found']]
+        lo, hi = (min(found), max(found)) if found else (None, None)
+        gaps = [k for k in silent if lo is not None and lo < k < hi]
+        rings = [d['keys'][str(k)]['ringS'] for k in found if d['keys'][str(k)]['ringS'] is not None]
+        capped = sum(1 for k in found if d['keys'][str(k)]['ringCapped'])
+        rec = {'label': d['label'], 'techLabel': d['techLabel'], 'cls': d['cls'], 'port': d['port'], 'zone': [ks[0], ks[-1]] if ks else None, 'measuredKeys': ks,
+               'lo': lo, 'hi': hi, 'silent': silent, 'gapsInside': gaps, 'ringMedianS': (round(float(np.median(rings)), 3) if rings else None), 'ringMinS': (min(rings) if rings else None), 'ringMaxS': (max(rings) if rings else None), 'capped': capped, 'keys': d['keys']}
+        out_ranges.setdefault(inst, {})[tech] = rec
+        if d['cls'] == 'one':
+            lengths_new.setdefault(tech, {})
+            for k in found:
+                q = d['keys'][str(k)]
+                if q['ringS'] is not None: lengths_new[tech].setdefault(str(k), []).append(q['ringS'])
+        sil = ' '.join(nm(k) for k in silent)
+        rg = f"{rings and min(rings) or 0:.2f} / {float(np.median(rings)) if rings else 0:.2f} / {rings and max(rings) or 0:.2f}" if rings else '-'
+        zone = f"{ks[0]}-{ks[-1]}" if ks else '-'
+        snd = f"{lo}-{hi}" if lo is not None else 'NONE'
+        print(f"{d['label']:14} {d['tech'][:24]:24} {zone:9} {snd:9} {sil[:40]:40} {rg:28} {capped if capped else '-'}")
+    # merge the one-shot lengths into the bank (a technique key shared by several instruments: the mean per key)
+    lp = os.path.join(ROOT, 'bank', 'sample_lengths.json')
+    try: SL = json.load(open(lp, encoding='utf-8'))
+    except Exception: SL = {}
+    for tech, per in lengths_new.items():   # merged per key: a later run adds or refreshes keys, never drops the others
+        row = SL.get(tech) if isinstance(SL.get(tech), dict) else {}
+        row.update({k: round(float(np.mean(v)), 3) for k, v in per.items()})
+        SL[tech] = {k: row[k] for k in sorted(row, key=lambda x: int(x))}
+    SL['_meta_septet'] = {'measuredAt': datetime.datetime.now().isoformat(timespec='seconds'), 'wav': os.path.basename(a.wav), 'rule': 'ring = onset -> last 10 ms frame above max(floor + 12 dB, peak - 40 dB) in the slot; capped at the slot end', 'techniques': sorted(lengths_new.keys())}
+    json.dump(SL, open(lp, 'w', encoding='utf-8'), indent=1)
+    outp = a.out if os.path.basename(a.out) != 'balance.json' else os.path.join(ROOT, 'bank', 'technique_ranges.json')
+    out = {'measuredAt': datetime.datetime.now().isoformat(timespec='seconds'), 'wav': os.path.basename(a.wav), 'windowS': a.win, 'minDb': a.min, 'weighting': a.weight,
+           'schedule': os.path.relpath(a.schedule, ROOT).replace(chr(92), '/'), 'noiseFloorDb': round(floor, 1), 'offsetS': round(offset, 3), 'rule': 'a key sounds if its onset is found and its flat level is above --min; the range = the lowest and highest sounding keys, the silent keys inside named', 'instruments': out_ranges}
+    json.dump(out, open(outp, 'w', encoding='utf-8'), indent=1)
+    clipped = [f"{r['label']} {r['tech']} {r['pitch']}" for r in rows if r['clip']]
+    if clipped: print('\nCLIPPED: ' + ', '.join(clipped))
+    print(f"\n-> {os.path.relpath(outp, ROOT)} and the one-shot rows in bank/sample_lengths.json ({', '.join(sorted(lengths_new.keys()))})")
+
+
 def proof_report(a, S, rows, key, floor, offset):
     """PLAN 1g item 1, to-do 6 (2026-09-06): at each curve height the seven instruments, each sent its remapped velocity, must
     sit at one level - the violins' - within a.tol dB."""
@@ -206,6 +259,7 @@ def main():
     ap.add_argument('--min', type=float, default=-70.0, help='a note below this level (dBFS) counts as NOT sounding')
     ap.add_argument('--bank', default=os.path.join(ROOT, 'bank', 'balance.json'), help='sweep: the balance bank the reference notes are compared against')
     ap.add_argument('--tol', type=float, default=1.5, help='sweep: the reference check tolerance in dB (PLAN 1g: within about 1.5 dB)')
+    ap.add_argument('--ranges', action='store_true', help='the samples true ranges and the one-shots lengths (tools/balance_schedule.js --ranges) -> bank/technique_ranges.json + bank/sample_lengths.json rows')
     ap.add_argument('--proof', action='store_true', help='the remap proof (tools/balance_schedule.js --proof): the seven at each curve height, their spread and deviation from the violins -> bank/velocity_proof.json')
     ap.add_argument('--sweep', action='store_true', help='the velocity / CC7 sweep (tools/balance_schedule.js --sweep): the reference check against bank/balance.json, the per-instrument velocity and CC7 curves -> bank/velocity_map.json')
     a = ap.parse_args()
@@ -235,13 +289,28 @@ def main():
         if not len(seg): flat, kk, pk = -99.0, -99.0, -99.0
         else: flat, kk = level(seg, sr, a.weight == 'k', a.win); pk = db(float(np.max(np.abs(seg))))
         if flat < a.min: found = False    # nothing sounded where the timetable expected a note (e.g. a pitch outside the preset's samples)
-        rows.append(dict(n, onset=round(on, 3), found=bool(found), dbFlat=round(flat, 2), dbK=(round(kk, 2) if kk is not None else None), peakDb=round(pk, 2), clip=bool(pk >= -0.1)))
+        ring_s, ring_capped = None, None
+        if found and n.get('slotEndMs') is not None:
+            # the ring (PLAN 0d, 2026-09-06): from the onset to the last 10 ms frame still above max(floor + 12, peak - 40) inside the
+            # note's own slot (the next note's pre-arm excluded); at the slot's end it is capped - the sample outlives the slot
+            slot_end = n['slotEndMs'] / 1000 + offset - 0.35
+            g0 = int(on * sr / hop); g1 = min(len(env), int(slot_end * sr / hop))
+            if g1 > g0 + 1:
+                seg_env = env[g0:g1]
+                thr = max(floor + 12.0, float(seg_env.max()) - 40.0)
+                above = np.nonzero(seg_env > thr)[0]
+                last = int(above[-1]) if len(above) else 0
+                ring_s = round((last + 1) * hop / sr, 3)
+                ring_capped = bool(last >= (g1 - g0) - 15)
+        rows.append(dict(n, onset=round(on, 3), found=bool(found), dbFlat=round(flat, 2), dbK=(round(kk, 2) if kk is not None else None), peakDb=round(pk, 2), clip=bool(pk >= -0.1), ringS=ring_s, ringCapped=ring_capped))
 
     key = 'dbK' if a.weight == 'k' else 'dbFlat'
     if a.sweep:
         sweep_report(a, S, rows, key, floor, offset); return
     if a.proof:
         proof_report(a, S, rows, key, floor, offset); return
+    if a.ranges:
+        ranges_report(a, S, rows, key, floor, offset); return
     insts = {}
     for r in rows:
         role = r.get('role', 'plain')

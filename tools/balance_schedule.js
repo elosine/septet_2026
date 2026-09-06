@@ -37,8 +37,22 @@ const SWEEP2 = { flute: [seq(127, 20, 8), 1], piano: [seq(127, 21, 2).concat([20
 // --proof (PLAN 1g item 1, to-do 6): every instrument's ordinary voice at its middle measured register, at the bottom, the
 // middle and the top of a curve (anchor velocity 65 · 96 · 127) — each sent the velocity bank/velocity_remap.json prescribes;
 // the recording must show the seven at one level per height (within about 1.5 dB).
+// --ranges (PLAN 0d re-scoped, 2026-09-06): the samples' TRUE ranges and the one-shots' lengths — every semitone of each one-shot in
+// use, every second semitone of the rest, across the technique's keyboard zone at 127, each note left to ring; the analyzer
+// (--ranges) reads per key whether it sounded and how long it rang. [key, step, class]: 'one' = a one-shot (rings on its own),
+// 'sus' = sustained (held, the range only).
+const ranges = args.includes('--ranges');
+const STRING_ROWS = [['bartok_vel', 1, 'one'], ['gettato_vel', 1, 'one'], ['senza_vel', 2, 'sus'], ['accent_senza_vel', 2, 'sus'], ['marcato_sfz_vel', 2, 'sus'], ['marcato_stac_vel', 2, 'one'], ['spicc_vel', 2, 'one'], ['stac_vel', 2, 'one']];
+const RANGES_PLAN = {
+    flute: [['pizzicato', 1, 'one'], ['tongue_ram', 1, 'one'], ['staccato', 1, 'one'], ['ord', 2, 'sus'], ['sforzando', 2, 'sus'], ['fortepiano', 2, 'sus']],
+    bass_clarinet: [['slap', 1, 'one'], ['stac_vel', 1, 'one'], ['secco', 1, 'one'], ['senza_vel', 2, 'sus'], ['accent_vel', 2, 'sus'], ['portato', 2, 'sus']],
+    piano: [['main', 2, 'sus'], ['plucked', 2, 'one'], ['harmonics', 2, 'one']],
+    violin1: STRING_ROWS, violin2: STRING_ROWS, viola: STRING_ROWS, cello: STRING_ROWS,
+};
+const RANGE_TIMING = { one: { holdMs: +opt('onehold', 200), gapMs: +opt('onegap', 1300) }, sus: { holdMs: +opt('sushold', 600), gapMs: +opt('susgap', 500) } };
 const held = args.includes('--held');   // 1g item 5's proof: a held note at three heights — the velocity for the top, CC7 for the height
 const proof = args.includes('--proof') || held;
+if (ranges && (sweep || proof)) { console.error('--ranges stands alone'); process.exit(1); }
 const PROOF_H = opt('proofh', '0,0.5,1').split(',').map(Number);
 const PROOF_LO = +opt('prooflo', 65), PROOF_HI = +opt('proofhi', 127);
 const REPEAT = Math.max(1, +opt('repeat', 1));   // each proof note played this many times in a row: the sampler's note-to-note scatter (round robins) averages out
@@ -64,7 +78,7 @@ const vels = opt('vels', '127,64').split(',').map(Number);
 const only = opt('only', '').split(',').filter(Boolean);
 const noStrike = args.includes('--nostrike');
 opt('strike', '').split(',').filter(Boolean).forEach(kv => { const [k, v] = kv.split('='); STRIKE_TECHS[k] = v; });
-const out = path.resolve(ROOT, opt('out', held ? 'probes/held_schedule.json' : proof ? 'probes/proof_schedule.json' : sweep2 ? 'probes/sweep2_schedule.json' : sweep ? 'probes/sweep_schedule.json' : 'probes/balance_schedule.json'));
+const out = path.resolve(ROOT, opt('out', ranges ? 'probes/ranges_schedule.json' : held ? 'probes/held_schedule.json' : proof ? 'probes/proof_schedule.json' : sweep2 ? 'probes/sweep2_schedule.json' : sweep ? 'probes/sweep_schedule.json' : 'probes/balance_schedule.json'));
 
 const notes = [];
 let t = leadMs, i = 0;
@@ -80,6 +94,28 @@ const add = (inst, I, tech, role, velList, cc7List, repeat) => {
     t += instGapMs;
 };
 const plan = [];
+if (ranges) {
+    for (const inst of ORDER) {
+        if (only.length && !only.includes(inst)) continue;
+        const I = INSTRUMENTS[inst]; if (!I) { console.error('no recipe for', inst); process.exit(1); }
+        for (const [key, step, cls] of (RANGES_PLAN[inst] || [])) {
+            const tech = I.techniques.find(q => q.key === key);
+            if (!tech) { console.error('no technique ' + key + ' on ' + inst + ' — skipped'); continue; }
+            const lo = tech.rangeLow != null ? tech.rangeLow : I.rangeLow, hi = tech.rangeHigh != null ? tech.rangeHigh : I.rangeHigh;
+            if (lo == null || hi == null) { console.error('no zone for ' + inst + ':' + key + ' — skipped'); continue; }
+            const tm = RANGE_TIMING[cls]; const keys = []; for (let p = lo; p <= hi; p += step) keys.push(p); if (keys[keys.length - 1] !== hi) keys.push(hi);
+            plan.push({ inst, role: 'range', tech: key, cls, step, keys: keys.length });
+            for (const pitch of keys) {
+                notes.push({ i: i++, inst, label: I.label, role: 'range', cls, tech: tech.key, techLabel: tech.label, port: tech.port || I.port, ch: tech.channel || 1,
+                             cc0: tech.cc0 != null ? tech.cc0 : null, ks: tech.ks != null ? tech.ks : null, pitch, vel: 127, cc7: 127,
+                             tPreMs: t - preMs, tOnMs: t, tOffMs: t + tm.holdMs, slotEndMs: t + tm.holdMs + tm.gapMs });
+                t += tm.holdMs + tm.gapMs;
+            }
+            t += 700;
+        }
+        t += instGapMs;
+    }
+}
 if (proof) {   // one note per height per instrument, the middle register, the remapped velocity
     for (const inst of ORDER) {
         if (only.length && !only.includes(inst)) continue;
@@ -102,7 +138,7 @@ if (proof) {   // one note per height per instrument, the middle register, the r
         t += instGapMs;
     }
 }
-for (const role of (proof ? [] : sweep2 ? ['ref', 'vel'] : sweep ? ['ref', 'vel', 'cc7'] : ['plain', 'strike'])) {
+for (const role of ((proof || ranges) ? [] : sweep2 ? ['ref', 'vel'] : sweep ? ['ref', 'vel', 'cc7'] : ['plain', 'strike'])) {
     if (role === 'strike' && noStrike) continue;
     for (const inst of ORDER) {
         if (only.length && !only.includes(inst)) continue;
@@ -120,7 +156,7 @@ for (const role of (proof ? [] : sweep2 ? ['ref', 'vel'] : sweep ? ['ref', 'vel'
     }
 }
 const schedule = { generatedAt: new Date().toISOString(), source: 'sandbox/instruments.js', order: ORDER.filter(k => !only.length || only.includes(k)),
-                   strikeTechs: noStrike ? {} : STRIKE_TECHS, proof, proofH: proof ? PROOF_H : null, proofScale: proof ? { lo: PROOF_LO, hi: PROOF_HI } : null, proofRepeat: proof ? REPEAT : null, remapMeasuredAt: remapBank ? remapBank.measuredAt : null, trims: Object.fromEntries(ORDER.map(k => [k, INSTRUMENTS[k] && INSTRUMENTS[k].balanceDb != null ? INSTRUMENTS[k].balanceDb : 0])), sweep, sweepVels: sweep2 ? [...new Set(notes.filter(n => n.role === 'vel').map(n => n.vel))].sort((a, b) => b - a) : sweep ? SWEEP_VELS : null, sweep2, sweep2Plan: sweep2 ? Object.fromEntries(Object.entries(SWEEP2).map(([k, v]) => [k, { velocities: v[0] || SWEEP_VELS, repeats: v[1] }])) : null, sweepCc7s: sweep ? SWEEP_CC7S : null, cc7Vel: sweep ? cc7Vel : null, plan, leadInMs: leadMs, preMs, noteMs, gapMs, instGapMs, vels, fracs: FRACS, totalMs: t, notes };
+                   strikeTechs: noStrike ? {} : STRIKE_TECHS, ranges, rangesPlan: ranges ? plan : null, rangeTiming: ranges ? RANGE_TIMING : null, proof, proofH: proof ? PROOF_H : null, proofScale: proof ? { lo: PROOF_LO, hi: PROOF_HI } : null, proofRepeat: proof ? REPEAT : null, remapMeasuredAt: remapBank ? remapBank.measuredAt : null, trims: Object.fromEntries(ORDER.map(k => [k, INSTRUMENTS[k] && INSTRUMENTS[k].balanceDb != null ? INSTRUMENTS[k].balanceDb : 0])), sweep, sweepVels: sweep2 ? [...new Set(notes.filter(n => n.role === 'vel').map(n => n.vel))].sort((a, b) => b - a) : sweep ? SWEEP_VELS : null, sweep2, sweep2Plan: sweep2 ? Object.fromEntries(Object.entries(SWEEP2).map(([k, v]) => [k, { velocities: v[0] || SWEEP_VELS, repeats: v[1] }])) : null, sweepCc7s: sweep ? SWEEP_CC7S : null, cc7Vel: sweep ? cc7Vel : null, plan, leadInMs: leadMs, preMs, noteMs, gapMs, instGapMs, vels, fracs: FRACS, totalMs: t, notes };
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, JSON.stringify(schedule, null, 1));
 console.log('balance schedule → ' + path.relative(ROOT, out) + ' · ' + notes.length + ' notes · ' + (t / 1000).toFixed(1) + ' s');

@@ -72,7 +72,10 @@ or not at all.**
    table. The copied table is the tuba's (`staccato` / `cuivre` / `fortepiano`, a few
    pitches); **the septet's one-shot techniques (pizz, Bartók, slap, key click, staccato …)
    need their own measured rows — PLAN 0c/0d.** Until then the extractor warns and uses the
-   drawn length.
+   drawn length. **Measured 2026-09-06 (RUNNING_LOG §122):** the septet's one-shots have their rows — pizzicato, tongue_ram,
+   staccato (flute), slap, stac_vel, secco, bartok_vel, gettato_vel, marcato_stac_vel, spicc_vel, harmonics — keyed by technique
+   (the strings share a key across the four instruments: the mean where their registers overlap); the tuba's rows are gone. A
+   technique's true range lives in the recipe's `MEASURED_RANGES` (`rangeLow / rangeHigh` measured, `zoneLow / zoneHigh` the preset's zone).
 8. **The flute's instrument in hand (D6)** is not a separate field: piccolo / bass flute
    enter as techniques of the flute track's recipe (their own port/channel/range now; clef
    + transposition metadata at 0c.5), so the technique key on the note says which

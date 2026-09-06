@@ -3612,3 +3612,47 @@ techniques main / ord / accent_senza_vel / senza_vel; the voice button → 4 mov
 at load), every lane on its ordinary voice, the cello's marcato attack kept; the curve button → 22 switched, 65–127, the labels
 "vel 65–127", the piano tutti's snippet carrying its 75 CC7 trims; the 294 strike notes byte-identical before and after.
 **For him:** reload · P on any trill · the two buttons · listen · Save (Name version first for a fallback).
+
+## §122. The samples' true ranges and the one-shots' lengths, measured (PLAN 0d re-scoped): 46 techniques, 1,408 notes; the strings' one-shots stop far below their zones; the piece's 16 silent strike notes named
+
+Composer: *"now the instrument ranges, whats to be done?"* → the top line agreed → *"ok go ahead with the ranges, hands off"*.
+
+**Built:** `balance_schedule.js --ranges` (every semitone of each one-shot in use, every second of the rest, across the technique's
+keyboard zone at 127; one-shots held 200 ms with 1.3 s to ring, sustained ones 600 ms; each note's slot end in the schedule);
+`analyze_balance.py --ranges` (per note whether it sounded — the onset found and the level above −70 dBFS — and its RING: the onset to the
+last 10 ms frame above max(floor + 12 dB, peak − 40 dB) inside its slot, capped at the slot's end; per technique the lowest and
+highest sounding keys, the silent keys inside named; → `bank/technique_ranges.json` and the one-shot rows merged per key into
+`bank/sample_lengths.json`); `probes/selftest_ranges.py` (a synthetic recording with known rings and known silent keys: 168 notes, 25
+silent by design, none misread, 132 rings within 20 ms — PASS); `tools/apply_ranges.js` (a generated `MEASURED_RANGES` block in
+`sandbox/instruments.js`, applied at load: the measured span replaces the zone where narrower; the technique keeps its zone as
+`zoneLow / zoneHigh` and `measured: true`); `tools/range_check.js <score>` (the notes and trills outside their technique's range;
+a trill reported where the app folds it); the trill label's ⚠ when the attack articulation has no sample at the pitch; the
+app's `techLength` / `isFixedLen` on the bank's rows alone (the tuba piece's fp / staccato / cuivre constants gone — the flute's
+fortepiano is sustained; the tuba's rows removed from the bank, the original kept as `bank/sample_lengths_tuba_20260810.json`).
+
+**The run** (14:15 → 14:47, 1,347 notes through the bridge, stopped with 40667; one harmless clip on the piano's harmonics at
+31) **and the Bartók-top run** (14:47, 61 notes above the provisional zones — the first run had swept the violins' Bartók only
+to the recipe's provisional 85; the provisional value removed from `vnRanges()` since, the measured block being the truth).
+
+**The ranges (the keys that sound, at 127):** flute — pizzicato 60–84, tongue ram 48–83, staccato / ordinario / sforzando /
+fortepiano 60–96, all complete; bass clarinet — every technique 34–65 complete; piano — main 21–108, harmonics 21–77, **the
+Spitfire plucked piano silent at every key** (not loaded or not routed on the Piano port's channel 2 — a rack matter, NITS);
+**violins — Bartók 55–88** (E6 the top; F6 and above silent; the provisional 85 was two semitones short; §46's B♭6 and §93's C7
+confirmed silent), gettato 55–94 (B6 and above silent), the sustained and the short bowed presets complete to 101; **viola —
+Bartók 48–76** (E5 the top, silent from F5), gettato 48–88 (silent from F6), the rest complete to 93; **cello — Bartók 36–71**
+(B4 the top, silent from C5), gettato 36–76 (silent from F5), the rest complete to 83 — so the cello's marcato sfz DOES sound at
+G#5 (his attack report of §112 is not a range matter; if the 100 ms attack still does not register, lengthen it in the panel).
+**The lengths (median rings):** flute pizzicato 0.42 s, tongue ram 0.52, staccato 0.61; bass clarinet slap 0.60, secco 0.82,
+staccato 1.04 (many capped at the slot — it rings past 1.15 s); Bartók 0.65 (violins), 0.68 (viola), 0.95 (cello); gettato 0.87 /
+0.94 / 1.03; marcato staccato ~0.9–1.0, spiccato ~0.93, staccato ~1.0 (some capped); the piano harmonics 1.25 capped.
+
+**The piece against the measured recipe** (`range_check` on his working copy of 14:14): **16 strike notes play silent** — violin 1 Bartók
+A6 (93) at 4.64 s and F#6 (90) at 10.09; violin 2 Bartók C7 (96) at 18.89, F#6 (90) at 24.11 and 42.07; viola gettato F6 (89) at
+11.84 and 85.13, A6 (93) at 36.63, F#6 (90) at 43.33, G6 (91) at 67.82; cello gettato B5 (83) at 24.38 and 30.57, A5 (81) at
+25.49, F#5 (78) at 43.65, G#5 (80) at 65.76, A#5 (82) at 67.89 — his to fold down or re-pick in the drawer (the drawer folds
+against the measured ranges from now on); the violins' D#6 and E6 Bartók notes (87, 88) sound after all. Two bass clarinet trills
+are written above its top (E4 at 68.79, G#5 at 85.35) and fold at playback to E3 and G#3 — the label says the written pitch.
+
+**Verified on the throwaway page** (a copy of the piece): the recipe in the page carries the measured spans with their zones; a
+cello trill at G#5 with a Bartók attack → the label's ⚠ (no sample at Ab5), with a marcato attack → none, at C4 → none;
+`techLength` reads the new rows. **0d's remainder** (0d.3 the controller lanes, 0d.4 the controller probes) stays as it was.

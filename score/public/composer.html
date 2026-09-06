@@ -3163,32 +3163,27 @@ const Composer = {
         const lc = document.getElementById('laneContainer'); if (lc) lc.style.top = show ? (32 + h.offsetHeight) + 'px' : '32px';
     },
 
-    // MEASURED one-shot sample lengths (probe 2026-08-15, bank/sample_lengths.json).
-    // fp / staccato / cuivre are FIXED: the sample ends itself, so the score
-    // duration must equal the sounding length and must never be scaled.
+    // MEASURED one-shot sample lengths (bank/sample_lengths.json — the septet's own rows since 2026-09-06, PLAN 0d, RUNNING_LOG
+    // §122: pizzicato, tongue ram, staccato, slap, stac_vel, secco, Bartók, gettato, marcato staccato, spiccato, harmonics).
+    // A technique with rows is FIXED: the sample ends itself, so the score duration must equal the sounding length and must
+    // never be scaled. The tuba piece's fp / staccato / cuivre constants are gone — the flute's fortepiano is sustained.
     sampleLen: null,
     async loadSampleLengths() {
         try { this.sampleLen = await fetch('/bank/sample_lengths.json').then(r => r.json()); }
         catch (e) { this.sampleLen = null; }
     },
-    FIXED_TECHS: { fortepiano: 1.67, staccato: 0.45, cuivre: 1.17 },
+    FIXED_TECHS: {},   // kept for the callers; the bank's rows decide (2026-09-06)
     isFixedLen(o) {
-        return !!(o && o.type === 'waveCurve' && o.layer < META_LAYER &&
-                  this.FIXED_TECHS[o.technique] !== undefined);
+        return !!(o && o.type === 'waveCurve' && o.layer < META_LAYER && this.sampleLen && this.sampleLen[o.technique] && !String(o.technique).startsWith('_'));
     },
     techLength(tech, pitch) {
-        const fallback = this.FIXED_TECHS[tech];
-        if (fallback === undefined) return null;                 // ord: variable
-        const tbl = this.sampleLen && this.sampleLen[tech];
-        if (tbl && tbl[pitch] != null) return tbl[pitch];
-        if (tbl) {                                               // nearest measured pitch
-            const keys = Object.keys(tbl).map(Number);
-            if (keys.length) {
-                const near = keys.reduce((a, b) => Math.abs(b - pitch) < Math.abs(a - pitch) ? b : a);
-                return tbl[near];
-            }
-        }
-        return fallback;
+        const tbl = this.sampleLen && !String(tech).startsWith('_') && this.sampleLen[tech];
+        if (!tbl || typeof tbl !== 'object') return null;       // no rows: a sustained technique, the drawn length rules
+        if (tbl[pitch] != null) return tbl[pitch];
+        const keys = Object.keys(tbl).map(Number);               // nearest measured pitch
+        if (!keys.length) return null;
+        const near = keys.reduce((a, b) => Math.abs(b - pitch) < Math.abs(a - pitch) ? b : a);
+        return tbl[near];
     },
 
     // D17: one state — the working copy of a file (gold). Red only if something bound the session
@@ -9346,6 +9341,10 @@ const Composer = {
             attack = (ap === r.port && ach === r.channel) ? { cc0: atq.cc0, sameSlot: true } : { cc0: atq.cc0, port: ap, channel: ach, sameSlot: false };
         }
         zone._overlap = this.trillOverlaps(zone).map(o => o.id);
+        // 0d (2026-09-06): the attack articulation may have no sample at the trill's pitch (the cello's marcato sfz at G#5, §112) — the label says so
+        { const aq = atq || r.tech; const lo = aq && aq.rangeLow != null ? aq.rangeLow : (r.inst && r.inst.rangeLow), hi = aq && aq.rangeHigh != null ? aq.rangeHigh : (r.inst && r.inst.rangeHigh);
+          const bad = t.accent && aq && lo != null && hi != null && (pitch < lo || pitch > hi || (aq.silentKeys && aq.silentKeys.includes(pitch)));
+          zone._attackNoSample = bad ? { key: aq.key, pitch, lo, hi } : null; }
         zone.midiSnippet = { port: r.port, channel: r.channel, leadMs: LEAD_MS,
             events: TrillEngine.snippetEvents(g.notes, zone.startTime - LEAD_MS / 1000, r.cc0, attack),
             technique: t.technique, source: 'trill', table: tbl.key, standIn: tbl.standIn, count: g.notes.length,
@@ -9413,7 +9412,8 @@ const Composer = {
         return 'tr ' + TrillEngine.noteName(t.pitch) + '–' + TrillEngine.noteName(t.pitch + (t.interval || 0)) + ' (' + iv + (t.interval < 0 ? ' ↓' : '') + ') · '
             + (t.technique || '') + (t.velMode === 'curve' ? ' · vel ' + (t.velLo != null ? t.velLo : 65) + '–' + (t.velHi != null ? t.velHi : 127) : ' · vel played')
             + (zone.midiSnippet && zone.midiSnippet.count != null ? ' · ' + zone.midiSnippet.count + ' notes' : '')
-            + (zone._overlap && zone._overlap.length ? ' · ⚠ overlaps ' + zone._overlap.join(', ') : '');
+            + (zone._overlap && zone._overlap.length ? ' · ⚠ overlaps ' + zone._overlap.join(', ') : '')
+            + (zone._attackNoSample ? ' · ⚠ attack ' + zone._attackNoSample.key + ' has no sample at ' + TrillEngine.noteName(zone._attackNoSample.pitch) : '');
     },
 
     // ---- auditions: timestamped, like the zone tick; one at a time ----
