@@ -31,6 +31,11 @@
    piece (its recipes: `CURVE_DATABASE.md` MAXDENSE-1 / BUILD-1 in #4)
 5. *(the rest: open)*
 
+**CN-28 (2026-09-06) re-forms the middle** — *(AI reading, to confirm with him)*: **section 2 = strikes with morph chords**
+("freeze frames / an old-time slide show": morph events launched from strikes, the tuba morph engine — PLAN 1f); **section 3 =
+patterned or call-and-response strikes with crescendos** (STRIKES_TOOL V); the tremolos → fugue → mass of v1 after, or
+interleaved — his to say.
+
 ## Open musical questions (for the composer, when the sandbox exists)
 
 - What does "curve-based" govern in the tremolos? (the tuba piece's META curves were

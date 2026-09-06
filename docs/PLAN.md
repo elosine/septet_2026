@@ -336,6 +336,12 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   id, date) per entry; the 1c panel reads it as a second source. *Why:* the composer's
   harmonic vocabulary as one addressable table.
 
+- **1f — Morph events: a morph launched from a strike (section 2, CN-28)** — `todo` *(composer, 2026-09-06, CN-28: "strikes with
+  morph chords, like freeze frames or old time slide show, work with ai to use morph engine from tuba piece to create 'morph
+  events'")* — the tuba piece's morph engine (in this port: the Morph panel, `morphBend` notes, the bend in the plain tick) made
+  launchable from a strike the way the trill is (TRILLS_TOOL §5: the strike's chord held and morphing into the next — each
+  strike a slide, the morph the dissolve); the requirements to be talked through with him first, as the trill module was (CN-19 →
+  §97–98); consult #4's morph docs (`for_seven_tubas`) when reached. *Why:* section 2's material in his form of 2026-09-06.
 - Sketch pad: `docs/COMPOSITION_NOTES.md` — the opening is already there (ensemble attack →
   curve-based tremolos with fp entries → tremolo fugue → density-build sound mass).
 - Tuba engines to pull per need: `compiler.js` swell clouds and grain envelopes (present

@@ -107,7 +107,9 @@ once, a copy is not launched from the note (§111, verified, pushed); his remind
 of its attack note — a 60 ms eating window, the drag keeps a trill's start, the articulation switch arbitrated on a shared slot
 (the tail, the lead), a lane change carries the stamps (verified, pushed). **Open: the cello's attack** — his *"first attack note
 not functioning for cello"*: the events are right (marcato sfz 100 ms at G#5); likeliest the sample is silent there (Q6's class);
-his one-click test in §112. Lake George's texture noted (COMPOSITION_NOTES 2026-09-06). Next: phase 5 (the weave) on his go.
+his one-click test in §112. Lake George's texture noted (COMPOSITION_NOTES 2026-09-06). **CN-28** (2026-09-06): the form's middle — section 2 strikes with morph
+chords ("morph events" from the tuba morph engine → **PLAN 1f**, todo, talk first), section 3 patterned / call-and-response strikes
+with crescendos (STRIKES_TOOL V); the planner's outline carries it, to confirm with him. Next: phase 5 (the weave) on his go.
 
 **Next up:** the composer's pick: (a) his hands on the trills and the curve windows — what bites; then **phase 4** (free trills,
 edge stretching — small) and **phase 5** (the weave) on his go; the notation of trills at 2a. (b) The chain by hand from #32.

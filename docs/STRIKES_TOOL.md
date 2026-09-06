@@ -516,6 +516,10 @@ is extensible: *"when I'm listening I'll say, oh, I want to hear it like this."*
   strikes alternating two sub-ensembles. Within one strike, order (K) · shape (J) · voicing (B) · locks
   and assign (E, F) already do each of these by hand; a chain is a take per strike today.
 
+*CN-28 (2026-09-06):* **"Patterned strikes. or call and response strikes. With Crescendos - section 3"** — the answering blocks (3)
+and the chains (2) are section 3's material, each chain carrying a crescendo (a dynamic law per chain beside the time law); on his
+call, as the chart decides (§86).
+
 ## W · The curves of the rush — `planned 2026-09-05, not built; the composer: "just the curve … keep a note or a plan so that if we do another one of these, we can build the different curves, the feel of the rush"`
 
 > The accel run (U13) has one curve: geometric — each gap a fixed fraction of the one before. When a strike wants a

@@ -757,3 +757,20 @@ warn; a dragged trill keeps its pitch; the curve reference is live, bake freezes
 multitempo panels, PLAN §1's list) are the tools; the material is quiet and pointillistic — few notes, many rests, the lines
 drifting in and out of phase; the counterpoint is made of the rests as much as the notes. Goes with the pairs and the morph
 opening already noted for Lake George (2026-09-04) and the animated conductions for its quiet material.
+
+---
+
+## CN-28 · 2026-09-06 — the form's middle: strikes with morph chords (section 2), patterned or call-and-response strikes with crescendos (section 3); "morph events"
+
+> *"Composition note. Patterned strikes. or call and response strikes. With Crescendos - section 3; section 2: strikes with morph
+> chords, like freeze frames or old time slide show, work with ai to use morph engine from tuba piece to create 'morph events'"*
+> *(2026-09-06, session 4, typed mid-session while testing the trills)*
+
+**AI reading (not the composer's words):** two sections named by number, his form. **Section 2 — strikes with morph chords:**
+a strike lands and its chord is held and *morphs* — the tuba piece's morph engine (pitches bending from one chord into the next;
+the port carries the Morph panel and the `morphBend` notes) — "freeze frames", "an old-time slide show": each strike a new slide,
+the morph the dissolve between slides. **"Morph events"** = a morph launched from a strike, the way a trill is launched from a
+strike note (TRILLS_TOOL §5): the object to design with him — PLAN 1f. **Section 3 — patterned or call-and-response strikes with
+crescendos:** the strikes as patterns, or as calls and answers between sub-ensembles (STRIKES_TOOL V's answering blocks), each
+chain carrying a crescendo. Where this leaves outline v1's tremolos → fugue → mass (after? interleaved?) is his to say; the
+planner's outline carries the note until then.
