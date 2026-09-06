@@ -3669,3 +3669,10 @@ cello gettato B5 → B4 (twice), A5 → A4, F#5 → F#4, G#5 → G#4, A#5 → A#
 `sonifyNote` changed, tracks and meta identical; `range_check` after → no strike outside, only the two bass clarinet trills written
 above its top (left alone, as asked; they fold at playback). **For him:** Reload in the app before anything else — the app held
 the pre-fold state. The score files stay his, uncommitted.
+
+## §124. "fold the two bass clarinet trills too" — done: their written pitches set to where the app already folded them
+
+Composer: *"fold the two bass clarinet trills too"*. Snapshot `scores/piece-septet-v1.11-beforeTrillFold.json` first; then the app's own fold
+(the pair by octaves into the technique's range 34–65): zn-967 at 68.79 s E4 → E3 (the pair F#3), zn-1010 at 85.35 s G#5 → G#3 (the
+pair A#3) — the sound unchanged, the labels honest now; 2 objects changed of 355; `range_check`: every note and trill inside its range.
+For him: Reload before anything else. The score files stay his, uncommitted.
