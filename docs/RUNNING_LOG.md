@@ -3828,3 +3828,28 @@ steep outlined; run → curve: 18 notes · 2316 ms, the dial `curve 0 [−1 … 
 **Not done, by design:** no calibration (his word: "I don't want to spend time on that currently"); the drawer's level ramp sends the
 remapped velocity without the per-note CC7 trim (NITS); the compiler's own accel keeps its copy of the law (NITS). Docs: PLAN 1h,
 STRIKES_TOOL §W built, PLANNER, journal §2, CN-30 / CN-31.
+
+## §130. "for the curve I described slow and gradual over a longer time span what settings do you suggest I try first" — the first words-to-numbers entry
+
+Composer, with the new block open on his take 34-a (gap 700 · steep 0.85 · notes 18 · → last 45): the question above.
+
+**Computed** (the calculator, first gap 700, landing 45): curve 0 · ms 6000 → 45 notes, the gaps 700 470 387 328 …, 187 ms at half
+time, the notes per quarter 3 / 6 / 12 / 23 (a steady doubling); curve +0.4 · ms 6000 → 33 notes, the head slower (700 584 507), 295 ms
+at half time; curve −0.3 · ms 6000 → 57 notes, the change early (700 378 304), 120 ms at half time; curve 0 · ms 9000 → 68 notes;
+S-curve ease 2 · ms 6000 → 22 notes, the head nearly still (700 684 667), then the rush, then the landing (per quarter 3 / 2 / 3 / 13);
+his geometric → 18 notes over 4201 ms, 418 ms at half time, 2 / 2 / 4 / 9.
+
+**Suggested:** run curve · dial 0 · ms 6000 first (the ramp heard from the second note, doubling quarter by quarter); then +0.4 and
+−0.3 as the two comparisons; the gap box up to about 1000 if 45 notes are too many; the S-curve named as the other feel (a still head
+that rolls and lands), not the gradual one. His word on which is closest = the first line of the calibration vocabulary (PLAN 1h item 4).
+
+## §131. "I dont see a curve selection" — the GUI read back in its own order; the vel row had a second box labelled curve, renamed
+
+Composer, looking at the block: *"please list as bullet points and list the actual box names I dont see a curve selection for
+example and in order of gui"*. Two findings from his eye: (1) the run's dial only appears after a shape is chosen in `run` — with
+`geometric` showing, there is no curve box at all; (2) the loudness ramp's third box, on the `vel` row, was labelled `curve` too — a
+collision. **Fixed at once:** that box reads `vel curve` now (`strike_drawer.js`, the label only; parses; a page change, his reload).
+The settings given as bullets in the GUI's top-to-bottom order with the box names as printed: `gap` 700 (leave) · `=` (the ms box under
+`span ×`) → 6000 · `run` → curve, then the `curve` box that appears under it → 0 · `steep` / `notes` (they follow) · `→ last` 45 ·
+`jitter %` 0 · `hold` 0 · `mirror` off · `vel` blank, `vel curve` untouched · `re-attack ≥` 250 · the readout to expect: 45 notes ·
+44 gaps · 6000 ms · curve · curve 0.00. The comparisons: only the `curve` box under `run`, +0.4 then −0.3.
