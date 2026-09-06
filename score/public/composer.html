@@ -3045,7 +3045,7 @@ const Composer = {
                 this.restoreData(result.data);
                 // scores that carry META shapes open the META window on load
                 // (otherwise the shapes exist but are invisible)
-                if (this.objects.some(o => o.type === 'waveCurve' && o.layer === META_LAYER)) this.openMetaWin();
+                // META stays closed at load (composer 2026-09-05: 'meta panel closed by default') — the META button opens it
                 CURVE_LAYERS.forEach(L => { if (this.objects.some(o => (o.type === 'waveCurve' || o.type === 'curveDot') && o.layer === L)) this.openCurveWin(L); });
                 this.isDirty = false;
                 this.saveStatus.textContent = `Loaded: ${name}`;
@@ -5307,10 +5307,11 @@ const Composer = {
         const n0 = wc.nodes[segIdx], n1 = wc.nodes[insertIdx];
         const segLen = n1.pos - n0.pos;
         const segT = segLen > 0 ? (nPos - n0.pos) / segLen : 0;
-        const interpY = this.computeYAtT(seg.model, seg.slope, n0.y / 10, n1.y / 10, segT) * 10;
-
-        wc.nodes.splice(insertIdx, 0, { pos: nPos, y: Math.round(interpY * 10) / 10, smooth: 0.25 });
-        wc.segments.splice(segIdx + 1, 0, { model: seg.model, slope: seg.slope });
+        const interpY = this.computeSegY(seg, n0.y / 10, n1.y / 10, segT) * 10;   // on the drawn line, bends included
+        const onCurveWin = CURVE_LAYERS.includes(wc.layer);
+        wc.nodes.splice(insertIdx, 0, { pos: nPos, y: Math.round(interpY * 10) / 10, smooth: onCurveWin ? 0 : 0.25 });   // curve windows: the line passes through its dots
+        if (seg.model === 'ctrl') { wc.segments[segIdx] = { model: 'bezier', slope: 0 }; wc.segments.splice(segIdx + 1, 0, { model: 'bezier', slope: 0 }); }   // a bent segment splits into two plain halves through the new dot
+        else wc.segments.splice(segIdx + 1, 0, { model: seg.model, slope: seg.slope });
         this.selectedNodeIdx = insertIdx;
         this.updateWCRendering(wc);
         this.showPropertyPanel();
