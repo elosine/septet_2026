@@ -42,7 +42,7 @@ const VR_ = () => (typeof VelocityRemap !== 'undefined' ? VelocityRemap : (root.
 const DIAL_CFG = { curve: 'aCurve', ease: 'aEase', knee: 'aKnee', gamma: 'aGamma' };   // the shapes' dials → the cfg fields
 // 1h (composer, 2026-09-06, CN-30): the run's dials — the shape, its number, the length by steep / notes / ms, jitter, hold,
 // mirror, the level ramp; a take saved before them gets these, never the last strike's
-const ACCEL_DEFAULTS = { aShape: 'geometric', aLen: 'ratio', aCount: 12, aDur: 2000, aCurve: 0, aEase: 2, aKnee: 0.5, aGamma: 2, aJit: 0, aJitEnd: '', aHold: 0, aMirror: false, aVel0: '', aVel1: '', aVelCurve: 0 };
+const ACCEL_DEFAULTS = { aShape: 'geometric', aLen: 'ratio', aCount: 12, aDur: 2000, aCurve: 0, aEase: 2, aKnee: 0.5, aGamma: 2, aJit: 0, aJitEnd: '', aHold: 0, aMirror: false, aVel0: '', aVel1: '', aVelCurve: 0, aDeal: 'robin', aPool: 'cards' };
 
 const DB_URL = '/bank/scattered_strikes.json';
 const STORE = 'septet.strikeDrawer.v3';
@@ -556,7 +556,7 @@ const D = {
     accelSeq() {
         const c = this.cfg; const units = this.accelUnits(); const n = units.length;
         const spec = this.accelSpec();
-        const key = JSON.stringify([spec, c.aMin, c.aRedeal, c.durX, units.map(u => [u.v.i, u.pitch, u.players.map(x => x.lane + ':' + x.tech)])]);
+        const key = JSON.stringify([spec, c.aMin, c.aRedeal, c.aDeal, c.aPool, c.durX, this.voices.map(v => v.pitch), units.map(u => [u.v.i, u.pitch, u.players.map(x => x.lane + ':' + x.tech)])]);
         if (this._accel && this._accel.key === key) return this._accel.out;
         const AC = AC_(); const R = AC.run(spec);
         const fastest = Math.min(spec.gapStart, spec.gapEnd), minMs = Math.max(0, +c.aMin || 0);
@@ -568,7 +568,38 @@ const D = {
         const fits = (u, t, L) => u.players.every(x => !L.has(x.lane) || t - L.get(x.lane) >= minMs);
         const mark = (u, t, L) => u.players.forEach(x => L.set(x.lane, t));
         const checkPerm = (perm, times) => { const L = new Map(last); for (let j = 0; j < times.length; j++) { if (!fits(perm[j], times[j], L)) return false; mark(perm[j], times[j], L); } return true; };
+        // 1h item 5 (composer, 2026-09-06, §135–138: "c, build both pls"): the pitch pool — the cards' pitches, or every distinct pitch
+        // the strike holds, players or not (each with its recorded voice for the velocity and the length); drawn to completion, then
+        // reshuffled. The round robin with the cards keeps its original draw (one permutation per lap) so earlier takes deal as before.
+        const poolAll = c.aPool === 'strike'; const seenP = new Set(); const pool = [];
+        (poolAll ? this.voices.slice().sort((a, b) => a.slot - b.slot) : units.map(u => u.v)).forEach(v => { if (!seenP.has(v.pitch)) { seenP.add(v.pitch); pool.push({ pitch: v.pitch, v }); } });
+        let deck = []; const draw = () => { if (!deck.length) deck = shuffled(pool, rnd); return deck.pop(); };
+        const lanesSeen = new Set(); const players = []; units.forEach(u => u.players.forEach(x => { if (!lanesSeen.has(x.lane)) { lanesSeen.add(x.lane); players.push(x); } }));
+        out.pool = pool.length; out.players = players.length;
         let pos = 0, cyc = 0;
+        if (c.aDeal === 'free') {
+            // the free dealer — no lap: each onset to any player the re-attack rule allows, at random (seeded), never the one who just
+            // played while another is free, a lean toward whoever has waited longest; the pitch drawn from the pool per note and folded
+            // into that player's range. Nobody free = the rule cannot hold at this speed: the least-recent player takes it, flagged.
+            let prevLane = -1, folded = 0, viol = 0;
+            on.forEach((t, i) => {
+                const wait = x => last.has(x.lane) ? t - last.get(x.lane) : Infinity;
+                let free = players.filter(x => wait(x) >= minMs);
+                if (free.length > 1) free = free.filter(x => x.lane !== prevLane);
+                let pick;
+                if (free.length) {
+                    const finite = free.map(x => wait(x)).filter(w => w !== Infinity); const top = (finite.length ? Math.max(...finite) : 0) + 1;
+                    const ws = free.map(x => (wait(x) === Infinity ? top * 2 : wait(x)) + 1); const tot = ws.reduce((a, b) => a + b, 0);
+                    let r = rnd() * tot; pick = free[free.length - 1]; for (let j = 0; j < free.length; j++) { r -= ws[j]; if (r <= 0) { pick = free[j]; break; } }
+                } else { viol++; pick = players.reduce((b, x) => wait(x) > wait(b) ? x : b, players[0]); }
+                const d = draw(); const P = d.pitch; const rz = this.realize(P, pick);
+                if (rz && !rz.standIn && rz.midi !== P) folded++;
+                out.events.push({ pos: i, onMs: t, cycle: 0, mode: 'free', unit: { v: d.v, pitch: P, players: [pick] }, pitch: P, notes: rz ? [{ lane: pick.lane, tech: pick.tech, midi: rz.midi, standIn: rz.standIn }] : [], level: R.levels ? R.levels[i] : null });
+                last.set(pick.lane, t); prevLane = pick.lane;
+            });
+            out.cycles.push({ cycle: 0, len: N, mode: 'free', folded, viol, redealt: true });
+            pos = N;
+        }
         while (pos < N) {
             const len = Math.min(n, N - pos), times = on.slice(pos, pos + len);
             let order = null, mode = 'own';
@@ -578,7 +609,7 @@ const D = {
                 else { for (let a = 0; a < 3000 && !order; a++) { const perm = shuffled(units, rnd); if (checkPerm(perm.slice(0, len), times)) { order = perm.slice(0, len); mode = 'shuffled'; } } }
                 if (!order) { order = units.slice(0, len); mode = 'rotation'; }
             }
-            const pitches = (cyc > 0 && (mode === 'rotation' || c.aRedeal)) ? shuffled(units.map(u => u.pitch), rnd) : null;   // U13b: the pitch set dealt afresh from cycle 2 (always in the rotation, else it would loop)
+            const pitches = (cyc > 0 && (mode === 'rotation' || c.aRedeal)) ? (poolAll ? Array.from({ length: len }, () => draw().pitch) : shuffled(units.map(u => u.pitch), rnd)) : null;   // U13b: the pitch set dealt afresh from cycle 2 (always in the rotation, else it would loop); 1h item 5: from the whole strike when chosen
             let folded = 0, viol = 0;
             order.forEach((u, j) => {
                 const t = times[j], P = pitches ? pitches[j] : u.pitch;
@@ -590,9 +621,13 @@ const D = {
             out.cycles.push({ cycle: cyc, len, mode, folded, viol, redealt: !!pitches });
             pos += len; cyc++;
         }
-        const tail = n * fastest, feas = tail >= minMs;   // the re-attack rule at the run's fastest gap
-        const cycText = out.cycles.map(x => (x.cycle + 1) + ': ' + (x.mode === 'own' ? 'your order' : x.mode === 'shuffled' ? 'shuffled ok' + (x.redealt ? ', pitches re-dealt' : '') : 'rotation, pitches re-dealt') + (x.folded ? ', ' + x.folded + ' folded' : '') + (x.viol ? ' ⚠ ' + x.viol + ' re-attack' + (x.viol > 1 ? 's' : '') + ' < ' + minMs : '')).join(' · ');
-        out.info = AC.describe(R, spec) + (R.fit && R.fit.residual && Math.abs(R.fit.residual) > 0.5 ? ' · fit off by ' + R.fit.residual.toFixed(1) + ' ms' : '') + '<br>cycles ' + cycText + '<br>tail ' + n + ' × ' + Math.round(fastest) + ' = ' + Math.round(tail) + (feas ? ' ≥ ' + minMs + ' ✓' : ' < ' + minMs + ' ✗ — raise the fastest gap to ' + Math.ceil(minMs / n) + ' or add a player');
+        const nTail = c.aDeal === 'free' ? players.length : n; const tail = nTail * fastest, feas = tail >= minMs;   // the re-attack rule at the run's fastest gap
+        const flags = x => (x.folded ? ', ' + x.folded + ' folded' : '') + (x.viol ? ' ⚠ ' + x.viol + ' re-attack' + (x.viol > 1 ? 's' : '') + ' < ' + minMs : '');
+        const poolText = 'pitches from ' + (poolAll ? 'the whole strike' : 'the cards') + ' (' + pool.length + ')';
+        const dealText = c.aDeal === 'free'
+            ? 'free dealing over ' + players.length + ' players · ' + poolText + flags(out.cycles[0])
+            : 'cycles ' + out.cycles.map(x => (x.cycle + 1) + ': ' + (x.mode === 'own' ? 'your order' : x.mode === 'shuffled' ? 'shuffled ok' + (x.redealt ? ', pitches re-dealt' : '') : 'rotation, pitches re-dealt') + flags(x)).join(' · ') + (poolAll ? ' · ' + poolText : '');
+        out.info = AC.describe(R, spec) + (R.fit && R.fit.residual && Math.abs(R.fit.residual) > 0.5 ? ' · fit off by ' + R.fit.residual.toFixed(1) + ' ms' : '') + '<br>' + dealText + '<br>tail ' + nTail + ' × ' + Math.round(fastest) + ' = ' + Math.round(tail) + (feas ? ' ≥ ' + minMs + ' ✓' : ' < ' + minMs + ' ✗ — raise the fastest gap to ' + Math.ceil(minMs / nTail) + ' or add a player');
         this._accel = { key, out }; return out;
     },
     resetRhythm() { this.cfg.shape = 'played'; this.cfg.timeX = 1; this.cfg.amount = 1; this.cfg.jitterMs = 0; this.cfg.reverse = false; this.cfg.rotate = 0; },
@@ -853,6 +888,8 @@ const D = {
                 '<label title="the run played backwards in time — a rush that opens out; not the same as swapping the gap and → last, which keeps the shape\'s direction"><input id="skAMirror" type="checkbox"> mirror</label>' +
                 '<label title="a loudness ramp along the run in the ensemble\'s one scale (the violins\' velocity, as the trills: 65 = a curve\'s bottom, 127 = its top), each instrument translated through 1g\'s measured remap; blank = the strike\'s own velocities; curve: below 0 the change early, above 0 late">vel <input id="skAVel0" type="number" min="1" max="127" step="1" placeholder="as is" style="' + inp + '"> → <input id="skAVel1" type="number" min="1" max="127" step="1" placeholder="as is" style="' + inp + '"> vel curve <input id="skAVelCurve" type="number" min="-1" max="1" step="0.1" style="' + inp + '"></label>' +
                 '<label title="no player attacks twice within this time; a cycle that cannot be shuffled under it falls back to the rotation of players with the pitches shuffled (folded into range)">re-attack ≥ <input id="skAMin" type="number" min="0" step="10" style="' + inp + '"> ms</label>' +
+                '<label title="1h item 5 (composer, 2026-09-06): round robin — every player once per lap of the cards, cycle 1 in your order, later laps shuffled under the re-attack rule (U13); free — no lap: each note to any player the rule allows, at random, never the one who just played while another is free, a lean toward whoever has waited longest">deal <select id="skADeal" style="' + inp + ';width:84px"><option value="robin">round robin</option><option value="free">free</option></select></label>' +
+                '<label title="1h item 5: where the dealt pitches come from — the cards (the notes with players, as now) or every distinct pitch the strike holds, players or not; drawn to completion before any repeats, then reshuffled; each folded into the receiving player\'s range as now">pitches <select id="skAPool" style="' + inp + ';width:84px"><option value="cards">the cards</option><option value="strike">the whole strike</option></select></label>' +
                 '<label title="U13b (composer, 2026-09-05: \"can we scramble the pitches after the round robin\"): checked — from cycle 2 on, the pitch set is dealt afresh to the players (folded into range), whether the instrument order is shuffled or repeats; unchecked — each player keeps its own pitch, only the order changes"><input id="skARedeal" type="checkbox"> re-deal pitches after cycle 1</label>' +
                 '<div id="skSeedA"></div>' +
                 '<div id="skAInfo" style="color:#9a9;white-space:normal;line-height:1.3"></div>' +
@@ -892,6 +929,8 @@ const D = {
             q('#skAVelCurve').addEventListener('change', e => { this.snapshot(); this.cfg.aVelCurve = clamp(+e.target.value || 0, -1, 1); this.save(); this.render(); });
             q('#skAFloor').addEventListener('change', e => { this.snapshot(); this.cfg.aFloor = clamp(+e.target.value || 45, 5, 5000); this.save(); this.render(); });
             q('#skAMin').addEventListener('change', e => { this.snapshot(); this.cfg.aMin = clamp(+e.target.value || 0, 0, 5000); this.save(); this.render(); });
+            q('#skADeal').addEventListener('change', e => { this.snapshot(); this.cfg.aDeal = e.target.value === 'free' ? 'free' : 'robin'; this.save(); this.render(); });   // 1h item 5
+            q('#skAPool').addEventListener('change', e => { this.snapshot(); this.cfg.aPool = e.target.value === 'strike' ? 'strike' : 'cards'; this.save(); this.render(); });
             q('#skARedeal').addEventListener('change', e => { this.snapshot(); this.cfg.aRedeal = !!e.target.checked; this.save(); this.render(); });
             q('#skSpanMs').addEventListener('change', e => {
                 if (this.cfg.shape === 'accel') { this.snapshot(); this.cfg.aDur = Math.max(1, +e.target.value || 1); this.cfg.aLen = 'duration'; this.save(); this.render(); return; }   // 1h: the duration as the run's length — steep and notes follow
@@ -925,7 +964,8 @@ const D = {
             Q('#skASteep').value = c.aLen === 'ratio' ? c.aRatio : +A.ratio.toFixed(3); Q('#skACount').value = c.aLen === 'count' ? c.aCount : A.notes;
             const master = { ratio: '#skASteep', count: '#skACount', duration: '#skSpanMs' }; Object.keys(master).forEach(k => { Q(master[k]).style.outline = (c.aLen || 'ratio') === k ? '1px solid #C9A05A' : ''; });
             Q('#skAJit').value = c.aJit || 0; Q('#skAJitEnd').value = c.aJitEnd === '' || c.aJitEnd == null ? '' : c.aJitEnd; Q('#skAHold').value = c.aHold || 0; Q('#skAMirror').checked = !!c.aMirror;
-            Q('#skAVel0').value = c.aVel0 === '' || c.aVel0 == null ? '' : c.aVel0; Q('#skAVel1').value = c.aVel1 === '' || c.aVel1 == null ? '' : c.aVel1; Q('#skAVelCurve').value = c.aVelCurve || 0; }
+            Q('#skAVel0').value = c.aVel0 === '' || c.aVel0 == null ? '' : c.aVel0; Q('#skAVel1').value = c.aVel1 === '' || c.aVel1 == null ? '' : c.aVel1; Q('#skAVelCurve').value = c.aVelCurve || 0;
+            Q('#skADeal').value = c.aDeal === 'free' ? 'free' : 'robin'; Q('#skAPool').value = c.aPool === 'strike' ? 'strike' : 'cards'; Q('#skARedeal').disabled = c.aDeal === 'free'; }
           else { msBox.style.outline = ''; const pp = this.pat(); const m = pp.length, last = m ? pp[m - 1] : 0; msBox.value = Math.round(last); gapBox.value = m > 1 ? +(last / (m - 1)).toFixed(1) : 0; gapBox.title = 'the mean gap between the onsets that sound; type a gap and the duration follows: gap × (onsets − 1)'; }
           msBox.disabled = false; ctl.querySelector('#skDrop').checked = !!this.cfg.dropRests; }   // 1h: in accel the ms box is the run's duration, typed
         ctl.querySelector('#skRhyW').value = this.cfg.rhythmW || 480; ctl.querySelector('#skTimeX').value = +(+this.cfg.timeX).toFixed(3); ctl.querySelector('#skShape').value = this.cfg.shape; ctl.querySelector('#skAmt').value = this.cfg.amount; ctl.querySelector('#skJit').value = this.cfg.jitterMs; ctl.querySelector('#skOrder').value = this.cfg.order;

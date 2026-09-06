@@ -438,7 +438,14 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      readout and Hear follow; takes from before the dials get the defaults.
   3. **Verify and document** — `done (§129)`: on a copy of his piece with real DOM events (his take 34-a unchanged: 18 notes · 4201 ms ·
      steep 0.842; an insert at 107.807 s exact to the millisecond); STRIKES_TOOL §W marked built; committed and pushed.
-  4. **Later, on his go:** the calibration ladder (his words → the dial's numbers, done the way the tuba's dens8 ladder was); other
+  4. **The free dealer and the pitch pool** — `built 2026-09-06 (§135–138)` *(composer: "I'm not sure the redeal is working, sounds
+     like a loop" → the dealt laps read off a copy: the shuffle and the re-deal worked; what looped was the lap of seven and the cards'
+     five pitch classes → "c, build both pls")*: a `deal` menu — round robin (as built) or free (no lap: each note to any player the
+     re-attack rule allows, at random, never the one who just played while another is free, a lean toward whoever has waited longest;
+     the rule a guarantee, flagged when nobody is free) — and a `pitches` menu — the cards, or every distinct pitch the strike holds,
+     drawn to completion then reshuffled, folded into the receiving player's range as before. Verified on the copy: 102 notes, the
+     closest two of one player 267 ms apart, ten pitch classes; the old round robin deals identically.
+  5. **Later, on his go:** the calibration ladder (his words → the dial's numbers, done the way the tuba's dens8 ladder was); other
      panels adopting the module — the trills, the compiler's clouds (its own copy of the law stays until touched; NITS), the morph
      events.
   *Result when done:* any feel of the rush is reachable by dialing, and one calculator serves every panel that accelerates. *Why:* the

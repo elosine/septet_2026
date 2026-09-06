@@ -3853,3 +3853,105 @@ The settings given as bullets in the GUI's top-to-bottom order with the box name
 `span ×`) → 6000 · `run` → curve, then the `curve` box that appears under it → 0 · `steep` / `notes` (they follow) · `→ last` 45 ·
 `jitter %` 0 · `hold` 0 · `mirror` off · `vel` blank, `vel curve` untouched · `re-attack ≥` 250 · the readout to expect: 45 notes ·
 44 gaps · 6000 ms · curve · curve 0.00. The comparisons: only the `curve` box under `run`, +0.4 then −0.3.
+
+## §132. "I was imaging something like 15-20s, gradually building, new figures?" — the long runs counted
+
+Composer: *"is 6000 the total duration?"* (yes — first note to last, in ms) → *"I was imaging something like 15-20s, gradually
+building, new figures?"* Read as new numbers for that length; if he meant musical figures per event (groups of notes rather than single
+strikes), that is not in the drawer and would be a new to-do — asked in one line.
+
+**Computed** (run curve, gap 700 unless stated): `=` 15000 · curve 0 · last 45 → 113 notes (~16 per player), per quarter 8 / 15 / 30 /
+59, the gap 284 ms at 5 s, 113 at 10 s, 21 notes in the last second; `=` 20000 · last 45 → 151 notes (~22 each), 11 / 20 / 40 / 79, 21
+in the last second; `=` 20000 · last 100 → 88 notes, 10 / 14 / 24 / 39, 10 in the last second; `=` 20000 · curve 0.4 · last 45 → 109,
+9 / 12 / 24 / 63; `=` 20000 · gap 1500 · last 100 → 69 notes (~10 each), 5 / 9 / 19 / 35. **Suggested first:** `=` 20000 · run curve ·
+curve 0 · gap 700 · `→ last` 100 (a build that ends at ten a second, not a blur); `→ last` 45 for the full rush (151 notes); gap 1500
+for a sparser build. The count is ruled by the fast end: the landing gap, not the first gap, decides how many notes there are.
+
+## §133. "the change in speed from the first to the last is less dramatic then the ones I've been making" — his read-back confirmed, the drama kept over a long span by starting slower
+
+Composer, on the suggested `gap` 700 · `→ last` 100 · `=` 20000: *"so it starts out relatively quick compared to the last one and
+builds up, so the change in speed from the first to the last is less dramatic then the ones I've been making"*. Confirmed with one
+precision: the start is the same as his runs (700 ms); the landing is slower (100 instead of 45), so first-to-last is 7× instead of
+15.6×. **To keep or raise the drama over 15–20 s, start slower and keep the 45 landing** (the calculator, curve 0): gap 1500 · last 45 ·
+20 s → 33× · 122 notes (per quarter 6 / 12 / 31 / 72); gap 2000 · last 45 · 20 s → 44× · 114 notes (4 / 11 / 28 / 70; the gap 838 ms at
+5 s, 305 at 10 s, 116 at 15 s); gap 2000 · last 45 · 15 s → 85 notes (3 / 8 / 21 / 52). The last second holds 20–21 notes whenever
+the landing is 45, whatever the start. His runs so far: 15.6× over 4.2 s, 18 notes.
+
+## §134. "no these are my requirements … less change, more gradually over a long period" — the AI had read §133 backwards; the gentle long runs counted, one picked
+
+Composer: *"no these are my requirements and I'm asking for numbers from you to match, so less change, more gradually over a long
+period"* — §133's read-back had taken his sentence as a complaint; it was the specification. **Counted** (run curve · curve 0 · `=`
+20000, gap 700 unless stated): `→ last` 100 → 7× · 88 notes (~13 each) · per quarter 10 / 14 / 24 / 39; `→ last` 150 → 4.7× · 68
+notes (~10 each) · 9 / 13 / 18 / 27, the gap 485 ms at 5 s, 326 at 10 s, 225 at 15 s, 7 notes in the last second; `→ last` 200 → 3.5×
+· 57 notes · 9 / 11 / 15 / 21; `→ last` 250 → 2.8× · 50 notes · 8 / 11 / 13 / 17; gap 1000 · last 200 → 5× · 50 notes · 7 / 9 / 13 / 20;
+gap 700 · last 150 · 15 s → 51 notes. **Picked for him:** `gap` 700 · `→ last` 150 · `=` 20000 · `run` curve · `curve` 0 — a build from
+1.4 to 6.7 notes a second over 20 s, no blur at the end; `→ last` 200 for gentler still, 100 for a little more. The vocabulary so far:
+"slow and gradual over a longer time span" / "less change, more gradually over a long period" → curve 0, the landing raised, the
+length typed — the drama is the landing gap, the gradualness is the curve dial at 0, the length is the `=` box.
+
+## §135. "I'm not sure the redeal is working, sounds like a loop" / "so instruments should also shuffle each 7 notes" — the dealt cycles read off the copy: the shuffle and the re-deal work; what loops is the material and the lap of seven
+
+Composer, on the 20 s run (gap 700 · → last 150 · curve 0, take 34-a): *"start a little faster and ends a little more faster, so more
+change than now also, I'm not sure the redeal is working, sounds like a loop"* · *"so instruments should also shuffle each 7 notes"*.
+
+**The evidence** (the throwaway server, a copy of his piece, his take, the run's 68 notes = 10 laps of 7): every lap after the first
+is a fresh permutation of the seven players — 2: bcl fl vn2 vc pf va vn1 · 3: vn2 pf vn1 va bcl fl vc · 4: bcl pf vn1 vc va fl vn2 ·
+5: vn2 pf vc bcl fl va vn1 · … — and the pitch set is re-dealt each lap (1–2 folds per lap into range). The dealer does what §91 built.
+**What loops:** (1) the cards' pitches are B1 · B3 · D1 · E5 · B4 · F5 · C#4 — five pitch classes for seven cards, three of them B — so
+every lap is the same five classes, B dominant, folded into each player's register; (2) the round robin itself: every player exactly
+once per seven notes, so the ensemble completes a lap every seven notes, ten times in this run (a faster run has more laps: 500 → 80
+over 20 s = 115 notes = 17 laps). Both are CN-18's design ("the ones I've already chosen … shuffle to completion"; "recycle the players"),
+made for runs of 2–3 laps; at 10–17 laps the ear hears the period.
+
+**The speed target counted** (curve 0 · = 20000): gap 500 · last 100 → 5× · 100 notes; gap 500 · last 80 → 6.3× · 115 notes (per 5 s
+13 / 20 / 32 / 49; 12 in the last second); gap 450 · last 70 → 6.4× · 130; gap 400 · last 60 → 6.7× · 149; gap 500 · last 60 → 8.3× · 138.
+Suggested: gap 500 · → last 80.
+
+**Put to him, lettered:** (a) a free dealer — no lap: each note to any player the re-attack rule allows, the period gone (a switch beside
+the round robin; the rule kept); (b) a wider pitch pool — all the strike's pitches rather than the seven cards, or an octave spread on
+each re-deal; (c) both; (d) leave it: it is the material. Nothing built until his word.
+
+## §136. "explain how a would work and would it still catch articulations in a row in the same instrument <250 ms" — the free dealer described; the rule stays a guarantee
+
+Composer's question, verbatim in the title. **Explained:** the onsets come from the calculator as now, known before any dealing; the
+free dealer walks them in order and, at each onset, lists the players whose last note is at least the re-attack time ago (250 ms), picks
+one of those at random (seeded, the same seed row), never the one who just played while another is free, with a lean toward whoever
+has waited longest so nobody drops out; the pitch for that note comes from the pool (the cards' pitches as now, or the wider pool of
+option b) folded into that player's range — pitch-on-player is no longer a card, it is dealt per note. The 250 ms rule is checked
+against the actual onset times, so it is a guarantee exactly as today, not a tendency; if at some onset nobody is free (a run faster
+than the players can share: the tail check, 7 × the landing gap against 250), the same ✗ warning as now, and the note is dealt to the
+least-recent player and flagged — the composer raises the landing or adds a player. With → last 80 and seven players a player is free
+again three notes after playing at the fast end, so the pick is among about four players there and among all seven in the slow head.
+No period: the run never completes a lap. Awaiting his word (a / b / c / d).
+
+## §137. "where do b pitches come from? the unused ones in the strike? and still same range check?" — strike #34 read: 26 notes, 7 with players, 10 pitch classes against the cards' 5
+
+Composer's question, verbatim in the title. **Read off the copy:** strike #34 has 26 recorded notes; 7 carry players (the cards: B1
+bcl · B3 vn2 · D1 pf · E5 fl · B4 va · F5 vn1 · C#4 vc — five pitch classes, three Bs); 19 have no player (D4 F3 A1 G#1 D6 B2 A2 C2 B0
+A1 G3 D3 A4 C1 D#1 F1 C1 C4 G#2); the whole strike holds ten pitch classes (B D F A G# E C G D# C#), 22 distinct pitches. **Answered:**
+yes — option b's pool is the strike's own notes, all of them, the seven with players and the nineteen without (distinct pitches, 22
+here), drawn shuffle-to-completion then reshuffled, seeded; and yes, the same range check — each drawn pitch is folded by octave into
+the receiving player's technique range (the measured ranges of 0d, `realize()` / `foldInto`), the folds counted in the readout, a
+noise technique taking its stand-in as now. Awaiting his word.
+
+## §138. "c, build both pls" — the free dealer and the whole-strike pitch pool built and verified on the copy; §137's pitch count corrected (24, not 22)
+
+Composer: *"c, build both pls"* after §135–137. **Built** (`strike_drawer.js`, PLAN 1h item 5): two menus in the accel block after
+the re-attack row — `deal`: round robin (as built) or free; `pitches`: the cards (as now) or the whole strike. The pool = the distinct
+pitches of the chosen source, each with its recorded voice (the velocity and the length come from it), drawn to completion then
+reshuffled, seeded with the run's seed. The free dealer: at each onset the players whose last note is at least the re-attack time ago;
+never the one who just played while another is free; a random pick weighted by the wait (a player who has not played yet counts as the
+longest); nobody free = the least-recent player, flagged and counted; the pitch drawn per note and folded into that player's range;
+the events carry a synthetic unit (the pool voice, the pitch, the one player) so the strip, Hear and the insert read them as before.
+The round robin with the cards keeps its original draw, so every earlier take deals identically; with the whole strike its re-deal
+from lap 2 draws from the deck. The re-deal checkbox greys in free. The readout names the dealing and the pool size. Correction to
+§137: strike #34 holds 24 distinct pitches, not 22 (26 notes, two duplicates).
+
+**Verified on the copy** (his take 34-a; run curve · curve 0 · = 20000; real DOM events; no console errors): round robin + cards at
+→ last 150 → lap 2 = bcl:C#4 fl:B4 vn2:D4 vc:B3 pf:E5 va:B4 vn1:F5, identical to §135's dump (the old behaviour kept); **free +
+the whole strike** at → last 80 → 102 notes, the closest two notes of one player 267 ms apart (the rule 250 ✓), no player twice in a
+row, per player 14 / 14 / 16 / 14 / 15 / 14 / 14, ten pitch classes, 41 folds, 0 violations, the readout "free dealing over 7 players ·
+pitches from the whole strike (24), 41 folded · tail 7 × 80 = 560 ≥ 250 ✓"; the first notes vn1:C4 pf:G#2 bcl:G3 vc:E5 vn1:C#4 va:A3
+fl:F4 pf:D3 bcl:D4 vn2:B3 …; free + the cards → five pitch classes, 272 ms, 27 folds; round robin + the whole strike → 15 laps, ten
+pitch classes, 302 ms; the re-deal box enabled in the robin; an insert in free + strike → 102 notes at 107.807 s. The page change
+needs his hard reload. **For him:** `deal` free · `pitches` the whole strike, with gap 500 · → last 80 · = 20000 · run curve · curve 0.

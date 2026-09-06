@@ -555,7 +555,10 @@ call, as the chart decides (§86).
 > compiler's one-dial family (the speed changes by a percentage per second; bloom ← even → surge; its calibrated zero left at 0 here,
 > the composer's to set), the length by any one of steep / notes / ms (the one in charge outlined), a `hold` at the landing, and a
 > level ramp `vel → vel` in the ensemble's scale through 1g's remap. The first gap, the landing and the re-attack rule stay as they
-> were; the round robin is untouched. The calibration of words to numbers waits for his go.
+> were; the round robin is untouched. Added the same evening (§138, "c, build both pls"): a `deal` menu — round robin (as built) or free (no lap: each note to any player the
+> re-attack rule allows, at random, never the one who just played while another is free, a lean toward whoever has waited longest; the
+> rule stays a guarantee, a ✗ when nobody is free) — and a `pitches` menu — the cards, or every distinct pitch the strike holds, drawn to
+> completion then reshuffled, each folded into the receiving player's range. The calibration of words to numbers waits for his go.
 
 
 ## Open questions for the composer (only what blocks the next piece)

@@ -100,7 +100,7 @@ own server (:5300); the AI built at his word, one chunk at a time:
   `scores/piece-septet.json` (snapshots `piece-septet-v1.9-beforeFold` / `-beforeTrillFold`); the checker clean.
 - **PLAN 1h built (§125–129, CN-30):** the acceleration calculator (`score/public/accel_calc.js`, the math alone, page and tools;
   `tools/accel_calc_check.js`, 52 checks) and the drawer's run dials — `run` (six shapes, the tuba curve dial among them), its dial, the
-  length by steep / notes / ms, jitter, hold, mirror, a level ramp through the remap, decelerations; his take 34-a unchanged. No
+  length by steep / notes / ms, jitter, hold, mirror, a level ramp through the remap, decelerations; his take 34-a unchanged; the same evening the free dealer and the whole-strike pitch pool (§135–138). No
   calibration (his word). **107.81 s = the next section's start** (CN-30). CN-31: Lake George's pointillistic multitempo section.
 - **Process:** `docs/PLANNING_METHOD.md` (state and restate → the top line → one step at a time: goal, sub-steps, into the plan),
   the user-level `/plan-item` skill and trigger lines; `docs/MORPH_NOTES.md` (D22, a standing practice); CN-28 (the form's
