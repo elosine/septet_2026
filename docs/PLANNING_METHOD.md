@@ -70,6 +70,37 @@ composer (a rack window, a decision, a listening).
 - Keeps execution separate: building a to-do follows HOW_WE_WORK's chunk cadence (conceptual proposal → go → build → verify →
   docs → commit → push). The plan's to-dos are the chunks; `/running-order` can manage them one at a time.
 
+## A worked example (PLAN 1g, 2026-09-06 — shortened)
+
+*Phase 1, the exchange:* the composer asked what accounts for the velocity differences between instruments and whether the balance
+probes were used. The AI read the balance bank and the trill data first, then answered: the probes act in the rack as gain and
+never touch velocities; the top (127) is matched, the slopes below are not (a table of the 127 → 64 drops). Two more turns settled
+the anchor scale (65 → 127) and the notation's independence. *Phase 2:* five lines. *Phase 3, item 1 in format A:*
+
+> **1. Normalize the volume between instruments.**
+>
+> Result when done: the same curve height is the same loudness on every instrument. The top is already done by the gains; the
+> bottom and the middle need one probe.
+
+*Then format B:*
+
+> **1. Normalize the volume between instruments** (the bottom and the middle of the curve; the top is already done by the gains)
+>
+> - Build the probe: a timetable of each instrument's ordinary voice at eight velocities, three registers.
+> - Run it in your rack, about seven minutes, and record it.
+> - Analyze the recording: a velocity-to-loudness table per instrument, saved in the bank.
+> - Compute, per instrument, the velocity that matches the violins at each curve height. Save it as the remap.
+> - Make the app send the remapped velocity. The trill reads it.
+> - Check: play all seven at bottom, middle and top, read the levels, within about 1.5 dB.
+
+*Then into PLAN.md, committed, pushed — and on to item 2.*
+
+## For future AIs — how this method reaches you
+
+- `/plan-item` (a user-level skill, next to `/session-start`) loads this method into the turn; the composer's user-level
+  CLAUDE.md names the trigger for every repo; this file is the canonical text, copied forward to each new piece.
+- The formats above are to be copied literally. The example is the pattern. The failure below is the tell.
+
 ## Why this method (composer, 2026-09-06)
 
 The failure it prevents: the AI answering with everything it knows at once — long, technical, several issues braided together —
