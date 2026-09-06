@@ -5374,6 +5374,7 @@ const Composer = {
                 }
             }
             if (this._trillLaneToRerender != null) { this.rerenderLaneNotes(this._trillLaneToRerender); this._trillLaneToRerender = null; }
+            this.refreshTrillDecor();   // a deleted curve: the trills that read it redraw
             this.deselectAll();
             this.markDirty();
         }
@@ -5386,6 +5387,10 @@ const Composer = {
         if (!panel || !this.selectedObject) { this.hidePropertyPanel(); return; }
         // META drawing curves: panel only on request (press P) — composer 2026-08-10
         if (this.selectedObject.type === 'waveCurve' && !this._panelOverride) {   // panel on demand only (P key) — composer 2026-08-13
+            this.hidePropertyPanel();
+            return;
+        }
+        if (this.selectedObject.type === 'zone' && this.selectedObject.midiModel === 'trill' && !this._panelOverride) {   // trill zones too: P opens it (composer 2026-09-05)
             this.hidePropertyPanel();
             return;
         }
@@ -8853,12 +8858,14 @@ const Composer = {
 
         g.appendChild(hl);
         g.appendChild(rect);
+        if (zone.midiModel === 'trill') this.renderTrillFill(zone, g, x, w, ry, rh);   // the curve it reads, over its own span (phase 3)
         g.appendChild(label);
         g.appendChild(bodyHit);
         g.appendChild(leftHit);
         g.appendChild(rightHit);
         g.appendChild(topHit);
         g.appendChild(bottomHit);
+        if (zone.midiModel === 'trill') this.renderTrillButtons(zone, g, x, w, ry, rh);   // 1 2 3 = curve A / B / C (phase 3)
 
         // Render chord markers as vertical lines inside the zone
         if (zone.chordMarkers && zone.chordMarkers.length > 0) {
@@ -9097,7 +9104,7 @@ const Composer = {
                 && o.startSeconds > best && startSec - o.startSeconds < 8) { best = o.startSeconds; pitch = o.sonifyNote; }
         });
         if (pitch == null) pitch = inst ? Math.round((inst.rangeLow + inst.rangeHigh) / 2) : 69;
-        return { pitch, interval: 2, technique: tech, accent: true, attackVel: 127, curveId: '', curveRef: 'auto', level: 0.5, eat: true,
+        return { pitch, interval: 2, technique: tech, accent: true, attackVel: 127, attackTech: '', attackDurMs: null, curveId: '', curveRef: 'auto', level: 0.5, eat: true,
             smooth: 0.7, stretch: 1, speed: 1, seed: 1, roles: true, launchedFrom: null };
     },
 
@@ -9120,7 +9127,7 @@ const Composer = {
         if (start == null) { const t = Math.max(0, this.getTimeAtPlayhead()); start = t; end = t + 4; }
         if (layer == null || layer >= META_LAYER) layer = 3;
         const zone = this.createZone({ layer, startTime: Math.round(start * 1000) / 1000, endTime: Math.round(end * 1000) / 1000,
-            zoneFunction: 'midiPreview', midiModel: 'trill', color: '#F04B00', opacity: 0.3, zoneHeight: 0.3, yOffset: 0.5,
+            zoneFunction: 'midiPreview', midiModel: 'trill', color: '#F04B00', opacity: 0.16, zoneHeight: 0.96, yOffset: 0.5,
             performanceNotes: 'trill' });
         zone.trill = this.trillDefaults(layer, start);
         if (fromNote) { zone.trill.pitch = fromNote.sonifyNote; zone.trill.launchedFrom = fromNote.id; }
@@ -9184,9 +9191,19 @@ const Composer = {
         const pitch = this.trillPitchInRange(zone, r);
         const g = TrillEngine.generate({ table: tbl.table, levelAt: this.trillLevelFn(zone), start: zone.startTime, end: zone.endTime,
             pitch, interval: t.interval, smooth: t.smooth, stretch: t.stretch, speed: t.speed, seed: t.seed, roles: t.roles,
-            accent: t.accent, attackVel: t.attackVel });
+            accent: t.accent, attackVel: t.attackVel, attackDurMs: t.accent ? t.attackDurMs : null });
+        // the first note on its own articulation (CN-27: the fp / sfz attack for the demo): same slot → its CC0 first and the
+        // trill's back before the second note; another slot → per-event routing
+        const techs = this.trackTechniques(zone.layer) || [];
+        const atq = (t.accent && t.attackTech) ? techs.find(q => q.key === t.attackTech) : null;
+        let attack = null;
+        if (atq) {
+            const ap = atq.port || r.inst.port, ach = atq.channel || 1;
+            attack = (ap === r.port && ach === r.channel) ? { cc0: atq.cc0, sameSlot: true } : { cc0: atq.cc0, port: ap, channel: ach, sameSlot: false };
+        }
+        zone._overlap = this.trillOverlaps(zone).map(o => o.id);
         zone.midiSnippet = { port: r.port, channel: r.channel, leadMs: LEAD_MS,
-            events: TrillEngine.snippetEvents(g.notes, zone.startTime - LEAD_MS / 1000, r.cc0),
+            events: TrillEngine.snippetEvents(g.notes, zone.startTime - LEAD_MS / 1000, r.cc0, attack),
             technique: t.technique, source: 'trill', table: tbl.key, standIn: tbl.standIn, count: g.notes.length,
             rateRange: g.rateRange, generatedAt: new Date().toISOString() };
         this.stampMutedBy(zone);
@@ -9196,6 +9213,7 @@ const Composer = {
     regenerateTrills() {
         let n = 0;
         this.objects.forEach(o => { if (o.type === 'zone' && o.midiModel === 'trill') { this.regenerateTrill(o); n++; } });
+        if (n) this.refreshTrillDecor();
         return n;
     },
 
@@ -9226,7 +9244,8 @@ const Composer = {
         if (t.pitch == null) return 'trill';
         const iv = (TrillEngine.INTERVALS.find(x => x[0] === Math.abs(t.interval || 0)) || [0, Math.abs(t.interval || 0) + ' st'])[1];
         return 'tr ' + TrillEngine.noteName(t.pitch) + '–' + TrillEngine.noteName(t.pitch + (t.interval || 0)) + ' (' + iv + (t.interval < 0 ? ' ↓' : '') + ') · '
-            + (t.technique || '') + (zone.midiSnippet && zone.midiSnippet.count != null ? ' · ' + zone.midiSnippet.count + ' notes' : '');
+            + (t.technique || '') + (zone.midiSnippet && zone.midiSnippet.count != null ? ' · ' + zone.midiSnippet.count + ' notes' : '')
+            + (zone._overlap && zone._overlap.length ? ' · ⚠ overlaps ' + zone._overlap.join(', ') : '');
     },
 
     // ---- auditions: timestamped, like the zone tick; one at a time ----
@@ -9304,8 +9323,11 @@ const Composer = {
             + ' <button class="tr-dir" title="upper or lower neighbour" style="font-size:10px;padding:1px 6px;margin-left:4px;cursor:pointer">' + (t.interval < 0 ? '↓ below' : '↑ above') + '</button></span></div>';
         h += '<div class="pp-row"><label>Technique</label><select data-trill="technique">' + techs.map(q =>
             '<option value="' + q.key + '"' + (q.key === t.technique ? ' selected' : '') + '>' + q.label + '</option>').join('') + '</select></div>';
-        h += '<div class="pp-row"><label>Accent</label><input type="checkbox" data-trill="accent"' + (t.accent ? ' checked' : '') + '>'
-            + ' <span style="font-size:10px;color:#666">first note at</span> <input type="number" data-trill="attackVel" value="' + t.attackVel + '" min="1" max="127" style="width:48px"></div>';
+        h += '<div class="pp-row"><label>Attack</label><input type="checkbox" data-trill="accent"' + (t.accent ? ' checked' : '') + '>'
+            + ' <span style="font-size:10px;color:#666">the first note —</span> vel <input type="number" data-trill="attackVel" value="' + t.attackVel + '" min="1" max="127" style="width:44px">'
+            + ' <select data-trill="attackTech" title="the first note\'s articulation: the fp / sfz attack for the demo"><option value=""' + (!t.attackTech ? ' selected' : '') + '>same as trill</option>'
+            + techs.map(q => '<option value="' + q.key + '"' + (q.key === t.attackTech ? ' selected' : '') + '>' + q.label + '</option>').join('') + '</select>'
+            + ' ms <input type="number" data-trill="attackDurMs" value="' + (t.attackDurMs != null ? t.attackDurMs : '') + '" min="20" max="4000" step="10" placeholder="as played" title="the first note\'s length; blank = his sampled length" style="width:64px"></div>';
         const ref = this.trillRefResolved(obj), refSel = t.curveRef || 'auto';
         const refStatus = ref.kind === 'flat' ? 'flat level' : (ref.name === 'lane' ? "this lane's curve " + (ref.curves[0] ? ref.curves[0].id : '')
             : 'curve ' + ref.name + (ref.curves.length ? ' (' + ref.curves.length + ' piece' + (ref.curves.length > 1 ? 's' : '') + ' under this span)' : ' — nothing drawn under this span: flat'));
@@ -9349,7 +9371,7 @@ const Composer = {
             const key = el.dataset.trill, t = this.ensureTrill(obj);
             this.pushUndoStateDebounced(300);
             if (el.type === 'checkbox') t[key] = el.checked;
-            else if (el.type === 'number') { const v = parseFloat(el.value); if (!isNaN(v)) t[key] = key === 'pitch' || key === 'seed' || key === 'attackVel' ? Math.round(v) : v; }
+            else if (el.type === 'number') { const v = parseFloat(el.value); if (!isNaN(v)) t[key] = key === 'pitch' || key === 'seed' || key === 'attackVel' || key === 'attackDurMs' ? Math.round(v) : v; else if (el.value === '') t[key] = null; }
             else t[key] = el.value;
             this.regenerateTrill(obj);
             this.renderZone(obj);
@@ -9572,6 +9594,7 @@ const Composer = {
         }
         for (const d of used) { if (d._els && d._els.group) d._els.group.remove(); this.elementCache.delete(d.id); const i = this.objects.indexOf(d); if (i >= 0) this.objects.splice(i, 1); }
         this.deselectAll(); this.markDirty();
+        this.refreshTrillDecor();
         this.saveStatus.textContent = made.length
             ? 'filled: ' + made.map(w => 'curve ' + CURVE_NAMES[w.layer] + ' ' + w.startSeconds.toFixed(1) + ' → ' + w.endSeconds.toFixed(1) + ' s (' + w.nodes.length + ' dots)').join(' · ')
                 + ' — hold the line to bend it · drag a dot to move it · double-click a dot to remove it'
@@ -9616,7 +9639,7 @@ const Composer = {
         wc.startSeconds = Math.round(S * 1000) / 1000; wc.endSeconds = Math.round(E * 1000) / 1000;
         wc.nodes.forEach((n, i) => n.pos = Math.round(((times[i] - S) / Math.max(1e-6, E - S)) * 10000) / 10000);
         wc.nodes[0].pos = 0; wc.nodes[wc.nodes.length - 1].pos = 1;
-        this.renderWaveCurve(wc); this.markDirty();
+        this.renderWaveCurve(wc); this.markDirty(); this.refreshTrillDecor();
         this.saveStatus.textContent = 'dot removed — curve ' + CURVE_NAMES[wc.layer] + ' ' + wc.startSeconds.toFixed(1) + ' → ' + wc.endSeconds.toFixed(1) + ' s';
     },
 
@@ -9637,7 +9660,7 @@ const Composer = {
             wc.nodes[0].pos = 0; wc.nodes[wc.nodes.length - 1].pos = 1;
             this.updateWCRendering(wc);   // the dots follow (curve layers)
         };
-        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.markDirty(); };
+        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.markDirty(); this.refreshTrillDecor(); };
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
 
@@ -9667,8 +9690,74 @@ const Composer = {
             seg.cy = Math.max(-0.4, Math.min(1.4, (v - (1 - bT) * (1 - bT) * y1 - bT * bT * y2) / Math.max(1e-6, w)));
             this.updateWCRendering(wc);
         };
-        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); if (moved) this.markDirty(); };
+        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); if (moved) { this.markDirty(); this.refreshTrillDecor(); } };
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
+    },
+
+    // ========== TRILL ZONE DECOR — phase 3 (CN-26, CN-27; RUNNING_LOG §109) ==========
+    // The zone draws the curve it reads over its own span as a translucent fill (on Violin 2 / Viola / Cello it sits on the
+    // very curve; elsewhere it carries the shape), redrawn when the zone moves or its source curve changes; `1 2 3` on the
+    // zone choose curve A / B / C (the chosen one lit; the lit one again → auto). The panel opens on P only.
+    renderTrillFill(zone, g, x, w, ry, rh) {
+        if (w <= 2 || rh <= 2) return;
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const lv = this.trillLevelFn(zone), span = zone.endTime - zone.startTime;
+        const n = Math.max(24, Math.min(400, Math.round(w / 3)));
+        let d = 'M ' + x.toFixed(1) + ' ' + (ry + rh).toFixed(1);
+        for (let i = 0; i <= n; i++) {
+            const u = i / n, v = Math.max(0, Math.min(1, lv(zone.startTime + u * span)));
+            d += ' L ' + (x + u * w).toFixed(1) + ' ' + (ry + rh - v * rh).toFixed(1);
+        }
+        d += ' L ' + (x + w).toFixed(1) + ' ' + (ry + rh).toFixed(1) + ' Z';
+        const p = document.createElementNS(svgNS, 'path');
+        p.setAttribute('d', d);
+        p.setAttribute('fill', zone.color || '#F04B00'); p.setAttribute('fill-opacity', '0.22');
+        p.setAttribute('stroke', zone.color || '#F04B00'); p.setAttribute('stroke-opacity', '0.6'); p.setAttribute('stroke-width', '1.2');
+        p.style.pointerEvents = 'none';
+        g.appendChild(p);
+    },
+
+    renderTrillButtons(zone, g, x, w, ry, rh) {
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const ref = this.trillRefResolved(zone), chosen = (zone.trill && zone.trill.curveRef) || 'auto';
+        const names = ['A', 'B', 'C'], bw = 16, bh = 13, gap = 3, right = x + w - 4, by = ry + 3;
+        names.forEach((nm, i) => {
+            const bx = right - (names.length - i) * (bw + gap);
+            const lit = chosen === nm || (chosen === 'auto' && ref.kind === 'meta' && ref.name === nm);
+            const b = document.createElementNS(svgNS, 'g');
+            b.setAttribute('class', 'composerObject trBtn'); b.style.cursor = 'pointer'; b.style.pointerEvents = 'all';
+            const r = document.createElementNS(svgNS, 'rect');
+            r.setAttribute('x', bx); r.setAttribute('y', by); r.setAttribute('width', bw); r.setAttribute('height', bh); r.setAttribute('rx', 2);
+            r.setAttribute('fill', lit ? (zone.color || '#F04B00') : '#fff'); r.setAttribute('fill-opacity', lit ? '0.92' : '0.88');
+            r.setAttribute('stroke', zone.color || '#F04B00'); r.setAttribute('stroke-width', '1');
+            const t = document.createElementNS(svgNS, 'text');
+            t.setAttribute('x', bx + bw / 2); t.setAttribute('y', by + 10); t.setAttribute('text-anchor', 'middle');
+            t.setAttribute('font-size', '9.5'); t.setAttribute('font-family', 'system-ui, sans-serif'); t.setAttribute('fill', lit ? '#fff' : '#333');
+            t.textContent = String(i + 1); t.style.pointerEvents = 'none';
+            b.appendChild(r); b.appendChild(t);
+            const title = document.createElementNS(svgNS, 'title'); title.textContent = 'read curve ' + nm + (lit ? ' (chosen — click again for auto)' : ''); b.appendChild(title);
+            b.addEventListener('mousedown', (e) => { e.stopPropagation(); e.preventDefault(); });
+            b.addEventListener('click', (e) => {
+                e.stopPropagation(); e.preventDefault();
+                this.pushUndoStateDebounced(300);
+                const tr = this.ensureTrill(zone);
+                tr.curveRef = (tr.curveRef === nm) ? 'auto' : nm;
+                this.regenerateTrill(zone); this.renderZone(zone); this.markDirty();
+                if (this.selectedObject === zone && this._panelOverride) this.showPropertyPanel();
+                const rr = this.trillRefResolved(zone);
+                this.saveStatus.textContent = 'trill reads ' + (tr.curveRef === 'auto' ? 'auto → ' : '') + (rr.kind === 'flat' ? 'a flat level (nothing drawn under it on ' + (tr.curveRef === 'auto' ? 'A' : nm) + ')' : rr.name === 'lane' ? "this lane's curve" : 'curve ' + rr.name);
+            });
+            g.appendChild(b);
+        });
+    },
+
+    refreshTrillDecor() {
+        this.objects.forEach(o => { if (o.type === 'zone' && o.midiModel === 'trill' && o._els) this.renderZone(o); });
+    },
+
+    trillOverlaps(zone) {
+        return this.objects.filter(o => o !== zone && o.type === 'zone' && o.midiModel === 'trill' && o.layer === zone.layer
+            && o.startTime < zone.endTime && o.endTime > zone.startTime);
     },
 
     tickCurvePlayback(currentTimeSec) {

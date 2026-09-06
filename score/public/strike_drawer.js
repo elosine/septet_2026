@@ -1016,9 +1016,11 @@ const D = {
             replaceMsg += gone ? (' · replaced ' + gone + ' original notes') : ' · no originals in this score';
         }
         const group = 'grp-strike-' + this.strike.index + '-' + Math.floor(t * 10) + (replace === true ? 'r' : replace === 'after' ? 'a' : '');
-        let maxEnd = t;
+        let maxEnd = t; const busy = [];   // TRILLS_TOOL §7 (phase 3): a card on a player who is trilling at that moment is skipped — the run keeps its timing
         notes.forEach(n => {
-            const start = t + n.onMs / 1000, dur = n.durMs / 1000; maxEnd = Math.max(maxEnd, start + dur);
+            const start = t + n.onMs / 1000, dur = n.durMs / 1000;
+            if (typeof C.trillCovers === 'function' && C.trillCovers(n.lane, +start.toFixed(3))) { busy.push(((TRK()[n.lane] || {}).short || ('L' + n.lane)) + '@' + start.toFixed(2)); return; }
+            maxEnd = Math.max(maxEnd, start + dur);
             const lv = Math.max(1, Math.round((n.vel / 127) * 100) / 10);
             C.objects.push({ id: 'wc-' + (C.nextId++), type: 'waveCurve', layer: n.lane, groupId: group,
                 startSeconds: +start.toFixed(3), endSeconds: +(start + dur).toFixed(3),
@@ -1032,7 +1034,7 @@ const D = {
         C.lastInsertGroup = group;
         if (typeof C.openMetaWin === 'function') C.openMetaWin();
         C.renderAll(); C.markDirty();
-        this.setStatus((replace === 'after' ? '#' + this.strike.index + ' → ' + t.toFixed(3) + ' s' + afterMsg + ' · ' : '') + 'inserted ' + notes.length + ' notes at ' + t.toFixed(3) + ' s' + (replace === true ? ' (original time)' : replace === 'after' ? ' (after previous)' : ' (playhead)') + ' as ' + group + replaceMsg);
+        this.setStatus((replace === 'after' ? '#' + this.strike.index + ' → ' + t.toFixed(3) + ' s' + afterMsg + ' · ' : '') + 'inserted ' + (notes.length - busy.length) + ' notes at ' + t.toFixed(3) + ' s' + (replace === true ? ' (original time)' : replace === 'after' ? ' (after previous)' : ' (playhead)') + ' as ' + group + replaceMsg + (busy.length ? ' · ' + busy.length + ' skipped — trilling: ' + busy.join(' ') : ''));
     },
 
     // ------------------------------------------------------------------ back / takes (O)

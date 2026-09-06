@@ -54,15 +54,34 @@
       notes.push({ t: o.start + t, len: Math.min(a.noteDurationsMs[0], gap * 1.8) / 1000, vel, pitch: o.pitch + (k % 2 === 0 ? 0 : interval), level, gap });
       t += gap / 1000; k++;
     }
+    if (o.attackDurMs > 0 && notes.length) notes[0].len = o.attackDurMs / 1000;   // the attack's own length (phase 3)
     return { notes, rateRange: table.rateRange || [0, 0] };
   }
 
-  // the notes as a zone snippet's events, relative to t0 (seconds), the CC7 / CC0 lead first
-  function snippetEvents(notes, t0, cc0) {
+  // the notes as a zone snippet's events, relative to t0 (seconds), the CC7 / CC0 lead first.
+  // attack (phase 3, CN-27): the FIRST note on its own articulation — { cc0, sameSlot } when it shares the trill's
+  // port and channel (its CC0 goes first, the trill's CC0 comes back just before the second note; the first note keeps
+  // sounding on its own sample), or { cc0, port, channel } when it rides another slot (per-event routing, e.g. the
+  // flute's tongue ram beside its ordinario).
+  function snippetEvents(notes, t0, cc0, attack) {
     const r1 = x => Math.round(x * 10) / 10;
     const ev = [{ onsetMs: 0, _cc: 7, _ccValue: 127 }];
-    if (cc0 != null) ev.push({ onsetMs: 0, _cc: 0, _ccValue: cc0 });
-    for (const n of notes) ev.push({ onsetMs: r1((n.t - t0) * 1000), notes: [n.pitch], velocity: n.vel, durations: [r1(n.len * 1000)] });
+    const at = attack && (attack.cc0 != null || attack.port || attack.channel) ? attack : null;
+    if (at && at.sameSlot && at.cc0 != null) ev.push({ onsetMs: 0, _cc: 0, _ccValue: at.cc0 });
+    else if (cc0 != null) ev.push({ onsetMs: 0, _cc: 0, _ccValue: cc0 });
+    if (at && !at.sameSlot) {
+      ev.push({ onsetMs: 0, _cc: 7, _ccValue: 127, port: at.port, channel: at.channel });
+      if (at.cc0 != null) ev.push({ onsetMs: 0, _cc: 0, _ccValue: at.cc0, port: at.port, channel: at.channel });
+    }
+    notes.forEach((n, i) => {
+      const e = { onsetMs: r1((n.t - t0) * 1000), notes: [n.pitch], velocity: n.vel, durations: [r1(n.len * 1000)] };
+      if (i === 0 && at && !at.sameSlot) { e.port = at.port; e.channel = at.channel; }
+      ev.push(e);
+      if (i === 0 && at && at.sameSlot && at.cc0 != null && cc0 != null && at.cc0 !== cc0 && notes.length > 1) {
+        const back = Math.max((n.t - t0) * 1000 + 1, (notes[1].t - t0) * 1000 - 12);
+        ev.push({ onsetMs: r1(back), _cc: 0, _ccValue: cc0 });   // the trill's articulation again, before the second note
+      }
+    });
     return ev;
   }
 

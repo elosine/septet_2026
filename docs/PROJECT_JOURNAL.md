@@ -127,7 +127,9 @@ proven, the rack built, the drawer built.
   reference curve per lane, the trill's live `auto · A · B · C · lane · flat` reference with bake, SHIFT-drag spans + T + ESC,
   and the curve reader fixed to read bent segments as drawn; verified on a copy of the piece. **Then the curves rebuilt to his
   design (CN-23 → CN-25, §107):** META out of the curve path; curve windows A / B / C exactly over Violin 2, Viola, Cello;
-  points → fill → shape (hold the line to bend it, Logic-style); the green square's cause fixed. Awaiting his hands.
+  points → fill → shape (hold the line to bend it, Logic-style); the green square's cause fixed. **The curve windows accepted
+  ("it works good"). Phase 3 built (§109, CN-26/27):** the zone's `1 2 3` with the sampled curve drawn in it, the panel on P, the
+  attack note's articulation / length / velocity, overlap warnings, the dealer's busy skip at insert. Awaiting his hands.
 - D17 (the save system) live; PLAN 1b done. Journal §4 D17. NITS: the stale stand-in after a voicing change.
 
 **Next up:** the composer's pick, each morning: (a) the chain by hand from **#32** (his own first gaps and landings now; the
@@ -136,26 +138,25 @@ proven, the rack built, the drawer built.
 **NEXT STEPS · MODEL · CLEAR:**
 1. ☑ 0a · 0b · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1b · 1c (U1–U13b) DONE and pushed; 1e spec written.
 2. ► **The composer composes** (any model): strikes #32 onward as accel runs; fix what blocks, file the rest in STRIKES_TOOL.
-3. **TRILLS_TOOL phases 3–5** (Fable) when he says go; phases 1 and 2 built (§104, §105) — his test next.
+3. **TRILLS_TOOL phases 4–5** (Fable) when he says go; phases 1–3 built (§104–109) — his test next.
 4. **0d sweep** (Fable, with the bridge) in his window; 0c / 0h after.
 
 **Open at session end** *(2026-09-05 evening, Fable — mid-session checkpoint, for an AI that has never seen this conversation):*
 - **Task and state:** the build work of session 3 is complete, verified and pushed; nothing is half-built. The composer is
   composing in the running app (his server on :5300; the page reloaded after every drawer change; the server unchanged today).
-- **Latest deliverable:** phases 1 + 2 of the trill module in `score/public/composer.html` (+ `trill_engine.js`): the trill
-  object, the interval audition, the eating rule; the curve windows A / B / C with points → fill → shape, the live curve
-  reference, spans (RUNNING_LOG §104–107); before them the scheduled playback (§103), `scores/trill-curve-test.json` + `bank/trill_timing_db.json` + `midi/*.mid` +
+- **Latest deliverable:** phases 1–3 of the trill module in `score/public/composer.html` (+ `trill_engine.js`, the drawer's busy
+  rule): the trill object, the interval audition, the eating rule; the curve windows A / B / C with points → fill → shape; the
+  zone's `1 2 3`, the sampled fill, the attack note, overlap warnings (RUNNING_LOG §104–109); before them the scheduled playback (§103), `scores/trill-curve-test.json` + `bank/trill_timing_db.json` + `midi/*.mid` +
   the tools (§101); before them
   `scores/trill0-listen.json` (§99, rejected on hearing);
   `docs/TRILLS_TOOL.md` (the spec, no code) and the drawer as of U13b in `score/public/strike_drawer.js`;
   `scores/piece-septet.json` + versions + `bank/panel_snapshots.json` committed at this checkpoint.
-- **Next concrete step:** the composer reloads and tries the curve windows: `A`, `● Points`, click dots, `Fill`, hold the line to
-  bend it, drag / double-click dots, several curves per window; a trill's Curve chips read A / B / C; SHIFT-drag a span, T; he
-  reports what bites (known limit: a bend held right beside a dot reaches the lane's ceiling). Piece #2's composer runs at
-  `http://localhost:5000/composer.html` for comparison. Then phase 3 (launch from a strike note as its attack + `busy()` in
-  the accel dealer) on his go. Composing #32 onward continues at his pace. Before any commit run
+- **Next concrete step:** the composer reloads and tries phase 3 on the piece: select a strike note, T; `1 2 3` on the zone; P for
+  the attack (marcato sfz or Bartók at 127, 200–400 ms) and the interval; drag the ends; redraw a curve and watch the trill
+  follow; he reports what bites. Then phase 4 (free trills, edge stretching — small) and phase 5 (the weave) on his go, and the
+  notation of trills in 2a. Composing #32 onward continues at his pace. Before any commit run
   `node tools/unsaved_check.js`; stage `scores/piece-septet*.json` and `bank/panel_snapshots.json` if he has worked.
-- **Resume reads:** `docs/PLANNER.md` NOW · `docs/STRIKES_TOOL.md` U11–U13b, V, W · `docs/TRILLS_TOOL.md` (phases 1–2 built, 3–6 ahead) · `RUNNING_LOG.md` §86–107 (the chart of the chain, the trill talk, step 0's file, the piece #2 deep dive, option A built, the playback path and its fix, phases 1 and 2, the curve windows) · `docs/REAPER_CONTROL.md` only for the 0d sweep.
+- **Resume reads:** `docs/PLANNER.md` NOW · `docs/STRIKES_TOOL.md` U11–U13b, V, W · `docs/TRILLS_TOOL.md` (phases 1–3 built, 4–6 ahead) · `RUNNING_LOG.md` §86–109 (the chart of the chain, the trill talk, step 0's file, the piece #2 deep dive, option A built, the playback path and its fix, phases 1–3, the curve windows) · `docs/REAPER_CONTROL.md` only for the 0d sweep.
 - **How the AI works the app:** its Browser pane opens `http://localhost:5300/composer.html` on the composer's server (no Web
   MIDI; it never edits his scores). A change to the app is verified on a throwaway server — `preview_start score-5301` (in
   `.claude/launch.json`: PORT=5301, the same `scores/`), the session named `zz-ai-*` so the autosave writes a throwaway working
@@ -164,7 +165,7 @@ proven, the rack built, the drawer built.
 - **How to work the rack now:** `node tools/reaper_job.js heartbeat | tracks | fader | run …` (docs/REAPER_CONTROL.md);
   `jobs/peakwatch.lua` + a probe note = the proof for routing; never trust frozen meters before dumping mute / solo / routing (P10).
 - **Pending the composer:** CN-2 (piccolo vs bass flute; the piccolo named twice) — not blocking · the 0d window · the trill
-  articulation (`accent_senza_vel`, what he played his samples on?) · his hands on phases 1 + 2 and the curve windows (§104–107) · his ears on the piece after the reload (§103) and on the MIDI exports (§101) · how the runs continue from #32 (his own numbers since about #27).
+  articulation (`accent_senza_vel`, what he played his samples on?) · his hands on phases 1–3 (§104–109) · his ears on the piece after the reload (§103) and on the MIDI exports (§101) · how the runs continue from #32 (his own numbers since about #27).
 - **Deliberately uncommitted:** nothing — `git status` is clean after this checkpoint's commit (`scores/*-work.json` and
   `scores/versions/` are gitignored by design).
 

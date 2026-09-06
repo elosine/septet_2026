@@ -3122,3 +3122,71 @@ the control point reaches the model's ceiling (`cy` 1.4) and the line goes as fa
 limit, not an error. The screenshot: window A on the Violin 2 lane, dashed edges on the lane's edges, `curve A` at the
 right, dots along it. *Left for his hands:* the feel of the bend; the windows' translucency (0.35); the bend near a dot.
 Piece #2's composer server stays up at `http://localhost:5000/composer.html` (`.claude/launch.json` → `twopianos`).
+
+## §108. Phase 3 talked through before building: the trill from a strike note, the zone's own curve buttons, the panel on P, the live curve update — his questions answered, the open points put to him
+
+Composer (CN-26): the curve windows *"work good"* (the Points icon → a nib, done: 6bf98b2); then phase 3: select a strike
+note, T → a trill; drag it longer or shorter like other zones; the panel hidden unless P, buttons on the zone `1 2 3` to
+choose a curve, the zone showing the sampled length of that curve filled and translucent, sitting on top of the curve;
+does a zone that extends past further strikes grey their notes automatically; do the notes come back when the zone is
+deleted; how to start a zone in the middle; and what happens when the source curve is changed afterwards.
+
+**What phase 1 already does** (§104): T on a selected strike note → a trill from its onset, 4 s, its pitch, that player;
+the note is eaten and the trill's first note is the accent. The zone's edges drag (`renderZone`'s edge handles); the
+eaten notes update live as it moves (a note that STARTS under the trill on that player is silent and faint; one that
+began before and rings into it is not); delete → `mutedBy` cleared, the lane redrawn, the strikes sound again; M mutes the
+trill and gives the notes back without deleting. T with nothing selected → 4 s at the playhead on the active lane;
+SHIFT-drag a span on a lane, then T → the trill over the span. The curve reference is live: the snippet is regenerated
+from the curve at every play start, so a changed source curve changes the trill's sound the next time it plays; `bake`
+freezes a copy when a trill must not follow.
+
+**Proposed for phase 3** (nothing built): (1) trill zones show no panel on selection — P opens it (pitch, interval
+audition, technique, feel, bake); (2) on the zone itself: `1 2 3` (curves A / B / C; the chosen one lit) and `▶` (hear);
+pressing a number sets the reference and the zone draws the sampled curve over its own span as a translucent fill inside
+its box — so on Violin 2 / Viola / Cello the zone sits on top of the very curve it reads, elsewhere it carries the shape
+with it; the fill redraws when the zone is dragged or the source curve is edited (fill, bend, dot moved) — live in the
+picture as well as in the sound; (3) the accel dealer consults `busy(lane, t)` (§7): a run's card that lands on a player
+while that player trills is skipped, the run keeps its timing, the readout says so; (4) the attack: on one channel the
+strike's own articulation (Bartók, gettato, slap) cannot sound with the trill's first note — the accent note on the trill
+articulation is the attack (the spec's option 1); option 3 (two voices) only where a second slot exists (the flute's
+strike slot). **Put to him:** the attack rule · the zone buttons (1 2 3 + ▶, or 1 2 3 only) · overlapping trills on one
+player (warn, my default, or forbid) · whether a trill's pitch should follow when it is dragged onto another strike note
+(no, my default — P changes it) · the live update as default with bake to freeze.
+
+## §109. Phase 3 built: the trill's own `1 2 3` and the sampled curve in the zone, the panel on P, the attack note's articulation / length / velocity, overlap warnings, the dealer's busy rule — verified
+
+Composer (CN-27): the attack for the demo — the first note's articulation, duration and velocity editable in the panel
+(the notation will say fp or sfz); `1 2 3` only; overlaps warn; a dragged trill keeps its pitch; live update, bake freezes.
+
+**Built** (`composer.html` 16 splices, `trill_engine.js`, `strike_drawer.js`): (1) a trill zone shows no panel when
+selected — P opens it (the `_panelOverride` the META curves use). (2) The zone draws the curve it reads over its own
+span as a translucent fill inside its box (24–400 samples of the live level function); new trill zones fill the lane's
+height (`zoneHeight` 0.96), so on Violin 2 / Viola / Cello the fill sits on the very curve; the fill redraws when the zone
+moves and when its source changes — after a Fill, a dot dragged or removed, a bend, a curve deleted, and at every play
+start (`refreshTrillDecor`). (3) `1 2 3` at the zone's top-right: a click → the trill reads A / B / C (lit); the lit one
+again → auto; the status names what it reads. (4) **The attack** (CN-27): the trill block gains `attackTech` (the first
+note's articulation from the lane's menu; blank = the trill's own) and `attackDurMs` (its length; blank = his sampled
+length) beside `attackVel`; the engine sets the first note's length; `snippetEvents` puts the attack's CC0 first and the
+trill's CC0 back 12 ms before the second note when both share the port and channel (the first note keeps sounding on its
+own sample — the sampler switches only new notes), or routes the first note with its CC7 / CC0 to the attack's own slot
+when that differs (the flute's tongue ram beside its ordinario) — the per-event routing the zone tick already had; the
+panel's Attack row: on / off · vel · articulation · ms. (5) Overlapping trills on one player: `_overlap` at regeneration;
+the zone's label says `⚠ overlaps zn-948`. (6) **The dealer's busy rule** (§7, the simplest honest form): at Insert the
+drawer asks `Composer.trillCovers(lane, t)` for every note and does not write one whose player is trilling at that
+moment — the run keeps its timing; the status says `n skipped — trilling: Vn1@45.20 …`. The deal itself is unchanged (a
+re-deal around busy players needs the target time at deal time — later, if wanted).
+
+**Verified on the throwaway server** (a copy of the piece; no fresh console error — the two logged entries were harness
+artefacts: the drawer's first load before a bracket fix, and a synthetic keydown dispatched on `window`): select the
+strike note C#6 at 43.103 on violin 1, T → a trill 43.103 → 47.103 on its pitch, `launchedFrom` set, zoneHeight 0.96, the
+fill drawn, three buttons, the panel hidden; the "2" button → `curveRef` B, lit, "trill reads curve B"; again → auto; a
+curve on A across it → auto resolves to A and the fill changes; a bend on A → the fill changes again; the attack marcato
+sfz at 300 ms → events `cc7 · cc0 11 · note 300 ms at 127 @150 · cc0 9 @320 · note 2 @332`; back to plain → `cc7 · cc0 9
+· note`; a second trill over the first → `_overlap` and the label's warning; `trillCovers(3, 45.5)` true; the drawer's
+loaded `insert` carries the rule; P on the selected zone → the panel with the Attack row (89 articulations + "same as
+trill", the "as played" placeholder), the ms box sets 250 and clears to blank, hidden again on reselect. The engine in
+node: `attackDurMs` 400 → the first note 0.4 s and the second his; the same-slot and other-slot event orders as designed.
+
+**For the composer:** reload; select a strike note, T; `1 2 3` on the zone; P for the attack (try marcato sfz or Bartók at
+127, 200–400 ms) and the interval; drag the ends; redraw a curve and the trill follows. *Not built:* a re-deal around busy
+players (the skip is at insert); the pitch following the note underneath (his d: it stays).

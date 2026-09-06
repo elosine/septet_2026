@@ -164,6 +164,11 @@ flute and bass clarinet strike slots do; the strings' Bartók is a CC0 preset on
 slot). The composer decides by ear; the envelope's `attackVel` and `dropTo` per instrument go into the speed table
 file beside the rates.
 
+> **Built (§109, CN-27):** the first note's articulation, length and velocity are the trill's own fields (`attackTech`,
+> `attackDurMs`, `attackVel`) in the panel's Attack row — option 1 by default; option 3 automatically where the attack's
+> technique rides another slot (the first note routed there with its own CC7 / CC0); on a shared slot the attack's CC0 goes
+> first and the trill's comes back before the second note. The composer chooses by ear for the demo; the notation says fp or sfz.
+
 ## 9 · The weave (later)
 
 Over a time range and a set of players: read each player's free spans from `busy()` and the strike notes (minus a
@@ -192,7 +197,9 @@ animation here, it'll just say trill". The animated score shows the span; the cu
    `bank/trill_timing_db.json`), not the rate table (§101). About a day.
 2. **Three META lanes, tracing, the live reference, the span selection** (§3, §4) — **built 2026-09-05 (RUNNING_LOG §105),
    rebuilt the same night as the curve windows with points → fill → shape (§107, CN-23 → CN-25);** the contract in NAMING §2.2.
-3. **Launch from a strike** and `busy()` in the dealer (§5, §7). Half a day.
+3. **Launch from a strike** and `busy()` in the dealer (§5, §7) — **built 2026-09-05 (RUNNING_LOG §109):** T on a strike note
+   (from phase 1) + the zone's `1 2 3`, the sampled curve drawn in the zone, the panel on P, the attack's articulation / length /
+   velocity (CN-27), overlap warnings; the dealer skips a trilling player at insert (the simplest form — a re-deal later if wanted).
 4. **Free trills and edge stretching** (§4's `T` on a span; the default length). Small.
 5. **The weave** (§9). A day, after the hand-made ones have taught the rules.
 6. **Notation** in 2a.

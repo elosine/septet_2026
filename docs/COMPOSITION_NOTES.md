@@ -707,3 +707,43 @@ One curve per window, a line through dots that live on the timeline; the dots ar
 **AI reading (not the composer's words):** the bend is vertical, the hump's depth and direction following the hand where the
 line is held (Logic's automation curve); a window holds several curves — dots placed with a curve selected continue it,
 dots placed with nothing selected become a new one. Built: RUNNING_LOG §107.
+
+---
+
+## CN-26 · 2026-09-05 — the curve windows accepted; the trill from a strike, as he pictures it (phase 3 talk)
+
+> *"Points icon a pencil or pointer, something with a tip please; otherwise good, it works good. Then for phase three, let's
+> talk and make sure the understanding is correct. So I find a note in one of the strikes, I select it, and then I hit T,
+> and it turns into one of those trill lines. Is that correct? So then what I'd like is, just like all the other zones, I can
+> drag it longer or shorter. And then could you add some buttons on the zone and have the panel hidden unless I press P?
+> And then buttons on the zone for, like, one, two, or three, so I can choose a curve. And then if I hit one, it'll sample
+> that zone's length of curve one, and I should see it filled — you can make it somewhat transparent if you want — and the
+> zone could sit on top of the curve. And then I wanted to ask: if the zone extends past additional strikes, is there just
+> automatic detection, and it grays out those notes? And then what if I want to delete the zone — do the strike notes come
+> back? And then how do I start a zone in the middle, just putting my cursor and hit Add Trill? Let's discuss the
+> requirements and anything else I'm not thinking of. Oh, and one more thing: what happens if I update the curve? Can we
+> have a way to update the zone curve as well? So I create a trill, and then I select a curve, but I wanted to have a
+> different curvature, so I go back to whatever source curve, like one, change it — then how do we update the trill curve?"*
+> *(2026-09-05, session 3, night; speech-to-text cleaned, content untouched)*
+
+**AI reading (not the composer's words):** the curve windows are accepted by his hands. Phase 3 as he pictures it is
+mostly what phase 1 already does (T on a strike note, drag the ends, the eaten notes grey, delete restores); the new asks
+are the zone's own `1 2 3` buttons with the sampled curve shown filled in the zone, the panel on P only, and the live
+update of a trill when its source curve changes. The discussion: RUNNING_LOG §108.
+
+---
+
+## CN-27 · 2026-09-05 — the attack of the trill, for the demo; the phase 3 decisions
+
+> *"a) So this is just for my audition, and as realistic as I can get it would be good. In the notation, I'll just mark it
+> as fp, forte-piano, or sforzando, and the performer will attack the trill before playing it, or the beginning of the
+> trill will be attacked. So we can simulate this maybe. I was wondering if the very first note could be modified. So maybe
+> in the trill panel there's a section where I could change the articulation of the first note in the series of notes that
+> make up the trill, and I could also change its duration. So I can change its articulation and change its duration, and
+> its velocity. That way I can simulate for the demo and for myself to hear the attacked trill. b) only 1 2 3. c) warn.
+> d) pitch stays. e) yes."*
+> *(2026-09-05, session 3, night; speech-to-text cleaned, content untouched)*
+
+**AI reading (not the composer's words):** the attack is a demo device: the trill's first note gets its own articulation,
+length and velocity in the panel (the notation will say fp or sfz); the zone's buttons are `1 2 3` only; overlapping trills
+warn; a dragged trill keeps its pitch; the curve reference is live, bake freezes. Built: RUNNING_LOG §109.
