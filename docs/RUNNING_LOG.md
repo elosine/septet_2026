@@ -3587,3 +3587,28 @@ the cello's five notes spread 4.4 dB. Six of seven within 1.4 dB at every height
 **1g is complete** (items 1–5). The morph events (1f) and any later curve-driven object have the two functions: velocity + CC7
 trim per note (`velocityFor / cc7For`) for attacks and trills, the held-note pair (`heldNote / cc7ForHeight`) for sustained
 sounds — MORPH_NOTES §1. Left as the samplers are: the cello's ±3.5 dB per note, the bass clarinet's ±2.
+
+## §121. "What is the shape of my current score? have those items been converted?" — the shape read from the working copy; nothing converted by itself; the All-trills batch
+
+Composer: *"what is the shape of my current score? have those items been converted to the proper instruments and volumes, just the
+trills, leave the strikes"*.
+
+**The shape** (`scores/piece-septet-work.json`, 14:14, read): 294 strike notes in 34 strikes (#0 … #33) to 103.0 s; 22 trills — the piano
+at 63.7 (main), four early string trills at 65–69 on accent senza vibrato (the cello with its marcato sfz attack), a bass clarinet
+(senza_vel) and two flute (ord) trills at 68–72, then two tutti blocks of seven copies each (72.8 → 84.85 and 85.35 → 102.65) all
+carrying the flute's `ord`; five curves on the windows (A 3, B 1, C 1); no drawn sustained note yet.
+
+**What the app would have done alone:** at the next play start the twelve copies with the foreign key fall to their lanes'
+ordinary voice (§117's reset); the four accent-senza-vibrato trills keep their legal key; every trill's velocity mode is unset →
+'played' (§117's rule for trills from before). So: not converted, by design — and a conversion of his score is his to make, in
+the app, with undo, not the AI's on the file.
+
+**Built:** an `All trills` row in the trill panel (P) — `→ ordinary voice` (every trill onto its instrument's ordinary voice; attack
+articulations, spans, pitches, curves kept) and `→ curve velocity` (every trill follows its curve, 65 → 127); one undo step each; the
+status names the counts; the strikes never touched (`convertAllTrills`).
+
+**Verified on a copy of his working copy** (zero fresh console errors; the copies deleted): before — 22 trills, modes 'played',
+techniques main / ord / accent_senza_vel / senza_vel; the voice button → 4 moved (the twelve foreign copies had already been reset
+at load), every lane on its ordinary voice, the cello's marcato attack kept; the curve button → 22 switched, 65–127, the labels
+"vel 65–127", the piano tutti's snippet carrying its 75 CC7 trims; the 294 strike notes byte-identical before and after.
+**For him:** reload · P on any trill · the two buttons · listen · Save (Name version first for a fallback).

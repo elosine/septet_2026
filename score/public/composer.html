@@ -9255,6 +9255,27 @@ const Composer = {
         this.regenerateTrill(zone); this.renderZone(zone);
     },
 
+    // 1g items 3–4, the batch (composer 2026-09-06: "have those items been converted … just the trills, leave the strikes"): every
+    // trill in the score onto its instrument's ordinary voice and / or the curve velocity mode; attacks, spans, pitches, curves kept;
+    // the strikes never touched; one undo step
+    convertAllTrills(what) {
+        const zs = this.objects.filter(o => o.type === 'zone' && o.midiModel === 'trill');
+        if (!zs.length) { this.saveStatus.textContent = 'no trills in this score'; return { trills: 0, voice: 0, curve: 0 }; }
+        this.pushUndoState();
+        let nv = 0, nc = 0;
+        zs.forEach(z => {
+            const t = this.ensureTrill(z);
+            if (what.voice) { const o = this.ordinaryTech(z.layer); if (o && t.technique !== o.key) { t.technique = o.key; nv++; } }
+            if (what.curve) { if (t.velMode !== 'curve') { t.velMode = 'curve'; nc++; } if (t.velLo == null) t.velLo = 65; if (t.velHi == null) t.velHi = 127; }
+            this.regenerateTrill(z); this.renderZone(z);
+        });
+        this.markDirty();
+        if (this.selectedObject && this.selectedObject.midiModel === 'trill') this.showPropertyPanel();
+        this.saveStatus.textContent = zs.length + ' trills' + (what.voice ? ' · ' + nv + ' moved to the ordinary voice' : '') + (what.curve ? ' · ' + nc + ' switched to the curve velocity' : '')
+            + ' — the strikes untouched; Save when it sounds right, undo restores';
+        return { trills: zs.length, voice: nv, curve: nc };
+    },
+
     // the curve the trill reads: the one it names, else the first drawn curve on its lane that overlaps it
     trillCurve(zone) {
         const t = zone.trill || {};
@@ -9504,6 +9525,11 @@ const Composer = {
             + (snip && snip.count != null ? ' · ' + snip.count + ' notes' : '') + (r ? ' · ' + r.port + ' ch ' + r.channel : '') + '</span></div>';
         h += '<div style="margin-top:4px"><button id="ppTrillHear" style="font-size:11px;padding:3px 10px;background:#43A047;color:#fff;border:1px solid #4CAF50;border-radius:3px;cursor:pointer">▶ hear</button>'
             + ' <span style="font-size:10px;color:#888">the whole trill, as it will play</span></div>';
+        // the batch (composer 2026-09-06: "have those items been converted … just the trills, leave the strikes"; RUNNING_LOG §121)
+        h += '<div class="pp-row" style="margin-top:6px"><label>All trills</label>'
+            + '<button class="tr-all-voice" title="every trill in the score onto its instrument&#8217;s ordinary voice (the attack articulation kept)" style="font-size:10px;padding:1px 6px;cursor:pointer">&#8594; ordinary voice</button>'
+            + ' <button class="tr-all-curve" title="every trill in the score follows its curve, 65 &#8594; 127 in the ensemble&#8217;s scale (the attack kept)" style="font-size:10px;padding:1px 6px;cursor:pointer;margin-left:4px">&#8594; curve velocity</button>'
+            + ' <span style="font-size:10px;color:#666">the strikes untouched &#183; undo restores</span></div>';
         h += '</div>';
         return h;
     },
@@ -9536,6 +9562,9 @@ const Composer = {
         }));
         const hear = panel.querySelector('#ppTrillHear');
         if (hear) hear.addEventListener('click', () => this.hearTrill(obj, hear));
+        const allV = panel.querySelector('.tr-all-voice'), allC = panel.querySelector('.tr-all-curve');
+        if (allV) allV.addEventListener('click', () => this.convertAllTrills({ voice: true }));
+        if (allC) allC.addEventListener('click', () => this.convertAllTrills({ curve: true }));
     },
 
     // ========== SPAN SELECTION + THE LIVE CURVE REFERENCE (TRILLS_TOOL phase 2, composer 2026-09-05; RUNNING_LOG §105) ==========

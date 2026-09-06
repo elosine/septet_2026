@@ -84,7 +84,8 @@ pitch) may use a second row (bowed tremolo faster).
 > without its technique is reset to that lane's ordinary voice at the next regeneration. **The remap is a hybrid (§119):** on the
 > deterministic samplers (flute, piano) the velocity picks the layer just above the target and a CC7 trim, sent 1 ms before the
 > note, takes the rest; on the round-robin samplers the averaged curve is inverted and CC7 stays 127. The trill's first note (the
-> attack) keeps its own velocity and no trim.
+> attack) keeps its own velocity and no trim. The trill panel's `All trills` row converts every trill in the score at once —
+> `→ ordinary voice`, `→ curve velocity` — one undo step each, the strikes untouched (§121).
 
 ## 3 · The reference curves — three META lanes
 
