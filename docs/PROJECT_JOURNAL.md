@@ -118,7 +118,7 @@ tool after this piece or the next); the morph event's four elements noted for PL
 height = ppp → fff for the notation, velocity 65 → 127 for the MIDI; → D23), the trill on the ordinary voice, the velocity mode, the
 sweep in his rack window, the per-instrument remap anchored on the violins, the proof, then crescendos and the morph events. **PLANNING_METHOD.md** written from this session's way of building 1g
 (state and restate · the top line · one step at a time: goal → sub-steps → into the plan; the fixed formats). The method reaches future AIs three ways (his choice, all repos): the document (canonical, copied forward),
-ten trigger lines in his user-level CLAUDE.md, and the `/plan-item` skill beside `/session-start`. **The sweep ran** (2026-09-06 11:40, driven through the bridge; §115): `bank/velocity_map.json` — consistent with the balance run, the ensemble at 127 within 1.8 dB, the velocity and CC7 curves per instrument and register. The remap computed (§116, `bank/velocity_remap.json`). **Built (§117):** the remap in the app, the trill's velocity switch (new trills follow the curve; the old keep 'played'), the ordinary voice and the cross-lane reset — verified on a copy of his piece. **The proof ran twice (§118):** FAIL at 3.4 dB — the piano's layer staircase and round-robin bias in the sweep's single points; the flute exact; the samplers' note-to-note scatter measured (the cello ±3.5 dB). **Then (§119):** the second sweep, the hybrid remap (velocity + a CC7 trim on the deterministic samplers), the analyzer's Hann-window error found and fixed, all recordings re-analyzed, the final proof: five of seven within 1 dB, the cello and bass clarinet within their own scatter — **1g item 1 closed; the app reads `bank/velocity_remap.json` (reload).** Next: 2's writing and 5's remaining to-dos, then phase 5 (the weave).
+ten trigger lines in his user-level CLAUDE.md, and the `/plan-item` skill beside `/session-start`. **The sweep ran** (2026-09-06 11:40, driven through the bridge; §115): `bank/velocity_map.json` — consistent with the balance run, the ensemble at 127 within 1.8 dB, the velocity and CC7 curves per instrument and register. The remap computed (§116, `bank/velocity_remap.json`). **Built (§117):** the remap in the app, the trill's velocity switch (new trills follow the curve; the old keep 'played'), the ordinary voice and the cross-lane reset — verified on a copy of his piece. **The proof ran twice (§118):** FAIL at 3.4 dB — the piano's layer staircase and round-robin bias in the sweep's single points; the flute exact; the samplers' note-to-note scatter measured (the cello ±3.5 dB). **Then (§119):** the second sweep, the hybrid remap (velocity + a CC7 trim on the deterministic samplers), the analyzer's Hann-window error found and fixed, all recordings re-analyzed, the final proof: five of seven within 1 dB, the cello and bass clarinet within their own scatter — **1g item 1 closed; the app reads `bank/velocity_remap.json` (reload).** **Item 2 written (D23):** NAMING §2.9, TRILLS_TOOL §10, NOTATION_WORKFLOW §7; D22 (the morph notes) promoted with it. Next: item 5's remaining to-dos (the CC7 remap for held notes, the stream on it, the two functions, the check), then phase 5 (the weave).
 
 **Next up:** the composer's pick: (a) his hands on the trills and the curve windows — what bites; then **phase 4** (free trills,
 edge stretching — small) and **phase 5** (the weave) on his go; the notation of trills at 2a. (b) The chain by hand from #32.
@@ -394,6 +394,23 @@ sources; verified here only when they bite.)*
   first phase-2 form (trace-fit + control diamonds) had a diamond that did nothing on plain curves. *Rejected:* the freehand
   trace on the curve windows; diamonds, the wheel, slope dials; a lane-header curve selector. RUNNING_LOG §106–107, §110.
 
+
+- **D22** *(2026-09-06, composer, CN-29: "institute a process where we're taking notes in a central document that will inform the eventual revision")*
+  — **The morph notes.** Every remark about the morph tool goes into `docs/MORPH_NOTES.md` the moment it is said, dated, verbatim, the
+  AI's reading marked; the tool is adjusted for the current use now and revised into an all-purpose tool after this piece or the
+  next. A standing practice in CLAUDE.md. *Why:* the morph textures will carry this piece's section 2 and the next piece; without a
+  memory of what was awkward, the revision would start from nothing. *Rejected:* notes in the lab journal only (scattered across
+  entries), a rewrite now (the composer: "for now … adjust it for the current use").
+- **D23** *(2026-09-06, composer: "the curve has a different translation to the graphic notation than it does to the MIDI … I have to tweak
+  the MIDI a bit … sixty five for the lowest point … it represents three p's in the notation")* — **The curve's two translations.** A
+  curve's height IS the dynamic for the notation and the IR (0 = ppp, 1 = fff, the eight marks at equal steps; the IR carries each
+  curve-driven object's range as names, e.g. "p → f", so the page may later be redrawn at full height with the range named —
+  a per-event choice at the notation stage). Velocity 65 → 127 in the ensemble's one scale — the violins' — is the playback
+  rendering of the same height, translated per instrument and register through the measured remap (with a CC7 trim on the stepped
+  samplers); one curve drives a trill's speed and its loudness. NAMING §2.9, TRILLS_TOOL §10, NOTATION_WORKFLOW §7. *Why:* the
+  rendering must never leak into the notation (M3); the MIDI has to be tweaked to sound right and the page must not inherit the
+  tweak. *Rejected:* a named dynamics table as the scale (p = 49 …) — he moved to a measured velocity floor; velocities read as
+  dynamics by the extractor (the tuba piece's velocity band — kept for the strikes only, whose velocities are as played).
 
 ---
 

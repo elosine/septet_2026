@@ -360,7 +360,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        error found and fixed; the final proof: five of seven within 1 dB at every height, the cello and the bass clarinet within their
        own round-robin scatter (±2 to ±4 dB per note). `bank/velocity_remap.json` is the remap the app reads.
      *Result:* the same curve height is the same loudness on every instrument — **achieved 2026-09-06, item 1 closed** (§119).
-  2. **The curve's meaning for the notation.** *Result:* a curve's actual heights are its dynamics — bottom ppp, top fff, a curve
+  2. **The curve's meaning for the notation** — `done 2026-09-06 (D23; NAMING §2.9, TRILLS_TOOL §10, NOTATION_WORKFLOW §7)`. *Result:* a curve's actual heights are its dynamics — bottom ppp, top fff, a curve
      rising two thirds of the way is f — and the notation never reads velocities; the IR carries every curve-driven object's dynamic
      range in names (e.g. "p → f"), so at the notation stage he may redraw a curve at full page height with "p → f" written at its
      start (a per-event choice, taken later, with the range names as the anchor). The to-dos:

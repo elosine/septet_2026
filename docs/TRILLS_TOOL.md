@@ -203,6 +203,11 @@ A trill class: `tr` and a wavy line over the span, the fp at the attack, the two
 eaten notes appear nowhere. The rate curve is **not** notated — the composer: the performers "are not following any
 animation here, it'll just say trill". The animated score shows the span; the curve stays a demo device.
 
+> **2026-09-06 (D23, PLAN 1g item 2):** a trill is written as `tr` with its interval (the upper or lower neighbour) over its span;
+> its **dynamics are read from its curve** — the height as the dynamic, 0 = ppp … 1 = fff (NAMING §2.9) — never from the
+> snippet's velocities or CC7, which are the rendering (§115–119); the IR carries the range in names (`dynamicRange`). The
+> attack's mark (fp, sfz) is the notation's; the panel's attack row is the demo's device. The rate curve stays un-notated.
+
 ## 11 · Phases and estimates
 
 0. **Hear it — no build.** *Corrected 2026-09-05 (RUNNING_LOG §99): the zone route is dead here — the zone panel routes through

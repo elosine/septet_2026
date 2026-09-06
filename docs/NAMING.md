@@ -77,6 +77,17 @@ or not at all.**
    enter as techniques of the flute track's recipe (their own port/channel/range now; clef
    + transposition metadata at 0c.5), so the technique key on the note says which
    instrument is in hand. Pending CN-2 (which of the two).
+9. **A curve-driven object's dynamic is its curve's height — never its velocities (D23, 2026-09-06).** For a trill zone
+   (`midiModel: 'trill'`) and every later object whose loudness a curve drives (the morph events, a crescendo on a held note),
+   the height of the curve it reads — the trill's `curveRef` resolved as the app resolves it: A / B / C, the lane's own curve, or the
+   flat `level` — IS the dynamic: 0 = ppp, 1 = fff, between them the eight marks ppp · pp · p · mp · mf · f · ff · fff at equal
+   steps of height (index = round(7 × height); a curve rising two thirds of the way is f). The velocities and CC7 values in
+   `midiSnippet` are the playback rendering — 65 → 127 in the ensemble's one scale, remapped per instrument through
+   `bank/velocity_remap.json` (RUNNING_LOG §115–119) — and carry no notational meaning. **The extractor writes each such object's
+   dynamic range as names**, `dynamicRange: { lo: 'p', hi: 'f' }`, from the curve's lowest and highest points over the object's
+   span, beside the sampled curve, so the notation can draw the curve at its true heights or redraw it at full height with the
+   range named at its start (NOTATION_WORKFLOW §7). The strikes' notes (`sonifyMode: 'plain'`, `recVel`) keep
+   NOTATION_STANDARDS' velocity band: their velocities are as played, the composition's own.
 
 ## 3. Not S1's business (where the piece-specific work goes)
 

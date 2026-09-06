@@ -160,3 +160,15 @@ part of the section from the same rules; hand-deviations live as per-item
 overrides in the canonical IR. When a profile knob turns out to need
 piece-wide variation (the log-vs-exp class), it moves into a registry file
 at THAT moment (deferred per D48, deliberately).
+
+## §7 Curve-driven objects: the dynamic is the curve (D23, 2026-09-06)
+
+For a trill, a morph event, a crescendo on a held note — anything whose loudness a curve drives — **the notation reads the curve's
+height, never the MIDI**: 0 = ppp, 1 = fff, the eight marks at equal steps of height (NAMING §2.9). The velocities and CC7 in the
+save are the playback rendering (65 → 127 remapped per instrument; RUNNING_LOG §115–119) and are not read.
+
+**The rescaling option, the composer's (2026-09-06):** *"I might draw a full curve from bottom to top in the notation, but have some
+notation at the beginning that says p to f, and then the full curve represents the distance from p to f."* So the page has two
+honest drawings of one object: (a) the curve at its true heights, the marks implied by the scale; (b) the curve redrawn at full
+height with the range named at its start ("p → f"). The IR's `dynamicRange` names are the anchor for (b); the choice is per event, at
+the notation stage, and the composer's. Neither drawing changes the playback.
