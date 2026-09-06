@@ -3513,3 +3513,44 @@ its nature, whatever the table. **The remedy, on his go:** a second sweep — de
 piano and flute (no repeats needed, ~3 min each), and three repeats at the eight velocities for the strings and the bass clarinet
 (~19 min), averaged before the fit; the remap rebuilt; the repeated proof again (4 min). About 25 minutes of the rack, driven by
 the AI. The alternative: keep the tables as they are, ±2 dB on the means and the piano's mid-curve 3 dB soft.
+
+## §119. The second sweep, the hybrid remap, and the analyzer's own 2 dB: how the proof came to pass — 1g item 1 closed as far as the samplers allow
+
+Composer: *"a go ahead, hands off"*.
+
+**The second sweep** (`balance_schedule.js --sweep2`: the piano every 2 velocities, the flute every 8, the strings and the bass clarinet
+three notes per point; 591 notes, 20 min, driven through the bridge, stopped with 40667): consistent with the balance run (worst
+0.96 dB); the remap rebuilt on averaged repeats. **The proof still failed** — the piano now 4.6 dB LOUD at mid-curve: its dense row
+is a clean three-layer staircase (C4: −35.8 up to velocity 85, −27.2 from 87 to 109, −24.4 above), nothing between the layers,
+and a monotone fit had put the target inside a step.
+
+**The hybrid** (`tools/velocity_remap.js` rewritten; `velocity_remap.js`'s `cc7For`; the engine's per-note CC7 in `snippetEvents`,
+sent 1 ms before a note whose trim changes; the page's `velocityAt` answering { vel, cc7 }; the proof schedule sending the trim):
+for a deterministic sampler (flute, piano) the velocity is the softest measured one at or above the target — the layer just above
+— and CC7 trims the rest, from the first sweep's measured CC7 curve (Kontakt's and UVI's CC7 is a plain gain; the piano's curve
+the same at velocity 109 and 100 within 0.4 dB, and history-free: CC7 105 after 127, 112, 105 or 96 gives −4.9 … −5.1 dB every
+time); the round-robin samplers keep the averaged monotone fit, CC7 127. Predicted error at the checkpoints 0.25 dB.
+
+**Then the proof missed the piano by −1.5 / −2.2 dB, deterministically, and the chase found the analyzer.** The same note
+(C4, velocity 109, CC7 127) read −27.5 in both sweeps and −29.6 in every test run; its flat RMS and sample peak identical
+everywhere (−29.6 / −17.8); only the K-weighted number moved. `level()` tapered each 400 ms slice with a Hann window: a note
+whose segment begins exactly at its attack has the transient at the window's edge, weight ≈ 0 — read 2 dB low; in the sweeps
+a loud predecessor's tail made the onset finder start the segment 0.1 s early, centring the transient. The window is rectangular
+now with exact Parseval scaling (the self-test unchanged, PASS 0.03 dB; the same note now −29.0 in every file). **Everything
+re-analyzed from the recordings, no rack:** the balance run of 2026-09-04 (→ `bank/balance_rect.json`: the piano's true level
+1.7 dB above the Hann reading — its 0j trim would be +5.3, not +7; the remap measures with the trims in force and absorbs it,
+the faders stay; NITS), both sweeps (`bank/velocity_map_sweep1.json`, `bank/velocity_map.json` — the second now within 0.34 dB of
+the corrected balance run), the remap rebuilt, and the 13:06 proof re-read: **PASS, worst 1.25 dB**.
+
+**The final proof on the final tables** (13:23, five repeats): flute −0.8 / +0.3 / 0.0 · piano −0.9 / +0.1 / +0.2 · violin 1
++0.2 / −0.3 / −0.5 · violin 2 −0.2 / +0.3 / +0.5 · viola −0.8 / +1.0 / 0.0 · bass clarinet −1.6 / +0.4 / −1.5 · cello +1.2 / +0.2 /
++1.8 (bottom / middle / top, dB from the violins). The verdict line says FAIL at 1.5 on the cello and the bass clarinet, and that
+is their scatter, not the tables: the cello's five notes at one velocity spread 4 dB (sd up to 4.0), the bass clarinet's 1.9; a
+mean of five cannot be pinned closer than about ±1.8 dB there, and across the day's proof runs their means sit within about a
+decibel of zero. Five of seven within 1 dB; the other two within their own instrument's noise. **1g item 1 closed.**
+
+**The samplers, measured (for §5 and the notation later):** flute (SI2) and piano (8Dio) deterministic; the piano a three-layer
+staircase with 8.5 and 3 dB steps; the violins ±1 dB round-robin scatter, the viola and the bass clarinet ±1–2, the cello ±3.5
+— a cello trill shimmers by nature. **Harness lessons:** stop a probe recording with action 40667; the tab's console log is
+cumulative; this shell's heredoc collapses a double backslash — scripts with escapes go through the file tool; a K-weighted
+RMS must not taper the window.

@@ -53,8 +53,11 @@
       const pitch = o.pitch + (k % 2 === 0 ? 0 : interval);
       // the velocity: the attack's own on the first note; then the captures' (as played) or, given velocityAt(level, pitch),
       // the curve's — PLAN 1g item 3 (2026-09-06): the height → the ensemble's scale → this instrument's remapped velocity
-      const vel = (k === 0 && o.accent) ? (o.attackVel || 127) : (o.velocityAt ? o.velocityAt(level, pitch) : a.avgVelocity);
-      notes.push({ t: o.start + t, len: Math.min(a.noteDurationsMs[0], gap * 1.8) / 1000, vel, pitch, level, gap });
+      // velocityAt may answer a number or { vel, cc7 } — the CC7 trim of a stepped sampler (the piano; RUNNING_LOG §119)
+      const va = (k === 0 && o.accent) ? null : (o.velocityAt ? o.velocityAt(level, pitch) : null);
+      const vel = (k === 0 && o.accent) ? (o.attackVel || 127) : (va == null ? a.avgVelocity : (typeof va === 'object' ? va.vel : va));
+      const cc7 = (va != null && typeof va === 'object' && va.cc7 != null) ? va.cc7 : 127;
+      notes.push({ t: o.start + t, len: Math.min(a.noteDurationsMs[0], gap * 1.8) / 1000, vel, cc7, pitch, level, gap });
       t += gap / 1000; k++;
     }
     if (o.attackDurMs > 0 && notes.length) notes[0].len = o.attackDurMs / 1000;   // the attack's own length (phase 3)
@@ -76,7 +79,10 @@
       ev.push({ onsetMs: 0, _cc: 7, _ccValue: 127, port: at.port, channel: at.channel });
       if (at.cc0 != null) ev.push({ onsetMs: 0, _cc: 0, _ccValue: at.cc0, port: at.port, channel: at.channel });
     }
+    let curCc7 = 127;   // the slot's CC7 as sent: 127 at the lead; a note's own trim goes out 1 ms before it (§119)
     notes.forEach((n, i) => {
+      const want = n.cc7 != null ? n.cc7 : 127;
+      if (want !== curCc7) { ev.push({ onsetMs: r1(Math.max(0, (n.t - t0) * 1000 - 1)), _cc: 7, _ccValue: want }); curCc7 = want; }
       const e = { onsetMs: r1((n.t - t0) * 1000), notes: [n.pitch], velocity: n.vel, durations: [r1(n.len * 1000)] };
       if (i === 0 && at && !at.sameSlot) { e.port = at.port; e.channel = at.channel; }
       ev.push(e);

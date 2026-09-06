@@ -56,9 +56,11 @@ def level(seg, sr, weight, win_s=0.4):
         rms = float(np.sqrt(np.mean(w * w) + 1e-18))
         if rms > best_flat: best_flat = rms
         if weight:
-            spec = np.fft.rfft(w * np.hanning(len(w)))
-            # Parseval, one-sided spectrum, de-windowed: rms^2 = 2 * sum|X W|^2 / (N * sum h^2)
-            p = np.sum((np.abs(spec) * wk) ** 2) / np.sum(np.hanning(len(w)) ** 2)
+            # RECTANGULAR window (2026-09-06, RUNNING_LOG §119): a Hann taper put a note's attack transient at the window's
+            # edge whenever the segment began exactly at the onset, and read a piano note 2 dB low against the same note
+            # measured with the segment starting 0.1 s earlier. Parseval on the plain spectrum: rms^2 = 2 * sum|X W|^2 / N^2
+            spec = np.fft.rfft(w)
+            p = np.sum((np.abs(spec) * wk) ** 2) / len(w)
             rk = float(np.sqrt(2 * p / len(w) + 1e-18))
             if rk > best_k: best_k = rk
     return db(best_flat), (db(best_k) if weight else None)
@@ -78,7 +80,7 @@ def sweep_report(a, S, rows, key, floor, offset):
     compared against bank/balance.json), vel (eight velocities), cc7 (eight CC7 values at one velocity). Per instrument and
     register the measured level; the means printed; everything written to bank/velocity_map.json with provenance."""
     bank = None
-    try: bank = json.load(open(os.path.join(ROOT, 'bank', 'balance.json'), encoding='utf-8'))
+    try: bank = json.load(open(a.bank, encoding='utf-8'))
     except Exception: bank = None
     def mean(vals): return round(float(np.mean(vals)), 2) if vals else None
     insts = {}
@@ -141,7 +143,7 @@ def sweep_report(a, S, rows, key, floor, offset):
     out = {'measuredAt': datetime.datetime.now().isoformat(timespec='seconds'), 'wav': os.path.basename(a.wav), 'windowS': a.win, 'minDb': a.min,
            'schedule': os.path.relpath(a.schedule, ROOT).replace(chr(92), '/'), 'scheduleGeneratedAt': S.get('generatedAt'), 'weighting': a.weight,
            'noiseFloorDb': round(floor, 1), 'offsetS': round(offset, 3), 'sweepVels': S.get('sweepVels'), 'sweepCc7s': S.get('sweepCc7s'), 'cc7Vel': S.get('cc7Vel'),
-           'referenceBank': 'bank/balance.json' if bank else None, 'referenceConsistent': consistent, 'referenceTolDb': a.tol, 'referenceWorstDb': round(worst, 2), 'repeatWorstDb': round(rep_worst, 2),
+           'referenceBank': (os.path.relpath(a.bank, ROOT).replace(chr(92), '/') if bank else None), 'referenceConsistent': consistent, 'referenceTolDb': a.tol, 'referenceWorstDb': round(worst, 2), 'repeatWorstDb': round(rep_worst, 2),
            'instruments': {k: insts[k] for k in order}}
     os.makedirs(os.path.dirname(outp), exist_ok=True)
     json.dump(out, open(outp, 'w', encoding='utf-8'), indent=1)
@@ -202,6 +204,7 @@ def main():
     ap.add_argument('--offset', type=float, default=None, help='recording start of the schedule, in s (default: detected from the first onset)')
     ap.add_argument('--win', type=float, default=0.4, help='RMS window in s (0.4 = momentary; 1.0 = the sustained reading)')
     ap.add_argument('--min', type=float, default=-70.0, help='a note below this level (dBFS) counts as NOT sounding')
+    ap.add_argument('--bank', default=os.path.join(ROOT, 'bank', 'balance.json'), help='sweep: the balance bank the reference notes are compared against')
     ap.add_argument('--tol', type=float, default=1.5, help='sweep: the reference check tolerance in dB (PLAN 1g: within about 1.5 dB)')
     ap.add_argument('--proof', action='store_true', help='the remap proof (tools/balance_schedule.js --proof): the seven at each curve height, their spread and deviation from the violins -> bank/velocity_proof.json')
     ap.add_argument('--sweep', action='store_true', help='the velocity / CC7 sweep (tools/balance_schedule.js --sweep): the reference check against bank/balance.json, the per-instrument velocity and CC7 curves -> bank/velocity_map.json')

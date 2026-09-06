@@ -30,6 +30,22 @@
     }
     return clampV(at(ps[ps.length - 1]));
   }
+  // the CC7 to send before the note (127 = none): the trim the remap prescribes at this anchor velocity, by register (§119)
+  function cc7For(bank, instKey, pitch, anchorVel) {
+    const a = clampV(anchorVel);
+    const inst = bank && bank.instruments && instKey ? bank.instruments[instKey] : null;
+    if (!inst || !inst.pitches || !inst.pitches.length || !inst.pitches[0].cc7) return 127;
+    const lo = bank.scale && bank.scale.lo != null ? bank.scale.lo : 65;
+    const ps = inst.pitches;
+    const at = p => p.cc7[Math.max(0, Math.min(p.cc7.length - 1, a - lo))];
+    const c = v => Math.max(1, Math.min(127, Math.round(v)));
+    if (pitch == null || pitch <= ps[0].pitch) return c(at(ps[0]));
+    if (pitch >= ps[ps.length - 1].pitch) return c(at(ps[ps.length - 1]));
+    for (let k = 0; k < ps.length - 1; k++) {
+      if (pitch >= ps[k].pitch && pitch <= ps[k + 1].pitch) { const t = (pitch - ps[k].pitch) / (ps[k + 1].pitch - ps[k].pitch); return c(at(ps[k]) + (at(ps[k + 1]) - at(ps[k])) * t); }
+    }
+    return c(at(ps[ps.length - 1]));
+  }
   // what the bank says about a register's reach (for a status line): the clamp counts of the nearest measured pitch
   function reach(bank, instKey, pitch) {
     const inst = bank && bank.instruments && instKey ? bank.instruments[instKey] : null;
@@ -37,5 +53,5 @@
     const p = inst.pitches.reduce((b, q) => Math.abs(q.pitch - pitch) < Math.abs(b.pitch - pitch) ? q : b, inst.pitches[0]);
     return { pitch: p.pitch, clampedLow: p.clampedLow, clampedHigh: p.clampedHigh };
   }
-  return { velocityFor, reach };
+  return { velocityFor, cc7For, reach };
 });

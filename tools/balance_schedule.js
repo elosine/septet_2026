@@ -28,7 +28,12 @@ const opt = (k, d) => { const i = args.indexOf('--' + k); return i >= 0 && args[
 // --sweep (2026-09-06, PLAN 1g item 1 + item 5): the VELOCITY / CC7 sweep — role 'ref' = the balance run's own notes (plain
 // technique, three pitches, 127: the consistency check against bank/balance.json), role 'vel' = the same at eight velocities,
 // role 'cc7' = the same at velocity 100 under eight CC7 values; every note carries cc7 (127 unless swept).
-const sweep = args.includes('--sweep');
+const sweep2 = args.includes('--sweep2');   // the second sweep (RUNNING_LOG §118): dense steps where the sampler is deterministic, repeats where it scatters
+const sweep = args.includes('--sweep') || sweep2;
+const seq = (hi, lo, step) => { const a = []; for (let v = hi; v >= lo; v -= step) a.push(v); if (a[a.length - 1] !== lo) a.push(lo); return a; };
+// per instrument: [velocities, repeats] — the piano's velocity layers form a staircase (every 2), the flute is smooth (every 8), both
+// deterministic (one note is exact); the strings and the bass clarinet scatter by round robin (three notes per point, averaged)
+const SWEEP2 = { flute: [seq(127, 20, 8), 1], piano: [seq(127, 21, 2).concat([20]), 1], bass_clarinet: [null, 3], violin1: [null, 3], violin2: [null, 3], viola: [null, 3], cello: [null, 3] };
 // --proof (PLAN 1g item 1, to-do 6): every instrument's ordinary voice at its middle measured register, at the bottom, the
 // middle and the top of a curve (anchor velocity 65 · 96 · 127) — each sent the velocity bank/velocity_remap.json prescribes;
 // the recording must show the seven at one level per height (within about 1.5 dB).
@@ -58,15 +63,15 @@ const vels = opt('vels', '127,64').split(',').map(Number);
 const only = opt('only', '').split(',').filter(Boolean);
 const noStrike = args.includes('--nostrike');
 opt('strike', '').split(',').filter(Boolean).forEach(kv => { const [k, v] = kv.split('='); STRIKE_TECHS[k] = v; });
-const out = path.resolve(ROOT, opt('out', proof ? 'probes/proof_schedule.json' : sweep ? 'probes/sweep_schedule.json' : 'probes/balance_schedule.json'));
+const out = path.resolve(ROOT, opt('out', proof ? 'probes/proof_schedule.json' : sweep2 ? 'probes/sweep2_schedule.json' : sweep ? 'probes/sweep_schedule.json' : 'probes/balance_schedule.json'));
 
 const notes = [];
 let t = leadMs, i = 0;
-const add = (inst, I, tech, role, velList, cc7List) => {
+const add = (inst, I, tech, role, velList, cc7List, repeat) => {
     const lo = tech.rangeLow != null ? tech.rangeLow : I.rangeLow, hi = tech.rangeHigh != null ? tech.rangeHigh : I.rangeHigh;
     const pitches = FRACS.map(f => Math.round(lo + (hi - lo) * f));
-    for (const cc7 of (cc7List || [127])) for (const vel of (velList || vels)) for (const pitch of pitches) {
-        notes.push({ i: i++, inst, label: I.label, role, tech: tech.key, techLabel: tech.label, port: tech.port || I.port, ch: tech.channel || 1,
+    for (const cc7 of (cc7List || [127])) for (const vel of (velList || vels)) for (const pitch of pitches) for (let rpt = 0; rpt < (repeat || 1); rpt++) {
+        notes.push({ i: i++, inst, label: I.label, role, rpt, tech: tech.key, techLabel: tech.label, port: tech.port || I.port, ch: tech.channel || 1,
                      cc0: tech.cc0 != null ? tech.cc0 : null, ks: tech.ks != null ? tech.ks : null,
                      pitch, vel, cc7, tPreMs: t - preMs, tOnMs: t, tOffMs: t + noteMs });
         t += noteMs + gapMs;
@@ -85,16 +90,17 @@ if (proof) {   // one note per height per instrument, the middle register, the r
         for (const h of PROOF_H) {
             const anchorVel = Math.round(PROOF_LO + (PROOF_HI - PROOF_LO) * h);
             const vel = VelocityRemap.velocityFor(remapBank, inst, pitch, anchorVel);
+            const cc7 = VelocityRemap.cc7For ? VelocityRemap.cc7For(remapBank, inst, pitch, anchorVel) : 127;   // the trim (§119)
             for (let rpt = 0; rpt < REPEAT; rpt++) {
                 notes.push({ i: i++, inst, label: I.label, role: 'proof', h, anchorVel, rpt, tech: tech.key, techLabel: tech.label, port: tech.port || I.port, ch: tech.channel || 1,
-                             cc0: tech.cc0 != null ? tech.cc0 : null, ks: tech.ks != null ? tech.ks : null, pitch, vel, cc7: 127, tPreMs: t - preMs, tOnMs: t, tOffMs: t + noteMs });
+                             cc0: tech.cc0 != null ? tech.cc0 : null, ks: tech.ks != null ? tech.ks : null, pitch, vel, cc7, tPreMs: t - preMs, tOnMs: t, tOffMs: t + noteMs });
                 t += noteMs + gapMs;
             }
         }
         t += instGapMs;
     }
 }
-for (const role of (proof ? [] : sweep ? ['ref', 'vel', 'cc7'] : ['plain', 'strike'])) {
+for (const role of (proof ? [] : sweep2 ? ['ref', 'vel'] : sweep ? ['ref', 'vel', 'cc7'] : ['plain', 'strike'])) {
     if (role === 'strike' && noStrike) continue;
     for (const inst of ORDER) {
         if (only.length && !only.includes(inst)) continue;
@@ -105,13 +111,14 @@ for (const role of (proof ? [] : sweep ? ['ref', 'vel', 'cc7'] : ['plain', 'stri
         else { const k = STRIKE_TECHS[inst]; if (!k) continue; tech = I.techniques.find(q => q.key === k); if (!tech) { console.error('no technique ' + k + ' on ' + inst); process.exit(1); } }
         plan.push({ inst, role, tech: tech.key });
         if (role === 'ref') add(inst, I, tech, role, [127], [127]);
+        else if (role === 'vel' && sweep2) { const [vl, rp] = SWEEP2[inst] || [null, 1]; add(inst, I, tech, role, vl || SWEEP_VELS, [127], rp); }
         else if (role === 'vel') add(inst, I, tech, role, SWEEP_VELS, [127]);
         else if (role === 'cc7') add(inst, I, tech, role, [cc7Vel], SWEEP_CC7S);
         else add(inst, I, tech, role);
     }
 }
 const schedule = { generatedAt: new Date().toISOString(), source: 'sandbox/instruments.js', order: ORDER.filter(k => !only.length || only.includes(k)),
-                   strikeTechs: noStrike ? {} : STRIKE_TECHS, proof, proofH: proof ? PROOF_H : null, proofScale: proof ? { lo: PROOF_LO, hi: PROOF_HI } : null, proofRepeat: proof ? REPEAT : null, remapMeasuredAt: remapBank ? remapBank.measuredAt : null, trims: Object.fromEntries(ORDER.map(k => [k, INSTRUMENTS[k] && INSTRUMENTS[k].balanceDb != null ? INSTRUMENTS[k].balanceDb : 0])), sweep, sweepVels: sweep ? SWEEP_VELS : null, sweepCc7s: sweep ? SWEEP_CC7S : null, cc7Vel: sweep ? cc7Vel : null, plan, leadInMs: leadMs, preMs, noteMs, gapMs, instGapMs, vels, fracs: FRACS, totalMs: t, notes };
+                   strikeTechs: noStrike ? {} : STRIKE_TECHS, proof, proofH: proof ? PROOF_H : null, proofScale: proof ? { lo: PROOF_LO, hi: PROOF_HI } : null, proofRepeat: proof ? REPEAT : null, remapMeasuredAt: remapBank ? remapBank.measuredAt : null, trims: Object.fromEntries(ORDER.map(k => [k, INSTRUMENTS[k] && INSTRUMENTS[k].balanceDb != null ? INSTRUMENTS[k].balanceDb : 0])), sweep, sweepVels: sweep2 ? [...new Set(notes.filter(n => n.role === 'vel').map(n => n.vel))].sort((a, b) => b - a) : sweep ? SWEEP_VELS : null, sweep2, sweep2Plan: sweep2 ? Object.fromEntries(Object.entries(SWEEP2).map(([k, v]) => [k, { velocities: v[0] || SWEEP_VELS, repeats: v[1] }])) : null, sweepCc7s: sweep ? SWEEP_CC7S : null, cc7Vel: sweep ? cc7Vel : null, plan, leadInMs: leadMs, preMs, noteMs, gapMs, instGapMs, vels, fracs: FRACS, totalMs: t, notes };
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, JSON.stringify(schedule, null, 1));
 console.log('balance schedule → ' + path.relative(ROOT, out) + ' · ' + notes.length + ' notes · ' + (t / 1000).toFixed(1) + ' s');

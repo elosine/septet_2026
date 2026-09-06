@@ -9120,6 +9120,12 @@ const Composer = {
         return VelocityRemap.velocityFor(this._velRemap, tr ? tr.instKey : null, pitch, anchorVel);
     },
 
+    // the CC7 trim the remap prescribes with that velocity (127 = none) — the stepped samplers' residual (§119)
+    cc7For(layer, pitch, anchorVel) {
+        const tr = TRACKS[layer];
+        return VelocityRemap.cc7For(this._velRemap, tr ? tr.instKey : null, pitch, anchorVel);
+    },
+
     // the instrument's ordinary voice (1g item 4): the recipe's `ordinary`, else the balance kit's preference order
     ordinaryTech(layer) {
         const inst = this.trackInstrument(layer), techs = (inst && inst.techniques) || [];
@@ -9286,7 +9292,7 @@ const Composer = {
             accent: t.accent, attackVel: t.attackVel, attackDurMs: t.accent ? t.attackDurMs : null,
             // 1g item 3: the loudness from the curve — the height → an anchor velocity between the trill's low and high (the
             // ensemble's one scale) → this instrument's velocity through the remap; 'played' keeps the captures' velocities
-            velocityAt: t.velMode === 'curve' ? (level, p) => this.velocityFor(zone.layer, p, t.velLo + (t.velHi - t.velLo) * level) : null });
+            velocityAt: t.velMode === 'curve' ? (level, p) => { const a = t.velLo + (t.velHi - t.velLo) * level; return { vel: this.velocityFor(zone.layer, p, a), cc7: this.cc7For(zone.layer, p, a) }; } : null });
         // the first note on its own articulation (CN-27: the fp / sfz attack for the demo): same slot → its CC0 first and the
         // trill's back before the second note; another slot → per-event routing
         const techs = this.trackTechniques(zone.layer) || [];

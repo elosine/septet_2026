@@ -66,3 +66,8 @@
   Not blocking composing; do it before the demo is judged, and with the trill object (phase 1), which needs the same.
   **Fixed the same evening (RUNNING_LOG §103):** the tick schedules every note with a timestamp and a 100 ms lookahead;
   stop clears the queue; verified on the piece's runs #28–#31.
+
+- **2026-09-06 — the 0j trims were derived with a tapered K-window (RUNNING_LOG §119):** re-analyzed with the corrected analyzer
+  (`bank/balance_rect.json`) the piano's trim comes out +5.3 dB, not the +7 on its fader (its 127 sits 1.7 dB above the violins); the
+  remap measures with the trims in force and absorbs it, so nothing is wrong in playback. Re-trim only if the strikes' balance
+  (set by ear) is revisited; the strikes' K readings in `bank/balance.json` carry the same taper error for transient-rich samples.

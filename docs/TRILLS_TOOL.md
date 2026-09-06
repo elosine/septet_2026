@@ -81,7 +81,10 @@ pitch) may use a second row (bowed tremolo faster).
 > velocity between `velLo` 65 and `velHi` 127 in the ensemble's one scale, the violins', translated per instrument and register through
 > `bank/velocity_remap.json` from the sweep) or 'played' (the captures' velocities; every trill from before). The attack keeps its own
 > velocity. The default technique is the instrument's ordinary voice (the recipe's `ordinary`), and a trill that lands on a lane
-> without its technique is reset to that lane's ordinary voice at the next regeneration.
+> without its technique is reset to that lane's ordinary voice at the next regeneration. **The remap is a hybrid (§119):** on the
+> deterministic samplers (flute, piano) the velocity picks the layer just above the target and a CC7 trim, sent 1 ms before the
+> note, takes the rest; on the round-robin samplers the averaged curve is inverted and CC7 stays 127. The trill's first note (the
+> attack) keeps its own velocity and no trim.
 
 ## 3 · The reference curves — three META lanes
 

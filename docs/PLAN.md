@@ -348,18 +348,18 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 - **1g — Balanced dynamics for curve-driven playback: trills first, then crescendos and the morph events** — `todo 2026-09-06`
   *(composer, 2026-09-06: "get balanced level playback through MIDI for trills using the curve shapes, and hopefully this will extend
   to other types of articulations like crescendos")*. Reordered 2026-09-06 at his word: one item at a time, the simplest terms.
-  1. **Normalize the volume between instruments** — the bottom and the middle of the curve; the top (127) is already done by the
+  1. **Normalize the volume between instruments** — `done 2026-09-06 (§115–119)` — the bottom and the middle of the curve; the top (127) is already done by the
      instruments' individual gains (0j). The to-dos:
      - ~~build the probe~~ — done 2026-09-06 (`tools/balance_schedule.js --sweep`, the player's cc7, the analyzer's sweep report, the self-test; §115);
      - ~~run it in his rack and record it~~ — done 2026-09-06, driven through the bridge (`reaper/Media/01-REC-260906_1140.wav`, 357 notes; §115);
      - ~~analyze the recording~~ — done 2026-09-06: `bank/velocity_map.json` (consistent with the balance run within 1.0 dB; the ensemble at 127 within 1.8 dB; the velocity and CC7 curves per register; §115);
      - ~~compute, per instrument, the velocity that matches the violins at each curve height; save it as the remap~~ — done 2026-09-06 (`tools/velocity_remap.js` → `bank/velocity_remap.json`, per register, within 0.03 dB where reachable, the clamps counted; §116);
      - ~~make the app send the remapped velocity~~ — done 2026-09-06 (`velocity_remap.js` shared by the page and the tools, `velocityFor(layer, pitch, anchorVel)`, the trill reads it through `velocityAt`; §117);
-     - check: all seven at bottom, middle and top, read the levels — within about 1.5 dB. **Run 2026-09-06 (§118), five repeats: FAIL at
-       3.4 dB worst — the piano's velocity-layer staircase (the eight sweep points too sparse), round-robin bias in the strings' and the
-       bass clarinet's single sweep points; the flute exact. Next, on his go: the second sweep (dense for the piano and flute, three
-       repeats for the rest), the remap rebuilt, the proof again.**
-     *Result:* the same curve height is the same loudness on every instrument.
+     - ~~check: all seven at bottom, middle and top, read the levels — within about 1.5 dB~~ — **done 2026-09-06 (§118–119):** the second
+       sweep, the hybrid remap (velocity for the layer, a CC7 trim for the rest on the deterministic samplers), the analyzer's Hann
+       error found and fixed; the final proof: five of seven within 1 dB at every height, the cello and the bass clarinet within their
+       own round-robin scatter (±2 to ±4 dB per note). `bank/velocity_remap.json` is the remap the app reads.
+     *Result:* the same curve height is the same loudness on every instrument — **achieved 2026-09-06, item 1 closed** (§119).
   2. **The curve's meaning for the notation.** *Result:* a curve's actual heights are its dynamics — bottom ppp, top fff, a curve
      rising two thirds of the way is f — and the notation never reads velocities; the IR carries every curve-driven object's dynamic
      range in names (e.g. "p → f"), so at the notation stage he may redraw a curve at full page height with "p → f" written at its
