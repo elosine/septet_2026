@@ -357,8 +357,15 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - make the app send the remapped velocity (one function: instrument + pitch + height → velocity); the trill reads it;
      - check: all seven at bottom, middle and top, read the levels — within about 1.5 dB.
      *Result:* the same curve height is the same loudness on every instrument.
-  2. **The curve's meaning for the notation.** *Result:* any curve's bottom is written as ppp and its top as fff; the notation never
-     reads velocities. (The rule → D23, in NAMING §2 and TRILLS_TOOL.)
+  2. **The curve's meaning for the notation.** *Result:* a curve's actual heights are its dynamics — bottom ppp, top fff, a curve
+     rising two thirds of the way is f — and the notation never reads velocities; the IR carries every curve-driven object's dynamic
+     range in names (e.g. "p → f"), so at the notation stage he may redraw a curve at full page height with "p → f" written at its
+     start (a per-event choice, taken later, with the range names as the anchor). The to-dos:
+     - the contract line in NAMING §2: the curve's height is the dynamic (0 = ppp, 1 = fff); velocities are rendering, never read
+       as dynamics; the extractor writes each curve-driven object's dynamic range as names (phase 2a is built to this);
+     - the notation line in TRILLS_TOOL §10: a trill is written as `tr` over its span, its dynamics read from its curve;
+     - decision D23 in the journal, with the why: the MIDI is tweaked to sound right, the notation must not inherit the tweak;
+     - a note in NOTATION_WORKFLOW: the rescaling option — the page curve at full height, the range named at its start.
   3. **The trill's velocity switch.** *Result:* a trill's loudness follows its curve, 65 → 127 (curve mode, the default for new
      trills; "as played" kept); the low and high editable per trill in the panel; the attack stays its own. Heard first on the
      flute's passage at 85.35.
