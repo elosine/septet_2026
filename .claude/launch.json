@@ -26,6 +26,16 @@
         "$env:PORT=5301; node score/server.js"
       ],
       "port": 5301
+    },
+    {
+      "name": "twopianos",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": [
+        "-NoProfile",
+        "-Command",
+        "cd C:/Users/jwloy/GitHub/composition_for_two_pianos_and_two_percussion; node server.js"
+      ],
+      "port": 5000
     }
   ]
 }

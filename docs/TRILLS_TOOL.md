@@ -96,6 +96,16 @@ pitch) may use a second row (bowed tremolo faster).
 > window); the trace → RDP fit existed; added: re-trace splicing (a sketch over a region replaces that region, the rest keeps its
 > bends), `curveName`, double-click a node to remove it; the three adjust gestures were already there (node drag, the diamond
 > bends a segment, double-click the curve adds a node). Also fixed: `getYAtPos` now reads a bent (`ctrl`) segment as drawn.
+>
+> **Rebuilt the same night to the composer's design (CN-23 → CN-25; RUNNING_LOG §107):** META is out of the curve path (its
+> shapes, stamps and freehand as before). Three CURVE windows A / B / C on layers 8 / 9 / 10 sit exactly over Violin 2, Viola
+> and Cello — translucent, click-through, `A B C` buttons. The object is **points → fill → shape**: `● Points` places dots
+> (pending `curveDot`s; scroll and keep placing; always visible); `Fill` draws the line through them — a new curve when
+> nothing is selected, more nodes of the selected curve otherwise (several curves per window); drag a dot to move it,
+> double-click / ALT-click to remove it (an end gone shrinks the curve; one dot left collapses the line to a dot); hold the
+> line between two dots and drag up / down to bend it like a DAW's automation curve — the line passes through the mouse in
+> the held column. Lines only, no fill; no freehand on the curve windows, no diamonds, no wheel. The green square's cause
+> (the plain drawing path blind to bends) fixed.
 
 ## 4 · The sampler — portable
 
@@ -113,7 +123,7 @@ pitch) may use a second row (bowed tremolo faster).
 > `auto` = A if drawn under the trill, else its lane's curve, else flat; A / B / C read over the trill's own span at absolute time
 > (the covering curve, else the nearest edge); regenerated at every play start; `bake` copies the reference into the trill's own
 > lane curve. SHIFT-drag on empty lane space marks a span, T makes the trill there, ESC or a plain click clears it. The
-> lane-header selector was not built — the chips do it.
+> lane-header selector was not built — the chips do it. Since §107 the chips A / B / C read the curve windows (layers 8 / 9 / 10).
 
 ## 5 · Launch from a strike
 
@@ -180,8 +190,8 @@ animation here, it'll just say trill". The animated score shows the span; the cu
    on save, the greyed drawing; the playability checker (the hard / soft badge) taught that a trill is one object — its notes
    re-attack by design (RUNNING_LOG §99). The realization = the table lookup of `tools/trill_curve_gen.js` (his timing from
    `bank/trill_timing_db.json`), not the rate table (§101). About a day.
-2. **Three META lanes, tracing, the live reference, the span selection** (§3, §4) — **built 2026-09-05 (RUNNING_LOG §105);**
-   the contract written into NAMING §2.2.
+2. **Three META lanes, tracing, the live reference, the span selection** (§3, §4) — **built 2026-09-05 (RUNNING_LOG §105),
+   rebuilt the same night as the curve windows with points → fill → shape (§107, CN-23 → CN-25);** the contract in NAMING §2.2.
 3. **Launch from a strike** and `busy()` in the dealer (§5, §7). Half a day.
 4. **Free trills and edge stretching** (§4's `T` on a span; the default length). Small.
 5. **The weave** (§9). A day, after the hand-made ones have taught the rules.

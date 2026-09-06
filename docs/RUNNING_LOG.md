@@ -3043,3 +3043,82 @@ PLAN 1a (the diamond does it — 1a closed); the extractor's classifier still sa
 note). **NAMING §2.2, the contract:** layers ≥ `tracks.length` are META — 7 = A (the strikes' shapes and reference
 curve A), 8 = B, 9 = C. **For the composer:** reload; `META A · B · C` at the bottom; ✎ Draw, then trace on an open
 window; click the curve to adjust; SHIFT-drag a span on a player, T; the trill's Curve row chooses what it reads.
+
+## §106. The curves, discussed: three curve windows one track high, META out of the curve path, the object rebuilt as points → fill → shape; why the green square did nothing — talk first, nothing built
+
+Composer (CN-23): the curve windows one track height, three of them, the META window left where it is and out of the curve
+path; the curve object "pretty close to" piece #2's but easier: click to place points (no lines), a command or a
+double-click fills the curve, hold a segment and drag left / right / up / down to change it, calibrated better than #2's
+("too sensitive"); "in this one that you made, the green square doesn't do anything"; discuss first. He asked for piece
+#2's composer server to look at: started (`.claude/launch.json` → `twopianos`: `node server.js` in the #2 repo, port
+5000 — free; `http://localhost:5000/composer.html`).
+
+**Piece #2's curve object, read:** `Draw Curve` makes a two-node curve between the Start / End boxes; nodes drag; a
+double-click on the line adds a node; a segment's shape is the panel's Model + Slope, and the wheel over a node nudges the
+slope by 0.05 a notch (the exponent is 4^slope, so a notch is a jump — "too sensitive"). No segment drag there.
+
+**Why the green square did nothing (found):** the diamond of `startSegmentDrag` writes the segment as a control-point
+model (`ctrl`, with `cx` / `cy` so the curve passes at the mouse). Two readers ignored that model: `getYAtPos` — fixed in
+§105 — and the drawing itself, `generateWCPath`, whose branch for curves WITHOUT node smoothing evaluates every segment
+through `computeYAtT`, which has no `ctrl` case; only the smooth-node branch goes through `computeSegY`. The strikes' META
+shapes have `smooth: 0`, and so does any curve whose smoothing was set to 0 — on those the diamond moved and the line did
+not. On traced curves (smooth 0.35) it worked. Not fixed yet — it goes with the rebuild (one line: the plain branch reads
+through `computeSegY`).
+
+**Proposed to the composer** (the answer in chat; his decisions next): (1) windows — the META window unchanged (the
+gestures' shapes, the stamps, no curve drawing); three curve windows A / B / C of one lane's height on layers 8 / 9 / 10,
+floating like META, each with its own resting height, toggled by `A B C`; the trill's chips read them. (2) The object,
+"points → fill → shape": `Points` mode on a curve window — a click drops a dot at that time and height, another click
+another dot, peaks and troughs, no lines, the dots sorted by time, draggable, ALT-click removes; `Fill` — a double-click
+on the window (or ENTER, or the button) draws the curve through the dots as an ordinary wave curve (gentle node
+smoothing, plain segments), so the trill, the tools and the IR read it unchanged; `Shape` — hold anywhere on a segment's
+line and drag: up / down bends it so the line passes through the mouse (1 : 1, nothing to calibrate), left / right slides
+the bend along the segment; drag a dot to move it, double-click a dot to remove it, double-click the line to add one;
+more points on an existing curve splice in on the next fill. No diamonds, no wheel, no slope dials. Questions put to him:
+floating or docked windows · the fill trigger · dots always visible or on selection · left-right bend or vertical only ·
+whether the trace stays as a second way or goes.
+
+## §107. The curve windows rebuilt to his design (CN-23 → CN-25): META out of the curve path; A / B / C exactly over Violin 2, Viola, Cello; points → fill → shape; the green square's cause fixed — verified
+
+Composer (CN-24): windows like META, translucent, floating, but *"precisely the height of and location of violin two, viola,
+and cello"*; the curve not filled, the line a little transparent; a button draws the line between the points; scroll and
+keep adding points anywhere; dots always visible; simple delete and move; no freehand; a way to continue a curve, and
+deleting an end collapses the curve to the next point. (CN-25): the bend *"like Logic Pro, where you can drag and change
+the depth of the curve or the direction of the hump"*; a window can hold several curves; *"good to go"*.
+
+**Built** (`score/public/composer.html`, 26 splices; phase 2's META B / C undone): (1) **windows** — META is one window
+again (layer 7: the gestures' shapes, the stamps, its freehand draw); three CURVE windows `#laneCurveA/B/C` on layers
+8 / 9 / 10, positioned by the same percentages as lanes 5 / 6 / 7 (top 57.14 / 71.43 / 85.71 %, height 14.29 %), so they
+cover Violin 2, Viola and Cello exactly; translucent (0.35), a dashed border and a `curve A` label at the right in the
+window's colour (rust, blue, violet), not draggable; buttons `META` and `A B C`; click-through except for their dots and
+lines, catching clicks only in Points mode. (2) **points → fill → shape** — `● Points`: a click in an open window places a
+dot (`curveDot` object: layer, time, height, `curveId` = the window's selected curve or null) — the dots live on the
+timeline, survive scrolling and the save, and are drawn always; `Fill`: the pending dots become lines — with nothing
+selected a new curve per window (an ordinary `waveCurve`, `fillMode: 'line'`, opacity 0.45, node smoothing 0 so the line
+passes exactly through the dots, plain segments, `curveName`), placed on a selected curve its new nodes (the span extends
+past an end, dots inside splice in; a lone dot waits); a filled curve's dots stay visible: drag one (time and height, the
+line following; ends stretch the curve), double-click or ALT-click removes it (an end gone shrinks the curve to the next;
+one dot left: the line goes, the dot stays pending); several curves per window. **Shape:** hold the line between two dots
+and drag up / down — the segment becomes a control-point curve whose control column is the held column, and `cy` is
+solved so the line passes through the mouse there: the hump's depth and direction follow the hand, one to one; left /
+right does nothing (Logic's gesture). No freehand on the curve windows, no diamonds, no wheel, no slope dials; the panel
+stays on demand. (3) **The green square (§106) fixed:** `generateWCPath`'s branch for curves without node smoothing now
+reads segments through `computeSegY`, so a bend draws on plain curves too. (4) The trill's `A / B / C` chips read the
+curve windows (`CURVE_LAYERS`); `layoutVersion` 5 with a v4 migration (one evening's layout); the Track menu lists META and
+curve A / B / C; a score with curves or dots on a window opens it on load; ESC ends Points.
+
+**Verified on the throwaway server** (a copy of the piece, tab fronted; synthetic mouse events; zero console errors):
+window A's `offsetTop` / `offsetHeight` = Violin 2's (352 / 88 at 1280 × 720) — exact; three clicks → three pending dots on
+layer 8 → Fill → one curve 40 → 46 s, 3 nodes, line, 0.45, `curveName` A, smoothing 0, its 3 dots drawn; select it, two
+more clicks → dots attached (`curveId`) → Fill → the same curve, 5 nodes, 40 → 52 s; deselect, two clicks → Fill → a second
+curve 60 → 63 s, the first untouched; a node drag → start 40 → 39; an end removed → end 52 → 49, 4 nodes, 3 segments;
+removed down to one → the curve gone, a pending dot at 39 s left, the second curve untouched; a trill on Violin 2 with
+`curveRef` A → kind meta, 1 curve, its level = the curve's height (0.75 at 61.5 s); the META Draw button arms META only;
+ESC ends Points. **The bend, in node against the app's evaluator** (the tab's rect reader returns collapsed rectangles,
+so pixel geometry was measured by offsets and the screenshot instead): held at the middle or off-centre (25 %, 35 %,
+75 %, 90 % of a segment) and dragged to 0.15 … 0.99 of the lane → the line passes through the held column at the mouse
+height to 0.00 %; the exception is a hold right beside a dot dragged far (a flat 0.1 segment held at 15 % dragged to 0.9):
+the control point reaches the model's ceiling (`cy` 1.4) and the line goes as far as the hump can (0.64) — the model's
+limit, not an error. The screenshot: window A on the Violin 2 lane, dashed edges on the lane's edges, `curve A` at the
+right, dots along it. *Left for his hands:* the feel of the bend; the windows' translucency (0.35); the bend near a dot.
+Piece #2's composer server stays up at `http://localhost:5000/composer.html` (`.claude/launch.json` → `twopianos`).

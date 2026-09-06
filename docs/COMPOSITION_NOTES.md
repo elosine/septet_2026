@@ -653,3 +653,57 @@ options are RUNNING_LOG §100; his decision pending.
 step** (was the chromatic neighbour); and the trill's panel gets an interval row that plays a short trill on each interval
 at the click (his own timing, the lane's technique) and sets the trill's interval — audition, then choose, then the trill
 sounds with it. Phase 1 (the trill object) built on that: RUNNING_LOG §104.
+
+---
+
+## CN-23 · 2026-09-05 — the curves, as he wants them: points first, then fill, then shape the line by hand
+
+> *"Let's discuss the curves. First, the curve windows. Let's make them one track height, and let me have three curve
+> windows and leave the meta window where it is. Leave it out of the curve path. Look at the wave curve object in the two
+> percussion two piano piece. I want something pretty close to that. I just want something easier to use. What I'd like to
+> be able to do is just click to add a point. So if I click, a point appears, and then I'll click somewhere down the
+> timeline, a little higher, I'll create peaks and troughs. Just with points. No lines. You'll just see points. Then either
+> I click a command or I double click or something like that, and it fills the curve. Then between any of the points, I can
+> click a line or hold a line and then just drag left or drag right or up or down, and it'll change the curve. And this
+> needs to be calibrated better. The one in two pianos, two percussion, it's hard to adjust the curve. It's not… it's too
+> sensitive. In this one that you made, the green square doesn't do anything. Nothing changes when I move the green square.
+> But I don't wanna fiddle around with this. This object's not right. So let's discuss it first, please, and make sure it's
+> clear what needs to be done."*
+> *(2026-09-05, session 3, night; speech-to-text cleaned, content untouched)*
+
+**AI reading (not the composer's words):** three decisions and a design brief. The META window is the gestures' shapes
+only and stays where it is; the three curve windows are their own, one track high. The curve object is rebuilt as
+**points → fill → shape**: click to place points (no lines), a command or double-click fills the curve through them, then
+hold the line and drag to bend it — the line following the hand 1 : 1, so nothing is left to calibrate. The diamond of
+phase 2 goes. The discussion and the diagnosis of the dead green square: RUNNING_LOG §106.
+
+---
+
+## CN-24 · 2026-09-05 — the curve windows and the curve object, decided
+
+> *"Windows: I want the windows like META, so it's a bit transparent, and it floats over. But I want them to be precisely the
+> height of and location of violin two, viola, and cello. So just floating windows directly above those and transparent. And
+> even the curve — actually, let's make the curve not fill. And even the line a little bit transparent, like META, but maybe a
+> little bit more. So the fill trigger will just draw the line between the points, and I would like a button for that. And
+> then make sure I can scroll and continue to add points throughout the score, even if the previous points aren't visible
+> anymore. Keep the dots visible always, and then let's have those simple controls for deleting a dot, and I can move them.
+> And then no need for a freehand draw. And then a way to continue the curve if I want to. So if I want to add to the end of a
+> curve, I can do something and then click more dots, and then redraw the line. Same with deleting ends. If I delete the
+> beginning or the end, the curve collapses to the next point."*
+> *(2026-09-05, session 3, night; speech-to-text cleaned, content untouched)*
+
+**AI reading (not the composer's words):** the design of CN-23 settled — the spec is TRILLS_TOOL §3b and RUNNING_LOG §107.
+One curve per window, a line through dots that live on the timeline; the dots are the whole interface.
+
+---
+
+## CN-25 · 2026-09-05 — the bend like a DAW; several curves per window; go
+
+> *"1 I'm not exactly sure, but a lot like a DAW, like Logic Pro, where you can drag and change the depth of the curve or the
+> direction of the hump. No. Two windows could have multiple curves. So that's the point where if I wanted to continue a
+> curve, I could, but I could have separate curves there as well. And then good to go."*
+> *(2026-09-05, session 3, night; speech-to-text cleaned, content untouched)*
+
+**AI reading (not the composer's words):** the bend is vertical, the hump's depth and direction following the hand where the
+line is held (Logic's automation curve); a window holds several curves — dots placed with a curve selected continue it,
+dots placed with nothing selected become a new one. Built: RUNNING_LOG §107.
