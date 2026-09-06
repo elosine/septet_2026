@@ -3434,3 +3434,23 @@ probe recording. And the heredoc rule of this shell: a double backslash arrives 
 tool.
 
 **Next (1g item 1, to-dos 4–6):** the remap per instrument and register anchored on the violins, the app function, the proof.
+
+## §116. The velocity remap computed (1g item 1, to-do 4): anchored on the violins, per instrument and register; the registers tell the story
+
+Composer: *"sorry just saved wave, is that ok or do you need to rerun?"* — no rerun: the file was complete and analyzed before Reaper's
+prompt; the bridge came back at once, the recording's item removed from REC (its two old items kept), the cursor back at 0.
+
+**Built** `tools/velocity_remap.js` → `bank/velocity_remap.json`: the anchor = the violins' mean velocity → level curve (20:−51.4 ·
+32:−47.8 · 48:−43.5 · 64:−40.5 · 80:−35.2 · 96:−33.2 · 112:−30.1 · 127:−28.3 dB K); a curve height h means anchor velocity
+65 + 62h and the anchor's level there is the target (h = 0 → −40.1, h = ½ → −33.2, h = 1 → −28.3); for every instrument and each
+measured register the sweep's curve made monotone by pool-adjacent-violators (the piano's 112 > 127 step and its 80/64 plateau,
+the viola's 64 > 80 at A5 pooled, never inverted) and inverted by linear interpolation → a 63-entry table (anchor 65 … 127 →
+the velocity to send), clamped where the register cannot reach the target and the clamp counted.
+
+**Checked in node** (h = 0, ½, 1 on all 21 registers): the level at the remapped velocity equals the target within **0.03 dB**
+wherever the register reaches it. The registers speak: the flute at D5 (78) needs velocity 22 at the bottom (its middle register is
+loud) and 53 at A4 (69); the bass clarinet 44–70 at the bottom; the piano 20 at G2 (43) is still 1.5 dB too loud — nothing softer
+was measured; the viola 20 at A5 (82) still 1.1 dB loud; the top: the cello at B4 (71) reaches only −32.6 at 127, 4.3 dB under the
+violins (§46's 12 dB register drop, measured again), the viola at B3 1.3 dB under, the bass clarinet at F#2 1.1 dB under, the
+flute at D5 0.6 dB under — the samples' reality; the tables send 127 there and the bank names the shortfall. The app interpolates
+between the measured pitches and holds the nearest beyond them (to-do 5, with 1g items 3 and 4).

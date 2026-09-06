@@ -353,7 +353,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - ~~build the probe~~ — done 2026-09-06 (`tools/balance_schedule.js --sweep`, the player's cc7, the analyzer's sweep report, the self-test; §115);
      - ~~run it in his rack and record it~~ — done 2026-09-06, driven through the bridge (`reaper/Media/01-REC-260906_1140.wav`, 357 notes; §115);
      - ~~analyze the recording~~ — done 2026-09-06: `bank/velocity_map.json` (consistent with the balance run within 1.0 dB; the ensemble at 127 within 1.8 dB; the velocity and CC7 curves per register; §115);
-     - compute, per instrument, the velocity that matches the violins at each curve height; save it as the remap;
+     - ~~compute, per instrument, the velocity that matches the violins at each curve height; save it as the remap~~ — done 2026-09-06 (`tools/velocity_remap.js` → `bank/velocity_remap.json`, per register, within 0.03 dB where reachable, the clamps counted; §116);
      - make the app send the remapped velocity (one function: instrument + pitch + height → velocity); the trill reads it;
      - check: all seven at bottom, middle and top, read the levels — within about 1.5 dB.
      *Result:* the same curve height is the same loudness on every instrument.
