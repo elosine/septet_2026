@@ -345,6 +345,39 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   document for the morph tool, this piece's adjustments and the eventual all-purpose revision; the morph event's four elements:
   pitch expansion → beating · re-breath / re-bow · crescendo · the pairs' own glissandi; short events of one breath, long ones with
   re-breaths). *Why:* section 2's material in his form of 2026-09-06.
+- **1g — Balanced dynamics for curve-driven playback: trills first, then crescendos and the morph events** — `todo 2026-09-06`
+  *(composer, 2026-09-06: "get balanced level playback through MIDI for trills using the curve shapes, and hopefully this will extend
+  to other types of articulations like crescendos")*. **The goal in one line:** a curve's height means the same loudness on every
+  instrument — the bottom of the curve is velocity 65 in the MIDI and ppp in the notation, the top is 127 and fff, and everything
+  between is balanced across the ensemble. Builds on 0j (the trims at the sampler masters stay) and shares 0d's rack window.
+  The steps, in order — **1 → 2 → 3 (with 9) need no rack; 5 → 6 → 7 need his window:**
+  1. **The rule, recorded (→ D23).** The curve's height IS the dynamic (ppp → fff) for the notation and the IR; velocity 65 → 127 is
+     the playback rendering of that same height; one curve drives a trill's speed and its loudness (a separate dynamic curve stays
+     possible later). *Done when NAMING §2, TRILLS_TOOL and journal §4 say it.*
+  2. **The trill on the ordinary voice.** Defaults per instrument — strings Senza Vibrato (#6), flute Ordinario, bass clarinet Senza
+     Vibrato Velocity (#13), piano main; a trill copied or dragged onto another lane takes that lane's voice (today it keeps a foreign
+     key and falls back silently). *Done when a new trill on each lane, and a cross-lane copy, play the ordinary voice — verified.*
+  3. **The velocity from the curve.** A velocity mode on the trill: curve (65 at the bottom → 127 at the top, by height) as the default
+     for new trills, "as played" kept for A/B; low and high editable in the panel; the attack stays its own. *Done when the flute's
+     long passage at 85.35 sounds right to him on the new rule.*
+  4. **The sweep — the measurement, in his rack window.** The 0j balance kit extended: each instrument's trill voice × three registers
+     (low · middle · high) × eight velocities (127 → about 20), ~170 notes, ~7 minutes, the analyzer at 400 ms K-weighted →
+     `bank/velocity_map.json` with provenance. *Done when the bank holds all seven instruments' velocity → dB curves.*
+  5. **The remap.** Per instrument and register: the velocity that lands on the violins' loudness at each curve height (the violins
+     are the anchor, as in 0j); a lookup interpolated between the measured pitches, clamped where an instrument cannot reach the
+     target and the clamp reported; ONE app function (instrument + pitch + height → velocity); the trill reads it, the captures keep
+     giving the timing and the lengths, the strikes stay as played. *Done when the trill sends remapped velocities and the engine
+     test shows the seven at one target level.*
+  6. **The proof.** A short probe: all seven at heights 0, ½ and 1, read back. *Done when every instrument is within about 1.5 dB of
+     the anchor at each height — the numbers in the log.*
+  7. **Extend.** The same function under crescendos on sustained notes (today CC7 through the tuba piece's map — re-based on these
+     measurements or on 0d.1's CC7 map), the morph events' crescendo (MORPH_NOTES), any curve-driven object. *Done when a crescendo
+     drawn on a lane balances across the instruments the same way.*
+  8. **Register.** Kept inside 4–5 (three pitches measured, interpolated): the cello's senza vibrato is 12 dB softer at B4 than at C3.
+  9. **Until the sweep.** A first line per instrument from the two measured points (127 and 64), honest only from 64 up, so step 3's
+     hearing can happen now; the sweep replaces it without touching the trill.
+  *Why:* the piece's second material is curve-driven (the trills, then the morph events, the tremolo fugue); if the curve's bottom is a
+  different loudness on each instrument, no ensemble balance can be composed — and the rendering must never leak into the notation.
 - Sketch pad: `docs/COMPOSITION_NOTES.md` — the opening is already there (ensemble attack →
   curve-based tremolos with fp entries → tremolo fugue → density-build sound mass).
 - Tuba engines to pull per need: `compiler.js` swell clouds and grain envelopes (present
