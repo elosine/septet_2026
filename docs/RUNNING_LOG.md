@@ -5021,3 +5021,32 @@ like strikes and increase all fonts  if 12 then 14 if 14=18 10=12"*. → MORPH_N
 
 **A note for the tool's memory** (MORPH_NOTES §4): the working panels of this stack are drawers from the bottom, not floating boxes —
 the composer looks for a tool where the strikes are.
+
+## §176. "midi note trapped won't stop playing" — the rack silenced by a panic script; the cause (a stop cancels a long note's scheduled note-off, and Xsample ignores CC123); the fix (every long note remembered and released on stop) and a ■ Panic button
+
+Composer, 2026-09-07 morning, testing the beating on his server: *"midi note trapped won't stop playing"*.
+
+**First the note:** `probes/panic.ps1` written and run at once — on every loopMIDI port of the septet (Flute · Fluteb · BassCl · Piano ·
+Vn1 · Vn2 · Va · Vc), on all 16 channels, an explicit note-off on every key, then CC120, CC123, the sustain pedal up, the bend centred,
+CC7 back to 127 — 2128 messages per port. (The tuba's probe and MorphEmit's `panic()` had learned the same: CC123 alone is not
+trustworthy — Kontakt's Xsample instruments do not honour it, piece #1's finding.)
+
+**The cause, in the code:** a beating's notes are the first LONG notes through the zone tick (6–30 s; the trill's are a few hundred
+ms). The tick schedules a note-on and its note-off together, with Web MIDI timestamps (D19). A stop (`stopPlay` → `flushCurvePlayback`)
+calls `out.clear()` on every output — which cancels the still-pending note-off — and then `resetCC7All`'s CC123, which Xsample ignores.
+The plain-note tick releases its own notes explicitly on a stop (its `_activeCurvePlayback`); the zone tick never had to. So a
+beating stopped mid-note stayed on. The same held for the panel's audition (its own stop released its notes; a TRANSPORT stop
+during an audition did not).
+
+**The fix (verified in the pane with fake outputs):** every long note the zone tick schedules (duration > 150 ms) and every note of a
+beating audition is remembered (`noteSounding`: port | channel | key → until); `flushCurvePlayback` releases them all explicitly right
+after its `clear()` (`releaseSounding`); the audition's own stop unregisters what it releases. Checked: two beating notes scheduled
+by the tick → stop → 8 clears, then two note-offs (Va 53, Vc 53) at the stop, the registry empty; an audition's two notes → a
+transport stop → two note-offs; no console errors. This fixes the class, not the instance: any long zone note is covered.
+
+**■ Panic in the toolbar** (`panicAll`): the queue cleared, an explicit note-off on every key of every channel of every open port,
+CC120 / CC123, the pedal up, the bend centred, CC7 127, every playback registry emptied, the auditions stopped — 17,024 messages to
+the eight ports in the check; the status line says so. The script `probes/panic.ps1` stays for a rack without the app.
+
+**For the tool's memory:** a sustained note in a scheduled-ahead world needs its own release path; "all notes off" is not one on
+this rack. MORPH_NOTES §3 (his words), BEATING_TOOL §5.

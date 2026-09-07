@@ -471,6 +471,8 @@
     <span style="color:#ccc">|</span>
     <button id="beatingBtn" title="Beating (B on a strike note makes one there): the panel — a pattern of up to three pairs, the mirrored rate curves with handles, the crescendo and breath lanes, SPACE plays it; P on a selected beating opens it bound to that one">Beating</button>
     <span style="color:#ccc">|</span>
+    <button id="panicBtn" title="Panic: silence everything — an explicit note-off on every key of every channel of every port, the bends centred, CC7 back to 127 (a trapped note)" style="color:#b00;font-weight:bold">&#9632; Panic</button>
+    <span style="color:#ccc">|</span>
     <button id="lwBtn">Add Line Wedge</button>
     <span style="color:#ccc">|</span>
     <select id="motiveSelect"><option value="">— motives —</option></select>
@@ -1475,6 +1477,7 @@ const Composer = {
         document.getElementById('zoneBtn').addEventListener('click', () => this.createZone());
         document.getElementById('trillBtn').addEventListener('click', () => this.createTrill());
         document.getElementById('beatingBtn').addEventListener('click', () => { if (typeof BeatingPanel !== 'undefined') BeatingPanel.toggle(); });   // PLAN 1f step 4
+        document.getElementById('panicBtn').addEventListener('click', () => this.panicAll());   // §176: the trapped note
         document.getElementById('lwBtn').addEventListener('click', () => this.createLineWedge());
         const mpBtn = document.getElementById('motivePlaceBtn');
         if (mpBtn) mpBtn.addEventListener('click', () => {
@@ -2168,7 +2171,7 @@ const Composer = {
             // ? = the help line (PLAN 1f step 7, 2026-09-07): the keys, and how a beating is made
             if (e.key === '?' && !e.ctrlKey && !(e.target && e.target.matches && e.target.matches('input, textarea, select'))) {
                 e.preventDefault();
-                this.saveStatus.textContent = 'keys: T = a trill on the selected note · B = a BEATING on the selected strike note (its pitch the centre, the nearest lane that can pair the partner, a 6 s bloom 0 → 3 beats/s; the strike untouched) · P = the panel of the selected trill or beating — the beating panel: the pair\'s mirrored rate curves with handles on rails, the crescendo and breath lanes, the strike menu and the keyboard for the pitches, SPACE plays, insert @ playhead puts a pattern of up to three pairs in the score under one META shape (drag = move, box = stretch, DELETE = all of it) · the Beating button = a new pattern · G surge · O ord · A column · C cuivre · SPACE play · ESC clear · ? this line';
+                this.saveStatus.textContent = 'keys: T = a trill on the selected note · B = a BEATING on the selected strike note (its pitch the centre, the nearest lane that can pair the partner, a 6 s bloom 0 → 3 beats/s; the strike untouched) · P = the panel of the selected trill or beating — the beating panel: the pair\'s mirrored rate curves with handles on rails, the crescendo and breath lanes, the strike menu and the keyboard for the pitches, SPACE plays, insert @ playhead puts a pattern of up to three pairs in the score under one META shape (drag = move, box = stretch, DELETE = all of it) · the Beating button = a new pattern · ■ Panic = silence everything (a trapped note) · G surge · O ord · A column · C cuivre · SPACE play · ESC clear · ? this line';
                 return;
             }
 
@@ -9897,7 +9900,7 @@ const Composer = {
         this._beatingAud = null; clearTimeout(a.timer);
         const now = performance.now();
         a.slots.forEach(s => { try { if (typeof s.out.clear === 'function') s.out.clear(); } catch (e) { } });
-        a.notes.forEach(n => n.out.send([0x80 | n.ch, n.key, 0], now));
+        a.notes.forEach(n => { n.out.send([0x80 | n.ch, n.key, 0], now); if (this._sounding) this._sounding.delete((n.out.name || '?') + '|' + n.ch + '|' + n.key); });
         a.slots.forEach(s => { s.out.send([0xE0 | s.ch, 0, 64], now); s.out.send([0xB0 | s.ch, 7, 127], now); });
         if (a.btn && a.btn.isConnected) a.btn.textContent = a.label;
     },
@@ -9916,7 +9919,7 @@ const Composer = {
             const at = now + e.onsetMs;
             if (e._bend != null) { out.send([0xE0 | ch, e._bend & 0x7F, (e._bend >> 7) & 0x7F], at); (this._morphBentChannels || (this._morphBentChannels = {}))[(e.port || snip.port || '') + '|' + ch] = true; return; }
             if (e._cc != null) { out.send([0xB0 | ch, e._cc, e._ccValue != null ? e._ccValue : 0], at); return; }
-            e.notes.forEach((k, i) => { const dur = e.durations[i] || 100; out.send([0x90 | ch, k, Math.max(1, Math.min(127, Math.round(e.velocity)))], at); out.send([0x80 | ch, k, 0], at + dur); a.notes.push({ out, ch, key: k }); last = Math.max(last, e.onsetMs + dur); });
+            e.notes.forEach((k, i) => { const dur = e.durations[i] || 100; out.send([0x90 | ch, k, Math.max(1, Math.min(127, Math.round(e.velocity)))], at); out.send([0x80 | ch, k, 0], at + dur); a.notes.push({ out, ch, key: k }); this.noteSounding(out, ch, k, at + dur); last = Math.max(last, e.onsetMs + dur); });   // remembered: a transport stop releases it too (§176)
         });
         a.slots.forEach(s => s.out.send([0xE0 | s.ch, 0, 64], now + last + this.BEATING_CENTRE_MS));
         if (btn) btn.textContent = '■ stop';
@@ -10465,6 +10468,43 @@ const Composer = {
         return bp[bp.length - 1][1];
     },
 
+    // THE TRAPPED NOTE (composer, 2026-09-07: "midi note trapped won't stop playing"; RUNNING_LOG §176). A note scheduled ahead
+    // through a Web MIDI timestamp gets its note-off scheduled with it; a stop calls out.clear(), which cancels that note-off; and
+    // Kontakt's Xsample instruments do not honour the CC123 all-notes-off sent after (piece #1's finding) — so a long note (a
+    // beating's 6–30 s bow) stayed on. Every long note is remembered here as it is scheduled, and released explicitly on every stop.
+    _sounding: null,
+    noteSounding(out, ch, key, untilPerf) {
+        if (!this._sounding) this._sounding = new Map();
+        this._sounding.set((out.name || '?') + '|' + ch + '|' + key, { out, ch, key, until: untilPerf });
+    },
+    releaseSounding(atPerf) {
+        if (!this._sounding || !this._sounding.size) return 0;
+        const at = atPerf == null ? performance.now() : atPerf; let n = 0;
+        for (const s of this._sounding.values()) { try { s.out.send([0x80 | s.ch, s.key, 0], at); n++; } catch (e) { } }
+        this._sounding.clear();
+        return n;
+    },
+    // PANIC (the toolbar's ■ Panic): silence everything — the queue cleared, an explicit note-off on every key of every channel of
+    // every port, CC120 / CC123, the sustain pedal up, the bend centred, CC7 back to 127; every playback registry emptied
+    panicAll() {
+        if (!this._zoneMidiInited) { this.initZoneMidi().then(() => this.panicAll()); return 0; }
+        const outs = Object.values(this._zoneMidiOutputs || {}); let n = 0;
+        outs.forEach(out => {
+            try { if (typeof out.clear === 'function') out.clear(); } catch (e) { }
+            for (let ch = 0; ch < 16; ch++) {
+                for (let k = 0; k < 128; k++) out.send([0x80 | ch, k, 0]);
+                out.send([0xB0 | ch, 120, 0]); out.send([0xB0 | ch, 123, 0]); out.send([0xB0 | ch, 64, 0]); out.send([0xE0 | ch, 0, 64]); out.send([0xB0 | ch, 7, 127]);
+                n += 133;
+            }
+        });
+        this._activeCurvePlayback = {}; this._activeZonePlayback = {}; this._curvePreArm = {}; this._morphBentChannels = {};
+        if (this._sounding) this._sounding.clear();
+        if (typeof this.stopBeatingAudition === 'function') this.stopBeatingAudition();
+        if (typeof this.stopTrillAudition === 'function') this.stopTrillAudition();
+        this.saveStatus.textContent = 'PANIC: ' + n + ' messages to ' + outs.length + ' port' + (outs.length === 1 ? '' : 's') + ' — every key released on every channel, the bends centred, CC7 127' + (outs.length ? '' : ' (no MIDI outputs open — is the rack up?)');
+        return n;
+    },
+
     // Centre the bend on every channel a morph touched. Called from
     // flushCurvePlayback so stopping the transport can never leave the residue
     // Probe 0 measured at +49.4 cents on the next note.
@@ -10500,6 +10540,7 @@ const Composer = {
         }
         this._activeCurvePlayback = {};
         this._curvePreArm = {};
+        this.releaseSounding(nowPerf);   // the long notes scheduled ahead: their note-offs died in clear() above (the trapped note of 2026-09-07, §176)
         this.resetMorphBend();   // PLAN 2v: same cure, for bend (Probe 0: +49.4 c residue)
         // THE CC7 RESIDUE CURE (composer 2026-08-13): swell tails leave CC7 near
         // zero on every channel they touched; UVI keeps that channel state across
@@ -14014,6 +14055,7 @@ const Composer = {
                         const dur = evt.durations[ni] || 100;
                         evtOutput.send([0x90 | evtCh, note, vel], now + delayMs);
                         evtOutput.send([0x80 | evtCh, note, 0], now + delayMs + dur);
+                        if (dur > 150) this.noteSounding(evtOutput, evtCh, note, now + delayMs + dur);   // a long note: released explicitly on a stop (§176)
                     });
                 }
 

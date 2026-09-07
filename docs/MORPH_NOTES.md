@@ -271,6 +271,15 @@ panel where the strikes are; the panel becomes a full-page drawer with the same 
 fonts: his mapping 10 → 12, 12 → 14, 14 → 18 (the panel used 8–11 px; applied as 8 → 10, 9 → 11, 10 → 12, 11 → 13) — a readability
 floor for every panel of the tool, with the row drawings widened to the page. RUNNING_LOG §175.
 
+### 2026-09-07 — a trapped note
+
+> *"midi note trapped won't stop playing"* *(2026-09-07, morning, testing the beating on his server; typed)*
+
+**AI reading (not the composer's words):** the first long notes through the scheduled-ahead path: a stop cancelled their pending
+note-offs (`clear()`), and the all-notes-off after it is ignored by the Xsample instruments. Fixed for every long note (remembered
+and released on stop) and a ■ Panic button added; `probes/panic.ps1` for the rack alone. For the all-purpose tool: a sustained note
+must always have its own release path — never rely on CC123. RUNNING_LOG §176.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

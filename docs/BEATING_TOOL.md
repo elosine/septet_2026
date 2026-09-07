@@ -429,6 +429,11 @@ edges (1 and 15 per second) · the birth default (0 → 3 per second over 6 s, o
 partner lane's mute and solo are not consulted (the zone is on one lane); `tools/range_check.js` does not read a beating's snippet;
 a play start inside a beating lands its latest state first but a note already sounding is not restarted (the trill's rule too).
 
+**Fixed on his first test (2026-09-07 morning, §176):** *"midi note trapped won't stop playing"* — a stop cancelled a long note's
+scheduled note-off and the Xsample instruments ignore CC123. Every long note is now remembered and released explicitly on every stop
+(the transport's and the panel's); **■ Panic** in the toolbar silences everything (an explicit note-off on every key of every
+channel of every port); `probes/panic.ps1` does the same from outside the app.
+
 ## Log (append-only)
 
 - **2026-09-07 — step 1 built:** the palette (§3): the recipe fields, `beating_calc.js` (the palette part, 37 checks), the bend
