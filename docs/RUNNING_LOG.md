@@ -6009,3 +6009,30 @@ as given (and what a reduction dropped), the PAIRS lines give what each pair pla
   as in §205; the five of CN-38 pre-kept.
 
 **Not built; his answer on the mode rule and his go pending.**
+
+## §207. "You mentioned before a strategy for grabbing from any of the sonorities. let's talk about a strategy. So most of the options have many more notes than three. What are the selection strategies?" — the strategies set out, a worked example, the recommendation; one question put to him
+
+Composer, 2026-09-07 late (verbatim in MORPH_NOTES §3). **The frame:** a sonority of N notes must give three notes (one per pair,
+doubled — the beating inside each pair) or six (two per pair — a pair beats between two different notes); the fold per pair (D26)
+follows whatever is chosen; the result is always shown and can be kept by name, so the strategy matters at the moment of picking only.
+
+**The strategies put to him (a pull-down, "take"):**
+- **lowest 3 / highest 3** — the bottom or the top of the sonority.
+- **outer + middle** — the frame: the lowest, the highest, the one nearest the middle.
+- **spread** — evenly across the sorted set (the reduceSource idea: whole clusters kept, spread over the register).
+- **by register** — one note per pair, the one nearest each pair's home (Vc + Va around C3–G3, the violins G3–D4, Fl + BCl C4–F4): the
+  fewest folds, the sonority heard where the players sit. Recommended as the default.
+- **consecutive from k** — a window with a number box: notes k, k+1, k+2 of the sorted set — every trichord of the sonority in turn.
+- **every other** — notes 1, 3, 5.
+- **random (seed)** — three at random, another seed another three; the beating drawer's reshuffle idiom.
+- **two per pair** as a switch for six notes: adjacent pairs (1-2 · 3-4 · 5-6, the pairs beat between neighbours) or spread pairs
+  (1-4 · 2-5 · 3-6, each pair a wider interval); the strategies above pick the six.
+Octave doublings are kept (S055's C2 C3 C4 is three pairs on C in three octaves — the doubling is the point).
+
+**Worked on cs-050 (B3 C4 C♯4 D♯4):** lowest B3 C4 C♯4 · highest C4 C♯4 D♯4 · outer + middle B3 C♯4 D♯4 · spread B3 C♯4 D♯4 · by
+register B3 · C♯4 · D♯4 (the low pair folds B3 down or plays it as written — both hold B3) · from 2: C4 C♯4 D♯4. On a nine-note blast
+(S001, F♯1 … D4): lowest F♯1 D2 F2 (folded up by the pairs) · spread F♯1 C3 D4 · by register C3 · C♯4? — the nearest to each home.
+
+**The modes' question of §206 dissolves into this:** a mode from the root is a sonority; "consecutive from 1, two per pair" is (a),
+"spread, doubled" is (b) — the strategy pull-down serves the modes, the stacks, the harmony list and the models' sets alike.
+**Put to him:** which of these to carry (all are cheap) and the default; nothing built.

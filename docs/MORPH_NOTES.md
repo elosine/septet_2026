@@ -748,6 +748,19 @@ keyboard is not asked for. For the all-purpose tool: a pitch source is (a family
 root box should drive a spectral fundamental and a transposition alike. The piano's solo scattered strikes are a composition note
 (CN-39), not the tool's. RUNNING_LOG §206.
 
+### 2026-09-07, late — "let's talk about a strategy … most of the options have many more notes than three. What are the selection strategies?"
+
+> *"You mentioned before a strategy for grabbing from any of the sonorities. let's talk about a strategy. So most of the options have
+> many more notes than three. What are the selection strategies?"* *(2026-09-07, late; typed)*
+
+**AI reading (not the composer's words):** the right question for a tool that casts a sonority onto a fixed number of pairs: the
+selection is a RULE with a name (lowest, highest, outer + middle, spread, by register, a consecutive window, every other, a seeded
+random), applied at the moment of picking, the result shown and keepable. For the all-purpose tool: the selection rule belongs
+beside the voicing rule (the strikes drawer's presets, the beating drawer's octave range) as the third member of the pitch source —
+family · root · voicing · selection — and "by register" (each pair takes the note nearest its home) is the one that respects the
+players. RUNNING_LOG §207.
+
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·
