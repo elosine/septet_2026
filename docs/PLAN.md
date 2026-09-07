@@ -355,7 +355,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 
 - **1f — The beatings: a pair of players on one pitch, a gap that beats — the beating panel (section 2, CN-28 · CN-29 · CN-33)** —
   `doing` — **building since 2026-09-07 at his word (*"will you be able to run the plan independantly? can you do so, and I'll check
-  in after the build"*, RUNNING_LOG §167): step 1 built (§167–168)** (the requirements talk 2026-09-06 evening, RUNNING_LOG
+  in after the build"*, RUNNING_LOG §167): step 1 built (§167–168), step 2 built (§169)** (the requirements talk 2026-09-06 evening, RUNNING_LOG
   §145–166; PLANNING_METHOD phase 3 from step 1) *(composer,
   2026-09-06: CN-28 "strikes with morph chords, like freeze frames or old time slide show … 'morph events'" · CN-29 "the expansion of
   pitch to expand beating, the rebreath … and the Crescendo … the multiple pairs" · "beating is good" · "the atom will be a pair of
@@ -400,7 +400,10 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - the sampler's range as a recipe field the tick reads at step 3 (the tuba's 1.99 stays until then);
      - `docs/BEATING_TOOL.md` opened with the numbers (the TRILLS_TOOL pattern); MORPH_NOTES §1 updated.
   2. **The beating math** (a pure module: rate to cents by pitch and interval, the two curves and their difference, the breaths, the
-     duration stretch) — `todo`. *Result when done:* one pure module, page and tools alike, turns a pair's description — the centre
+     duration stretch) — `built 2026-09-07 (RUNNING_LOG §169; docs/BEATING_TOOL.md §4): beating_calc.js's second half — the
+     conversion (13.18 c = 1 beat/s at C3), the heard beating from the two players' cents, the shapes, mirrored / flat partner, the
+     slide, the three breath modes and the seeded deal with the ceiling table, the re-key, the notes with note-relative bend and level
+     breakpoints, renderPattern with the META contour, stretch, the flags; beating_calc_check.js 77 checks — nothing heard`. *Result when done:* one pure module, page and tools alike, turns a pair's description — the centre
      pitch, the interval inside the pair, the two rate curves (one per player, signed, in beats per second, as the panel slides them),
      the crescendo curve, the length, the breath rule — into each player's chain of notes, one per breath, each carrying its bend in
      cents over time and its level over time; the upper player sits on the just interval, every rate becomes the cents that produce

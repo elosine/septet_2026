@@ -4666,3 +4666,53 @@ REC and the nine instrument tracks armed as for the sweeps): recorded → played
 0.99 · 0.97, bendMeasured true, bendMutableByMidi false, the residues); `tools/beating_calc_check.js` extended (37 checks: the limit
 the smaller of the two, every range measured, the flute at 2 and the five at 0.96–0.99) — PASS; `probes/selftest_bend.py` — PASS.
 BEATING_TOOL §3 stamped with the numbers. PLAN 1f step 1 marked built.
+
+## §169. PLAN 1f step 2 (the beating math) built: one pure call turns a pair's description into each player's chain of notes — the conversion, the heard beating, the shapes, the mirror and the slide, the breaths dealt inside the ceilings, the re-key, the stretch, the flags; 77 checks, nothing heard
+
+Built straight after step 1's commit (2026-09-07, about 01:00–01:40), in the plan's words (PLAN 1f item 2's to-dos), the same file
+as the palette: `score/public/beating_calc.js`'s second half; `tools/beating_calc_check.js` extended from 37 to 77 checks.
+
+**The model, as decided in the code (the choices worth remembering):**
+- **A player's rate curve is its SHARE of the beating, signed.** The plan's words: two signed rate curves, "the difference → the beat-rate
+  line" (§147: what is heard is the DIFFERENCE of the two curves). So each player's cents come from its own rate against a partner at the
+  centre — cents = 1200·log2(1 + rate ÷ (p·f)), p the interval's coincident partial — and the heard beating is computed from the two
+  players' actual cents: beat = p·f·|2^(cU/1200) − 2^(cL/1200)|. Consequence: **the panel draws ONE heard-rate curve per pair** and
+  `mirrored()` splits it half and half (bipolar) — so the drawn height IS the beating heard (a 3-hump: ±9.9 c each at C4, 2.99 beats per
+  second at the peak); `flatPartner()` gives the whole curve to one player (the trainable form, CN-33). Two explicit curves are still
+  accepted (the unlocked panel of step 4).
+- **The tuba's 13.19 c is 13.18.** 1 beat per second at C3 (130.81 Hz) = 1200·log2(1 + 1/130.81) = 13.184 c; D28's "13.19" was a
+  rounding. At C4 6.60 c, at C2 26.27 c (not 26.37: the log compresses a little going down). The register law holds as written.
+- **The just interval is the zero** (§148): the upper player's centre is the just interval above the pitch; its bend carries the just
+  offset (+1.955 c at the fifth, −1.955 at the fourth, −13.686 at the major third, +15.641 at the minor third) even when its rate is 0.
+- **Curves over normalised time**, breakpoints linear between, held flat beyond the ends — so `stretch()` is a change of `length` and
+  nothing else (the slides and the hand-placed breath marks scale; dealt breaths re-deal). **The slide** reads a player's curve later
+  by so many seconds. Proven as §147 predicted: mirrored humps in phase = a pulse 0 → max → 0; the upper slid by half the length = a
+  plateau at half the peak, flat from the middle on; two curves on the same side of the centre, one slid = the beat dies to a
+  momentary unison (both at the same cents) and returns.
+- **The breaths** (§152): three modes per player — `one` · `continuous` (marked for the notation: re-bow at will; no ceiling flag) ·
+  `designated` (marks as note boundaries; hand-placed marks kept, the nearest dealt mark giving way; the rest dealt). **The deal** =
+  the tuba carrier's rule per instrument: a target with 35 % jitter, capped by the ceiling, seeded (mulberry32, the accel
+  calculator's), the upper player half a breath behind by default; no span ever longer than its ceiling, the last at least 40 % of
+  the target. **The ceiling table — DEFAULTS for his ear:** flute 8 s breath · bass clarinet 10 s · violins and viola 12 s bow · cello
+  10 s; louder = shorter (× 0.85 above level 0.5, × 0.7 above 0.75, the tuba's rule); the winds re-enter after a 0.5 s gap, a bow
+  changes without one. A 40 s event at 2 beats per second: the flute in 7 breaths of ≤ 6.8 s with 0.5 s gaps, the violin in 5 bows of
+  ≤ 10.2 s, the pair staggered (first marks 6.8 s and 3.07 s); louder (level 0.9), 8 breaths. Continuity across a breath is free —
+  the next note reads the same curves where the last stopped (within 0.5 c and 0.02 of level on the check).
+- **The re-key** (#1's convention, §150): a note splits where its cents pass the sampler's range; the key moves a semitone, the bend
+  is re-based against it, the seam flagged `sampler-range`. Proven at 40 beats per second on C4 (±127 c each: the viola re-keyed a
+  semitone up, the cello down, the bends inside ±100 c). Under his semitone and the measured 0.96–2.00 st it never happens.
+- **The output:** per player the chain of notes `{ key, keyOffset, startS, endS, breath, bend: [[dt, cents]…] (the tuba's morphBend
+  shape, 50 ms steps), level: [[dt, 0…1]…], flags }` — the level in the score's units, the tick applies 1g's remap (step 3); per pair
+  the panel's lines (`samples`), the zones, `maxBeat`, `maxCents`, the marks and spans, the flags; per pattern (`renderPattern`) the
+  notes in absolute time at the rows' offsets, the length, the flags, and the **META contour** — the crescendo's mean across the
+  pattern, 33 points (§160's decision). **The flags:** `player-limit` · `sampler-range` · `roughness` · `ceiling` · `out-of-range`
+  (a player who cannot hold the note — the palette's business, but the module says so).
+
+**The checks (the plan's list, every one):** rate → cents → rate exact on 250 points (worst 1.2e-12) · the fifth at 3× per cent, the
+fourth 4×, the thirds 5× and 6× · the just offsets on the upper note · the pulse, the plateau, the momentary unison · the breaths
+inside the ceilings and staggered, seeded, a hand mark kept · the stretch (6 → 12 s: the same cents at the same normalised time,
+the slide and the hand mark scaled; dealt breaths re-dealt at 30 s) · the flags · a three-pair pattern at offsets 0 · 1 · 2 s (six
+notes, 8 s, the contour). First run: 4 of 77 failed — every one a wrong expected number in the AI's check (13.19 for 13.18; 26.32
+for 26.27; two tolerances tighter than the samples' three-decimal rounding); the module unchanged. **PASS.**
+
+**Not done, by the plan:** nothing heard — step 3 puts one pair in the score and plays it through the tick.

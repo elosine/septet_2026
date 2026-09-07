@@ -132,10 +132,54 @@ reads `bendRangeSt` of the instrument instead; `resetMorphBend` (the centre on s
 measurement) · whether the curve channels' copies of the Xsample instruments (D11: 2–4) share the main channel's bend range — the
 probe reads the technique's own channel; assumed the same until a beating plays on a curve channel.
 
-## 4 · The beating math — step 2 `todo`
+## 4 · The beating math — `built 2026-09-07 (PLAN 1f step 2; RUNNING_LOG §169) — checked in node, nothing heard yet`
 
-A pure module (this file's `beating_calc.js`, extended): rate ↔ cents by pitch and interval, the two curves and their difference,
-the breaths, the duration stretch; `tools/beating_calc_check.js` extended. *(PLAN 1f item 2.)*
+> *"there'll be single events … longer events … bring in the indicator from the tuba piece … the dotted go line … on sliders … a
+> warning … maximum breath length or bow length … continuous … or designate when the bows should change … an opportunity for the
+> shuffle"* (composer, §152)
+
+`score/public/beating_calc.js`, the second half (page and tools alike); `tools/beating_calc_check.js`, 77 checks. **One call turns a
+pair's description into each player's chain of notes**: `renderPair(spec, recipe)` and, for several pairs at offsets,
+`renderPattern({ length, pairs, offsets }, recipe)`.
+
+- **Units.** Time in seconds inside the event; every curve over normalised time 0 → 1 (so a typed duration re-samples it); a player's
+  **rate in beats per second, signed** (above the centre +, below −); **cents** against the player's own centre; **level 0 → 1** = the
+  score's curve height (D23) — the tick applies 1g's remap, not this module.
+- **The conversion** (§148): a player's rate against a partner at the centre, on the interval's coincident partial p —
+  cents = 1200·log2(1 + rate ÷ (p·f)), and back exactly. The register law is inside: 1 beat per second is 13.18 c at C3 (the tuba's
+  13.19 of D28 to the rounding), 6.60 c at C4, 26.27 c at C2. The same cents beat 3× at a fifth, 4× at a fourth, 5× at a major third.
+- **The heard beating** = the gap between the two players' coincident partials: beat = p·f·|2^(cU/1200) − 2^(cL/1200)|. The panel draws
+  ONE heard-rate curve per pair and `mirrored()` splits it bipolar, half each — so the drawn height is the beating heard (a 3-hump
+  gives ±9.9 c each at C4 and 2.99 beats per second at the peak); `flatPartner()` gives it all to one player (one holds — the
+  trainable form). Two signed curves may also be given outright. **The zones:** < 1 flanger · 1–15 beating · > 15 roughness.
+- **Curves and shapes.** Breakpoints `[[p, v], …]`, linear between, held flat beyond the ends; a number is a flat line. The menu:
+  `flat · rampOut · rampIn · hump · arc (a raised cosine, nine points) · burst` — a few points, every one a handle for step 4. **The
+  slide** = a player's curve read later by so many seconds (before its start the first value holds, after its end the last).
+  Proven: mirrored humps in phase = a pulse 0 → max → 0; the upper slid by half the length = a plateau at half the peak; two curves
+  on the same side, one slid = the beat dies to a momentary unison and returns.
+- **The breaths** (§152). Three modes per player: `one` (a single note the whole length — flagged past the ceiling) · `continuous`
+  (one long note, marked for the notation: re-bow / re-breathe at will) · `designated` (the marks as note boundaries — hand-placed,
+  kept; the rest dealt). **The deal** (the tuba carrier's rule, per instrument): a target length with jitter (35 %), capped by the
+  ceiling, seeded (another seed = another deal, the same seed the same); the pair's two players half a breath apart; no span ever
+  longer than its ceiling, the last at least 40 % of the target. **The ceilings** — DEFAULTS, his ear to tune them (§11): flute 8 s
+  breath · bass clarinet 10 s · violins and viola 12 s bow · cello 10 s; louder = shorter (× 0.85 above level 0.5, × 0.7 above 0.75);
+  the winds re-enter after a 0.5 s gap, a bow changes without one. Continuity across a breath is free: the next note reads the same
+  curves where the last stopped.
+- **The re-key** (#1's convention, §150): where a player's cents pass the sampler's range the note splits, the key moves a semitone
+  and the bend is re-based against it, the seam flagged `sampler-range`. Under his semitone and the measured ranges it never happens;
+  the module does it anyway.
+- **The output.** Per player a chain of notes `{ key, keyOffset, startS, endS, breath, bend: [[dt, cents]…] (note-relative, the tuba's
+  morphBend shape, 50 ms steps), level: [[dt, 0…1]…], flags }`; per pair the panel's lines (`samples`: the rates, the cents, the beat,
+  the zone, the level), the zones, `maxBeat`, `maxCents`, the breath marks and spans, the flags; per pattern the notes in absolute time
+  at the rows' offsets, the length, the flags and the **META contour** (the crescendo's mean across the pattern, 33 points, §160).
+  **The flags:** `player-limit` (past playerBendSt) · `sampler-range` (re-keyed) · `roughness` (the zone) · `ceiling` (a span past the
+  breath or bow) · `out-of-range` (a player who cannot hold the note).
+- **The stretch:** `stretch(spec, seconds)` — the curves are already normalised; the slides and the hand-placed marks scale; dealt
+  breaths re-deal at the new length.
+
+*Verified in node only (the plan's checks: rate → cents → rate exact on 250 points; the fifth at 3×; the just offsets on the upper
+note; the pulse, the plateau, the momentary unison; a 40 s event breathed inside the ceilings and staggered; the stretch; every flag;
+a three-pair pattern). Nothing heard until step 3.*
 
 ## 5 · The beating object — step 3 `todo`
 
@@ -158,7 +202,7 @@ freehand, the slide, the space bar, the duration box, takes. *(PLAN 1f item 4.)*
 The strikes menu → the drawer's keyboard inside the panel, a pitch per pair (the lower note), the sonority between pairs by
 relation from a root, the interval inside a pair. *(PLAN 1f item 5.)*
 
-## 8 · The breaths (§152) — inside steps 2 and 4
+## 8 · The breaths (§152) — the model built at step 2 (§4 above); the lane, the sliders and the warning at step 4
 
 > *"there'll be single events … longer events … bring in the indicator from the tuba piece … the dotted go line … on sliders … a
 > warning … maximum breath length or bow length … continuous … or designate when the bows should change … an opportunity for the
@@ -188,3 +232,6 @@ every breath, the beat rate at both ends of the gliss — the tuba's settled for
   probe on this kit (the schedule, the player's bend events, the analyzer and its self-test, the applier, the runner's switch);
   **the probe run in his rack the same night** (the bridge up and idle, at his word to run the plan independently): SI2 ±2.00 st,
   the Xsample five ±0.96–0.99 st, RPN ignored everywhere, the residue real everywhere, the pre-arm fine — written into the recipe.
+- **2026-09-07 — step 2 built:** the beating math (§4): the conversion, the heard beating from the two players' cents, the shapes,
+  the mirror and the slide, the three breath modes and the seeded deal with the ceiling table, the re-key, the notes with their bend
+  and level breakpoints, the pattern and its contour, the stretch, the flags; 77 checks in node. Nothing heard.

@@ -90,5 +90,102 @@ ok(Object.keys(T).length === 6 && T[36].length === 1 && T[48].length === 3 && T[
    'the unison table over the C\'s: C2 1 pair · C3 3 · C4 15 · C5 10 · C6 6 · C7 3 (' + [36, 48, 60, 72, 84, 96].map(p => BC.noteName(p) + ' ' + T[p].length).join(' · ') + ')');
 ok(BC.noteName(60) === 'C4' && BC.noteName(34) === 'A#1' && near(BC.midiHz(69), 440) && near(BC.midiHz(48), 130.8128, 1e-3), 'noteName and midiHz');
 console.log('\n' + BC.describePalette(recipe).join('\n') + '\n');
+
+// ======================= STEP 2 — the beating math (PLAN 1f item 2's checks) =======================
+// the conversion: the tuba's number, the register law, the round trip, the partials
+ok(near(BC.rateToCents(1, 48, 'unison'), 13.18, 0.01), '1 beat per second at C3 = ' + BC.rateToCents(1, 48, 'unison').toFixed(3) + ' c (the tuba\'s 13.19 of D28 to the rounding — the exact figure is 13.18)');
+ok(near(BC.rateToCents(1, 60, 'unison'), 6.60, 0.01) && near(BC.rateToCents(1, 36, 'unison'), 26.27, 0.01), 'the register law: the same beat is 6.60 c at C4 and 26.27 c at C2 (a fixed cents doubles per octave, the log compressing a little)');
+{ let worst = 0, n = 0;
+  for (const r of [-8, -3, -1, -0.2, 0, 0.2, 1, 3, 8, 20]) for (const p of [36, 48, 60, 72, 96]) for (const iv of ['unison', 'm3', 'M3', 'P4', 'P5']) { worst = Math.max(worst, Math.abs(BC.centsToRate(BC.rateToCents(r, p, iv), p, iv) - r)); n++; }
+  ok(worst < 1e-9, 'rate → cents → rate exact on ' + n + ' points (worst ' + worst.toExponential(1) + ')'); }
+ok(near(BC.centsToRate(10, 60, 'P5') / BC.centsToRate(10, 60, 'unison'), 3) && near(BC.centsToRate(10, 60, 'P4') / BC.centsToRate(10, 60, 'unison'), 4) &&
+   near(BC.centsToRate(10, 60, 'M3') / BC.centsToRate(10, 60, 'unison'), 5) && near(BC.centsToRate(10, 60, 'm3') / BC.centsToRate(10, 60, 'unison'), 6),
+   'the same cents beat 3× at a fifth, 4× at a fourth, 5× at a major third, 6× at a minor third (the coincident partial)');
+ok(BC.zoneOf(0.5) === 'flanger' && BC.zoneOf(1) === 'beating' && BC.zoneOf(15) === 'beating' && BC.zoneOf(15.1) === 'roughness', 'the zones: < 1 flanger · 1–15 beating · > 15 roughness');
+// curves and shapes
+ok(BC.evalCurve([[0, 0], [0.5, 3], [1, 0]], 0.25) === 1.5 && BC.evalCurve(2, 0.7) === 2 && BC.evalCurve([[0.2, 1], [0.8, 3]], 0) === 1 && BC.evalCurve([[0.2, 1], [0.8, 3]], 1) === 3,
+   'curves: linear between the points, a number flat, the ends held beyond the first and last point');
+ok(BC.shape('hump', { peak: 3 }).length === 3 && BC.shape('arc', { peak: 2 }).length === 9 && near(BC.evalCurve(BC.shape('arc', { peak: 2 }), 0.5), 2) && BC.shape('flat', { level: 1.5 })[0][1] === 1.5 && BC.shape('burst', { peak: 4 })[1][1] === 4,
+   'the shapes: hump (3 points) · arc (9, the peak at the middle) · flat · burst');
+{ const m = BC.mirrored(BC.shape('hump', { peak: 3 })); ok(m.lower[1][1] === -1.5 && m.upper[1][1] === 1.5, 'mirrored: half each, the lower below (−1.5 / +1.5 from a 3 hump)');
+  const fp = BC.flatPartner(BC.shape('hump', { peak: 3 }), 'upper'); ok(fp.lower === 0 && fp.upper[1][1] === 3, 'a flat partner: the lower holds, the upper carries the whole 3');
+  const lv = BC.levelFromBeat(BC.shape('hump', { peak: 3 }), 0.3, 0.9); ok(lv[0][1] === 0.3 && lv[1][1] === 0.9 && lv[2][1] === 0.3, 'a level curve following the beating: 0.3 → 0.9 → 0.3'); }
+// a still fifth: the just offset rides on the upper player's bend, the beat line 0
+{ const o = BC.renderPair({ pitch: 60, interval: 'P5', players: { lower: 'cello', upper: 'viola' }, length: 4, rate: { lower: 0, upper: 0 } }, recipe);
+  ok(o.notes.upper.length === 1 && o.notes.upper[0].key === 67 && o.notes.upper[0].bend.every(b => near(b[1], 1.955, 1e-3)) && o.notes.lower[0].key === 60 && o.notes.lower[0].bend.every(b => b[1] === 0),
+     'a still fifth on C4: the upper note G4 carries +1.955 c (just) throughout, the lower none');
+  ok(o.maxBeat === 0 && o.zones.length === 1 && o.zones[0].zone === 'flanger' && near(o.f.upper, o.f.lower * 1.5, 0.01), '… the beat line 0 (flanger zone), the upper frequency 3/2 of the lower');
+  const q = BC.renderPair({ pitch: 60, interval: 'P4', players: { lower: 'cello', upper: 'viola' }, length: 4, rate: { lower: 0, upper: 0 } }, recipe);
+  const t = BC.renderPair({ pitch: 60, interval: 'M3', players: { lower: 'cello', upper: 'viola' }, length: 4, rate: { lower: 0, upper: 0 } }, recipe);
+  const u = BC.renderPair({ pitch: 60, interval: 'm3', players: { lower: 'cello', upper: 'viola' }, length: 4, rate: { lower: 0, upper: 0 } }, recipe);
+  ok(near(q.notes.upper[0].bend[0][1], -1.955, 1e-3) && near(t.notes.upper[0].bend[0][1], -13.686, 1e-3) && near(u.notes.upper[0].bend[0][1], 15.641, 1e-3), '… the fourth −2 c, the major third −14 c, the minor third +16 c on the upper note'); }
+// mirrored humps in phase = a pulse; slid = a plateau; both moving the same way = a momentary unison
+const HUMP3 = BC.shape('hump', { peak: 3 });
+{ const a = BC.renderPair({ pitch: 60, interval: 'unison', players: { lower: 'cello', upper: 'viola' }, length: 6, beat: HUMP3 }, recipe);
+  const mid = a.samples[Math.floor(a.samples.length / 2)];
+  ok(near(a.samples[0].beat, 0, 1e-6) && near(a.maxBeat, 3, 0.02) && near(a.samples[a.samples.length - 1].beat, 0, 1e-6), 'mirrored hump in phase: a pulse 0 → ' + a.maxBeat + ' → 0 beats per second (the heard rate = the drawn peak, each player half)');
+  ok(near(mid.centsL, -mid.centsU, 1e-6) && near(mid.centsU, BC.rateToCents(1.5, 60, 'unison'), 1e-3), '… the two players mirror in cents (±' + mid.centsU + ' c at the peak = 1.5 beats each)');
+  ok(a.notes.lower.length === 1 && a.notes.upper.length === 1 && a.notes.lower[0].bend.length === 121 && a.notes.lower[0].bend[60][1] === mid.centsL && a.notes.upper[0].level[60][1] === 0.6,
+     '… one note each, 121 bend points at 50 ms, the level 0.6 flat by default');
+  const b = BC.renderPair({ pitch: 60, interval: 'unison', players: { lower: 'cello', upper: 'viola' }, length: 6, beat: HUMP3, slide: { upper: 3 } }, recipe);
+  const late = b.samples.filter(q => q.t >= 3).map(q => q.beat);
+  ok(near(b.maxBeat, 1.5, 0.02) && Math.max(...late) - Math.min(...late) < 0.02, 'the upper slid by half the length: a plateau — the peak halves (' + b.maxBeat + ') and from the middle on the beat holds flat');
+  const c = BC.renderPair({ pitch: 60, interval: 'unison', players: { lower: 'cello', upper: 'viola' }, length: 6, rate: { lower: BC.scaleCurve(HUMP3, -0.5), upper: BC.scaleCurve(HUMP3, -0.5) }, slide: { upper: 3 } }, recipe);
+  const at = t => c.samples.find(q => near(q.t, t, 1e-6)).beat;
+  ok(at(3) > 1 && at(4.5) < 0.02 && at(6) > 1, 'both curves below the centre, one slid: the beat rises, dies to a momentary unison at 4.5 s (both at the same cents), rises again'); }
+// the breaths: inside the ceiling, staggered, the winds' gap, seeded, continuity, a hand mark kept, the ceiling flag, continuous
+{ const spec = { pitch: 60, interval: 'unison', players: { lower: 'flute', upper: 'violin1' }, length: 40, beat: BC.shape('hump', { peak: 2 }), breath: { mode: 'designated', seed: 3 } };
+  const o = BC.renderPair(spec, recipe), fl = o.notes.lower, vn = o.notes.upper, cF = o.breaths.lower.ceiling, cV = o.breaths.upper.ceiling;
+  ok(cF.kind === 'breath' && cF.seconds === 6.8 && cV.kind === 'bow' && cV.seconds === 10.2, 'the ceilings at level 0.6: the flute\'s breath 8 × 0.85 = 6.8 s, the violin\'s bow 12 × 0.85 = 10.2 s');
+  ok(fl.length >= 5 && fl.every(n => n.endS - n.startS <= cF.seconds + 1e-6) && vn.length >= 3 && vn.every(n => n.endS - n.startS <= cV.seconds + 1e-6),
+     'a 40 s designated event: the flute in ' + fl.length + ' breaths, none above ' + cF.seconds + ' s; the violin in ' + vn.length + ' bows, none above ' + cV.seconds + ' s');
+  ok(fl.slice(1).every((n, i) => near(n.startS - fl[i].endS, 0.5, 1e-6)) && vn.slice(1).every((n, i) => near(n.startS - vn[i].endS, 0, 1e-6)), '… the flute re-enters after a 0.5 s gap, the violin changes bow without one');
+  const m1 = o.breaths.lower.marks, m2 = o.breaths.upper.marks;
+  ok(m1.length && m2.length && Math.abs(m1[0] - m2[0]) > 1.5, '… the pair staggered: the first marks at ' + m1[0] + ' s and ' + m2[0] + ' s');
+  ok(fl[fl.length - 1].endS === 40 && vn[vn.length - 1].endS === 40 && fl[0].startS === 0, '… the chains run from 0 to the end');
+  ok(fl.slice(1).every((n, i) => Math.abs(n.bend[0][1] - fl[i].bend[fl[i].bend.length - 1][1]) < 0.5 && Math.abs(n.level[0][1] - fl[i].level[fl[i].level.length - 1][1]) < 0.02),
+     '… continuity: each breath starts within 0.5 c and 0.02 of level of where the last ended');
+  ok(!o.flags.length, '… no flags (2 beats per second at C4 is ±6.6 c each; every span inside its ceiling)');
+  const o2 = BC.renderPair(Object.assign({}, spec, { breath: { mode: 'designated', seed: 4 } }), recipe), o3 = BC.renderPair(spec, recipe);
+  ok(JSON.stringify(o2.breaths.lower.marks) !== JSON.stringify(m1) && JSON.stringify(o3.breaths.lower.marks) === JSON.stringify(m1), 'another seed, other marks; the same seed, the same marks');
+  const o4 = BC.renderPair(Object.assign({}, spec, { breath: { mode: 'designated', seed: 3, marks: { lower: [12.5] } } }), recipe);
+  ok(o4.breaths.lower.marks.includes(12.5) && o4.breaths.lower.marks.length === m1.length && o4.notes.lower.some(n => n.startS === 12.5), 'a hand-placed mark at 12.5 s kept through the deal (the nearest dealt mark gives way), a breath starting there');
+  const o5 = BC.renderPair({ pitch: 60, interval: 'unison', players: { lower: 'flute', upper: 'violin1' }, length: 20, beat: HUMP3, breath: { mode: 'one' } }, recipe);
+  ok(o5.notes.lower.length === 1 && o5.flags.some(f => f.flag === 'ceiling' && f.player === 'flute' && f.seconds === 20) && o5.flags.some(f => f.flag === 'ceiling' && f.player === 'violin1'), 'a 20 s single breath: the flute (6.8 s) and the violin (10.2 s) both flagged past the ceiling');
+  const o6 = BC.renderPair({ pitch: 60, interval: 'unison', players: { lower: 'flute', upper: 'violin1' }, length: 20, beat: HUMP3, breath: { mode: 'continuous' } }, recipe);
+  ok(o6.notes.lower.length === 1 && o6.notes.lower[0].flags.includes('continuous') && !o6.flags.some(f => f.flag === 'ceiling'), 'continuous: one long note, marked for the notation ("re-breathe at will"), no ceiling flag');
+  const loud = BC.renderPair(Object.assign({}, spec, { level: 0.9 }), recipe);
+  ok(loud.breaths.lower.ceiling.seconds === 5.6 && loud.notes.lower.length > fl.length, 'louder (level 0.9): the flute\'s ceiling 8 × 0.7 = 5.6 s, more breaths (' + loud.notes.lower.length + ' vs ' + fl.length + ')'); }
+// the stretch
+{ const spec = { pitch: 60, interval: 'unison', players: { lower: 'cello', upper: 'viola' }, length: 6, beat: HUMP3, slide: { upper: 1 }, breath: { mode: 'designated', marks: { lower: [3] }, deal: false } };
+  const a = BC.renderPair(spec, recipe), b = BC.renderPair(BC.stretch(spec, 12), recipe);
+  ok(b.length === 12 && near(b.maxBeat, a.maxBeat, 1e-6) && b.slide.upper === 2 && b.breaths.lower.marks[0] === 6, 'stretched 6 → 12 s: the same peak, the slide scaled 1 → 2 s, the hand mark 3 → 6 s');
+  const at = (o, p) => o.samples.find(q => near(q.p, p, 1e-6));
+  ok([0.25, 0.5, 0.75].every(p => near(at(a, p).centsU, at(b, p).centsU, 1e-6) && near(at(a, p).beat, at(b, p).beat, 1e-6)), '… the same cents and beat at the same normalised time');
+  ok(a.notes.lower.length === 2 && b.notes.lower.length === 2 && b.notes.lower[1].startS === 6 && b.notes.lower[1].endS === 12, '… the cello\'s two bows now 0–6 and 6–12');
+  const c = BC.renderPair(BC.stretch({ pitch: 60, interval: 'unison', players: { lower: 'flute', upper: 'violin1' }, length: 6, beat: HUMP3, breath: { mode: 'designated', seed: 3 } }, 30), recipe);
+  ok(c.notes.lower.length >= 4 && c.notes.lower.every(n => n.endS - n.startS <= 6.8 + 1e-6), '… dealt breaths re-dealt at the new length: the flute in ' + c.notes.lower.length + ' breaths over 30 s, all inside the ceiling'); }
+// the flags: the player's semitone, the sampler's range (the re-key), the roughness zone; a pair out of range
+{ const o = BC.renderPair({ pitch: 60, interval: 'unison', players: { lower: 'cello', upper: 'viola' }, length: 4, beat: BC.shape('flat', { level: 40 }) }, recipe);
+  ok(o.flags.some(f => f.flag === 'player-limit') && o.flags.some(f => f.flag === 'sampler-range') && o.flags.some(f => f.flag === 'roughness') && o.maxBeat > 15,
+     '40 beats per second at C4 (±' + o.maxCents.upper + ' c each): the player\'s semitone, the sampler\'s range (re-keyed) and the roughness zone all flagged');
+  const rk = o.notes.upper.find(n => n.keyOffset === 1);
+  ok(rk && rk.flags.includes('rekey') && rk.key === 60 && rk.bend.every(b => Math.abs(b[1]) <= 100) && o.notes.lower.some(n => n.keyOffset === -1),
+     '… the re-keyed notes: the viola a semitone up (key 60, offset +1) with the bend re-based inside ±100 c, the cello a semitone down');
+  const q = BC.renderPair({ pitch: 60, interval: 'unison', players: { lower: 'cello', upper: 'viola' }, length: 4, beat: BC.shape('flat', { level: 3 }) }, recipe);
+  ok(q.flags.length === 0 && q.notes.lower[0].keyOffset === 0, '3 beats per second at C4 (±6.6 c): no flags, no re-key');
+  const w = BC.renderPair({ pitch: 96, interval: 'unison', players: { lower: 'cello', upper: 'flute' }, length: 4, beat: 2 }, recipe);
+  ok(w.flags.some(f => f.flag === 'out-of-range' && f.player === 'cello' && f.note === 96), 'the cello asked for C7: flagged out of range (the palette\'s business, but the module says so)'); }
+// the pattern: three pairs at offsets, the notes in absolute time, the META contour; describePair
+{ const pat = BC.renderPattern({ length: 6, pairs: [
+    { pitch: 60, interval: 'unison', players: { lower: 'cello', upper: 'viola' }, beat: HUMP3 },
+    { pitch: 67, interval: 'unison', players: { lower: 'violin1', upper: 'violin2' }, beat: HUMP3, level: BC.levelFromBeat(HUMP3) },
+    { pitch: 60, interval: 'P5', players: { lower: 'bass_clarinet', upper: 'flute' }, beat: HUMP3 }], offsets: [0, 1, 2] }, recipe);
+  const fl = pat.notes.find(n => n.player === 'flute');
+  ok(pat.pairs.length === 3 && pat.notes.length === 6 && pat.length === 8 && fl.startS === 2 && fl.endS === 8 && fl.key === 67 && pat.notes[0].player === 'cello' && pat.flags.length === 0,
+     'a three-pair pattern at offsets 0 · 1 · 2 s: six notes, 8 s long, the flute on G4 from 2 to 8 s, the cello first, no flags');
+  ok(pat.contour.length === 33 && near(pat.contour[0][1], 0.6, 1e-6) && pat.contour[16][1] > 0.6 && near(pat.contour[32][1], 0.6, 1e-6),
+     '… the META contour: the crescendo\'s mean across the pattern, 33 points, above 0.6 in the middle where the violins swell');
+  console.log('  ' + BC.describePair(pat.pairs[2])); }
 console.log(fails ? 'FAIL — ' + fails + ' check' + (fails > 1 ? 's' : '') + ' failed' : 'PASS — every check passed');
 process.exit(fails ? 1 : 0);
