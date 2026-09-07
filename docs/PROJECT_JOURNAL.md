@@ -555,6 +555,12 @@ sources; verified here only when they bite.)*
   strikes drawer's §113 rule); the zones ride the existing group machinery (§173). (8) **The keyboard is drawn again in the panel,
   the drawer's picture** — not a call into the drawer, whose drawing is bound to its own DOM (§172). *Why all of these:* the plan's
   words, and every one proven on a copy of the piece by the decoded MIDI or real DOM events before it was called built.
+- **D26** *(2026-09-07, composer: "a for the octive displacement" — RUNNING_LOG §199–200)* — **A morph pair folds as one unit.** When a
+  player swapped into a pair cannot hold the pair's pitch, the pair moves by octaves together to the nearest octave both players hold —
+  the unison kept, the beating as designed; no octave serving both → the line names the player who cannot, the pair silent until he
+  swaps again. The beating drawer's rule (§180, D25) extended to the morph panel's pairs. *Why:* the beating is the material; an
+  octave pair beats at twice the rate for the same cents and sounds thinner. *Rejected:* (b) only the player who cannot reach folds,
+  the pair an octave apart — the register kept at the sound's expense.
 
 ---
 

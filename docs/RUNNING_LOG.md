@@ -5784,3 +5784,48 @@ cannot, the pair silent until he swaps again (the beating drawer's rule, §180) 
 folds**, the pair an octave apart — the register kept, but an octave pair beats between the upper note and the lower's second
 partial: twice the rate for the same cents, and a thinner sound than a unison splitting. The fold shown on the line as in the drawers
 ("F3 → F4 ↑"); the folded pitch is what the extractor reads. **His answer pending; nothing built.**
+
+## §200. "what is this? … how did the original morph choose the pitches? a for the octive displacement; for the sampler gliss, I think we worked it out for the string quartet piece … 61 but bent a semi tone down … a whole tone glist up from c to d" — the scratch file explained, the tuba's pitch choice traced, the fold decided (a), the quartet's glissando method confirmed against the engine and the measured ranges
+
+Composer, 2026-09-07 late (verbatim in MORPH_NOTES §3): *"and what is this?: New pitch sets the tuba way: you say the words, I write the
+scratch variant, the panel picks it up, you listen. and how did the original morph choose the pitches? a for the octive displacement;
+for the sampler gliss, I think we worked it out for the string quartet piece, and I thought the AI who built the beating drawer also
+picked up on this. I think what we did was we pitch bent a note all the way in one direction, the opposite direction of where it
+needed to go. So, for example, let's say it's c four, midi sixty, then you would play sixty one but bent a semi tone down. And then
+glists all the way to the max pitch bend, which will be a whole tone glist up from c to d. let me know if you understand what I'm saying
+and if you have knowledge of the system. I may be getting some of the particulars wrong. I can't remember, for example, what the full
+pitch bend for the x sample instruments are, but I know it's recorded somewhere. One more pass in discussion."*
+
+**Decided (his): the octave displacement = (a), the pair folds as one unit** (§199) — the beating drawer's rule of §180 extended to
+the morph pairs; D26.
+
+**The scratch file (his "what is this?"):** the tuba's panel had no pitch controls; the pitches lived in two files the AI wrote at his
+word — `bank/morph_params.json`, the "scratch" variants A–F (each a whole set of params: the model, the pitch list as MIDI numbers, the
+dials, the carrier, the dynamics; a `rev` the panel polls once a second, so an edit appeared in the panel without a reload), and
+`bank/morph_models.json`, the six stock models with their own pitch sets. **How the tuba's pitches were chosen:** typed into those
+files by the AI in conversation — the stock sets from the day-10 audit (BLOOM: four unison pairs F2 · B♭2 · E♭3 · A♭3 = 41,41,46,46,
+51,51,56,56; CONVERGE: whole-tone pairs 45,47 · 50,52 · 57,59 · 62,64 closing to the unisons 46 · 51 · 58 · 63; BALANCE: a B♭ major
+9th 34,38,41,45,48,53,58,62; SPECTRAL: F2 (41) as the fundamental, partials 2 … 13 folded into the tuba's range, each voice to its
+nearest free partial); the engine's hook for a chord by id from the score's bank (`source.kind: 'vert'`) exists but the panel never
+passed a resolver, so it was never used from the panel. For the septet the same way: the six models re-voiced once for three pairs;
+other pitches by his word into a variant or a model.
+
+**The quartet's method (his "61 bent a semitone down … a whole tone up from C to D"): understood and confirmed** —
+`string_quartet_no1-composer/docs/AI_GLISSANDO_PROMPT_GUIDE.md` and `LONG_TONE_GLISSANDO_WORKFLOW.md`: gliss up = the note at
+startPitch + 1 with the bend starting at MIN, gliss down = startPitch − 1 with the bend at MAX; one segment covers 2 semitones of
+travel (the Xsample range ±1 st there too, §150); a wider glissando is cut into segments, each new note starting 5 ms before the
+previous ends (the seam hidden by the overlap); CC0 on the first two segments only. **The morph engine does the same idea** — the
+played key is CENTRED on the note's excursion so both halves of the bend serve, a note beyond the range is split into consecutive
+notes with no gap ("segmented re-key") — **but its split rule is conservative:** it splits whenever the travel exceeds 2 × (reach −
+50 c), the worst case of rounding the centre to a key; at the tuba's 199 c that is 298 c per key, at the Xsample five's 96–99 c it
+would cut a whole tone into three notes where his method takes one. **The measured ranges (MEASURED_BEND, 2026-09-07 00:22,
+BEATING_TOOL §3):** flute 2.00 st · bass clarinet 0.98 · violin 1 0.96 · violin 2 0.97 · viola 0.99 · cello 0.97; RPN 0 ignored on all
+six, so only Kontakt's own dial changes them. So one key at ±0.96–0.99 st reaches 192–198 c: a whole tone arrives 2–8 c short at
+each end.
+
+**Put to him:** (i) the engine's split by the ACTUAL excursion (his method), a shortfall of a few cents clamped, the quartet's 5 ms
+overlap at a re-key — a whole tone in one key on every instrument, 2–8 c shy at the ends on the five; or (ii) Kontakt's bend range
+set to ±2 st on the five and the bend probe re-run (his rack, about ten minutes; the recipe's numbers update, the beating drawer
+follows them through `bendRangeSt`, its steps 0.34 → 0.68 c) — a whole tone with room, up to a major third per key, no seam and no
+shortfall; recommended (ii) because a CONVERGE closing to a unison must actually arrive: two voices each 4 c shy would beat at
+about 1.4 Hz on D4 where a unison was written. His choice pending; nothing built.

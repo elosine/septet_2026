@@ -648,6 +648,26 @@ tool:** the cast and the fold belong to the pair widget, whatever engine sits be
 number, not a per-instrument one — a semitone for a beating pair, a whole tone for a morph glissando, both his by ear. The sampler's
 seam on a whole tone is a mock-up fact, not a notation fact. RUNNING_LOG §199.
 
+### 2026-09-07, late — the scratch file, the tuba's pitches, the fold (a), the quartet's glissando method
+
+> *"and what is this?: New pitch sets the tuba way: you say the words, I write the scratch variant, the panel picks it up, you listen.
+> and how did the original morph choose the pitches? a for the octive displacement; for the sampler gliss, I think we worked it out for
+> the string quartet piece, and I thought the AI who built the beating drawer also picked up on this. I think what we did was we pitch
+> bent a note all the way in one direction, the opposite direction of where it needed to go. So, for example, let's say it's c four, midi
+> sixty, then you would play sixty one but bent a semi tone down. And then glists all the way to the max pitch bend, which will be a
+> whole tone glist up from c to d. let me know if you understand what I'm saying and if you have knowledge of the system. I may be
+> getting some of the particulars wrong. I can't remember, for example, what the full pitch bend for the x sample instruments are, but I
+> know it's recorded somewhere. One more pass in discussion."* *(2026-09-07, late; typed)*
+
+**AI reading (not the composer's words):** two things for the revision. (1) In the tuba piece the pitches were never in the tool: they
+were numbers the AI typed into a polled file at his word — the tool's memory was the conversation, which is why "how did it choose
+the pitches" is a fair question a day later; the all-purpose tool should show its pitch set and where it came from, even when the
+AI sets it. (2) The glissando rule he carries from the string quartet — the key one semitone into the travel, the bend from the far
+end, a segment per two semitones with a 5 ms overlap — is the same rule the tuba engine holds ("the key centred on the excursion, a
+re-key beyond") but the engine's split threshold was tuned for the tuba's ±2 st and is far too eager at ±1 st; the rule must read
+the sampler's measured range and split by the real need. The measured ranges live in the recipe (MEASURED_BEND) and BEATING_TOOL
+§3, not in anyone's memory. The fold decided as (a): the pair folds as one unit (D26). RUNNING_LOG §200.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·
