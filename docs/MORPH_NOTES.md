@@ -501,6 +501,16 @@ needed seconds. Rule B again, and a corollary for the all-purpose tool: **an env
 what the length leaves** — the ADSR is the natural unit of a held gesture, and a tool that stretches it with the duration is wrong.
 Fixed as §185.
 
+### 2026-09-07, late evening — the end dot
+
+> *"I'm meant to be able to move the final dot at the right horizontally. Correct? Alright. Am I missing something? I still can't move
+> it. It doesn't shift horizontally."* *(typed, with two screenshots)*
+
+**AI reading (not the composer's words):** the drag worked and the dot did not move — because the lanes drew the pair over the whole
+width. The design rule "curves over normalised time" was invisible to him and wrong for his hands: **a lane is a piece of time**, the
+gesture ends where it ends, the rest is empty. Fixed as RUNNING_LOG §186. For the all-purpose tool: every lane on a real time axis,
+shared with the timeline.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

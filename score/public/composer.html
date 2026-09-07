@@ -9742,7 +9742,7 @@ const Composer = {
     beatingSpec(zone) {
         const b = this.ensureBeating(zone), roles = this.beatingRoles(zone), beat = this.beatingCurve(b);
         const spec = { pitch: b.pitch == null ? 60 : b.pitch, noNote: b.pitch == null, interval: b.interval, players: { lower: roles.lower, upper: roles.upper }, length: Math.max(0.1, zone.endTime - zone.startTime),
-                       beat, share: b.share, breath: b.breath, slide: b.slide, stepS: 0.05 };
+                       beat, share: b.share, breath: b.breath, slide: b.slide, stepS: Math.min(0.05, Math.max(0.005, Math.max(0.1, zone.endTime - zone.startTime) / 200)) };   // finer on a short pair (2026-09-07: a 0.5 s pair drew ten slivers)
         // the panel (step 4): two explicit curves when the mirror is unlocked; a drawn crescendo, else the level follows the beating —
         // the heard curve while mirrored, the gap between the two curves when not
         let heard = beat;

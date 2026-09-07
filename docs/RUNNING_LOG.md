@@ -5485,3 +5485,24 @@ curve's value at the grabbed column 3.41 for a mouse value of 3.36, the control 
 the two players, the shape still "hold"; len 12 → the control kept, the attack still 2 s; the end handle +100 px → 12 → 14 s, the attack
 still 2 s; SHIFT + the attack's node dragged diagonally → the value kept, the time moved, the attack now 2.7 s; the crescendo's hump
 grabbed and pulled → a control on both players' curves (together), the samples bent. 121 checks in node. No page errors.
+
+## §186. "I still can't move it. It doesn't shift horizontally" — the lanes get a real time axis: the pair ends at its length, the end dot follows the mouse in seconds
+
+Composer, 2026-09-07 late evening, with two screenshots (a pair at 0.5 s, the bands in ten slivers): *"I'm meant to be able to move the
+final dot at the right horizontally. Correct? Alright. Am I missing something? I still can't move it. It doesn't shift horizontally."*
+
+**What was wrong:** the drag worked (his pair had gone to 0.5 s, the minimum), but the lanes drew the pair stretched over the full
+width — the curves are over normalised time — so the end dot was pinned at the right edge whatever the length; only the number moved.
+His picture is the DAW's: the axis is time, the end sits at the length, dragging it moves it.
+
+**Done:** the three lanes (the rates, the crescendo, the breaths) share a real time axis — the window is 1.15 × the length (never under
+1 s), the pair spans 0 → its length, the space beyond is dimmed with a dashed line at the end and second ticks along the bottom; every
+mouse → time mapping goes through the window (`viewSpan`), and the window is held still while the end is dragged so the dot stays
+under the mouse; the end dot's position IS the length (0.05 s steps, 0.5 s the least). The hold shape keeps its seconds through it
+(`fitShapeToLength`). The sampling step follows the length (`beatingSpec`: length / 200, floored at 0.01 s), so a short pair no longer
+draws in slivers.
+
+**Verified on `zz-ai-axis` (a copy, deleted):** a 9 s pair — the end dot at 725 px of 828 (the window 10.35 s), the beyond dimmed; dragged
+300 px left → 5.05 s (the mapping's 5.06), the dot 0.7 px from the mouse during the drag, the window re-fitted after; the attack and
+release 1.94 / 2.91 s (2 and 3 shrunk by the pair's room, the rule of §185); 200 px right → 6.5 s; the attack's node dragged to 30 % lands
+at 0.299; the three lanes' end lines at the same x; 0.5 s → 51 samples instead of 10. No page errors.

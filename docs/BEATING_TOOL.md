@@ -521,8 +521,9 @@ class: flute + bass clarinet on F# G G# A A# B, bass clarinet + either violin on
 follows the mouse (a control point `[cx, cy]` on the segment; two degrees of freedom — where you grab, how far you pull); a sideways
 pull moves the segment's points; CTRL-drag slides the curve in time; ALT-click straightens; SHIFT clamps a dragged node to one axis.
 The **hold shape's attack and release are seconds** (2 and 3 by birth, rewritten when you drag its nodes): a length change — the len
-box, the end handle, the strip's edges — leaves them and gives the hold the rest; too short a pair shrinks them in proportion. The
-**end handle** moves 1 s per 50 px.
+box, the end handle, the strip's edges — leaves them and gives the hold the rest; too short a pair shrinks them in proportion. **The
+lanes are a piece of time** (§186): the pair ends at its length, the space beyond is dimmed, and the end dot sits at the length and
+follows the mouse in seconds.
 
 ## Log (append-only)
 

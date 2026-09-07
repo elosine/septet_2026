@@ -127,7 +127,9 @@ own server (:5300); the AI built at his word, one chunk at a time:
 - **His first test, late evening (§185):** the bend rebuilt as the score's grab-and-pull control point (two degrees of freedom; the
   slope gone), the hold shape's attack and release in seconds (`adsr { attackS, releaseS }`, the hold absorbs the length), the end
   handle 1 s per 50 px, SHIFT clamps a node; his settings so far recorded (cs-015, BCl + Fl on D4, 2.1 s, 8 Hz, hold, p → ff). Verified
-  on a copy (`zz-ai-bend`, deleted). **Next: his test goes on, then the first beating sequence in the piece; the stutter A/B still his.**
+  on a copy (`zz-ai-bend`, deleted). Then (§186) the lanes on a REAL time axis — the pair ends at its length, the end dot follows the
+  mouse in seconds — after his "I still can't move it" (the drag worked; the dot was pinned by the normalised drawing). **Next: his
+  test goes on, then the first beating sequence in the piece; the stutter A/B still his.**
 - **Tools on his hands (§111–114):** the bend cursor only when Points is off; TRILLS phase 4 (a trill runs to the player's next
   strike note, a stretch regenerates at once); a nudged trill keeps its attack note (a 60 ms eating window; the drag keeps a
   trill's start; the articulation switch arbitrated on a shared sampler slot — the tail and the lead); the drawer's pick no

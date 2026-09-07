@@ -703,12 +703,19 @@ const P = {
     // the segment under the mouse, sideways to move its points (a hump's place, a plateau); SHIFT-drag slides the whole curve in time
     // (the phase); the wheel bends a step; ALT-click straightens; a double-click adds a point; the END HANDLE dragged sideways is the
     // pair's length.
+    // the lanes' time axis is REAL (2026-09-07 evening, "I'm meant to be able to move the final dot at the right horizontally"): a pair
+    // ends at its length, the window shows a little beyond it, the end dot sits at the length and follows the mouse in seconds
+    viewSpan(row) { return row._viewLock || r3(Math.max(row.length * 1.15, 1)); },
     drawRates(row, svg) {
-        const BC = BC_(), out = row.out, cur = this.curvesOf(row), b = row.b, S = row.scale, L = row.length;
+        const BC = BC_(), out = row.out, cur = this.curvesOf(row), b = row.b, S = row.scale, L = row.length, view = this.viewSpan(row);
         const x0 = PADL, x1 = W - PADR, mid = HR / 2, sy = (HR / 2 - 6) / S;
-        const X = p => x0 + p * (x1 - x0), Y = v => mid - v * sy, ns = 'http://www.w3.org/2000/svg';
+        const X = p => x0 + (p * L / view) * (x1 - x0), Y = v => mid - v * sy, ns = 'http://www.w3.org/2000/svg';
         const mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
         svg.innerHTML = '';
+        // beyond the pair's end: empty, dimmed; a dashed line at the end with the length
+        svg.appendChild(mk('rect', { x: X(1), y: 0, width: Math.max(0, x1 - X(1)), height: HR, fill: '#000', 'fill-opacity': 0.25 }));
+        svg.appendChild(mk('line', { x1: X(1), x2: X(1), y1: 0, y2: HR, stroke: '#777', 'stroke-dasharray': '3 3' }));
+        for (let t = 1; t < view; t += (view > 40 ? 10 : view > 16 ? 5 : 1)) { svg.appendChild(mk('line', { x1: X(t / L), x2: X(t / L), y1: HR - 6, y2: HR, stroke: '#555' })); }
         // the zone bands: a sliver per sample between the two players' rates (the gap = the heard beating)
         out.samples.forEach((s, k) => {
             const n = out.samples[k + 1]; if (!n) return;
@@ -750,14 +757,14 @@ const P = {
         const nmL = mk('text', { x: x1 - 4, y: HR - 5, fill: COL.lower, 'font-size': 12, 'text-anchor': 'end' }); nmL.textContent = (out.players.lower || '?') + ' ↓' + (b.slide && b.slide.lower ? ' slid ' + b.slide.lower + ' s' : ''); svg.appendChild(nmL);
         const beatT = mk('text', { x: x0 + 4, y: 12, fill: '#c9a8ff', 'font-size': 12 }); beatT.textContent = 'beating ' + out.maxBeat + ' Hz max' + (row.locked ? ' · mirrored' : ' · free') + (row.length ? ' · ' + row.length + ' s' : ''); svg.appendChild(beatT);
         const addAt = e => {   // a point where the mouse is, on the curve above or below the centre
-            const r = svg.getBoundingClientRect(); const p = clamp((e.clientX - r.left - x0) / (x1 - x0), 0, 1), v = (mid - (e.clientY - r.top)) / sy;
+            const r = svg.getBoundingClientRect(); const p = clamp((e.clientX - r.left - x0) / (x1 - x0) * view / L, 0, 1), v = (mid - (e.clientY - r.top)) / sy;
             const who = v >= 0 ? 'upper' : 'lower';
             this.snapshot(); this.addPoint(row, who, r3(p), r3(v)); this.changed(row, true); this.render();
         };
         const onEmpty = e => e.target === svg || e.target.tagName === 'rect' || e.target.tagName === 'line' || (e.target.tagName === 'path' && e.target.getAttribute('stroke') !== 'transparent');
         svg.addEventListener('dblclick', e => { if (e.target.tagName === 'circle') return; e.preventDefault(); addAt(e); });
         if (row.draw) { svg.style.cursor = 'crosshair'; svg.addEventListener('mousedown', e => { if (!onEmpty(e)) return; addAt(e); }); }
-        svg._geom = { x0, x1, mid, sy, X, Y };
+        svg._geom = { x0, x1, mid, sy, X, Y, view, L };
     },
     // hold the line and pull (the score's startBendDrag): the column where the line was grabbed is the control's x, and as the mouse moves
     // the control's y is solved so the held point of the line follows the mouse — two degrees of freedom; a sideways pull moves the
@@ -768,7 +775,7 @@ const P = {
         const cur0 = this.curvesOf(row)[who], a0 = cur0[k], c0 = cur0[k + 1]; if (!a0 || !c0) return;
         const n = cur0.length, pA = a0[0], pC = c0[0], y1 = a0[1], y2 = c0[1];
         const sp = ((b.slide && b.slide[who]) || 0) / Math.max(0.1, row.length);
-        const pGrab = clamp((e0.clientX - r.left - g.x0) / (g.x1 - g.x0) - sp, 0, 1);
+        const pGrab = clamp((e0.clientX - r.left - g.x0) / (g.x1 - g.x0) * g.view / g.L - sp, 0, 1);
         const cx = clamp((pGrab - pA) / Math.max(1e-6, pC - pA), 0.08, 0.92), bT = BC.bezierT(cx, cx), w2 = 2 * (1 - bT) * bT;
         const movA = k > 0, movC = k + 1 < n - 1, lo = k > 0 ? cur0[k - 1][0] + 0.01 : 0, hi = k + 2 < n ? cur0[k + 2][0] - 0.01 : 1;
         const onMove = ev => {
@@ -780,7 +787,7 @@ const P = {
                 this.setCtrl(row, who, k, [cx, cy]);
             }
             else if (movA || movC) {
-                let s = dx / (g.x1 - g.x0);
+                let s = dx / (g.x1 - g.x0) * g.view / g.L;
                 if (movA) s = clamp(s, lo - pA, (movC ? hi - (pC - pA) : pC - 0.01) - pA);
                 if (movC) s = clamp(s, (movA ? lo + (pC - pA) : pA + 0.01) - pC, hi - pC);
                 if (movA) this.setPoint(row, who, k, r3(pA + s), a0[1]);
@@ -796,15 +803,17 @@ const P = {
     dragHandle(row, who, idx, e0, svg) {
         this.snapshot();
         const BC = BC_(), g = svg._geom, r = svg.getBoundingClientRect(), b = row.b, cur = this.curvesOf(row)[who], n = cur.length;
-        const slide = (b.slide && b.slide[who]) || 0, L0 = row.length, sp = slide / Math.max(0.1, L0), xs = e0.clientX, ys = e0.clientY, PX_PER_S = 50;
+        const slide = (b.slide && b.slide[who]) || 0, L0 = row.length, sp = slide / Math.max(0.1, L0), xs = e0.clientX, ys = e0.clientY;
         const p0 = cur[idx][0], v0 = cur[idx][1]; let axis = null;
+        row._viewLock = g.view;   // the time axis stays put while the end is dragged, so the dot follows the mouse
+        const secAt = x => (x - r.left - g.x0) / (g.x1 - g.x0) * g.view;   // the mouse in seconds on the lane's axis
         const tip = document.createElementNS('http://www.w3.org/2000/svg', 'text'); tip.setAttribute('fill', '#fff'); tip.setAttribute('font-size', '12'); svg.appendChild(tip);
         const onMove = ev => {
-            let p = clamp((ev.clientX - r.left - g.x0) / (g.x1 - g.x0) - sp, 0, 1); let v = clamp((g.mid - (ev.clientY - r.top)) / g.sy, -row.scale, row.scale);
+            let p = clamp(secAt(ev.clientX) / Math.max(0.1, row.length) - sp, 0, 1); let v = clamp((g.mid - (ev.clientY - r.top)) / g.sy, -row.scale, row.scale);
             if (ev.shiftKey) { if (!axis) { const dx = Math.abs(ev.clientX - xs), dy = Math.abs(ev.clientY - ys); if (dx < 3 && dy < 3) return; axis = dx >= dy ? 'x' : 'y'; } if (axis === 'x') v = v0; else p = p0; }
             if (idx === 0) p = 0;
-            if (idx === n - 1) {   // the end handle: sideways = the pair's length (his line 10), up / down its value
-                p = 1; const len = r3(Math.max(0.5, Math.round((L0 + (ev.clientX - xs) / PX_PER_S) / 0.05) * 0.05));
+            if (idx === n - 1) {   // the end handle: sideways = the pair's length (his line 10), the dot under the mouse; up / down its value
+                p = 1; const len = r3(clamp(Math.round(secAt(ev.clientX) / 0.05) * 0.05, 0.5, 180));
                 if (len !== row.length) { const s = BC.stretch({ length: row.length, slide: b.slide, breath: b.breath }, len); b.slide = s.slide; b.breath = s.breath; row.length = len; this.placeZone(row); this.fitShapeToLength(row); }
             }
             const vv = who === 'upper' ? Math.max(0, v) : Math.min(0, v);   // above the centre for the upper, below for the lower
@@ -817,12 +826,12 @@ const P = {
             this.drawRates(row, svg); svg.appendChild(tip); if (idx === n - 1) this.drawSeq();
             this.changed(row, false);
         };
-        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); tip.remove(); this.noteAdsrFromPoints(row); this.changed(row, true); this.render(); };
+        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); tip.remove(); delete row._viewLock; this.noteAdsrFromPoints(row); this.changed(row, true); this.render(); };
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
     dragBody(row, who, e0, svg) {
-        const g = svg._geom, L = row.length, x0 = e0.clientX; let last = 0;
-        const onMove = ev => { const d = (ev.clientX - x0) / (g.x1 - g.x0) * L; const step = r3(d - last); if (!step) return; last = r3(last + step); if (ev.altKey && row.locked) { row.locked = false; this.unlock(row); } this.slideCurve(row, who, step); this.rowOut(row); this.drawRates(row, svg); this.changed(row, false); };
+        const g = svg._geom, x0 = e0.clientX; let last = 0;
+        const onMove = ev => { const d = (ev.clientX - x0) / (g.x1 - g.x0) * g.view; const step = r3(d - last); if (!step) return; last = r3(last + step); if (ev.altKey && row.locked) { row.locked = false; this.unlock(row); } this.slideCurve(row, who, step); this.rowOut(row); this.drawRates(row, svg); this.changed(row, false); };
         const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); };
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
@@ -848,10 +857,12 @@ const P = {
         b.levelCurve = { lower: pts.map(p => p.slice()), upper: pts.map(p => p.slice()) };
     },
     drawLevel(row, svg) {
-        const BC = BC_(), out = row.out, b = row.b, ns = 'http://www.w3.org/2000/svg', L = row.length;
-        const x0 = PADL, x1 = W - PADR, X = p => x0 + p * (x1 - x0), Y = v => HL - 4 - clamp(v, 0, 1) * (HL - 10);
+        const BC = BC_(), out = row.out, b = row.b, ns = 'http://www.w3.org/2000/svg', L = row.length, view = this.viewSpan(row);
+        const x0 = PADL, x1 = W - PADR, X = p => x0 + (p * L / view) * (x1 - x0), Y = v => HL - 4 - clamp(v, 0, 1) * (HL - 10);
         const mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
         svg.innerHTML = '';
+        svg.appendChild(mk('rect', { x: X(1), y: 0, width: Math.max(0, x1 - X(1)), height: HL, fill: '#000', 'fill-opacity': 0.25 }));
+        svg.appendChild(mk('line', { x1: X(1), x2: X(1), y1: 0, y2: HL, stroke: '#777', 'stroke-dasharray': '3 3' }));
         // the ideal breath lengths as faint ticks, per player (the ceiling at this level, from the start)
         for (const who of ['lower', 'upper']) { const br = out.breaths[who], col = who === 'upper' ? COL.upper : COL.lower; if (!br || !br.ceiling || !(br.ceiling.seconds > 0)) continue; for (let t = br.ceiling.seconds; t < L - 0.05; t += br.ceiling.seconds) svg.appendChild(mk('line', { x1: X(t / L), x2: X(t / L), y1: 2, y2: HL - 2, stroke: col, 'stroke-opacity': 0.35, 'stroke-dasharray': '1 3' })); }
         const lp = this.levelPts(row);
@@ -887,7 +898,7 @@ const P = {
                     if (e.altKey) { if (pts.length > 2 && idx > 0 && idx < pts.length - 1) { this.snapshot(); const cur = this.levelPts(row)[who]; cur.splice(idx, 1); this.setLevelPts(row, who, cur); this.changed(row, true); this.render(); } return; }
                     this.snapshot();
                     const r = svg.getBoundingClientRect(), n = pts.length;
-                    const onMove = ev => { let pp = clamp((ev.clientX - r.left - x0) / (x1 - x0), 0, 1); if (idx === 0) pp = 0; if (idx === n - 1) pp = 1; const v = clamp((HL - 4 - (ev.clientY - r.top)) / (HL - 10), 0, 1); const cur = this.levelPts(row)[who]; cur[idx] = cur[idx].length > 2 ? [r3(pp), r3(v), cur[idx][2]] : [r3(pp), r3(v)]; this.setLevelPts(row, who, cur); this.rowOut(row); this.drawLevel(row, svg); this.changed(row, false); };
+                    const onMove = ev => { let pp = clamp((ev.clientX - r.left - x0) / (x1 - x0) * view / L, 0, 1); if (idx === 0) pp = 0; if (idx === n - 1) pp = 1; const v = clamp((HL - 4 - (ev.clientY - r.top)) / (HL - 10), 0, 1); const cur = this.levelPts(row)[who]; cur[idx] = cur[idx].length > 2 ? [r3(pp), r3(v), cur[idx][2]] : [r3(pp), r3(v)]; this.setLevelPts(row, who, cur); this.rowOut(row); this.drawLevel(row, svg); this.changed(row, false); };
                     const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); };
                     window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
                 });
@@ -897,17 +908,17 @@ const P = {
         drawOne('lower', lp.lower, COL.lower); drawOne('upper', lp.upper, COL.upper);
         svg.addEventListener('dblclick', e => {   // a point on the curve nearer the mouse (the upper when together)
             if (e.target.tagName === 'circle') return; e.preventDefault();
-            const r = svg.getBoundingClientRect(); const p = clamp((e.clientX - r.left - x0) / (x1 - x0), 0, 1), v = clamp((HL - 4 - (e.clientY - r.top)) / (HL - 10), 0, 1);
+            const r = svg.getBoundingClientRect(); const p = clamp((e.clientX - r.left - x0) / (x1 - x0) * view / L, 0, 1), v = clamp((HL - 4 - (e.clientY - r.top)) / (HL - 10), 0, 1);
             const who = row.levelLock !== false ? 'upper' : (Math.abs(BC.evalCurve(lp.upper, p) - v) <= Math.abs(BC.evalCurve(lp.lower, p) - v) ? 'upper' : 'lower');
             this.snapshot(); const cur = this.levelPts(row)[who]; cur.push([r3(p), r3(v)]); this.setLevelPts(row, who, BC.curveOf(cur)); this.changed(row, true); this.render();
         });
     },
     dragLevelSegment(row, who, k, e0, svg) {
         this.snapshot();
-        const BC = BC_(), r = svg.getBoundingClientRect(), x0 = e0.clientX, y0 = e0.clientY, xw = W - PADR - PADL; let mode = null;
+        const BC = BC_(), r = svg.getBoundingClientRect(), x0 = e0.clientX, y0 = e0.clientY, xw = W - PADR - PADL, vL = this.viewSpan(row) / Math.max(0.1, row.length); let mode = null;
         const cur0 = this.levelPts(row)[who].map(p => JSON.parse(JSON.stringify(p))), a0 = cur0[k], c0 = cur0[k + 1]; if (!a0 || !c0) return;
         const n = cur0.length, pA = a0[0], pC = c0[0], y1 = a0[1], y2 = c0[1];
-        const pGrab = clamp((e0.clientX - r.left - PADL) / xw, 0, 1), cx = clamp((pGrab - pA) / Math.max(1e-6, pC - pA), 0.08, 0.92), bT = BC.bezierT(cx, cx), w2 = 2 * (1 - bT) * bT;
+        const pGrab = clamp((e0.clientX - r.left - PADL) / xw * vL, 0, 1), cx = clamp((pGrab - pA) / Math.max(1e-6, pC - pA), 0.08, 0.92), bT = BC.bezierT(cx, cx), w2 = 2 * (1 - bT) * bT;
         const movA = k > 0, movC = k + 1 < n - 1, lo = k > 0 ? cur0[k - 1][0] + 0.01 : 0, hi = k + 2 < n ? cur0[k + 2][0] - 0.01 : 1;
         const onMove = ev => {
             const dx = ev.clientX - x0, dy = ev.clientY - y0;
@@ -915,7 +926,7 @@ const P = {
             const cur = cur0.map(p => JSON.parse(JSON.stringify(p)));
             if (mode === 'bend') { const v = clamp((HL - 4 - (ev.clientY - r.top)) / (HL - 10), -0.2, 1.2); const cy = clamp((v - (1 - bT) * (1 - bT) * y1 - bT * bT * y2) / Math.max(1e-6, w2), -0.5, 1.5); cur[k] = [cur[k][0], cur[k][1], [cx, r3(cy)]]; }
             else if (movA || movC) {
-                let s = dx / xw;
+                let s = dx / xw * vL;
                 if (movA) s = clamp(s, lo - pA, (movC ? hi - (pC - pA) : pC - 0.01) - pA);
                 if (movC) s = clamp(s, (movA ? lo + (pC - pA) : pA + 0.01) - pC, hi - pC);
                 if (movA) cur[k][0] = r3(pA + s); if (movC) cur[k + 1][0] = r3(pC + s);
@@ -930,10 +941,12 @@ const P = {
     // drag to move, click to add, ALT-click to remove; one ⚠ where a span is longer than the ceiling — nothing else (2026-09-07, his line
     // 18: "all the warnings and whatnot are throwing me off") ----
     drawBreaths(row, svg, info) {
-        const BC = BC_(), out = row.out, b = row.b, ns = 'http://www.w3.org/2000/svg', L = row.length;
-        const x0 = PADL, x1 = W - PADR, X = t => x0 + (t / Math.max(0.1, L)) * (x1 - x0);
+        const BC = BC_(), out = row.out, b = row.b, ns = 'http://www.w3.org/2000/svg', L = row.length, view = this.viewSpan(row);
+        const x0 = PADL, x1 = W - PADR, X = t => x0 + (t / view) * (x1 - x0), secAt = x => (x - x0) / (x1 - x0) * view;
         const mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
         svg.innerHTML = '';
+        svg.appendChild(mk('rect', { x: X(L), y: 0, width: Math.max(0, x1 - X(L)), height: HB, fill: '#000', 'fill-opacity': 0.25 }));
+        svg.appendChild(mk('line', { x1: X(L), x2: X(L), y1: 0, y2: HB, stroke: '#777', 'stroke-dasharray': '3 3' }));
         const rowsY = { upper: 15, lower: 41 };
         const over = [];
         for (const who of ['upper', 'lower']) {
@@ -959,7 +972,7 @@ const P = {
                         b.breath.mode = 'designated'; this.changed(row, true); this.render(); return;
                     }
                     const r = svg.getBoundingClientRect(); const others = handList.filter(x => x !== m);
-                    const onMove = ev => { const cur = r3(clamp((ev.clientX - r.left - x0) / (x1 - x0) * L, 0.1, L - 0.1)); b.breath.mode = 'designated'; b.breath.marks[who] = others.concat([cur]).sort((p, q) => p - q); this.rowOut(row); this.drawBreaths(row, svg, info); this.changed(row, false); };
+                    const onMove = ev => { const cur = r3(clamp(secAt(ev.clientX - r.left), 0.1, L - 0.1)); b.breath.mode = 'designated'; b.breath.marks[who] = others.concat([cur]).sort((p, q) => p - q); this.rowOut(row); this.drawBreaths(row, svg, info); this.changed(row, false); };
                     const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); };
                     window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
                 });
@@ -971,7 +984,7 @@ const P = {
         svg.addEventListener('mousedown', e => {   // a click on the lane places your breath for that player
             if (e.target.tagName === 'circle') return;
             this.snapshot();
-            const r = svg.getBoundingClientRect(); const who = (e.clientY - r.top) < 28 ? 'upper' : 'lower'; const t = r3(clamp((e.clientX - r.left - x0) / (x1 - x0) * L, 0.1, L - 0.1));
+            const r = svg.getBoundingClientRect(); const who = (e.clientY - r.top) < 28 ? 'upper' : 'lower'; const t = r3(clamp(secAt(e.clientX - r.left), 0.1, L - 0.1));
             if (!b.breath.marks) b.breath.marks = { lower: [], upper: [] }; if (!b.breath.marks[who]) b.breath.marks[who] = [];
             b.breath.mode = 'designated'; b.breath.marks[who] = b.breath.marks[who].concat([t]).sort((p, q) => p - q);   // yours; a deal keeps it
             this.changed(row, true); this.render();
