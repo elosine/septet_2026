@@ -4402,3 +4402,27 @@ for the winds and none for a bow change, the pair's two players half a breath ap
 Composer: *"on point, good"* (the to-dos of §152). **Written into `docs/PLAN.md` 1f item 2 at once:** the result when done and the
 eight to-dos in the fixed format, his words of §152 quoted. Committed and pushed. Next: step 3's goal (one pair in the score, heard),
 on his word.
+
+## §154. "ok, step 3" → "So we'll be able to adjust the maximum beating. Yes.? Or is this just a test proof of concept?" → "on point, good" — step 3's goal accepted; the to-dos put to him
+
+Composer: *"ok, step 3"* → the goal put to him (format A): a beating as a score object; B on a strike note makes one on that lane and
+its partner's with defaults (the note's pitch the centre, the partner the nearest able lane by step 1's table, a bloom from unison to
+3 beats per second over 6 s, one breath, the crescendo following the beating curve); regenerated at play from its settings as the
+trill (D20): one sustained note per player, bent per frame through the instrument's own range, the bend set before the note starts
+and centred when it stops, the loudness through 1g's remap; a stretch regenerates; a minimal properties row on P (partner, interval,
+the two rates, the length, the breath mode); the curve panel step 4, the mute rule and the group step 6; verified on a copy at
+175.7 s by decoding the tick's MIDI (the beat rate over time matching the curve), then his ear — unison, then a fifth and a fourth.
+Two things named for the to-dos: the object's shape in the score (one object on the launching lane carrying its partner's lane,
+drawn as a bracket on both, the notes generated onto both) and the defaults B gives.
+
+Composer: *"So we'll be able to adjust the maximum beating. Yes.? Or is this just a test proof of concept?"* **Answered:** yes,
+adjustable from step 3 on — the 3 per second is only the birth default; the P row changes both rates by typing, step 4 makes the top a
+handle; the ceiling is the player's semitone (step 1), flagged when a rate needs more — above the musical range in practice (at
+middle C a full semitone between the two players ≈ 15 beats per second, already roughness; ≈ 8 at the C below).
+
+Composer: *"on point, good"* — **step 3's goal stands.** The to-dos put to him (format B): the object (a `beating` on the launching
+lane with its partner's lane, the trill's zone as the model, drawn on both lanes) · regeneration at play and after a drag or stretch
+into the object's own snippet · the tick (the bend per frame through the instrument's range from step 1, joined to the pre-arm,
+centred at the note's end and on stop; the level through 1g's held-note path; the timestamped scheduler) · the launch by B with the
+defaults · the P row · Hear through the same path · the verification on a copy by decoding the MIDI · his ear at unison, fifth,
+fourth, the verdicts filed. Into PLAN 1f on his go. Nothing built.
