@@ -109,3 +109,6 @@
   keeps its length), moving the last point carries the release's start node with it (the release keeps its length), the sustain
   absorbs; the nodes inside still move on their own; moving or trimming the zone in the strip does the same as moving the endpoints.
   Saved at his word — the next model change to the lanes, to be agreed in one line before it is built (HOW_WE_WORK).
+- **How the beating units are displayed in the main score** (composer, 2026-09-07 night, "we should revisit the way the beating units
+  are displayed in the main score, but it's fine for now"): the zone on the launching lane with the partner's dashed bracket and a
+  long label (BEATING_TOOL §5); to be revisited — what a beating should look like among the strikes and trills, on both lanes. Saved.

@@ -5632,3 +5632,10 @@ Composer, 2026-09-07 night. §182 had settled that the level box keeps a drawn s
 again at the new level — and the hold shape's pop rebuilt its nodes from the birth seconds, throwing his moved nodes away. Now the box
 only scales: every node keeps its time, the shape its name (the hold's attack and release boxes stay); a curve at zero takes a flat at
 the level. Fixed at once as the agreed behaviour of §182, not a new feature.
+
+## §195. "we should revisit the way the beating units are displayed in the main score" — saved; the checkpoint before a clear
+
+Composer, 2026-09-07 night: the beating zones' look in the score (the launching lane's zone, the partner's dashed bracket, the long
+label) is *"fine for now"* — saved in NITS. Then: *"prep for a clear… make sure the next AI will understand what we're doing right now,
+and we'll be able to keep the running list of issues and feature requests"* → the journal §2 checkpoint rewritten cold; the running
+list lives in NITS (every entry dated, his words in MORPH_NOTES §3), the rules in HOW_WE_WORK.

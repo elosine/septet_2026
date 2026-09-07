@@ -202,51 +202,59 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
    his go; the run dials' calibration ladder (1h item 6) on his go; the notation of trills and beatings at 2a.
 4. **0c / 0h** (the recipes' completion; the phase-0 gate) when the music asks; 0d.3 / 0d.4 remain as the remainder.
 
-**Open at session end** *(checkpoint 2026-09-07 about 05:45, the build done, for an AI that has never seen this conversation):*
-- **Task and state:** PLAN 1f — the beatings — is **built, steps 1–7**, at his word (*"will you be able to run the plan
-  independantly? can you do so, and I'll check in after the build"*, §167); **nothing of it has been heard by him.** The tool's
-  document is `docs/BEATING_TOOL.md` (§0–§11 — §11 is his check-in list); the plan's words in `docs/PLAN.md` 1f (item 8 held); the
-  decisions D24 (his) and D25 (the build's) in §4; the lab journal §167–174 has every number and every dead end. The piece: section 1
-  drafted to 175.7 s, his `v1.23-sec1DraftDone` = the saved `scores/piece-septet.json` (639 objects) — **never touched by the AI**;
-  every run was on a `zz-ai-*` copy, deleted after. His app sees the night's page changes only after a hard reload.
-- **Latest deliverable — the beating tool:** `score/public/beating_calc.js` (the math, page and tools; `tools/beating_calc_check.js`
-  77 checks) · in `composer.html` the beating zone (`createBeating` on B, `regenerateBeating` → the snippet with `_bend` events, the
-  tick's bend branch, the centre after the end, the partner bracket, the label, the `?` help line, the three group paths carrying
-  zones) · `score/public/beating_panel.js` (the panel: rows, curves, band, shapes, lock, slide, crescendo and breath lanes, offset,
-  length, SPACE, takes; the strike menu and the keyboard; insert @ playhead) · the bend probe kit and its numbers (`bank/bend_ranges.json`,
-  `MEASURED_BEND` in the recipe: SI2 ±2.00 st, the Xsample five ±0.96–0.99, RPN ignored, the residue real) · NAMING §2.10 ·
-  MORPH_NOTES §1 / §4. Commits de88ba3 → (this checkpoint), all pushed.
-- **Next concrete step — his check-in, nothing to build until he speaks:** when he reports, take each verdict as a new lab-journal
-  entry (his words verbatim), file it in MORPH_NOTES §3 and BEATING_TOOL §11, fix what he asks in the chunk cadence (build → verify
-  on a copy → docs → commit → push), never touch the piece file. If he has not yet looked: point him to the help line (`?`) and
-  BEATING_TOOL §11's order; the first test is B on a strike note on his server after a hard reload.
-- **Resume reads:** `docs/BEATING_TOOL.md` whole (the tool, its stamps, §11) · `docs/PLAN.md` 1f (item 8's held things) ·
-  `docs/MORPH_NOTES.md` §1 and §4 · RUNNING_LOG §167–174 (the build's numbers, the dead ends: the false pre-arm flag §168, the wrong
-  check numbers §169, the drag's hit-test §172, the double-booked player §174) · journal §4 D24–D25.
-- **How the AI works the app and the rack:** the Browser pane on :5301 (`preview_start score-5301`), a `zz-ai-*` copy of a score
-  (`cp`, then `Composer.openScore('zz-ai-…')`), deleted after with its `-work` (stop the server first); the pane's console log is
-  cumulative across loads; the pane's synthetic pointer cannot hit-test (`elementFromPoint`) — the panel's drag listens to the rows'
-  own mouseover as well; a beating's MIDI is captured by installing fake outputs in `_zoneMidiOutputs` (keyed by port lower-case),
-  `_zoneMidiInited = true`, `performance.now` patched to the clock, `tickZoneMidiPlayback(t)` driven at 20 ms, the `0xE0` values →
-  cents through `INSTRUMENTS[k].bendRangeSt` (the recipe of §170); a zone drag = the real handler (`startWCBodyDrag` / the bodyHit's
-  mousedown, then MouseEvents on window); the panel's handles = MouseEvents on its SVG circles and paths. **This shell's heredoc**
-  collapses a double backslash and refuses a quoted single letter — such files go through the file tool then `cat >>`; patches to
-  the page through the Edit tool on exact anchors (a node script with indexOf anchors for a block removal). `cd` persists — use
-  absolute paths. The rack: `tools/reaper_job.js` (heartbeat · tracks · fader · run · chunk); a probe run = `bash tools/probe_run.sh
-  <schedule>` (the analyzer by the schedule's flag; PROBE_SCRATCH a scratch dir; the REC track must be armed — the guard aborts on a
-  stale take); the bend probe = `node tools/balance_schedule.js --bend` → the run → `node tools/apply_bend_ranges.js`.
-- **Pending the composer:** his check-in (above) · the winds' embouchure range by his ear when a beating is heard (the semitone is
-  his ceiling, not a measurement) · the breath and bow ceilings (BEATING_TOOL §4's defaults) · the calibration ladder of the run
-  dials (§130–134) on his go · the bass clarinet's attack articulation for the batch (With Accent #20 / Staccato #19 / Secco #27) ·
-  his verdict on the trills at the new loudness · the cello's attack (the marcato has a sample at G#5) · "the range walk" (meaning
-  unconfirmed) · the plucked piano silent in the rack (NITS) · the 0j piano trim +7 vs +5.3 (NITS) · CN-2 (piccolo vs bass flute) ·
-  Q7 (the low-C bass clarinet).
-- **Deliberately uncommitted (his, not the AI's to commit):** `scores/piece-septet.json` (his saved score = v1.23) · his named versions
-  `scores/piece-septet-v1.7 · v1.8 · v1.8-startTrills · v1.9 · v1.10-preAccelNear105 · v1.12-preTrillFix · v1.15-newAccel ·
-  v1.18-preReload · v1.19-marcatoApplied · v1.20-preTrillm2 · v1.21-postm2Trill · v1.22-beforeDelete · v1.23-sec1DraftDone.json`
-  (NAMING §1 says versions are committed — at session end on his word) · `scores/piece-septet-v1.9-beforeFold.json` and
-  `-beforeTrillFold.json` (the AI's snapshots before the folds) · `scores/trillBuildTst.json` (his test score) ·
-  `bank/panel_snapshots.json` (his takes — the night's tests left it one empty `beatings` bucket, nothing else).
+**Open at session end** *(mid-session checkpoint, 2026-09-07 night — after a full day of his testing; for an AI that has never seen this conversation):*
+- **Task and state:** the composer is TESTING THE BEATING DRAWER by hand and building his first beating sequence in the piece; the
+  AI answers his observations. The drawer is PLAN 1f (built overnight, §167–174) plus a day of his asks: the pitch side's second pass
+  (§179–181: the pair folds a note as one unit, the voicing bar, the lines, the range columns), his nine asks (§182: the sequence
+  strip, SPACE by focus, slopes, pair takes), **the discussion on how to work** (§183: strategy A — his walk-through as a script; rule
+  B — a panel borrows the score's idiom; C held), **the sweep** of that script (§184: born empty, the ADSR "hold" shape, max in Hz,
+  his stored shapes, a crescendo per player, ppp … fff over the whole scale, unison breaths, auto-assign / revert, fourths ↔ fifths,
+  mute / solo, undo, loop), and his first tests answered one by one (§185 the bend as the score's grab-and-pull control point; §186 a
+  real time axis; §187 the beats drawn, typed nodes, zoom; **§188 THE REGION MODEL — the current model of the lanes:** the lanes show
+  the sequence timeline, a pair is a region at its offset, every node keeps its own time when an edge is trimmed, a node beyond a cut
+  waits dim; ALT + wheel zooms, a horizontal wheel scrolls; a cursor while it plays; a gesture card; §189 the rows' scroll kept across
+  renders; §194 the max box only scales). **The rules now in force (HOW_WE_WORK):** save every remark as a feature request by default
+  and build only at his word — "fix now" and a broken agreed behaviour are the exceptions (§190, §194); one round of issues per
+  sitting, one commit back with a walk of each; a gesture is tested as a real mouse sequence (the click-then-render trap, §188); a
+  MODEL is agreed in one line before it is built, a control is just built. **The piece file `scores/piece-septet.json` is his and was
+  never touched by the AI**; every run was on a `zz-ai-*` copy on :5301, deleted after. His app sees a page change only after a hard
+  reload (CTRL+SHIFT+R).
+- **Latest deliverable:** the drawer as `docs/BEATING_TOOL.md` §12–§14 describe (the region model paragraph in §14 is the truth of the
+  lanes), the code in `score/public/beating_panel.js` (the drawer), `score/public/beating_calc.js` (the math: `foldPair`, `voiceChord`,
+  the control-point bend `ctrlOf` / `bezierT`, `SHAPES.adsr`, the per-player level; `tools/beating_calc_check.js` 121 checks) and
+  `composer.html` (the zone's block and the loudness over the whole measured scale). Last commit 620228e, pushed; every commit of the
+  day is pushed.
+- **The running list of issues and feature requests lives in `docs/NITS.md`** (dated, the last eight entries are today's: the zoom's
+  sensitivity and centre, a zoom for the strip, SPACE playing a pair when he expects the sequence — the focus rule, with three ways
+  out — a double-click in a number box, **his expected behaviours for the curves' endpoints (§193: the endpoints are the duration,
+  the attack and the release ride on them, the nodes inside free, the strip's zone acts as the endpoints)**, the beating units' look
+  in the main score); his words verbatim in `docs/MORPH_NOTES.md` §3 (every 2026-09-07 entry). **The stutter A/B is still his** (§182:
+  the same pair at 2 Hz · the crescendo flat · the panel vs the transport).
+- **Next concrete step — an instruction:** wait for his next round. When it comes, take each item in his words into MORPH_NOTES §3 and
+  RUNNING_LOG; SAVE it in NITS unless he marks it "fix now" or it breaks a behaviour already agreed (then fix it, verify on a copy
+  with real mouse sequences, one commit for the round, push). Build the §193 endpoint model only after reading it back to him in one
+  line and getting his yes — it will replace the region's edge handles (BEATING_TOOL §14) with the curve's endpoints and attach the
+  hold shape's attack and release to them. Never touch `scores/piece-septet.json`.
+- **Resume reads:** `docs/HOW_WE_WORK.md` (the rules of 2026-09-07, at the end of Working Style) · `docs/BEATING_TOOL.md` §12–§14 ·
+  `docs/NITS.md` (the last eight entries) · RUNNING_LOG §182–§195 (§184 the sweep's walk, §187 the beats, §188 the region model, §193
+  his endpoint list) · `docs/MORPH_NOTES.md` §3, the 2026-09-07 entries.
+- **How the AI works the app (verified ways, today's additions marked):** the Browser pane on :5301 (`preview_start score-5301`), a
+  `zz-ai-*` copy of the score (`cp`, then `Composer.openScore('zz-ai-…')`), deleted after with its `-work` (stop the server first);
+  fake outputs in `_zoneMidiOutputs` (keyed by port lower-case) with `_zoneMidiInited = true` capture the MIDI; **the pane is usually
+  hidden: its timers throttle (scripts must not `await` timers — split them) and `requestAnimationFrame` never fires (call the
+  cursor's `tickCursor` or `renderLines` directly), and its layout has no height until `resize_window` 1400 × 900 is set (reset
+  to desktop after)**; a gesture is driven as MouseEvents — `mousedown` on the element, `mousemove` / `mouseup` on window, integer
+  coordinates (a synthetic event rounds them; a fractional target is a pixel off) — **and a double-click needs the same element for
+  both clicks, so a handler that re-renders on a plain click breaks it (§188)**; a screenshot works only when the pane is shown. This
+  shell's heredoc breaks on some quotes — write such files with the file tool and `cat >>`; big block replacements go through a node
+  splice by unique markers (the pieces in the scratchpad) — and mind that a method placed just above a marker is inside the spliced
+  region (§188 lost the window helpers that way, re-inserted). `cd` persists; use absolute paths.
+- **Pending the composer:** his test of the region model · the §193 endpoint model (his yes to one line) · the stutter A/B · the SPACE
+  rule (NITS, three ways) · the winds' embouchure range and the breath ceilings by his ear · PLAN 1f item 8's held things · PLAN 1d the
+  harmony module (CN-35, to be planned on his word) · the trills' phase 5 and the run dials' calibration on his go.
+- **The deliberately-uncommitted list (all his, never staged by the AI):** `bank/panel_snapshots.json` (his takes — the AI's test takes
+  were deleted again) · `scores/piece-septet.json` (his working score) · the untracked named versions `scores/piece-septet-v1.7 …
+  v1.23-sec1DraftDone.json` and `scores/trillBuildTst.json`.
 
 **Open questions:** Q1 the flute doubling (piccolo vs bass flute; SI2 flute in C until then) · Q5 print format (A3 landscape;
 #4's tabloid is 432 mm) · ~~Q6 the violins' Bartók top~~ measured 2026-09-06: E6 (88), the viola's E5, the cello's B4 (§122) ·
