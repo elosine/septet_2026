@@ -579,7 +579,15 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - his hard reload and his listening on his server, the first pattern in the piece placed by him; the verdicts to MORPH_NOTES §3
        and BEATING_TOOL.md; commit, push.
   8. **Later** (the shuffle as a writer; cycles of beatings for section 3, CN-33; the training material on the full beating curve;
-     the notation at 2a) — *to be laid out when we discuss it.*
+     the notation at 2a) — `deferred`. *Result when done:* four things stand in the plan as named, not built, each with the line that
+     will start it:
+     - **the shuffle as a writer** — dealing cards, rates, entries, pairings and pitches into the same rows (§146), when hands prove
+       too slow;
+     - **cycles of beatings for section 3** — strikes with crescendos on the beating pairs (CN-33), when the section is reached;
+     - **the training material on the full beating curve** — rendered from the tool so the players hear the bottom, the middle and
+       the top (CN-33), at the performance-score stage;
+     - **the notation of a beating** at phase 2a — two curves per part and the beat rate written at the ends of the glissando, the
+       tuba's settled form (`for_seven_tubas/docs/MORPH_NOTATION.md`) as the start.
   *Why:* section 2's material in his form of 2026-09-06 — strikes whose chords are held and beat, the slide show — and the beating
   textures he means to use "a lot in the future for this piece and the next piece"; the pair as the unit is the one thing the tuba
   engine never had (#4 day 13, finding 3).

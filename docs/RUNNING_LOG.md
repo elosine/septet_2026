@@ -4538,3 +4538,12 @@ and verdicts, commit, push. Into PLAN 1f on his go. Nothing built.
 
 Composer: *"on point, good"* (the to-dos of §163). **Written into `docs/PLAN.md` 1f item 7 at once:** the result when done and the
 seven to-dos. Committed and pushed. Next: step 8 (later), then the whole item shown once and "is that it?".
+
+## §165. "on point, good" — step 8 written into PLAN 1f; the whole item shown once, "is that it?"
+
+Composer: *"on point, good"* (step 8's goal: the four held things named with the lines that will start them). **Written into
+`docs/PLAN.md` 1f item 8 at once**, status `deferred`. PLAN 1f is complete as a plan: eight items, 1–7 in the fixed format with
+their to-dos, 8 the parking line. Committed and pushed. **Shown to him whole, once (format B, the to-dos compressed), with "is that
+it?"** and what sits outside the plan and is his: a rack window for the bend probe (step 1); the winds' embouchure numbers by his ear
+when heard; his listening at each step (unison, fifth, fourth; the panel; the pattern in the piece); the first pattern's placement in
+the piece. Nothing built.
