@@ -4999,3 +4999,25 @@ held things standing.
 
 **Not done, by the plan — his:** the hard reload, his listening at steps 3–7 (BEATING_TOOL §11), the first pattern in the piece
 placed by him. The piece file was never touched: every run on a copy.
+
+## §175. His check-in begins: "where is the panel?" → "lets make the panel full page like strikes and increase all fonts  if 12 then 14 if 14=18 10=12" — the panel a full-page drawer, the fonts one step up
+
+Composer, 2026-09-07 morning, after the overnight build: *"where is the panel?"* — the floating box at the top right (the morph panel's
+chassis) was not found; his server was serving the new page (checked: the Beating button and `beating_panel.js` on :5300, HTTP 200),
+the page needed a hard reload and the panel opens only on the Beating button, B or P. Told so. Then: *"lets make the panel full page
+like strikes and increase all fonts  if 12 then 14 if 14=18 10=12"*. → MORPH_NOTES §3 (his words), and built at once.
+
+**Done:**
+- **The chassis is the strikes drawer's:** `position:fixed; left:0; right:0; bottom:0; height:100vh`, the purple border on top, a
+  header bar (BEATING · the title · ⇕ half / full · ✕), the height remembered in the browser (`septet.beatingPanel.v1`, the drawer's
+  way; half = 62vh), a **BEATING ▴ tab at the bottom right beside STRIKES ▴** when closed; the drag, the clamp and the resize grip
+  of the floating box removed. The Beating button, B and P open it as before.
+- **The row drawings fill the page:** the drawing width is read from the rows' column at every render (520 px the floor, the
+  window's resize re-renders); the rate area 150 px tall (was 132), the level lane 50, the breath lane 56, the keyboard's keys 10 px.
+- **The fonts, his mapping** (10 → 12, 12 → 14, 14 → 18; the panel had 8–11 px, applied as 8 → 10, 9 → 11, 10 → 12, 11 → 13): the base
+  13 px, every button 12, the status 13, the SVG axis and readout texts 11–12, the keyboard's names 10, the tab 14, the close mark 18.
+  Checked in the pane: base 13, button 12, status 13, axis 11, keyboard 10, tab 14; the screenshot shows the drawer across the page
+  with two rows and the keyboard at the left.
+
+**A note for the tool's memory** (MORPH_NOTES §4): the working panels of this stack are drawers from the bottom, not floating boxes —
+the composer looks for a tool where the strikes are.

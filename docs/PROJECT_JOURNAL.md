@@ -148,7 +148,8 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
    (CTRL+SHIFT+R) · B on a strike note, unison, then the fifth and the fourth (step 3) · the panel's feel (step 4) · the pitch side
    (step 5) · an insertion (step 6) · the first pattern in the piece placed by him; the verdicts to MORPH_NOTES §3 and BEATING_TOOL,
    each a new entry in the lab journal; the piece file is his (every AI run was on a copy). Section 1 stays drafted at 175.7 s
-   (v1.23-sec1DraftDone).
+   (v1.23-sec1DraftDone). **Begun 2026-09-07 morning (§175):** "where is the panel?" → the panel made a full-page drawer like
+   the strikes with the fonts one step up — done; the listening itself still to come.
 3. **After his verdicts:** the fixes they ask for (the chunk cadence); 1f item 8's four held things when their lines come (the
    shuffle as a writer, cycles for section 3 — CN-33, the training material, the notation at 2a); TRILLS_TOOL phase 5 (the weave) on
    his go; the run dials' calibration ladder (1h item 6) on his go; the notation of trills and beatings at 2a.

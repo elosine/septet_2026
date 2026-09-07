@@ -253,8 +253,10 @@ the winds' embouchure range; the ceilings (§4).
 > *"a screen, a panel, and I can see the pair represented by some sort of curve … it'll be bipolar … I can slide one over … everything
 > should have handles … hit space bar to play that configuration … audition that configuration over different durations"* (§147)
 
-`score/public/beating_panel.js` — a floating, draggable panel (the morph panel's chassis, the strikes drawer's takes and its
-space-bar rule) holding a **pattern of up to three pairs, one row each**. Two ways in: **P on a selected beating binds the panel to
+`score/public/beating_panel.js` — **a full-page drawer from the bottom, the strikes drawer's chassis** (composer, 2026-09-07 morning:
+"lets make the panel full page like strikes"; ⇕ half / full, a BEATING ▴ tab at the bottom right when closed, the fonts one step up
+by his mapping — RUNNING_LOG §175; it was a floating box at the top right for the overnight build) holding a **pattern of up to three
+pairs, one row each**, the row drawings as wide as the page. Two ways in: **P on a selected beating binds the panel to
 that zone** — the row IS the zone's block, every edit regenerates the zone live (debounced 120 ms) and redraws it on the score;
 **B** makes a beating and opens the panel bound to it; the **Beating** button with nothing selected opens an **empty pattern that
 lives in the panel until Insert** (step 6). ESC closes.
@@ -454,3 +456,5 @@ a play start inside a beating lands its latest state first but a note already so
   picker could give one player to two pairs (one channel, two bends), now it never does and the rows warn when it is done by hand;
   the help line (`?`); this document complete; MORPH_NOTES §1 and §4; NAMING §2.10; the journal's D24 / D25; PLAN 1f marked built.
   **His listening pending (§11).**
+- **2026-09-07, morning — his first remarks (§175):** "where is the panel?" → the panel a full-page drawer like the strikes (⇕ half /
+  full, a bottom tab), the fonts one step up (10 → 12, 12 → 14, 14 → 18), the row drawings as wide as the page.

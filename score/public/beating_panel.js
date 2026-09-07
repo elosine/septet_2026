@@ -32,7 +32,8 @@ const INST = () => (typeof INSTRUMENTS !== 'undefined' ? INSTRUMENTS : (root.INS
 const TAKES_PANEL = 'beatings';
 const TAKE_NAME = /^[A-Za-z0-9._ -]{1,64}$/;
 const MAX_ROWS = 3;
-const W = 520, HR = 132, HL = 44, HB = 46, PADL = 34, PADR = 10;   // the row's drawing: width, the rate area, the level lane, the breath lane, the axis gutters
+let W = 520;   // the row's drawing width — the page's, read at every render (a full-page drawer, 2026-09-07); 520 the floor
+const HR = 150, HL = 50, HB = 56, PADL = 40, PADR = 12;   // the rate area, the level lane, the breath lane, the axis gutters
 const ZONE_FILL = { flanger: 'rgba(150,150,170,0.22)', beating: 'rgba(123,63,228,0.30)', roughness: 'rgba(225,70,70,0.38)' };
 const COL = { upper: '#ffb347', lower: '#69b7c9', level: '#7ec9a8', breath: '#e0e0e0', bad: '#e88' };
 const SHAPES = [['flat', 'flat'], ['rampOut', 'ramp out'], ['rampIn', 'ramp in'], ['hump', 'hump'], ['arc', 'long arc'], ['burst', 'burst']];
@@ -59,14 +60,18 @@ const P = {
     // ------------------------------------------------------------------ the chassis
     init() {
         if (this.el) return;
+        // THE CHASSIS: a full-page drawer from the bottom, the strikes drawer's (composer, 2026-09-07: "lets make the panel full page like
+        // strikes" — the floating box at the top right was not found); ⇕ half / full as the drawer's, a tab at the bottom when closed
+        this.restore();
         const d = document.createElement('div');
         d.id = 'beatingPanel';
-        d.style.cssText = ['position:fixed', 'right:16px', 'top:96px', 'width:' + (W + 40) + 'px', 'z-index:9000', 'background:rgba(28,28,32,0.97)', 'border:1px solid #7B3FE4', 'border-radius:6px',
-            'padding:10px 12px', 'color:#ddd', 'font:11px/1.45 system-ui,sans-serif', 'box-shadow:0 6px 24px rgba(0,0,0,0.5)', 'display:none', 'flex-direction:column',
-            'max-height:calc(100vh - 110px)', 'min-width:420px', 'min-height:240px', 'resize:both', 'overflow:hidden'].join(';');
+        d.style.cssText = ['position:fixed', 'left:0', 'right:0', 'bottom:0', 'height:100vh', 'z-index:9000', 'background:#1b1b20', 'border-top:2px solid #7B3FE4',
+            'padding:0 12px 8px', 'color:#ddd', 'font:13px/1.45 system-ui,sans-serif', 'box-shadow:0 -8px 30px rgba(0,0,0,.6)', 'display:none', 'flex-direction:column', 'overflow:hidden'].join(';');
         d.innerHTML = [
-            '<div id="bpDrag" style="cursor:move;font-weight:600;color:#c9a8ff;margin:-10px -12px 8px;padding:7px 12px;border-bottom:1px solid #444;background:rgba(123,63,228,0.18)">BEATING',
-            '<span id="bpTitle" style="font-weight:400;color:#aaa;margin-left:8px"></span><span id="bpClose" title="close (ESC)" style="float:right;cursor:pointer;color:#888">&#10005;</span></div>',
+            '<div id="bpDrag" style="font-weight:600;color:#c9a8ff;margin:0 -12px 8px;padding:7px 12px;border-bottom:1px solid #444;background:rgba(123,63,228,0.18);display:flex;gap:10px;align-items:center">BEATING',
+            '<span id="bpTitle" style="font-weight:400;color:#aaa"></span><span style="flex:1 1 auto"></span>',
+            '<button id="bpFull" title="full page height / half" style="font-size:12px;cursor:pointer">&#8597; half</button>',
+            '<span id="bpClose" title="close (ESC)" style="cursor:pointer;color:#888;font-size:18px;padding:0 4px">&#10005;</span></div>',
             '<div id="bpStatus" style="color:#9a9;margin-bottom:6px;flex:0 0 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>',
             '<div id="bpHead" style="flex:0 0 auto;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:6px">',
             '<label>length <input id="bpLen" type="number" step="0.5" min="0.5" max="180" style="width:56px"> s</label>',
@@ -99,6 +104,14 @@ const P = {
         ].join('');
         document.body.appendChild(d);
         this.el = d;
+        const tab = document.createElement('div');
+        tab.id = 'beatingTab'; tab.textContent = 'BEATING ▴'; tab.title = 'open the beating panel';
+        tab.style.cssText = 'position:fixed;right:124px;bottom:0;z-index:8999;background:#2e1f4a;color:#d9c8ff;border:1px solid #7B3FE4;border-bottom:none;border-radius:6px 6px 0 0;padding:2px 12px;cursor:pointer;font:14px system-ui,sans-serif;letter-spacing:.04em';
+        tab.addEventListener('click', () => this.toggle());
+        document.body.appendChild(tab);
+        d.querySelector('#bpFull').addEventListener('click', () => { this.cfg.full = !this.cfg.full; this.save(); this.applyHeight(); this.render(); });
+        window.addEventListener('resize', () => { if (this.isOpen()) this.render(); });
+        this.applyHeight();
         d.querySelector('#bpClose').addEventListener('click', () => this.close());
         d.querySelector('#bpAdd').addEventListener('click', () => this.addRow());
         d.querySelector('#bpPlay').addEventListener('click', () => this.play());
@@ -111,13 +124,11 @@ const P = {
         d.querySelector('#bpInsert').addEventListener('click', () => this.insert());
         // the pitch side's controls
         d.querySelector('#bpSrc').addEventListener('change', ev => { this.pickSource(ev.target.value); });
-        d.querySelector('#bpRel').innerHTML = RELATIONS.map(([k, l, t]) => '<button class="bpRelBtn" data-rel="' + k + '" title="' + esc(t) + '" style="font-size:10px;padding:1px 5px;margin:1px;cursor:pointer">' + l + '</button>').join('');
+        d.querySelector('#bpRel').innerHTML = RELATIONS.map(([k, l, t]) => '<button class="bpRelBtn" data-rel="' + k + '" title="' + esc(t) + '" style="font-size:12px;padding:1px 5px;margin:1px;cursor:pointer">' + l + '</button>').join('');
         d.querySelectorAll('.bpRelBtn').forEach(b => b.addEventListener('click', () => { this.relation = b.dataset.rel; this.rootMode = true; this.paintRelation(); this.setStatus('relation ' + b.textContent + ' — click a key for the root (or type it) and deal'); }));
         d.querySelector('#bpDeal').addEventListener('click', () => this.deal());
         d.querySelector('#bpRoot').addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); ev.stopPropagation(); this.deal(); });
         d.querySelector('#bp88').addEventListener('change', ev => { this.show88 = ev.target.checked; this.drawKeyboard(); });
-        this.makeDraggable(d, d.querySelector('#bpDrag'));
-        window.addEventListener('resize', () => this.clampIntoView());
         d.setAttribute('tabindex', '0');
         d.addEventListener('keydown', e => {
             if (e.target.matches('input,select,textarea')) { if (e.key === 'Escape') e.target.blur(); return; }
@@ -134,20 +145,15 @@ const P = {
             if (this._aud) this.stop(); else this.play();
         }, true);
     },
-    makeDraggable(box, handle) {
-        let sx = 0, sy = 0, bx = 0, by = 0, on = false;
-        handle.addEventListener('mousedown', e => {
-            if (e.target.id === 'bpClose') return;
-            on = true; sx = e.clientX; sy = e.clientY; const r = box.getBoundingClientRect(); bx = r.left; by = r.top; this.bringToFront(); e.preventDefault();
-        });
-        document.addEventListener('mousemove', e => { if (!on) return; box.style.left = (bx + e.clientX - sx) + 'px'; box.style.top = (by + e.clientY - sy) + 'px'; box.style.right = 'auto'; this.clampIntoView(); });
-        document.addEventListener('mouseup', () => { on = false; });
-    },
-    clampIntoView() {
-        const box = this.el; if (!box || box.style.display === 'none') return;
-        const r = box.getBoundingClientRect(); if (!r.width && !r.height) return;
-        const MIN_TOP = 36, MARGIN = 4, maxLeft = Math.max(MARGIN, window.innerWidth - r.width - MARGIN), maxTop = Math.max(MIN_TOP, window.innerHeight - r.height - MARGIN);
-        box.style.left = Math.min(Math.max(r.left, MARGIN), maxLeft) + 'px'; box.style.top = Math.min(Math.max(r.top, MIN_TOP), maxTop) + 'px'; box.style.right = 'auto';
+    // the height: full page or half, remembered in the browser (the strikes drawer's way)
+    cfg: { full: true },
+    save() { try { localStorage.setItem('septet.beatingPanel.v1', JSON.stringify(this.cfg)); } catch (e) {} },
+    restore() { try { const s = JSON.parse(localStorage.getItem('septet.beatingPanel.v1') || 'null'); if (s) Object.assign(this.cfg, s); } catch (e) {} },
+    applyHeight() {
+        if (!this.el) return;
+        const full = this.cfg.full !== false;
+        this.el.style.height = full ? '100vh' : '62vh';
+        const b = this.el.querySelector('#bpFull'); if (b) b.innerHTML = full ? '&#8597; half' : '&#8597; full';
     },
     bringToFront() {
         let z = 9000;
@@ -156,8 +162,8 @@ const P = {
     },
     setStatus(msg, bad) { this.status = msg; const s = this.el && this.el.querySelector('#bpStatus'); if (s) { s.textContent = msg; s.title = msg; s.style.color = bad ? '#e88' : '#9a9'; } },
     isOpen() { return !!this.el && this.el.style.display !== 'none'; },
-    show() { this.init(); this.el.style.display = 'flex'; this.bringToFront(); this.clampIntoView(); this.el.focus(); this.refreshTakes(); const b = document.getElementById('beatingBtn'); if (b) { b.style.background = '#3a2a5a'; b.style.color = '#d9c8ff'; } },
-    close() { if (!this.el) return; this.stop(); this.el.style.display = 'none'; const b = document.getElementById('beatingBtn'); if (b) { b.style.background = ''; b.style.color = ''; } },
+    show() { this.init(); this.el.style.display = 'flex'; this.bringToFront(); this.applyHeight(); this.el.focus(); this.refreshTakes(); const b = document.getElementById('beatingBtn'); if (b) { b.style.background = '#3a2a5a'; b.style.color = '#d9c8ff'; } const tab = document.getElementById('beatingTab'); if (tab) tab.style.display = 'none'; },
+    close() { if (!this.el) return; this.stop(); this.el.style.display = 'none'; const b = document.getElementById('beatingBtn'); if (b) { b.style.background = ''; b.style.color = ''; } const tab = document.getElementById('beatingTab'); if (tab) tab.style.display = ''; },
     toggle() { this.init(); if (this.isOpen()) { this.close(); return; } const C = C_(), sel = C && C.selectedObject; if (sel && sel.type === 'zone' && sel.midiModel === 'beating') this.openFor(sel); else this.openNew(); },
 
     // ------------------------------------------------------------------ the two ways in
@@ -262,6 +268,7 @@ const P = {
         this.el.querySelector('#bpAdd').disabled = (!!this.bound && !this.patternGroupId) || this.rows.length >= MAX_ROWS;
         this.el.querySelector('#bpInsert').textContent = this.patternGroupId ? 'insert (replace the pattern)' : 'insert @ ' + (this.insertAt != null ? this.insertAt.toFixed(2) + ' s' : 'playhead');
         const host = this.el.querySelector('#bpRows'); host.innerHTML = '';
+        W = Math.max(520, (host.clientWidth || 0) - 24);   // the drawings fill the page
         this.rows.forEach((row, i) => { this.rowOut(row); host.appendChild(this.buildRow(row, i)); });
         if (!this.rows.length) host.innerHTML = '<div style="color:#888;padding:12px">no pairs — + pair</div>';
         if (this.activeRow >= this.rows.length) this.activeRow = Math.max(0, this.rows.length - 1);
@@ -286,7 +293,7 @@ const P = {
         box.addEventListener('dragleave', () => { box.style.outline = ''; });
         box.addEventListener('drop', ev => { ev.preventDefault(); box.style.outline = ''; const m = parseInt(ev.dataTransfer.getData('text/plain'), 10); if (!isNaN(m)) this.assign(i, m); });
         const sel = 'background:#7B3FE4;color:#fff;border-color:#7B3FE4;';
-        const btn = (cls, data, label, on, title) => '<button class="' + cls + '" ' + data + ' title="' + esc(title || '') + '" style="font-size:10px;padding:1px 5px;margin:1px;cursor:pointer;' + (on ? sel : '') + '">' + label + '</button>';
+        const btn = (cls, data, label, on, title) => '<button class="' + cls + '" ' + data + ' title="' + esc(title || '') + '" style="font-size:12px;padding:1px 5px;margin:1px;cursor:pointer;' + (on ? sel : '') + '">' + label + '</button>';
         box.innerHTML = [
             '<div style="display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-bottom:4px">',
             '<b style="color:#c9a8ff">pair ' + (i + 1) + '</b> ',
@@ -296,7 +303,7 @@ const P = {
                 + (b.partnerLayer != null && !cands.some(c => c.layer === b.partnerLayer) && T[b.partnerLayer] ? '<option value="' + b.partnerLayer + '" selected>' + esc(T[b.partnerLayer].label) + ' — cannot play this</option>' : '') + '</select>',
             ' on <input class="bpPitch" type="number" value="' + b.pitch + '" min="21" max="108" step="1" style="width:50px" title="the pair&#8217;s lower note"> <span style="color:#aaa">' + nn(b.pitch) + (iv.semitones ? ' + ' + nn(b.pitch + iv.semitones) : '') + '</span>',
             ' <span>' + Object.values(BC.INTERVALS).map(q => btn('bpIv', 'data-iv="' + q.key + '"', q.label, b.interval === q.key, q.label + ': the just offset ' + q.justOffsetCents + ' c on the upper note, the beating ' + q.partial + '× per cent')).join('') + '</span>',
-            (row.zone ? '' : ' <button class="bpRemove" title="remove this pair" style="margin-left:auto;font-size:10px;cursor:pointer">&#10005; pair</button>'),
+            (row.zone ? '' : ' <button class="bpRemove" title="remove this pair" style="margin-left:auto;font-size:12px;cursor:pointer">&#10005; pair</button>'),
             '</div>',
             '<div style="display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-bottom:3px">',
             '<span style="color:#888">rate</span> ' + SHAPES.map(([k, l]) => btn('bpShape', 'data-shape="' + k + '"', l, false, 'pop the shape in (the level = the row&#8217;s to rate)')).join(''),
@@ -406,8 +413,8 @@ const P = {
         });
         // the axis: the centre line and the rate marks
         svg.appendChild(mk('line', { x1: x0, x2: x1, y1: mid, y2: mid, stroke: '#666', 'stroke-width': 1 }));
-        [S, S / 2, -S / 2, -S].forEach(v => { svg.appendChild(mk('line', { x1: x0, x2: x1, y1: Y(v), y2: Y(v), stroke: '#333', 'stroke-dasharray': '2 4' })); const t = mk('text', { x: 2, y: Y(v) + 4, fill: '#777', 'font-size': 9 }); t.textContent = (v > 0 ? '+' : '') + v; svg.appendChild(t); });
-        const zt = mk('text', { x: 2, y: mid + 4, fill: '#999', 'font-size': 9 }); zt.textContent = '0'; svg.appendChild(zt);
+        [S, S / 2, -S / 2, -S].forEach(v => { svg.appendChild(mk('line', { x1: x0, x2: x1, y1: Y(v), y2: Y(v), stroke: '#333', 'stroke-dasharray': '2 4' })); const t = mk('text', { x: 2, y: Y(v) + 4, fill: '#777', 'font-size': 11 }); t.textContent = (v > 0 ? '+' : '') + v; svg.appendChild(t); });
+        const zt = mk('text', { x: 2, y: mid + 4, fill: '#999', 'font-size': 11 }); zt.textContent = '0'; svg.appendChild(zt);
         [1, 15].forEach(z => { const y = Y(z / 2), y2 = Y(-z / 2); svg.appendChild(mk('line', { x1: x0, x2: x1, y1: y, y2: y, stroke: z === 1 ? '#557' : '#744', 'stroke-dasharray': '1 5' })); svg.appendChild(mk('line', { x1: x0, x2: x1, y1: y2, y2: y2, stroke: z === 1 ? '#557' : '#744', 'stroke-dasharray': '1 5' })); });
         // the slid curves as played (the samples) — thin; the drawn curves with their handles — bold
         const lineOf = (key, col) => { const d = out.samples.map((s, k) => (k ? 'L' : 'M') + X(s.p).toFixed(1) + ' ' + Y(s[key]).toFixed(1)).join(' '); svg.appendChild(mk('path', { d, fill: 'none', stroke: col, 'stroke-width': 1, 'stroke-opacity': 0.55 })); };
@@ -427,9 +434,9 @@ const P = {
         };
         drawCurve('upper', cur.upper, COL.upper); drawCurve('lower', cur.lower, COL.lower);
         // the players' names and the lock state
-        const nmU = mk('text', { x: x1 - 4, y: 12, fill: COL.upper, 'font-size': 10, 'text-anchor': 'end' }); nmU.textContent = (out.players.upper || '?') + ' ↑' + (b.slide && b.slide.upper ? ' slid ' + b.slide.upper + ' s' : ''); svg.appendChild(nmU);
-        const nmL = mk('text', { x: x1 - 4, y: HR - 5, fill: COL.lower, 'font-size': 10, 'text-anchor': 'end' }); nmL.textContent = (out.players.lower || '?') + ' ↓' + (b.slide && b.slide.lower ? ' slid ' + b.slide.lower + ' s' : ''); svg.appendChild(nmL);
-        const beatT = mk('text', { x: x0 + 4, y: 12, fill: '#c9a8ff', 'font-size': 10 }); beatT.textContent = 'beating ' + out.maxBeat + '/s max' + (row.locked ? ' · mirrored' : ' · free'); svg.appendChild(beatT);
+        const nmU = mk('text', { x: x1 - 4, y: 12, fill: COL.upper, 'font-size': 12, 'text-anchor': 'end' }); nmU.textContent = (out.players.upper || '?') + ' ↑' + (b.slide && b.slide.upper ? ' slid ' + b.slide.upper + ' s' : ''); svg.appendChild(nmU);
+        const nmL = mk('text', { x: x1 - 4, y: HR - 5, fill: COL.lower, 'font-size': 12, 'text-anchor': 'end' }); nmL.textContent = (out.players.lower || '?') + ' ↓' + (b.slide && b.slide.lower ? ' slid ' + b.slide.lower + ' s' : ''); svg.appendChild(nmL);
+        const beatT = mk('text', { x: x0 + 4, y: 12, fill: '#c9a8ff', 'font-size': 12 }); beatT.textContent = 'beating ' + out.maxBeat + '/s max' + (row.locked ? ' · mirrored' : ' · free'); svg.appendChild(beatT);
         // draw mode: a click on empty space adds a point
         if (row.draw) {
             svg.style.cursor = 'crosshair';
@@ -446,7 +453,7 @@ const P = {
     dragHandle(row, who, idx, e0, svg) {
         const g = svg._geom, r = svg.getBoundingClientRect(), b = row.b, L = this.length, cur = this.curvesOf(row)[who], n = cur.length;
         const slide = (b.slide && b.slide[who]) || 0, sp = slide / Math.max(0.1, L);
-        const tip = document.createElementNS('http://www.w3.org/2000/svg', 'text'); tip.setAttribute('fill', '#fff'); tip.setAttribute('font-size', '10'); svg.appendChild(tip);
+        const tip = document.createElementNS('http://www.w3.org/2000/svg', 'text'); tip.setAttribute('fill', '#fff'); tip.setAttribute('font-size', '12'); svg.appendChild(tip);
         const onMove = ev => {
             let p = clamp((ev.clientX - r.left - g.x0) / (g.x1 - g.x0) - sp, 0, 1); const v = clamp((g.mid - (ev.clientY - r.top)) / g.sy, -row.scale, row.scale);
             if (idx === 0) p = 0; if (idx === n - 1) p = 1;   // the ends stay at the ends
@@ -479,8 +486,8 @@ const P = {
         const d = out.samples.map((s, k) => (k ? 'L' : 'M') + X(s.p).toFixed(1) + ' ' + Y(s.level).toFixed(1)).join(' ');
         svg.appendChild(mk('path', { d: d + ' L' + X(1).toFixed(1) + ' ' + Y(0) + ' L' + X(0) + ' ' + Y(0) + ' Z', fill: COL.level, 'fill-opacity': 0.18, stroke: 'none' }));
         svg.appendChild(mk('path', { d, fill: 'none', stroke: COL.level, 'stroke-width': 1.6 }));
-        [0, 0.5, 1].forEach(v => { const t = mk('text', { x: 2, y: Y(v) + 3, fill: '#777', 'font-size': 9 }); t.textContent = v; svg.appendChild(t); });
-        const lbl = mk('text', { x: x1 - 4, y: 11, fill: COL.level, 'font-size': 10, 'text-anchor': 'end' }); lbl.textContent = b.levelCurve ? 'own curve' : 'follows the beating · ' + b.levelLo + ' → ' + b.levelHi; svg.appendChild(lbl);
+        [0, 0.5, 1].forEach(v => { const t = mk('text', { x: 2, y: Y(v) + 3, fill: '#777', 'font-size': 11 }); t.textContent = v; svg.appendChild(t); });
+        const lbl = mk('text', { x: x1 - 4, y: 11, fill: COL.level, 'font-size': 12, 'text-anchor': 'end' }); lbl.textContent = b.levelCurve ? 'own curve' : 'follows the beating · ' + b.levelLo + ' → ' + b.levelHi; svg.appendChild(lbl);
         if (b.levelCurve) {
             const pts = BC.curveOf(b.levelCurve);
             pts.forEach((p, idx) => {
@@ -506,11 +513,11 @@ const P = {
         const x0 = PADL, x1 = W - PADR, X = t => x0 + (t / Math.max(0.1, L)) * (x1 - x0);
         const mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
         svg.innerHTML = '';
-        const rowsY = { upper: 12, lower: 32 };
+        const rowsY = { upper: 15, lower: 41 };
         let warn = 0;
         for (const who of ['upper', 'lower']) {
             const br = out.breaths[who], inst = out.players[who], y = rowsY[who], col = who === 'upper' ? COL.upper : COL.lower;
-            const nm = mk('text', { x: 2, y: y + 4, fill: col, 'font-size': 9 }); nm.textContent = (inst || '?').slice(0, 5); svg.appendChild(nm);
+            const nm = mk('text', { x: 2, y: y + 4, fill: col, 'font-size': 11 }); nm.textContent = (inst || '?').slice(0, 5); svg.appendChild(nm);
             svg.appendChild(mk('line', { x1: x0, x2: x1, y1: y, y2: y, stroke: '#444' }));
             (br.spans || []).forEach(sp => {
                 const over = sp[1] - sp[0] > br.ceiling.seconds + 1e-6 && br.mode !== 'continuous'; if (over) warn++;
@@ -538,12 +545,12 @@ const P = {
                 });
                 svg.appendChild(h);
             });
-            const ct = mk('text', { x: x1 - 4, y: y + 4, fill: '#888', 'font-size': 9, 'text-anchor': 'end' }); ct.textContent = br.ceiling.kind + ' ≤ ' + br.ceiling.seconds + ' s'; svg.appendChild(ct);
+            const ct = mk('text', { x: x1 - 4, y: y + 4, fill: '#888', 'font-size': 11, 'text-anchor': 'end' }); ct.textContent = br.ceiling.kind + ' ≤ ' + br.ceiling.seconds + ' s'; svg.appendChild(ct);
         }
         svg.style.cursor = 'copy';
         svg.addEventListener('mousedown', e => {   // a click on the lane adds a hand mark for that player
             if (e.target.tagName === 'circle') return;
-            const r = svg.getBoundingClientRect(); const who = (e.clientY - r.top) < 22 ? 'upper' : 'lower'; const t = r3(clamp((e.clientX - r.left - x0) / (x1 - x0) * L, 0.1, L - 0.1));
+            const r = svg.getBoundingClientRect(); const who = (e.clientY - r.top) < 28 ? 'upper' : 'lower'; const t = r3(clamp((e.clientX - r.left - x0) / (x1 - x0) * L, 0.1, L - 0.1));
             if (!b.breath.marks) b.breath.marks = { lower: [], upper: [] }; if (!b.breath.marks[who]) b.breath.marks[who] = [];
             b.breath.mode = 'designated'; b.breath.marks[who] = b.breath.marks[who].concat([t]).sort((p, q) => p - q);   // a hand mark; the deal keeps it
             this.changed(row, true); this.render();
@@ -600,14 +607,14 @@ const P = {
     // the rows' pair notes as rings in the row colours, the keys the active pair cannot play dimmed; a click arms a note (or sets the root)
     drawKeyboard() {
         const svg = this.el && this.el.querySelector('#bpKb'); if (!svg) return;
-        const R = this.range(), h = 8, rows = R.hi - R.lo + 1, H = rows * h + 14, keyY = m => 6 + (R.hi - m) * h;
+        const R = this.range(), h = 10, rows = R.hi - R.lo + 1, H = rows * h + 14, keyY = m => 6 + (R.hi - m) * h;
         svg.setAttribute('height', H); svg.style.height = H + 'px';
         const row = this.rows[this.activeRow], rc = ROW_COLORS[this.activeRow % ROW_COLORS.length];
         let s = '';
         for (let m = R.hi; m >= R.lo; m--) {
             const y = keyY(m), black = BLACK.includes(m % 12), can = row ? this.rowCanPlay(row, m) : true;
             s += '<rect class="bpKey" data-m="' + m + '" x="30" y="' + (y + 0.5) + '" width="' + (black ? 54 : 90) + '" height="' + (h - 1) + '" fill="' + (black ? '#2a2a30' : '#d8d3c8') + '" fill-opacity="' + (can ? 1 : 0.22) + '" stroke="#111" stroke-width="0.5" style="cursor:pointer"><title>' + nn(m) + (can ? '' : ' — the active pair cannot play it') + '</title></rect>';
-            if (m % 12 === 0) s += '<text x="2" y="' + (y + h * 0.85) + '" font-size="8" fill="#777">C' + (m / 12 - 1) + '</text>';
+            if (m % 12 === 0) s += '<text x="2" y="' + (y + h * 0.85) + '" font-size="10" fill="#777">C' + (m / 12 - 1) + '</text>';
         }
         // the rows' pair notes: rings (the lower note filled, the upper hollow) in the row colour, at the right
         this.rows.forEach((r, i) => {
@@ -621,11 +628,11 @@ const P = {
             const m = +p; if (m < R.lo || m > R.hi) return;
             const pc = ((m % 12) + 12) % 12, col = this.pcColor(pc), cy = keyY(m) + h / 2, k = byPitch[p].length;
             s += '<circle class="bpDot" data-m="' + m + '" cx="106" cy="' + cy + '" r="' + (3.2 + Math.min(2, k - 1)) + '" fill="' + col + '" stroke="' + (this.armed === m ? '#fff' : col) + '" stroke-width="' + (this.armed === m ? 2.2 : 1) + '" style="cursor:grab"><title>' + nn(m) + (k > 1 ? ' ×' + k : '') + ' — click to arm, drag onto a pair</title></circle>';
-            s += '<text x="27" y="' + (cy + 3) + '" font-size="8" fill="' + col + '" text-anchor="end">' + nn(m) + '</text>';
+            s += '<text x="27" y="' + (cy + 3) + '" font-size="10" fill="' + col + '" text-anchor="end">' + nn(m) + '</text>';
         });
         const above = this.chord.filter(n => n.midi > R.hi).length, below = this.chord.filter(n => n.midi < R.lo).length;
-        if (above) s += '<text x="100" y="8" fill="#e88" font-size="9">▲' + above + '</text>';
-        if (below) s += '<text x="100" y="' + (H - 2) + '" fill="#e88" font-size="9">▼' + below + '</text>';
+        if (above) s += '<text x="100" y="8" fill="#e88" font-size="11">▲' + above + '</text>';
+        if (below) s += '<text x="100" y="' + (H - 2) + '" fill="#e88" font-size="11">▼' + below + '</text>';
         if (this.armed != null && this.armed >= R.lo && this.armed <= R.hi) s += '<rect x="28" y="' + (keyY(this.armed) - 0.5) + '" width="94" height="' + (h + 1) + '" fill="none" stroke="#fff" stroke-width="1.2" pointer-events="none"/>';
         svg.innerHTML = s;
         svg.querySelectorAll('.bpKey').forEach(k => k.addEventListener('click', () => this.keyClick(+k.dataset.m)));
@@ -642,7 +649,7 @@ const P = {
     },
     // a dot dragged onto a row: our own drag (SVG elements do not take the browser's drag); the row under the pointer at release takes the note
     startDotDrag(m, e0) {
-        const ghost = document.createElement('div'); ghost.textContent = nn(m); ghost.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;padding:1px 5px;border-radius:3px;background:#7B3FE4;color:#fff;font:11px system-ui;left:' + (e0.clientX + 8) + 'px;top:' + (e0.clientY - 8) + 'px';
+        const ghost = document.createElement('div'); ghost.textContent = nn(m); ghost.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;padding:1px 5px;border-radius:3px;background:#7B3FE4;color:#fff;font:13px system-ui;left:' + (e0.clientX + 8) + 'px;top:' + (e0.clientY - 8) + 'px';
         document.body.appendChild(ghost); let moved = false, over = null;
         const rows = [...this.el.querySelectorAll('.bpRow')];
         const mark = rowEl => { over = rowEl; rows.forEach(r => { r.style.outline = r === rowEl ? '2px dashed #c9a8ff' : ''; }); };

@@ -260,6 +260,17 @@ its own group; the accents are the composer's, by hand. The tool stays simple an
 rather than adjusted. RUNNING_LOG §160.
 
 
+### 2026-09-07 — the panel full page, the fonts up (his first remarks after the build)
+
+> *"where is the panel?"* — then — *"lets make the panel full page like strikes and increase all fonts  if 12 then 14 if 14=18 10=12"*
+> *(2026-09-07, morning, his check-in after the overnight build; typed)*
+
+**AI reading (not the composer's words):** two things for the all-purpose tool. (1) A floating box at the top right was not found —
+the working panels of this stack are full-width drawers from the bottom (the strikes drawer), and the composer expects the beating
+panel where the strikes are; the panel becomes a full-page drawer with the same half / full toggle and a bottom tab. (2) The
+fonts: his mapping 10 → 12, 12 → 14, 14 → 18 (the panel used 8–11 px; applied as 8 → 10, 9 → 11, 10 → 12, 11 → 13) — a readability
+floor for every panel of the tool, with the row drawings widened to the page. RUNNING_LOG §175.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·
@@ -281,3 +292,6 @@ rather than adjusted. RUNNING_LOG §160.
   or is drawn); the exit as a rule (a release to unison and the floor — here the curve's own end); the notation; a way to hear a
   pair's beating rate as a number while the score plays (the readout is the panel's, before playing); the ceilings by register and
   by loudness measured, not defaulted.
+- *(2026-09-07, his first remarks)* **The panel is a drawer from the bottom, full page, like the strikes — not a floating box**; the
+  composer looks for a tool where the strikes are. And a readability floor: no font under 10 px in a panel, the base 13, the
+  buttons 12 (his mapping 10 → 12, 12 → 14, 14 → 18).
