@@ -4457,3 +4457,23 @@ go. Nothing built.
 
 Composer: *"on point, good"* (the to-dos of §156). **Written into `docs/PLAN.md` 1f item 4 at once:** the result when done, the
 three things settled with the goal, the eight to-dos. Committed and pushed. Next: step 5's goal (the pitch side), on his word.
+
+## §158. "ok, step 5" → "on point, good" — step 5's goal (the pitch side) accepted; the to-dos put to him
+
+Composer: *"ok, step 5"* → the goal put to him (format A): the panel's pitches chosen the strikes drawer's way — a strikes menu of
+the bank's played chords, the chosen chord on a keyboard inside the panel, a click on a note then on a row giving that pair its
+pitch, the keyboard dimming the notes the pair cannot play (step 1's table); the sonority between the pairs also dealt by relation
+from a root (unison · thirds · fourths · fifths · a typed stack), folded into range; each row's interval placing the partner above
+at the just interval (unison by default; fourths, fifths, the thirds to try), both notes shown; the player above by the ranges; a
+pattern launched from a strike opening on that strike's chord. Three proposals with it: the assigned pitch = the pair's lower note,
+the partner above by the interval; unison between the pairs offered two ways — (a) all pairs on one note in one octave (a six-player
+field on one pitch, the tuba's bloom) and (b) the pitch class spread across octaves; the strikes drawer's own keyboard reused inside
+the panel (the fold arrows and the range dimming for free). Composer: *"on point, good"* — **the goal stands with the three.**
+
+**The to-dos put to him (format B):** the source menu (the bank's strikes as numbered in the drawer; the relations from a root; a
+launched pattern opening on its strike) · the keyboard (the drawer's, reused; the chord lit; the notes outside the selected pair's
+ranges dimmed; the fold arrows) · assigning (click a note then a row, or drag; the lower note; the partner above by the interval; two
+marks per row in the row's colour; the upper player by range; the players changed by chips, re-checked) · the relations dealt from
+a root and folded, the pairs from the bottom · the interval menu per row with the just offset in the cents readout · the row's label
+mirrored into the object's fields, regenerated on a change · the verification on a copy, his test, the verdicts filed. Into PLAN 1f
+on his go. Nothing built.
