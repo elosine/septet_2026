@@ -4075,3 +4075,72 @@ selected group shape itself moves by the exact Δt as well, instead of a second 
 both strikes' 7 notes each moved by exactly 2.000 s, every other object untouched; the single-shape drag (unchanged path) 1 s → its 7
 notes by the shape's snapped delta, 1.007 s, as before. **Answer to his question:** select the META shape (or several) and drag — the
 strikes come along now, as they always did for one shape dragged alone; the hard reload first.
+
+## §145. "read up on the morph section from the tuba piece … understand how the panel works … how we used it … read some of the Journal … check back in, and we'll talk through some of the requirements" — #4's morph tool read cold: the data for PLAN 1f's requirements talk
+
+Composer, opening the morph section after `/postclear`: *"ready to start the morph section, /plan-item 1f First, let's spend some good
+time figuring out the requirements. based on the things I want to do and our previous work in the morph section. So I'm gonna talk
+through this in some detail. But first, can you read up on the morph section from the tuba piece? Collect that data, understand how
+the panel works. And if you can look at some of the notes when we're building the panel and later how we used it, try to read some of
+the Journal And then when you've collected enough data or when you've collected that data, check back in, and we'll talk through some
+of the requirements. before we even enumerate a plan."* → PLANNING_METHOD phase 1, the data first. Nothing built, nothing proposed.
+
+**Read (this repo):** `MORPH_NOTES.md` · CN-28, CN-29 · `score/public/morph.js` (the constants, the six models, the carrier, the
+timeline, `toScoreObjects`), `morph_emit.js`, `morph_panel.js` (the controls) · `bank/morph_models.json`, `morph_recipes.json`,
+`morph_params.json` · TRILLS_TOOL §5 · journal D18–D23. **Read (#4, `for_seven_tubas`):** `MORPH_FINDINGS.md` · `MORPH_NOTATION.md` ·
+`plans/MORPHING_CHORDS.md` §1–3 · `plans/MORPH_SECTION.md` · `SHAPE_LESSONS.md` · `FEATURE_REQUESTS.md` FR-1 … FR-6, FR-8 · RUNNING_LOG
+day 10 whole (the build arc, lines 160–1013), day 11–12 (2z, D31), day 13 (spec mode, "the arc", the release/cycling conflation),
+day 14 (the CC7 timing law, ACT-BLOOM-02, the notation data walk) · PROJECT_JOURNAL D24–D34 and the §6 morph entries · COMPOSER_LOG
+days 14, 15, 19 · PAPER_NOTES on the morphs · `bank/actuals/` (four).
+
+**Found — the tool in one picture.** Three orthogonal parts: MORPH = what changes (cents, technique, level as a pure function of
+progress 0 → 1) · CARRIER = when each voice sounds (a chain of breaths: segLen 8 s ± 35 %, a 0.75 s gap, staggered entries, split
+at the breath table's ceiling) · RENDER = the morph sampled at each breath → notes with note-relative bend and level breakpoints.
+Six models (M1 BLOOM detune ± cents alternating · M2 SPECTRAL to folded partials · M3 CONVERGE chord A → B · M4 COLOUR techniques ·
+M5 SPACING · M6 BALANCE loudness only); three keepers in #4 (BLOOM, CONVERGE, BALANCE). Loudness a layer on every model (D24: swell /
+rise / fall / rotate / flat, per-voice phase spread; driven by progress, not the clock). The timeline (FR-3 / FR-6, pinned): span =
+the one-way gliss = the pace · duration = the body, cycling out-and-back (a triangle, never a jump) when longer than span · release =
+a unanimous run-down to unison and to the floor, players finishing their breath. The gesture shape (2z): attack (entry order, edge
+technique, transient hit-THEN-tone, noise layer on spare lanes, motion converge / gliss-in), decay, release (taper, dropout by whole
+pairs, motion disperse / to-unison / gliss-out) — "correct as an engine", the presets not sound models (D31 → bespoke by ear;
+SHAPE_LESSONS has no lesson 2). The panel: Generate · Play · Stop · Insert @ cursor · Save as ACTUAL · fade ladder; tabs variants
+(the AI's scratch file, polled) / models (the six, word-recipes as sliders OFF until turned, D32; a seed stepper) / actuals (decided
+renders, placed with provenance). Never edits. The working mode: speech → the AI writes the numbers → he listens (day 10: *"it's too
+fiddly to understand the range of numbers to put in"*). Output: ordinary `waveCurve` notes + `morphBend`, a group with a META shape;
+drag / scale / save carry the bend (2v phase 4 gates). Measured laws: bend ± 1.99 st on SI2 tuba, RPN ignored, wider = re-keyed
+mid-note, *"no seam"* (D26) · CC7 250 ms lead before a cold attack, 2 s restore after (the CC7 timing law) · beating Hz = |f1 − f2|,
+cents = 1200·log2(1 + beat/f), a fixed cents doubles per octave (the register law, D28); < 1 Hz flanger, > 1 Hz beating, > ~20 Hz
+timbre · a model ends where its dynamics shape leaves it (the ending law).
+
+**Found — the build notes, musically.** A 30–60 s morph holds as ONE sonority; 30 s *"much more dramatic"* than 10. His ear latched
+first onto beating near unison with the swells; beating the strongest material, and the performable one (*"beat about twice a second"*
+is an instruction, a cents value is not). Re-articulation carries the morph's audibility and reads as PULSES when dense; segLen 3–8 s
+the working band, 15 s loses detail. Fewer voices = less detail, same identity (*"8-bit vs 16-bit"*); two concurrent morphs = one richer
+sonority. Thinning takes whole pairs (`reduceSource`; half a pair does not beat). Words → numbers: the recipes (slower / longer, more
+dramatic, smoother / choppier, more beating, louder swells) with dial boundaries in `morph_recipes.json`.
+
+**Found — how #4 used it.** Three morph sections, each an actual he tuned and saved (JYBloom001 · the 108 s BEATING BLOOM: 4 unison
+pairs, ± 25 c, span 48, duration 90, release 18, 8 of 10 players · JYConverge001: whole-tone pairs closing to near-unison and
+re-opening, twice, 99 c of travel · jyBalance001: a static B♭ major 9th, rotate, no glissando, no beating). The pairs consecutive
+T1/T2 … (measured, r = −0.98). `MORPH_SECTION.md`: the morphs as a bed, impacts borrowing whole pairs (each borrow silences one beat
+rate); FR-4 "clip and rejoin" (hand-written attack notes, each player rejoining at the next breath) spec'd, never built; FR-5 (the
+pitch set and the pair count from the panel) never built — the AI edited the store; FR-8 doubling undecided; *"release on the
+consonant clear chord"* noted. Notation (day 35): two curves per part (gliss above, crescendo below, each normalised to its own
+extremes), the two written pitches at least a quarter tone apart, a go line at every breath, the beat rate at both ends of the gliss
+(decided, not built).
+
+**Found — the port.** `morph.js` and `morph_panel.js` byte-identical to #4's; `morph_emit.js` two lines apart. The engine's technique
+table (ord / bisb / cuivre / flz …), breath table, ranges, the 1.99 st bend range and the lane → instrument routing are the tuba's; the
+banks hold the tuba's chords; `sandbox/instruments.js` carries no bend range per instrument. In the score a morph note is a sustained
+curve note, so 1g's remap should already carry its loudness; the panel's own audition goes through `curveValToCC` — unverified.
+
+**Found — the one structural fact for his four elements (CN-29).** #4 day 13, finding 3: *"the pair is not the unit; the voice is"* —
+the engine staggers each voice on its own seeded order and never asks who a player's partner is, so the gap between a pair's halves,
+the only audible thing, is whatever falls out; *"cycling the pair's gap as a unit — a true repeated bloom"* explicitly deferred. His
+elements 1–3 exist as dials (expansion = BLOOM's cents — the beat-rate dial in Hz asked for in D29, never built · re-breath = the
+carrier's segLen / gap / striation · crescendo = the dynamics layer, 1g's remap); element 4 (each pair its own glissando pattern) makes
+the pair the scheduled unit — a structural change, not a dial. New to this piece besides: the launch from a strike (TRILLS_TOOL §5's
+pattern) and seven unlike instruments.
+
+**Not done:** no requirements proposed, no plan. Checked in with the digest (the data first); the open topics of MORPH_NOTES §2 held
+aside for his order, one at a time.
