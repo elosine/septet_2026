@@ -392,8 +392,38 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        the pitch; at a fourth or fifth each holds its own note; the panel offers only those;
      - the sampler's range as a recipe field the tick reads at step 3 (the tuba's 1.99 stays until then);
      - `docs/BEATING_TOOL.md` opened with the numbers (the TRILLS_TOOL pattern); MORPH_NOTES §1 updated.
-  2. **The beating math** (a pure module: rate ↔ cents by pitch and interval, the mirrored curves and their difference, the breath
-     rule, the duration stretch) — *to be laid out when we discuss it.*
+  2. **The beating math** (a pure module: rate to cents by pitch and interval, the two curves and their difference, the breaths, the
+     duration stretch) — `todo`. *Result when done:* one pure module, page and tools alike, turns a pair's description — the centre
+     pitch, the interval inside the pair, the two rate curves (one per player, signed, in beats per second, as the panel slides them),
+     the crescendo curve, the length, the breath rule — into each player's chain of notes, one per breath, each carrying its bend in
+     cents over time and its level over time; the upper player sits on the just interval, every rate becomes the cents that produce
+     it on that pitch and that partial; it also returns what the panel shows and checks — the beat rate over time (the difference of
+     the two curves), the cents each player reaches, flags where a player's semitone, the sampler's range or the roughness zone is
+     crossed, a re-key where the sampler's range would be passed; a typed duration re-samples the same curves. Checked in node,
+     nothing heard yet. *(composer, 2026-09-06, RUNNING_LOG §152: "single events … one bow or breath … longer events … the dotted go
+     line … on sliders … a warning … maximum breath length or bow length … continuous … or designate when the bows should change …
+     an opportunity for the shuffle")*. The to-dos:
+     - the conversion: the pair's coincident partial from its interval (unison 1:1 · fourth 4:3 · fifth 3:2 · the thirds 5:4, 6:5);
+       the upper player's offset to the just interval; each player's signed rate curve → cents over time; the difference → the
+       beat-rate line with its zones (flanger below 1 per second, roughness above about 15);
+     - time: the curves normalised to the event's length, so a typed duration re-samples them; a slide is an offset of one player's
+       curve;
+     - three breath modes per player: one breath (the short event, a single note) · continuous (one long note; the performer re-bows
+       at will and the notation says so) · designated (the breath marks as note boundaries, placed by hand or dealt);
+     - the breath shuffle, the tuba carrier's rule per instrument (`morph.js` `buildCarrier`): a target length with jitter, a ceiling
+       by instrument, register and loudness, the gap (about half a second for the winds, none for a bow change), the pair's two
+       players half a breath apart by default or aligned for the pulse; seeded, so reshuffle = a new seed; hand-moved marks kept, the
+       rest re-dealt;
+     - the ceiling table for the six (the winds' breath, the strings' bow), defaults tuned by his ear later; a flag on any note past
+       it — the sliders, the dotted go lines and the warning display are the panel's (step 4);
+     - continuity across a breath: the next note starts at the pitch and level where the last ended; a re-key where the sampler's
+       range is passed, flagged;
+     - the output: per player a chain of notes with note-relative bend and level in the score's units (the tick applies 1g's remap);
+       the pattern's notes for several pairs at their offsets; the flags (a player's semitone, the sampler's range from step 1's bank,
+       the roughness zone, the ceiling);
+     - the check script in node (`tools/beating_calc_check.js`, the accel calculator's pattern): rate → cents → rate; the fifth at 3×
+       per cent; the just offsets (+2 · −2 · −14 · +16 c); mirrored humps in phase = a pulse, slid = a plateau; breath lengths inside
+       the ceiling and staggered; the stretch; the flags; the tuba's number reproduced (13.19 c = 1 beat per second at C3, D28).
   3. **One pair in the score, heard** (the object on its two lanes, its notes, playback through the bend and 1g's remap; unison first,
      then fifth and fourth by ear) — *to be laid out when we discuss it.*
   4. **The panel** (rows, the mirrored curves with handles on rails, the crescendo and breath layers, the derived beating line, shapes

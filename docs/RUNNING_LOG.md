@@ -4396,3 +4396,9 @@ seeded random (another version = a new seed). The same shape here, per instrumen
 for the winds and none for a bow change, the pair's two players half a breath apart by default.
 
 **The to-dos put to him (format B)** — in the chat, mirrored into PLAN 1f on his go. Nothing built.
+
+## §153. "on point, good" — step 2 written into PLAN 1f
+
+Composer: *"on point, good"* (the to-dos of §152). **Written into `docs/PLAN.md` 1f item 2 at once:** the result when done and the
+eight to-dos in the fixed format, his words of §152 quoted. Committed and pushed. Next: step 3's goal (one pair in the score, heard),
+on his word.
