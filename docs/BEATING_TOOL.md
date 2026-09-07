@@ -523,7 +523,10 @@ pull moves the segment's points; CTRL-drag slides the curve in time; ALT-click s
 The **hold shape's attack and release are seconds** (2 and 3 by birth, rewritten when you drag its nodes): a length change — the len
 box, the end handle, the strip's edges — leaves them and gives the hold the rest; too short a pair shrinks them in proportion. **The
 lanes are a piece of time** (§186): the pair ends at its length, the space beyond is dimmed, and the end dot sits at the length and
-follows the mouse in seconds.
+follows the mouse in seconds. **The beats themselves** (§187): a mark on the centre line at every beat the pair makes and the count
+— the picture of the sound (a beating near zero is inaudible as a rate; the ear counts beats). **Typed:** the hold shape's `attack` and
+`release` in seconds beside the shape buttons; a double-click on a node opens a box for its time and value (Hz heard, or a dynamic).
+**One time scale for every row** with zoom − / + / fit in the head. **CTRL+Z** is the drawer's undo whenever the drawer is open.
 
 ## Log (append-only)
 

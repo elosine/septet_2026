@@ -511,6 +511,19 @@ width. The design rule "curves over normalised time" was invisible to him and wr
 gesture ends where it ends, the rest is empty. Fixed as RUNNING_LOG §186. For the all-purpose tool: every lane on a real time axis,
 shared with the timeline.
 
+### 2026-09-07, late evening — "I can't get the visual to look like the sound"
+
+> *"I think the problem is I can't get the visual to look like the sound. Something to do with the length, number box, and the visual of
+> the pair curve. So I wanted a short ramp up about a double the length sustained and then an equal short ramp down, a tach ramp down.
+> And no matter how I tried to manipulate the image, it doesn't correspond with the sound. I seem to be guessing. where the image should
+> feel intuitive. So I don't know if we need a absolute scale and, uh, sorry, horizontal scale and then just a Zoom. Maybe maybe that. Or
+> if you have another suggestion. then: way to type in node amplitude, dbl-click or shift click or something? need undo;"* *(typed)*
+
+**AI reading (not the composer's words):** the deepest remark of the day. A rate curve is not a picture of what is heard: a beating
+near zero is inaudible as a rate, and the ear counts beats. **For the all-purpose tool:** the lane should show the beats (the marks)
+as well as the rate; the envelope should be typed in seconds; every node should take a typed value; one time scale for every lane
+with a zoom; and undo must answer from anywhere while the tool is open. Done as RUNNING_LOG §187.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

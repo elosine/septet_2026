@@ -5506,3 +5506,37 @@ draws in slivers.
 300 px left → 5.05 s (the mapping's 5.06), the dot 0.7 px from the mouse during the drag, the window re-fitted after; the attack and
 release 1.94 / 2.91 s (2 and 3 shrunk by the pair's room, the rule of §185); 200 px right → 6.5 s; the attack's node dragged to 30 % lands
 at 0.299; the three lanes' end lines at the same x; 0.5 s → 51 samples instead of 10. No page errors.
+
+## §187. "I can't get the visual to look like the sound" — the beats themselves drawn on the centre line, the hold shape typed in seconds, a node typed by double-click, one time scale for every row with a zoom, CTRL+Z reaching the drawer from anywhere
+
+Composer, 2026-09-07 late evening: *"I think the problem is I can't get the visual to look like the sound. Something to do with the
+length, number box, and the visual of the pair curve. So I wanted a short ramp up about a double the length sustained and then an equal
+short ramp down … no matter how I tried to manipulate the image, it doesn't correspond with the sound. I seem to be guessing. where the
+image should feel intuitive. So I don't know if we need a absolute scale … horizontal scale and then just a Zoom. Maybe maybe that. Or if
+you have another suggestion. then: way to type in node amplitude, dbl-click or shift click or something? need undo"*
+
+**The physics in it (the reply's point):** the rate curve is a picture of a number the ear cannot follow near zero — a beating needs
+about two beat periods to be heard as a rate, so at 2 Hz it is heard only after a second, and a ramp from 0 is silence-then-beating
+whatever its drawn shape; a 2 s pair at 8 Hz has about one second of audible beating in the middle. The samplers add their own attack
+and release tails (a few hundred milliseconds each) at both ends. So the picture of the RATE and the sound of the BEATS differ by
+nature; what the ear gets is the beats' count and spacing.
+
+**Done:**
+- **The beats drawn** — a mark on the centre line at every beat the pair makes (the integral of the heard rate over the samples, a mark
+  at each whole number; grey under 1 Hz), and the count ("11 beats in 2 s"). His hold shape 0.5 · 1 · 0.5 at 8 Hz: nothing for the first
+  fraction of a second, a dense run on the hold, a thinning tail — the picture of the sound.
+- **The hold shape typed:** `attack ▢ s · release ▢ s` beside the shape buttons while the shape is hold, the hold's seconds shown; a
+  length change keeps them.
+- **A node typed:** double-click a node → a small box at it with its time in seconds and its value (Hz heard on a rate curve; a dynamic
+  or 0 … 1 on the crescendo); ENTER sets, ESC closes; the start and the end keep their time.
+- **One time scale for every row** — the longest pair fills the width and the others sit on the same seconds (a 2 s pair beside a 9 s
+  pair is a fifth as wide); **zoom − / + / fit** in the head (px per second, shared; a pair always fits its lane).
+- **Undo:** it existed (↶ and CTRL+Z) but CTRL+Z reached the drawer only while the focus sat inside it — after a click on the score the
+  SCORE's undo answered. Now a capture listener on the window: CTRL+Z while the drawer is open is the drawer's undo, wherever the focus is
+  (text boxes keep theirs).
+
+**Verified on `zz-ai-pulse` (a copy, deleted):** a 2 s pair at 8 Hz with attack 0.5 and release 0.5 typed → 0.5 · 1 · 0.5 s, "hold 1 s";
+11 beat marks, "11 beats in 2 s" (the integral 12); the node editor opened on the attack's end with 0.5 s and 8 Hz heard, set to 0.4 s
+and 6 Hz → the point at 0.4 s, 6 Hz, the attack seconds rewritten; a second pair of 9 s → both rows on a 10.35 s window, the 2 s pair
+ending at 192 px where the 9 s pair ends at 725; zoom out → 51 px/s, 15.5 s; fit; CTRL+Z with the focus on the body → the drawer's
+maximum back from 12 to 8, the score's undo stack untouched. No page errors.

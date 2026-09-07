@@ -73,7 +73,7 @@ const nn = m => BC_().noteName(m);
 const P = {
     el: null, rows: [], length: 6, bound: null, takeList: {}, pairTakes: {}, shapesBank: {}, _timer: null, _aud: null, _drag: null, status: '',
     focus: 'sequence',   // what SPACE plays: 'sequence' | 'pair' (the active row) | 'chord' — set by where he last clicked
-    loop: false, _loopArgs: null, seqSpan: null, _undo: null, _prevHarmony: null, _keepRows: false,
+    loop: false, _loopArgs: null, seqSpan: null, _undo: null, _prevHarmony: null, _keepRows: false, pxPerS: null,
     db: null, banks: null, harmony: null, collapsed: {}, chord: [], chordId: '', armed: null, armedIdx: null, activeRow: 0, show88: false, rootMode: false, relation: 'unison1',
     voicing: VOICING_DEFAULTS(),   // the sonority's voicing: the preset, the seed, the octave box, the octave range (saved with the take)
 
@@ -99,7 +99,8 @@ const P = {
             '<button id="bpPlay" title="the whole sequence: all pairs at their offsets (the strip&#8217;s mute and solo apply), through the score&#8217;s MIDI path">&#9654; sequence</button>',
             '<button id="bpStop">&#9632; stop</button>',
             '<button id="bpLoop" title="loop: the play goes round until stop &#8212; adjust while it plays, every round takes the edits">&#10227; loop</button>',
-            '<button id="bpUndo" title="undo the last edit in the drawer (one level) &#8212; CTRL+Z here does the same">&#8630; undo</button>',
+            '<button id="bpUndo" title="undo the last edit in the drawer (one level) &#8212; CTRL+Z while the drawer is open does the same">&#8630; undo</button>',
+            '<span style="display:inline-flex;gap:2px;align-items:center;color:#888" title="the lanes&#8217; time scale, shared by every pair (the same second is the same width in every row): zoom out to see a pair small against time, fit = the longest pair fills the width"><button id="bpZoomOut">&#8722;</button><span id="bpZoomLbl" style="min-width:64px;text-align:center">fit</span><button id="bpZoomIn">+</button><button id="bpZoomFit">fit</button></span>',
             '<span id="bpSpace" style="color:#9a9" title="what SPACE plays — the sequence, the active pair, or the chord — set by where you last clicked; SPACE while playing stops"></span>',
             '<span style="margin-left:auto"></span>',
             '<input id="bpTakeName" type="text" placeholder="take name" style="width:110px" title="ENTER saves">',
@@ -173,6 +174,15 @@ const P = {
         d.querySelector('#bpAuto').addEventListener('click', ev => this.autoAssign(ev.shiftKey));
         d.querySelector('#bpRevert').addEventListener('click', () => this.revertHarmony());
         d.querySelector('#bpUndo').addEventListener('click', () => this.undo());
+        d.querySelector('#bpZoomOut').addEventListener('click', () => this.zoomBy(1 / 1.5));
+        d.querySelector('#bpZoomIn').addEventListener('click', () => this.zoomBy(1.5));
+        d.querySelector('#bpZoomFit').addEventListener('click', () => { this.pxPerS = null; this.render(); this.setStatus('the lanes fit the longest pair; every row on the same scale'); });
+        // CTRL+Z while the drawer is open is the drawer's undo, wherever the focus sits (the score's undo would answer otherwise)
+        window.addEventListener('keydown', ev => {
+            if (!(ev.ctrlKey || ev.metaKey) || ev.shiftKey || (ev.key !== 'z' && ev.key !== 'Z') || !this.isOpen()) return;
+            const t = ev.target; if (t && t.matches && t.matches('input[type=text], textarea')) return;
+            ev.preventDefault(); ev.stopPropagation(); this.undo();
+        }, true);
         d.querySelector('#bpLoop').addEventListener('click', () => { this.loop = !this.loop; const bt = d.querySelector('#bpLoop'); bt.style.background = this.loop ? '#7B3FE4' : ''; bt.style.color = this.loop ? '#fff' : ''; this.setStatus(this.loop ? 'loop on — the play goes round until stop; edits take effect at every round' : 'loop off'); if (!this.loop) this._loopArgs = null; });
         d.querySelector('#bpRoot').addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); ev.stopPropagation(); this.deal(); });
         d.querySelector('#bp88').addEventListener('change', ev => { this.show88 = ev.target.checked; this.applyVoicing(); });
@@ -220,7 +230,7 @@ const P = {
     setStatus(msg, bad) { this.status = msg; const s = this.el && this.el.querySelector('#bpStatus'); if (s) { s.textContent = msg; s.title = msg; s.style.color = bad ? '#e88' : '#9a9'; } },
     isOpen() { return !!this.el && this.el.style.display !== 'none'; },
     show() { this.init(); this.el.style.display = 'flex'; this.bringToFront(); this.applyHeight(); this.el.focus(); this.refreshTakes(); const b = document.getElementById('beatingBtn'); if (b) { b.style.background = '#3a2a5a'; b.style.color = '#d9c8ff'; } const tab = document.getElementById('beatingTab'); if (tab) tab.style.display = 'none'; },
-    close() { if (!this.el) return; this.stop(); this.el.style.display = 'none'; const b = document.getElementById('beatingBtn'); if (b) { b.style.background = ''; b.style.color = ''; } const tab = document.getElementById('beatingTab'); if (tab) tab.style.display = ''; },
+    close() { if (!this.el) return; this.stop(); this.closeNodeEditor(); this.el.style.display = 'none'; const b = document.getElementById('beatingBtn'); if (b) { b.style.background = ''; b.style.color = ''; } const tab = document.getElementById('beatingTab'); if (tab) tab.style.display = ''; },
     toggle() { this.init(); if (this.isOpen()) { this.close(); return; } const C = C_(), sel = C && C.selectedObject; if (sel && sel.type === 'zone' && sel.midiModel === 'beating') this.openFor(sel); else this.openNew(); },
 
     // ------------------------------------------------------------------ the two ways in
@@ -363,7 +373,7 @@ const P = {
         this.rows.forEach((row, i) => { this.rowOut(row); host.appendChild(this.buildRow(row, i)); });
         if (!this.rows.length) host.innerHTML = '<div style="color:#888;padding:12px">no pairs — + pair</div>';
         if (this.activeRow >= this.rows.length) this.activeRow = Math.max(0, this.rows.length - 1);
-        this.drawKeyboard(); this.paintRelation(); this.paintVoicing(); this.drawSeq(); this.paintFocus();
+        this.drawKeyboard(); this.paintRelation(); this.paintVoicing(); this.drawSeq(); this.paintFocus(); this.paintZoom();
         const ar = this.el.querySelector('#bpArmed'); if (ar) ar.textContent = this.armed != null ? nn(this.armed) + ' armed — click a pair\'s node (or drag it there)' : (this.rootMode ? 'root mode: click a key' : '');
         requestAnimationFrame(() => this.renderLines());
     },
@@ -553,6 +563,10 @@ const P = {
             '<span style="color:#888">shape</span> ' + shapeBtns('bpShape', 'pop the shape in at the maximum'),
             ' <label style="color:#888" title="the maximum beating in Hz (beats per second) &#8212; type it, spin it with the arrows or the wheel; a menu shape pops in again at it, a drawn shape is scaled to it">max <input class="bpRateTo" type="number" value="' + (+b.rateTo || 0) + '" min="0" max="30" step="0.5" style="width:52px"> Hz</label>',
             ' ' + btn('bpHearMax', '', '&#9654; max', false, 'hear 4 s flat at the maximum on this pair'),
+            // the hold shape's attack and release, typed in seconds (2026-09-07 late evening: "a short ramp up about a double the length sustained and then an equal short ramp down")
+            (this.isAdsr(row) ? ' <label style="color:#888" title="the hold shape&#8217;s rise to the maximum, in seconds &#8212; kept through a length change; the hold takes the rest">attack <input class="bpAtt" type="number" step="0.1" min="0.05" max="60" value="' + ((b.adsr && b.adsr.attackS) || 2) + '" style="width:48px"> s</label>'
+                + ' <label style="color:#888" title="the hold shape&#8217;s fall back to the base, in seconds">release <input class="bpRel" type="number" step="0.1" min="0.05" max="60" value="' + ((b.adsr && b.adsr.releaseS) || 3) + '" style="width:48px"> s</label>'
+                + ' <span class="bpHoldInfo" style="color:#888"></span>' : ''),
             ' ' + btn('bpLock', '', row.locked ? '&#128274; mirrored' : '&#128275; free', row.locked, 'the mirror lock: drag one curve, the other mirrors (ALT-drag moves one alone)'),
             ' ' + btn('bpDraw', '', '&#10002; draw', row.draw, 'draw: a click in the rate area adds a point (ESC or click again to end) — without it a double-click adds one'),
             ' <label style="color:#888">±<input class="bpScale" type="number" value="' + row.scale + '" min="2" max="40" step="1" style="width:40px" title="the rate axis, Hz"></label>',
@@ -596,6 +610,11 @@ const P = {
         q('.bpRateTo').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (!isNaN(v)) { this.snapshot(); this.setLevel(row, Math.max(0, v)); redo(); } });
         q('.bpRateTo').addEventListener('wheel', ev => { ev.preventDefault(); ev.stopPropagation(); const v = Math.max(0, r3((+ev.target.value || 0) + (ev.deltaY > 0 ? -0.5 : 0.5))); ev.target.value = v; this.snapshot(); this.setLevel(row, v); redo(); }, { passive: false });
         q('.bpHearMax').addEventListener('click', () => { this.activeRow = i; this.setFocus('pair'); this.hearMax(row); });
+        if (q('.bpAtt')) {
+            const setHold = () => { const a = parseFloat(q('.bpAtt').value), r = parseFloat(q('.bpRel').value); if (!(a > 0) || !(r > 0)) return; this.snapshot(); b.adsr = { attackS: r3(a), releaseS: r3(r) }; this.fitShapeToLength(row); redo(); const pts = BC.curveOf(this.heardCurve(row)); this.setStatus('hold: attack ' + r3(pts[1][0] * row.length) + ' s · hold ' + r3((pts[2][0] - pts[1][0]) * row.length) + ' s · release ' + r3((1 - pts[2][0]) * row.length) + ' s' + (pts[1][0] * row.length < a - 0.01 ? ' (the pair is too short for ' + a + ' + ' + r + ' s — both shrunk in proportion)' : '')); };
+            q('.bpAtt').addEventListener('change', setHold); q('.bpRel').addEventListener('change', setHold);
+            const pts = BC.curveOf(this.heardCurve(row)); q('.bpHoldInfo').textContent = 'hold ' + r3((pts[2][0] - pts[1][0]) * row.length) + ' s';
+        }
         q('.bpRowLen').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (v > 0) { this.snapshot(); this.setRowLength(row, v); } });
         q('.bpRowPlay').addEventListener('click', () => { this.activeRow = i; this.setFocus('pair'); this.playRow(i); });
         q('.bpPairSave').addEventListener('click', () => this.savePair(i, q('.bpPairName').value));
@@ -705,7 +724,21 @@ const P = {
     // pair's length.
     // the lanes' time axis is REAL (2026-09-07 evening, "I'm meant to be able to move the final dot at the right horizontally"): a pair
     // ends at its length, the window shows a little beyond it, the end dot sits at the length and follows the mouse in seconds
-    viewSpan(row) { return row._viewLock || r3(Math.max(row.length * 1.15, 1)); },
+    // one time scale for every row (2026-09-07 late evening, "an absolute horizontal scale and then just a zoom"): by default the longest
+    // pair fills the width and the others sit on the same seconds; zoom out to see a pair small against time; a pair always fits its lane
+    viewSpan(row) {
+        if (row._viewLock) return row._viewLock;
+        const longest = Math.max(1, ...this.rows.map(r => r.length || 0));
+        const shared = this.pxPerS ? (W - PADL - PADR) / this.pxPerS : longest * 1.15;
+        return r3(Math.max(shared, (row.length || 0) * 1.05, 1));
+    },
+    zoomBy(k) {
+        const longest = Math.max(1, ...this.rows.map(r => r.length || 0));
+        const cur = this.pxPerS || (W - PADL - PADR) / (longest * 1.15);
+        this.pxPerS = clamp(cur * k, 2, 600); this.render();
+        this.setStatus('zoom ' + Math.round(this.pxPerS) + ' px per second — every row on the same scale');
+    },
+    paintZoom() { const l = this.el && this.el.querySelector('#bpZoomLbl'); if (l) l.textContent = this.pxPerS ? Math.round(this.pxPerS) + ' px/s' : 'fit'; },
     drawRates(row, svg) {
         const BC = BC_(), out = row.out, cur = this.curvesOf(row), b = row.b, S = row.scale, L = row.length, view = this.viewSpan(row);
         const x0 = PADL, x1 = W - PADR, mid = HR / 2, sy = (HR / 2 - 6) / S;
@@ -730,6 +763,17 @@ const P = {
         // the slid curves as played (the samples) — thin
         const lineOf = (key, col) => { const d = out.samples.map((s, k) => (k ? 'L' : 'M') + X(s.p).toFixed(1) + ' ' + Y(s[key]).toFixed(1)).join(' '); svg.appendChild(mk('path', { d, fill: 'none', stroke: col, 'stroke-width': 1, 'stroke-opacity': 0.55 })); };
         lineOf('rateU', COL.upper); lineOf('rateL', COL.lower);
+        // THE BEATS THEMSELVES (2026-09-07 late evening, "I can't get the visual to look like the sound"): a mark on the centre line at every
+        // beat the pair makes — the integral of the heard rate — so the picture shows what the ear gets: nothing while the rate is near
+        // zero, a dense run on the plateau, thinning out on the release
+        let phase = 0, beats = 0;
+        for (let k = 1; k < out.samples.length; k++) {
+            const s0 = out.samples[k - 1], s1 = out.samples[k], dt = s1.t - s0.t; if (dt <= 0) continue;
+            const next = phase + (s0.beat + s1.beat) / 2 * dt;
+            if (Math.floor(next) > Math.floor(phase)) { const f = (Math.floor(next) - phase) / Math.max(1e-9, next - phase); const t = s0.t + f * dt; beats++; svg.appendChild(mk('line', { x1: X(t / L), x2: X(t / L), y1: mid - 5, y2: mid + 5, stroke: s1.beat < 1 ? '#667' : '#e6d8ff', 'stroke-width': 1.2, 'stroke-opacity': s1.beat < 1 ? 0.5 : 0.9 })); }
+            phase = next;
+        }
+        const bt = mk('text', { x: x0 + 4, y: HR - 5, fill: '#c9a8ff', 'font-size': 11 }); bt.textContent = beats + ' beat' + (beats === 1 ? '' : 's') + ' in ' + L + ' s'; svg.appendChild(bt);
         // the drawn curves — bold, sampled through their slopes; a hit stroke per segment carries the line's gestures; the points are handles
         const drawCurve = (who, pts, col) => {
             const slide = (b.slide && b.slide[who]) || 0, sp = slide / Math.max(0.1, L);
@@ -746,8 +790,9 @@ const P = {
                 const last = idx === pts.length - 1;
                 const h = mk('circle', { cx: X(clamp(p[0] + sp, 0, 1)), cy: Y(p[1]), r: 5, fill: last ? col : '#1a1a20', stroke: col, 'stroke-width': 2 });
                 h.style.cursor = last ? 'ew-resize' : 'move';
-                h.innerHTML = '<title>' + (last ? 'the end: drag sideways for the pair\'s length (50 px = 1 s), up / down for its value' : idx === 0 ? 'the start: up / down for its value' : 'drag (SHIFT clamps to one axis); ALT-click removes') + '</title>';
+                h.innerHTML = '<title>' + (last ? 'the end: drag sideways for the pair\'s length, up / down for its value' : idx === 0 ? 'the start: up / down for its value' : 'drag (SHIFT clamps to one axis); ALT-click removes') + ' · double-click to type its time and value</title>';
                 h.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.altKey && !last && idx !== 0) { this.snapshot(); this.removePoint(row, who, idx); this.changed(row, true); this.render(); return; } this.dragHandle(row, who, idx, e, svg); });
+                h.addEventListener('dblclick', e => { e.preventDefault(); e.stopPropagation(); this.openNodeEditor(row, who, idx, e, 'rate'); });
                 svg.appendChild(h);
             });
         };
@@ -829,6 +874,41 @@ const P = {
         const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); tip.remove(); delete row._viewLock; this.noteAdsrFromPoints(row); this.changed(row, true); this.render(); };
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
+    // a node typed (2026-09-07 late evening, "way to type in node amplitude, dbl-click or shift click"): a small box at the node with its
+    // time in seconds and its value — Hz on a rate curve, a dynamic (ppp … fff) or 0 … 1 on the crescendo; ENTER applies, ESC closes
+    openNodeEditor(row, who, idx, e, lane) {
+        this.closeNodeEditor();
+        const BC = BC_(), b = row.b, L = row.length;
+        const pts = lane === 'rate' ? this.curvesOf(row)[who] : (this.levelPts(row) || {})[who]; if (!pts || !pts[idx]) return;
+        const p = pts[idx], n = pts.length, isRate = lane === 'rate';
+        const box = document.createElement('div'); box.id = 'bpNodeEd';
+        box.style.cssText = 'position:fixed;z-index:9500;left:' + Math.min(window.innerWidth - 230, e.clientX + 10) + 'px;top:' + Math.max(4, e.clientY - 40) + 'px;background:#26262e;border:1px solid #7B3FE4;border-radius:4px;padding:6px 8px;color:#ddd;font:12px system-ui;display:flex;gap:6px;align-items:center;box-shadow:0 4px 16px rgba(0,0,0,.5)';
+        const fixedT = idx === 0 || idx === n - 1;
+        box.innerHTML = '<label>time <input id="bpNeT" type="number" step="0.05" min="0" value="' + r3(p[0] * L) + '" style="width:60px"' + (fixedT ? ' disabled title="the start and the end stay where they are (the end handle sets the length)"' : '') + '> s</label>'
+            + '<label>' + (isRate ? 'value <input id="bpNeV" type="text" value="' + r3(Math.abs(p[1]) * (row.locked ? 2 : 1)) + '" style="width:56px"> Hz' + (row.locked ? ' heard' : ' ' + who) : 'level <input id="bpNeV" type="text" value="' + dynName(p[1]) + '" style="width:56px" title="ppp … fff or 0 … 1">') + '</label>'
+            + '<button id="bpNeOk">set</button><button id="bpNeX" title="ESC">&#10005;</button>';
+        document.body.appendChild(box);
+        const apply = () => {
+            const tIn = parseFloat(box.querySelector('#bpNeT').value), vRaw = box.querySelector('#bpNeV').value;
+            const pNew = fixedT ? p[0] : clamp((isNaN(tIn) ? p[0] * L : tIn) / Math.max(0.1, L), 0, 1);
+            this.snapshot();
+            if (isRate) {
+                const v = parseFloat(vRaw); if (isNaN(v)) { this.setStatus('a number of Hz, please', true); return; }
+                const heardOrOwn = Math.max(0, v), val = row.locked ? heardOrOwn / 2 : heardOrOwn;
+                this.setPoint(row, who, idx, r3(pNew), r3(who === 'upper' ? val : -val));
+                this.noteAdsrFromPoints(row);
+            } else {
+                const v = parseLevel(vRaw); if (v == null) { this.setStatus('a dynamic (ppp … fff) or a number 0 … 1, please', true); return; }
+                const cur = this.levelPts(row)[who]; cur[idx] = cur[idx].length > 2 ? [r3(pNew), v, cur[idx][2]] : [r3(pNew), v]; this.setLevelPts(row, who, BC.curveOf(cur));
+            }
+            this.closeNodeEditor(); this.changed(row, true); this.render();
+        };
+        box.querySelector('#bpNeOk').addEventListener('click', apply);
+        box.querySelector('#bpNeX').addEventListener('click', () => this.closeNodeEditor());
+        box.addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); ev.stopPropagation(); apply(); } else if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); this.closeNodeEditor(); } else ev.stopPropagation(); });
+        const first = box.querySelector(fixedT ? '#bpNeV' : '#bpNeT'); first.focus(); first.select();
+    },
+    closeNodeEditor() { const old = document.getElementById('bpNodeEd'); if (old) old.remove(); },
     dragBody(row, who, e0, svg) {
         const g = svg._geom, x0 = e0.clientX; let last = 0;
         const onMove = ev => { const d = (ev.clientX - x0) / (g.x1 - g.x0) * g.view; const step = r3(d - last); if (!step) return; last = r3(last + step); if (ev.altKey && row.locked) { row.locked = false; this.unlock(row); } this.slideCurve(row, who, step); this.rowOut(row); this.drawRates(row, svg); this.changed(row, false); };
@@ -892,7 +972,8 @@ const P = {
             if (together && who === 'lower') return;
             pts.forEach((p, idx) => {
                 const h = mk('circle', { cx: X(p[0]), cy: Y(p[1]), r: 4.5, fill: '#1a1a20', stroke: col, 'stroke-width': 2 }); h.style.cursor = 'move';
-                h.innerHTML = '<title>' + dynName(p[1]) + ' at ' + (p[0] * L).toFixed(2) + ' s — drag; ALT-click removes</title>';
+                h.innerHTML = '<title>' + dynName(p[1]) + ' at ' + (p[0] * L).toFixed(2) + ' s — drag; ALT-click removes; double-click to type</title>';
+                h.addEventListener('dblclick', e => { e.preventDefault(); e.stopPropagation(); this.openNodeEditor(row, who, idx, e, 'level'); });
                 h.addEventListener('mousedown', e => {
                     e.preventDefault(); e.stopPropagation();
                     if (e.altKey) { if (pts.length > 2 && idx > 0 && idx < pts.length - 1) { this.snapshot(); const cur = this.levelPts(row)[who]; cur.splice(idx, 1); this.setLevelPts(row, who, cur); this.changed(row, true); this.render(); } return; }
