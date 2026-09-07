@@ -93,7 +93,11 @@ or not at all.**
    NOTATION_STANDARDS' velocity band: their velocities are as played, the composition's own.
 10. **A beating (PLAN 1f, 2026-09-07; `docs/BEATING_TOOL.md`) is a zone with `midiModel: 'beating'`** on the launching player's
     lane, carrying its partner's lane in its `beating` block: `{ partnerLayer, pitch (the pair's LOWER note, MIDI), interval
-    ('unison' | 'm3' | 'M3' | 'P4' | 'P5' — the partner above at the JUST interval, its bend carrying the just offset),
+    ('unison' | 'm3' | 'M3' | 'P4' | 'P5' | 'P8' — the partner above at the JUST interval, its bend carrying the just offset; at most
+    an octave apart, RUNNING_LOG §180), **srcPitch** (the note as given — the sonority's or typed; `pitch` is what sounds after the
+    pair's fold by octaves as one unit, BEATING_TOOL §12), **fold** (the octaves moved, `pitch − srcPitch` in octaves), **noteIndex**
+    (which note of the panel's sonority the pair holds, or null — the take's `harmony` + `voicing` name that sonority), **skip** (true =
+    nobody plays it: the snippet has no events and says `skipped`),
     rateFrom, rateTo, shape | beat (the heard-rate curve: breakpoints over normalised time, beats per second), share (how the
     beating is split between the two, 0.5 = mirrored), rate { lower, upper } (two explicit rate curves when the mirror is
     unlocked), levelLo, levelHi | levelCurve (the crescendo, 0 → 1), breath { mode: 'one' | 'continuous' | 'designated', seed,

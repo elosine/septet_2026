@@ -2171,7 +2171,7 @@ const Composer = {
             // ? = the help line (PLAN 1f step 7, 2026-09-07): the keys, and how a beating is made
             if (e.key === '?' && !e.ctrlKey && !(e.target && e.target.matches && e.target.matches('input, textarea, select'))) {
                 e.preventDefault();
-                this.saveStatus.textContent = 'keys: T = a trill on the selected note · B = a BEATING on the selected strike note (its pitch the centre, the nearest lane that can pair the partner, a 6 s bloom 0 → 3 beats/s; the strike untouched) · P = the panel of the selected trill or beating — the beating panel: the pair\'s mirrored rate curves with handles on rails, the crescendo and breath lanes, the strike menu and the keyboard for the pitches, SPACE plays, insert @ playhead puts a pattern of up to three pairs in the score under one META shape (drag = move, box = stretch, DELETE = all of it) · the Beating button = a new pattern · ■ Panic = silence everything (a trapped note) · G surge · O ord · A column · C cuivre · SPACE play · ESC clear · ? this line';
+                this.saveStatus.textContent = 'keys: T = a trill on the selected note · B = a BEATING on the selected strike note (its pitch the centre, the nearest lane that can pair the partner, a 6 s bloom 0 → 3 beats/s; the strike untouched) · P = the panel of the selected trill or beating — the beating panel: the pair\'s mirrored rate curves with handles on rails, the crescendo and breath lanes, the harmonies and the keyboard for the pitches (double-click a note, click a pair\'s node; the pair folds the note as one unit to the nearest octave both reach, the arrows say so, a row offers the ways out when no octave serves; the voicing bar moves the sonority), SPACE plays, insert @ playhead puts a pattern of up to three pairs in the score under one META shape (drag = move, box = stretch, DELETE = all of it) · the Beating button = a new pattern · ■ Panic = silence everything (a trapped note) · G surge · O ord · A column · C cuivre · SPACE play · ESC clear · ? this line';
                 return;
             }
 
@@ -9686,7 +9686,9 @@ const Composer = {
     BEATING_CENTRE_MS: 400,
 
     beatingDefaults(layer, startSec, pitch, partnerLayer) {
-        return { partnerLayer, pitch, interval: 'unison', rateFrom: 0, rateTo: 3, shape: 'ramp', share: 0.5, beat: null,
+        // srcPitch = the note as given (the sonority's or typed), pitch = what sounds after the pair's fold (RUNNING_LOG §180), fold = the
+        // octaves moved, noteIndex = which note of the panel's sonority (Q3), skip = nobody plays it (the ladder's third way)
+        return { partnerLayer, pitch, srcPitch: pitch, fold: 0, noteIndex: null, skip: false, interval: 'unison', rateFrom: 0, rateTo: 3, shape: 'ramp', share: 0.5, beat: null,
                  levelLo: 0.3, levelHi: 0.9, breath: { mode: 'one', seed: 1, target: null, marks: null }, slide: { lower: 0, upper: 0 }, launchedFrom: null };
     },
     ensureBeating(zone) {
@@ -9766,7 +9768,7 @@ const Composer = {
         const LEAD = this.BEATING_LEAD_MS, r1 = x => Math.round(x * 10) / 10;
         const defaultR = this.beatingRouting(zone.layer) || { port: '', channel: 1 };
         const ev = [], slots = [];
-        for (const who of ['lower', 'upper']) {
+        for (const who of (b.skip ? [] : ['lower', 'upper'])) {   // a skipped pair (§180, the ladder's third way): no notes, the snippet says so
             const instKey = spec.players[who]; if (!instKey || lanes[instKey] == null) continue;
             const r = this.beatingRouting(lanes[instKey]); if (!r) continue;
             const route = (r.port === defaultR.port && r.channel === defaultR.channel) ? {} : { port: r.port, channel: r.channel };
@@ -9789,8 +9791,8 @@ const Composer = {
         }
         const rank = e => e._cc != null ? 0 : e._bend != null ? 1 : 2;
         ev.sort((a, c) => a.onsetMs - c.onsetMs || rank(a) - rank(c));
-        zone.midiSnippet = { port: defaultR.port, channel: defaultR.channel, leadMs: LEAD, events: ev, source: 'beating', slots,
-            count: out.notes.lower.length + out.notes.upper.length, maxBeat: out.maxBeat, maxCents: out.maxCents, players: spec.players,
+        zone.midiSnippet = { port: defaultR.port, channel: defaultR.channel, leadMs: LEAD, events: ev, source: 'beating', slots, skipped: !!b.skip,
+            count: b.skip ? 0 : out.notes.lower.length + out.notes.upper.length, maxBeat: out.maxBeat, maxCents: out.maxCents, players: spec.players,
             flags: out.flags.map(f => f.flag).filter((v, i, a) => a.indexOf(v) === i), roles: { ok: roles.ok, why: roles.why }, generatedAt: new Date().toISOString() };
         if (!this._beatingOuts) this._beatingOuts = new Map();
         this._beatingOuts.set(zone.id, out);
@@ -9830,7 +9832,8 @@ const Composer = {
         const b = this.ensureBeating(zone), s = zone.midiSnippet || {};
         const me = TRACKS[zone.layer] ? TRACKS[zone.layer].short : '?', pt = b.partnerLayer != null && TRACKS[b.partnerLayer] ? TRACKS[b.partnerLayer].short : '?';
         const iv = BeatingCalc.INTERVALS[b.interval] || BeatingCalc.INTERVALS.unison;
-        return 'beating ' + me + ' + ' + pt + ' on ' + BeatingCalc.noteName(b.pitch) + (iv.semitones ? ' + ' + BeatingCalc.noteName(b.pitch + iv.semitones) : '') + ' (' + iv.label + ') · '
+        const k = b.srcPitch != null ? Math.round((b.pitch - b.srcPitch) / 12) : 0;   // the pair's fold (§180): shown with the arrow and the note as given
+        return 'beating ' + me + ' + ' + pt + ' on ' + BeatingCalc.noteName(b.pitch) + (iv.semitones ? ' + ' + BeatingCalc.noteName(b.pitch + iv.semitones) : '') + (k ? BeatingCalc.foldMark(k) + ' from ' + BeatingCalc.noteName(b.srcPitch) : '') + ' (' + iv.label + ')' + (b.skip ? ' · ✕ skipped' : '') + ' · '
             + (+b.rateFrom || 0) + ' → ' + (+b.rateTo || 0) + '/s ' + (b.shape || 'ramp') + (s.maxBeat != null ? ' · max ' + s.maxBeat + '/s' : '') + (s.count != null ? ' · ' + s.count + ' notes' : '')
             + ' · ' + ((b.breath && b.breath.mode) || 'one') + (s.roles && !s.roles.ok ? ' · ⚠ ' + s.roles.why : '') + (s.flags && s.flags.length ? ' · ⚠ ' + s.flags.join(' ') : '');
     },
@@ -9878,20 +9881,23 @@ const Composer = {
         let pitch = fromNote ? fromNote.sonifyNote : null;
         if (pitch == null) { const a = this.trillAnchorNote(layer, start); pitch = a ? a.sonifyNote : null; }
         if (pitch == null) { const r = BeatingCalc.ordinaryRange(INSTRUMENTS, me); pitch = r ? Math.round((r[0] + r[1]) / 2) : 60; }
-        const cands = this.beatingPartnerCandidates(layer, pitch, 'unison');
-        if (!cands.length) { this.saveStatus.textContent = 'beating: no other player can hold ' + BeatingCalc.noteName(pitch) + ' with ' + TRACKS[layer].label + (BeatingCalc.holds(INSTRUMENTS, me, pitch) ? '' : ' (nor can ' + TRACKS[layer].label + ')') + ' — pick another note'; return null; }
-        cands.sort((a, c) => Math.abs(a.layer - layer) - Math.abs(c.layer - layer) || a.layer - c.layer);
-        const partnerLayer = cands[0].layer;
+        // the pair folds as a unit (RUNNING_LOG §180): the nearest lane whose player holds the note with this one as written, else the
+        // nearest that reaches it folded by the fewest octaves (the panel shows the fold, the arrows and the ladder)
+        const opts = BeatingCalc.seatOptions(INSTRUMENTS, pitch, 'unison', me).filter(o => o.ok).map(o => ({ layer: TRACKS.findIndex(t => t.instKey === o.player), fold: o.fold })).filter(o => o.layer >= 0);
+        if (!opts.length) { this.saveStatus.textContent = 'beating: no other player can hold ' + BeatingCalc.noteName(pitch) + ' with ' + TRACKS[layer].label + ' in any octave — pick another note'; return null; }
+        opts.sort((a, c) => Math.abs(a.fold.k) - Math.abs(c.fold.k) || Math.abs(a.layer - layer) - Math.abs(c.layer - layer) || a.layer - c.layer);
+        const partnerLayer = opts[0].layer, fold = opts[0].fold;
         const zone = this.createZone({ layer, startTime: Math.round(start * 1000) / 1000, endTime: Math.round((start + 6) * 1000) / 1000,
             zoneFunction: 'midiPreview', midiModel: 'beating', color: '#7B3FE4', opacity: 0.16, zoneHeight: 0.96, yOffset: 0.5, performanceNotes: 'beating' });
-        zone.beating = this.beatingDefaults(layer, start, pitch, partnerLayer);
+        zone.beating = this.beatingDefaults(layer, start, fold.pitch, partnerLayer);
+        zone.beating.srcPitch = pitch; zone.beating.fold = fold.k;
         if (fromNote) zone.beating.launchedFrom = fromNote.id;
         this.regenerateBeating(zone);
         this.renderZone(zone);
         this.selectObject(zone);
         this.markDirty();
         if (typeof BeatingPanel !== 'undefined') BeatingPanel.openFor(zone);   // step 4: the panel, bound to the new beating
-        this.saveStatus.textContent = 'beating ' + TRACKS[layer].short + ' + ' + TRACKS[partnerLayer].short + ' on ' + BeatingCalc.noteName(pitch) + ', ' + zone.startTime.toFixed(2) + ' → ' + zone.endTime.toFixed(2) + ' s: a bloom 0 → 3 beats/s, one breath — the panel edits it (P reopens it), SPACE there plays the pair, the right edge stretches it' + (fromNote ? '; the strike note stays as it is' : '');
+        this.saveStatus.textContent = 'beating ' + TRACKS[layer].short + ' + ' + TRACKS[partnerLayer].short + ' on ' + BeatingCalc.noteName(fold.pitch) + (fold.k ? BeatingCalc.foldMark(fold.k) + ' (' + BeatingCalc.noteName(pitch) + ' folded ' + Math.abs(fold.k) + ' octave' + (Math.abs(fold.k) > 1 ? 's' : '') + ' so both reach it)' : '') + ', ' + zone.startTime.toFixed(2) + ' → ' + zone.endTime.toFixed(2) + ' s: a bloom 0 → 3 beats/s, one breath — the panel edits it (P reopens it), SPACE there plays the pair, the right edge stretches it' + (fromNote ? '; the strike note stays as it is' : '');
         return zone;
     },
     // ---- the audition: the pair alone, timestamped, with the bends; one at a time ----

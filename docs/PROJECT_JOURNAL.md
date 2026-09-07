@@ -98,6 +98,19 @@ own server (:5300); the AI built at his word, one chunk at a time:
   (one group with a META shape, the shape's drag / stretch / delete) · the end-to-end (within 0.006 beats/s of the panel on every
   pair; a double-booked player found and fixed) · the documents (BEATING_TOOL, MORPH_NOTES §1 / §4, NAMING §2.10, D24 / D25, the
   help line `?`). **1f built; his listening pending.**
+- **His check-in, morning of 2026-09-07 (§175–178):** the panel a full-page drawer with the fonts up; the trapped note's two causes
+  closed (a long note's release never queued ahead; ■ Panic; `probes/panic.ps1`); the harmonies on the left in three banners
+  (`bank/harmonies.json` by `tools/harmony_scrape.js`), ▶ chord on the piano, the harmony in the take (CN-36); **CN-35 the harmony
+  module noted in PLAN 1d for later.**
+- **The pitch side's second pass, early afternoon (§179–181; BEATING_TOOL §12; MORPH_NOTES §3 2026-09-07), his six asks discussed
+  first (the planning method's phase 1, §179), his answers (§180: at most an octave apart · the tool offers, never applies · a pair
+  follows its sonority note · a tie folds down), then built at his word without the plan regime:** `BeatingCalc` — `P8`, `foldPair`
+  (the pair folds as one unit), `pairLadder`, `seatOptions`, `voiceChord` (the strikes presets, the octave box, the octave range as
+  the scatter window; pure) — 102 checks; the block's `srcPitch · fold · noteIndex · skip`; the panel — the voicing bar with the seeded
+  reshuffle and its chips, every player in the partner menu with its pitch and ↑ / ↓ or ✕, the chips beside the seats, the ladder of
+  offers, the players' ranges as columns on the keyboard, the three-state keys, the dotted lines from key to node, the take's
+  `voicing`; B folds the same way; the labels show the fold. Verified with real DOM events on a copy (`zz-ai-pitch2`, deleted).
+  **His test pending (a hard reload first).**
 - **Tools on his hands (§111–114):** the bend cursor only when Points is off; TRILLS phase 4 (a trill runs to the player's next
   strike note, a stretch regenerates at once); a nudged trill keeps its attack note (a 60 ms eating window; the drag keeps a
   trill's start; the articulation switch arbitrated on a shared sampler slot — the tail and the lead); the drawer's pick no

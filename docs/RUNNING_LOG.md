@@ -5135,3 +5135,119 @@ empty; ▶ chord — 3 notes on the piano, 3 offs 1.5 s later from timers. No co
 **For the tool's memory (MORPH_NOTES §3, the trapped-note entry):** never queue a long note's release ahead of time on a shared
 output — a stop, a panic, another audition's stop may clear the queue; send the release when it is due, from the tick or a timer,
 and keep a registry a stop can drain.
+
+## §179. His six asks for the beating drawer's pitch side, one to discuss first — the pair's range check; the data, the AI's suggestion and the questions put to him (planning method, phase 1; nothing built)
+
+Composer, 2026-09-07, late morning, with three screenshots of the strikes drawer (the voicing buttons, the keyboard with the fold
+mark E4↑ on Violin 1 and the dotted lines, the shuffle head) — his words verbatim in MORPH_NOTES §3. Six asks: the voicing buttons ·
+the octave box and an octave range for the reshuffle · the assignment lines from key to node · the players' ranges as columns on the
+keyboard · the player menus not self-limiting, the ↑ / ↓ fold mark instead · **to discuss first: the pair's range — both notes in one
+octave (unison, a fifth, an octave at most), the fold and the conflict when only one player can reach the note.** *"let me hear your
+suggestions about that and discuss before making changes"* → the planning method: the data, the restatement, the suggestion, the
+questions only he can answer. Nothing built.
+
+**The data (what exists):**
+- The strikes drawer (STRIKES_TOOL F, U7 → U10): a hand assignment that does not fit **folds by octave into the range** — `foldInto`
+  moves the note up while it is below the range, down while above — marked ↑ / ↓ on the chip; or is **skipped** (✕, nobody plays it);
+  the shuffle never misfits; the voicing presets move octaves only, the harmony never changes (B, L).
+- The beating panel today: a pair holds ONE MIDI number, its LOWER note (§158); the partner sits above by the interval (unison ·
+  m3 · M3 · P4 · P5 — no octave); `BeatingCalc.pairsFor` says which pairs can play a note (at unison both hold it; at an interval one
+  the lower, the other the upper); the partner menu lists only the lanes that can (the self-limiting menus he dislikes); the
+  keyboard dims the keys the active pair cannot play; a note out of reach is refused, never folded.
+- The ranges that matter (the ordinary voices, measured): flute C4–C7 · bass clarinet A#1–F4 · violins G3–F7 · viola C3–A6 · cello
+  C2–B5. Two players share at least one octave-related pitch for every pitch class EXCEPT the bass clarinet with the flute: their
+  overlap is C4–F4, so at unison they share only C · C# · D · D# · E · F — a G has no common octave (the bass clarinet's G3, the
+  flute's G4) — and at an octave apart they do (G3 + G4).
+
+**The AI's suggestion, put to him:**
+1. **The pair folds as a unit.** A note from the sonority is folded by octave to the nearest octave where BOTH players hold their
+   notes (the lower on the note, the partner above by the interval) — as-is first, then the nearest k, ties downward. Both players'
+   boxes show the actual pitch with ↑ / ↓ (the drawer's mark); at unison both carry the same mark.
+2. **The interval gains the octave** (P8: ratio 2:1, the partial p = 2, no just offset), since he names it; unison · fifth · octave as
+   the usual three, the thirds and the fourth kept as tries.
+3. **When no octave serves both at the chosen interval, a ladder the panel offers, never applies by itself:** (a) the interval that
+   would serve — the octave apart, then the fifth — one click; (b) another player for the seat — the menus list all six, each marked
+   with what it would sound (the pitch and the arrow, or ✕ out of reach); (c) skip the pair on this note (✕, the drawer's third
+   option). The row says which of the three it is waiting for.
+4. **A pair remembers WHICH note of the sonority it holds** (its index), not a MIDI number: the octave box and the voicings move the
+   sonority, the pair's pitch follows and refolds — the drawer's rule (the harmony never changes; the octaves move). The pitch typed
+   by hand stays a MIDI number.
+
+**The questions only he can answer:** (Q1) is "at most an octave apart" a hard rule — the intervals offered become unison · m3 · M3 ·
+P4 · P5 · P8, nothing wider? (Q2) when unison cannot be reached at any octave, may the panel switch the interval by itself, or only
+offer it? (Q3) the pair follows the sonority's note through voicings and octave moves — wanted? (Q4) the tie when two octaves are
+equally near: down (the lower, more sustainable register) or up?
+
+**§179 — correction, same hour (computed, not read off the ranges):** three pairs cannot reach a unison on some pitch class, not
+one — flute + bass clarinet on F# G G# A A# B (overlap C4–F4); bass clarinet + violin 1 and bass clarinet + violin 2 on F# only
+(overlap G3–F4). Every other pair reaches every pitch class at unison somewhere. The viola and the cello pair with anyone on anything.
+
+## §180. His answers to §179 — the pair's range model decided; the six asks go ahead without the full plan regime
+
+Composer, 2026-09-07: *"Q1 yes, Q2 b, Q3 yes, Q4 a; and no need for the entire plan regime if this is clear what needs to be done.
+You can go ahead."* So: **(Q1) at most an octave apart is a hard rule** — the chips become unison · m3 · M3 · P4 · P5 · P8, nothing
+wider; **(Q2) when unison is unreachable at any octave the panel only OFFERS the switch**, never applies it (the strikes rule: the
+tool never changes his harmony); **(Q3) a pair remembers which note of the sonority it holds** and follows it through voicings and
+octave moves; **(Q4) a tie between two equally near octaves folds DOWN.** The six asks (MORPH_NOTES §3, 2026-09-07) built next as one
+chunk sequence, each verified on a copy; the results in the entries that follow.
+
+## §181. The pitch side's second pass BUILT (his six asks of §179, his answers of §180): the voicing bar with the octave box and range, the pair's fold as a unit with the arrows, the ladder, every player in the menus, the lines from key to node, the range columns, the octave interval — verified with real DOM events on a copy; his test pending
+
+Built 2026-09-07, early afternoon, on `scores/zz-ai-pitch2.json` (a copy of the piece on :5301, deleted after; the piece file untouched).
+
+**The math (`score/public/beating_calc.js`; `tools/beating_calc_check.js` 77 → 102 checks):** `INTERVALS.P8` (the octave: 2:1, the
+2nd partial, no just offset — Q1: six intervals, nothing wider) · `foldPair(recipe, note, interval, a, b)` — the pair moves by octaves
+AS ONE UNIT to the nearest octave where both hold their notes, k tried in the order 0 · −1 · +1 · −2 · +2 … (as written first, the
+nearest next, a tie DOWN — Q4), the roles from `pairsFor` at the folded pitch so the page and the panel agree by construction; null
+when no octave serves · `pairLadder` — the offers: the intervals that would serve in `LADDER_ORDER` (unison · fifth · octave · the
+thirds · the fourth), another player for either seat, each with its fold · `seatOptions` — every other player with what it would
+sound opposite a given one (the menus' labels) · `voiceChord(pitches0, { preset, seed, oct, below, above }, span)` — the strikes
+drawer's presets over the pitch classes (original · spread out · cluster · cluster low · cluster high · high + low, `pack` and
+`nearestOct` ported), then the OCTAVE BOX moves the whole sonority, then the OCTAVE RANGE scatters every note by a seeded random
+octave inside −below … +above, the piano's ends clamping; pure — the same five numbers give the same voicing, so a take carries them.
+The checks: the flute + bass clarinet on G4 at unison null, at an octave apart G3 + G4 (folded down), at a fifth G3 + D4; C7 for the
+cello + flute folded two down; the tie down on an artificial recipe; the ladder's order P5 · P8 · P4 for that case (the thirds would
+put the flute below C4 — so they are not offered); the presets keep the pitch classes, the cluster inside one octave, the range ±1
+with seed 3 moves some notes and never more than an octave.
+
+**The block (`zone.beating`):** `srcPitch` (the note as given — the sonority's or typed) · `pitch` (what sounds, after the fold) ·
+`fold` (the octaves moved) · `noteIndex` (which note of the panel's sonority — Q3) · `skip` (nobody plays it). `regenerateBeating`
+makes no notes for a skipped pair (`skipped: true`, count 0); `beatingLabel` shows the fold ("on E4↑ from E3") and "✕ skipped";
+B on a note folds as a unit — the nearest lane that holds the note as written, else the fewest octaves.
+
+**The panel (`score/public/beating_panel.js`):** the VOICING BAR (six presets, oct −3 … +3, range −0…3 … +0…3, ↻ reshuffle = a new
+seed, the seed input and the last eight seeds as chips — the drawer's U8); a sonority keeps its original pitches (`midi0`) and is
+voiced from them; a pair holding a note of the sonority follows it through the voicings and the octave box and refolds (Q3); a new
+sonority keeps a pair's index only where the voiced note at that index is the pair's note as given (a reopened beating, a loaded
+take), else clears it. THE PAIR'S ROW: the partner menu lists EVERY player with the pitch it would sound and the fold mark, ✕ when no
+octave serves (§180 — no self-limiting); a chip beside each seat with the pitch actually sounded and ↑ / ↓; the pitch box holds the
+note as given with "→ E4↑" after it when folded and "note 19" when it is the sonority's; the interval chips gain the octave; THE
+LADDER under the header when no octave serves both (Q2 — offered, never applied): the intervals that would, with both players'
+notes; another player instead of the partner (and instead of the launching player when the pattern is not bound); ✕ skip — a click
+applies that one change and refolds; a skipped pair says so and offers "play it". THE KEYBOARD (236 px): the six players' ordinary
+ranges as coloured columns at the left with a legend above, ▲ / ▼ past the view; the keys lit where the active pair holds the note
+as written, half where it would fold (the title says to what), dim where no octave serves; the sonority's dots carry their index;
+the pairs' rings show what SOUNDS (dim when skipped). THE LINES: an SVG over the body, a dotted line in the row's colour from the
+assigned note's dot (or its key when the note is not in the sonority) to the pair's node, redrawn on render and on either column's
+scroll, not drawn when its end is scrolled out of sight. Assign never refuses; the status says the fold ("pair 1 on G4 → G3↓ (1
+octave down, both players) · Fl G4 · BCl G3 (octave)") or the conflict. The deal uses the fold. The take carries `voicing`.
+
+**Verified on the copy with real DOM events (clicks, dblclick, change), the numbers:** 145 entries in the list; strike #3 (20 notes)
+picked; 6 range columns, the legend "ranges Fl BCl Vn1 Vn2 Va Vc"; the six presets each equal to `voiceChord` on the same numbers;
+oct +1 = every note +12; range −1 … +1, ↻ → seed 2, 12 of 20 notes moved, none more than an octave, the chips "2, 1", chip 1 → the
+seed-1 voicing back; the range off → the original. E3 double-clicked, the node clicked → index 18, as written, the chips "E3 E3";
+oct −1 → the pair follows to E2 and refolds to E3↑ (the viola's bottom). The flute launching: the menu reads "Bass Cl. — E4↑ | Violin
+1 — E4↑ | …". Flute + bass clarinet on G4: the chips ✕ ✕, the flag out-of-range, the ladder "fifth: BCl G3 · Fl D4 · octave: BCl G3 ·
+Fl G4 · fourth: BCl G3 · Fl C4 · instead of BCl: Vn1 G4 … · instead of Fl: Vn1 G3↓ …"; the octave offer taken → P8, G3, fold −1, the
+chips G4↓ G3↓, the bass clarinet lower and the flute upper, no flags, the rings G3 (lower) G4 (upper); unison again, skip → 0 events,
+"✕ skipped", the ring dimmed; play it → 283 events; the Vn1 offer → G4 as written, no ladder. Fifths dealt from C4 → C4 as written.
+A take saved (spread, oct +1, index 18, E7 → E6↓), the panel disturbed, the take loaded → the same block and voicing byte for byte,
+the chord and the harmony back; deleted. Insert → the zone E3 → E4↑ (index 18 kept on the rebound panel), 361 events; the label
+"beating Fl + Vn1 on E4↑ from E3 (unison)". B on the flute's C6 → Vn1 as written; B on the bass clarinet's D#2 → the cello as
+written. The lines: with a 1400 × 900 viewport one dashed line per assigned pair from the key's right edge (x 427, y 609) to the
+node (x 534, y 18) in the row's colour; two pairs → two lines. No console errors, no page errors.
+
+**Two test artifacts, not defects:** the Browser pane was hidden — its timers throttled (the first script timed out; split into
+scripts without waits) and `requestAnimationFrame` never fired (`renderLines` called directly); with the pane hidden the layout had
+no height, so the lines' out-of-sight rule drew nothing until the viewport was emulated. No screenshot could be taken (the page did
+not draw); his own reload shows it.

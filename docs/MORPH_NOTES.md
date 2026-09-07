@@ -300,6 +300,58 @@ the assignment by hand, a note armed then dropped on a pair's node; the choice a
 all-purpose tool: the pitch side is a harmony BROWSER over every collection (CN-35's module), the assignment the tool's own. The
 blasts and the chord shapes scraped from the earlier pieces for it (`bank/harmonies.json`). RUNNING_LOG §177.
 
+### 2026-09-07 — the voicings, the octave box and range, the assignment lines, the range columns, the pair's range check (a discussion asked for)
+
+> *"Can I have a version of the chord voicing options from the strikes drawer in the beating drawer: I want all the button options -
+> original , spread out, cluster..., and I would like the octave number box to move the sonority to a different octave ,  I with also,
+> like, an octave range. So the octave box transposes or moves the sonority up or down an octave. But then I'd like to be able to say
+> the range would include one octave below or two octaves above or one octave below to one octave above. And then any reshuffling
+> would include the octave in the octave box. So whatever octave I've chosen the sonority to be in originally plus whatever I say on
+> the octave range. So if it's one octave low, one octave above, it could scatter between those three octaves. Then could I have the
+> same seeded reshuffle voicing button. Also, I would like the keyboard-note-to-instrument assignment UI functionality/look-feel from
+> the strikes drawer. So this is... I would double click a note on the keyboard and then click the pair node, and then I would see a
+> line, dotted line drawn to that Node from the keyboard key. That means that pitch is assigned to that node. Then an additional
+> visual on the keyboard. Show instrument ranges b. displaying columns on the keyboard. These could just be different colored lines
+> showing me the ordinary range of the instruments in this piece, each in its own column on the keyboard. There's room to the left
+> of the circle note indicators. Next let's come up with a better system for the range check on the beating pair. So there currently
+> are pull downs for choosing the instruments for the pair. but they are self limiting. let's not have any checks in the menus
+> themselves. So if I assign a note that one of the instruments can't play, currently they don't show up in the menu. Let's just have
+> both menus display all the instruments available. and then let's do something like what is in the strikes drawer. see the image.
+> once I assign a pitch to that pair or I choose an instrument in one of those pairs or one of the instruments in the pair, I get a
+> reassignment indicator with the arrow just like in the strikes drawer. So if I assign f six to the base clarinet, it will show me
+> the actual pitch it's using, like c5,  and then the downward arrow. And let's talk about this a bit first to figure this out because
+> both pitches in the pair should be in the same octave for the beating. Usually, unison, and then sometimes if it's fifths  or 1
+> octave apart, the beating pair should be max 1 octave apart. So let's figure out how to manage this in a similar way to the strikes.
+> So I guess the scenarios are if one of the pair need to transpose to a pitch, and then if the other instrument of the pair can't hit
+> that pitch. We have to figure a way to resolve that conflict I guess the octive transposition for the note from the original
+> sonority should be one both of that pair can reach and then the instrument selection boxes for each instrument in that pair should
+> have something like the strikes with the actual assigned pitch and the respective down or up arrow depending on which direction the
+> note had to be transposed for that instrument. And then just a way to resolve if there's a pitch that only one instrument can reach.
+> So let me hear your suggestions about that and discuss before making changes. please."*
+> *(2026-09-07, late morning; typed, with three screenshots of the strikes drawer — the voicing buttons, the keyboard, the lines and
+> the ↑ fold mark on Violin 1's E4)*
+
+**AI reading (not the composer's words):** six asks, one to discuss first. (1) the strikes drawer's voicing buttons in the beating
+drawer; (2) the octave box moves the whole sonority; an octave RANGE (below / above the box's octave) bounds where a reshuffle may
+scatter each note; the seeded reshuffle button; (3) the assignment's look: double-click a key, click the pair's node, a dotted line
+from the key to the node; (4) the players' ordinary ranges as coloured columns on the keyboard, left of the dots; (5) the pair's
+player menus not self-limiting — every player listed, the actual pitch with a ↑ / ↓ fold mark shown afterwards, as the drawer does;
+(6) to discuss: the pair's note must land in ONE octave for both players (unison usually; a fifth or an octave at most) — how to fold
+and how to resolve a note only one of the pair can reach. Planning method, phase 1 (RUNNING_LOG §179).
+
+### 2026-09-07 — the pair's range decided and the six asks built (RUNNING_LOG §180–181)
+
+> *"Q1 yes, Q2 b, Q3 yes, Q4 a; and no need for the entire plan regime if this is clear what needs to be done. You can go ahead."*
+> *(2026-09-07, early afternoon; his answers to the four questions of §179)*
+
+**AI reading (not the composer's words):** at most an octave apart is the rule (the chips end at the octave); when no octave serves,
+the tool offers and never applies; a pair follows its sonority note through voicings and octave moves; a tie folds down. Built as
+`BEATING_TOOL.md` §12: the voicing bar (the strikes drawer's presets, the octave box, the octave range as the scatter window, the seeded
+reshuffle with chips), the pair's fold as one unit with the ↑ / ↓ marks on both seats, the ladder of offers, every player in the
+menus, the dotted lines from key to node, the players' ranges as columns, skip. **For the all-purpose tool:** the fold of a PAIR (not
+of a note) and the offer-never-apply ladder are the two ideas worth keeping; the voicing engine is now a pure function shared by
+name with the strikes drawer's presets — the harmony module (CN-35) should take it from `beating_calc.js` rather than copy it again.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

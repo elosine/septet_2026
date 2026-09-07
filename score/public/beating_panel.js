@@ -45,6 +45,13 @@ const NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const BLACK = [1, 3, 6, 8, 10];
 const PC_PALETTE = ['#ffd479', '#7ec9a8', '#8ea9c9', '#c98a8a', '#b58ec9', '#d4c25e', '#69b7c9', '#c9986e', '#96c96e', '#c96ea8', '#8a8ac9', '#e0e0e0'];
 const ROW_COLORS = ['#c9a8ff', '#ffb347', '#7ec9a8'];
+// the keyboard's geometry (2026-09-07, the second pass of the pitch side, MORPH_NOTES §3 / RUNNING_LOG §179–181): the players' ordinary
+// ranges as coloured columns at the left ("each in its own column on the keyboard. There's room to the left of the circle note
+// indicators"), then the C labels, the note names, the keys, the chord's dots, the pairs' rings
+const KB = { w: 236, top: 18, colX: 6, colGap: 6, colW: 3, cX: 40, nameX: 72, keyX: 76, whiteW: 90, blackW: 54, dotX: 152, ringX: 176 };
+const INST_COL = { flute: '#ffd479', bass_clarinet: '#e08a8a', violin1: '#8ea9c9', violin2: '#69b7c9', viola: '#b58ec9', cello: '#7ec9a8' };
+const SEED_KEEP = 8;   // the strikes drawer's U8: the last seeds as chips
+const VOICING_DEFAULTS = () => ({ preset: 'original', seed: 1, oct: 0, below: 0, above: 0, hist: [] });
 const RELATIONS = [['unison1', 'unison · 1 oct', 'every pair on the root, one octave (a field on one pitch — the tuba\'s bloom)'], ['unisonOcts', 'unison · octaves', 'the root\'s pitch class spread across octaves, a pair per octave'],
                    ['thirds', 'thirds', 'a stack of thirds from the root (root · +4 · +7)'], ['fourths', 'fourths', 'a stack of fourths (root · +5 · +10)'], ['fifths', 'fifths', 'a stack of fifths (root · +7 · +14)'], ['stack', 'stack', 'the typed stack: semitones above the root, one per pair']];
 const parseNote = s => { s = String(s || '').trim(); if (!s) return null; if (/^\d+$/.test(s)) return +s; const m = /^([A-Ga-g])([#b]?)(-?\d)$/.exec(s); if (!m) return null; const pc = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1].toUpperCase()] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0); return (parseInt(m[3], 10) + 1) * 12 + pc; };
@@ -55,7 +62,8 @@ const nn = m => BC_().noteName(m);
 
 const P = {
     el: null, rows: [], length: 6, bound: null, takeList: {}, _timer: null, _aud: null, _drag: null, status: '',
-    db: null, banks: null, harmony: null, collapsed: {}, chord: [], chordId: '', armed: null, activeRow: 0, show88: false, rootMode: false, relation: 'unison1',
+    db: null, banks: null, harmony: null, collapsed: {}, chord: [], chordId: '', armed: null, armedIdx: null, activeRow: 0, show88: false, rootMode: false, relation: 'unison1',
+    voicing: VOICING_DEFAULTS(),   // the sonority's voicing: the preset, the seed, the octave box, the octave range (saved with the take)
 
     // ------------------------------------------------------------------ the chassis
     init() {
@@ -98,12 +106,22 @@ const P = {
             '<label title="the whole piano instead of the ensemble&#8217;s span"><input id="bp88" type="checkbox"> 88</label>',
             '<span id="bpArmed" style="color:#c9a8ff"></span>',
             '</div>',
+            // THE VOICING BAR (2026-09-07, MORPH_NOTES §3): the strikes drawer's presets over the sonority; the OCTAVE box moves the whole
+            // sonority; the octave RANGE is the window every note may scatter within on a reshuffle; the seeded reshuffle with its chips
+            '<div id="bpVoice" style="flex:0 0 auto;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-bottom:6px;padding:4px 6px;border:1px solid #3a3a44;border-radius:4px">',
+            '<span style="color:#888">voicing</span><span id="bpVBtns"></span>',
+            '<label title="the octave box: the whole sonority moved by octaves">oct <input id="bpOct" type="number" min="-3" max="3" step="1" value="0" style="width:44px"></label>',
+            '<label title="the octave range: every note may scatter this many octaves below &#8230; above the octave box&#8217;s octave (a reshuffle deals the scatter)">range &#8722;<input id="bpBelow" type="number" min="0" max="3" step="1" value="0" style="width:40px"> &#8230; +<input id="bpAbove" type="number" min="0" max="3" step="1" value="0" style="width:40px"></label>',
+            '<button id="bpVRe" title="a different realization of the same voicing preset &#8212; a new seed; with an octave range the notes scatter inside it">&#8635; reshuffle voicing</button>',
+            '<span id="bpSeeds"></span>',
+            '</div>',
             // the body: three columns, each scrolling on its own — the harmonies on the left in banners (CN-36, the strikes drawer's list), the
-            // keyboard, the rows
-            '<div id="bpBody" style="flex:1 1 auto;display:flex;gap:8px;overflow:hidden;min-height:0;margin:0 -4px;padding:0 4px">',
+            // keyboard, the rows; over them the LINES from the assigned keys to the pairs' nodes (the strikes drawer's dotted lines)
+            '<div id="bpBody" style="flex:1 1 auto;display:flex;gap:8px;overflow:hidden;min-height:0;margin:0 -4px;padding:0 4px;position:relative">',
             '<div id="bpList" style="flex:0 0 260px;overflow-y:auto;min-height:0;border-right:1px solid #333;padding:2px 0"></div>',
-            '<div id="bpKbWrap" style="flex:0 0 150px;overflow-y:auto;min-height:0"><svg id="bpKb" width="150" style="display:block"></svg></div>',
+            '<div id="bpKbWrap" style="flex:0 0 ' + KB.w + 'px;overflow-y:auto;min-height:0"><div id="bpKbLegend" style="font-size:10px;color:#888;padding:0 0 2px 4px;white-space:nowrap"></div><svg id="bpKb" width="' + KB.w + '" style="display:block"></svg></div>',
             '<div id="bpRows" style="flex:1 1 auto;min-width:0;overflow-y:auto;min-height:0"></div>',
+            '<svg id="bpLines" style="position:absolute;left:0;top:0;pointer-events:none;overflow:visible"></svg>',
             '</div>',
         ].join('');
         document.body.appendChild(d);
@@ -132,7 +150,16 @@ const P = {
         d.querySelectorAll('.bpRelBtn').forEach(b => b.addEventListener('click', () => { this.relation = b.dataset.rel; this.rootMode = true; this.paintRelation(); this.setStatus('relation ' + b.textContent + ' — click a key for the root (or type it) and deal'); }));
         d.querySelector('#bpDeal').addEventListener('click', () => this.deal());
         d.querySelector('#bpRoot').addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); ev.stopPropagation(); this.deal(); });
-        d.querySelector('#bp88').addEventListener('change', ev => { this.show88 = ev.target.checked; this.drawKeyboard(); });
+        d.querySelector('#bp88').addEventListener('change', ev => { this.show88 = ev.target.checked; this.applyVoicing(); });
+        // the voicing bar
+        d.querySelector('#bpVBtns').innerHTML = BC_().VOICINGS.map(([k, l]) => '<button class="bpV" data-v="' + k + '" style="font-size:12px;padding:1px 5px;margin:1px;cursor:pointer">' + l + '</button>').join('');
+        d.querySelectorAll('.bpV').forEach(b => b.addEventListener('click', () => { this.voicing.preset = b.dataset.v; this.applyVoicing(); this.setStatus('voicing ' + b.textContent + (this.voicing.oct ? ' · oct ' + (this.voicing.oct > 0 ? '+' : '') + this.voicing.oct : '') + ((this.voicing.below || this.voicing.above) ? ' · range −' + this.voicing.below + ' … +' + this.voicing.above : '') + ' · seed ' + this.voicing.seed + ' — the pairs holding a note of the sonority follow it'); }));
+        d.querySelector('#bpOct').addEventListener('change', ev => { this.voicing.oct = clamp(Math.round(+ev.target.value || 0), -3, 3); this.applyVoicing(); });
+        d.querySelector('#bpBelow').addEventListener('change', ev => { this.voicing.below = clamp(Math.round(+ev.target.value || 0), 0, 3); this.applyVoicing(); });
+        d.querySelector('#bpAbove').addEventListener('change', ev => { this.voicing.above = clamp(Math.round(+ev.target.value || 0), 0, 3); this.applyVoicing(); });
+        d.querySelector('#bpVRe').addEventListener('click', () => { this.useSeed(this.nextSeed()); this.setStatus('voicing reshuffled — seed ' + this.voicing.seed + ((this.voicing.below || this.voicing.above) ? ', the notes scattered −' + this.voicing.below + ' … +' + this.voicing.above + ' octaves around oct ' + this.voicing.oct : (this.voicing.preset === 'original' ? ' (original with no octave range: nothing to scatter — set a range)' : '')) + '; the earlier seeds are the chips'); });
+        d.querySelector('#bpKbWrap').addEventListener('scroll', () => this.renderLines());
+        d.querySelector('#bpRows').addEventListener('scroll', () => this.renderLines());
         d.setAttribute('tabindex', '0');
         d.addEventListener('keydown', e => {
             if (e.target.matches('input,select,textarea')) { if (e.key === 'Escape') e.target.blur(); return; }
@@ -181,7 +208,7 @@ const P = {
         this.patternGroupId = zone.groupId || null; this.insertAt = null;
         this.rows = mates.map(z => { C.ensureBeating(z); return this.mkRow(z.layer, z.beating, r3(z.startTime - first), z); });
         this.length = r3(Math.max(0.1, Math.max.apply(null, mates.map(z => z.endTime - z.startTime))));
-        this.activeRow = 0; this.armed = null;
+        this.activeRow = 0; this.armed = null; this.armedIdx = null; this.voicing = VOICING_DEFAULTS();
         this.show(); this.render();
         this.setStatus((mates.length > 1 ? 'bound to the pattern ' + zone.groupId + ' (' + mates.length + ' pairs) — every edit regenerates its beatings; insert replaces it in place' : 'bound to ' + C.beatingLabel(zone) + ' — every edit regenerates it') + '; SPACE plays; ESC closes');
         // a beating born on a strike note opens on that strike's chord (the strike by the note's id, its group, or its time)
@@ -194,11 +221,13 @@ const P = {
         // the starting point (§160, kept as a convenience): a selected strike note gives the first row its pitch and the insert its time — no link
         const sel = C && C.selectedObject, note = (sel && sel.type === 'waveCurve' && sel.sonifyNote != null && sel.layer < METAL() && sel.layer !== 2) ? sel : null;
         if (!this.rows.length || this.rows.some(r => r.zone) || note) { this.rows = []; const r = this.defaultRow(note ? note.layer : (C ? C.activeLane : 3)); if (r) this.rows.push(r); }
-        if (note && this.rows[0]) {
-            const r = this.rows[0]; if (this.rowCanPlay(r, note.sonifyNote)) r.b.pitch = note.sonifyNote; else { const c = C.beatingPartnerCandidates(r.layer, note.sonifyNote, 'unison'); if (c.length) { r.b.pitch = note.sonifyNote; r.b.partnerLayer = c[0].layer; } }
+        if (note && this.rows[0]) {   // the note folds as a unit for the pair (§180); a partner that reaches it as written is preferred
+            const r = this.rows[0]; r.b.noteIndex = null; r.b.srcPitch = note.sonifyNote;
+            if (!this.rowFold(r, note.sonifyNote)) { const c = C.beatingPartnerCandidates(r.layer, note.sonifyNote, 'unison'); if (c.length) r.b.partnerLayer = c[0].layer; }
+            this.refold(r);
             this.insertAt = r3(note.startSeconds);
         }
-        this.activeRow = 0; this.armed = null;
+        this.activeRow = 0; this.armed = null; this.armedIdx = null; this.voicing = VOICING_DEFAULTS();
         this.show(); this.render();
         this.setStatus(this.rows.length ? 'a new pattern' + (note ? ' from the strike note ' + nn(note.sonifyNote) + ' at ' + note.startSeconds.toFixed(2) + ' s (its pitch on the first pair, its onset the insert time — no link)' : '') + ' — pick a strike or deal a relation for the pitches, shapes pop in from the menu, SPACE plays it, insert puts it in the score' : 'no pair can be made on this lane', !this.rows.length);
         this.loadDb().then(() => this.drawKeyboard());
@@ -276,13 +305,101 @@ const P = {
         this.rows.forEach((row, i) => { this.rowOut(row); host.appendChild(this.buildRow(row, i)); });
         if (!this.rows.length) host.innerHTML = '<div style="color:#888;padding:12px">no pairs — + pair</div>';
         if (this.activeRow >= this.rows.length) this.activeRow = Math.max(0, this.rows.length - 1);
-        this.drawKeyboard(); this.paintRelation();
-        const ar = this.el.querySelector('#bpArmed'); if (ar) ar.textContent = this.armed != null ? nn(this.armed) + ' armed — click a pair (or drag it there)' : (this.rootMode ? 'root mode: click a key' : '');
+        this.drawKeyboard(); this.paintRelation(); this.paintVoicing();
+        const ar = this.el.querySelector('#bpArmed'); if (ar) ar.textContent = this.armed != null ? nn(this.armed) + ' armed — click a pair\'s node (or drag it there)' : (this.rootMode ? 'root mode: click a key' : '');
+        requestAnimationFrame(() => this.renderLines());
+    },
+    // ---- the voicing bar's state (the buttons, the boxes, the seed chips — the strikes drawer's U8) ----
+    paintVoicing() {
+        const v = this.voicing, el = this.el; if (!el) return;
+        el.querySelectorAll('.bpV').forEach(b => { const on = b.dataset.v === v.preset; b.style.background = on ? '#7B3FE4' : ''; b.style.color = on ? '#fff' : ''; b.style.borderColor = on ? '#7B3FE4' : ''; });
+        const put = (id, val) => { const q = el.querySelector(id); if (q && document.activeElement !== q) q.value = val; };
+        put('#bpOct', v.oct); put('#bpBelow', v.below); put('#bpAbove', v.above);
+        const chips = 'background:#2a2a30;color:#ddd;border:1px solid #555;border-radius:3px;padding:0 4px;font-size:11px;cursor:pointer;line-height:16px';
+        const hist = Array.isArray(v.hist) ? v.hist : (v.hist = []); if (!hist.includes(v.seed)) this.noteSeed();
+        const seeds = el.querySelector('#bpSeeds');
+        if (seeds) {
+            seeds.innerHTML = '<span style="display:inline-flex;flex-wrap:wrap;gap:3px;align-items:center;color:#9a9" title="the seed of this voicing — click an earlier one to have it back, or type one">seed <input id="bpSeedIn" type="number" min="1" step="1" value="' + v.seed + '" style="width:44px">'
+                + hist.map(n => '<button class="bpSeed" data-n="' + n + '" style="' + chips + (n === v.seed ? ';background:#c9a8ff;color:#222' : '') + '">' + n + '</button>').join('') + '</span>';
+            seeds.querySelector('#bpSeedIn').addEventListener('change', ev => { ev.stopPropagation(); this.useSeed(+ev.target.value); });
+            seeds.querySelectorAll('.bpSeed').forEach(b => b.addEventListener('click', ev => { ev.stopPropagation(); this.useSeed(+b.dataset.n); }));
+        }
+    },
+    noteSeed() { const v = this.voicing, h = Array.isArray(v.hist) ? v.hist : (v.hist = []); const i = h.indexOf(v.seed); if (i >= 0) h.splice(i, 1); h.unshift(v.seed); if (h.length > SEED_KEEP) h.length = SEED_KEEP; },
+    nextSeed() { const v = this.voicing; return Math.max(v.seed || 0, ...(Array.isArray(v.hist) ? v.hist : [])) + 1; },
+    useSeed(n) { this.voicing.seed = Math.max(1, Math.round(+n || 1)); this.noteSeed(); this.applyVoicing(); },
+    // the sonority voiced from its original pitches (BeatingCalc.voiceChord: pure — the same five numbers, the same voicing); the pairs
+    // holding a note of the sonority follow it (Q3) and refold (§180)
+    voiceNow() { const BC = BC_(); if (!this.chord.length) return; const v = BC.voiceChord(this.chord.map(n => n.midi0 != null ? n.midi0 : n.midi), this.voicing, this.range()); this.chord.forEach((n, i) => { n.midi = v[i]; }); },
+    applyVoicing() { this.voiceNow(); this.refoldRows(); this.render(); },
+    // a sonority onto the keyboard: the original pitches kept (midi0), the voicing applied; a pair's note index belongs to the sonority it
+    // was made on — it survives where the voiced note at that index is the pair's note as given (a reopened beating, a loaded take), else
+    // it is cleared (the pair keeps its pitch, the line then comes from the key)
+    setChord(notes) {
+        this.chord = (notes || []).map(n => Object.assign({}, n, { midi0: n.midi }));
+        this.voiceNow();
+        this.rows.forEach(r => { const b = r.b; if (b.noteIndex != null && !(this.chord[b.noteIndex] && this.chord[b.noteIndex].midi === b.srcPitch)) b.noteIndex = null; });
+        this.refoldRows(); this.render();
+    },
+    refoldRows() { this.rows.forEach(r => { const b = r.b; if (b.noteIndex != null && this.chord[b.noteIndex]) { b.srcPitch = this.chord[b.noteIndex].midi; this.refold(r); } }); },
+    // THE PAIR'S FOLD (§179–180): the note as given (srcPitch — the sonority's or typed) folds by octaves AS ONE UNIT to the nearest octave
+    // both players hold their notes, as written first, a tie down; when no octave serves, the pitch stays as given and the row flags it
+    // and offers the ladder (buildRow). The block's `pitch` is always what sounds.
+    refold(row) {
+        const BC = BC_(), T = TRK(), b = row.b;
+        const me = T[row.layer] && T[row.layer].instKey, pt = b.partnerLayer != null && T[b.partnerLayer] ? T[b.partnerLayer].instKey : null;
+        if (b.srcPitch == null) b.srcPitch = b.pitch;
+        const f = (me && pt) ? BC.foldPair(INST(), b.srcPitch, b.interval, me, pt) : null;
+        if (f) { b.pitch = f.pitch; b.fold = f.k; } else { b.pitch = b.srcPitch; b.fold = 0; }
+        this.changed(row, true);
+        return f;
+    },
+    rowFold(row, m) {   // what the row's pair would make of a note, without touching the row
+        const BC = BC_(), T = TRK(), b = row.b;
+        const me = T[row.layer] && T[row.layer].instKey, pt = b.partnerLayer != null && T[b.partnerLayer] ? T[b.partnerLayer].instKey : null;
+        return (me && pt) ? BC.foldPair(INST(), m, b.interval, me, pt) : null;
+    },
+    // the pitch each player of the row actually sounds, with the fold mark
+    rowPitches(row) {
+        const BC = BC_(), b = row.b, out = row.out || this.rowOut(row), iv = BC.INTERVALS[b.interval] || BC.INTERVALS.unison, T = TRK();
+        const me = T[row.layer] && T[row.layer].instKey, src = b.srcPitch != null ? b.srcPitch : b.pitch;
+        const k = Math.round((b.pitch - src) / 12), mark = BC.foldMark(k);
+        const of = key => key ? { player: key, pitch: b.pitch + (out.players.upper === key && iv.semitones ? iv.semitones : 0), mark, k } : null;
+        return { me: of(me), partner: of(b.partnerLayer != null && T[b.partnerLayer] ? T[b.partnerLayer].instKey : null), src, k, mark };
+    },
+    // THE LINES (the strikes drawer's renderLines): from the assigned note's dot on the keyboard — or its key when the note is not in the
+    // sonority — to the pair's node, dotted, in the row's colour; over the body, redrawn on render and on the columns' scroll
+    renderLines() {
+        const el = this.el, svg = el && el.querySelector('#bpLines'), body = el && el.querySelector('#bpBody'), kb = el && el.querySelector('#bpKb');
+        if (!svg || !body || !kb || !this.isOpen()) return;
+        const bb = body.getBoundingClientRect(); svg.setAttribute('width', bb.width); svg.setAttribute('height', bb.height);
+        const kbBox = el.querySelector('#bpKbWrap').getBoundingClientRect();
+        let s = '';
+        this.rows.forEach((row, i) => {
+            const b = row.b, src = b.srcPitch != null ? b.srcPitch : b.pitch, col = ROW_COLORS[i % ROW_COLORS.length];
+            const node = el.querySelector('.bpRow[data-row="' + i + '"] .bpNode'); if (!node) return;
+            const from = (b.noteIndex != null && kb.querySelector('.bpDot[data-i="' + b.noteIndex + '"]')) || kb.querySelector('.bpDot[data-m="' + src + '"]') || kb.querySelector('.bpKey[data-m="' + src + '"]');
+            if (!from) return;
+            const a = from.getBoundingClientRect(), n = node.getBoundingClientRect();
+            const y1 = a.top + a.height / 2, y2 = n.top + n.height / 2;
+            if (y1 < kbBox.top || y1 > kbBox.bottom || y2 < bb.top || y2 > bb.bottom) return;   // scrolled out of sight: no line
+            const x1 = a.left + a.width - bb.left, x2 = n.left + n.width / 2 - bb.left;
+            const hot = i === this.activeRow;
+            s += '<line x1="' + x1 + '" y1="' + (y1 - bb.top) + '" x2="' + x2 + '" y2="' + (y2 - bb.top) + '" stroke="' + col + '" stroke-width="' + (hot ? 2 : 1.2) + '" stroke-dasharray="' + (hot ? '5 3' : '3 3') + '" opacity="' + (hot ? 0.95 : 0.6) + '"/>';
+        });
+        svg.innerHTML = s;
     },
     paintRelation() { this.el.querySelectorAll('.bpRelBtn').forEach(b => { const on = b.dataset.rel === this.relation; b.style.background = on ? '#7B3FE4' : ''; b.style.color = on ? '#fff' : ''; b.style.borderColor = on ? '#7B3FE4' : ''; }); },
     buildRow(row, i) {
         const C = C_(), BC = BC_(), b = row.b, out = row.out, T = TRK();
-        const me = T[row.layer] ? T[row.layer].label : '?', cands = C.beatingPartnerCandidates(row.layer, b.pitch, b.interval);
+        const me = T[row.layer] ? T[row.layer].label : '?', meKey = T[row.layer] && T[row.layer].instKey, ptKey = b.partnerLayer != null && T[b.partnerLayer] ? T[b.partnerLayer].instKey : null;
+        // the pitch side (§180): the note as given, the pair's fold, the ladder when no octave serves; every player in the partner menu
+        const src = b.srcPitch != null ? b.srcPitch : b.pitch, RP = this.rowPitches(row), folded = !!(meKey && ptKey && BC.foldPair(INST(), src, b.interval, meKey, ptKey));
+        const ladder = (!folded && meKey && ptKey) ? BC.pairLadder(INST(), src, b.interval, meKey, ptKey) : null;
+        const laneOf = key => T.findIndex(t => t.instKey === key);
+        const pcCol = m => this.pcColor(((m % 12) + 12) % 12);
+        const chip = (p, bad) => p ? '<span class="bpChip" style="color:' + (bad ? '#e88' : pcCol(p.pitch)) + ';font-weight:600" title="' + esc(p.player + (bad ? ': out of reach at this interval in every octave' : ' sounds ' + nn(p.pitch) + (p.k ? ', ' + Math.abs(p.k) + ' octave' + (Math.abs(p.k) > 1 ? 's' : '') + (p.k > 0 ? ' up' : ' down') + ' from the note as given' : ', as given'))) + '">' + (bad ? '✕' : nn(p.pitch) + p.mark) + '</span>' : '';
+        const seatOpts = meKey ? BC.seatOptions(INST(), src, b.interval, meKey) : [];
         const lim = k => k ? BC.bendLimits(INST(), k) : null, lo = lim(out.players.lower), up = lim(out.players.upper);
         const fl = out.flags.map(f => f.flag).filter((v, j, a) => a.indexOf(v) === j);
         { const used = this.usedLayers(row); const twice = [row.layer, b.partnerLayer].filter(L => L != null && used.has(L)).map(L => T[L].short); if (twice.length) fl.push('⚠ ' + twice.join(', ') + ' also in another pair — one channel would carry two bends'); }
@@ -304,13 +421,23 @@ const P = {
             '<span class="bpNode" title="' + (this.armed != null ? nn(this.armed) + ' lands here' : 'arm a note on the keyboard, then click here') + '" style="display:inline-block;width:12px;height:12px;border-radius:50%;border:2px solid ' + ROW_COLORS[i % ROW_COLORS.length] + ';background:' + (this.armed != null ? ROW_COLORS[i % ROW_COLORS.length] : '#1b1b20') + ';cursor:pointer;flex:none"></span>',
             '<b style="color:#c9a8ff">pair ' + (i + 1) + '</b> ',
             (row.zone ? '<span>' + esc(me) + '</span>' : '<select class="bpLane" title="the launching player">' + [0, 1, 3, 4, 5, 6].map(L => '<option value="' + L + '"' + (L === row.layer ? ' selected' : '') + '>' + esc(T[L].label) + '</option>').join('') + '</select>'),
-            ' + <select class="bpPartner" title="the lanes whose player holds the note (step 1&#8217;s table)">' + (cands.length ? '' : '<option value="">no partner can play this</option>')
-                + cands.map(c => '<option value="' + c.layer + '"' + (c.layer === b.partnerLayer ? ' selected' : '') + '>' + esc(T[c.layer].label) + (b.interval === 'unison' ? '' : c.upper === c.instKey ? ' (above)' : ' (below)') + '</option>').join('')
-                + (b.partnerLayer != null && !cands.some(c => c.layer === b.partnerLayer) && T[b.partnerLayer] ? '<option value="' + b.partnerLayer + '" selected>' + esc(T[b.partnerLayer].label) + ' — cannot play this</option>' : '') + '</select>',
-            ' on <input class="bpPitch" type="number" value="' + b.pitch + '" min="21" max="108" step="1" style="width:50px" title="the pair&#8217;s lower note"> <span style="color:#aaa">' + nn(b.pitch) + (iv.semitones ? ' + ' + nn(b.pitch + iv.semitones) : '') + '</span>',
+            ' ' + chip(RP.me, !folded),
+            // the partner: EVERY player listed (§180 — no self-limiting), each with what it would sound on this note and the fold mark, ✕ when no octave serves both
+            ' + <select class="bpPartner" title="the partner: every player, with the pitch it would sound on this note (&#8593; / &#8595; = folded by octaves, both players together), &#10005; when no octave serves both">' + (b.partnerLayer == null ? '<option value="" selected>partner&#8230;</option>' : '')
+                + seatOpts.map(o => { const L = laneOf(o.player), f = o.fold, pOf = f ? (f.lower === o.player ? f.pitch : f.pitch + iv.semitones) : null; return L < 0 ? '' : '<option value="' + L + '"' + (L === b.partnerLayer ? ' selected' : '') + '>' + esc(T[L].label) + ' — ' + (f ? nn(pOf) + BC.foldMark(f.k) : '✕') + '</option>'; }).join('') + '</select>',
+            ' ' + chip(RP.partner, !folded),
+            ' on <input class="bpPitch" type="number" value="' + src + '" min="21" max="108" step="1" style="width:50px" title="the note as given (the sonority&#8217;s, or typed) &#8212; the pair folds it as one unit to the nearest octave both reach, as written first, a tie down"> <span style="color:#aaa">' + nn(src) + (folded && RP.k ? ' &#8594; ' + nn(b.pitch) + RP.mark : '') + (iv.semitones && folded ? ' + ' + nn(b.pitch + iv.semitones) : '') + (b.noteIndex != null ? ' <span style="color:#777" title="the pair remembers which note of the sonority it holds: the voicings and the octave box move it and the pair follows">note ' + (b.noteIndex + 1) + '</span>' : '') + '</span>',
             ' <span>' + Object.values(BC.INTERVALS).map(q => btn('bpIv', 'data-iv="' + q.key + '"', q.label, b.interval === q.key, q.label + ': the just offset ' + q.justOffsetCents + ' c on the upper note, the beating ' + q.partial + '× per cent')).join('') + '</span>',
+            (b.skip ? ' <span style="color:#e88">&#10005; skipped &#8212; nobody plays it</span> ' + btn('bpUnskip', '', 'play it', false, 'take the skip off') : ''),
             (row.zone ? '' : ' <button class="bpRemove" title="remove this pair" style="margin-left:auto;font-size:12px;cursor:pointer">&#10005; pair</button>'),
             '</div>',
+            // THE LADDER (§180, Q2 — offered, never applied by the tool): when no octave serves both players at this interval — the intervals
+            // that would, another player for either seat, or skip (the strikes drawer's third way)
+            (ladder ? '<div class="bpLadder" style="color:#e88;margin:0 0 4px;display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center">&#9888; no octave where ' + esc(T[row.layer].short) + ' and ' + esc(T[b.partnerLayer].short) + ' both reach ' + nn(src) + ' at ' + iv.label + ' &#8212;'
+                + (ladder.intervals.length ? ' <span style="color:#aaa">the interval:</span> ' + ladder.intervals.map(o => btn('bpOfferIv', 'data-iv="' + o.interval + '"', o.label + ': ' + esc(T[laneOf(o.fold.lower)].short) + ' ' + nn(o.fold.pitch) + ' · ' + esc(T[laneOf(o.fold.upper)].short) + ' ' + nn(o.fold.pitch + BC.INTERVALS[o.interval].semitones), false, 'this pair at ' + o.label + ' (folded ' + Math.abs(o.fold.k) + ')')).join('') : '')
+                + (ladder.players.some(o => o.seat === 'b') ? ' <span style="color:#aaa">instead of ' + esc(T[b.partnerLayer].short) + ':</span> ' + ladder.players.filter(o => o.seat === 'b').map(o => btn('bpOfferPt', 'data-lane="' + laneOf(o.player) + '"', esc(T[laneOf(o.player)].short) + ' ' + nn(o.fold.lower === o.player ? o.fold.pitch : o.fold.pitch + iv.semitones) + BC.foldMark(o.fold.k), false, T[laneOf(o.player)].label + ' as the partner')).join('') : '')
+                + (!row.zone && ladder.players.some(o => o.seat === 'a') ? ' <span style="color:#aaa">instead of ' + esc(T[row.layer].short) + ':</span> ' + ladder.players.filter(o => o.seat === 'a').map(o => btn('bpOfferMe', 'data-lane="' + laneOf(o.player) + '"', esc(T[laneOf(o.player)].short) + ' ' + nn(o.fold.lower === o.player ? o.fold.pitch : o.fold.pitch + iv.semitones) + BC.foldMark(o.fold.k), false, T[laneOf(o.player)].label + ' as the launching player')).join('') : '')
+                + ' ' + btn('bpSkip', '', '&#10005; skip', !!b.skip, 'nobody plays this pair (the strikes drawer\'s third way); a new note, partner or interval takes it off') + '</div>' : ''),
             '<div style="display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-bottom:3px">',
             '<span style="color:#888">rate</span> ' + SHAPES.map(([k, l]) => btn('bpShape', 'data-shape="' + k + '"', l, false, 'pop the shape in (the level = the row&#8217;s to rate)')).join(''),
             ' to <input class="bpRateTo" type="number" value="' + (+b.rateTo || 0) + '" min="0" max="30" step="0.5" style="width:46px" title="the shape&#8217;s level in beats per second"> /s',
@@ -333,12 +460,17 @@ const P = {
         ].join('');
         // the controls
         const q = s => box.querySelector(s), qa = s => box.querySelectorAll(s);
-        const keepPartner = () => { const c = C.beatingPartnerCandidates(row.layer, b.pitch, b.interval); if (c.length && !c.some(x => x.layer === b.partnerLayer)) b.partnerLayer = c[0].layer; };
         const redo = () => { this.changed(row, true); this.render(); };
-        if (q('.bpLane')) q('.bpLane').addEventListener('change', ev => { row.layer = +ev.target.value; keepPartner(); redo(); });
-        q('.bpPartner').addEventListener('change', ev => { b.partnerLayer = ev.target.value === '' ? null : +ev.target.value; redo(); });
-        q('.bpPitch').addEventListener('change', ev => { const v = parseInt(ev.target.value, 10); if (!isNaN(v)) { b.pitch = v; keepPartner(); redo(); } });
-        qa('.bpIv').forEach(el => el.addEventListener('click', () => { b.interval = el.dataset.iv; keepPartner(); redo(); }));
+        const refit = () => { b.skip = false; this.refold(row); this.render(); this.sayFold(row, i); };   // a change of a seat, the note or the interval refolds the pair (§180) and takes a skip off
+        if (q('.bpLane')) q('.bpLane').addEventListener('change', ev => { row.layer = +ev.target.value; if (b.partnerLayer === row.layer) b.partnerLayer = null; refit(); });
+        q('.bpPartner').addEventListener('change', ev => { b.partnerLayer = ev.target.value === '' ? null : +ev.target.value; refit(); });
+        q('.bpPitch').addEventListener('change', ev => { const v = parseInt(ev.target.value, 10); if (!isNaN(v)) { b.noteIndex = null; b.srcPitch = clamp(v, 21, 108); refit(); } });
+        qa('.bpIv').forEach(el => el.addEventListener('click', () => { b.interval = el.dataset.iv; refit(); }));
+        qa('.bpOfferIv').forEach(el => el.addEventListener('click', () => { b.interval = el.dataset.iv; refit(); }));
+        qa('.bpOfferPt').forEach(el => el.addEventListener('click', () => { b.partnerLayer = +el.dataset.lane; refit(); }));
+        qa('.bpOfferMe').forEach(el => el.addEventListener('click', () => { row.layer = +el.dataset.lane; refit(); }));
+        if (q('.bpSkip')) q('.bpSkip').addEventListener('click', () => { b.skip = !b.skip; redo(); this.setStatus(b.skip ? 'pair ' + (i + 1) + ' skipped — nobody plays it; a new note, partner or interval takes the skip off' : 'pair ' + (i + 1) + ' plays again'); });
+        if (q('.bpUnskip')) q('.bpUnskip').addEventListener('click', () => { b.skip = false; redo(); });
         if (q('.bpRemove')) q('.bpRemove').addEventListener('click', () => this.removeRow(i));
         qa('.bpShape').forEach(el => el.addEventListener('click', () => { this.popShape(row, el.dataset.shape); redo(); }));
         q('.bpRateTo').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (!isNaN(v)) { b.rateTo = v; this.popShape(row, b.shape || 'ramp'); redo(); } });
@@ -601,8 +733,8 @@ const P = {
     pickHarmony(bank, id) {
         if (bank === 'strikes') { this.pickSource(id); return; }
         const e = this.entriesOf(bank).find(x => x.id === id); if (!e) return;
-        this.harmony = { bank, id }; this.chordId = ''; this.chord = e.pitches.map(m => ({ midi: m })); this.rootMode = false;
-        this.renderList(); this.drawKeyboard();
+        this.harmony = { bank, id }; this.chordId = ''; this.rootMode = false; this.setChord(e.pitches.map(m => ({ midi: m })));
+        this.renderList();
         const nm = this.el.querySelector('#bpChordName'); if (nm) nm.textContent = e.label + ' · ' + e.name;
         this.setStatus(e.label + ' ' + e.name + ' (' + e.n + ' notes, ' + e.range + ') on the keyboard — &#9654; chord hears it on the piano; click or double-click a note, then a pair\'s node'.replace('&#9654;', '▶'));
     },
@@ -630,9 +762,9 @@ const P = {
     fillSources() { this.renderList(); },
     pickSource(id) {
         const s = this.db && this.db.strikes && this.db.strikes[id];
-        this.chordId = s ? id : ''; this.chord = s ? s.notes.map(n => ({ midi: n.midi, instKey: n.instKey, id: n.objectId })) : [];
+        this.chordId = s ? id : '';
         this.harmony = s ? { bank: 'strikes', id } : null;
-        this.rootMode = false; this.renderList(); this.drawKeyboard();
+        this.rootMode = false; this.setChord(s ? s.notes.map(n => ({ midi: n.midi, instKey: n.instKey, id: n.objectId })) : []); this.renderList();
         const nm = this.el.querySelector('#bpChordName'); if (nm) nm.textContent = s ? '#' + s.index + ' · strike at ' + s.t0.toFixed(2) + ' s' : '';
         if (s) this.setStatus('strike #' + s.index + ' (' + s.t0.toFixed(2) + ' s, ' + s.notes.length + ' notes) on the keyboard — ▶ chord hears it on the piano; click or double-click a note, then a pair\'s node; the dimmed keys are what the active pair cannot play');
     },
@@ -649,56 +781,68 @@ const P = {
     range() { return this.show88 ? FULL : SPAN; },
     pcColor(pc) { const pcs = [...new Set(this.chord.map(n => ((n.midi % 12) + 12) % 12))].sort((a, b) => a - b); const i = pcs.indexOf(pc); return PC_PALETTE[(i >= 0 ? i : pc) % PC_PALETTE.length]; },
     // can this row's pair play the note as its lower note (step 1's table: at unison both hold it; at an interval one the lower, one the upper)
-    rowCanPlay(row, m) {
-        const C = C_(), b = row.b, me = TRK()[row.layer] && TRK()[row.layer].instKey, other = b.partnerLayer != null && TRK()[b.partnerLayer] ? TRK()[b.partnerLayer].instKey : null;
-        if (!me || !other) return false;
-        return C.beatingPartnerCandidates(row.layer, m, b.interval).some(c => c.instKey === other);
-    },
+    rowCanPlay(row, m) { return !!this.rowFold(row, m); },   // in some octave (§180: the pair folds as a unit); rowFold says which
     // the keyboard: the drawer's drawing — vertical keys, the C labels, the chord's notes as dots in their pitch-class colours with their names,
     // the rows' pair notes as rings in the row colours, the keys the active pair cannot play dimmed; a click arms a note (or sets the root)
     drawKeyboard() {
         const svg = this.el && this.el.querySelector('#bpKb'); if (!svg) return;
-        const R = this.range(), h = 10, rows = R.hi - R.lo + 1, H = rows * h + 14, keyY = m => 6 + (R.hi - m) * h;
+        const BC = BC_(), R = this.range(), h = 10, rows = R.hi - R.lo + 1, H = rows * h + KB.top + 10, keyY = m => KB.top + (R.hi - m) * h;
         svg.setAttribute('height', H); svg.style.height = H + 'px';
-        const row = this.rows[this.activeRow], rc = ROW_COLORS[this.activeRow % ROW_COLORS.length];
+        const row = this.rows[this.activeRow], T = TRK();
         let s = '';
-        for (let m = R.hi; m >= R.lo; m--) {
-            const y = keyY(m), black = BLACK.includes(m % 12), can = row ? this.rowCanPlay(row, m) : true;
-            s += '<rect class="bpKey" data-m="' + m + '" x="30" y="' + (y + 0.5) + '" width="' + (black ? 54 : 90) + '" height="' + (h - 1) + '" fill="' + (black ? '#2a2a30' : '#d8d3c8') + '" fill-opacity="' + (can ? 1 : 0.22) + '" stroke="#111" stroke-width="0.5" style="cursor:pointer"><title>' + nn(m) + (can ? '' : ' — the active pair cannot play it') + '</title></rect>';
-            if (m % 12 === 0) s += '<text x="2" y="' + (y + h * 0.85) + '" font-size="10" fill="#777">C' + (m / 12 - 1) + '</text>';
-        }
-        // the rows' pair notes: rings (the lower note filled, the upper hollow) in the row colour, at the right
-        this.rows.forEach((r, i) => {
-            const out = r.out || this.rowOut(r), col = ROW_COLORS[i % ROW_COLORS.length], iv = BC_().INTERVALS[r.b.interval] || BC_().INTERVALS.unison;
-            const lo = r.b.pitch, up = r.b.pitch + iv.semitones;
-            [[lo, true], [up, iv.semitones > 0]].forEach(([m, show]) => { if (!show || m < R.lo || m > R.hi) return; const cy = keyY(m) + h / 2; s += '<circle cx="' + (128 + i * 7) + '" cy="' + cy + '" r="4" fill="' + (m === lo ? col : 'none') + '" stroke="' + col + '" stroke-width="1.5"><title>pair ' + (i + 1) + ': ' + nn(m) + (m === lo ? ' (lower)' : ' (upper)') + '</title></circle>'; });
+        // the players' ordinary ranges as columns at the left (2026-09-07: "different colored lines showing me the ordinary range of the
+        // instruments in this piece, each in its own column"), one per bending player in score order; the legend above the keyboard
+        const P = BC.players(INST());
+        P.forEach((p, i) => {
+            const r = BC.ordinaryRange(INST(), p); if (!r) return;
+            const x = KB.colX + i * KB.colGap, top = Math.min(r[1], R.hi), bot = Math.max(r[0], R.lo), col = INST_COL[p] || '#888';
+            const short = (T.find(t => t.instKey === p) || {}).short || p;
+            if (top >= bot) s += '<rect x="' + (x - KB.colW / 2) + '" y="' + keyY(top) + '" width="' + KB.colW + '" height="' + (keyY(bot) + h - keyY(top)) + '" rx="1.5" fill="' + col + '" fill-opacity="0.75"><title>' + esc(short) + ' — ordinary range ' + nn(r[0]) + '–' + nn(r[1]) + '</title></rect>';
+            if (r[1] > R.hi) s += '<text x="' + x + '" y="' + (KB.top - 4) + '" font-size="7" fill="' + col + '" text-anchor="middle">▲</text>';
+            if (r[0] < R.lo) s += '<text x="' + x + '" y="' + (H - 2) + '" font-size="7" fill="' + col + '" text-anchor="middle">▼</text>';
         });
-        // the chord's notes: dots with their names, draggable onto a row
-        const byPitch = {}; this.chord.forEach(n => { (byPitch[n.midi] = byPitch[n.midi] || []).push(n); });
+        const legend = this.el.querySelector('#bpKbLegend'); if (legend) legend.innerHTML = 'ranges ' + P.map(p => '<span style="color:' + (INST_COL[p] || '#888') + '" title="' + esc(p + ' ' + (BC.ordinaryRange(INST(), p) || []).map(nn).join('–')) + '">' + esc((T.find(t => t.instKey === p) || {}).short || p) + '</span>').join(' ');
+        // the keys: lit where the active pair holds the note as written, half where the pair would fold it, dim where no octave serves both
+        for (let m = R.hi; m >= R.lo; m--) {
+            const y = keyY(m), black = BLACK.includes(m % 12), f = row ? this.rowFold(row, m) : { k: 0 };
+            const op = !f ? 0.22 : f.k ? 0.55 : 1;
+            s += '<rect class="bpKey" data-m="' + m + '" x="' + KB.keyX + '" y="' + (y + 0.5) + '" width="' + (black ? KB.blackW : KB.whiteW) + '" height="' + (h - 1) + '" fill="' + (black ? '#2a2a30' : '#d8d3c8') + '" fill-opacity="' + op + '" stroke="#111" stroke-width="0.5" style="cursor:pointer"><title>' + nn(m) + (!f ? ' — no octave where the active pair both reach it' : f.k ? ' — the active pair would fold it to ' + nn(f.pitch) + BC.foldMark(f.k) : '') + '</title></rect>';
+            if (m % 12 === 0) s += '<text x="' + KB.cX + '" y="' + (y + h * 0.85) + '" font-size="10" fill="#777">C' + (m / 12 - 1) + '</text>';
+        }
+        // the rows' pair notes AS SOUNDED: rings (the lower note filled, the upper hollow) in the row colour, at the right
+        this.rows.forEach((r, i) => {
+            const iv = BC.INTERVALS[r.b.interval] || BC.INTERVALS.unison, col = ROW_COLORS[i % ROW_COLORS.length];
+            const lo = r.b.pitch, up = r.b.pitch + iv.semitones;
+            [[lo, true], [up, iv.semitones > 0]].forEach(([m, show]) => { if (!show || m < R.lo || m > R.hi) return; const cy = keyY(m) + h / 2; s += '<circle cx="' + (KB.ringX + i * 7) + '" cy="' + cy + '" r="4" fill="' + (m === lo ? col : 'none') + '" stroke="' + col + '" stroke-width="1.5"' + (r.b.skip ? ' opacity="0.35"' : '') + '><title>pair ' + (i + 1) + ': ' + nn(m) + (m === lo ? ' (lower)' : ' (upper)') + (r.b.skip ? ' — skipped' : '') + '</title></circle>'; });
+        });
+        // the sonority's notes: dots with their names (data-i = the note's index in the sonority — a pair remembers it, Q3), draggable onto a row
+        const byPitch = {}; this.chord.forEach((n, idx) => { (byPitch[n.midi] = byPitch[n.midi] || []).push(idx); });
         Object.keys(byPitch).forEach(p => {
             const m = +p; if (m < R.lo || m > R.hi) return;
-            const pc = ((m % 12) + 12) % 12, col = this.pcColor(pc), cy = keyY(m) + h / 2, k = byPitch[p].length;
-            s += '<circle class="bpDot" data-m="' + m + '" cx="106" cy="' + cy + '" r="' + (3.2 + Math.min(2, k - 1)) + '" fill="' + col + '" stroke="' + (this.armed === m ? '#fff' : col) + '" stroke-width="' + (this.armed === m ? 2.2 : 1) + '" style="cursor:grab"><title>' + nn(m) + (k > 1 ? ' ×' + k : '') + ' — click to arm, drag onto a pair</title></circle>';
-            s += '<text x="27" y="' + (cy + 3) + '" font-size="10" fill="' + col + '" text-anchor="end">' + nn(m) + '</text>';
+            const pc = ((m % 12) + 12) % 12, col = this.pcColor(pc), cy = keyY(m) + h / 2, k = byPitch[p].length, idx = byPitch[p][0];
+            const held = this.rows.some(r => r.b.noteIndex != null && byPitch[p].includes(r.b.noteIndex));
+            s += '<circle class="bpDot" data-m="' + m + '" data-i="' + idx + '" cx="' + KB.dotX + '" cy="' + cy + '" r="' + (3.2 + Math.min(2, k - 1)) + '" fill="' + col + '" stroke="' + (this.armed === m || held ? '#fff' : col) + '" stroke-width="' + (this.armed === m ? 2.2 : held ? 1.4 : 1) + '" style="cursor:grab"><title>' + nn(m) + (k > 1 ? ' ×' + k : '') + (this.chord[idx].midi0 != null && this.chord[idx].midi0 !== m ? ' (voiced from ' + nn(this.chord[idx].midi0) + ')' : '') + ' — double-click to arm, then a pair\'s node; or drag it onto a pair</title></circle>';
+            s += '<text x="' + KB.nameX + '" y="' + (cy + 3) + '" font-size="10" fill="' + col + '" text-anchor="end">' + nn(m) + '</text>';
         });
         const above = this.chord.filter(n => n.midi > R.hi).length, below = this.chord.filter(n => n.midi < R.lo).length;
-        if (above) s += '<text x="100" y="8" fill="#e88" font-size="11">▲' + above + '</text>';
-        if (below) s += '<text x="100" y="' + (H - 2) + '" fill="#e88" font-size="11">▼' + below + '</text>';
-        if (this.armed != null && this.armed >= R.lo && this.armed <= R.hi) s += '<rect x="28" y="' + (keyY(this.armed) - 0.5) + '" width="94" height="' + (h + 1) + '" fill="none" stroke="#fff" stroke-width="1.2" pointer-events="none"/>';
+        if (above) s += '<text x="' + (KB.dotX - 6) + '" y="' + (KB.top - 5) + '" fill="#e88" font-size="11">▲' + above + '</text>';
+        if (below) s += '<text x="' + (KB.dotX - 6) + '" y="' + (H - 2) + '" fill="#e88" font-size="11">▼' + below + '</text>';
+        if (this.armed != null && this.armed >= R.lo && this.armed <= R.hi) s += '<rect x="' + (KB.keyX - 2) + '" y="' + (keyY(this.armed) - 0.5) + '" width="' + (KB.whiteW + 4) + '" height="' + (h + 1) + '" fill="none" stroke="#fff" stroke-width="1.2" pointer-events="none"/>';
         svg.innerHTML = s;
-        svg.querySelectorAll('.bpKey').forEach(k => { k.addEventListener('click', () => this.keyClick(+k.dataset.m)); k.addEventListener('dblclick', ev => { ev.preventDefault(); this.arm(+k.dataset.m); }); });
+        svg.querySelectorAll('.bpKey').forEach(k => { k.addEventListener('click', () => this.keyClick(+k.dataset.m)); k.addEventListener('dblclick', ev => { ev.preventDefault(); this.arm(+k.dataset.m, this.indexAt(+k.dataset.m)); }); });
         svg.querySelectorAll('.bpDot').forEach(d => {
             d.addEventListener('click', ev => { ev.stopPropagation(); this.keyClick(+d.dataset.m); });
-            d.addEventListener('dblclick', ev => { ev.stopPropagation(); ev.preventDefault(); this.arm(+d.dataset.m); });   // CN-36: "double click a note on the keyboard and then click a node connected to a pair"
+            d.addEventListener('dblclick', ev => { ev.stopPropagation(); ev.preventDefault(); this.arm(+d.dataset.m, +d.dataset.i); });   // CN-36: "double click a note on the keyboard and then click a node connected to a pair"
             d.addEventListener('mousedown', ev => { ev.preventDefault(); this.startDotDrag(+d.dataset.m, ev); });
         });
     },
-    arm(m) { this.armed = m; this.rootMode = false; this.render(); this.setStatus(nn(m) + ' armed — click a pair\'s node (or anywhere on its row) to give it the note as its lower note; ESC disarms'); },
+    indexAt(m) { const i = this.chord.findIndex(n => n.midi === m); return i >= 0 ? i : null; },
+    arm(m, idx) { this.armed = m; this.armedIdx = idx != null ? idx : this.indexAt(m); this.rootMode = false; this.render(); this.setStatus(nn(m) + ' armed — click a pair\'s node (or anywhere on its row) to give it the note; the pair folds it as one unit to the nearest octave both reach; ESC disarms'); },
     keyClick(m) {
         if (this.rootMode) { const rb = this.el.querySelector('#bpRoot'); if (rb) rb.value = nn(m); this.rootMode = false; this.deal(m); return; }
-        this.armed = this.armed === m ? null : m;
+        this.armed = this.armed === m ? null : m; this.armedIdx = this.armed != null ? this.indexAt(m) : null;
         this.render();
-        if (this.armed != null) this.setStatus(nn(m) + ' armed — click a pair to give it the note (its lower note), ESC or click it again to disarm' + (this.rows[this.activeRow] && !this.rowCanPlay(this.rows[this.activeRow], m) ? ' · the active pair cannot play it' : ''));
+        if (this.armed != null) { const r = this.rows[this.activeRow], f = r ? this.rowFold(r, m) : null; this.setStatus(nn(m) + ' armed — click a pair\'s node to give it the note, ESC or click it again to disarm' + (r ? (f ? (f.k ? ' · the active pair would fold it to ' + nn(f.pitch) + BC_().foldMark(f.k) : ' · the active pair holds it as written') : ' · no octave where the active pair both reach it — the row will offer the ways out') : '')); }
     },
     // a dot dragged onto a row: our own drag (SVG elements do not take the browser's drag); the row under the pointer at release takes the note
     startDotDrag(m, e0) {
@@ -709,17 +853,25 @@ const P = {
         // the row under the pointer: by the rows' own mouseover (robust when the pane cannot hit-test) and by hit-testing
         const overs = rows.map(r => { const f = () => mark(r); r.addEventListener('mouseover', f); return f; });
         const onMove = ev => { moved = true; ghost.style.left = (ev.clientX + 8) + 'px'; ghost.style.top = (ev.clientY - 8) + 'px'; const el = document.elementFromPoint(ev.clientX, ev.clientY); const rowEl = el && el.closest ? el.closest('.bpRow') : null; if (rowEl || !over) mark(rowEl); };
-        const onUp = ev => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); rows.forEach((r, i) => r.removeEventListener('mouseover', overs[i])); ghost.remove(); rows.forEach(r => { r.style.outline = ''; }); if (moved && over) this.assign(+over.dataset.row, m); else if (!moved) this.keyClick(m); };
+        const onUp = ev => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); rows.forEach((r, i) => r.removeEventListener('mouseover', overs[i])); ghost.remove(); rows.forEach(r => { r.style.outline = ''; }); if (moved && over) this.assign(+over.dataset.row, m, this.indexAt(m)); else if (!moved) this.keyClick(m); };
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
-    // the note becomes the pair's lower note; the interval places the partner; refused when the pair cannot play it
-    assign(i, m) {
+    // the note becomes the pair's note — its index in the sonority remembered (Q3) — and the pair folds it as one unit (§180); never
+    // refused: when no octave serves both, the row shows the ladder
+    assign(i, m, idx) {
         const row = this.rows[i]; if (!row) return;
-        this.armed = null; this.activeRow = i;
-        if (!this.rowCanPlay(row, m)) { this.render(); this.setStatus('pair ' + (i + 1) + ' cannot play ' + nn(m) + (row.b.interval === 'unison' ? '' : ' with its ' + row.b.interval) + ' — the dimmed keys are out of its reach; another pair, or another note', true); return; }
-        row.b.pitch = m;
-        this.changed(row, true); this.render();
-        this.setStatus('pair ' + (i + 1) + ' on ' + nn(m) + (row.b.interval === 'unison' ? '' : ' + ' + nn(m + (BC_().INTERVALS[row.b.interval] || {}).semitones)) + ' — ' + (row.out ? row.out.players.lower + ' below, ' + row.out.players.upper + ' above' : ''));
+        const useIdx = idx != null ? idx : (this.armed === m && this.armedIdx != null ? this.armedIdx : this.indexAt(m));
+        this.armed = null; this.armedIdx = null; this.activeRow = i;
+        row.b.noteIndex = (useIdx != null && this.chord[useIdx] && this.chord[useIdx].midi === m) ? useIdx : null;
+        row.b.srcPitch = m; row.b.skip = false;
+        this.refold(row); this.render(); this.sayFold(row, i);
+    },
+    sayFold(row, i) {
+        const BC = BC_(), T = TRK(), b = row.b, RP = this.rowPitches(row), iv = BC.INTERVALS[b.interval] || BC.INTERVALS.unison;
+        const me = T[row.layer] ? T[row.layer].short : '?', pt = b.partnerLayer != null && T[b.partnerLayer] ? T[b.partnerLayer].short : '?';
+        if (b.partnerLayer == null) { this.setStatus('pair ' + (i + 1) + ' on ' + nn(RP.src) + ' — no partner yet: pick one in the row (every player is listed, with what it would sound)', true); return; }
+        if (!this.rowFold(row, RP.src)) { this.setStatus('pair ' + (i + 1) + ': no octave where ' + me + ' and ' + pt + ' both reach ' + nn(RP.src) + ' at ' + iv.label + ' — the row offers the ways out (an interval, another player, skip); nothing applied', true); return; }
+        this.setStatus('pair ' + (i + 1) + ' on ' + nn(RP.src) + (RP.k ? ' → ' + nn(b.pitch) + RP.mark + ' (' + Math.abs(RP.k) + ' octave' + (Math.abs(RP.k) > 1 ? 's' : '') + (RP.k > 0 ? ' up' : ' down') + ', both players)' : ' as written') + ' · ' + (RP.me ? me + ' ' + nn(RP.me.pitch) : '') + (RP.partner ? ' · ' + pt + ' ' + nn(RP.partner.pitch) : '') + (iv.semitones ? ' (' + iv.label + ')' : ''));
     },
     // the relation from a root: every pair's pitch by the relation, folded by octave into what the pair can play (the drawer's fold rule),
     // the pairs from the bottom up
@@ -733,11 +885,10 @@ const P = {
         const placed = [], skipped = [];
         this.rows.forEach((row, i) => {
             const target = root + (offs[i] != null ? offs[i] : offs[offs.length - 1] || 0);
-            let best = null;
-            for (let m = target - 48; m <= target + 48; m += 12) { if (m < 21 || m > 108 || !this.rowCanPlay(row, m)) continue; if (!best || Math.abs(m - target) < Math.abs(best - target)) best = m; }
-            if (best == null) { skipped.push('pair ' + (i + 1)); return; }
-            row.b.pitch = best; this.changed(row, true);
-            placed.push('pair ' + (i + 1) + ' ' + nn(best) + (best !== target ? (best > target ? ' ↑' : ' ↓') : ''));
+            const f = this.rowFold(row, target);   // the pair's fold (§180): the nearest octave both reach, a tie down
+            if (!f) { skipped.push('pair ' + (i + 1)); return; }
+            row.b.noteIndex = null; row.b.srcPitch = target; row.b.skip = false; this.refold(row);
+            placed.push('pair ' + (i + 1) + ' ' + nn(f.pitch) + BC_().foldMark(f.k));
         });
         this.rootMode = false; this.render();
         this.setStatus('dealt ' + (RELATIONS.find(r => r[0] === rel) || [])[1] + ' from ' + nn(root) + ': ' + placed.join(' · ') + (skipped.length ? ' · out of reach: ' + skipped.join(', ') : ''), !!skipped.length);
@@ -820,9 +971,10 @@ const P = {
     },
 
     // ------------------------------------------------------------------ takes (bank/panel_snapshots.json, the `beatings` bucket)
-    state() { return { length: this.length, harmony: this.harmony ? { bank: this.harmony.bank, id: this.harmony.id } : null, rows: this.rows.map(r => ({ layer: r.layer, offset: r.offset, locked: r.locked, scale: r.scale, b: JSON.parse(JSON.stringify(r.b)) })) }; },
+    state() { return { length: this.length, harmony: this.harmony ? { bank: this.harmony.bank, id: this.harmony.id } : null, voicing: JSON.parse(JSON.stringify(this.voicing)), rows: this.rows.map(r => ({ layer: r.layer, offset: r.offset, locked: r.locked, scale: r.scale, b: JSON.parse(JSON.stringify(r.b)) })) }; },
     applyState(st) {
         if (!st || !Array.isArray(st.rows)) return;
+        this.voicing = Object.assign(VOICING_DEFAULTS(), st.voicing || {});   // the voicing saves with the take (2026-09-07); the rows' note indices survive where the voiced note matches
         if (st.harmony && st.harmony.bank && st.harmony.id) this.loadDb().then(() => this.pickHarmony(st.harmony.bank, st.harmony.id));   // the harmony chosen saves with the take (CN-36)
         this.length = r3(+st.length || 6);
         if (this.bound) {   // a bound zone takes the FIRST row's block; the length stretches the zone
@@ -844,7 +996,7 @@ const P = {
     takeNames() { const t = this.takeList; return Object.keys(t).sort((a, b) => String(t[b].saved || '').localeCompare(String(t[a].saved || ''))); },
     fillTakes() { const sel = this.el && this.el.querySelector('#bpTakeSel'); if (!sel) return; sel.innerHTML = '<option value="">load take…</option>' + this.takeNames().map(n => '<option value="' + esc(n) + '">' + esc(n) + '</option>').join(''); },
     async postTake(body) { const r = await fetch('/api/snapshots', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ panel: TAKES_PANEL }, body)) }).then(x => x.json()); if (!r.success) throw new Error(r.error || '?'); return r; },
-    takeComment() { return (this.harmony ? this.harmony.bank + ' ' + this.harmony.id + ' · ' : '') + this.rows.map(r => (TRK()[r.layer] || {}).short + '+' + (TRK()[r.b.partnerLayer] || {}).short + ' ' + nn(r.b.pitch) + ' ' + r.b.interval).join(' · ') + ' · ' + this.length + ' s'; },
+    takeComment() { const v = this.voicing; return (this.harmony ? this.harmony.bank + ' ' + this.harmony.id + ' · ' : '') + ((v.preset !== 'original' || v.oct || v.below || v.above) ? v.preset + (v.oct ? ' oct' + (v.oct > 0 ? '+' : '') + v.oct : '') + ((v.below || v.above) ? ' −' + v.below + '…+' + v.above : '') + ' seed ' + v.seed + ' · ' : '') + this.rows.map(r => (TRK()[r.layer] || {}).short + '+' + (TRK()[r.b.partnerLayer] || {}).short + ' ' + nn(r.b.pitch) + ' ' + r.b.interval).join(' · ') + ' · ' + this.length + ' s'; },
     async saveTake() {
         const box = this.el.querySelector('#bpTakeName'), d = new Date(), pad = x => String(x).padStart(2, '0');
         const name = (box.value || '').trim() || ('beating ' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + pad(d.getMinutes()));

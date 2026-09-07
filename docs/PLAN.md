@@ -369,7 +369,10 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   `built 2026-09-07 — steps 1–7 overnight at his word (*"will you be able to run the plan independantly? can you do so, and I'll
   check in after the build"*, RUNNING_LOG §167): the palette (§167–168, the probe run in the rack), the math (§169), the object
   (§170), the panel (§171), the pitch side (§172), the insertion (§173), verify and document (§174); his listening at 3–7 pending;
-  item 8's four held things stand — docs/BEATING_TOOL.md is the tool's document, D24 / D25 the decisions` (the requirements talk
+  item 8's four held things stand — docs/BEATING_TOOL.md is the tool's document, D24 / D25 the decisions; **the pitch side's second
+  pass built 2026-09-07 at his word without the plan regime (RUNNING_LOG §179–181; BEATING_TOOL §12): the voicing bar with the octave
+  box and the octave range, the pair's fold as one unit with the arrows, the ladder of offers, every player in the menus, the lines
+  from key to node, the players' ranges as columns, the octave interval, skip — his test pending`** (the requirements talk
   2026-09-06 evening, RUNNING_LOG §145–166; PLANNING_METHOD phase 3 from step 1) *(composer,
   2026-09-06: CN-28 "strikes with morph chords, like freeze frames or old time slide show … 'morph events'" · CN-29 "the expansion of
   pitch to expand beating, the rebreath … and the Crescendo … the multiple pairs" · "beating is good" · "the atom will be a pair of

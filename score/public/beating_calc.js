@@ -29,11 +29,15 @@
 
   // the intervals inside a pair (RUNNING_LOG §148): ratio p:q, the beating between the lower's p-th and the upper's q-th partial,
   // p times the unison's rate per cent; the just offset = 1200·log2(p/q) − 100·semitones (the tempered interval already beats by it)
+  // the octave (2026-09-07, RUNNING_LOG §180, Q1: "at most an octave apart" is the rule — unison · fifth · octave the usual three, the
+  // thirds and the fourth kept as tries, nothing wider): ratio 2:1, the beating between the lower's 2nd partial and the upper's 1st,
+  // no just offset
   const INTERVALS = {};
-  for (const [key, label, semitones, p, q] of [['unison', 'unison', 0, 1, 1], ['m3', 'minor third', 3, 6, 5], ['M3', 'major third', 4, 5, 4], ['P4', 'fourth', 5, 4, 3], ['P5', 'fifth', 7, 3, 2]]) {
+  for (const [key, label, semitones, p, q] of [['unison', 'unison', 0, 1, 1], ['m3', 'minor third', 3, 6, 5], ['M3', 'major third', 4, 5, 4], ['P4', 'fourth', 5, 4, 3], ['P5', 'fifth', 7, 3, 2], ['P8', 'octave', 12, 2, 1]]) {
     INTERVALS[key] = { key, label, semitones, ratio: [p, q], partial: p, justOffsetCents: +(1200 * Math.log2(p / q) - 100 * semitones).toFixed(3) };
   }
   const intervalOf = iv => (typeof iv === 'string' ? INTERVALS[iv] : iv) || INTERVALS.unison;
+  const LADDER_ORDER = ['unison', 'P5', 'P8', 'm3', 'M3', 'P4'];   // the order the offers come in (§180: usually unison, then fifths or an octave)
 
   // ---- the palette ----
   function players(recipe) { return ORDER.filter(k => recipe[k] && recipe[k].beating !== false && (recipe[k].playerBendSt == null || recipe[k].playerBendSt > 0)); }
@@ -88,6 +92,83 @@
     const t = {};
     for (const p of pitches) t[p] = pairsFor(recipe, p, interval);
     return t;
+  }
+
+  // ---- THE PAIR'S FOLD (2026-09-07, RUNNING_LOG §179–180; the strikes drawer's fold, for a pair) ----
+  // A note from the sonority is the pair's LOWER note; the pair moves BY OCTAVES AS ONE UNIT until both players hold their notes (the
+  // lower on the note, the partner above by the interval): as written first (k = 0), then the nearest octave, a tie folding DOWN (Q4).
+  // The roles come from pairsFor at the folded pitch — the same rule the page uses — so the two agree by construction.
+  // → { pitch (the folded lower note), k (octaves moved), lower, upper, flexible, src (the note as given) } or null when no octave serves.
+  function foldPair(recipe, note, interval, a, b, maxOct) {
+    if (typeof note !== 'number' || !isFinite(note) || !a || !b || a === b) return null;
+    const iv = intervalOf(interval), M = maxOct == null ? 8 : maxOct;
+    const ks = [0]; for (let d = 1; d <= M; d++) { ks.push(-d); ks.push(d); }   // 0, −1, +1, −2, +2 … : the nearest first, a tie down
+    for (const k of ks) {
+      const p = note + 12 * k; if (p < 0 || p + iv.semitones > 127) continue;
+      const c = pairsFor(recipe, p, iv.key).find(q => q.players.includes(a) && q.players.includes(b));
+      if (c) return { pitch: p, k, lower: c.lower, upper: c.upper, flexible: c.flexible, src: note, interval: iv.key };
+    }
+    return null;
+  }
+  const foldMark = k => (k > 0 ? '↑' : k < 0 ? '↓' : '');
+  // the LADDER (§180, Q2: offered, never applied by the tool): when no octave serves the pair at its interval — (a) the intervals that
+  // would, with the same two players, in LADDER_ORDER; (b) for each seat, the other players that would, the other seat kept; (c) skip —
+  // the panel's business. Every offer carries the fold it would make.
+  function pairLadder(recipe, note, interval, a, b) {
+    const iv = intervalOf(interval);
+    const intervals = LADDER_ORDER.filter(k => k !== iv.key).map(k => { const f = foldPair(recipe, note, k, a, b); return f ? { interval: k, label: INTERVALS[k].label, fold: f } : null; }).filter(Boolean);
+    const players = [];
+    for (const [seat, keep, swap] of [['a', b, a], ['b', a, b]]) {
+      for (const p of players_(recipe)) { if (p === keep || p === swap) continue; const f = foldPair(recipe, note, iv.key, seat === 'a' ? p : keep, seat === 'a' ? keep : p); if (f) players.push({ seat, player: p, replaces: swap, fold: f }); }
+    }
+    return { intervals, players };
+  }
+  function players_(recipe) { return players(recipe); }
+  // what every other player would sound in the seat opposite `me` on this note — the menus' labels (§180: every player listed, the
+  // pitch and the arrow shown, ✕ when no octave serves)
+  function seatOptions(recipe, note, interval, me) {
+    return players(recipe).filter(p => p !== me).map(p => { const f = foldPair(recipe, note, interval, me, p); return { player: p, fold: f, ok: !!f }; });
+  }
+
+  // ---- THE VOICINGS (2026-09-07, MORPH_NOTES §3: "a version of the chord voicing options from the strikes drawer in the beating drawer"
+  // — original · spread out · cluster · cluster low · cluster high · high + low, the strikes drawer's presets over pitch classes; the
+  // OCTAVE box moves the whole sonority; the octave RANGE (below … above) is the window each note may scatter within on a reshuffle:
+  // "whatever octave I've chosen the sonority to be in originally plus whatever I say on the octave range") ----
+  // voiceChord(pitches0, { preset, seed, oct, below, above }, span) → the voiced pitches, one per input, same order. Pure: the same
+  // five numbers give the same voicing (a take carries them). The harmony never changes — octaves move (the drawer's rule, B).
+  function shuffled(arr, rnd) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  const VOICINGS = [['original', 'original'], ['spread', 'spread out'], ['cluster', 'cluster'], ['low', 'cluster low'], ['high', 'cluster high'], ['highlow', 'high + low']];
+  function voiceChord(pitches0, v, span) {
+    const o = v || {}, preset = o.preset || 'original', seed = (o.seed == null ? 1 : +o.seed) | 0, oct = (+o.oct || 0), below = Math.max(0, +o.below || 0), above = Math.max(0, +o.above || 0);
+    const R = span || { lo: 36, hi: 96 }, LO = 21, HI = 108;
+    const rnd = mulberry32(seed * 7919 + 17);
+    const items = (pitches0 || []).map((p, i) => ({ i, p0: +p, pc: ((+p % 12) + 12) % 12, pitch: +p }));
+    if (!items.length) return [];
+    const nearestOct = (pc, target) => { let best = null; for (let p = pc; p <= 127; p += 12) { if (p < R.lo - 12) continue; if (best == null || Math.abs(p - target) < Math.abs(best - target)) best = p; } return clamp(best, R.lo, R.hi); };
+    const pack = (list, centre) => {   // the drawer's: the smallest chromatic span — the sorted pitch classes rotated so the largest gap is at the end
+      const pcs = [...new Set(list.map(q => q.pc))].sort((a, b) => a - b); if (!pcs.length) return;
+      let bestK = 0, bestSpan = 99;
+      const spans = pcs.map((_, k) => (pcs[(k - 1 + pcs.length) % pcs.length] - pcs[k] + 12) % 12 || 12);
+      pcs.forEach((_, k) => { if (spans[k] < bestSpan) { bestSpan = spans[k]; bestK = k; } });
+      const near = pcs.map((_, k) => k).filter(k => spans[k] <= bestSpan + 2);
+      const k0 = seed === 1 ? bestK : near[Math.floor(rnd() * near.length)];
+      const packed = {}; let p = pcs[k0] + 12 * Math.round((centre - pcs[k0]) / 12);
+      for (let j = 0; j < pcs.length; j++) { const pc = pcs[(k0 + j) % pcs.length]; while (((p % 12) + 12) % 12 !== pc) p++; packed[pc] = p; }
+      const lo = Math.min(...Object.values(packed)), hi = Math.max(...Object.values(packed));
+      const shift = 12 * Math.round((centre - (lo + hi) / 2) / 12);
+      list.forEach(q => { q.pitch = packed[q.pc] + shift; });
+    };
+    switch (preset) {
+      case 'spread': { const order = shuffled(items, rnd); order.forEach((q, i) => { q.pitch = nearestOct(q.pc, R.lo + (i + 0.5) * (R.hi - R.lo) / order.length); }); break; }
+      case 'cluster': pack(items, 60); break;
+      case 'low': pack(items, R.lo + 8); break;
+      case 'high': pack(items, R.hi - 8); break;
+      case 'highlow': { const order = shuffled(items, rnd), half = Math.ceil(order.length / 2); pack(order.slice(0, half), R.lo + 8); pack(order.slice(half), R.hi - 8); break; }
+      default: items.forEach(q => { q.pitch = q.p0; });
+    }
+    // the octave box moves the whole sonority; the octave range scatters every note by a random octave inside the window (seeded)
+    items.forEach(q => { q.pitch += 12 * oct; if (below || above) q.pitch += 12 * (Math.floor(rnd() * (below + above + 1)) - below); q.pitch = clamp(q.pitch, LO, HI); });
+    return items.map(q => q.pitch);
   }
   // one line per player for a readout
   function describePalette(recipe) {
@@ -313,7 +394,8 @@
       (o.breath.mode || 'one') + ' (' + o.notes.lower.length + ' + ' + o.notes.upper.length + ' notes)' + (fl.length ? ' · flags: ' + fl.join(' ') : ' · no flags');
   }
 
-  return { ORDER, INTERVALS, intervalOf, noteName, midiHz, players, ordinaryVoice, ordinaryRange, bendLimits, holds, pairsFor, pairingTable, describePalette,
+  return { ORDER, INTERVALS, LADDER_ORDER, intervalOf, noteName, midiHz, players, ordinaryVoice, ordinaryRange, bendLimits, holds, pairsFor, pairingTable, describePalette,
+           foldPair, foldMark, pairLadder, seatOptions, VOICINGS, voiceChord, shuffled, mulberry32,
            curveOf, evalCurve, scaleCurve, SHAPES, shape, mirrored, flatPartner, levelFromBeat, rateToCents, centsToRate, beatRate, ZONES, zoneOf,
            CEILINGS, ceilingFor, dealBreaths, breathSpans, renderPair, renderPattern, stretch, describePair };
 });

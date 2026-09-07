@@ -442,6 +442,32 @@ sends it when its end comes due, an audition sends it from a timer, and every lo
 (the transport's and the panel's); **■ Panic** in the toolbar silences everything (an explicit note-off on every key of every
 channel of every port); `probes/panic.ps1` does the same from outside the app.
 
+## 12 · The pitch side, second pass — `built 2026-09-07 (his six asks, RUNNING_LOG §179–181; MORPH_NOTES §3 2026-09-07) — verified with real DOM events on a copy; his test pending`
+
+**The rule (his answers, §180):** a pair's two notes sit in ONE octave — unison usually, a fifth or an octave at most (Q1: the interval
+chips are unison · m3 · M3 · P4 · P5 · **P8**, nothing wider); a note from the sonority is the pair's note as given (`srcPitch`) and
+the pair **folds it by octaves as one unit** to the nearest octave where both players hold their notes — as written first, a tie down
+(Q4) — `BeatingCalc.foldPair`; the pitch that sounds is `pitch`, the octaves moved `fold`; when no octave serves, the panel **offers
+the ways out and applies none by itself** (Q2, the strikes drawer's rule — the tool never changes his harmony): the intervals that
+would serve (`pairLadder`, in the order unison · fifth · octave · the thirds · the fourth), another player for either seat, or skip
+(nobody plays it, `skip`). A pair **remembers which note of the sonority it holds** (`noteIndex`, Q3) and follows it through the
+voicings and the octave box, refolding.
+
+**The voicing bar** (the strikes drawer's, over the sonority — `BeatingCalc.voiceChord`, pure): original · spread out · cluster ·
+cluster low · cluster high · high + low; **oct** moves the whole sonority by octaves; **range −n … +m** is the window every note may
+scatter within on a reshuffle ("whatever octave I've chosen the sonority to be in originally plus whatever I say on the octave
+range"); **↻ reshuffle voicing** = a new seed, the seed typed or an earlier one back from the chips. The harmony never changes; the
+five numbers save with the take.
+
+**The row:** the partner menu lists **every player** with the pitch it would sound on this note and ↑ / ↓ when folded, ✕ when no
+octave serves; a chip beside each seat with the pitch actually sounded and its arrow; the pitch box holds the note as given, "→ E4↑"
+after it when folded; the ladder under the header when no octave serves both. **The keyboard:** the six players' ordinary ranges as
+coloured columns at the left (the legend above); the keys lit where the active pair holds the note as written, half where it would
+fold, dim where no octave serves; the sonority's dots; the pairs' rings as sounded. **The lines:** a dotted line in the row's colour
+from the assigned note's dot (or its key) to the pair's node — double-click the note, click the node. **B on a note** folds the same
+way (the nearest lane that holds it as written, else the fewest octaves). The three pairs that cannot reach a unison on some pitch
+class: flute + bass clarinet on F# G G# A A# B, bass clarinet + either violin on F# (§179) — an octave apart or a fifth serves them.
+
 ## Log (append-only)
 
 - **2026-09-07 — step 1 built:** the palette (§3): the recipe fields, `beating_calc.js` (the palette part, 37 checks), the bend
@@ -475,3 +501,7 @@ channel of every port); `probes/panic.ps1` does the same from outside the app.
 - **2026-09-07, morning — the harmonies on the left (CN-36, §177):** three collapsible banners (the strikes · the tuba's blasts · the
   two-piano chord shapes, the last two scraped into `bank/harmonies.json`), ▶ chord on the piano, a double-click arms, the pairs'
   nodes take the note, the harmony saved with the take. The harmony MODULE (CN-35) noted for later in PLAN 1d.
+- **2026-09-07 — the pitch side's second pass built** (§12; his six asks, RUNNING_LOG §179–181): the octave interval; the pair's fold as
+  one unit with the arrows and the ladder; every player in the partner menu; the voicing bar with the octave box and the octave range,
+  the seeded reshuffle with its chips; the lines from key to node; the players' ranges as columns; skip; the block's `srcPitch · fold ·
+  noteIndex · skip`, the take's `voicing`; 102 checks in node; verified with real DOM events on a copy. His test pending.

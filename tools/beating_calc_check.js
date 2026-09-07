@@ -187,5 +187,61 @@ const HUMP3 = BC.shape('hump', { peak: 3 });
   ok(pat.contour.length === 33 && near(pat.contour[0][1], 0.6, 1e-6) && pat.contour[16][1] > 0.6 && near(pat.contour[32][1], 0.6, 1e-6),
      '… the META contour: the crescendo\'s mean across the pattern, 33 points, above 0.6 in the middle where the violins swell');
   console.log('  ' + BC.describePair(pat.pairs[2])); }
+// ---- the pitch side's second pass (2026-09-07, RUNNING_LOG §179–180): the octave, the pair's fold, the ladder, the menus, the voicings ----
+{ const P8 = BC.INTERVALS.P8;
+  ok(P8 && P8.semitones === 12 && P8.partial === 2 && near(P8.justOffsetCents, 0) && Object.keys(BC.INTERVALS).length === 6, 'the octave: 12 semitones, the 2nd partial, no just offset — six intervals, nothing wider (Q1)');
+  ok(near(BC.centsToRate(10, 60, 'P8') / BC.centsToRate(10, 60, 'unison'), 2), '… at an octave the beating is twice the unison\'s per cent (p = 2)');
+  // the fold as a unit: as written first, then the nearest octave, a tie down
+  const f0 = BC.foldPair(recipe, 60, 'unison', 'cello', 'viola');
+  ok(f0 && f0.pitch === 60 && f0.k === 0 && f0.lower === 'viola' && f0.upper === 'cello', 'C4 for cello + viola at unison: as written (k = 0), the roles from pairsFor (score order at unison)');
+  const f1 = BC.foldPair(recipe, 96, 'unison', 'cello', 'flute');
+  ok(f1 && f1.pitch === 72 && f1.k === -2, 'C7 for cello + flute at unison: folded two octaves DOWN to C5 (the nearest both reach)');
+  const f2 = BC.foldPair(recipe, 40, 'unison', 'flute', 'violin1');
+  ok(f2 && f2.pitch === 64 && f2.k === 2, 'E2 for flute + violin 1 at unison: folded two octaves UP to E4');
+  const f3 = BC.foldPair(recipe, 67, 'unison', 'flute', 'bass_clarinet');
+  ok(f3 === null, 'G4 for flute + bass clarinet at unison: NO octave serves (their overlap is C4–F4) — null, the ladder\'s case');
+  const f4 = BC.foldPair(recipe, 67, 'P8', 'flute', 'bass_clarinet');
+  ok(f4 && f4.pitch === 55 && f4.k === -1 && f4.lower === 'bass_clarinet' && f4.upper === 'flute', '… at an octave apart it folds down: the bass clarinet on G3, the flute on G4');
+  const f5 = BC.foldPair(recipe, 67, 'P5', 'flute', 'bass_clarinet');
+  ok(f5 && f5.pitch === 55 && f5.lower === 'bass_clarinet' && f5.upper === 'flute', '… at a fifth: the bass clarinet on G3, the flute on D4');
+  // a tie folds down: a note both reach only one octave away on either side — the viola (C3–A6) and the flute (C4–C7) on B7 (107)? out of both; use B3 (59): the flute has B4 (71) up, nothing down; C8 (108) for cello+viola: down to A6? use an exact tie: the bass clarinet (A#1–F4) with the cello (C2–B5) on C6 (84): both reach C4 (60) two down… take G5 (79): BCl G3 (55) two down, no up → not a tie. A true tie needs a common octave both sides of the note: violin 1 (G3–F7) + viola (C3–A6) on A7 (105): down A6 (93) ✓ → one down; up none. Tie: the same pair on F#2 (42)? up F#3 (54) — the violin's bottom is G3, no. The tie rule is exercised below by construction on the flute + violin: B3 (59) → B4 (71) one up ✓, B2 (47) one down ✗.
+  const tie = BC.foldPair(recipe, 59, 'unison', 'flute', 'violin1');
+  ok(tie && tie.pitch === 71 && tie.k === 1, 'B3 for flute + violin 1 at unison: up to B4 (nothing below serves)');
+  // an artificial recipe where both k = −1 and k = +1 serve and k = 0 does not: the tie goes DOWN (Q4)
+  const R2 = { x: { beating: true, playerBendSt: 1, rangeLow: 40, rangeHigh: 90, techniques: [{ key: 'o', rangeLow: 40, rangeHigh: 90, silentKeys: [60] }], ordinary: 'o' }, y: { beating: true, playerBendSt: 1, rangeLow: 40, rangeHigh: 90, techniques: [{ key: 'o', rangeLow: 40, rangeHigh: 90, silentKeys: [60] }], ordinary: 'o' } };
+  const RR = Object.assign({}, R2, { flute: R2.x, cello: R2.y });
+  const t2 = BC.foldPair(RR, 60, 'unison', 'flute', 'cello');
+  ok(t2 && t2.k === -1 && t2.pitch === 48, 'a tie (C4 silent on both, C3 and C5 both reach): folds DOWN to C3 (Q4)');
+  // the ladder: offered, never applied
+  const L = BC.pairLadder(recipe, 67, 'unison', 'flute', 'bass_clarinet');
+  ok(L.intervals.map(i => i.interval).join() === 'P5,P8,P4' && L.intervals[0].fold.pitch === 55 && L.intervals[1].fold.pitch === 55,
+     'the ladder for G4 flute + bass clarinet at unison: the fifth, the octave, the fourth (the thirds put the flute below C4), each with its fold');
+  ok(L.players.filter(p => p.seat === 'b').every(p => p.replaces === 'bass_clarinet') && L.players.some(p => p.seat === 'b' && p.player === 'viola' && p.fold.pitch === 67) && L.players.some(p => p.seat === 'a' && p.player === 'cello' && p.fold.pitch === 55),
+     '… and the other players for either seat: the viola for the bass clarinet on G4 as written; the cello for the flute on G3');
+  const S = BC.seatOptions(recipe, 67, 'unison', 'flute');
+  ok(S.length === 5 && S.find(s => s.player === 'bass_clarinet').ok === false && S.find(s => s.player === 'viola').fold.k === 0 && S.find(s => s.player === 'cello').fold.k === 0,
+     'the partner menu for the flute on G4: five players, the bass clarinet ✕, the viola and the cello as written');
+  ok(BC.foldMark(2) === '↑' && BC.foldMark(-1) === '↓' && BC.foldMark(0) === '', 'the fold marks: ↑ up, ↓ down, nothing as written');
+  // the voicings: pure, the harmony never changes, the octave box moves the whole sonority, the range scatters inside the window
+  const H = [48, 55, 62, 66, 71, 76];
+  const same = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
+  const pcsOf = a => a.map(p => ((p % 12) + 12) % 12).sort((x, y) => x - y).join();
+  ok(same(BC.voiceChord(H, { preset: 'original' }), H), 'original: the sonority as given');
+  ok(same(BC.voiceChord(H, { preset: 'original', oct: 1 }), H.map(p => p + 12)) && same(BC.voiceChord(H, { preset: 'original', oct: -1 }), H.map(p => p - 12)), 'the octave box: the whole sonority an octave up or down');
+  const sc = BC.voiceChord(H, { preset: 'original', oct: 0, below: 1, above: 1, seed: 3 });
+  ok(pcsOf(sc) === pcsOf(H) && sc.every((p, i) => Math.abs(p - H[i]) <= 12 && (p - H[i]) % 12 === 0) && !same(sc, H) && same(sc, BC.voiceChord(H, { preset: 'original', below: 1, above: 1, seed: 3 })),
+     'the range −1 … +1 with seed 3: every note within an octave of its own, the pitch classes kept, some moved, the same again from the same seed');
+  const sc2 = BC.voiceChord(H, { preset: 'original', below: 0, above: 2, seed: 5 });
+  ok(sc2.every((p, i) => p >= H[i] && p <= H[i] + 24 && (p - H[i]) % 12 === 0), 'the range 0 … +2: never below the note, up to two octaves above');
+  const cl = BC.voiceChord(H, { preset: 'cluster' });
+  ok(pcsOf(cl) === pcsOf(H) && Math.max(...cl) - Math.min(...cl) < 12, 'cluster: the same pitch classes inside one octave');
+  const lo = BC.voiceChord(H, { preset: 'low' }), hi = BC.voiceChord(H, { preset: 'high' });
+  ok(pcsOf(lo) === pcsOf(H) && pcsOf(hi) === pcsOf(H) && Math.max(...lo) < 60 && Math.min(...hi) > 72, 'cluster low below C4, cluster high above C5, the pitch classes kept');
+  const sp = BC.voiceChord(H, { preset: 'spread', seed: 2 });
+  ok(pcsOf(sp) === pcsOf(H) && Math.max(...sp) - Math.min(...sp) > 36, 'spread out: the same pitch classes over more than three octaves');
+  const hl = BC.voiceChord(H, { preset: 'highlow', seed: 2 });
+  ok(pcsOf(hl) === pcsOf(H) && hl.filter(p => p < 60).length >= 2 && hl.filter(p => p > 72).length >= 2, 'high + low: half the notes low, half high');
+  ok(!same(BC.voiceChord(H, { preset: 'spread', seed: 2 }), BC.voiceChord(H, { preset: 'spread', seed: 3 })), 'a reshuffle (a new seed) is a different spread');
+  ok(BC.voiceChord(H, { preset: 'original', oct: 3 }).every(p => p <= 108) && BC.voiceChord(H, { preset: 'original', oct: -3 }).every(p => p >= 21), 'the piano\'s ends clamp the octave box'); }
 console.log(fails ? 'FAIL — ' + fails + ' check' + (fails > 1 ? 's' : '') + ' failed' : 'PASS — every check passed');
 process.exit(fails ? 1 : 0);
