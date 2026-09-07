@@ -108,7 +108,19 @@
   lines; the curve's two ENDPOINTS control the duration; moving the first point carries the attack's end node with it (the attack
   keeps its length), moving the last point carries the release's start node with it (the release keeps its length), the sustain
   absorbs; the nodes inside still move on their own; moving or trimming the zone in the strip does the same as moving the endpoints.
-  Saved at his word — the next model change to the lanes, to be agreed in one line before it is built (HOW_WE_WORK).
+  Saved at his word — the next model change to the lanes, to be agreed in one line before it is built (HOW_WE_WORK). **2026-09-07 late:** the build deferred to the REBUILD SESSION at his word (*"Just keep collecting the
+  feature requests. We'll have a a rebuild session later"*, RUNNING_LOG §196); the one-line model was put to him at the resume with
+  one open detail for then — an end dragged past an inner node: (a) the node waits dim beyond the cut as in §188, or (b) the end
+  pushes it.
 - **How the beating units are displayed in the main score** (composer, 2026-09-07 night, "we should revisit the way the beating units
   are displayed in the main score, but it's fine for now"): the zone on the launching lane with the partner's dashed bracket and a
   long label (BEATING_TOOL §5); to be revisited — what a beating should look like among the strikes and trills, on both lanes. Saved.
+- **No per-player dynamic in the strikes drawer, and two partial inserts cannot be stacked at one time** (found 2026-09-07 late,
+  answering the composer's "is there a way to just insert part of the strike … do I have to do it per instrument or Do I just use the
+  d y n times?", RUNNING_LOG §196). `dyn ×` multiplies every voice's played velocity at once; the only per-player lever is solo (S) +
+  insert, and an insert replaces an earlier insert of the same strike within 100 ms (§113), so "these two players at p, the rest at f"
+  needs two inserts that cannot coexist. A strike note plays at its `recVel` with CC7 127 and its velocity has no editor in the score
+  (the drawn height is a picture of it, not a control). For the rebuild session: a dynamic per player row (ppp … fff or a factor), or a
+  velocity box on a selected strike note; and let a partial insert ADD to an earlier insert of the same strike at the same time when
+  the players differ. The strikes' five velocity bands (≤ 45 ppp · 75 p · 100 mf · 118 f · 127 fff, `notation/registry/container.json`)
+  are the tuba's provisional thresholds — re-set for the septet at 2a.

@@ -577,6 +577,22 @@ endpoints; the attack and the release are attached to them (they keep their seco
 only); the nodes between are free on the timeline (§188's rule, inside). Saved (NITS, RUNNING_LOG §193), to be agreed in one line
 and built in one pass when he says so.
 
+### 2026-09-07, late — "Just keep collecting the feature requests. We'll have a a rebuild session later"
+
+> *"Just keep collecting the feature requests. We'll have a a rebuild session later. And in the strikes drawer, is there a way to just
+> insert part of the strike? So if I just want to insert the portions of the strike for, say, two instruments and then explain to me
+> how the dynamic works. If I wanted it quieter, do I have to do it per instrument or Do I just use the d y n times? How do... how
+> should I do it? and how... what corresponds to the scale, PPP to FFF."* *(2026-09-07, late, after the clear; typed, with two
+> screenshots of the strikes drawer)*
+
+**AI reading (not the composer's words):** the endpoint model (§193) and everything after it wait for a REBUILD SESSION — the revision
+event this file exists for; until then every remark is collected (NITS, and his words here), nothing built. The strikes questions,
+answered from the code (RUNNING_LOG §196), show two loudness models living in one app: the strikes drawer scales PLAYED velocities
+with one multiplier and plays them raw (no remap — the strikes are "as played", D23); the beating drawer's crescendo is ppp … fff by
+height through the measured remap; and the strikes drawer has no per-player dynamic at all. **For the all-purpose tool:** one dynamic
+scale for every panel — ppp … fff per player, rendered through the remap — with a dynamic per row, and a partial insert (solo) that
+can be stacked with another at the same time.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

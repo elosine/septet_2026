@@ -5639,3 +5639,38 @@ Composer, 2026-09-07 night: the beating zones' look in the score (the launching 
 label) is *"fine for now"* — saved in NITS. Then: *"prep for a clear… make sure the next AI will understand what we're doing right now,
 and we'll be able to keep the running list of issues and feature requests"* → the journal §2 checkpoint rewritten cold; the running
 list lives in NITS (every entry dated, his words in MORPH_NOTES §3), the rules in HOW_WE_WORK.
+
+## §196. "Just keep collecting the feature requests. We'll have a a rebuild session later" — the endpoint model deferred at his word; the strikes drawer's partial insert (solo) and its dynamic read from the code and explained; a per-player dynamic found missing, saved
+
+Composer, 2026-09-07 late (after the clear; verbatim in MORPH_NOTES §3): *"Just keep collecting the feature requests. We'll have a a
+rebuild session later. And in the strikes drawer, is there a way to just insert part of the strike? So if I just want to insert the
+portions of the strike for, say, two instruments and then explain to me how the dynamic works. If I wanted it quieter, do I have to do
+it per instrument or Do I just use the d y n times? How do... how should I do it? and how... what corresponds to the scale, PPP to
+FFF."* — with two screenshots of the strikes drawer (seed 324; Flute F5 · Bass Cl. C#3* · Piano C4 · Violin 1 F5 · Violin 2 B3 ·
+Viola A4 · Cello F#4; the bottom bar with dur × 1, dyn × 1 and **flat 127 checked**).
+
+**The endpoint model (§193):** put to him in one line at the resume, with one open detail (an end dragged past an inner node: the
+node waits dim beyond the cut as in §188, or the end pushes it) — his answer is the rule above: collect, build at the rebuild
+session. NITS updated; nothing built.
+
+**The strikes drawer, read** (`strike_drawer.js` `notesFor` / `insert`; `composer.html` the plain-note pre-arm and tick;
+`velocity_remap.js`; `notation/registry/container.json` `dynamicBands`):
+- **Part of a strike:** yes, by SOLO — **S** on a player's row solos its voices (SHIFT-click a dot solos one voice); while anything is
+  soloed, Hear orchestrated and every Insert write ONLY the soloed voices (`anySolo && !v.solo` → dropped); **solo off** clears; the
+  solo state is in the take. The other way is destructive: a chip on a row clicked takes the note off that player. **The catch:** an
+  insert replaces an earlier insert of the same strike within 100 ms of its time (§113), so a partial insert at the same playhead
+  replaces the full one there, and two partial inserts at one time cannot be stacked.
+- **The dynamic:** every voice carries the velocity it was PLAYED with (`v.vel`, the capture's `recVel`); the drawer's one loudness
+  control is **dyn ×** — a multiplier on every voice at once (0.1 … 2); **flat 127** sets every voice to 127 before the multiplier
+  (his screenshot has it on: every note at 127 = fff). No per-player dynamic exists in the drawer (the run's `vel` ramp belongs to
+  the accel shape only). An inserted note keeps its final velocity as `recVel` and is drawn at the height velocity / 127; the score
+  plays a plain note at `recVel` with CC7 127 ("replay exactly as monitored") — **no loudness remap for strikes** (D23: the strikes'
+  velocities are as played), so the same velocity is not the same loudness on every instrument, unlike the trills and the beatings;
+  the drawn height of a strike note is a picture of its velocity, not a control. A strike note's velocity has no editor in the score.
+- **ppp … fff — two scales in the app.** Curves (trills, beatings, held notes): the HEIGHT is the dynamic, 0 = ppp … 1 = fff in eight
+  equal steps, played 65 → 127 through the remap (D23, NAMING §2.9). Strikes: the VELOCITY through the registry's five bands —
+  ≤ 45 ppp · 46–75 p · 76–100 mf · 101–118 f · 119–127 fff (the tuba's provisional thresholds, "equal-ish widths", to be re-set for
+  the septet at 2a). With flat 127 on, dyn × lands exactly: 0.35 → 44 ppp · 0.55 → 70 p · 0.75 → 95 mf · 0.9 → 114 f · 1 → 127 fff.
+
+**Saved (NITS):** a per-player dynamic in the strikes drawer (or a velocity box on a strike note in the score) and the stacking of
+partial inserts — for the rebuild session. Nothing built; the piece file untouched.
