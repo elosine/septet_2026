@@ -5625,3 +5625,10 @@ Composer, 2026-09-07 night (verbatim in MORPH_NOTES §3): the vertical edge line
 first point carries the attack's end node, the last point carries the release's start node (the attack and the release keep their
 lengths, the sustain takes the rest); the nodes inside move on their own; the strip's zone acts as the endpoints. Saved (NITS) under
 the standing rule — to be worked out with him later, one line of behaviour agreed before it is built.
+
+## §194. "typing in a new hz max changes the whole curve" — the level box scales the curve as it is (fixed: it re-popped the hold shape from its defaults)
+
+Composer, 2026-09-07 night. §182 had settled that the level box keeps a drawn shape and scales it, but a MENU shape was popped in
+again at the new level — and the hold shape's pop rebuilt its nodes from the birth seconds, throwing his moved nodes away. Now the box
+only scales: every node keeps its time, the shape its name (the hold's attack and release boxes stay); a curve at zero takes a flat at
+the level. Fixed at once as the agreed behaviour of §182, not a new feature.

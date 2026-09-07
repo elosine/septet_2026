@@ -341,11 +341,14 @@ const P = {
     setLevel(row, to) {
         const BC = BC_(), b = row.b; b.rateTo = to;
         const unlocked = !!(b.rate && b.rate.lower && b.rate.upper);
-        if ((PRESET_SHAPES.includes(b.shape) || (String(b.shape).indexOf('u:') === 0 && this.shapesBank[String(b.shape).slice(2)])) && !unlocked) { this.popShape(row, b.shape); return; }
-        const out = this.rowOut(row), k = out.maxBeat > 1e-6 ? to / out.maxBeat : 0;
+        // the level box SCALES the curve as it is — every node keeps its time, the shape its proportions (2026-09-07 night: "typing in a new
+        // hz max changes the whole curve" — the hold shape was popped in again from its defaults); a curve at zero takes a flat at the level
+        const out = this.rowOut(row);
+        if (!(out.maxBeat > 1e-6)) { this.popShape(row, PRESET_SHAPES.includes(b.shape) ? b.shape : 'flat'); return; }
+        const k = to / out.maxBeat;
         if (unlocked) { b.rate.lower = BC.scaleCurve(b.rate.lower, k); b.rate.upper = BC.scaleCurve(b.rate.upper, k); }
         else b.beat = BC.scaleCurve(BC.curveOf(this.heardCurve(row)), k);
-        b.shape = 'drawn';
+        // the shape keeps its name (a scaled hold is still the hold — its attack and release boxes stay)
     },
     // what SPACE plays (2026-09-07: "somehow I listen to the entire sequence with space … if I'm working with a pair, I just listen to the
     // pair with space. And if I'm in the chord shapes, I just listen to the chord with space")
