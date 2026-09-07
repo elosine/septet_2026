@@ -4504,3 +4504,15 @@ crescendo's starting level; the META contour from the crescendo's mean stands (n
 Insert at the playhead only (a selected strike note's pitch and onset as a starting point, no link — kept as a convenience unless he
 says otherwise); the group with its META shape (drag, delete, stretch regenerates); a re-insert replaces its own earlier insert at
 its own time; select + P reopens the pattern. Step 3's B launch reads the same way (no link, no mute). Nothing built.
+
+## §161. "on point, good" — step 6's restated goal accepted; the to-dos put to him
+
+Composer: *"on point, good"* (the goal of §160 restated: Insert at the playhead as its own group with a META shape; nothing around it
+touched; the conflict marks as for any note; the accents by hand; the pattern's own length; a re-insert replacing at its own time;
+select + P; a selected strike note's pitch and onset as a starting point without a link; the META contour from the crescendo's mean).
+**The goal stands.** The to-dos put to him (format B): Insert @ playhead (the objects on their lanes, the row offsets kept, one new
+group, the META shape from the crescendo's mean, the panel remembering its insert) · the starting-point convenience · the group's
+behaviour (drag, delete, an edge stretch scaling the pattern with the breaths re-dealt, regenerated on mouseup) · re-insert replaces
+its own earlier group, a new time = a new group · select + P loads the whole group, Insert then = replace · nothing else touched, the
+checker reading its notes like any · the verification on a copy at 175.7 s, his test, the verdicts filed. Into PLAN 1f on his go.
+Nothing built.
