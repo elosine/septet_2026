@@ -719,6 +719,21 @@ For the all-purpose tool: never make a sampler setting a precondition of a featu
 a list with their gain named, and let the composer decide when. And: a lookup he did not ask for is a cost — the reply comes first,
 the record after. RUNNING_LOG §203.
 
+### 2026-09-07, late — "can we have a discussion about pitch? … Is there a facility where we try some pitches and then I can select them again?"
+
+> *"So can we have a discussion about pitch? So I put some images of potential ones I want to try. Now you say you're just gonna put
+> them in. Is there a facility where we try some pitches and then I can select them again? another time, put them into some kind of
+> menu."* *(2026-09-07, late; typed, with five screenshots of the beating drawer's harmony list — cs-015, cs-019, cs-021, cs-050,
+> S055 — each with its notes on the keyboard)*
+
+**AI reading (not the composer's words):** the tuba way ("you say the words, I type them into the scratch file") has no memory he
+can reach: a pitch set lived in a variant letter or a model and vanished when the next was typed. The ask is a MENU of pitch sets —
+tried, kept by name, chosen again — and the sets he points at come from the beating drawer's harmony list (`bank/harmonies.json`):
+the piece's own material, not the tuba's chords. **For the all-purpose tool:** a pitch set is a first-class object with a name and
+a provenance (which harmony, which voicing), kept in a bank the panel lists, never only in the conversation; and the harmony
+browser (CN-35) is the natural source for it in every panel — the morph panel included, even in the simple form of a pull-down.
+RUNNING_LOG §205.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

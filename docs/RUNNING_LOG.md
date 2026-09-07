@@ -5967,3 +5967,21 @@ probe (§203):
 - **Not done, for his ear:** the seams and the clamps in the rack, the CONVERGE arrival, the loudness; COLOUR a shell; the tuba's
   shape presets (edge techniques) untouched; the notation at 2a. **His listening next:** a hard reload, [Morph], MODELS, BLOOM,
   Generate, Play; the sliders; a pair alone; CONVERGE; a seat swapped; then pitch sets by his word.
+
+## §205. "can we have a discussion about pitch? … Is there a facility where we try some pitches and then I can select them again? another time, put them into some kind of menu" — no such facility yet (the tuba way was the scratch file); a pitch-set menu proposed; his five candidates read from the harmony bank
+
+Composer, 2026-09-07 late (verbatim in MORPH_NOTES §3; the candidates in CN-38), with five screenshots of the beating drawer's
+harmony list. **The five, in `bank/harmonies.json`:** cs-015 M3 P4 = 57 61 62 (A3 C♯4 D4) · cs-019 m9 M9 = 55 68 69 (G3 G♯4 A4) ·
+cs-021 M7 m9 = 55 66 68 (G3 F♯4 G♯4) · cs-050 m2 M2 M3 = 59 60 61 63 (B3 C4 C♯4 D♯4) · S055 UNISON-C oct = 36 48 60 (C2 C3 C4). The
+bank holds 54 chord shapes and 45 blasts; the strikes are live from `bank/scattered_strikes.json` (46).
+
+**Answered:** no — the tuba panel had no menu; a pitch set lived in a scratch variant or a model until the next was typed.
+**Proposed (put to him):** a `pitches` pull-down at the head of the panel's fields — the model's own set · the KEPT sets by name ·
+the harmony list in its three groups (the strikes, the tuba's blasts, the two-piano chord shapes); picking one makes it the model's
+pitches: three notes → one per pair, doubled (BLOOM opens each, CONVERGE closes onto each from a whole tone apart, BALANCE holds
+them); six → two per pair; any other count → reduced to three by whole clusters, said in the status (he can keep an edited set
+instead, typed at his word); the pairs' fold and the PAIRS lines as built. **[keep]** stores the current pitches under a name with
+their provenance ("cs-015 · M3 P4") in the takes file's `morphPitches` bucket (the existing `/api/snapshots`, no server change; the
+bucket is born on first contact — snapshots.js rule 2); **[✕]** removes one; the kept sets head the pull-down next time; an ACTUAL
+keeps its pitches as always. The five of CN-38 pre-kept under their ids at the build. Not in it: a keyboard picture or note-by-note
+editing (the beating drawer's pitch side, parked). His go pending; nothing built.

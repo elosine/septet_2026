@@ -948,3 +948,19 @@ in RUNNING_LOG §197, his words in MORPH_NOTES §3.
 **AI reading (not the composer's words):** the morph section is made the tuba way — an ensemble sequence generated whole, its
 crescendos and re-breaths from the engine — and placed by pairs; the re-orchestration and the fold of the first ask are withdrawn for
 now (RUNNING_LOG §198).
+
+## CN-38 · 2026-09-07 — pitch sets to try for the morphs, from the harmony list
+
+> *"So can we have a discussion about pitch? So I put some images of potential ones I want to try."* *(2026-09-07, late; typed, with
+> five screenshots of the beating drawer's harmony list, each highlighted with its notes on the keyboard)*
+
+The five he pointed at (the two-piano chord shapes and the tuba's blasts, as the list names them):
+- **cs-015** M3 P4 [0,4,5] — A3 · C♯4 · D4
+- **cs-019** m9 M9 [0,13,14] — G3 · G♯4 · A4
+- **cs-021** M7 m9 [0,11,13] — G3 · F♯4 · G♯4
+- **cs-050** m2 M2 M3 [0,1,2,4] — B3 · C4 · C♯4 · D♯4
+- **S055** UNISON-C oct — C2 · C3 · C4 (the bank's MIDI 36 · 48 · 60; the list row says C2–C4)
+
+*AI reading (not the composer's words):* three-note sets of a semitone or a ninth apart — one note per pair, doubled, the beating
+inside each pair and the sonority between them; a four-note cluster and an octave stack as the outliers. The facility to try and
+keep them: RUNNING_LOG §205.
