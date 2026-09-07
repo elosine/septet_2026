@@ -111,8 +111,9 @@ own server (:5300); the AI built at his word, one chunk at a time:
 - **PLAN 1f opened (§145–146, evening):** #4's morph tool read cold (the engine, the panel, the banks, the build days, the feature
   requests, the section form, the notation; the port byte-identical to the tuba's; the one structural fact: the pair was never the
   unit). **The object is a *beating*** (his word): one pair of players on one pitch, a gap that beats; seven elements read back; the
-  atom's cards hold · burst · bloom · close · arc; a beating drawer as the strikes drawer's kin (rows per pair, the deal of cards /
-  rates / entries / pairings / pitches shuffled); the top line put to him, his to reorder. CN-33: section 3 = cycles of strikes with
+  atom's cards hold · burst · bloom · close · arc; **the interface a beating PANEL** (§147, his picture): a row per pair, the pair as two
+  mirrored pitch curves slid against each other for phase, a crescendo layer, a breath layer, shapes with handles on rails or the
+  trill's curve tool, the space bar, a typed duration — the shuffle drawer of §146 parked; the top line put to him, his to reorder. CN-33: section 3 = cycles of strikes with
   crescendos on the beating pairs; train the performers on the full beating curve.
 
 **Last session (3, 2026-09-04 → 06):** the piece to #31 / 72 s; the drawer U5–U13b; the trill module phases 0–3 and the curve

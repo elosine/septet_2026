@@ -4206,3 +4206,54 @@ breaths · 3 the atom in the score and its playback, launched from a strike with
 and seeds · 6 verify on a copy of the piece at 175.7 s, document · 7 later: cycles of beatings for section 3 (CN-33), the training
 material, the notation at 2a. **A decision held for step 2:** inside a pair, one player holds while the other moves (the trainable
 form — a fixed reference to beat against, CN-33), or both move apart (#4's way, alternating directions). Nothing built.
+
+## §147. "maybe I have, like, a screen, a panel, and I can see the pair represented by some sort of curve … it'll be bipolar … I can slide one over … everything should have handles … hit space bar to play that configuration … audition that configuration over different durations" — the beating panel replaces the shuffle drawer; the AI's read and insider input
+
+Composer (PLAN 1f, phase 1, after the three-layer architecture and the top line of §146): *"Okay. Then maybe I have, like, a screen,
+a panel, and I can see the pair represented. by some sort of curve, for example, or if it's just on or off, it'll look like a square
+wave. And then between the pair, I can slide the waves. So if I want them to not be in sync, I can. And one will be... it'll be
+bipolar. So one... if it was a sound... sign wave, one will go up, and the other will go down. and that's how they reach max beating.
+So for example, if it was like the convergence, it would be a hump up and a hump down, and there would be in phase reaching the peak
+Nadir together. But I can slide one over so that they are out of phase. They reach the peak at different times. and then a similar
+layer, which represents the crescendo. And I guess we can just use the... to draw the initial ones. We can use the curve tool that
+we... I've been using for the trills. And then I can... there's three of these, so I can use all three or not, three pairs. but then
+I can slide once I've... I have established the pairs and their configuration. I can slide the whole pair. And then I can audition
+this at any time. And then maybe we should have some preset curve so I don't have to draw a curve every time. but I have the option
+of redrawing the curve. So maybe hold on the shuffle for now. This seems to be a different model, but we'll bring it back in if
+necessary. But, for example, there'll be some efficiency if I can select curve shapes. So, like, if they're just coming in at one
+level, it'll be, like, um, a square wave, and I can just grab the top and bring it to a different level. And then everything could be
+an easy slide, like on rails, and everything should have handles. So if I want to grab... if I'm working with one pair, I want to
+grab one curve. See, the bottom one, I move it over. I could just grab a handle. And same with the read breaths and same with the
+crescendo. So something like select the part, click on a curve shape. It pops in. I can re... easily resize it and reshape it, and
+then I could slide it, like, on a rail. And this will all be in real time so I can just hit space bar to play that configuration. And
+then if I find a configuration that I like, I can audition that configuration over different durations. relatively quick... quickly,
+like, type in iteration and then that same shape, whatever configuration I made will play over that duration. So give me your read on
+this and any additional insider input that you may have."* (speech-to-text: "sign wave" = sine wave, "read breaths" = re-breaths,
+"type in iteration" = type in a duration)
+
+**The model shift, recorded:** the shuffle drawer of §146 is PARKED at his word (*"hold on the shuffle for now … we'll bring it back
+in if necessary"*); the interface is a **beating panel** of direct manipulation — a row per pair (up to three), the pair as two
+mirrored pitch curves (bipolar: one up, one down; slid against each other for phase), a crescendo layer, a breath layer, shapes from a
+preset menu with handles on rails (a flat line for a held level, its top grabbed to change the level; a hump for a convergence; the
+long arc), or redrawn with the trill's curve tool (D21: points → fill → bend the line), a whole pair slid in time against the others,
+the space bar playing the configuration in real time, a typed duration replaying the same configuration stretched over it. The data
+underneath (pairs × curves × offsets) is §146's pattern unchanged; only the writer changes — hands instead of a deal.
+
+**The AI's read and insider input, put to him:** (1) **show the beating** — what is heard is the DIFFERENCE of the two curves, so a
+derived third line per pair, the beat rate over time, shows what a slide does: mirrored humps in phase = a pulse of beating (0 → max →
+0); slid apart = a plateau, steadier and lower (#4 day 13's prediction: in-phase pulses, anti-phase holds); slid until both move the
+same way at some moment = a momentary unison, the beating stops and restarts. (2) **draw in beats per second** — the register law
+(D28: a fixed cents doubles per octave) means the same drawn height beats twice as fast on a higher pair; with the rate as the axis the
+presets are heard levels and the tool finds each player's cents from the pair's pitch; < 1/s reads as flanger, > ~15/s as roughness —
+zones the line can show; the cents as a readout. (3) **who moves is answered by the bipolar picture** — both bend, half the gap each,
+the centre pitch stays (#4's alternating direction); a flat partner (one holds) is the same picture with one curve flattened — the
+trainable form (CN-33) and the piano's only form. (4) **each row needs its pitch and its two players** — no cents without a pitch;
+from a strike its chord's notes are offered to the rows and the strike's onset is the front edge of the square. (5) **breaths per
+player, not per pair** — the two breathe apart so the beating never gaps; the marks slide like everything else; a typed duration past
+the breath ceiling inserts breaths by the rule and shows them. (6) **where the curves live** — in the beating object itself (the
+trill's bake); select a beating, press P, its curves come back into the panel; the trill's regenerate-at-play (D20) makes the space
+bar free; the duration box is the trill's "read the curve over whatever the span becomes". (7) **the shuffle returns as a writer** —
+the same rows and curves are what a deal would fill later. **Consequence for the top line:** step 4 (the drawer) becomes the panel —
+rows, layers, shapes with handles, the derived line, the duration box; steps 1 (the palette) and 2 (the atom's math) unchanged; step 5
+(the shuffles) parked. **One question put to him:** the axis of the beating curves — (a) beats per second (recommended) or (b)
+cents. Nothing built.
