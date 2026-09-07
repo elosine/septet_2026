@@ -4039,3 +4039,39 @@ the whole strike → 68 notes, every gap 298.507 ms (20000 ÷ 67), the closest t
 a row, per player 8 – 11, ten pitch classes, 29 folds, 0 violations; `notes` 40 → 40 notes at exactly 300 ms, 11700 ms; round robin +
 the cards over 12 s → 6 laps, 41 notes, 300 ms; back to geometric → the boxes live again. **For him:** `run` even · `gap` the spacing ·
 `=` the length (or `notes` the count) · `deal` free · `pitches` the whole strike; the hard reload first.
+
+## §143. "ive loaded a previous piece save file how do I continue with this as the main one?" / "What should I have done?" — Name version saves the file too, so Reload is the way back; a version file is opened only to look
+
+Composer: *"ive loaded a previous piece save file how do I continue with this as the main one?"* → *"So I saved a name version,
+which was the before delete. And then I tried to make some changes that they didn't work. And so then I want to go back to that
+version, and then continue. What should I have done?"*
+
+**Read off the disk:** `piece-septet.json` (21:29:11, 693 objects, 69 trills) and `piece-septet-v1.22-beforeDelete.json` are the same
+music (the objects identical; only the metadata stamps differ by milliseconds — Name version writes both in one act, D17); the working
+copy `piece-septet-work.json` (21:30:03) holds the failed changes: 639 objects, unsaved; no version has a working copy, so the loaded
+version was not edited. **The rule, restated for him:** Name version saves the file AND freezes the copy, so the file itself is the
+before-delete state — **Reload** (drop the unsaved edits) was the whole move; opening the frozen version was not needed and is
+only for looking, since Save inside a version writes into the frozen file. The app cannot promote a version to the main name (a
+typed existing name saves as a unique variant, never over a file) — a swap would be the AI's file operation, not needed here.
+**Told him:** open `piece-septet` from the Piece menu (the app resumes the 21:30 working copy and says so) → Reload → OK; then
+continue; Name version suggests 1.23 next.
+
+## §144. "when I try to move the meta shapes for some strikes, the meta shapes move, but the underlying strikes do not. But when I select a meta shape and then delete, it deletes the entire strike" — the multi-selection drag left the group behind; fixed
+
+Composer: *"So when I try to move the meta shapes for some strikes, the meta shapes move, but the underlying strikes do not. But when
+I select a meta shape and then delete, it deletes the entire strike. So how could I use the meta shapes to move strikes?"*
+
+**The data first** (his saved score of 21:29): 50 META shapes on layer 7, every one with its notes under the same groupId, no note
+group without a shape, no broken link — so the group itself was intact. **The code:** the single-shape drag (`startWCBodyDrag`) and
+the box handles (`startBoxDrag`) and the edge nodes (`startNodeDrag`) all move or scale the members (2026-08-13); the delete of a
+multi-selection deletes whole gestures (2026-08-14); but the **multi-selection drag** (`startGroupDrag`: several objects selected,
+dragged together) snapshotted only the selected objects — a META shape selected among others moved alone, its strike stayed. That is
+"for some strikes": the ones he moved as a selection. **Fixed:** `startGroupDrag` collects the members of every selected META group
+shape (the notes, the marker; a zone member too) and moves them by the exact Δt (their internal timing kept — no per-note snap); the
+selected group shape itself moves by the exact Δt as well, instead of a second grid snap that left the handle a few ms off its notes
+(six shapes in his score sat 11–51 ms before their notes from earlier drags); the earliest member counts for the ≥ 0 clamp.
+
+**Verified on a copy** (synthetic mouse events through the real handlers; no console errors): two META shapes selected and dragged 2 s →
+both strikes' 7 notes each moved by exactly 2.000 s, every other object untouched; the single-shape drag (unchanged path) 1 s → its 7
+notes by the shape's snapped delta, 1.007 s, as before. **Answer to his question:** select the META shape (or several) and drag — the
+strikes come along now, as they always did for one shape dragged alone; the hard reload first.
