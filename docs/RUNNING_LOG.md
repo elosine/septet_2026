@@ -4547,3 +4547,14 @@ their to-dos, 8 the parking line. Committed and pushed. **Shown to him whole, on
 it?"** and what sits outside the plan and is his: a rack window for the bend probe (step 1); the winds' embouchure numbers by his ear
 when heard; his listening at each step (unison, fifth, fourth; the panel; the pattern in the piece); the first pattern's placement in
 the piece. Nothing built.
+
+## §166. "yes that's it, checkpoint and clear" — PLAN 1f confirmed whole; the checkpoint
+
+Composer: *"yes that's it, checkpoint and clear"* — **PLAN 1f (the beatings) is confirmed whole:** eight steps in the fixed format,
+agreed one at a time this evening (§146–165), nothing built. Named as his, outside the plan: a rack window for the bend probe
+(step 1), the winds' embouchure range by his ear when heard, his listening at each step, where the first pattern goes in the piece.
+
+**Checkpoint** (the project's `/checkpoint`): the lab journal, the sketch pad (CN-33, CN-34), MORPH_NOTES §3 and PLAN 1f already
+current; journal §2 rewritten cold (the session's 1f bullet in its final form, NEXT STEPS, the checkpoint block with the next
+concrete step as an instruction — build step 1, the palette; step 2 while the probe waits — the resume reads, the uncommitted
+list); PLANNER's NOW ► refreshed; committed and pushed. Resume on Fable, `/postclear`.
