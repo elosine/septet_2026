@@ -489,6 +489,34 @@ class: flute + bass clarinet on F# G G# A A# B, bass clarinet + either violin on
   same 50 ms grid, steps under half a cent and 1–2 CC7 units); the A/B that separates the beating itself from the sampler and from the
   transport's tick is his: the same pair at 2/s; with the crescendo flat; from the panel vs from the transport.
 
+## 14 · The sweep — his walk-through's misses in one pass — `built 2026-09-07 (RUNNING_LOG §183–184; HOW_WE_WORK: a panel borrows the score's idiom) — the script walked on a copy with real events; his test pending`
+
+**How to work with the drawer now, in his order (the script of §183):**
+1. **The harmony:** click a chord on the left, SPACE hears it on the piano, the columns show the ranges; reshuffle or move the octave.
+2. **A pair is born empty:** + pair (or B on a note). Double-click a note on the keyboard, click the pair's node — the note is assigned
+   and the pair folds it as one unit; player 1 and player 2 are pull-downs on every row, each showing what it would sound; the drag is
+   gone; the crosshair points. The birth shape is the ADSR ("hold": rise, hold at the maximum, fall) at 3 Hz over 9 s.
+3. **The maximum:** `max ▢ Hz` — type it, spin it with the arrows or the wheel; **▶ max** plays 4 s flat at it.
+4. **The shape:** the menu's (hold · hump · burst · long arc · ramps · flat) or yours (**save shape**, a ★ button; ALT-click deletes).
+   **Hold the line** (the score's curve windows): drag up / down to bend the segment toward the mouse, sideways to move its points (the
+   attack's end, a plateau); SHIFT-drag slides the whole curve in time (the phase); the wheel bends a step; ALT-click straightens; a
+   double-click adds a point; the **end handle dragged sideways is the pair's length**. `len` in the row does the same by number.
+5. **The crescendo:** a shape (the menu's or yours) between low and high; **together** (one curve, both players) or **each** (a curve per
+   player — "maybe they reach max at different times"); the same line gestures; the boxes take **ppp … fff** or a number. The loudness
+   runs the whole measured scale — ppp at the bank's floor, fff at 127 — through the remap per instrument.
+6. **The breaths:** one · random · unison · by hand; the ideal breath length as faint ticks (in the crescendo lane too); click to place a
+   breath, drag it, ALT-click removes; ↻ shuffle re-deals (your marks stay). Unison = the same marks for both.
+7. **The sequence:** every pair is a zone in the strip from birth — drag, stretch, start later; **M / S** per track; the timeline's own
+   span in the head; SPACE plays what you last clicked (sequence · pair · chord); **⟲ loop** plays round while you adjust; **↶ undo**
+   (CTRL+Z in the drawer) takes the last edit back.
+8. **Another harmony later:** the pairs keep their place in the new sonority (the same index, else the nearest pitch); **auto-assign**
+   deals the sonority to the empty pairs (SHIFT: all); **revert** brings the previous harmony, voicing and assignments back.
+9. **Save** a pair (`save pair`), a shape, or the whole sequence (a take); **insert @ playhead** puts the sequence in the score (an empty
+   pair is skipped).
+
+**Fourths and fifths are one family:** a fifth that no octave serves for the two players sounds as the fourth below the same note
+(and a fourth as the fifth); the row says "inverted". The other intervals keep the ladder of §12.
+
 ## Log (append-only)
 
 - **2026-09-07 — step 1 built:** the palette (§3): the recipe fields, `beating_calc.js` (the palette part, 37 checks), the bend
@@ -530,3 +558,8 @@ class: flute + bass clarinet on F# G G# A A# B, bass clarinet + either violin on
   per pair, SPACE by focus, the number boxes freed, the slopes on the curves, the level box keeping a drawn shape, pair takes, the
   crosshair; the stutter examined (the streams smooth — his A/B pending); the level scale answered. His test pending; the discussion on
   how to proceed next.
+- **2026-09-07 — the sweep built** (§14; RUNNING_LOG §183–184): his walk-through written back as a 23-line script, the misses built in
+  one pass — born empty, the ADSR birth shape, max in Hz with ▶ max, his stored shapes, hold-the-line curve gestures, the end handle as
+  the length, a crescendo per player, ppp … fff over the whole measured scale, the breath lane simplified with unison, the timeline's
+  span, auto-assign and revert on a harmony change, fourths ↔ fifths, mute / solo, undo, loop; two defects found on the walk and
+  fixed. His test pending, against the same script.

@@ -253,5 +253,23 @@ const HUMP3 = BC.shape('hump', { peak: 3 });
   ok(BC.curveOf([[1, 4], [0, 0, 0.5]])[0][2] === 0.5 && BC.curveOf([[0, 1, 0], [1, 2]])[0].length === 2, '… and sorting; a zero slope is not stored');
   const o = BC.renderPair({ pitch: 60, interval: 'unison', players: { lower: 'cello', upper: 'viola' }, length: 4, beat: [[0, 0, 1], [1, 4]] }, recipe);
   ok(o.samples[Math.round(o.samples.length / 2)].beat < 1 && near(o.maxBeat, 4, 0.05), 'a pair on a bent ramp: the beating stays low through the middle and reaches 4 at the end'); }
+// ---- the sweep (2026-09-07, RUNNING_LOG §184): the ADSR, the inversion (fourths and fifths one family), a crescendo per player ----
+{ const a = BC.shape('adsr', { peak: 3 });
+  ok(a.length === 4 && a[0][1] === 0 && a[1][1] === 3 && a[2][1] === 3 && a[3][1] === 0 && near(a[1][0], 0.22) && near(a[2][0], 0.67), 'the ADSR: rise to the peak at 0.22, hold to 0.67, back to the base — the birth shape');
+  const o = BC.renderPair({ pitch: 62, interval: 'unison', players: { lower: 'flute', upper: 'bass_clarinet' }, length: 9, beat: a }, recipe);
+  ok(o.samples.filter(s => Math.abs(s.beat - 3) < 0.05).length >= 70, '… on a 9 s pair the beating holds at 3 Hz for about four seconds');
+  // the inversion: an artificial pair where a fifth fits in no octave but the fourth below the same note does
+  const R3 = { a: { beating: true, playerBendSt: 1, rangeLow: 60, rangeHigh: 64, techniques: [{ key: 'o', rangeLow: 60, rangeHigh: 64 }], ordinary: 'o' }, b: { beating: true, playerBendSt: 1, rangeLow: 65, rangeHigh: 66, techniques: [{ key: 'o', rangeLow: 65, rangeHigh: 66 }], ordinary: 'o' } };
+  const RR = Object.assign({}, R3, { flute: R3.a, cello: R3.b });
+  ok(BC.foldPair(RR, 65, 'P5', 'flute', 'cello') === null, 'a fifth from F4 for a 60–64 player and a 65–66 player: no octave serves');
+  const inv = BC.foldPair(RR, 65, 'P4', 'flute', 'cello', null, { noteIs: 'upper' });
+  ok(inv && inv.pitch === 60 && inv.noteIs === 'upper' && inv.lower === 'flute' && inv.upper === 'cello', '… the fourth below the same F4: C4 + F4, the 60–64 player below, the 65–66 player on the note — the inversion serves');
+  ok(BC.INVERSION.P5 === 'P4' && BC.INVERSION.P4 === 'P5', '… the family: P5 ↔ P4');
+  // a crescendo per player
+  const pp = BC.renderPair({ pitch: 60, interval: 'unison', players: { lower: 'cello', upper: 'viola' }, length: 4, beat: 2, level: { lower: [[0, 0.2], [1, 0.2]], upper: [[0, 0.9], [1, 0.9]] } }, recipe);
+  const nL = pp.notes.lower[0], nU = pp.notes.upper[0];
+  ok(nL.level.every(l => near(l[1], 0.2)) && nU.level.every(l => near(l[1], 0.9)) && near(pp.samples[10].level, 0.55) && near(pp.samples[10].levelL, 0.2) && near(pp.samples[10].levelU, 0.9), 'a level per player: the cello at 0.2, the viola at 0.9, the samples carry both and their mean');
+  const one = BC.renderPair({ pitch: 60, interval: 'unison', players: { lower: 'cello', upper: 'viola' }, length: 4, beat: 2, level: [[0, 0.5], [1, 0.5]] }, recipe);
+  ok(one.notes.lower[0].level.every(l => near(l[1], 0.5)) && one.notes.upper[0].level.every(l => near(l[1], 0.5)), '… one curve still serves both'); }
 console.log(fails ? 'FAIL — ' + fails + ' check' + (fails > 1 ? 's' : '') + ' failed' : 'PASS — every check passed');
 process.exit(fails ? 1 : 0);

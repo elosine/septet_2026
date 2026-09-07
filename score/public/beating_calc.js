@@ -99,17 +99,23 @@
   // lower on the note, the partner above by the interval): as written first (k = 0), then the nearest octave, a tie folding DOWN (Q4).
   // The roles come from pairsFor at the folded pitch — the same rule the page uses — so the two agree by construction.
   // → { pitch (the folded lower note), k (octaves moved), lower, upper, flexible, src (the note as given) } or null when no octave serves.
-  function foldPair(recipe, note, interval, a, b, maxOct) {
+  // opts.noteIs = 'lower' (default) | 'upper': the note given is the pair's upper note, the lower sits the interval below it (the
+  // INVERSION — 2026-09-07, "fourths and fifths can be considered the same": a fifth that no octave serves may sound as the fourth
+  // below the same note, the panel's refold does the switch)
+  function foldPair(recipe, note, interval, a, b, maxOct, opts) {
     if (typeof note !== 'number' || !isFinite(note) || !a || !b || a === b) return null;
-    const iv = intervalOf(interval), M = maxOct == null ? 8 : maxOct;
+    const iv = intervalOf(interval), M = maxOct == null ? 8 : maxOct, upperGiven = !!(opts && opts.noteIs === 'upper');
+    const base = upperGiven ? note - iv.semitones : note;
     const ks = [0]; for (let d = 1; d <= M; d++) { ks.push(-d); ks.push(d); }   // 0, −1, +1, −2, +2 … : the nearest first, a tie down
     for (const k of ks) {
-      const p = note + 12 * k; if (p < 0 || p + iv.semitones > 127) continue;
+      const p = base + 12 * k; if (p < 0 || p + iv.semitones > 127) continue;
       const c = pairsFor(recipe, p, iv.key).find(q => q.players.includes(a) && q.players.includes(b));
-      if (c) return { pitch: p, k, lower: c.lower, upper: c.upper, flexible: c.flexible, src: note, interval: iv.key };
+      if (c) return { pitch: p, k, lower: c.lower, upper: c.upper, flexible: c.flexible, src: note, interval: iv.key, noteIs: upperGiven ? 'upper' : 'lower' };
     }
     return null;
   }
+  // the fourth and the fifth as one family: the same note as the other one's other end
+  const INVERSION = { P5: 'P4', P4: 'P5' };
   const foldMark = k => (k > 0 ? '↑' : k < 0 ? '↓' : '');
   // the LADDER (§180, Q2: offered, never applied by the tool): when no octave serves the pair at its interval — (a) the intervals that
   // would, with the same two players, in LADDER_ORDER; (b) for each seat, the other players that would, the other seat kept; (c) skip —
@@ -216,6 +222,9 @@
     hump:    o => { const at = clamp(o.at == null ? 0.5 : +o.at, 0.02, 0.98), base = +o.base || 0; return [[0, base], [at, +o.peak || 0], [1, base]]; },
     arc:     o => { const pk = +o.peak || 0, base = +o.base || 0, n = 8, pts = []; for (let i = 0; i <= n; i++) { const p = i / n; pts.push([r3(p), r3(base + (pk - base) * 0.5 * (1 - Math.cos(2 * Math.PI * p)))]); } return pts; },
     burst:   o => { const pk = +o.peak || 0, at = clamp(o.at == null ? 0.1 : +o.at, 0.02, 0.5); return [[0, 0], [at, pk], [clamp(at + 0.25, 0.3, 0.9), pk * 0.35], [1, 0]]; },
+    // the ADSR (2026-09-07, his walk-through lines 6 and 9: "holds at max for a few seconds … pretty classic ADSR"): the attack to the
+    // peak, the hold, the release to the base — three handles; the birth default (9 s: 2 · 4 · 3)
+    adsr:    o => { const base = +o.base || 0, pk = +o.peak || 0, a = clamp(o.attack == null ? 0.22 : +o.attack, 0.02, 0.9), h = clamp(o.hold == null ? 0.67 : +o.hold, a + 0.02, 0.98); return [[0, base], [r3(a), pk], [r3(h), pk], [1, base]]; },
   };
   const shape = (name, o) => (SHAPES[name] || SHAPES.flat)(o || {});
   // the two players from ONE heard-rate curve: mirrored (bipolar, half each by default — the heard beating is the drawn height) or a
@@ -300,7 +309,11 @@
     const rate = s.rate || (s.beat != null ? mirrored(s.beat, s.share) : { lower: 0, upper: 0 });
     const curves = { lower: curveOf(rate.lower), upper: curveOf(rate.upper) };
     const slide = { lower: +(s.slide && s.slide.lower) || 0, upper: +(s.slide && s.slide.upper) || 0 };
-    const level = curveOf(s.level == null ? 0.6 : s.level);
+    // the level: one curve for both, or one PER PLAYER ({ lower, upper } — 2026-09-07, his line 15: "peaks and values for individual
+    // players … maybe they reach max at different times"); the samples carry both and their mean (the META contour's line)
+    const lvIn = s.level == null ? 0.6 : s.level, perPlayer = lvIn && typeof lvIn === 'object' && !Array.isArray(lvIn);
+    const levels = { lower: curveOf(perPlayer ? (lvIn.lower != null ? lvIn.lower : lvIn.upper) : lvIn), upper: curveOf(perPlayer ? (lvIn.upper != null ? lvIn.upper : lvIn.lower) : lvIn) };
+    const level = levels.lower;
     const just = iv.justOffsetCents;
     const fLower = midiHz(pitch), fUpper = fLower * iv.ratio[0] / iv.ratio[1];
     const rateAt = (who, t) => evalCurve(curves[who], (t - slide[who]) / length);
@@ -308,23 +321,35 @@
     const samples = [];
     for (let i = 0, n = Math.ceil(length / stepS); i <= n; i++) {
       const t = Math.min(length, i * stepS), p = t / length, cL = centsAt('lower', t), cU = centsAt('upper', t), beat = beatRate(cL, cU, pitch, iv);
-      samples.push({ t: r3(t), p: r3(p), rateL: r3(rateAt('lower', t)), rateU: r3(rateAt('upper', t)), centsL: r3(cL), centsU: r3(cU), beat: r3(beat), zone: zoneOf(beat), level: r3(evalCurve(level, p)) });
+      const lL = evalCurve(levels.lower, p), lU = evalCurve(levels.upper, p);
+      samples.push({ t: r3(t), p: r3(p), rateL: r3(rateAt('lower', t)), rateU: r3(rateAt('upper', t)), centsL: r3(cL), centsU: r3(cU), beat: r3(beat), zone: zoneOf(beat), level: r3((lL + lU) / 2), levelL: r3(lL), levelU: r3(lU) });
     }
     const beat = samples.map(q => [q.t, q.beat]);
     const zones = []; for (const q of samples) { const z = zones[zones.length - 1]; if (z && z.zone === q.zone) z.to = q.t; else zones.push({ from: q.t, to: q.t, zone: q.zone }); }
     const flags = [], notes = { lower: [], upper: [] }, breaths = {};
     const br = s.breath || { mode: 'one' };
     const lvMean = samples.reduce((a, q) => a + q.level, 0) / samples.length;
+    // UNISON breaths (2026-09-07, "random and unison breaths"): phase 0 = both players breathe together — one deal on the stricter
+    // ceiling, the same marks for both (the hand marks of either count)
+    const ceils = { lower: ceilingFor(players.lower, lvMean), upper: ceilingFor(players.upper, lvMean) };
+    const unison = br.mode === 'designated' && br.deal !== false && br.phase != null && +br.phase === 0;
+    let shared = null;
+    if (unison) {
+      const who = ceils.lower.seconds <= ceils.upper.seconds ? 'lower' : 'upper';
+      const hand = [].concat((br.marks && br.marks.lower) || [], (br.marks && br.marks.upper) || []).map(Number).sort((a, b) => a - b);
+      shared = dealBreaths({ inst: players[who], length, level: lvMean, target: br.target, jitter: br.jitter, seed: (br.seed == null ? 1 : +br.seed), phase: 0, keep: hand });
+    }
     for (const who of ['lower', 'upper']) {
       const inst = players[who];
       const lim = inst ? bendLimits(R, inst) : { playerSt: 1, samplerSt: null };
-      const ceil = ceilingFor(inst, lvMean);
+      const ceil = ceils[who];
       const centre = pitch + (who === 'upper' ? iv.semitones : 0);
       if (inst && !holds(R, inst, centre)) flags.push({ player: inst, role: who, flag: 'out-of-range', note: centre });
       let marks = null;
       if (br.mode === 'designated') {
         const hand = (br.marks && br.marks[who]) || [];
         marks = (hand.length && br.deal === false) ? hand.map(Number).sort((a, b) => a - b)
+              : shared ? shared.slice()
               : dealBreaths({ inst, length, level: lvMean, target: br.target, jitter: br.jitter, seed: (br.seed == null ? 1 : +br.seed) + (who === 'upper' ? 1000 : 0), phase: who === 'upper' ? (br.phase == null ? 0.5 : +br.phase) : 0, keep: hand });
       }
       const spans = breathSpans(br.mode, marks, length, ceil.gapS);
@@ -344,7 +369,7 @@
             if (need) { cur.flags.push('rekey'); flags.push({ player: inst, role: who, flag: 'sampler-range', at: r3(t), cents: r3(raw), keyOffset: need }); }
           }
           cur.bend.push([r3(t - cur.startS), r3(raw - cur.keyOffset * 100)]);
-          cur.level.push([r3(t - cur.startS), r3(evalCurve(level, t / length))]);
+          cur.level.push([r3(t - cur.startS), r3(evalCurve(levels[who], t / length))]);
           if (Math.abs(raw) > lim.playerSt * 100 + 1e-6 && !cur.flags.includes('player-limit')) { cur.flags.push('player-limit'); flags.push({ player: inst, role: who, flag: 'player-limit', at: r3(t), cents: r3(raw) }); }
         }
         finish(end);
@@ -399,7 +424,7 @@
       (o.breath.mode || 'one') + ' (' + o.notes.lower.length + ' + ' + o.notes.upper.length + ' notes)' + (fl.length ? ' · flags: ' + fl.join(' ') : ' · no flags');
   }
 
-  return { ORDER, INTERVALS, LADDER_ORDER, intervalOf, noteName, midiHz, players, ordinaryVoice, ordinaryRange, bendLimits, holds, pairsFor, pairingTable, describePalette,
+  return { ORDER, INTERVALS, LADDER_ORDER, INVERSION, intervalOf, noteName, midiHz, players, ordinaryVoice, ordinaryRange, bendLimits, holds, pairsFor, pairingTable, describePalette,
            foldPair, foldMark, pairLadder, seatOptions, VOICINGS, voiceChord, shuffled, mulberry32,
            curveOf, evalCurve, scaleCurve, slopeOf, bend01, SHAPES, shape, mirrored, flatPartner, levelFromBeat, rateToCents, centsToRate, beatRate, ZONES, zoneOf,
            CEILINGS, ceilingFor, dealBreaths, breathSpans, renderPair, renderPattern, stretch, describePair };

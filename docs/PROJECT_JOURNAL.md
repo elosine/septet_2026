@@ -117,7 +117,14 @@ own server (:5300); the AI built at his word, one chunk at a time:
   number boxes freed, the score's slope diamonds on the rate curves and the crescendo (`[p, v, slope]` in the block), the level box
   keeping a drawn shape (the "snaps back" was the level box popping a burst), pair takes (`beatingPairs`), the crosshair; the stutter
   examined — the emitted streams are as smooth as #1's, his A/B pending; the 0–1 level answered (the curve height). Verified on a copy
-  (`zz-ai-seq`, deleted). **Next: the discussion he asked for on how to proceed — then his test.**
+  (`zz-ai-seq`, deleted).
+- **The discussion and the sweep, late afternoon → evening (§183–184; BEATING_TOOL §14; HOW_WE_WORK):** strategy A — his walk-through
+  in his words, written back as a 23-line script with works · awkward · missing marks; rule B a standing rule (a panel borrows the
+  score's idiom; a tool is planned against how he works, the script is the unit); C (the listening ladder) held. **The sweep built in
+  one pass at his "go ahead"** with his refinements (born empty, hold the line, ppp … fff over the whole scale, fourths ↔ fifths one
+  family, a–d): see §184. Walked on a copy (`zz-ai-sweep`, deleted) with real events; two defects found on the walk and fixed (the
+  per-player crescendo not reaching the sound; revert remembering the wrong harmony). **Next: his test against the same script
+  (a hard reload first), then the first beating sequence in the piece; the stutter A/B still his.**
 - **Tools on his hands (§111–114):** the bend cursor only when Points is off; TRILLS phase 4 (a trill runs to the player's next
   strike note, a stretch regenerates at once); a nudged trill keeps its attack note (a 60 ms eating window; the drag keeps a
   trill's start; the articulation switch arbitrated on a shared sampler slot — the tail and the lead); the drawer's pick no

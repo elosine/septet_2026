@@ -5381,3 +5381,68 @@ against the others (his "I wanna hear it in context"); the two players' PHASE (t
 narration never reaches — kept, no question; an UNDO inside the drawer (one level, for a wrong drag); LOOP while adjusting (the pair
 plays round while a handle is dragged); the pair's EXIT — the default returns to unison at the end; a pair that ENDS on its maximum (a
 cut) is a shape question the ADSR handles. The build waits for his word on these.
+
+## §184. The sweep BUILT — the walk-through's misses in one pass, his refinements taken (born empty; hold the line to bend; ppp … fff over the whole measured scale; fourths and fifths one family; mute / solo, undo, loop) — the script walked on a copy with real events; two defects found on the walk and fixed
+
+Composer, 2026-09-07, his refinements to the script (verbatim in MORPH_NOTES §3): a new pair born with its node disconnected, the
+note assigned by double-click + node, the drag behaviour gone, both players as pull-downs, everything dynamic on a harmony change;
+the curves "like logic pro or daw: hover over curve line, vert dbl arrow mouse, drag up/down, left/right"; the level "ppp to fff …
+make sure we're getting the already calibrated volumes per instrument"; a–d good; "if I change it to a fifth and that pushes one of
+the players out of range, that it gets dropped an octave or popped up an octave. fourths and fifths can be considered the same";
+*"Otherwise, go ahead."*
+
+**Built (`beating_calc.js` · `beating_panel.js` · `composer.html`; 114 checks in node):**
+- **Born empty** (line 5): a new pair has no note; the row says "assign a note — double-click a note on the keyboard, then this node";
+  player 1 and player 2 are pull-downs on every row (a bound zone moves to the lane chosen); the dot drag is gone; the crosshair stays.
+  `beatingDefaults` allows a null pitch; the page makes no notes for a pair without one and labels it.
+- **The birth shape** (line 6): the ADSR — `SHAPES.adsr`, rise to 0.22, hold to 0.67, fall — at 3 Hz over 9 s ("hold" first in the menu;
+  B on a note makes a 9 s beating too).
+- **The maximum** (line 7): "max ▢ Hz" with the arrows and the wheel; **▶ max** plays 4 s flat at it; every "/s" is "Hz".
+- **His shapes** (line 8): "save shape" stores the heard curve normalised in the `beatingShapes` bucket; a ★ button among the shapes
+  for the beating and for the crescendo; ALT-click deletes; the level box re-pops a stored shape at the new maximum.
+- **The curves as the score's curve windows** (his correction of my diamonds): HOLD THE LINE — a vertical drag bends the segment under
+  the mouse toward the mouse (the power model, ±1), a sideways drag moves its points (the attack's end, a plateau), SHIFT-drag slides
+  the whole curve in time, the wheel bends a step, ALT-click straightens, a double-click adds a point; the END HANDLE dragged sideways
+  is the pair's length (line 10); draw mode stays for freehand.
+- **A crescendo per player** (line 15): `levelCurve: { lower, upper }` in the block, `renderPair` takes both (the samples carry
+  `levelL / levelU` and their mean for the META contour); the lane draws both in the players' colours with the same line gestures;
+  "together" (one curve, edit one, both move) or "each"; the shapes and his stored shapes pop into it between low and high.
+- **The dynamics** (line 17): the boxes take ppp … fff (or a number); the lane's axis reads ppp · mf · fff; **the beating's loudness
+  runs the whole measured scale** — the bank's floor (anchor 20, −50 dB) to 127, not the trill's 65 — through the remap per
+  instrument (`LV_LO` from `bank.scale.lo`). At ppp the flute's first note takes velocity 30 and CC7 trims to 54.
+- **The breaths** (line 18): the lane shows the ideal breath length as faint ticks per player (also in the crescendo lane), the marks
+  as dotted lines (yours bold), a click places one, a drag moves it, ALT-click removes; no bars, one ⚠ past the ideal; the modes
+  **one · random · unison · by hand**; UNISON = one deal on the stricter ceiling, the same marks for both (`phase: 0`).
+- **The timeline's own span** (line 20): the head's box is room, not a stretch; the strip never shorter than the content.
+- **A harmony change re-assigns** (line 22): a pair keeps its index in the new sonority, else the nearest pitch; **auto-assign** deals
+  the sonority to the empty pairs (SHIFT: all); **revert** brings the previous harmony, voicing and assignments back (remembered by
+  the pickers before they change anything).
+- **Fourths and fifths one family:** `foldPair` takes `noteIs: 'upper'` (the note given is the pair's upper note); when no octave
+  serves a fifth (or a fourth), `refold` tries the other with the note as its other end and marks the row "inverted"; `INVERSION`.
+- **a–d:** mute / solo per track in the strip (the sequence's play honours them; a pair alone ignores them); **↶ undo** one level and
+  CTRL+Z inside the drawer (a snapshot before every edit; the score's undo untouched); **⟲ loop** — the play goes round until stop,
+  every round takes the edits; the phase slide and the interval chips kept.
+
+**The walk on `zz-ai-sweep` (a copy, deleted), the script's lines with real events:** stage 1 — the chord picked, SPACE plays it on the
+piano (19 notes), the focus "chord". Stage 2 — the pair born empty (no note, the ADSR of four points, 9 s, the strip "pair 1 · bass_ +
+flute · no note · 9 s", player 1 six lanes, player 2 five names); a dot double-clicked → armed (the drag gone: `startDotDrag`
+undefined); the node clicked → F3 → F4↑ for BCl + Fl, the chips "F4↑ F4↑", the menu "Flute — F4↑ | Violin 1 — F4↑ …"; "max Hz" and
+▶ max (two notes, four bends); the shapes "hold, hump, burst, long arc, ramp out, ramp in, flat"; a shape saved (normalised
+[[0,0],[0.22,1],[0.67,1],[1,0]]), its ★ button, popped at max 5 → [[0,0],[0.22,5],[0.67,5],[1,0]], re-levelled to 7 by the box,
+deleted. The line held: a vertical drag on the attack → slope −0.4 (above the line, as dragged), a sideways drag on the plateau →
+0.22/0.67 → 0.296/0.746 (the hold kept); the end handle +100 px → 10.15 s, the shape kept, the strip following; a double-click →
+a fifth point, draw off. Stage 3 — "hold" popped into the crescendo → { lower, upper }, the axis ppp · mf · fff, two ideal ticks;
+mp / ff typed → 0.429 / 0.857; "each" then the upper's peak pulled down → the curves differ, the two CC7 streams differ in the
+snippet; unison breaths on a 30 s pair → [6.8, 11.23, 18.03, 24.83] for both; random → 3 + 5, different; ppp … fff following the
+beating → the flute's first note at velocity 30, CC7 down to 54, the peak at 113 / 107. Stage 4 — a second pair born empty, auto-assign
+→ A#4; mute → only pair 1's ports play, solo → only pair 2's; the timeline box 30 → the span 30, the lengths untouched; loop on →
+the args kept; CTRL+Z in the drawer → the max 12 back to 7, the score's undo stack untouched; another harmony → pair 1 follows
+(the nearest pitch), revert → the first harmony, voicing and assignments back; insert with an empty third pair → two zones (10.15
+and 9 s) and the shape, the empty one skipped; player 1's pull-down on the bound zone → the zone on the violin 1 lane, in its group,
+the label "Vn1 + Fl on F4↑ from F3". No page errors.
+
+**Two defects found on the walk, fixed before the commit:** (1) `beatingSpec` passed only an ARRAY level curve to the math — the
+per-player object fell back to "follows the beating", so a crescendo per player (and any edited crescendo in the object form) never
+reached the sound; now both forms pass. (2) `revert` remembered the NEW harmony: the pickers set `this.harmony` before the memory
+was taken; now `rememberHarmony()` runs at the top of both pickers. One test artifact: `openNew` keeps unbound rows when nothing is
+selected, so a second script saw the first script's lock state — not a defect.

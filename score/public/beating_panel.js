@@ -36,7 +36,11 @@ let W = 520;   // the row's drawing width — the page's, read at every render (
 const HR = 150, HL = 50, HB = 56, PADL = 40, PADR = 12;   // the rate area, the level lane, the breath lane, the axis gutters
 const ZONE_FILL = { flanger: 'rgba(150,150,170,0.22)', beating: 'rgba(123,63,228,0.30)', roughness: 'rgba(225,70,70,0.38)' };
 const COL = { upper: '#ffb347', lower: '#69b7c9', level: '#7ec9a8', breath: '#e0e0e0', bad: '#e88' };
-const SHAPES = [['flat', 'flat'], ['rampOut', 'ramp out'], ['rampIn', 'ramp in'], ['hump', 'hump'], ['arc', 'long arc'], ['burst', 'burst']];
+const SHAPES = [['adsr', 'hold'], ['hump', 'hump'], ['burst', 'burst'], ['arc', 'long arc'], ['rampOut', 'ramp out'], ['rampIn', 'ramp in'], ['flat', 'flat']];   // "hold" = the ADSR (2026-09-07)
+// the dynamics (NAMING §2.9): the level 0 … 1 is ppp … fff in eight equal steps
+const DYN = ['ppp', 'pp', 'p', 'mp', 'mf', 'f', 'ff', 'fff'];
+const dynName = h => DYN[Math.max(0, Math.min(7, Math.round(7 * (+h || 0))))];
+const parseLevel = s => { s = String(s == null ? '' : s).trim().toLowerCase(); if (!s) return null; const i = DYN.indexOf(s); if (i >= 0) return Math.round(i / 7 * 1000) / 1000; const v = parseFloat(s); return isNaN(v) ? null : Math.max(0, Math.min(1, v)); };
 // the pitch side (step 5): the keyboard as the strikes drawer draws it, the relations between the pairs (§148: "the thirds, fifths, and just
 // Unison … the relationship could be between the three, could be fifths, could be thirds, could be something else"; §158: unison two ways)
 const DB_URL = '/bank/scattered_strikes.json';
@@ -54,9 +58,10 @@ const SEED_KEEP = 8;   // the strikes drawer's U8: the last seeds as chips
 const VOICING_DEFAULTS = () => ({ preset: 'original', seed: 1, oct: 0, below: 0, above: 0, hist: [] });
 // the sequence (2026-09-07, the composer: "a length for the entire sequence and a play for the entire sequence … for each pair, there
 // should be a length, a duration, and then the play for just that pair … a track for every pair … drag them like I can the trill zones")
-const PRESET_SHAPES = ['flat', 'rampOut', 'rampIn', 'hump', 'arc', 'burst'];   // the menu's shapes: the level box pops them in again; a drawn one is scaled
+const PRESET_SHAPES = ['adsr', 'flat', 'rampOut', 'rampIn', 'hump', 'arc', 'burst'];   // the menu's shapes: the level box pops them in again; a drawn one is scaled
 const SEQ_H = 30;                 // a track's height in the sequence strip
 const PAIRS_PANEL = 'beatingPairs';   // the pair takes' bucket in bank/panel_snapshots.json
+const SHAPES_PANEL = 'beatingShapes';   // his stored shapes (normalised curves)
 const RELATIONS = [['unison1', 'unison · 1 oct', 'every pair on the root, one octave (a field on one pitch — the tuba\'s bloom)'], ['unisonOcts', 'unison · octaves', 'the root\'s pitch class spread across octaves, a pair per octave'],
                    ['thirds', 'thirds', 'a stack of thirds from the root (root · +4 · +7)'], ['fourths', 'fourths', 'a stack of fourths (root · +5 · +10)'], ['fifths', 'fifths', 'a stack of fifths (root · +7 · +14)'], ['stack', 'stack', 'the typed stack: semitones above the root, one per pair']];
 const parseNote = s => { s = String(s || '').trim(); if (!s) return null; if (/^\d+$/.test(s)) return +s; const m = /^([A-Ga-g])([#b]?)(-?\d)$/.exec(s); if (!m) return null; const pc = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1].toUpperCase()] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0); return (parseInt(m[3], 10) + 1) * 12 + pc; };
@@ -66,8 +71,9 @@ const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(
 const nn = m => BC_().noteName(m);
 
 const P = {
-    el: null, rows: [], length: 6, bound: null, takeList: {}, pairTakes: {}, _timer: null, _aud: null, _drag: null, status: '',
+    el: null, rows: [], length: 6, bound: null, takeList: {}, pairTakes: {}, shapesBank: {}, _timer: null, _aud: null, _drag: null, status: '',
     focus: 'sequence',   // what SPACE plays: 'sequence' | 'pair' (the active row) | 'chord' — set by where he last clicked
+    loop: false, _loopArgs: null, seqSpan: null, _undo: null, _prevHarmony: null, _keepRows: false,
     db: null, banks: null, harmony: null, collapsed: {}, chord: [], chordId: '', armed: null, armedIdx: null, activeRow: 0, show88: false, rootMode: false, relation: 'unison1',
     voicing: VOICING_DEFAULTS(),   // the sonority's voicing: the preset, the seed, the octave box, the octave range (saved with the take)
 
@@ -88,10 +94,12 @@ const P = {
             '<span id="bpClose" title="close (ESC)" style="cursor:pointer;color:#888;font-size:18px;padding:0 4px">&#10005;</span></div>',
             '<div id="bpStatus" style="color:#9a9;margin-bottom:6px;flex:0 0 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>',
             '<div id="bpHead" style="flex:0 0 auto;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:6px">',
-            '<label title="the whole sequence: typing a new length stretches every pair and its offset in proportion (the shapes kept)">sequence <input id="bpLen" type="number" step="0.5" min="0.5" max="180" style="width:56px"> s</label>',
-            '<button id="bpAdd" title="another pair (up to three)">+ pair</button>',
-            '<button id="bpPlay" title="the whole sequence: all pairs at their offsets, through the score&#8217;s MIDI path">&#9654; sequence</button>',
+            '<label title="the timeline&#8217;s own span (room to drag the pairs into) &#8212; never shorter than the last pair&#8217;s end">timeline <input id="bpLen" type="number" step="1" min="1" max="600" style="width:56px"> s</label>',
+            '<button id="bpAdd" title="another pair (up to three) &#8212; born empty: double-click a note on the keyboard, then its node">+ pair</button>',
+            '<button id="bpPlay" title="the whole sequence: all pairs at their offsets (the strip&#8217;s mute and solo apply), through the score&#8217;s MIDI path">&#9654; sequence</button>',
             '<button id="bpStop">&#9632; stop</button>',
+            '<button id="bpLoop" title="loop: the play goes round until stop &#8212; adjust while it plays, every round takes the edits">&#10227; loop</button>',
+            '<button id="bpUndo" title="undo the last edit in the drawer (one level) &#8212; CTRL+Z here does the same">&#8630; undo</button>',
             '<span id="bpSpace" style="color:#9a9" title="what SPACE plays — the sequence, the active pair, or the chord — set by where you last clicked; SPACE while playing stops"></span>',
             '<span style="margin-left:auto"></span>',
             '<input id="bpTakeName" type="text" placeholder="take name" style="width:110px" title="ENTER saves">',
@@ -110,6 +118,8 @@ const P = {
             '<input id="bpStack" type="text" value="0 7 12" style="width:64px" title="a typed stack: semitones above the root, one per pair">',
             '<label>root <input id="bpRoot" type="text" placeholder="C4 or 60" style="width:56px" title="a note name or MIDI number; or click a key with root mode on"></label>',
             '<button id="bpDeal" title="deal the pairs&#8217; pitches from the root by the relation, folded into the pairs&#8217; ranges, from the bottom up">deal</button>',
+            '<button id="bpAuto" title="deal the sonority to the pairs without a note, low to high (SHIFT: every pair again)">auto-assign</button>',
+            '<button id="bpRevert" title="back to the previous harmony, voicing and assignments (one level)">revert</button>',
             '<label title="the whole piano instead of the ensemble&#8217;s span"><input id="bp88" type="checkbox"> 88</label>',
             '<span id="bpArmed" style="color:#c9a8ff"></span>',
             '</div>',
@@ -159,7 +169,11 @@ const P = {
         d.querySelector('#bpHear').addEventListener('click', () => { this.setFocus('chord'); this.hearChord(); });
         d.querySelector('#bpRel').innerHTML = RELATIONS.map(([k, l, t]) => '<button class="bpRelBtn" data-rel="' + k + '" title="' + esc(t) + '" style="font-size:12px;padding:1px 5px;margin:1px;cursor:pointer">' + l + '</button>').join('');
         d.querySelectorAll('.bpRelBtn').forEach(b => b.addEventListener('click', () => { this.relation = b.dataset.rel; this.rootMode = true; this.paintRelation(); this.setStatus('relation ' + b.textContent + ' — click a key for the root (or type it) and deal'); }));
-        d.querySelector('#bpDeal').addEventListener('click', () => this.deal());
+        d.querySelector('#bpDeal').addEventListener('click', () => { this.snapshot(); this.deal(); });
+        d.querySelector('#bpAuto').addEventListener('click', ev => this.autoAssign(ev.shiftKey));
+        d.querySelector('#bpRevert').addEventListener('click', () => this.revertHarmony());
+        d.querySelector('#bpUndo').addEventListener('click', () => this.undo());
+        d.querySelector('#bpLoop').addEventListener('click', () => { this.loop = !this.loop; const bt = d.querySelector('#bpLoop'); bt.style.background = this.loop ? '#7B3FE4' : ''; bt.style.color = this.loop ? '#fff' : ''; this.setStatus(this.loop ? 'loop on — the play goes round until stop; edits take effect at every round' : 'loop off'); if (!this.loop) this._loopArgs = null; });
         d.querySelector('#bpRoot').addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); ev.stopPropagation(); this.deal(); });
         d.querySelector('#bp88').addEventListener('change', ev => { this.show88 = ev.target.checked; this.applyVoicing(); });
         // the voicing bar
@@ -173,6 +187,7 @@ const P = {
         d.querySelector('#bpRows').addEventListener('scroll', () => this.renderLines());
         d.setAttribute('tabindex', '0');
         d.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && !e.shiftKey && (e.key === 'z' || e.key === 'Z') && !(e.target.matches && e.target.matches('input[type=text], textarea'))) { e.preventDefault(); e.stopPropagation(); this.undo(); return; }   // the drawer's own undo, not the score's
             if (e.target.matches('input,select,textarea')) { if (e.key === 'Escape') e.target.blur(); return; }
             if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); if (this.armed != null || this.rootMode) { this.armed = null; this.rootMode = false; this.render(); this.setStatus('disarmed'); } else this.close(); }
         });
@@ -224,7 +239,7 @@ const P = {
         this.show(); this.render();
         this.setStatus((mates.length > 1 ? 'bound to the pattern ' + zone.groupId + ' (' + mates.length + ' pairs) — every edit regenerates its beatings; insert replaces it in place' : 'bound to ' + C.beatingLabel(zone) + ' — every edit regenerates it') + '; SPACE plays; ESC closes');
         // a beating born on a strike note opens on that strike's chord (the strike by the note's id, its group, or its time)
-        this.loadDb().then(() => { const s = this.strikeFor(zone); if (s) this.pickSource(s.id); else this.drawKeyboard(); });
+        this.loadDb().then(() => { const s = this.strikeFor(zone); this._keepRows = true; try { if (s) this.pickSource(s.id); else this.drawKeyboard(); } finally { this._keepRows = false; } });
     },
     // the Beating button with nothing bound: an empty pattern that lives here until Insert (step 6)
     openNew() {
@@ -244,23 +259,19 @@ const P = {
         this.setStatus(this.rows.length ? 'a new pattern' + (note ? ' from the strike note ' + nn(note.sonifyNote) + ' at ' + note.startSeconds.toFixed(2) + ' s (its pitch on the first pair, its onset the insert time — no link)' : '') + ' — pick a strike or deal a relation for the pitches, shapes pop in from the menu, SPACE plays it, insert puts it in the score' : 'no pair can be made on this lane', !this.rows.length);
         this.loadDb().then(() => this.drawKeyboard());
     },
-    mkRow(layer, b, offset, zone, length) { return { layer, b, offset: offset || 0, length: r3(Math.max(0.1, +length || this.length || 6)), zone: zone || null, locked: true, draw: false, scale: 6, out: null }; },
+    mkRow(layer, b, offset, zone, length) { return { layer, b, offset: offset || 0, length: r3(Math.max(0.1, +length || this.length || 6)), zone: zone || null, locked: true, levelLock: true, mute: false, solo: false, draw: false, scale: 6, out: null }; },
     // a new pair on a lane: the partner the nearest lane that can pair on the lane's middle note — never a player already in the
     // pattern (a player in two pairs would carry two bend streams on one channel: a sum, wrong); the rows warn if it happens by hand
     defaultRow(layer, used) {
         const C = C_(), BC = BC_(); if (!C || !BC) return null;
         const M = METAL(); if (layer == null || layer >= M || layer === 2) layer = 3;
         const me = TRK()[layer] && TRK()[layer].instKey; if (!me) return null;
-        const r = BC.ordinaryRange(INST(), me); let pitch = r ? Math.round((r[0] + r[1]) / 2) : 60;
-        const free = c => !used || !used.has(c.layer);
-        let cands = C.beatingPartnerCandidates(layer, pitch, 'unison').filter(free);
-        if (!cands.length) { pitch = 60; cands = C.beatingPartnerCandidates(layer, pitch, 'unison').filter(free); }
-        if (!cands.length && r) { for (let p = r[0]; p <= r[1] && !cands.length; p += 3) { cands = C.beatingPartnerCandidates(layer, p, 'unison').filter(free); if (cands.length) pitch = p; } }
-        if (!cands.length) return null;
-        cands.sort((a, c) => Math.abs(a.layer - layer) - Math.abs(c.layer - layer) || a.layer - c.layer);
-        const b = C.beatingDefaults(layer, 0, pitch, cands[0].layer);
-        b.shape = 'hump';
-        return this.mkRow(layer, b, 0, null);
+        // born EMPTY (2026-09-07, his walk-through line 5: "before I choose my instruments, I'll assign a pitch"): no note until he
+        // assigns one; the partner the nearest free bending lane; the birth shape the ADSR at 3 Hz over 9 s
+        const free = [0, 1, 3, 4, 5, 6].filter(L => L !== layer && !(used && used.has(L)));
+        free.sort((a, c) => Math.abs(a - layer) - Math.abs(c - layer) || a - c);
+        const b = C.beatingDefaults(layer, 0, null, free.length ? free[0] : null);
+        return this.mkRow(layer, b, 0, null, 9);
     },
     usedLayers(except) { const used = new Set(); this.rows.forEach(r => { if (r === except) return; used.add(r.layer); if (r.b.partnerLayer != null) used.add(r.b.partnerLayer); }); return used; },
     addRow() {
@@ -293,18 +304,13 @@ const P = {
     },
     // ---- the sequence: every pair has its own length and offset; the sequence is as long as the last pair's end ----
     seqLength() { return r3(Math.max(0.1, ...this.rows.map(r => (r.offset || 0) + (r.length || 0)), 0.1)); },
-    // the whole sequence stretched: every pair's offset and length in proportion (the curves are over normalised time; the slides and the
-    // hand marks scale; dealt breaths re-deal)
+    // the timeline's own span (his line 20: "that timeline could have an independent duration"): room to drag the pairs into; never
+    // shorter than the content; the pairs are not stretched by it
     setLength(v) {
         if (!(v > 0)) return;
-        const BC = BC_(), old = this.seqLength(), k = v / old;
-        this.rows.forEach(r => {
-            const s = BC.stretch({ length: r.length, slide: r.b.slide, breath: r.b.breath }, r.length * k);
-            r.b.slide = s.slide; r.b.breath = s.breath; r.offset = r3((r.offset || 0) * k); r.length = r3(Math.max(0.1, r.length * k));
-            this.placeZone(r); this.changed(r, true);
-        });
+        this.seqSpan = r3(Math.max(v, this.seqLength()));
         this.render();
-        this.setStatus('sequence ' + this.seqLength() + ' s — every pair and its offset stretched in proportion, the shapes kept, the breaths re-dealt');
+        this.setStatus('timeline ' + this.seqSpan + ' s' + (this.seqSpan > v ? ' (the pairs reach ' + this.seqLength() + ' s)' : '') + ' — the pairs keep their lengths; drag them in the strip');
     },
     // one pair's own duration: the same shapes over it (the composer, 2026-09-07: "keep the custom shape and just change the duration")
     setRowLength(row, v) {
@@ -324,7 +330,7 @@ const P = {
     setLevel(row, to) {
         const BC = BC_(), b = row.b; b.rateTo = to;
         const unlocked = !!(b.rate && b.rate.lower && b.rate.upper);
-        if (PRESET_SHAPES.includes(b.shape) && !unlocked) { this.popShape(row, b.shape); return; }
+        if ((PRESET_SHAPES.includes(b.shape) || (String(b.shape).indexOf('u:') === 0 && this.shapesBank[String(b.shape).slice(2)])) && !unlocked) { this.popShape(row, b.shape); return; }
         const out = this.rowOut(row), k = out.maxBeat > 1e-6 ? to / out.maxBeat : 0;
         if (unlocked) { b.rate.lower = BC.scaleCurve(b.rate.lower, k); b.rate.upper = BC.scaleCurve(b.rate.upper, k); }
         else b.beat = BC.scaleCurve(BC.curveOf(this.heardCurve(row)), k);
@@ -345,7 +351,9 @@ const P = {
         if (!this.el) return;
         const C = C_(), BC = BC_();
         this.length = this.seqLength();
-        this.el.querySelector('#bpLen').value = this.length;
+        if (this.seqSpan && this.seqSpan < this.length) this.seqSpan = null;
+        this.el.querySelector('#bpLen').value = this.seqSpan || Math.ceil(this.length * 1.15);
+        this.paintUndo();
         this.el.querySelector('#bpTitle').textContent = this.patternGroupId ? '— pattern ' + this.patternGroupId + ' · ' + this.rows.length + ' pair' + (this.rows.length > 1 ? 's' : '') : this.bound ? '— ' + (TRK()[this.bound.layer] || {}).short + ' ' + this.bound.startTime.toFixed(2) + ' s' : '— new pattern' + (this.insertAt != null ? ' @ ' + this.insertAt.toFixed(2) + ' s' : '');
         this.el.querySelector('#bpAdd').disabled = (!!this.bound && !this.patternGroupId) || this.rows.length >= MAX_ROWS;
         this.el.querySelector('#bpInsert').textContent = this.patternGroupId ? 'insert (replace the pattern)' : 'insert @ ' + (this.insertAt != null ? this.insertAt.toFixed(2) + ' s' : 'playhead');
@@ -384,11 +392,50 @@ const P = {
     // a sonority onto the keyboard: the original pitches kept (midi0), the voicing applied; a pair's note index belongs to the sonority it
     // was made on — it survives where the voiced note at that index is the pair's note as given (a reopened beating, a loaded take), else
     // it is cleared (the pair keeps its pitch, the line then comes from the key)
-    setChord(notes) {
+    // the harmony on the keyboard remembered for `revert` (his line 22: "an easy way to revert back to the original choice") — one level,
+    // taken by the pickers BEFORE they change anything (a reopened beating or a loaded take remembers too)
+    rememberHarmony() {
+        if (!this.chord.length && !this.harmony) return;
+        this._prevHarmony = { harmony: this.harmony ? Object.assign({}, this.harmony) : null, chordId: this.chordId, notes: this.chord.map(n => ({ midi: n.midi0 != null ? n.midi0 : n.midi, instKey: n.instKey, id: n.id })), voicing: JSON.parse(JSON.stringify(this.voicing)), rows: this.rows.map(r => ({ noteIndex: r.b.noteIndex, srcPitch: r.b.srcPitch, pitch: r.b.pitch, fold: r.b.fold, interval: r.b.interval, noteIs: r.b.noteIs, partnerLayer: r.b.partnerLayer })) };
+    },
+    setChord(notes, opts) {
+        const o = opts || {};
+        if (!o.noHistory) this.rememberHarmony();
         this.chord = (notes || []).map(n => Object.assign({}, n, { midi0: n.midi }));
         this.voiceNow();
-        this.rows.forEach(r => { const b = r.b; if (b.noteIndex != null && !(this.chord[b.noteIndex] && this.chord[b.noteIndex].midi === b.srcPitch)) b.noteIndex = null; });
+        // a pair keeps its place in the new sonority ("maybe there's an initial assignment automatic"): the note at its own index, else the
+        // nearest pitch of the new sonority; a pair without a note stays empty (auto-assign fills those). A reopened beating or a loaded
+        // take keeps its rows as they are (keepRows).
+        if (!o.keepRows && !this._keepRows) this.rows.forEach(r => {
+            const b = r.b; if (b.noteIndex == null && b.srcPitch == null) return;
+            if (b.noteIndex != null && this.chord[b.noteIndex]) { b.srcPitch = this.chord[b.noteIndex].midi; return; }
+            if (!this.chord.length) { b.noteIndex = null; return; }
+            const was = b.srcPitch != null ? b.srcPitch : b.pitch; let best = 0;
+            this.chord.forEach((n, k) => { if (Math.abs(n.midi - was) < Math.abs(this.chord[best].midi - was)) best = k; });
+            b.noteIndex = best; b.srcPitch = this.chord[best].midi;
+        });
+        else this.rows.forEach(r => { const b = r.b; if (b.noteIndex != null && !(this.chord[b.noteIndex] && this.chord[b.noteIndex].midi === b.srcPitch)) b.noteIndex = null; });
         this.refoldRows(); this.render();
+    },
+    // back to the previous harmony, voicing and assignments (one level)
+    revertHarmony() {
+        const p = this._prevHarmony; if (!p) { this.setStatus('nothing to revert — the harmony before the last change is remembered from now on', true); return; }
+        this._prevHarmony = null; this.snapshot();
+        this.voicing = Object.assign(VOICING_DEFAULTS(), p.voicing); this.harmony = p.harmony; this.chordId = p.chordId || '';
+        this.setChord(p.notes, { noHistory: true, keepRows: true });
+        this.rows.forEach((r, i) => { const s = p.rows[i]; if (!s) return; Object.assign(r.b, { noteIndex: s.noteIndex, srcPitch: s.srcPitch, pitch: s.pitch, fold: s.fold, interval: s.interval, noteIs: s.noteIs, partnerLayer: s.partnerLayer }); if (r.b.pitch != null) this.refold(r); });
+        this.renderList();
+        const nm = this.el.querySelector('#bpChordName'), st = this.harmony && this.harmony.bank === 'strikes' && this.db && this.db.strikes ? this.db.strikes[this.harmony.id] : null, en = this.harmony && this.harmony.bank !== 'strikes' ? this.entriesOf(this.harmony.bank).find(x => x.id === this.harmony.id) : null;
+        if (nm) nm.textContent = st ? '#' + st.index + ' · strike at ' + st.t0.toFixed(2) + ' s' : en ? en.label + ' · ' + en.name : (this.harmony ? this.harmony.id : '');
+        this.render(); this.setStatus('the previous harmony, voicing and assignments are back');
+    },
+    // the sonority dealt to the pairs without a note (all of them with SHIFT): low to high across the pairs, each folded for its players
+    autoAssign(all) {
+        const notes = [...new Set(this.chord.map(n => n.midi))].sort((a, b) => a - b); if (!notes.length) { this.setStatus('no sonority on the keyboard — pick one on the left', true); return; }
+        const rows = this.rows.filter(r => all || r.b.pitch == null); if (!rows.length) { this.setStatus('every pair has a note — SHIFT-click deals them all again', true); return; }
+        this.snapshot();
+        rows.forEach((r, k) => { const m = notes[rows.length === 1 ? Math.floor(notes.length / 2) : Math.round(k * (notes.length - 1) / (rows.length - 1))]; r.b.noteIndex = this.indexAt(m); r.b.srcPitch = m; r.b.noteIs = 'lower'; r.b.skip = false; this.refold(r); });
+        this.render(); this.setStatus('dealt: ' + rows.map(r => 'pair ' + (this.rows.indexOf(r) + 1) + ' ' + nn(r.b.srcPitch) + (r.b.fold ? ' → ' + nn(r.b.pitch) + BC_().foldMark(r.b.fold) : '')).join(' · '));
     },
     refoldRows() { this.rows.forEach(r => { const b = r.b; if (b.noteIndex != null && this.chord[b.noteIndex]) { b.srcPitch = this.chord[b.noteIndex].midi; this.refold(r); } }); },
     // THE PAIR'S FOLD (§179–180): the note as given (srcPitch — the sonority's or typed) folds by octaves AS ONE UNIT to the nearest octave
@@ -397,16 +444,25 @@ const P = {
     refold(row) {
         const BC = BC_(), T = TRK(), b = row.b;
         const me = T[row.layer] && T[row.layer].instKey, pt = b.partnerLayer != null && T[b.partnerLayer] ? T[b.partnerLayer].instKey : null;
+        if (b.srcPitch == null && b.pitch == null) { this.changed(row, true); return null; }   // born empty: nothing to fold yet
         if (b.srcPitch == null) b.srcPitch = b.pitch;
-        const f = (me && pt) ? BC.foldPair(INST(), b.srcPitch, b.interval, me, pt) : null;
-        if (f) { b.pitch = f.pitch; b.fold = f.k; } else { b.pitch = b.srcPitch; b.fold = 0; }
+        let f = (me && pt) ? BC.foldPair(INST(), b.srcPitch, b.interval, me, pt, null, { noteIs: b.noteIs || 'lower' }) : null;
+        // the fourth and the fifth are one family (2026-09-07): when no octave serves the one, the pair takes the other with the same note as its
+        // other end — the note given becomes the pair's upper note (or its lower again)
+        if (!f && me && pt && BC.INVERSION[b.interval]) {
+            const inv = BC.INVERSION[b.interval], flip = (b.noteIs || 'lower') === 'lower' ? 'upper' : 'lower';
+            const g = BC.foldPair(INST(), b.srcPitch, inv, me, pt, null, { noteIs: flip });
+            if (g) { b.interval = inv; b.noteIs = flip; f = g; }
+        }
+        if (f) { b.pitch = f.pitch; b.fold = f.k; } else { b.pitch = (b.noteIs === 'upper') ? b.srcPitch - (BC.INTERVALS[b.interval] || BC.INTERVALS.unison).semitones : b.srcPitch; b.fold = 0; }
         this.changed(row, true);
         return f;
     },
     rowFold(row, m) {   // what the row's pair would make of a note, without touching the row
         const BC = BC_(), T = TRK(), b = row.b;
         const me = T[row.layer] && T[row.layer].instKey, pt = b.partnerLayer != null && T[b.partnerLayer] ? T[b.partnerLayer].instKey : null;
-        return (me && pt) ? BC.foldPair(INST(), m, b.interval, me, pt) : null;
+        if (!(me && pt)) return null;
+        return BC.foldPair(INST(), m, b.interval, me, pt, null, { noteIs: b.noteIs || 'lower' }) || (BC.INVERSION[b.interval] ? BC.foldPair(INST(), m, BC.INVERSION[b.interval], me, pt, null, { noteIs: (b.noteIs || 'lower') === 'lower' ? 'upper' : 'lower' }) : null);
     },
     // the pitch each player of the row actually sounds, with the fold mark
     rowPitches(row) {
@@ -442,109 +498,120 @@ const P = {
     buildRow(row, i) {
         const C = C_(), BC = BC_(), b = row.b, out = row.out, T = TRK();
         const me = T[row.layer] ? T[row.layer].label : '?', meKey = T[row.layer] && T[row.layer].instKey, ptKey = b.partnerLayer != null && T[b.partnerLayer] ? T[b.partnerLayer].instKey : null;
-        // the pitch side (§180): the note as given, the pair's fold, the ladder when no octave serves; every player in the partner menu
-        const src = b.srcPitch != null ? b.srcPitch : b.pitch, RP = this.rowPitches(row), folded = !!(meKey && ptKey && BC.foldPair(INST(), src, b.interval, meKey, ptKey));
-        const ladder = (!folded && meKey && ptKey) ? BC.pairLadder(INST(), src, b.interval, meKey, ptKey) : null;
+        const noNote = b.pitch == null;   // born empty (his line 5): the row asks for a note
+        const src = noNote ? null : (b.srcPitch != null ? b.srcPitch : b.pitch), RP = noNote ? null : this.rowPitches(row);
+        const folded = !noNote && !!(meKey && ptKey && this.rowFold(row, src));
+        const ladder = (!noNote && !folded && meKey && ptKey) ? BC.pairLadder(INST(), src, b.interval, meKey, ptKey) : null;
         const laneOf = key => T.findIndex(t => t.instKey === key);
         const pcCol = m => this.pcColor(((m % 12) + 12) % 12);
         const chip = (p, bad) => p ? '<span class="bpChip" style="color:' + (bad ? '#e88' : pcCol(p.pitch)) + ';font-weight:600" title="' + esc(p.player + (bad ? ': out of reach at this interval in every octave' : ' sounds ' + nn(p.pitch) + (p.k ? ', ' + Math.abs(p.k) + ' octave' + (Math.abs(p.k) > 1 ? 's' : '') + (p.k > 0 ? ' up' : ' down') + ' from the note as given' : ', as given'))) + '">' + (bad ? '✕' : nn(p.pitch) + p.mark) + '</span>' : '';
-        const seatOpts = meKey ? BC.seatOptions(INST(), src, b.interval, meKey) : [];
+        const seatOpts = (meKey && !noNote) ? BC.seatOptions(INST(), src, b.interval, meKey) : [];
         const lim = k => k ? BC.bendLimits(INST(), k) : null, lo = lim(out.players.lower), up = lim(out.players.upper);
-        const fl = out.flags.map(f => f.flag).filter((v, j, a) => a.indexOf(v) === j);
+        const fl = out.flags.map(f => f.flag).filter((v, j, a) => a.indexOf(v) === j && v !== 'out-of-range');
         { const used = this.usedLayers(row); const twice = [row.layer, b.partnerLayer].filter(L => L != null && used.has(L)).map(L => T[L].short); if (twice.length) fl.push('⚠ ' + twice.join(', ') + ' also in another pair — one channel would carry two bends'); }
         const iv = BC.INTERVALS[b.interval] || BC.INTERVALS.unison;
         const box = document.createElement('div');
         box.className = 'bpRow'; box.dataset.row = i;
-        box.style.cssText = 'border:1px solid #444;border-left:4px solid ' + ROW_COLORS[i % ROW_COLORS.length] + ';border-radius:5px;padding:6px 8px;margin-bottom:8px;background:' + (i === this.activeRow ? 'rgba(123,63,228,0.08)' : 'rgba(255,255,255,0.03)');
-        // the pitch side: a click on the row's header takes the armed note (or makes the row the active one — the keyboard dims for it);
-        // a note dragged from the keyboard lands the same way
-        box.addEventListener('mousedown', () => { if (this.activeRow !== i) { this.activeRow = i; this.paintFocus(); } this.focus = 'pair'; this.paintFocus(); });   // the row under the mouse is the pair SPACE plays
+        box.style.cssText = 'border:1px solid #444;border-left:4px solid ' + ROW_COLORS[i % ROW_COLORS.length] + ';border-radius:5px;padding:6px 8px;margin-bottom:8px;background:' + (i === this.activeRow ? 'rgba(123,63,228,0.08)' : 'rgba(255,255,255,0.03)') + (row.mute ? ';opacity:0.55' : '');
+        box.addEventListener('mousedown', () => { if (this.activeRow !== i) this.activeRow = i; this.focus = 'pair'; this.paintFocus(); });   // the row under the mouse is the pair SPACE plays
         box.addEventListener('click', ev => { if (ev.target.closest('input, select, button, svg')) return; if (this.armed != null) this.assign(i, this.armed); else if (this.activeRow !== i) { this.activeRow = i; this.render(); } });
-        box.addEventListener('dragover', ev => { ev.preventDefault(); box.style.outline = '2px dashed ' + ROW_COLORS[i % ROW_COLORS.length]; });
-        box.addEventListener('dragleave', () => { box.style.outline = ''; });
-        box.addEventListener('drop', ev => { ev.preventDefault(); box.style.outline = ''; const m = parseInt(ev.dataTransfer.getData('text/plain'), 10); if (!isNaN(m)) this.assign(i, m); });
         const sel = 'background:#7B3FE4;color:#fff;border-color:#7B3FE4;';
         const btn = (cls, data, label, on, title) => '<button class="' + cls + '" ' + data + ' title="' + esc(title || '') + '" style="font-size:12px;padding:1px 5px;margin:1px;cursor:pointer;' + (on ? sel : '') + '">' + label + '</button>';
+        const userShapes = Object.keys(this.shapesBank || {}).sort();
+        const shapeBtns = (cls, what) => SHAPES.map(([k, l]) => btn(cls, 'data-shape="' + k + '"', l, false, what)).join('') + userShapes.map(n => btn(cls, 'data-shape="u:' + esc(n) + '"', '&#9733; ' + esc(n), false, 'your shape "' + n + '" — ALT-click deletes it')).join('');
+        // player 1 and player 2 as pull-downs, both always (a bound zone moves to the lane chosen); player 2 shows what it would sound
+        const laneSel = '<select class="bpLane" title="player 1 &#8212; the launching player (a bound zone moves to that lane)">' + [0, 1, 3, 4, 5, 6].map(L => '<option value="' + L + '"' + (L === row.layer ? ' selected' : '') + '>' + esc(T[L].label) + '</option>').join('') + '</select>';
+        const ptSel = '<select class="bpPartner" title="player 2: every player, with the pitch it would sound on this note (&#8593; / &#8595; = folded by octaves, both together), &#10005; when no octave serves both">' + (b.partnerLayer == null ? '<option value="" selected>partner&#8230;</option>' : '')
+            + (noNote ? [0, 1, 3, 4, 5, 6].filter(L => L !== row.layer).map(L => '<option value="' + L + '"' + (L === b.partnerLayer ? ' selected' : '') + '>' + esc(T[L].label) + '</option>').join('')
+                      : seatOpts.map(o => { const L = laneOf(o.player), f = o.fold, pOf = f ? (f.lower === o.player ? f.pitch : f.pitch + iv.semitones) : null; return L < 0 ? '' : '<option value="' + L + '"' + (L === b.partnerLayer ? ' selected' : '') + '>' + esc(T[L].label) + ' — ' + (f ? nn(pOf) + BC.foldMark(f.k) : '✕') + '</option>'; }).join('')) + '</select>';
+        const levLo = b.levelLo == null ? 0.3 : b.levelLo, levHi = b.levelHi == null ? 0.9 : b.levelHi;
+        const brMode = (b.breath.mode || 'one') !== 'designated' ? 'one' : (b.breath.deal === false ? 'hand' : ((b.breath.phase == null ? 0.5 : +b.breath.phase) === 0 ? 'unison' : 'random'));
         box.innerHTML = [
             '<div style="display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-bottom:4px">',
-            // the pair's NODE (CN-36: "click a node connected to a pair"; the strikes drawer's "the lines land here" dot): lit while a note is armed
-            '<span class="bpNode" title="' + (this.armed != null ? nn(this.armed) + ' lands here' : 'arm a note on the keyboard, then click here') + '" style="display:inline-block;width:12px;height:12px;border-radius:50%;border:2px solid ' + ROW_COLORS[i % ROW_COLORS.length] + ';background:' + (this.armed != null ? ROW_COLORS[i % ROW_COLORS.length] : '#1b1b20') + ';cursor:pointer;flex:none"></span>',
+            // the pair's NODE (CN-36: "click a node connected to a pair"): lit while a note is armed
+            '<span class="bpNode" title="' + (this.armed != null ? nn(this.armed) + ' lands here' : 'double-click a note on the keyboard, then click here') + '" style="display:inline-block;width:12px;height:12px;border-radius:50%;border:2px solid ' + ROW_COLORS[i % ROW_COLORS.length] + ';background:' + (this.armed != null ? ROW_COLORS[i % ROW_COLORS.length] : '#1b1b20') + ';cursor:pointer;flex:none"></span>',
             '<b style="color:#c9a8ff">pair ' + (i + 1) + '</b> ',
-            (row.zone ? '<span>' + esc(me) + '</span>' : '<select class="bpLane" title="the launching player">' + [0, 1, 3, 4, 5, 6].map(L => '<option value="' + L + '"' + (L === row.layer ? ' selected' : '') + '>' + esc(T[L].label) + '</option>').join('') + '</select>'),
-            ' ' + chip(RP.me, !folded),
-            // the partner: EVERY player listed (§180 — no self-limiting), each with what it would sound on this note and the fold mark, ✕ when no octave serves both
-            ' + <select class="bpPartner" title="the partner: every player, with the pitch it would sound on this note (&#8593; / &#8595; = folded by octaves, both players together), &#10005; when no octave serves both">' + (b.partnerLayer == null ? '<option value="" selected>partner&#8230;</option>' : '')
-                + seatOpts.map(o => { const L = laneOf(o.player), f = o.fold, pOf = f ? (f.lower === o.player ? f.pitch : f.pitch + iv.semitones) : null; return L < 0 ? '' : '<option value="' + L + '"' + (L === b.partnerLayer ? ' selected' : '') + '>' + esc(T[L].label) + ' — ' + (f ? nn(pOf) + BC.foldMark(f.k) : '✕') + '</option>'; }).join('') + '</select>',
-            ' ' + chip(RP.partner, !folded),
-            ' on <input class="bpPitch" type="number" value="' + src + '" min="21" max="108" step="1" style="width:50px" title="the note as given (the sonority&#8217;s, or typed) &#8212; the pair folds it as one unit to the nearest octave both reach, as written first, a tie down"> <span style="color:#aaa">' + nn(src) + (folded && RP.k ? ' &#8594; ' + nn(b.pitch) + RP.mark : '') + (iv.semitones && folded ? ' + ' + nn(b.pitch + iv.semitones) : '') + (b.noteIndex != null ? ' <span style="color:#777" title="the pair remembers which note of the sonority it holds: the voicings and the octave box move it and the pair follows">note ' + (b.noteIndex + 1) + '</span>' : '') + '</span>',
-            ' <span>' + Object.values(BC.INTERVALS).map(q => btn('bpIv', 'data-iv="' + q.key + '"', q.label, b.interval === q.key, q.label + ': the just offset ' + q.justOffsetCents + ' c on the upper note, the beating ' + q.partial + '× per cent')).join('') + '</span>',
-            // this pair's own length and its own play (2026-09-07)
-            ' <label style="color:#888" title="this pair&#8217;s own duration &#8212; the curves keep their shape over it; the sequence strip&#8217;s right edge does the same">len <input class="bpRowLen" type="number" step="0.5" min="0.5" max="180" value="' + row.length + '" style="width:52px"> s</label>',
+            laneSel, ' ' + chip(RP && RP.me, !folded),
+            ' + ' + ptSel, ' ' + chip(RP && RP.partner, !folded),
+            (noNote ? ' <span style="color:#c9a8ff" title="the pair has no note yet">assign a note &#8212; double-click a note on the keyboard, then this node</span>'
+                    : ' on <input class="bpPitch" type="number" value="' + src + '" min="21" max="108" step="1" style="width:50px" title="the note as given (the sonority&#8217;s, or typed) &#8212; the pair folds it as one unit to the nearest octave both reach, as written first, a tie down"> <span style="color:#aaa">' + nn(src) + (folded && RP.k ? ' &#8594; ' + nn(b.pitch) + RP.mark : '') + (iv.semitones && folded ? ' + ' + nn(b.pitch + iv.semitones) : '') + (b.noteIs === 'upper' ? ' <span style="color:#777" title="the note given is the pair&#8217;s UPPER note: the fifth that no octave served sounds as the fourth below it (fourths and fifths are one family)">inverted</span>' : '') + (b.noteIndex != null ? ' <span style="color:#777" title="the pair remembers which note of the sonority it holds: the voicings and the octave box move it and the pair follows">note ' + (b.noteIndex + 1) + '</span>' : '') + '</span>'),
+            ' <span>' + Object.values(BC.INTERVALS).map(q => btn('bpIv', 'data-iv="' + q.key + '"', q.label, b.interval === q.key, q.label + ': the just offset ' + q.justOffsetCents + ' c on the upper note, the beating ' + q.partial + '× per cent' + (q.key === 'P4' || q.key === 'P5' ? ' — the fourth and the fifth are one family: when no octave serves, the pair takes the other' : ''))).join('') + '</span>',
+            ' <label style="color:#888" title="this pair&#8217;s own duration &#8212; the curves keep their shape over it; the end handle and the strip&#8217;s right edge do the same">len <input class="bpRowLen" type="number" step="0.5" min="0.5" max="180" value="' + row.length + '" style="width:52px"> s</label>',
             ' ' + btn('bpRowPlay', '', '&#9654; pair', false, 'hear this pair alone — SPACE does the same while the pair is the focus'),
             (b.skip ? ' <span style="color:#e88">&#10005; skipped &#8212; nobody plays it</span> ' + btn('bpUnskip', '', 'play it', false, 'take the skip off') : ''),
             (row.zone ? '' : ' <button class="bpRemove" title="remove this pair" style="margin-left:auto;font-size:12px;cursor:pointer">&#10005; pair</button>'),
             '</div>',
-            // THE LADDER (§180, Q2 — offered, never applied by the tool): when no octave serves both players at this interval — the intervals
-            // that would, another player for either seat, or skip (the strikes drawer's third way)
+            // THE LADDER (§180, Q2 — offered, never applied by the tool): when no octave serves both players at this interval
             (ladder ? '<div class="bpLadder" style="color:#e88;margin:0 0 4px;display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center">&#9888; no octave where ' + esc(T[row.layer].short) + ' and ' + esc(T[b.partnerLayer].short) + ' both reach ' + nn(src) + ' at ' + iv.label + ' &#8212;'
                 + (ladder.intervals.length ? ' <span style="color:#aaa">the interval:</span> ' + ladder.intervals.map(o => btn('bpOfferIv', 'data-iv="' + o.interval + '"', o.label + ': ' + esc(T[laneOf(o.fold.lower)].short) + ' ' + nn(o.fold.pitch) + ' · ' + esc(T[laneOf(o.fold.upper)].short) + ' ' + nn(o.fold.pitch + BC.INTERVALS[o.interval].semitones), false, 'this pair at ' + o.label + ' (folded ' + Math.abs(o.fold.k) + ')')).join('') : '')
-                + (ladder.players.some(o => o.seat === 'b') ? ' <span style="color:#aaa">instead of ' + esc(T[b.partnerLayer].short) + ':</span> ' + ladder.players.filter(o => o.seat === 'b').map(o => btn('bpOfferPt', 'data-lane="' + laneOf(o.player) + '"', esc(T[laneOf(o.player)].short) + ' ' + nn(o.fold.lower === o.player ? o.fold.pitch : o.fold.pitch + iv.semitones) + BC.foldMark(o.fold.k), false, T[laneOf(o.player)].label + ' as the partner')).join('') : '')
-                + (!row.zone && ladder.players.some(o => o.seat === 'a') ? ' <span style="color:#aaa">instead of ' + esc(T[row.layer].short) + ':</span> ' + ladder.players.filter(o => o.seat === 'a').map(o => btn('bpOfferMe', 'data-lane="' + laneOf(o.player) + '"', esc(T[laneOf(o.player)].short) + ' ' + nn(o.fold.lower === o.player ? o.fold.pitch : o.fold.pitch + iv.semitones) + BC.foldMark(o.fold.k), false, T[laneOf(o.player)].label + ' as the launching player')).join('') : '')
+                + (ladder.players.some(o => o.seat === 'b') ? ' <span style="color:#aaa">instead of ' + esc(T[b.partnerLayer].short) + ':</span> ' + ladder.players.filter(o => o.seat === 'b').map(o => btn('bpOfferPt', 'data-lane="' + laneOf(o.player) + '"', esc(T[laneOf(o.player)].short) + ' ' + nn(o.fold.lower === o.player ? o.fold.pitch : o.fold.pitch + iv.semitones) + BC.foldMark(o.fold.k), false, T[laneOf(o.player)].label + ' as player 2')).join('') : '')
+                + (ladder.players.some(o => o.seat === 'a') ? ' <span style="color:#aaa">instead of ' + esc(T[row.layer].short) + ':</span> ' + ladder.players.filter(o => o.seat === 'a').map(o => btn('bpOfferMe', 'data-lane="' + laneOf(o.player) + '"', esc(T[laneOf(o.player)].short) + ' ' + nn(o.fold.lower === o.player ? o.fold.pitch : o.fold.pitch + iv.semitones) + BC.foldMark(o.fold.k), false, T[laneOf(o.player)].label + ' as player 1')).join('') : '')
                 + ' ' + btn('bpSkip', '', '&#10005; skip', !!b.skip, 'nobody plays this pair (the strikes drawer\'s third way); a new note, partner or interval takes it off') + '</div>' : ''),
+            // the shape line: the menu's shapes and his own, the maximum in Hz with its audition, the lock, draw, the axis, save shape; the pair takes at the right
             '<div style="display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-bottom:3px">',
-            '<span style="color:#888">rate</span> ' + SHAPES.map(([k, l]) => btn('bpShape', 'data-shape="' + k + '"', l, false, 'pop the shape in (the level = the row&#8217;s to rate)')).join(''),
-            ' to <input class="bpRateTo" type="number" value="' + (+b.rateTo || 0) + '" min="0" max="30" step="0.5" style="width:46px" title="the shape&#8217;s level in beats per second"> /s',
+            '<span style="color:#888">shape</span> ' + shapeBtns('bpShape', 'pop the shape in at the maximum'),
+            ' <label style="color:#888" title="the maximum beating in Hz (beats per second) &#8212; type it, spin it with the arrows or the wheel; a menu shape pops in again at it, a drawn shape is scaled to it">max <input class="bpRateTo" type="number" value="' + (+b.rateTo || 0) + '" min="0" max="30" step="0.5" style="width:52px"> Hz</label>',
+            ' ' + btn('bpHearMax', '', '&#9654; max', false, 'hear 4 s flat at the maximum on this pair'),
             ' ' + btn('bpLock', '', row.locked ? '&#128274; mirrored' : '&#128275; free', row.locked, 'the mirror lock: drag one curve, the other mirrors (ALT-drag moves one alone)'),
-            ' ' + btn('bpDraw', '', '&#10002; draw', row.draw, 'draw: click in the rate area to add points (ESC or click again to end)'),
-            ' <label style="color:#888">±<input class="bpScale" type="number" value="' + row.scale + '" min="2" max="40" step="1" style="width:40px" title="the rate axis, beats per second"></label>',
-            // the pair takes (2026-09-07: "a save for individual pairs settings"): the curves, the level, the breaths, the interval, the length, under a name
+            ' ' + btn('bpDraw', '', '&#10002; draw', row.draw, 'draw: a click in the rate area adds a point (ESC or click again to end) — without it a double-click adds one'),
+            ' <label style="color:#888">±<input class="bpScale" type="number" value="' + row.scale + '" min="2" max="40" step="1" style="width:40px" title="the rate axis, Hz"></label>',
+            ' <span style="display:inline-flex;gap:3px;align-items:center"><input class="bpShapeName" type="text" placeholder="shape name" style="width:80px" title="store this pair&#8217;s beating shape under a name (normalised: it pops in at any maximum) &#8212; ENTER saves"><button class="bpShapeSave" title="store the shape among the shape buttons (bank/panel_snapshots.json, beatingShapes); ALT-click a stored shape deletes it">save shape</button></span>',
             ' <span style="margin-left:auto;display:inline-flex;gap:4px;align-items:center"><input class="bpPairName" type="text" placeholder="pair take" style="width:90px" title="a name for this pair&#8217;s settings (the curves, the level, the breaths, the interval, the length) &#8212; ENTER saves">'
                 + '<button class="bpPairSave" title="save this pair&#8217;s settings as a named pair take (bank/panel_snapshots.json, the beatingPairs bucket)">save pair</button>'
                 + '<select class="bpPairSel" style="max-width:120px" title="load a pair take into this pair: its curves, level, breaths, interval and length; the players and the note stay"><option value="">load pair&#8230;</option>' + Object.keys(this.pairTakes || {}).sort().map(n => '<option value="' + esc(n) + '">' + esc(n) + '</option>').join('') + '</select></span>',
             '</div>',
             '<svg class="bpRates" width="' + W + '" height="' + HR + '" style="display:block;background:#1a1a20;border-radius:3px"></svg>',
-            '<div style="display:flex;gap:8px;align-items:center;margin:3px 0 2px"><span style="color:#888">crescendo</span> ' + SHAPES.map(([k, l]) => btn('bpLevShape', 'data-shape="' + k + '"', l, false, 'the level shape between low and high')).join('')
+            // the crescendo line: the shapes, follows, together / each, low and high as dynamics (ppp … fff)
+            '<div style="display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin:3px 0 2px"><span style="color:#888">crescendo</span> ' + shapeBtns('bpLevShape', 'the level shape between low and high')
                 + ' ' + btn('bpLevFollow', '', 'follows the beating', !b.levelCurve, 'the crescendo follows the beating between low and high')
-                + ' low <input class="bpLevLo" type="number" value="' + b.levelLo + '" min="0" max="1" step="0.05" style="width:44px" title="the score&#8217;s curve height, not dB and not raw velocity: 0 = the softest held dynamic, 1 = fff, the same loudness on every instrument through the loudness remap (velocity + a CC7 trim per instrument, measured in the rack)"> high <input class="bpLevHi" type="number" value="' + b.levelHi + '" min="0" max="1" step="0.05" style="width:44px" title="the score&#8217;s curve height: 0 = the softest held dynamic, 1 = fff, equal loudness across instruments through the remap"></div>',
+                + ' ' + btn('bpLevLock', '', row.levelLock !== false ? '&#128274; together' : '&#128275; each', row.levelLock !== false, 'together: one crescendo for both players (edit one, both move) · each: a crescendo per player ("maybe they reach max at different times")')
+                + ' <label style="color:#888" title="the score&#8217;s dynamic: ppp = 0 &#8230; fff = 1 in eight steps &#8212; type a name (mp) or a number; equal loudness across instruments through the remap, over the whole measured scale">low <input class="bpLevLo" type="text" value="' + levLo + '" style="width:44px"> <span class="bpDynLo" style="color:#7ec9a8">' + dynName(levLo) + '</span></label>'
+                + ' <label style="color:#888" title="ppp = 0 &#8230; fff = 1">high <input class="bpLevHi" type="text" value="' + levHi + '" style="width:44px"> <span class="bpDynHi" style="color:#7ec9a8">' + dynName(levHi) + '</span></label></div>',
             '<svg class="bpLevel" width="' + W + '" height="' + HL + '" style="display:block;background:#1a1a20;border-radius:3px"></svg>',
-            '<div style="display:flex;gap:8px;align-items:center;margin:3px 0 2px"><span style="color:#888">breaths</span> <select class="bpBreath">' + ['one', 'continuous', 'designated'].map(k => '<option value="' + k + '"' + ((b.breath.mode || 'one') === k ? ' selected' : '') + '>' + k + '</option>').join('') + '</select>'
-                + ' ' + btn('bpShuffle', '', '&#8635; shuffle', false, 'deal the breaths again from a new seed — the hand-moved marks stay') + ' <span style="color:#888">seed ' + (b.breath.seed || 1) + '</span>'
+            // the breaths: one · random · unison · by hand; the shuffle; the marks live in the lane below
+            '<div style="display:flex;gap:8px;align-items:center;margin:3px 0 2px"><span style="color:#888">breaths</span> <select class="bpBreath" title="one: a single breath or bow each · random: dealt inside the ceiling, the two players staggered · unison: both at the same marks · by hand: only the marks you place">' + [['one', 'one'], ['random', 'random'], ['unison', 'unison'], ['hand', 'by hand']].map(([k, l]) => '<option value="' + k + '"' + (brMode === k ? ' selected' : '') + '>' + l + '</option>').join('') + '</select>'
+                + ' ' + btn('bpShuffle', '', '&#8635; shuffle', false, 'deal the breaths again from a new seed — the marks you placed stay') + ' <span style="color:#888">seed ' + (b.breath.seed || 1) + '</span>'
                 + ' <span class="bpBreathInfo" style="color:#888"></span></div>',
             '<svg class="bpBreaths" width="' + W + '" height="' + HB + '" style="display:block;background:#1a1a20;border-radius:3px"></svg>',
             '<div style="display:flex;gap:8px;align-items:center;margin-top:3px"><span style="color:#888" title="this pair&#8217;s place in the sequence — drag its zone in the strip above">@ ' + (row.offset || 0).toFixed(2) + ' s · ' + row.length + ' s</span>',
-            ' <span class="bpReadout" style="color:#9a9;margin-left:auto">max ' + out.maxBeat + '/s · ' + (out.players.lower || '?') + ' ±' + out.maxCents.lower + ' c' + (lo ? '/' + lo.limitCents : '') + ' · ' + (out.players.upper || '?') + ' ±' + out.maxCents.upper + ' c' + (up ? '/' + up.limitCents : '')
+            ' <span class="bpReadout" style="color:#9a9;margin-left:auto">max ' + out.maxBeat + ' Hz · ' + (out.players.lower || '?') + ' ±' + out.maxCents.lower + ' c' + (lo ? '/' + lo.limitCents : '') + ' · ' + (out.players.upper || '?') + ' ±' + out.maxCents.upper + ' c' + (up ? '/' + up.limitCents : '')
                 + (out.justOffsetCents ? ' · just ' + (out.justOffsetCents > 0 ? '+' : '') + out.justOffsetCents + ' c' : '') + ' · ' + out.notes.lower.length + '+' + out.notes.upper.length + ' notes' + (fl.length ? ' · <span style="color:#e88">&#9888; ' + fl.join(' ') + '</span>' : '') + '</span></div>',
         ].join('');
         // the controls
         const q = s => box.querySelector(s), qa = s => box.querySelectorAll(s);
         const redo = () => { this.changed(row, true); this.render(); };
         const refit = () => { b.skip = false; this.refold(row); this.render(); this.sayFold(row, i); };   // a change of a seat, the note or the interval refolds the pair (§180) and takes a skip off
-        if (q('.bpLane')) q('.bpLane').addEventListener('change', ev => { row.layer = +ev.target.value; if (b.partnerLayer === row.layer) b.partnerLayer = null; refit(); });
-        q('.bpPartner').addEventListener('change', ev => { b.partnerLayer = ev.target.value === '' ? null : +ev.target.value; refit(); });
-        q('.bpPitch').addEventListener('change', ev => { const v = parseInt(ev.target.value, 10); if (!isNaN(v)) { b.noteIndex = null; b.srcPitch = clamp(v, 21, 108); refit(); } });
-        qa('.bpIv').forEach(el => el.addEventListener('click', () => { b.interval = el.dataset.iv; refit(); }));
-        qa('.bpOfferIv').forEach(el => el.addEventListener('click', () => { b.interval = el.dataset.iv; refit(); }));
-        qa('.bpOfferPt').forEach(el => el.addEventListener('click', () => { b.partnerLayer = +el.dataset.lane; refit(); }));
-        qa('.bpOfferMe').forEach(el => el.addEventListener('click', () => { row.layer = +el.dataset.lane; refit(); }));
-        if (q('.bpSkip')) q('.bpSkip').addEventListener('click', () => { b.skip = !b.skip; redo(); this.setStatus(b.skip ? 'pair ' + (i + 1) + ' skipped — nobody plays it; a new note, partner or interval takes the skip off' : 'pair ' + (i + 1) + ' plays again'); });
-        if (q('.bpUnskip')) q('.bpUnskip').addEventListener('click', () => { b.skip = false; redo(); });
-        if (q('.bpRemove')) q('.bpRemove').addEventListener('click', () => this.removeRow(i));
-        qa('.bpShape').forEach(el => el.addEventListener('click', () => { this.popShape(row, el.dataset.shape); redo(); }));
-        q('.bpRateTo').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (!isNaN(v)) { this.setLevel(row, v); redo(); } });
-        q('.bpRowLen').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (v > 0) this.setRowLength(row, v); });
+        q('.bpLane').addEventListener('change', ev => { this.snapshot(); const L = +ev.target.value; if (b.partnerLayer === L) b.partnerLayer = null; if (row.zone) C.removeBeatingDecor(row.zone); row.layer = L; if (row.zone) { row.zone.layer = L; C.renderZone(row.zone); C.markDirty(); } refit(); });
+        q('.bpPartner').addEventListener('change', ev => { this.snapshot(); b.partnerLayer = ev.target.value === '' ? null : +ev.target.value; refit(); });
+        if (q('.bpPitch')) q('.bpPitch').addEventListener('change', ev => { const v = parseInt(ev.target.value, 10); if (!isNaN(v)) { this.snapshot(); b.noteIndex = null; b.srcPitch = clamp(v, 21, 108); b.noteIs = 'lower'; refit(); } });
+        qa('.bpIv').forEach(el => el.addEventListener('click', () => { this.snapshot(); b.interval = el.dataset.iv; b.noteIs = 'lower'; refit(); }));
+        qa('.bpOfferIv').forEach(el => el.addEventListener('click', () => { this.snapshot(); b.interval = el.dataset.iv; b.noteIs = 'lower'; refit(); }));
+        qa('.bpOfferPt').forEach(el => el.addEventListener('click', () => { this.snapshot(); b.partnerLayer = +el.dataset.lane; refit(); }));
+        qa('.bpOfferMe').forEach(el => el.addEventListener('click', () => { this.snapshot(); const L = +el.dataset.lane; if (row.zone) { C.removeBeatingDecor(row.zone); row.zone.layer = L; } row.layer = L; if (row.zone) { C.renderZone(row.zone); C.markDirty(); } refit(); }));
+        if (q('.bpSkip')) q('.bpSkip').addEventListener('click', () => { this.snapshot(); b.skip = !b.skip; redo(); this.setStatus(b.skip ? 'pair ' + (i + 1) + ' skipped — nobody plays it; a new note, partner or interval takes the skip off' : 'pair ' + (i + 1) + ' plays again'); });
+        if (q('.bpUnskip')) q('.bpUnskip').addEventListener('click', () => { this.snapshot(); b.skip = false; redo(); });
+        if (q('.bpRemove')) q('.bpRemove').addEventListener('click', () => { this.snapshot(); this.removeRow(i); });
+        qa('.bpShape').forEach(el => el.addEventListener('click', ev => { if (ev.altKey && el.dataset.shape.indexOf('u:') === 0) { this.deleteShape(el.dataset.shape.slice(2)); return; } this.snapshot(); this.popShape(row, el.dataset.shape); redo(); }));
+        q('.bpRateTo').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (!isNaN(v)) { this.snapshot(); this.setLevel(row, Math.max(0, v)); redo(); } });
+        q('.bpRateTo').addEventListener('wheel', ev => { ev.preventDefault(); ev.stopPropagation(); const v = Math.max(0, r3((+ev.target.value || 0) + (ev.deltaY > 0 ? -0.5 : 0.5))); ev.target.value = v; this.snapshot(); this.setLevel(row, v); redo(); }, { passive: false });
+        q('.bpHearMax').addEventListener('click', () => { this.activeRow = i; this.setFocus('pair'); this.hearMax(row); });
+        q('.bpRowLen').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (v > 0) { this.snapshot(); this.setRowLength(row, v); } });
         q('.bpRowPlay').addEventListener('click', () => { this.activeRow = i; this.setFocus('pair'); this.playRow(i); });
         q('.bpPairSave').addEventListener('click', () => this.savePair(i, q('.bpPairName').value));
         q('.bpPairName').addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); ev.stopPropagation(); this.savePair(i, q('.bpPairName').value); });
-        q('.bpPairSel').addEventListener('change', ev => { if (ev.target.value) this.loadPair(i, ev.target.value); ev.target.value = ''; });
-        q('.bpLock').addEventListener('click', () => { row.locked = !row.locked; if (row.locked) { this.relock(row); } else { this.unlock(row); } redo(); });
-        q('.bpDraw').addEventListener('click', () => { row.draw = !row.draw; this.render(); this.setStatus(row.draw ? 'draw: click in the rate area to add points; a point drags; ALT-click removes it; click draw again to end' : 'draw off'); });
+        q('.bpPairSel').addEventListener('change', ev => { if (ev.target.value) { this.snapshot(); this.loadPair(i, ev.target.value); } ev.target.value = ''; });
+        q('.bpShapeSave').addEventListener('click', () => this.saveShape(row, q('.bpShapeName').value));
+        q('.bpShapeName').addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); ev.stopPropagation(); this.saveShape(row, q('.bpShapeName').value); });
+        q('.bpLock').addEventListener('click', () => { this.snapshot(); row.locked = !row.locked; if (row.locked) { this.relock(row); } else { this.unlock(row); } redo(); });
+        q('.bpDraw').addEventListener('click', () => { row.draw = !row.draw; this.render(); this.setStatus(row.draw ? 'draw: click in the rate area to add points; a point drags; ALT-click removes it; click draw again to end' : 'draw off — a double-click on the curve area adds a point'); });
         q('.bpScale').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (v > 0) { row.scale = v; this.render(); } });
-        qa('.bpLevShape').forEach(el => el.addEventListener('click', () => { b.levelCurve = BC.shape(el.dataset.shape, { level: b.levelHi, from: el.dataset.shape === 'rampIn' ? b.levelHi : b.levelLo, to: el.dataset.shape === 'rampIn' ? b.levelLo : b.levelHi, peak: b.levelHi, base: b.levelLo }); redo(); }));
-        q('.bpLevFollow').addEventListener('click', () => { b.levelCurve = null; redo(); });
-        q('.bpLevLo').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (!isNaN(v)) { b.levelLo = clamp(v, 0, 1); redo(); } });
-        q('.bpLevHi').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (!isNaN(v)) { b.levelHi = clamp(v, 0, 1); redo(); } });
-        q('.bpBreath').addEventListener('change', ev => { b.breath.mode = ev.target.value; redo(); });
-        q('.bpShuffle').addEventListener('click', () => { b.breath.mode = 'designated'; b.breath.seed = (b.breath.seed || 1) + 1; delete b.breath.deal; redo(); this.setStatus('breaths dealt again (seed ' + b.breath.seed + '); the hand-moved marks kept'); });
+        qa('.bpLevShape').forEach(el => el.addEventListener('click', ev => { if (ev.altKey && el.dataset.shape.indexOf('u:') === 0) { this.deleteShape(el.dataset.shape.slice(2)); return; } this.snapshot(); this.popLevelShape(row, el.dataset.shape); redo(); }));
+        q('.bpLevFollow').addEventListener('click', () => { this.snapshot(); b.levelCurve = null; redo(); });
+        q('.bpLevLock').addEventListener('click', () => { this.snapshot(); const lock = row.levelLock === false; row.levelLock = lock; const lp = this.levelPts(row); if (lock && lp) this.setLevelPts(row, 'upper', lp.upper); redo(); this.setStatus(lock ? 'the crescendo is shared again — the upper player\'s curve for both' : 'a crescendo per player — edit each curve on its own'); });
+        q('.bpLevLo').addEventListener('change', ev => { const v = parseLevel(ev.target.value); if (v != null) { this.snapshot(); b.levelLo = v; redo(); } else this.setStatus('low: a dynamic (ppp … fff) or a number 0 … 1', true); });
+        q('.bpLevHi').addEventListener('change', ev => { const v = parseLevel(ev.target.value); if (v != null) { this.snapshot(); b.levelHi = v; redo(); } else this.setStatus('high: a dynamic (ppp … fff) or a number 0 … 1', true); });
+        q('.bpBreath').addEventListener('change', ev => { this.snapshot(); const k = ev.target.value; if (k === 'one') b.breath.mode = 'one'; else { b.breath.mode = 'designated'; if (k === 'hand') b.breath.deal = false; else { delete b.breath.deal; b.breath.phase = k === 'unison' ? 0 : 0.5; } } redo(); });
+        q('.bpShuffle').addEventListener('click', () => { this.snapshot(); if ((b.breath.mode || 'one') !== 'designated' || b.breath.deal === false) { b.breath.mode = 'designated'; delete b.breath.deal; if (b.breath.phase == null) b.breath.phase = 0.5; } b.breath.seed = (b.breath.seed || 1) + 1; redo(); this.setStatus('breaths dealt again (seed ' + b.breath.seed + '); the marks you placed stay'); });
         this.drawRates(row, q('.bpRates'));
         this.drawLevel(row, q('.bpLevel'));
         this.drawBreaths(row, q('.bpBreaths'), q('.bpBreathInfo'));
@@ -561,8 +628,9 @@ const P = {
     },
     popShape(row, key) {
         const BC = BC_(), b = row.b, to = +b.rateTo || 0, from = +b.rateFrom || 0;
+        if (String(key).indexOf('u:') === 0) { const sh = this.shapesBank[key.slice(2)]; if (!sh) return; b.shape = key; b.beat = BC.scaleCurve(sh.curve, to); b.rate = null; row.locked = true; return; }   // his stored shape at the maximum
         b.shape = key;
-        b.beat = key === 'flat' ? BC.shape('flat', { level: to }) : key === 'rampOut' ? [[0, 0], [1, to]] : key === 'rampIn' ? [[0, to], [1, 0]] : key === 'hump' ? BC.shape('hump', { peak: to, base: from }) : key === 'arc' ? BC.shape('arc', { peak: to, base: from }) : BC.shape('burst', { peak: to });
+        b.beat = key === 'flat' ? BC.shape('flat', { level: to }) : key === 'rampOut' ? [[0, 0], [1, to]] : key === 'rampIn' ? [[0, to], [1, 0]] : key === 'hump' ? BC.shape('hump', { peak: to, base: from }) : key === 'adsr' ? BC.shape('adsr', { peak: to, base: from }) : key === 'arc' ? BC.shape('arc', { peak: to, base: from }) : BC.shape('burst', { peak: to });
         b.rate = null; row.locked = true;
     },
     unlock(row) { const c = this.curvesOf(row); row.b.rate = { lower: c.lower.map(p => p.slice()), upper: c.upper.map(p => p.slice()) }; },
@@ -612,6 +680,10 @@ const P = {
     },
 
     // ---- the rate area: the two curves, the band by zone, the handles on rails ----
+    // The curves are the score's curve windows' (2026-09-07, "works like logic pro or daw"): HOLD THE LINE and drag up / down to bend
+    // the segment under the mouse, sideways to move its points (a hump's place, a plateau); SHIFT-drag slides the whole curve in time
+    // (the phase); the wheel bends a step; ALT-click straightens; a double-click adds a point; the END HANDLE dragged sideways is the
+    // pair's length.
     drawRates(row, svg) {
         const BC = BC_(), out = row.out, cur = this.curvesOf(row), b = row.b, S = row.scale, L = row.length;
         const x0 = PADL, x1 = W - PADR, mid = HR / 2, sy = (HR / 2 - 6) / S;
@@ -624,35 +696,33 @@ const P = {
             const xa = X(s.p), xb = X(n.p), top = Y(Math.max(s.rateL, s.rateU)), bot = Y(Math.min(s.rateL, s.rateU));
             svg.appendChild(mk('rect', { x: xa, y: Math.min(top, bot), width: Math.max(0.5, xb - xa), height: Math.max(0.5, Math.abs(bot - top)), fill: ZONE_FILL[s.zone] || ZONE_FILL.beating }));
         });
-        // the axis: the centre line and the rate marks
+        // the axis: the centre line and the rate marks (Hz)
         svg.appendChild(mk('line', { x1: x0, x2: x1, y1: mid, y2: mid, stroke: '#666', 'stroke-width': 1 }));
         [S, S / 2, -S / 2, -S].forEach(v => { svg.appendChild(mk('line', { x1: x0, x2: x1, y1: Y(v), y2: Y(v), stroke: '#333', 'stroke-dasharray': '2 4' })); const t = mk('text', { x: 2, y: Y(v) + 4, fill: '#777', 'font-size': 11 }); t.textContent = (v > 0 ? '+' : '') + v; svg.appendChild(t); });
         const zt = mk('text', { x: 2, y: mid + 4, fill: '#999', 'font-size': 11 }); zt.textContent = '0'; svg.appendChild(zt);
         [1, 15].forEach(z => { const y = Y(z / 2), y2 = Y(-z / 2); svg.appendChild(mk('line', { x1: x0, x2: x1, y1: y, y2: y, stroke: z === 1 ? '#557' : '#744', 'stroke-dasharray': '1 5' })); svg.appendChild(mk('line', { x1: x0, x2: x1, y1: y2, y2: y2, stroke: z === 1 ? '#557' : '#744', 'stroke-dasharray': '1 5' })); });
-        // the slid curves as played (the samples) — thin; the drawn curves with their handles — bold
+        // the slid curves as played (the samples) — thin
         const lineOf = (key, col) => { const d = out.samples.map((s, k) => (k ? 'L' : 'M') + X(s.p).toFixed(1) + ' ' + Y(s[key]).toFixed(1)).join(' '); svg.appendChild(mk('path', { d, fill: 'none', stroke: col, 'stroke-width': 1, 'stroke-opacity': 0.55 })); };
         lineOf('rateU', COL.upper); lineOf('rateL', COL.lower);
+        // the drawn curves — bold, sampled through their slopes; a hit stroke per segment carries the line's gestures; the points are handles
         const drawCurve = (who, pts, col) => {
             const slide = (b.slide && b.slide[who]) || 0, sp = slide / Math.max(0.1, L);
-            // the curve sampled through its slopes (the score's power model); the points are its handles, the diamonds its slopes
-            const N = 120, d = []; for (let i = 0; i <= N; i++) { const p = i / N; d.push((i ? 'L' : 'M') + X(clamp(p + sp, 0, 1)).toFixed(1) + ' ' + Y(BC.evalCurve(pts, p)).toFixed(1)); }
-            const path = mk('path', { d: d.join(' '), fill: 'none', stroke: col, 'stroke-width': 2.2, 'stroke-linejoin': 'round' }); path.style.cursor = 'ew-resize'; path.style.pointerEvents = 'stroke';
-            path.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); this.dragBody(row, who, e, svg); });
-            svg.appendChild(path);
-            for (let k = 0; k + 1 < pts.length; k++) {   // a slope diamond at each segment's middle (2026-09-07): drag up / down bends it, the wheel steps it
-                const a = pts[k], c = pts[k + 1]; if (c[0] - a[0] < 0.03) continue;
-                const pm = (a[0] + c[0]) / 2, cx = X(clamp(pm + sp, 0, 1)), cy = Y(BC.evalCurve(pts, pm)), s = BC.slopeOf(a);
-                const dm = mk('rect', { x: cx - 4, y: cy - 4, width: 8, height: 8, transform: 'rotate(45 ' + cx + ' ' + cy + ')', fill: s ? col : '#1a1a20', stroke: col, 'stroke-width': 1.5, 'fill-opacity': s ? 0.8 : 1 });
-                dm.style.cursor = 'ns-resize';
-                dm.innerHTML = '<title>curve ' + s.toFixed(2) + ' — drag up / down to bend this segment (the score\'s curve), the wheel steps it, ALT-click straightens</title>';
-                dm.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.altKey) { this.setSlope(row, who, k, 0); this.changed(row, true); this.render(); return; } this.dragSlope(row, who, k, e, svg, () => BC.slopeOf(this.curvesOf(row)[who][k]), v => this.setSlope(row, who, k, v)); });
-                dm.addEventListener('wheel', e => { e.preventDefault(); e.stopPropagation(); this.setSlope(row, who, k, BC.slopeOf(this.curvesOf(row)[who][k]) + (e.deltaY > 0 ? -0.05 : 0.05)); this.rowOut(row); this.drawRates(row, svg); this.changed(row, false); }, { passive: false });
-                svg.appendChild(dm);
+            for (let k = 0; k + 1 < pts.length; k++) {
+                const a = pts[k], c = pts[k + 1], N = 24, d = [];
+                for (let j = 0; j <= N; j++) { const p = a[0] + (c[0] - a[0]) * j / N; d.push((j ? 'L' : 'M') + X(clamp(p + sp, 0, 1)).toFixed(1) + ' ' + Y(BC.evalCurve(pts, p)).toFixed(1)); }
+                const path = mk('path', { d: d.join(' '), fill: 'none', stroke: col, 'stroke-width': 2.2, 'stroke-linejoin': 'round' }); path.style.pointerEvents = 'none'; svg.appendChild(path);
+                const hit = mk('path', { d: d.join(' '), fill: 'none', stroke: 'transparent', 'stroke-width': 14 }); hit.style.cursor = 'ns-resize'; hit.style.pointerEvents = 'stroke';
+                hit.innerHTML = '<title>' + (BC.slopeOf(a) ? 'curve ' + BC.slopeOf(a).toFixed(2) + ' · ' : '') + 'hold the line: drag up / down to bend this segment, sideways to move its points · SHIFT-drag slides the whole curve in time · the wheel bends a step · ALT-click straightens · double-click adds a point</title>';
+                hit.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.shiftKey) { this.snapshot(); this.dragBody(row, who, e, svg); return; } if (e.altKey) { this.snapshot(); this.setSlope(row, who, k, 0); this.changed(row, true); this.render(); return; } this.dragSegment(row, who, k, e, svg); });
+                hit.addEventListener('wheel', e => { e.preventDefault(); e.stopPropagation(); this.setSlope(row, who, k, BC.slopeOf(this.curvesOf(row)[who][k]) + (e.deltaY > 0 ? -0.05 : 0.05)); this.rowOut(row); this.drawRates(row, svg); this.changed(row, false); }, { passive: false });
+                svg.appendChild(hit);
             }
             pts.forEach((p, idx) => {
-                const h = mk('circle', { cx: X(clamp(p[0] + sp, 0, 1)), cy: Y(p[1]), r: 5, fill: '#1a1a20', stroke: col, 'stroke-width': 2 });
-                h.style.cursor = 'move';
-                h.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.altKey) { this.removePoint(row, who, idx); this.changed(row, true); this.render(); return; } this.dragHandle(row, who, idx, e, svg); });
+                const last = idx === pts.length - 1;
+                const h = mk('circle', { cx: X(clamp(p[0] + sp, 0, 1)), cy: Y(p[1]), r: 5, fill: last ? col : '#1a1a20', stroke: col, 'stroke-width': 2 });
+                h.style.cursor = last ? 'ew-resize' : 'move';
+                h.innerHTML = '<title>' + (last ? 'the end: drag sideways for the pair\'s length, up / down for its value' : idx === 0 ? 'the start: up / down for its value' : 'drag; ALT-click removes') + '</title>';
+                h.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.altKey && !last && idx !== 0) { this.snapshot(); this.removePoint(row, who, idx); this.changed(row, true); this.render(); return; } this.dragHandle(row, who, idx, e, svg); });
                 svg.appendChild(h);
             });
         };
@@ -660,35 +730,60 @@ const P = {
         // the players' names and the lock state
         const nmU = mk('text', { x: x1 - 4, y: 12, fill: COL.upper, 'font-size': 12, 'text-anchor': 'end' }); nmU.textContent = (out.players.upper || '?') + ' ↑' + (b.slide && b.slide.upper ? ' slid ' + b.slide.upper + ' s' : ''); svg.appendChild(nmU);
         const nmL = mk('text', { x: x1 - 4, y: HR - 5, fill: COL.lower, 'font-size': 12, 'text-anchor': 'end' }); nmL.textContent = (out.players.lower || '?') + ' ↓' + (b.slide && b.slide.lower ? ' slid ' + b.slide.lower + ' s' : ''); svg.appendChild(nmL);
-        const beatT = mk('text', { x: x0 + 4, y: 12, fill: '#c9a8ff', 'font-size': 12 }); beatT.textContent = 'beating ' + out.maxBeat + '/s max' + (row.locked ? ' · mirrored' : ' · free'); svg.appendChild(beatT);
-        // draw mode: a click on empty space adds a point
-        if (row.draw) {
-            svg.style.cursor = 'crosshair';
-            svg.addEventListener('mousedown', e => {
-                if (e.target !== svg && e.target.tagName !== 'rect' && e.target.tagName !== 'line' && e.target.tagName !== 'path') return;
-                if (e.target.tagName === 'path' && e.target.getAttribute('stroke-width') === '2.2') return;
-                const r = svg.getBoundingClientRect(); const p = clamp((e.clientX - r.left - x0) / (x1 - x0), 0, 1), v = (mid - (e.clientY - r.top)) / sy;
-                const who = v >= 0 ? 'upper' : 'lower';
-                this.addPoint(row, who, r3(p), r3(v)); this.changed(row, true); this.render();
-            });
-        }
+        const beatT = mk('text', { x: x0 + 4, y: 12, fill: '#c9a8ff', 'font-size': 12 }); beatT.textContent = 'beating ' + out.maxBeat + ' Hz max' + (row.locked ? ' · mirrored' : ' · free') + (row.length ? ' · ' + row.length + ' s' : ''); svg.appendChild(beatT);
+        const addAt = e => {   // a point where the mouse is, on the curve above or below the centre
+            const r = svg.getBoundingClientRect(); const p = clamp((e.clientX - r.left - x0) / (x1 - x0), 0, 1), v = (mid - (e.clientY - r.top)) / sy;
+            const who = v >= 0 ? 'upper' : 'lower';
+            this.snapshot(); this.addPoint(row, who, r3(p), r3(v)); this.changed(row, true); this.render();
+        };
+        const onEmpty = e => e.target === svg || e.target.tagName === 'rect' || e.target.tagName === 'line' || (e.target.tagName === 'path' && e.target.getAttribute('stroke') !== 'transparent');
+        svg.addEventListener('dblclick', e => { if (e.target.tagName === 'circle') return; e.preventDefault(); addAt(e); });
+        if (row.draw) { svg.style.cursor = 'crosshair'; svg.addEventListener('mousedown', e => { if (!onEmpty(e)) return; addAt(e); }); }
         svg._geom = { x0, x1, mid, sy, X, Y };
     },
+    // hold the line: up / down bends the segment (toward the mouse), sideways moves its points; the mode from the first movement
+    dragSegment(row, who, k, e0, svg) {
+        this.snapshot();
+        const BC = BC_(), g = svg._geom, x0 = e0.clientX, y0 = e0.clientY; let mode = null;
+        const cur0 = this.curvesOf(row)[who], a0 = cur0[k], c0 = cur0[k + 1]; if (!a0 || !c0) return;
+        const s0 = BC.slopeOf(a0), dir = Math.sign(c0[1] - a0[1]) || 1, n = cur0.length, pA = a0[0], pC = c0[0];
+        const movA = k > 0, movC = k + 1 < n - 1, lo = k > 0 ? cur0[k - 1][0] + 0.01 : 0, hi = k + 2 < n ? cur0[k + 2][0] - 0.01 : 1;
+        const onMove = ev => {
+            const dx = ev.clientX - x0, dy = ev.clientY - y0;
+            if (!mode) { if (Math.abs(dx) < 3 && Math.abs(dy) < 3) return; mode = Math.abs(dy) >= Math.abs(dx) ? 'bend' : 'shift'; svg.style.cursor = mode === 'bend' ? 'ns-resize' : 'ew-resize'; }
+            if (mode === 'bend') this.setSlope(row, who, k, s0 + dir * dy / (HR / 2));   // up = the curve toward the mouse, whichever way the segment runs
+            else if (movA || movC) {
+                let s = dx / (g.x1 - g.x0);
+                if (movA) s = clamp(s, lo - pA, (movC ? hi - (pC - pA) : pC - 0.01) - pA);
+                if (movC) s = clamp(s, (movA ? lo + (pC - pA) : pA + 0.01) - pC, hi - pC);
+                if (movA) this.setPoint(row, who, k, r3(pA + s), a0[1]);
+                if (movC) this.setPoint(row, who, k + 1, r3(pC + s), c0[1]);
+            }
+            this.rowOut(row); this.drawRates(row, svg); this.changed(row, false);
+        };
+        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); svg.style.cursor = ''; this.changed(row, true); this.render(); };
+        window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
+    },
     dragHandle(row, who, idx, e0, svg) {
-        const g = svg._geom, r = svg.getBoundingClientRect(), b = row.b, L = row.length, cur = this.curvesOf(row)[who], n = cur.length;
-        const slide = (b.slide && b.slide[who]) || 0, sp = slide / Math.max(0.1, L);
+        this.snapshot();
+        const g = svg._geom, r = svg.getBoundingClientRect(), b = row.b, cur = this.curvesOf(row)[who], n = cur.length;
+        const slide = (b.slide && b.slide[who]) || 0, L0 = row.length, sp = slide / Math.max(0.1, L0), xs = e0.clientX, secPerPx = L0 / (g.x1 - g.x0);
         const tip = document.createElementNS('http://www.w3.org/2000/svg', 'text'); tip.setAttribute('fill', '#fff'); tip.setAttribute('font-size', '12'); svg.appendChild(tip);
         const onMove = ev => {
             let p = clamp((ev.clientX - r.left - g.x0) / (g.x1 - g.x0) - sp, 0, 1); const v = clamp((g.mid - (ev.clientY - r.top)) / g.sy, -row.scale, row.scale);
-            if (idx === 0) p = 0; if (idx === n - 1) p = 1;   // the ends stay at the ends
+            if (idx === 0) p = 0;
+            if (idx === n - 1) {   // the end handle: sideways = the pair's length (his line 10), up / down its value
+                p = 1; const len = r3(Math.max(0.5, Math.round((L0 + (ev.clientX - xs) * secPerPx) / 0.05) * 0.05));
+                if (len !== row.length) { const s = BC_().stretch({ length: row.length, slide: b.slide, breath: b.breath }, len); b.slide = s.slide; b.breath = s.breath; row.length = len; this.placeZone(row); }
+            }
             const vv = who === 'upper' ? Math.max(0, v) : Math.min(0, v);   // above the centre for the upper, below for the lower
             const wasLocked = row.locked; if (ev.altKey && row.locked) { row.locked = false; this.unlock(row); }
             this.setPoint(row, who, idx, r3(p), r3(vv));
             row.locked = row.locked && wasLocked;
             this.rowOut(row);
-            tip.setAttribute('x', clamp(ev.clientX - r.left + 8, 4, W - 60)); tip.setAttribute('y', clamp(ev.clientY - r.top - 8, 10, HR - 4));
-            tip.textContent = (row.locked ? (Math.abs(vv) * 2).toFixed(2) + '/s heard' : Math.abs(vv).toFixed(2) + '/s ' + who) + ' · ' + (p * L).toFixed(2) + ' s';
-            this.drawRates(row, svg); svg.appendChild(tip);
+            tip.setAttribute('x', clamp(ev.clientX - r.left + 8, 4, W - 90)); tip.setAttribute('y', clamp(ev.clientY - r.top - 8, 10, HR - 4));
+            tip.textContent = (row.locked ? (Math.abs(vv) * 2).toFixed(2) + ' Hz heard' : Math.abs(vv).toFixed(2) + ' Hz ' + who) + ' · ' + (idx === n - 1 ? row.length + ' s long' : (p * row.length).toFixed(2) + ' s');
+            this.drawRates(row, svg); svg.appendChild(tip); if (idx === n - 1) this.drawSeq();
             this.changed(row, false);
         };
         const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); tip.remove(); this.changed(row, true); this.render(); };
@@ -702,83 +797,136 @@ const P = {
     },
 
     // ---- the crescendo lane ----
+    // One curve for both players, or one per player (2026-09-07, his line 15); the same gestures as the rate curves: hold the line to bend
+    // or shift, double-click adds a point, ALT-click removes; the axis in dynamics (ppp … fff, NAMING §2.9); the players' ideal breath
+    // lengths as faint ticks (his line 18: "a simple indicator in the crescendo part that shows me ideally a breath length")
+    levelPts(row) {   // the edited crescendo curves, or null while it follows the beating (a legacy single array serves both players)
+        const BC = BC_(), lc = row.b.levelCurve; if (!lc) return null;
+        if (Array.isArray(lc)) return { lower: BC.curveOf(lc), upper: BC.curveOf(lc) };
+        return { lower: BC.curveOf(lc.lower || lc.upper || 0.6), upper: BC.curveOf(lc.upper || lc.lower || 0.6) };
+    },
+    setLevelPts(row, who, pts) {   // together: both players take the edit; each: this player alone
+        const cur = this.levelPts(row) || { lower: pts, upper: pts }, copy = a => a.map(p => p.slice());
+        row.b.levelCurve = row.levelLock !== false ? { lower: copy(pts), upper: copy(pts) } : Object.assign(cur, { [who]: copy(pts) });
+    },
+    popLevelShape(row, key) {
+        const BC = BC_(), b = row.b, lo = b.levelLo == null ? 0.3 : b.levelLo, hi = b.levelHi == null ? 0.9 : b.levelHi;
+        let pts;
+        if (key.indexOf('u:') === 0) { const sh = this.shapesBank[key.slice(2)]; if (!sh) return; pts = BC.curveOf(sh.curve).map(p => (p.length > 2 ? [p[0], r3(lo + (hi - lo) * p[1]), p[2]] : [p[0], r3(lo + (hi - lo) * p[1])])); }
+        else pts = BC.shape(key, { level: hi, from: key === 'rampIn' ? hi : lo, to: key === 'rampIn' ? lo : hi, peak: hi, base: lo });
+        b.levelCurve = { lower: pts.map(p => p.slice()), upper: pts.map(p => p.slice()) };
+    },
     drawLevel(row, svg) {
-        const BC = BC_(), out = row.out, b = row.b, ns = 'http://www.w3.org/2000/svg';
-        const x0 = PADL, x1 = W - PADR, X = p => x0 + p * (x1 - x0), Y = v => HL - 4 - v * (HL - 10);
+        const BC = BC_(), out = row.out, b = row.b, ns = 'http://www.w3.org/2000/svg', L = row.length;
+        const x0 = PADL, x1 = W - PADR, X = p => x0 + p * (x1 - x0), Y = v => HL - 4 - clamp(v, 0, 1) * (HL - 10);
         const mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
         svg.innerHTML = '';
-        const d = out.samples.map((s, k) => (k ? 'L' : 'M') + X(s.p).toFixed(1) + ' ' + Y(s.level).toFixed(1)).join(' ');
-        svg.appendChild(mk('path', { d: d + ' L' + X(1).toFixed(1) + ' ' + Y(0) + ' L' + X(0) + ' ' + Y(0) + ' Z', fill: COL.level, 'fill-opacity': 0.18, stroke: 'none' }));
-        svg.innerHTML += '<title>the crescendo: the score\'s curve height — 0 the softest held dynamic, 1 fff, equal loudness across instruments through the remap</title>';
-        svg.appendChild(mk('path', { d, fill: 'none', stroke: COL.level, 'stroke-width': 1.6 }));
-        [0, 0.5, 1].forEach(v => { const t = mk('text', { x: 2, y: Y(v) + 3, fill: '#777', 'font-size': 11 }); t.textContent = v; svg.appendChild(t); });
-        const lbl = mk('text', { x: x1 - 4, y: 11, fill: COL.level, 'font-size': 12, 'text-anchor': 'end' }); lbl.textContent = b.levelCurve ? 'own curve' : 'follows the beating · ' + b.levelLo + ' → ' + b.levelHi; svg.appendChild(lbl);
-        if (b.levelCurve) {
-            const pts = BC.curveOf(b.levelCurve);
-            for (let k = 0; k + 1 < pts.length; k++) {   // the crescendo's segment slopes too (2026-09-07), the same diamonds
-                const a = pts[k], c = pts[k + 1]; if (c[0] - a[0] < 0.03) continue;
-                const pm = (a[0] + c[0]) / 2, cx = X(pm), cy = Y(clamp(BC.evalCurve(pts, pm), 0, 1)), s = BC.slopeOf(a);
-                const dm = mk('rect', { x: cx - 3.5, y: cy - 3.5, width: 7, height: 7, transform: 'rotate(45 ' + cx + ' ' + cy + ')', fill: s ? COL.level : '#1a1a20', stroke: COL.level, 'stroke-width': 1.3 });
-                dm.style.cursor = 'ns-resize'; dm.innerHTML = '<title>curve ' + s.toFixed(2) + ' — drag up / down to bend this segment; ALT-click straightens</title>';
-                const setS = v => { const cur = BC.curveOf(b.levelCurve); cur[k] = v ? [cur[k][0], cur[k][1], clamp(r3(v), -1, 1)] : [cur[k][0], cur[k][1]]; b.levelCurve = cur; };
-                dm.addEventListener('mousedown', e => {
-                    e.preventDefault(); e.stopPropagation();
-                    if (e.altKey) { setS(0); this.changed(row, true); this.render(); return; }
-                    const y0 = e.clientY, s0 = s;
-                    const onMove = ev => { setS(s0 + (y0 - ev.clientY) / (HL - 10)); this.rowOut(row); this.drawLevel(row, svg); this.changed(row, false); };
-                    const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); };
-                    window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
-                });
-                svg.appendChild(dm);
+        // the ideal breath lengths as faint ticks, per player (the ceiling at this level, from the start)
+        for (const who of ['lower', 'upper']) { const br = out.breaths[who], col = who === 'upper' ? COL.upper : COL.lower; if (!br || !br.ceiling || !(br.ceiling.seconds > 0)) continue; for (let t = br.ceiling.seconds; t < L - 0.05; t += br.ceiling.seconds) svg.appendChild(mk('line', { x1: X(t / L), x2: X(t / L), y1: 2, y2: HL - 2, stroke: col, 'stroke-opacity': 0.35, 'stroke-dasharray': '1 3' })); }
+        const lp = this.levelPts(row);
+        const fillOf = key => { const d = out.samples.map((s, k) => (k ? 'L' : 'M') + X(s.p).toFixed(1) + ' ' + Y(s[key]).toFixed(1)).join(' '); return d + ' L' + X(1).toFixed(1) + ' ' + Y(0) + ' L' + X(0) + ' ' + Y(0) + ' Z'; };
+        svg.appendChild(mk('path', { d: fillOf('levelU'), fill: COL.upper, 'fill-opacity': 0.1, stroke: 'none' }));
+        svg.appendChild(mk('path', { d: fillOf('levelL'), fill: COL.lower, 'fill-opacity': 0.1, stroke: 'none' }));
+        [[0, 'ppp'], [4 / 7, 'mf'], [1, 'fff']].forEach(([v, name]) => { const t = mk('text', { x: 2, y: Y(v) + 3, fill: '#777', 'font-size': 10 }); t.textContent = name; svg.appendChild(t); });
+        const lbl = mk('text', { x: x1 - 4, y: 11, fill: COL.level, 'font-size': 12, 'text-anchor': 'end' }); lbl.textContent = (lp ? (row.levelLock !== false ? 'one crescendo, both players' : 'a crescendo per player') : 'follows the beating') + ' · ' + dynName(b.levelLo == null ? 0.3 : b.levelLo) + ' → ' + dynName(b.levelHi == null ? 0.9 : b.levelHi); svg.appendChild(lbl);
+        if (!lp) {   // following: the two sample lines
+            [['levelU', COL.upper], ['levelL', COL.lower]].forEach(([key, col]) => { const d = out.samples.map((s, k) => (k ? 'L' : 'M') + X(s.p).toFixed(1) + ' ' + Y(s[key]).toFixed(1)).join(' '); svg.appendChild(mk('path', { d, fill: 'none', stroke: col, 'stroke-width': 1.4 })); });
+            svg.innerHTML += '<title>the crescendo follows the beating between low and high — pick a shape or double-click to draw one</title>';
+            svg.addEventListener('dblclick', e => { e.preventDefault(); this.snapshot(); this.popLevelShape(row, 'hump'); this.changed(row, true); this.render(); });
+            return;
+        }
+        const drawOne = (who, pts, col) => {
+            const together = row.levelLock !== false;
+            for (let k = 0; k + 1 < pts.length; k++) {
+                const a = pts[k], c = pts[k + 1], N = 20, d = [];
+                for (let j = 0; j <= N; j++) { const p = a[0] + (c[0] - a[0]) * j / N; d.push((j ? 'L' : 'M') + X(p).toFixed(1) + ' ' + Y(BC.evalCurve(pts, p)).toFixed(1)); }
+                svg.appendChild(mk('path', { d: d.join(' '), fill: 'none', stroke: col, 'stroke-width': together && who === 'lower' ? 1 : 1.8, 'stroke-opacity': together && who === 'lower' ? 0.5 : 1, 'pointer-events': 'none' }));
+                if (together && who === 'lower') continue;   // one set of gestures while the two are the same curve
+                const hit = mk('path', { d: d.join(' '), fill: 'none', stroke: 'transparent', 'stroke-width': 12 }); hit.style.cursor = 'ns-resize'; hit.style.pointerEvents = 'stroke';
+                hit.innerHTML = '<title>hold the line: drag up / down to bend this segment, sideways to move its points (a plateau slides) · the wheel bends a step · ALT-click straightens · double-click adds a point</title>';
+                hit.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.altKey) { this.snapshot(); const cur = this.levelPts(row)[who]; cur[k] = [cur[k][0], cur[k][1]]; this.setLevelPts(row, who, cur); this.changed(row, true); this.render(); return; } this.dragLevelSegment(row, who, k, e, svg); });
+                hit.addEventListener('wheel', e => { e.preventDefault(); e.stopPropagation(); const cur = this.levelPts(row)[who]; const s = clamp(BC.slopeOf(cur[k]) + (e.deltaY > 0 ? -0.05 : 0.05), -1, 1); cur[k] = s ? [cur[k][0], cur[k][1], s] : [cur[k][0], cur[k][1]]; this.setLevelPts(row, who, cur); this.rowOut(row); this.drawLevel(row, svg); this.changed(row, false); }, { passive: false });
+                svg.appendChild(hit);
             }
+            if (together && who === 'lower') return;
             pts.forEach((p, idx) => {
-                const h = mk('circle', { cx: X(p[0]), cy: Y(clamp(p[1], 0, 1)), r: 4.5, fill: '#1a1a20', stroke: COL.level, 'stroke-width': 2 }); h.style.cursor = 'move';
+                const h = mk('circle', { cx: X(p[0]), cy: Y(p[1]), r: 4.5, fill: '#1a1a20', stroke: col, 'stroke-width': 2 }); h.style.cursor = 'move';
+                h.innerHTML = '<title>' + dynName(p[1]) + ' at ' + (p[0] * L).toFixed(2) + ' s — drag; ALT-click removes</title>';
                 h.addEventListener('mousedown', e => {
                     e.preventDefault(); e.stopPropagation();
-                    if (e.altKey) { if (pts.length > 2) { pts.splice(idx, 1); b.levelCurve = pts; this.changed(row, true); this.render(); } return; }
+                    if (e.altKey) { if (pts.length > 2 && idx > 0 && idx < pts.length - 1) { this.snapshot(); const cur = this.levelPts(row)[who]; cur.splice(idx, 1); this.setLevelPts(row, who, cur); this.changed(row, true); this.render(); } return; }
+                    this.snapshot();
                     const r = svg.getBoundingClientRect(), n = pts.length;
-                    const onMove = ev => { let p = clamp((ev.clientX - r.left - x0) / (x1 - x0), 0, 1); if (idx === 0) p = 0; if (idx === n - 1) p = 1; const v = clamp((HL - 4 - (ev.clientY - r.top)) / (HL - 10), 0, 1); pts[idx] = [r3(p), r3(v)]; b.levelCurve = pts; this.rowOut(row); this.drawLevel(row, svg); this.changed(row, false); };
+                    const onMove = ev => { let pp = clamp((ev.clientX - r.left - x0) / (x1 - x0), 0, 1); if (idx === 0) pp = 0; if (idx === n - 1) pp = 1; const v = clamp((HL - 4 - (ev.clientY - r.top)) / (HL - 10), 0, 1); const cur = this.levelPts(row)[who]; cur[idx] = cur[idx].length > 2 ? [r3(pp), r3(v), cur[idx][2]] : [r3(pp), r3(v)]; this.setLevelPts(row, who, cur); this.rowOut(row); this.drawLevel(row, svg); this.changed(row, false); };
                     const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); };
                     window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
                 });
                 svg.appendChild(h);
             });
-            svg.style.cursor = 'crosshair';
-            svg.addEventListener('mousedown', e => { if (e.target.tagName === 'circle') return; const r = svg.getBoundingClientRect(); const p = clamp((e.clientX - r.left - x0) / (x1 - x0), 0, 1), v = clamp((HL - 4 - (e.clientY - r.top)) / (HL - 10), 0, 1); pts.push([r3(p), r3(v)]); b.levelCurve = BC.curveOf(pts); this.changed(row, true); this.render(); });
-        }
+        };
+        drawOne('lower', lp.lower, COL.lower); drawOne('upper', lp.upper, COL.upper);
+        svg.addEventListener('dblclick', e => {   // a point on the curve nearer the mouse (the upper when together)
+            if (e.target.tagName === 'circle') return; e.preventDefault();
+            const r = svg.getBoundingClientRect(); const p = clamp((e.clientX - r.left - x0) / (x1 - x0), 0, 1), v = clamp((HL - 4 - (e.clientY - r.top)) / (HL - 10), 0, 1);
+            const who = row.levelLock !== false ? 'upper' : (Math.abs(BC.evalCurve(lp.upper, p) - v) <= Math.abs(BC.evalCurve(lp.lower, p) - v) ? 'upper' : 'lower');
+            this.snapshot(); const cur = this.levelPts(row)[who]; cur.push([r3(p), r3(v)]); this.setLevelPts(row, who, BC.curveOf(cur)); this.changed(row, true); this.render();
+        });
+    },
+    dragLevelSegment(row, who, k, e0, svg) {
+        this.snapshot();
+        const BC = BC_(), x0 = e0.clientX, y0 = e0.clientY, xw = W - PADR - PADL; let mode = null;
+        const cur0 = this.levelPts(row)[who].map(p => p.slice()), a0 = cur0[k], c0 = cur0[k + 1]; if (!a0 || !c0) return;
+        const s0 = BC.slopeOf(a0), dir = Math.sign(c0[1] - a0[1]) || 1, n = cur0.length, pA = a0[0], pC = c0[0];
+        const movA = k > 0, movC = k + 1 < n - 1, lo = k > 0 ? cur0[k - 1][0] + 0.01 : 0, hi = k + 2 < n ? cur0[k + 2][0] - 0.01 : 1;
+        const onMove = ev => {
+            const dx = ev.clientX - x0, dy = ev.clientY - y0;
+            if (!mode) { if (Math.abs(dx) < 3 && Math.abs(dy) < 3) return; mode = Math.abs(dy) >= Math.abs(dx) ? 'bend' : 'shift'; svg.style.cursor = mode === 'bend' ? 'ns-resize' : 'ew-resize'; }
+            const cur = cur0.map(p => p.slice());
+            if (mode === 'bend') { const s = clamp(s0 + dir * dy / (HL - 10), -1, 1); cur[k] = s ? [cur[k][0], cur[k][1], r3(s)] : [cur[k][0], cur[k][1]]; }
+            else if (movA || movC) {
+                let s = dx / xw;
+                if (movA) s = clamp(s, lo - pA, (movC ? hi - (pC - pA) : pC - 0.01) - pA);
+                if (movC) s = clamp(s, (movA ? lo + (pC - pA) : pA + 0.01) - pC, hi - pC);
+                if (movA) cur[k][0] = r3(pA + s); if (movC) cur[k + 1][0] = r3(pC + s);
+            }
+            this.setLevelPts(row, who, cur); this.rowOut(row); this.drawLevel(row, svg); this.changed(row, false);
+        };
+        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); svg.style.cursor = ''; this.changed(row, true); this.render(); };
+        window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
 
-    // ---- the breath lane: per player the marks as dotted go lines on sliders, the ceiling bar, the warning ----
+    // ---- the breath lane: per player the ideal breath lengths as faint ticks, the marks as dotted lines (yours bold, the dealt ones thin),
+    // drag to move, click to add, ALT-click to remove; one ⚠ where a span is longer than the ceiling — nothing else (2026-09-07, his line
+    // 18: "all the warnings and whatnot are throwing me off") ----
     drawBreaths(row, svg, info) {
         const BC = BC_(), out = row.out, b = row.b, ns = 'http://www.w3.org/2000/svg', L = row.length;
         const x0 = PADL, x1 = W - PADR, X = t => x0 + (t / Math.max(0.1, L)) * (x1 - x0);
         const mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
         svg.innerHTML = '';
         const rowsY = { upper: 15, lower: 41 };
-        let warn = 0;
+        const over = [];
         for (const who of ['upper', 'lower']) {
             const br = out.breaths[who], inst = out.players[who], y = rowsY[who], col = who === 'upper' ? COL.upper : COL.lower;
             const nm = mk('text', { x: 2, y: y + 4, fill: col, 'font-size': 11 }); nm.textContent = (inst || '?').slice(0, 5); svg.appendChild(nm);
             svg.appendChild(mk('line', { x1: x0, x2: x1, y1: y, y2: y, stroke: '#444' }));
-            (br.spans || []).forEach(sp => {
-                const over = sp[1] - sp[0] > br.ceiling.seconds + 1e-6 && br.mode !== 'continuous'; if (over) warn++;
-                svg.appendChild(mk('rect', { x: X(sp[0]), y: y - 4, width: Math.max(1, X(sp[1]) - X(sp[0])), height: 8, fill: over ? COL.bad : col, 'fill-opacity': over ? 0.45 : 0.28, rx: 2 }));
-                if (over) svg.appendChild(mk('rect', { x: X(sp[0] + br.ceiling.seconds), y: y - 4, width: Math.max(1, X(sp[1]) - X(sp[0] + br.ceiling.seconds)), height: 8, fill: 'none', stroke: COL.bad, 'stroke-width': 1 }));
-            });
+            // the ideal breath length, from the start and from every mark: faint ticks
+            const ceil = br.ceiling && br.ceiling.seconds > 0 ? br.ceiling.seconds : 0;
+            if (ceil) for (let t = ceil; t < L - 0.05; t += ceil) svg.appendChild(mk('line', { x1: X(t), x2: X(t), y1: y - 7, y2: y + 7, stroke: col, 'stroke-opacity': 0.35, 'stroke-dasharray': '1 2' }));
+            (br.spans || []).forEach(sp => { if (br.mode !== 'continuous' && ceil && sp[1] - sp[0] > ceil + 1e-6) { over.push(who); svg.appendChild(mk('rect', { x: X(sp[0]), y: y - 3, width: Math.max(1, X(sp[1]) - X(sp[0])), height: 6, fill: COL.bad, 'fill-opacity': 0.25, rx: 2 })); } });
             (br.marks || []).forEach(m => {
                 const hand = b.breath.marks && b.breath.marks[who] && b.breath.marks[who].includes(m);
-                const g = mk('line', { x1: X(m), x2: X(m), y1: y - 9, y2: y + 9, stroke: COL.breath, 'stroke-width': hand ? 2 : 1.2, 'stroke-dasharray': '2 2' }); svg.appendChild(g);
-                const h = mk('circle', { cx: X(m), cy: y, r: 4, fill: hand ? COL.breath : '#1a1a20', stroke: COL.breath, 'stroke-width': 1.5 }); h.style.cursor = 'ew-resize';
+                svg.appendChild(mk('line', { x1: X(m), x2: X(m), y1: y - 11, y2: y + 11, stroke: COL.breath, 'stroke-width': hand ? 2 : 1, 'stroke-dasharray': hand ? '3 2' : '2 3', 'stroke-opacity': hand ? 1 : 0.7 }));
+                const h = mk('circle', { cx: X(m), cy: y, r: 4.5, fill: hand ? COL.breath : '#1a1a20', stroke: COL.breath, 'stroke-width': 1.5 }); h.style.cursor = 'ew-resize';
+                h.innerHTML = '<title>' + (hand ? 'your breath' : 'a dealt breath') + ' at ' + m.toFixed(2) + ' s — drag; ALT-click removes</title>';
                 h.addEventListener('mousedown', e => {
-                    e.preventDefault(); e.stopPropagation();
+                    e.preventDefault(); e.stopPropagation(); this.snapshot();
                     if (!b.breath.marks) b.breath.marks = { lower: [], upper: [] }; if (!b.breath.marks[who]) b.breath.marks[who] = [];
                     const handList = b.breath.marks[who], isHand = handList.includes(m);
-                    if (e.altKey) {   // a hand mark is dropped; a dealt one: every current mark becomes a hand mark but this one (the deal stops)
+                    if (e.altKey) {   // your mark goes; a dealt one: the others become yours and the deal stops
                         if (isHand) b.breath.marks[who] = handList.filter(x => x !== m);
                         else { b.breath.deal = false; b.breath.marks[who] = (br.marks || []).filter(x => x !== m); }
                         b.breath.mode = 'designated'; this.changed(row, true); this.render(); return;
                     }
-                    // a dragged mark becomes a HAND mark, kept; the rest stay the deal's (the nearest dealt mark gives way to it — `keep`)
                     const r = svg.getBoundingClientRect(); const others = handList.filter(x => x !== m);
                     const onMove = ev => { const cur = r3(clamp((ev.clientX - r.left - x0) / (x1 - x0) * L, 0.1, L - 0.1)); b.breath.mode = 'designated'; b.breath.marks[who] = others.concat([cur]).sort((p, q) => p - q); this.rowOut(row); this.drawBreaths(row, svg, info); this.changed(row, false); };
                     const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); };
@@ -786,17 +934,18 @@ const P = {
                 });
                 svg.appendChild(h);
             });
-            const ct = mk('text', { x: x1 - 4, y: y + 4, fill: '#888', 'font-size': 11, 'text-anchor': 'end' }); ct.textContent = br.ceiling.kind + ' ≤ ' + br.ceiling.seconds + ' s'; svg.appendChild(ct);
+            if (ceil) { const ct = mk('text', { x: x1 - 4, y: y + 4, fill: '#666', 'font-size': 10, 'text-anchor': 'end' }); ct.textContent = 'ideal ≤ ' + ceil + ' s'; svg.appendChild(ct); }
         }
         svg.style.cursor = 'copy';
-        svg.addEventListener('mousedown', e => {   // a click on the lane adds a hand mark for that player
+        svg.addEventListener('mousedown', e => {   // a click on the lane places your breath for that player
             if (e.target.tagName === 'circle') return;
+            this.snapshot();
             const r = svg.getBoundingClientRect(); const who = (e.clientY - r.top) < 28 ? 'upper' : 'lower'; const t = r3(clamp((e.clientX - r.left - x0) / (x1 - x0) * L, 0.1, L - 0.1));
             if (!b.breath.marks) b.breath.marks = { lower: [], upper: [] }; if (!b.breath.marks[who]) b.breath.marks[who] = [];
-            b.breath.mode = 'designated'; b.breath.marks[who] = b.breath.marks[who].concat([t]).sort((p, q) => p - q);   // a hand mark; the deal keeps it
+            b.breath.mode = 'designated'; b.breath.marks[who] = b.breath.marks[who].concat([t]).sort((p, q) => p - q);   // yours; a deal keeps it
             this.changed(row, true); this.render();
         });
-        if (info) { info.textContent = (b.breath.mode === 'continuous' ? 'one long note each — re-bow at will' : b.breath.mode === 'one' ? 'a single bow or breath each' : 'designated: ' + (out.breaths.lower.marks || []).length + ' + ' + (out.breaths.upper.marks || []).length + ' marks' + (b.breath.deal === false ? ' (by hand)' : ', dealt')) + (warn ? ' · ⚠ ' + warn + ' past the ceiling' : ''); info.style.color = warn ? COL.bad : '#888'; }
+        if (info) { const mode = (b.breath.mode || 'one') !== 'designated' ? 'one breath each' : (b.breath.deal === false ? 'your marks only' : ((b.breath.phase == null ? 0.5 : +b.breath.phase) === 0 ? 'unison' : 'random') + ' · ' + (out.breaths.lower.marks || []).length + ' + ' + (out.breaths.upper.marks || []).length + ' marks'); info.textContent = mode + (over.length ? ' · ⚠ ' + [...new Set(over)].map(w => out.players[w]).join(', ') + ' past the ideal length' : ''); info.style.color = over.length ? COL.bad : '#888'; }
     },
 
     // ------------------------------------------------------------------ the pitch side (step 5): the bank, the keyboard, assigning, the relations
@@ -836,7 +985,8 @@ const P = {
     pickHarmony(bank, id) {
         if (bank === 'strikes') { this.pickSource(id); return; }
         const e = this.entriesOf(bank).find(x => x.id === id); if (!e) return;
-        this.harmony = { bank, id }; this.chordId = ''; this.rootMode = false; this.setChord(e.pitches.map(m => ({ midi: m })));
+        this.rememberHarmony();
+        this.harmony = { bank, id }; this.chordId = ''; this.rootMode = false; this.setChord(e.pitches.map(m => ({ midi: m })), { noHistory: true });
         this.renderList();
         const nm = this.el.querySelector('#bpChordName'); if (nm) nm.textContent = e.label + ' · ' + e.name;
         this.setStatus(e.label + ' ' + e.name + ' (' + e.n + ' notes, ' + e.range + ') on the keyboard — &#9654; chord hears it on the piano; click or double-click a note, then a pair\'s node'.replace('&#9654;', '▶'));
@@ -865,9 +1015,10 @@ const P = {
     fillSources() { this.renderList(); },
     pickSource(id) {
         const s = this.db && this.db.strikes && this.db.strikes[id];
+        this.rememberHarmony();
         this.chordId = s ? id : '';
         this.harmony = s ? { bank: 'strikes', id } : null;
-        this.rootMode = false; this.setChord(s ? s.notes.map(n => ({ midi: n.midi, instKey: n.instKey, id: n.objectId })) : []); this.renderList();
+        this.rootMode = false; this.setChord(s ? s.notes.map(n => ({ midi: n.midi, instKey: n.instKey, id: n.objectId })) : [], { noHistory: true }); this.renderList();
         const nm = this.el.querySelector('#bpChordName'); if (nm) nm.textContent = s ? '#' + s.index + ' · strike at ' + s.t0.toFixed(2) + ' s' : '';
         if (s) this.setStatus('strike #' + s.index + ' (' + s.t0.toFixed(2) + ' s, ' + s.notes.length + ' notes) on the keyboard — ▶ chord hears it on the piano; click or double-click a note, then a pair\'s node; the dimmed keys are what the active pair cannot play');
     },
@@ -936,7 +1087,6 @@ const P = {
         svg.querySelectorAll('.bpDot').forEach(d => {
             d.addEventListener('click', ev => { ev.stopPropagation(); this.keyClick(+d.dataset.m); });
             d.addEventListener('dblclick', ev => { ev.stopPropagation(); ev.preventDefault(); this.arm(+d.dataset.m, +d.dataset.i); });   // CN-36: "double click a note on the keyboard and then click a node connected to a pair"
-            d.addEventListener('mousedown', ev => { ev.preventDefault(); this.startDotDrag(+d.dataset.m, ev); });
         });
     },
     indexAt(m) { const i = this.chord.findIndex(n => n.midi === m); return i >= 0 ? i : null; },
@@ -947,34 +1097,25 @@ const P = {
         this.render();
         if (this.armed != null) { const r = this.rows[this.activeRow], f = r ? this.rowFold(r, m) : null; this.setStatus(nn(m) + ' armed — click a pair\'s node to give it the note, ESC or click it again to disarm' + (r ? (f ? (f.k ? ' · the active pair would fold it to ' + nn(f.pitch) + BC_().foldMark(f.k) : ' · the active pair holds it as written') : ' · no octave where the active pair both reach it — the row will offer the ways out') : '')); }
     },
-    // a dot dragged onto a row: our own drag (SVG elements do not take the browser's drag); the row under the pointer at release takes the note
-    startDotDrag(m, e0) {
-        const ghost = document.createElement('div'); ghost.textContent = nn(m); ghost.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;padding:1px 5px;border-radius:3px;background:#7B3FE4;color:#fff;font:13px system-ui;left:' + (e0.clientX + 8) + 'px;top:' + (e0.clientY - 8) + 'px';
-        document.body.appendChild(ghost); let moved = false, over = null;
-        const rows = [...this.el.querySelectorAll('.bpRow')];
-        const mark = rowEl => { over = rowEl; rows.forEach(r => { r.style.outline = r === rowEl ? '2px dashed #c9a8ff' : ''; }); };
-        // the row under the pointer: by the rows' own mouseover (robust when the pane cannot hit-test) and by hit-testing
-        const overs = rows.map(r => { const f = () => mark(r); r.addEventListener('mouseover', f); return f; });
-        const onMove = ev => { moved = true; ghost.style.left = (ev.clientX + 8) + 'px'; ghost.style.top = (ev.clientY - 8) + 'px'; const el = document.elementFromPoint(ev.clientX, ev.clientY); const rowEl = el && el.closest ? el.closest('.bpRow') : null; if (rowEl || !over) mark(rowEl); };
-        const onUp = ev => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); rows.forEach((r, i) => r.removeEventListener('mouseover', overs[i])); ghost.remove(); rows.forEach(r => { r.style.outline = ''; }); if (moved && over) this.assign(+over.dataset.row, m, this.indexAt(m)); else if (!moved) this.keyClick(m); };
-        window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
-    },
+    // (the drag of a dot onto a row is gone — 2026-09-07, "you can just get rid of the drag behavior. I'll just stick with double
+    // clicking and then clicking on the node")
     // the note becomes the pair's note — its index in the sonority remembered (Q3) — and the pair folds it as one unit (§180); never
     // refused: when no octave serves both, the row shows the ladder
     assign(i, m, idx) {
         const row = this.rows[i]; if (!row) return;
         const useIdx = idx != null ? idx : (this.armed === m && this.armedIdx != null ? this.armedIdx : this.indexAt(m));
-        this.armed = null; this.armedIdx = null; this.activeRow = i;
+        this.armed = null; this.armedIdx = null; this.activeRow = i; this.snapshot();
         row.b.noteIndex = (useIdx != null && this.chord[useIdx] && this.chord[useIdx].midi === m) ? useIdx : null;
-        row.b.srcPitch = m; row.b.skip = false;
+        row.b.srcPitch = m; row.b.skip = false; row.b.noteIs = 'lower';
         this.refold(row); this.render(); this.sayFold(row, i);
     },
     sayFold(row, i) {
         const BC = BC_(), T = TRK(), b = row.b, RP = this.rowPitches(row), iv = BC.INTERVALS[b.interval] || BC.INTERVALS.unison;
         const me = T[row.layer] ? T[row.layer].short : '?', pt = b.partnerLayer != null && T[b.partnerLayer] ? T[b.partnerLayer].short : '?';
+        if (b.pitch == null) { this.setStatus('pair ' + (i + 1) + ' has no note yet — double-click a note on the keyboard, then its node', true); return; }
         if (b.partnerLayer == null) { this.setStatus('pair ' + (i + 1) + ' on ' + nn(RP.src) + ' — no partner yet: pick one in the row (every player is listed, with what it would sound)', true); return; }
         if (!this.rowFold(row, RP.src)) { this.setStatus('pair ' + (i + 1) + ': no octave where ' + me + ' and ' + pt + ' both reach ' + nn(RP.src) + ' at ' + iv.label + ' — the row offers the ways out (an interval, another player, skip); nothing applied', true); return; }
-        this.setStatus('pair ' + (i + 1) + ' on ' + nn(RP.src) + (RP.k ? ' → ' + nn(b.pitch) + RP.mark + ' (' + Math.abs(RP.k) + ' octave' + (Math.abs(RP.k) > 1 ? 's' : '') + (RP.k > 0 ? ' up' : ' down') + ', both players)' : ' as written') + ' · ' + (RP.me ? me + ' ' + nn(RP.me.pitch) : '') + (RP.partner ? ' · ' + pt + ' ' + nn(RP.partner.pitch) : '') + (iv.semitones ? ' (' + iv.label + ')' : ''));
+        this.setStatus('pair ' + (i + 1) + ' on ' + nn(RP.src) + (RP.k ? ' → ' + nn(b.pitch) + RP.mark + ' (' + Math.abs(RP.k) + ' octave' + (Math.abs(RP.k) > 1 ? 's' : '') + (RP.k > 0 ? ' up' : ' down') + ', both players)' : ' as written') + ' · ' + (RP.me ? me + ' ' + nn(RP.me.pitch) : '') + (RP.partner ? ' · ' + pt + ' ' + nn(RP.partner.pitch) : '') + (iv.semitones ? ' (' + iv.label + (b.noteIs === 'upper' ? ', inverted — the fourth and the fifth are one family' : '') + ')' : ''));
     },
     // the relation from a root: every pair's pitch by the relation, folded by octave into what the pair can play (the drawer's fold rule),
     // the pairs from the bottom up
@@ -990,7 +1131,7 @@ const P = {
             const target = root + (offs[i] != null ? offs[i] : offs[offs.length - 1] || 0);
             const f = this.rowFold(row, target);   // the pair's fold (§180): the nearest octave both reach, a tie down
             if (!f) { skipped.push('pair ' + (i + 1)); return; }
-            row.b.noteIndex = null; row.b.srcPitch = target; row.b.skip = false; this.refold(row);
+            row.b.noteIndex = null; row.b.srcPitch = target; row.b.skip = false; row.b.noteIs = 'lower'; this.refold(row);
             placed.push('pair ' + (i + 1) + ' ' + nn(f.pitch) + BC_().foldMark(f.k));
         });
         this.rootMode = false; this.render();
@@ -1000,10 +1141,14 @@ const P = {
     // ------------------------------------------------------------------ the audition: all pairs, timestamped, through the tick's event path
     async play() { return this.playRows(this.rows, 'the sequence', false); },
     async playRow(i) { const row = this.rows[i]; if (row) return this.playRows([row], 'pair ' + (i + 1), true); },
-    // the rows given, at their offsets (a pair alone from its own start), timestamped through the tick's event path
-    async playRows(list, label, alone) {
-        const C = C_(); if (!C || !list.length) return;
+    // the rows given, at their offsets (a pair alone from its own start), timestamped through the tick's event path; the strip's mute and
+    // solo apply to the sequence; with the loop on it plays round until stop (edits take effect at every round)
+    async playRows(listIn, label, alone) {
+        const C = C_(); if (!C || !listIn.length) return;
         this.stop();
+        const anySolo = !alone && listIn.some(r => r.solo);
+        const list = alone ? listIn : listIn.filter(r => !r.mute && (!anySolo || r.solo));
+        if (!list.length) { this.setStatus('every pair is muted', true); return; }
         const events = [], slots = new Map();
         let firstPort = null, firstCh = 1;
         const firstStart = Math.min.apply(null, list.filter(r => r.zone).map(r => r.zone.startTime).concat([Infinity]));
@@ -1016,17 +1161,29 @@ const P = {
             s.events.forEach(e => events.push(Object.assign({}, e, { onsetMs: e.onsetMs + off, port: e.port || s.port, channel: e.channel || s.channel })));
             s.slots.forEach(q => slots.set(q.port + '|' + q.channel, q));
         }
-        if (!events.length) { this.setStatus('nothing to play' + (list.some(r => r.b.skip) ? ' — the pair is skipped' : ''), true); return; }
+        if (!events.length) { this.setStatus('nothing to play' + (list.some(r => r.b.pitch == null) ? ' — a pair has no note yet' : list.some(r => r.b.skip) ? ' — the pair is skipped' : ''), true); return; }
         events.sort((a, c) => a.onsetMs - c.onsetMs);
         const fake = { id: 'bp-pattern', midiSnippet: { port: firstPort, channel: firstCh, events, slots: [...slots.values()], source: 'beating' } };
         await C.playBeatingEvents(fake, events, null, null);
-        this._aud = C._beatingAud;
+        this._aud = C._beatingAud; this._loopArgs = [listIn, label, alone];
         const btn = this.el.querySelector('#bpPlay'); if (btn) btn.textContent = '■ playing ' + label;
         const last = events.reduce((m, e) => Math.max(m, e.onsetMs + (e.durations ? e.durations[0] : 0)), 0);
-        clearTimeout(this._audTimer); this._audTimer = setTimeout(() => { this._aud = null; if (btn) btn.innerHTML = '&#9654; sequence'; }, last + C.BEATING_CENTRE_MS + 100);
-        this.setStatus('playing ' + label + ' · ' + list.length + ' pair' + (list.length > 1 ? 's' : '') + ' · ' + events.length + ' events · SPACE stops');
+        clearTimeout(this._audTimer);
+        this._audTimer = setTimeout(() => { this._aud = null; if (this.loop && this._loopArgs) { this.playRows.apply(this, this._loopArgs); return; } if (btn) btn.innerHTML = '&#9654; sequence'; }, last + C.BEATING_CENTRE_MS + 100);
+        this.setStatus('playing ' + label + ' · ' + list.length + ' pair' + (list.length > 1 ? 's' : '') + ' · ' + events.length + ' events' + (this.loop ? ' · looping' : '') + ' · SPACE stops');
     },
-    stop() { const C = C_(); if (C) C.stopBeatingAudition(); this._aud = null; clearTimeout(this._audTimer); const btn = this.el && this.el.querySelector('#bpPlay'); if (btn) btn.innerHTML = '&#9654; sequence'; },
+    stop() { const C = C_(); if (C) C.stopBeatingAudition(); this._aud = null; this._loopArgs = null; clearTimeout(this._audTimer); const btn = this.el && this.el.querySelector('#bpPlay'); if (btn) btn.innerHTML = '&#9654; sequence'; },
+    // 4 s flat at the maximum on this pair (his line 7: "listen to a passage of max beating")
+    hearMax(row) {
+        const C = C_(), BC = BC_(), b = row.b; if (!C || b.pitch == null) { this.setStatus('the pair has no note yet — assign one first', true); return; }
+        const to = +b.rateTo || 0; if (!(to > 0)) { this.setStatus('max is 0 Hz — nothing to hear', true); return; }
+        const tb = Object.assign(JSON.parse(JSON.stringify(b)), { shape: 'flat', beat: BC.shape('flat', { level: to }), rate: null, share: 0.5, breath: { mode: 'one' }, levelCurve: null, slide: { lower: 0, upper: 0 }, skip: false });
+        const z = { id: 'bp-max-' + this.rows.indexOf(row), type: 'zone', layer: row.layer, startTime: 0, endTime: 4, beating: tb };
+        const s = C.regenerateBeating(z); if (!s || !s.events.length) { this.setStatus('nothing to hear', true); return; }
+        this.stop();
+        C.playBeatingEvents(z, s.events, null, null).then(() => { this._aud = C._beatingAud; });
+        this.setStatus('4 s flat at ' + to + ' Hz on pair ' + (this.rows.indexOf(row) + 1) + ' · SPACE stops');
+    },
 
     // ------------------------------------------------------------------ the sequence strip (2026-09-07): a track per pair, the pair a zone
     // drawn with its heard-beating curve — the body dragged moves it in time, the right edge stretches it (the pair's own length, its
@@ -1035,28 +1192,39 @@ const P = {
         const svg = this.el && this.el.querySelector('#bpSeq'), wrap = this.el && this.el.querySelector('#bpSeqWrap'); if (!svg || !wrap) return;
         const rows = this.rows; if (!rows.length) { wrap.style.display = 'none'; return; } wrap.style.display = '';
         const BC = BC_(), ns = 'http://www.w3.org/2000/svg', mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
-        const W2 = Math.max(400, (wrap.clientWidth || W) - 2), seq = this.seqLength(), L = Math.max(1, seq * 1.15), H = 16 + rows.length * SEQ_H + 4;
-        const x0 = PADL, x1 = W2 - PADR, X = t => x0 + (t / L) * (x1 - x0), secPerPx = L / (x1 - x0);
+        // the timeline's own span (his line 20: "that timeline could have an independent duration"): typed in the head, never less than the content
+        const W2 = Math.max(400, (wrap.clientWidth || W) - 2), seq = this.seqLength(), L = Math.max(1, seq * 1.05, +this.seqSpan || 0), H = 16 + rows.length * SEQ_H + 4;
+        const x0 = PADL, x1 = W2 - PADR - 40, X = t => x0 + (t / L) * (x1 - x0), secPerPx = L / (x1 - x0);
         svg.setAttribute('width', W2); svg.setAttribute('height', H); svg.style.width = W2 + 'px'; svg.style.height = H + 'px'; svg.innerHTML = '';
         const step = L > 40 ? 10 : L > 16 ? 5 : 1;
         for (let t = 0; t <= L + 1e-6; t += step) { svg.appendChild(mk('line', { x1: X(t), x2: X(t), y1: 12, y2: H, stroke: '#2e2e36' })); const tx = mk('text', { x: X(t) + 2, y: 10, fill: '#777', 'font-size': 10 }); tx.textContent = t + ' s'; svg.appendChild(tx); }
         const lbl = mk('text', { x: 2, y: 10, fill: '#9a9', 'font-size': 10 }); lbl.textContent = 'sequence ' + seq + ' s'; svg.appendChild(lbl);
         rows.forEach((row, i) => {
             const out = row.out || this.rowOut(row), col = ROW_COLORS[i % ROW_COLORS.length], y = 16 + i * SEQ_H, h = SEQ_H - 4, active = i === this.activeRow;
-            const xa = X(row.offset || 0), xb = X((row.offset || 0) + row.length);
+            const xa = X(row.offset || 0), xb = X((row.offset || 0) + row.length), dim = row.mute || row.b.skip || row.b.pitch == null;
             svg.appendChild(mk('line', { x1: x0, x2: x1, y1: y + h / 2, y2: y + h / 2, stroke: '#2a2a32' }));
-            const body = mk('rect', { x: xa, y, width: Math.max(2, xb - xa), height: h, rx: 3, fill: col, 'fill-opacity': active ? 0.3 : 0.16, stroke: col, 'stroke-width': active ? 1.5 : 1 });
-            body.style.cursor = 'move'; body.innerHTML = '<title>pair ' + (i + 1) + ' — drag to move it in time; the edges stretch it</title>'; svg.appendChild(body);
+            const body = mk('rect', { x: xa, y, width: Math.max(2, xb - xa), height: h, rx: 3, fill: col, 'fill-opacity': dim ? 0.08 : active ? 0.3 : 0.16, stroke: col, 'stroke-width': active ? 1.5 : 1, 'stroke-opacity': dim ? 0.4 : 1 });
+            body.style.cursor = 'move'; body.innerHTML = '<title>pair ' + (i + 1) + ' — drag to move it in time; the edges stretch it; a click makes it the pair SPACE plays</title>'; svg.appendChild(body);
             const mb = out.maxBeat || 1, d = out.samples.map((s, k) => (k ? 'L' : 'M') + (xa + (s.t / Math.max(0.1, row.length)) * (xb - xa)).toFixed(1) + ' ' + (y + h - 2 - (s.beat / mb) * (h - 4)).toFixed(1)).join(' ');
-            svg.appendChild(mk('path', { d, fill: 'none', stroke: col, 'stroke-width': 1.2, 'pointer-events': 'none', opacity: row.b.skip ? 0.3 : 0.9 }));
+            svg.appendChild(mk('path', { d, fill: 'none', stroke: col, 'stroke-width': 1.2, 'pointer-events': 'none', opacity: dim ? 0.3 : 0.9 }));
             const t = mk('text', { x: xa + 5, y: y + 11, fill: '#ddd', 'font-size': 10, 'pointer-events': 'none' });
-            t.textContent = 'pair ' + (i + 1) + ' · ' + (out.players.lower || '?').slice(0, 5) + ' + ' + (out.players.upper || '?').slice(0, 5) + ' · ' + nn(row.b.pitch) + ' · ' + row.length + ' s' + (row.offset ? ' @ ' + row.offset + ' s' : '') + (row.b.skip ? ' · skipped' : '');
+            t.textContent = 'pair ' + (i + 1) + ' · ' + (out.players.lower || '?').slice(0, 5) + ' + ' + (out.players.upper || '?').slice(0, 5) + ' · ' + (row.b.pitch == null ? 'no note' : nn(row.b.pitch)) + ' · ' + row.length + ' s' + (row.offset ? ' @ ' + row.offset + ' s' : '') + (row.b.skip ? ' · skipped' : '') + (row.mute ? ' · muted' : '');
             svg.appendChild(t);
             const edgeL = mk('rect', { x: xa - 3, y, width: 6, height: h, fill: col, 'fill-opacity': 0.02 }); edgeL.style.cursor = 'ew-resize'; edgeL.innerHTML = '<title>start later, the end kept</title>';
             const edgeR = mk('rect', { x: xb - 3, y, width: 6, height: h, fill: col, 'fill-opacity': 0.02 }); edgeR.style.cursor = 'ew-resize'; edgeR.innerHTML = '<title>the pair\'s length — its shapes kept over it</title>';
             svg.appendChild(edgeL); svg.appendChild(edgeR);
+            // mute and solo per track ("I wanna hear it in context")
+            [['M', 'mute', x1 + 6], ['S', 'solo', x1 + 24]].forEach(([lab, key, x]) => {
+                const on = !!row[key];
+                const g = mk('g', { class: 'bpMS' }); g.style.cursor = 'pointer';
+                g.appendChild(mk('rect', { x, y: y + h / 2 - 8, width: 16, height: 16, rx: 3, fill: on ? (key === 'solo' ? '#e8cf9a' : '#e88') : '#2a2a30', stroke: '#555' }));
+                const tt = mk('text', { x: x + 8, y: y + h / 2 + 4, fill: on ? '#222' : '#aaa', 'font-size': 11, 'text-anchor': 'middle', 'pointer-events': 'none' }); tt.textContent = lab; g.appendChild(tt);
+                g.innerHTML += '<title>' + (key === 'mute' ? 'mute this pair in the sequence' : 'solo this pair in the sequence') + '</title>';
+                g.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); row[key] = !row[key]; if (row[key]) row[key === 'mute' ? 'solo' : 'mute'] = false; this.render(); this.setStatus('pair ' + (i + 1) + (row.mute ? ' muted' : row.solo ? ' soloed' : ' plays')); });
+                svg.appendChild(g);
+            });
             const drag = (mode, e0) => {
-                e0.preventDefault(); e0.stopPropagation(); this.activeRow = i; this.setFocus('pair');
+                e0.preventDefault(); e0.stopPropagation(); this.activeRow = i; this.setFocus('pair'); this.snapshot();
                 const o0 = row.offset || 0, l0 = row.length, xs = e0.clientX;
                 const onMove = ev => {
                     const dt = (ev.clientX - xs) * secPerPx;
@@ -1093,7 +1261,8 @@ const P = {
         const M = METAL();
         const groupStart = this.patternGroupId ? Math.min.apply(null, C.objects.filter(o => o.groupId === this.patternGroupId && o.type === 'zone').map(o => o.startTime).concat([Infinity])) : Infinity;
         const t = isFinite(groupStart) ? groupStart : (this.insertAt != null ? this.insertAt : Math.max(0, +C.getTimeAtPlayhead().toFixed(3)));
-        const rowsSpec = this.rows.map(r => ({ layer: r.layer, b: JSON.parse(JSON.stringify(r.b)), offset: r.zone && isFinite(groupStart) ? r3(r.zone.startTime - groupStart) : (r.offset || 0), length: r.zone ? r3(r.zone.endTime - r.zone.startTime) : r.length }));
+        const rowsSpec = this.rows.filter(r => r.b.pitch != null).map(r => ({ layer: r.layer, b: JSON.parse(JSON.stringify(r.b)), offset: r.zone && isFinite(groupStart) ? r3(r.zone.startTime - groupStart) : (r.offset || 0), length: r.zone ? r3(r.zone.endTime - r.zone.startTime) : r.length }));
+        if (!rowsSpec.length) { this.setStatus('nothing to insert — no pair has a note yet', true); return; }
         C.pushUndoState();
         let replaced = 0;
         if (this.patternGroupId && (isFinite(groupStart) ? true : false)) { if (Math.abs(groupStart - t) < 0.1) replaced = this.removeGroup(this.patternGroupId); }
@@ -1123,55 +1292,56 @@ const P = {
         this.setStatus('inserted ' + zones.length + ' pair' + (zones.length > 1 ? 's' : '') + ' at ' + t.toFixed(3) + ' s as ' + group + (replaced ? ' · replaced the earlier insert at this time (' + replaced + ' objects)' : '') + ' — the shape on META is the handle; nothing around it touched');
     },
 
-    // ------------------------------------------------------------------ takes (bank/panel_snapshots.json, the `beatings` bucket)
-    state() { return { length: this.seqLength(), harmony: this.harmony ? { bank: this.harmony.bank, id: this.harmony.id } : null, voicing: JSON.parse(JSON.stringify(this.voicing)), rows: this.rows.map(r => ({ layer: r.layer, offset: r.offset, length: r.length, locked: r.locked, scale: r.scale, b: JSON.parse(JSON.stringify(r.b)) })) }; },
+    // ------------------------------------------------------------------ takes (bank/panel_snapshots.json): the sequence (`beatings`), a pair
+    // (`beatingPairs`), a shape (`beatingShapes`); the one-level undo; the state
+    state() { return { length: this.seqLength(), seqSpan: this.seqSpan || null, harmony: this.harmony ? { bank: this.harmony.bank, id: this.harmony.id } : null, voicing: JSON.parse(JSON.stringify(this.voicing)), rows: this.rows.map(r => ({ layer: r.layer, offset: r.offset, length: r.length, locked: r.locked, levelLock: r.levelLock !== false, mute: !!r.mute, solo: !!r.solo, scale: r.scale, b: JSON.parse(JSON.stringify(r.b)) })) }; },
     applyState(st) {
         if (!st || !Array.isArray(st.rows)) return;
-        this.voicing = Object.assign(VOICING_DEFAULTS(), st.voicing || {});   // the voicing saves with the take (2026-09-07); the rows' note indices survive where the voiced note matches
-        if (st.harmony && st.harmony.bank && st.harmony.id) this.loadDb().then(() => this.pickHarmony(st.harmony.bank, st.harmony.id));   // the harmony chosen saves with the take (CN-36)
+        this.voicing = Object.assign(VOICING_DEFAULTS(), st.voicing || {});   // the voicing saves with the take (2026-09-07)
+        this.seqSpan = st.seqSpan || null;
         const seqLen = r3(+st.length || 6);
+        const fill = (row, r) => { row.locked = r.locked !== false; row.levelLock = r.levelLock !== false; row.mute = !!r.mute; row.solo = !!r.solo; row.scale = r.scale || 6; return row; };
         if (this.bound) {   // a bound zone takes the FIRST row's block; its length stretches the zone
             const r0 = st.rows[0]; if (!r0) return;
             Object.assign(this.bound.beating, r0.b, { partnerLayer: r0.b.partnerLayer });
             const len = r3(+r0.length || seqLen);
             this.bound.endTime = r3(this.bound.startTime + len);
-            this.rows = [this.mkRow(this.bound.layer, this.bound.beating, 0, this.bound, len)]; this.rows[0].locked = r0.locked !== false; this.rows[0].scale = r0.scale || 6;
+            this.rows = [fill(this.mkRow(this.bound.layer, this.bound.beating, 0, this.bound, len), r0)];
             this.changed(this.rows[0], true);
         } else {
-            this.rows = st.rows.slice(0, MAX_ROWS).map(r => { const row = this.mkRow(r.layer, JSON.parse(JSON.stringify(r.b)), r.offset || 0, null, r.length || seqLen); row.locked = r.locked !== false; row.scale = r.scale || 6; return row; });
+            this.rows = st.rows.slice(0, MAX_ROWS).map(r => fill(this.mkRow(r.layer, JSON.parse(JSON.stringify(r.b)), r.offset || 0, null, r.length || seqLen), r));
         }
+        this._keepRows = true;   // the rows' notes are the take's: the harmony pick must not re-deal them
+        if (st.harmony && st.harmony.bank && st.harmony.id) this.loadDb().then(() => { this.pickHarmony(st.harmony.bank, st.harmony.id); this._keepRows = false; }); else this._keepRows = false;
         this.render();
     },
-    // ---- the pair takes (2026-09-07, "a save for individual pairs settings"): one row's settings under a name, the beatingPairs bucket ----
-    pairState(row) { return { layer: row.layer, length: row.length, locked: row.locked, scale: row.scale, b: JSON.parse(JSON.stringify(row.b)) }; },
-    async savePair(i, name) {
-        const row = this.rows[i]; if (!row) return;
-        const d = new Date(), pad = x => String(x).padStart(2, '0');
-        name = (name || '').trim() || ('pair ' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + pad(d.getMinutes()));
-        if (!TAKE_NAME.test(name)) { this.setStatus('pair take not saved: a name is 1–64 letters, digits, dot, underscore, space or hyphen', true); return; }
-        const T = TRK(), b = row.b;
-        try { const r = await this.postTake({ name, comment: (T[row.layer] || {}).short + '+' + (T[b.partnerLayer] || {}).short + ' ' + nn(b.pitch) + ' ' + b.interval + ' · ' + (b.shape || 'drawn') + ' to ' + (+b.rateTo || 0) + '/s · ' + row.length + ' s', state: this.pairState(row) }, PAIRS_PANEL); await this.refreshTakes(); this.render(); this.setStatus('pair take saved: ' + name + (r.existed ? ' (replaced)' : '')); }
-        catch (e) { this.setStatus('pair take not saved: ' + e.message, true); }
+    // ---- the one-level undo (2026-09-07): a snapshot before every edit; ↶ or CTRL+Z in the drawer brings it back ----
+    snapshot() {
+        this._undo = { rows: this.rows.map(r => ({ layer: r.layer, length: r.length, offset: r.offset, locked: r.locked, levelLock: r.levelLock, scale: r.scale, mute: r.mute, solo: r.solo, b: JSON.parse(JSON.stringify(r.b)) })), voicing: JSON.parse(JSON.stringify(this.voicing)), harmony: this.harmony ? Object.assign({}, this.harmony) : null, chordId: this.chordId, notes: this.chord.map(n => ({ midi: n.midi0 != null ? n.midi0 : n.midi, instKey: n.instKey, id: n.id })), activeRow: this.activeRow };
+        this.paintUndo();
     },
-    // into a row: the curves, the level, the breaths, the interval, the length, the lock and the axis; the row's players and its note stay
-    loadPair(i, name) {
-        const t = this.pairTakes[name], row = this.rows[i]; if (!t || !row || !t.state || !t.state.b) { this.setStatus('no pair take named "' + name + '"', true); return; }
-        const nb = JSON.parse(JSON.stringify(t.state.b)), keep = ['partnerLayer', 'pitch', 'srcPitch', 'noteIndex', 'fold', 'launchedFrom'];
-        keep.forEach(k => { delete nb[k]; });
-        Object.assign(row.b, nb); row.locked = t.state.locked !== false; row.scale = t.state.scale || row.scale;
-        this.setRowLength(row, +t.state.length || row.length);
-        this.refold(row); this.render();
-        this.setStatus('pair take "' + name + '" loaded into pair ' + (i + 1) + ': its curves, level, breaths, interval and length — the players and the note kept');
+    paintUndo() { const u = this.el && this.el.querySelector('#bpUndo'); if (u) { u.disabled = !this._undo; u.style.opacity = this._undo ? '' : '0.5'; } },
+    undo() {
+        const u = this._undo; if (!u) { this.setStatus('nothing to undo', true); return; }
+        this._undo = null;
+        this.voicing = Object.assign(VOICING_DEFAULTS(), u.voicing); this.harmony = u.harmony; this.chordId = u.chordId || '';
+        this.setChord(u.notes, { noHistory: true, keepRows: true });
+        if (this.bound || this.rows.length === u.rows.length) {
+            u.rows.forEach((s, i) => { const r = this.rows[i]; if (!r) return; Object.keys(r.b).forEach(k => { delete r.b[k]; }); Object.assign(r.b, s.b); r.length = s.length; r.offset = s.offset; r.locked = s.locked; r.levelLock = s.levelLock; r.scale = s.scale; r.mute = s.mute; r.solo = s.solo; if (r.zone && r.zone.layer !== s.layer) { C_().removeBeatingDecor(r.zone); r.zone.layer = s.layer; } r.layer = s.layer; this.placeZone(r); this.changed(r, true); });
+        } else {
+            this.rows = u.rows.map(s => { const r = this.mkRow(s.layer, s.b, s.offset, null, s.length); r.locked = s.locked; r.levelLock = s.levelLock; r.scale = s.scale; r.mute = !!s.mute; r.solo = !!s.solo; return r; });
+        }
+        this.activeRow = Math.min(u.activeRow || 0, Math.max(0, this.rows.length - 1)); this.renderList(); this.render(); this.setStatus('undone (one level)');
     },
     async refreshTakes() {
-        try { const file = await fetch('/api/snapshots', { cache: 'no-store' }).then(x => x.json()); this.takeList = (file && file.panels && file.panels[TAKES_PANEL]) || {}; this.pairTakes = (file && file.panels && file.panels[PAIRS_PANEL]) || {}; }
-        catch (e) { this.takeList = {}; this.pairTakes = {}; }
+        try { const file = await fetch('/api/snapshots', { cache: 'no-store' }).then(x => x.json()); const P = (file && file.panels) || {}; this.takeList = P[TAKES_PANEL] || {}; this.pairTakes = P[PAIRS_PANEL] || {}; this.shapesBank = {}; Object.keys(P[SHAPES_PANEL] || {}).forEach(n => { const t = P[SHAPES_PANEL][n]; if (t && t.state && Array.isArray(t.state.curve)) this.shapesBank[n] = t.state; }); }
+        catch (e) { this.takeList = {}; this.pairTakes = {}; this.shapesBank = {}; }
         this.fillTakes();
     },
     takeNames() { const t = this.takeList; return Object.keys(t).sort((a, b) => String(t[b].saved || '').localeCompare(String(t[a].saved || ''))); },
     fillTakes() { const sel = this.el && this.el.querySelector('#bpTakeSel'); if (!sel) return; sel.innerHTML = '<option value="">load take…</option>' + this.takeNames().map(n => '<option value="' + esc(n) + '">' + esc(n) + '</option>').join(''); },
     async postTake(body, panel) { const r = await fetch('/api/snapshots', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ panel: panel || TAKES_PANEL }, body)) }).then(x => x.json()); if (!r.success) throw new Error(r.error || '?'); return r; },
-    takeComment() { const v = this.voicing; return (this.harmony ? this.harmony.bank + ' ' + this.harmony.id + ' · ' : '') + ((v.preset !== 'original' || v.oct || v.below || v.above) ? v.preset + (v.oct ? ' oct' + (v.oct > 0 ? '+' : '') + v.oct : '') + ((v.below || v.above) ? ' −' + v.below + '…+' + v.above : '') + ' seed ' + v.seed + ' · ' : '') + this.rows.map(r => (TRK()[r.layer] || {}).short + '+' + (TRK()[r.b.partnerLayer] || {}).short + ' ' + nn(r.b.pitch) + ' ' + r.b.interval + ' ' + r.length + 's' + (r.offset ? '@' + r.offset : '')).join(' · ') + ' · ' + this.seqLength() + ' s'; },
+    takeComment() { const v = this.voicing; return (this.harmony ? this.harmony.bank + ' ' + this.harmony.id + ' · ' : '') + ((v.preset !== 'original' || v.oct || v.below || v.above) ? v.preset + (v.oct ? ' oct' + (v.oct > 0 ? '+' : '') + v.oct : '') + ((v.below || v.above) ? ' −' + v.below + '…+' + v.above : '') + ' seed ' + v.seed + ' · ' : '') + this.rows.map(r => (TRK()[r.layer] || {}).short + '+' + (TRK()[r.b.partnerLayer] || {}).short + ' ' + (r.b.pitch == null ? '—' : nn(r.b.pitch)) + ' ' + r.b.interval + ' ' + r.length + 's' + (r.offset ? '@' + r.offset : '')).join(' · ') + ' · ' + this.seqLength() + ' s'; },
     async saveTake() {
         const box = this.el.querySelector('#bpTakeName'), d = new Date(), pad = x => String(x).padStart(2, '0');
         const name = (box.value || '').trim() || ('beating ' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + pad(d.getMinutes()));
@@ -1181,7 +1351,7 @@ const P = {
     },
     loadTake(name) {
         const t = this.takeList[name]; if (!t) { this.setStatus('no take named "' + name + '"', true); return; }
-        this.applyState(t.state);
+        this.snapshot(); this.applyState(t.state);
         const box = this.el.querySelector('#bpTakeName'); if (box) box.value = name;
         this.setStatus('take loaded: ' + name + (t.comment ? ' · ' + t.comment : ''));
     },
@@ -1190,6 +1360,44 @@ const P = {
         if (!name || !this.takeList[name]) { this.setStatus('type or load the name of the take to delete', true); return; }
         if (!window.confirm('Delete take "' + name + '" from bank/panel_snapshots.json?')) return;
         try { const r = await this.postTake({ name, delete: true }); box.value = ''; await this.refreshTakes(); this.setStatus('take deleted: ' + name + ' · ' + r.panels + ' left'); }
+        catch (e) { this.setStatus('delete failed: ' + e.message, true); }
+    },
+    // ---- the pair takes (2026-09-07, "a save for individual pairs settings"): one row's settings under a name, the beatingPairs bucket ----
+    pairState(row) { return { layer: row.layer, length: row.length, locked: row.locked, levelLock: row.levelLock !== false, scale: row.scale, b: JSON.parse(JSON.stringify(row.b)) }; },
+    async savePair(i, name) {
+        const row = this.rows[i]; if (!row) return;
+        const d = new Date(), pad = x => String(x).padStart(2, '0');
+        name = (name || '').trim() || ('pair ' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + pad(d.getMinutes()));
+        if (!TAKE_NAME.test(name)) { this.setStatus('pair take not saved: a name is 1–64 letters, digits, dot, underscore, space or hyphen', true); return; }
+        const T = TRK(), b = row.b;
+        try { const r = await this.postTake({ name, comment: (T[row.layer] || {}).short + '+' + (T[b.partnerLayer] || {}).short + ' ' + (b.pitch == null ? '—' : nn(b.pitch)) + ' ' + b.interval + ' · ' + (b.shape || 'drawn') + ' max ' + (+b.rateTo || 0) + ' Hz · ' + row.length + ' s', state: this.pairState(row) }, PAIRS_PANEL); await this.refreshTakes(); this.render(); this.setStatus('pair take saved: ' + name + (r.existed ? ' (replaced)' : '')); }
+        catch (e) { this.setStatus('pair take not saved: ' + e.message, true); }
+    },
+    // into a row: the curves, the level, the breaths, the interval, the length, the locks and the axis; the row's players and its note stay
+    loadPair(i, name) {
+        const t = this.pairTakes[name], row = this.rows[i]; if (!t || !row || !t.state || !t.state.b) { this.setStatus('no pair take named "' + name + '"', true); return; }
+        const nb = JSON.parse(JSON.stringify(t.state.b)), keep = ['partnerLayer', 'pitch', 'srcPitch', 'noteIndex', 'noteIs', 'fold', 'launchedFrom'];
+        keep.forEach(k => { delete nb[k]; });
+        Object.assign(row.b, nb); row.locked = t.state.locked !== false; row.levelLock = t.state.levelLock !== false; row.scale = t.state.scale || row.scale;
+        this.setRowLength(row, +t.state.length || row.length);
+        if (row.b.pitch != null) this.refold(row); this.render();
+        this.setStatus('pair take "' + name + '" loaded into pair ' + (i + 1) + ': its curves, level, breaths, interval and length — the players and the note kept');
+    },
+    // ---- the shapes (his line 8: "the first few are custom, but then I can store those as preset shapes"): the heard curve normalised
+    // (its maximum 1) under a name, the beatingShapes bucket; a button among the shapes, for the beating and for the crescendo ----
+    async saveShape(row, name) {
+        const BC = BC_(); name = (name || '').trim();
+        if (!name) { this.setStatus('a name for the shape, please', true); return; }
+        if (!TAKE_NAME.test(name)) { this.setStatus('shape not saved: a name is 1–64 letters, digits, dot, underscore, space or hyphen', true); return; }
+        const beat = BC.curveOf(this.heardCurve(row)), m = Math.max(...beat.map(p => Math.abs(p[1]))) || 1;
+        const curve = BC.scaleCurve(beat, 1 / m).map(p => (p.length > 2 ? [r3(p[0]), r3(p[1]), p[2]] : [r3(p[0]), r3(p[1])]));
+        try { const r = await this.postTake({ name, comment: curve.length + ' points, max 1 — from pair ' + (this.rows.indexOf(row) + 1), state: { curve, from: row.b.shape || 'drawn' } }, SHAPES_PANEL); await this.refreshTakes(); this.render(); this.setStatus('shape saved: ' + name + (r.existed ? ' (replaced)' : '') + ' — it pops in at any maximum; ALT-click its button to delete it'); }
+        catch (e) { this.setStatus('shape not saved: ' + e.message, true); }
+    },
+    async deleteShape(name) {
+        if (!this.shapesBank[name]) return;
+        if (!window.confirm('Delete the shape "' + name + '"?')) return;
+        try { await this.postTake({ name, delete: true }, SHAPES_PANEL); await this.refreshTakes(); this.render(); this.setStatus('shape deleted: ' + name); }
         catch (e) { this.setStatus('delete failed: ' + e.message, true); }
     },
 };

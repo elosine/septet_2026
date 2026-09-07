@@ -463,6 +463,30 @@ choose the players by ear, set the maximum, then shape — so the birth default 
 the maximum must be one box with its own audition, and the shape is ADSR before it is anything else. For the all-purpose tool: the
 shape library should be his, saved from what he draws, not a menu guessed in advance.
 
+### 2026-09-07 — his refinements to the script, and "go ahead"
+
+> *"Sweep: a new pair is born empty, saying "assign a note". A new pair is born. Node disconnected. I double click on the keyboard key
+> with a circle on it, one of the harmonies pitches. There's some sort of visual indicator that that's selected and ready to be
+> assigned. and then click on the note. Pitch gets assigned. And also the big hand in the previous version. I can't see what I'm
+> clicking on. So something with a pointer. And you can just get rid of the drag behavior. I'll just stick with double clicking and then
+> clicking on the node. And then I can just use the pull downs to assign pitch one and pitch two or player one and player two
+> instruments. And then we already discussed the transposition behavior and the indicators. But this all happens dynamically? So if I
+> switch harmony, There's an auto assigned, but I can change it. And the transposition per instrument rejiggers.*
+> *Different ramp shape per segment. Works now, the diamonds. no see main score curve lanes for trills, works like logic pro or daw,
+> hover over curve line vert dlb arrow mouse, drag up.down, left/right to control curve amount and hump location (i think, howver daws
+> work)*
+> *Sweep: the lane reads ppp to fff, and the beating runs the whole measured scale. Also, make sure we're getting the already
+> calibrated volumes per instrument. A through d, good. I'll have to play with d to get more specific. But I guess just make sure the
+> active management is working here. So if I change it to a fifth and that pushes one of the players out of range, that it gets
+> dropped, uh, octave or popped up, uh, noctive. fourths and fifths can be considered the same. then, if necessary, check-in with any
+> additional clarifications. Otherwise, go ahead."*
+> *(2026-09-07, late afternoon; typed)*
+
+**AI reading (not the composer's words):** the diamonds were my invention where the score already had a gesture — hold the line —
+exactly the miss rule B names; taken out, the line's gestures put in. "Fourths and fifths can be considered the same" is a rule about
+the pair's identity: the two pitch classes, not the direction — the fold may turn the one into the other. Built as RUNNING_LOG §184,
+BEATING_TOOL §14.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

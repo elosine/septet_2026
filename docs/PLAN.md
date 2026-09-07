@@ -374,7 +374,11 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   box and the octave range, the pair's fold as one unit with the arrows, the ladder of offers, every player in the menus, the lines
   from key to node, the players' ranges as columns, the octave interval, skip — his test pending; **his first hour's nine asks built the
   same afternoon (§182; BEATING_TOOL §13): the sequence strip with a track per pair, a length and a play per pair, SPACE by focus, the
-  slopes, the level box keeping a drawn shape, pair takes — and his call for a discussion on how to proceed, held next**`** (the requirements talk
+  slopes, the level box keeping a drawn shape, pair takes — and his call for a discussion on how to proceed; **the discussion held (§183):
+  strategy A — his walk-through as a 23-line script, the misses built in one sweep (§184; BEATING_TOOL §14) — born empty, the ADSR,
+  max in Hz, his stored shapes, hold-the-line curves, a crescendo per player, ppp … fff over the whole scale, unison breaths, the
+  timeline's span, auto-assign / revert, fourths ↔ fifths, mute / solo, undo, loop; rule B into HOW_WE_WORK; C held. His test pending,
+  against the script.**`** (the requirements talk
   2026-09-06 evening, RUNNING_LOG §145–166; PLANNING_METHOD phase 3 from step 1) *(composer,
   2026-09-06: CN-28 "strikes with morph chords, like freeze frames or old time slide show … 'morph events'" · CN-29 "the expansion of
   pitch to expand beating, the rebreath … and the Crescendo … the multiple pairs" · "beating is good" · "the atom will be a pair of
