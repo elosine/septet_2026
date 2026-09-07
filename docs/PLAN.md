@@ -355,7 +355,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 
 - **1f — The beatings: a pair of players on one pitch, a gap that beats — the beating panel (section 2, CN-28 · CN-29 · CN-33)** —
   `doing` — **building since 2026-09-07 at his word (*"will you be able to run the plan independantly? can you do so, and I'll check
-  in after the build"*, RUNNING_LOG §167): step 1 built (§167–168), step 2 built (§169), step 3 built (§170), step 4 built (§171)** (the requirements talk 2026-09-06 evening, RUNNING_LOG
+  in after the build"*, RUNNING_LOG §167): step 1 built (§167–168), step 2 built (§169), step 3 built (§170), step 4 built (§171), step 5 built (§172)** (the requirements talk 2026-09-06 evening, RUNNING_LOG
   §145–166; PLANNING_METHOD phase 3 from step 1) *(composer,
   2026-09-06: CN-28 "strikes with morph chords, like freeze frames or old time slide show … 'morph events'" · CN-29 "the expansion of
   pitch to expand beating, the rebreath … and the Crescendo … the multiple pairs" · "beating is good" · "the atom will be a pair of
@@ -510,7 +510,11 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        duration change, a shuffle), each changing the objects' notes as predicted and decoded; the takes round-trip; nothing outside
        the pattern touched; then his test, the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md, commit, push.
   5. **The pitch side** (the strikes menu → the keyboard, a pitch per pair, the sonority between pairs, the interval inside a pair)
-     — `todo`. *Result when done:* the panel's pitches are chosen the way the strikes drawer chooses them. A strikes menu lists the
+     — `built 2026-09-07 (RUNNING_LOG §172; docs/BEATING_TOOL.md §7): in beating_panel.js — the strike menu from the bank
+     (numbered as the drawer), the keyboard beside the rows (the chord's dots, the unplayable keys dimmed from step 1's table, the
+     pairs' notes as rings), arm-and-click or drag onto a row = the pair's lower note, the relations from a root (unison in one
+     octave · across octaves · thirds · fourths · fifths · a typed stack) dealt and folded into the pairs' ranges, a launched
+     beating opening on its strike; verified with real DOM events on a copy. HIS TEST PENDING`. *Result when done:* the panel's pitches are chosen the way the strikes drawer chooses them. A strikes menu lists the
      played chords from the bank; clicking one puts that chord on a keyboard inside the panel. A click on a keyboard note and then on
      a row gives that pair its pitch, and the keyboard dims the notes the pair cannot play (step 1's table). The sonority between the
      pairs can also be dealt by relation from a root note — unison, thirds, fourths, fifths, or a typed stack — folded into range.

@@ -4849,3 +4849,56 @@ view; the z-order on grab), the strikes drawer's takes (`/api/snapshots`, the `s
 
 **Not done, by the plan:** his test — the feel of the handles, the colours, the axis — when he checks in; the verdicts to
 MORPH_NOTES §3 and BEATING_TOOL.md. **Carried:** Insert (step 6); the keyboard and the strikes menu inside the panel (step 5).
+
+## §172. PLAN 1f step 5 (the pitch side) built: the strike menu from the bank, the keyboard beside the rows with the chord lit and the unplayable keys dimmed, a note armed and dropped (or dragged) onto a pair, the relations dealt from a root and folded, a launched beating opening on its strike — verified with real DOM events on a copy; his test pending
+
+Built 2026-09-07, about 03:40–04:20, after step 4's commit, in the plan's words (PLAN 1f item 5's to-dos; the settled points of §158).
+Read first: the strikes drawer's keyboard (`renderKeyboard`: vertical keys, the C labels, the pitch-class palette, the ▲▼ arrows), its
+database (`loadDb` → `bank/scattered_strikes.json`: sequences → strikeIds → strikes with `index`, `t0`, `notes[{ objectId, midi,
+instKey }]`), its fold rule (`foldInto`), STRIKES_TOOL A and F. All of it inside `score/public/beating_panel.js`.
+
+**The decisions:**
+- **The keyboard is a copy of the drawer's drawing, not a call into the drawer.** The drawer's `renderKeyboard` is bound to its own
+  DOM (`#skKb`), its `voices` and its row height; the plan's "reused" is honoured by drawing the same picture with the same
+  conventions (SPAN C2–C7 / FULL 21–108, the palette, the dots with names, ▲▼), 8 px a key, in the panel's own SVG beside the rows.
+- **The dimming is the pairing table, at the row's interval:** a key is dimmed when `beatingPartnerCandidates(row.layer, m, interval)`
+  does not contain the row's partner — at unison both must hold the note; at an interval one the lower, the other the upper. Cello +
+  viola at unison: 25 of the 61 keys out (below C3 and above B5).
+- **A note lands as the pair's LOWER note** (§158: the assigned pitch is the pair's lower note, the partner above by the interval);
+  who takes the upper follows the table (step 3's roles). The two ways: click a dot or a key (armed, the panel says so, ESC disarms)
+  then click the row; or drag a dot onto the row — the panel's own mouse drag (an SVG circle cannot use the browser's drag), the
+  row under the pointer found by its own mouseover as well as by hit-testing. The first test of the drag missed its drop: the
+  synthetic pointer of the pane cannot hit-test (`elementFromPoint` found no row); the mouseover path was added and the drag then
+  landed. A note the pair cannot play is refused with the reason; a click on a row with nothing armed makes it the active pair.
+- **The relations** (§148: "the thirds, fifths, and just Unison … could be something else"; §158: unison two ways): `unison · 1 oct`
+  = every pair on the root (a field on one pitch — the tuba's bloom), `unison · octaves` = the pitch class a pair per octave,
+  `thirds` = root · +4 · +7, `fourths` = +5 · +10, `fifths` = +7 · +14, `stack` = typed semitones, one per pair. The root typed
+  (`C4` or `60`, ENTER) or — with a relation just chosen — clicked on the keyboard (root mode). **The fold:** the nearest playable
+  octave of the target (the drawer's rule by octave, the pairs from the bottom up), ↑↓ said in the status; a pair with no playable
+  octave is named and left where it was.
+- **A beating born on a strike note opens on that strike:** the note's id in the bank first (the bank's `objectId`s are the SOURCE
+  save's — the piece's re-inserted strikes carry new ids), else the strike group's index from the note's `groupId`
+  (`grp-strike-23-1868` → strike #23 — this is what matched on the copy), else the onset within 100 ms.
+- The pairs' notes as rings in the row colours at the keyboard's right (the lower filled, the upper hollow); the row headers in
+  the row colours; the active row tinted.
+
+**Verified on the copy (`zz-ai-beating`, :5301; the server stopped and the copy and its `-work` removed after), with real
+`MouseEvent`s:**
+1. B on the last strike (the cello's F3, `wc-1357`, group `grp-strike-23-1868`) → the panel bound; the bank read (46 strikes); the
+   strike menu on **#23 · 34.22 s · 11 n · D#2–A4**; the chord's 11 dots on the keyboard, F3 among them; 25 keys dimmed (36–47 and
+   84–96) for Vc + Va at unison; one ring (the pair's note).
+2. The dot E3 (52) clicked → armed ("E3 armed — click a pair (or drag it there)"); the row clicked → the zone's pitch 52, regenerated
+   (the keys Va:52, Vc:52), the label "beating Vc + Va on E3 (unison) …", the ring "pair 1: E3 (lower)".
+3. The fifth chip → Vc:52 + Va:59 (E3 + B3), the roles cello below / viola above, the readout "just +1.955 c", the upper note's first
+   bend +1.958 c, the rings "E3 (lower)" and "B3 (upper)".
+4. The key C7 (96): dimmed (fill-opacity 0.22); clicked → armed with "the active pair cannot play it"; the row clicked → refused
+   ("pair 1 cannot play C7 with its P5 — the dimmed keys are out of its reach"), the pitch unchanged.
+5. A new two-pair pattern (BCl + Va on D3, Fl + Vn1 on F#5): **fifths from C3** (typed, ENTER) → pair 1 C3, pair 2 **G4 ↑** (G3 is
+   below the flute's C4; folded up an octave); **unison · octaves** with a clicked C4 (root mode) → C4 · C5.
+6. Strike #5 picked (21 notes, D2–B6); **B6 dragged from the chord onto the second pair** (mousedown on the dot, mousemove, the row's
+   mouseover, mouseup) → its pitch 95 (the flute and violin 1 both hold it), the row outlined during the drag, the ghost removed; a
+   plain mousedown-mouseup on a dot still arms it ("D2 armed … the active pair cannot play it").
+No console errors.
+
+**Not done, by the plan:** his test — when he checks in; the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md. **Carried to step 6:**
+Insert (the pattern into the score as one group with a META shape), the selected strike note as a starting point.

@@ -301,13 +301,49 @@ zone can change along the way); the step-3 property row is retired — the panel
 **Open, for the composer (his test):** the feel of the handles on rails; whether the rate axis should follow the loudest row;
 whether a bound panel should also take a whole pattern (step 6 groups it); the colours of the band's zones.
 
-## 7 · The pitch side — step 5 `todo`
+## 7 · The pitch side — `built 2026-09-07 (PLAN 1f step 5; RUNNING_LOG §172) — verified with real DOM events on a copy; his test pending`
 
 > *"the menu of strikes … it appears on the keyboard … assign a pitch to a pair … the chord or sonority is between the three pairs …
 > internally, there's Unison, but I also would like to try fourths, fifths"* (§148)
 
-The strikes menu → the drawer's keyboard inside the panel, a pitch per pair (the lower note), the sonority between pairs by
-relation from a root, the interval inside a pair. *(PLAN 1f item 5.)*
+In the panel (§6), above the rows and beside them:
+- **The strike menu** — the bank's played chords (`bank/scattered_strikes.json`, the strikes drawer's source) in sequence order,
+  numbered as the drawer numbers them (`#23 · 34.22 s · 11 n · D#2–A4`); picking one puts its chord on the keyboard. **A beating born
+  on a strike note (B) opens on that strike** — found by the note's id in the bank, else by its strike group's index
+  (`grp-strike-23-…`), else by its onset.
+- **The keyboard** — the drawer's drawing beside the rows: vertical keys, the C labels, the ensemble's span (C2–C7; `88` for the
+  whole piano, ▲▼ counting what is out of view); the chord's notes as dots in their pitch-class colours with their names (a bigger
+  dot for a doubling); **the keys the active pair cannot play dimmed** (step 1's table, at the row's interval: at unison both must
+  hold the note, at an interval one the lower and the other the upper — for cello + viola at unison 25 of 61 keys are out); the
+  rows' pair notes as rings in the row colours at the right (the lower note filled, the upper hollow).
+- **Assigning** — click a dot or a key: the note is **armed** (the panel says so; ESC or a second click disarms); click a pair's row:
+  the note becomes **the pair's lower note**, the interval places the partner above it, the objects regenerate; or **drag a dot onto a
+  row** (the row outlines under the pointer). A note the pair cannot play is refused with the reason. A click on a row with nothing
+  armed makes it the active pair (the keyboard dims for it).
+- **The relations from a root** — `unison · 1 oct` (every pair on the root: a field on one pitch, the tuba's bloom) · `unison ·
+  octaves` (the pitch class a pair per octave) · `thirds` (root · +4 · +7) · `fourths` (+5 · +10) · `fifths` (+7 · +14) · `stack`
+  (typed semitones, one per pair); the root typed (`C4` or `60`, ENTER) or, with a relation just chosen, **clicked on the keyboard**;
+  **deal** puts every pair's pitch by the relation, **folded by octave into what the pair can play** (the drawer's fold rule, the
+  nearest octave to the target, ↑↓ said), the pairs from the bottom up; a pair out of reach is named and left.
+- **The interval per row** — the chips of §5 (unison · m3 · M3 · P4 · P5); the just offset in the row's readout and on the upper note.
+- **The row's label** — the panel's row header (players, the lower note, the upper note when an interval, the interval) and the
+  zone's label (`beatingLabel`) say the same thing; the objects regenerate on any pitch change.
+
+**Verified on a copy (`zz-ai-beating`, :5301, 2026-09-07; §172), with real DOM events:** B on the last strike (the cello's F3 in
+strike #23) → the panel bound and the strike menu on **#23** (11 notes, the chord's dots with F3 among them), 25 keys dimmed for
+Vc + Va; a dot (E3) clicked → armed, the row clicked → the zone on E3, regenerated (Va:52, Vc:52), the ring; the fifth → Vc:52 +
+Va:59 (E3 + B3), the just +1.955 c in the readout and +1.958 in the upper note's first bend, both rings; C7 dimmed (0.22), armed with
+the warning, refused on the row ("pair 1 cannot play C7 with its P5"), the pitch unchanged; a new two-pair pattern (BCl + Va, Fl +
+Vn1): **fifths from C3** → C3 · G4 ↑ (G3 is below the flute; folded up); **unison · octaves from a clicked C4** (root mode) → C4 · C5;
+strike #5 picked, **B6 dragged from the chord onto the second pair** → its pitch 95, the row outlined during the drag, the ghost
+gone, a plain click still arms.
+
+**Decided in the build (§172):** the keyboard is a copy of the drawer's drawing, not a call into the drawer (its drawing is bound to
+its own DOM and voices); the drag is the panel's own mouse drag (an SVG dot cannot use the browser's drag), the row found by its own
+mouseover as well as by hit-testing; the fold picks the nearest playable octave of the target, not the first that fits.
+
+**Open, for the composer (his test):** whether the relations should also take the strike's own bass as the root; a doubling
+between pairs (two pairs on one note) — allowed, nothing stops it; the pitch-class colours against the row colours.
 
 ## 8 · The breaths (§152) — the model built at step 2 (§4 above); the lane, the sliders and the warning at step 4
 
@@ -348,3 +384,6 @@ every breath, the beat rate at both ends of the gliss — the tuba's settled for
 - **2026-09-07 — step 4 built:** the panel (§6): `beating_panel.js` — rows, the mirrored curves with handles on rails, the band by
   zone, the shapes and draw mode, the mirror lock and the slide, the crescendo and breath lanes, the offset rail, the length box,
   SPACE, takes; P / B / the Beating button; verified with real DOM events on a copy. His test pending.
+- **2026-09-07 — step 5 built:** the pitch side (§7): the strike menu from the bank, the keyboard beside the rows with the chord lit
+  and the unplayable keys dimmed, arming and dropping a note on a pair, the drag, the relations dealt from a root and folded, a
+  launched beating opening on its strike; verified with real DOM events on a copy. His test pending.

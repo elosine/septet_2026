@@ -36,6 +36,17 @@ const W = 520, HR = 132, HL = 44, HB = 46, PADL = 34, PADR = 10;   // the row's 
 const ZONE_FILL = { flanger: 'rgba(150,150,170,0.22)', beating: 'rgba(123,63,228,0.30)', roughness: 'rgba(225,70,70,0.38)' };
 const COL = { upper: '#ffb347', lower: '#69b7c9', level: '#7ec9a8', breath: '#e0e0e0', bad: '#e88' };
 const SHAPES = [['flat', 'flat'], ['rampOut', 'ramp out'], ['rampIn', 'ramp in'], ['hump', 'hump'], ['arc', 'long arc'], ['burst', 'burst']];
+// the pitch side (step 5): the keyboard as the strikes drawer draws it, the relations between the pairs (§148: "the thirds, fifths, and just
+// Unison … the relationship could be between the three, could be fifths, could be thirds, could be something else"; §158: unison two ways)
+const DB_URL = '/bank/scattered_strikes.json';
+const SPAN = { lo: 36, hi: 96 }, FULL = { lo: 21, hi: 108 };
+const NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+const BLACK = [1, 3, 6, 8, 10];
+const PC_PALETTE = ['#ffd479', '#7ec9a8', '#8ea9c9', '#c98a8a', '#b58ec9', '#d4c25e', '#69b7c9', '#c9986e', '#96c96e', '#c96ea8', '#8a8ac9', '#e0e0e0'];
+const ROW_COLORS = ['#c9a8ff', '#ffb347', '#7ec9a8'];
+const RELATIONS = [['unison1', 'unison · 1 oct', 'every pair on the root, one octave (a field on one pitch — the tuba\'s bloom)'], ['unisonOcts', 'unison · octaves', 'the root\'s pitch class spread across octaves, a pair per octave'],
+                   ['thirds', 'thirds', 'a stack of thirds from the root (root · +4 · +7)'], ['fourths', 'fourths', 'a stack of fourths (root · +5 · +10)'], ['fifths', 'fifths', 'a stack of fifths (root · +7 · +14)'], ['stack', 'stack', 'the typed stack: semitones above the root, one per pair']];
+const parseNote = s => { s = String(s || '').trim(); if (!s) return null; if (/^\d+$/.test(s)) return +s; const m = /^([A-Ga-g])([#b]?)(-?\d)$/.exec(s); if (!m) return null; const pc = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1].toUpperCase()] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0); return (parseInt(m[3], 10) + 1) * 12 + pc; };
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const r3 = v => Math.round(v * 1000) / 1000;
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
@@ -43,6 +54,7 @@ const nn = m => BC_().noteName(m);
 
 const P = {
     el: null, rows: [], length: 6, bound: null, takeList: {}, _timer: null, _aud: null, _drag: null, status: '',
+    db: null, chord: [], chordId: '', armed: null, activeRow: 0, show88: false, rootMode: false, relation: 'unison1',
 
     // ------------------------------------------------------------------ the chassis
     init() {
@@ -68,7 +80,22 @@ const P = {
             '<button id="bpTakeDel" title="delete the named take">&#10005;</button>',
             '<button id="bpInsert" disabled title="Insert at the playhead — step 6">insert</button>',
             '</div>',
-            '<div id="bpRows" style="flex:1 1 auto;overflow-y:auto;min-height:0;margin:0 -4px;padding:0 4px"></div>',
+            // THE PITCH SIDE (step 5, §148 / §158): the strikes menu → the keyboard; a note armed by a click lands on the pair whose row is
+            // clicked next (or is dragged onto it) as the pair's LOWER note; the relations deal every pair's pitch from a root
+            '<div id="bpPitch" style="flex:0 0 auto;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-bottom:6px;padding:4px 6px;border:1px solid #3a3a44;border-radius:4px">',
+            '<label>strike <select id="bpSrc" style="max-width:190px" title="the played chords from the bank (bank/scattered_strikes.json), numbered as the strikes drawer numbers them"><option value="">the bank&#8230;</option></select></label>',
+            '<span style="color:#888">relation</span>',
+            '<span id="bpRel"></span>',
+            '<input id="bpStack" type="text" value="0 7 12" style="width:64px" title="a typed stack: semitones above the root, one per pair">',
+            '<label>root <input id="bpRoot" type="text" placeholder="C4 or 60" style="width:56px" title="a note name or MIDI number; or click a key with root mode on"></label>',
+            '<button id="bpDeal" title="deal the pairs&#8217; pitches from the root by the relation, folded into the pairs&#8217; ranges, from the bottom up">deal</button>',
+            '<label title="the whole piano instead of the ensemble&#8217;s span"><input id="bp88" type="checkbox"> 88</label>',
+            '<span id="bpArmed" style="color:#c9a8ff"></span>',
+            '</div>',
+            '<div id="bpBody" style="flex:1 1 auto;display:flex;gap:8px;overflow-y:auto;min-height:0;margin:0 -4px;padding:0 4px">',
+            '<div id="bpKbWrap" style="flex:0 0 150px"><svg id="bpKb" width="150" style="display:block"></svg></div>',
+            '<div id="bpRows" style="flex:1 1 auto;min-width:0"></div>',
+            '</div>',
         ].join('');
         document.body.appendChild(d);
         this.el = d;
@@ -81,12 +108,19 @@ const P = {
         d.querySelector('#bpTakeName').addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); ev.stopPropagation(); this.saveTake(); });
         d.querySelector('#bpTakeSel').addEventListener('change', ev => { if (ev.target.value) this.loadTake(ev.target.value); ev.target.value = ''; });
         d.querySelector('#bpTakeDel').addEventListener('click', () => this.deleteTake());
+        // the pitch side's controls
+        d.querySelector('#bpSrc').addEventListener('change', ev => { this.pickSource(ev.target.value); });
+        d.querySelector('#bpRel').innerHTML = RELATIONS.map(([k, l, t]) => '<button class="bpRelBtn" data-rel="' + k + '" title="' + esc(t) + '" style="font-size:10px;padding:1px 5px;margin:1px;cursor:pointer">' + l + '</button>').join('');
+        d.querySelectorAll('.bpRelBtn').forEach(b => b.addEventListener('click', () => { this.relation = b.dataset.rel; this.rootMode = true; this.paintRelation(); this.setStatus('relation ' + b.textContent + ' — click a key for the root (or type it) and deal'); }));
+        d.querySelector('#bpDeal').addEventListener('click', () => this.deal());
+        d.querySelector('#bpRoot').addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); ev.stopPropagation(); this.deal(); });
+        d.querySelector('#bp88').addEventListener('change', ev => { this.show88 = ev.target.checked; this.drawKeyboard(); });
         this.makeDraggable(d, d.querySelector('#bpDrag'));
         window.addEventListener('resize', () => this.clampIntoView());
         d.setAttribute('tabindex', '0');
         d.addEventListener('keydown', e => {
             if (e.target.matches('input,select,textarea')) { if (e.key === 'Escape') e.target.blur(); return; }
-            if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); this.close(); }
+            if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); if (this.armed != null || this.rootMode) { this.armed = null; this.rootMode = false; this.render(); this.setStatus('disarmed'); } else this.close(); }
         });
         // SPACE while the panel is open = the pattern, never the transport (the strikes drawer's rule, capture phase: the score
         // blurs selects and number inputs on change and would hand SPACE to the transport); text entry keeps its SPACE
@@ -132,16 +166,21 @@ const P = {
         this.bound = zone; C.ensureBeating(zone);
         this.rows = [this.mkRow(zone.layer, zone.beating, 0, zone)];
         this.length = r3(Math.max(0.1, zone.endTime - zone.startTime));
+        this.activeRow = 0; this.armed = null;
         this.show(); this.render();
         this.setStatus('bound to ' + C.beatingLabel(zone) + ' — every edit regenerates it; SPACE plays the pair; ESC closes');
+        // a beating born on a strike note opens on that strike's chord (the strike by the note's id, its group, or its time)
+        this.loadDb().then(() => { const s = this.strikeFor(zone); if (s) this.pickSource(s.id); else this.drawKeyboard(); });
     },
     // the Beating button with nothing bound: an empty pattern that lives here until Insert (step 6)
     openNew() {
         this.init(); const C = C_();
         this.bound = null;
         if (!this.rows.length || this.rows.some(r => r.zone)) { this.rows = []; const r = this.defaultRow(C ? C.activeLane : 3); if (r) this.rows.push(r); }
+        this.activeRow = 0; this.armed = null;
         this.show(); this.render();
-        this.setStatus(this.rows.length ? 'a new pattern — shapes pop in from the menu, SPACE plays it; Insert comes at step 6' : 'no pair can be made on this lane', !this.rows.length);
+        this.setStatus(this.rows.length ? 'a new pattern — pick a strike or deal a relation for the pitches, shapes pop in from the menu, SPACE plays it; Insert comes at step 6' : 'no pair can be made on this lane', !this.rows.length);
+        this.loadDb().then(() => this.drawKeyboard());
     },
     mkRow(layer, b, offset, zone) { return { layer, b, offset: offset || 0, zone: zone || null, locked: true, draw: false, scale: 6, out: null }; },
     defaultRow(layer) {
@@ -207,7 +246,11 @@ const P = {
         const host = this.el.querySelector('#bpRows'); host.innerHTML = '';
         this.rows.forEach((row, i) => { this.rowOut(row); host.appendChild(this.buildRow(row, i)); });
         if (!this.rows.length) host.innerHTML = '<div style="color:#888;padding:12px">no pairs — + pair</div>';
+        if (this.activeRow >= this.rows.length) this.activeRow = Math.max(0, this.rows.length - 1);
+        this.drawKeyboard(); this.paintRelation();
+        const ar = this.el.querySelector('#bpArmed'); if (ar) ar.textContent = this.armed != null ? nn(this.armed) + ' armed — click a pair (or drag it there)' : (this.rootMode ? 'root mode: click a key' : '');
     },
+    paintRelation() { this.el.querySelectorAll('.bpRelBtn').forEach(b => { const on = b.dataset.rel === this.relation; b.style.background = on ? '#7B3FE4' : ''; b.style.color = on ? '#fff' : ''; b.style.borderColor = on ? '#7B3FE4' : ''; }); },
     buildRow(row, i) {
         const C = C_(), BC = BC_(), b = row.b, out = row.out, T = TRK();
         const me = T[row.layer] ? T[row.layer].label : '?', cands = C.beatingPartnerCandidates(row.layer, b.pitch, b.interval);
@@ -216,7 +259,13 @@ const P = {
         const iv = BC.INTERVALS[b.interval] || BC.INTERVALS.unison;
         const box = document.createElement('div');
         box.className = 'bpRow'; box.dataset.row = i;
-        box.style.cssText = 'border:1px solid #444;border-radius:5px;padding:6px 8px;margin-bottom:8px;background:rgba(255,255,255,0.03)';
+        box.style.cssText = 'border:1px solid #444;border-left:4px solid ' + ROW_COLORS[i % ROW_COLORS.length] + ';border-radius:5px;padding:6px 8px;margin-bottom:8px;background:' + (i === this.activeRow ? 'rgba(123,63,228,0.08)' : 'rgba(255,255,255,0.03)');
+        // the pitch side: a click on the row's header takes the armed note (or makes the row the active one — the keyboard dims for it);
+        // a note dragged from the keyboard lands the same way
+        box.addEventListener('click', ev => { if (ev.target.closest('input, select, button, svg')) return; if (this.armed != null) this.assign(i, this.armed); else if (this.activeRow !== i) { this.activeRow = i; this.render(); } });
+        box.addEventListener('dragover', ev => { ev.preventDefault(); box.style.outline = '2px dashed ' + ROW_COLORS[i % ROW_COLORS.length]; });
+        box.addEventListener('dragleave', () => { box.style.outline = ''; });
+        box.addEventListener('drop', ev => { ev.preventDefault(); box.style.outline = ''; const m = parseInt(ev.dataTransfer.getData('text/plain'), 10); if (!isNaN(m)) this.assign(i, m); });
         const sel = 'background:#7B3FE4;color:#fff;border-color:#7B3FE4;';
         const btn = (cls, data, label, on, title) => '<button class="' + cls + '" ' + data + ' title="' + esc(title || '') + '" style="font-size:10px;padding:1px 5px;margin:1px;cursor:pointer;' + (on ? sel : '') + '">' + label + '</button>';
         box.innerHTML = [
@@ -481,6 +530,138 @@ const P = {
             this.changed(row, true); this.render();
         });
         if (info) { info.textContent = (b.breath.mode === 'continuous' ? 'one long note each — re-bow at will' : b.breath.mode === 'one' ? 'a single bow or breath each' : 'designated: ' + (out.breaths.lower.marks || []).length + ' + ' + (out.breaths.upper.marks || []).length + ' marks' + (b.breath.deal === false ? ' (by hand)' : ', dealt')) + (warn ? ' · ⚠ ' + warn + ' past the ceiling' : ''); info.style.color = warn ? COL.bad : '#888'; }
+    },
+
+    // ------------------------------------------------------------------ the pitch side (step 5): the bank, the keyboard, assigning, the relations
+    async loadDb() {
+        if (this.db) return this.db;
+        try { const r = await fetch(DB_URL + '?t=' + Date.now(), { cache: 'no-store' }); if (!r.ok) throw new Error('HTTP ' + r.status); this.db = await r.json(); }
+        catch (e) { this.setStatus('the bank of strikes could not be read (' + e.message + ') — the keyboard works without it', true); this.db = { strikes: {}, sequences: {} }; }
+        this.fillSources();
+        return this.db;
+    },
+    // the strikes in sequence order, numbered as the drawer numbers them (index · t0 · notes)
+    sourceList() {
+        const db = this.db; if (!db) return [];
+        const seqs = Object.values(db.sequences || {}), out = [];
+        seqs.forEach(sq => (sq.strikeIds || []).forEach(sid => { const s = db.strikes[sid]; if (s) out.push(s); }));
+        if (!out.length) Object.values(db.strikes || {}).forEach(s => out.push(s));
+        return out;
+    },
+    fillSources() {
+        const sel = this.el && this.el.querySelector('#bpSrc'); if (!sel) return;
+        sel.innerHTML = '<option value="">the bank…</option>' + this.sourceList().map(s => '<option value="' + esc(s.id) + '"' + (s.id === this.chordId ? ' selected' : '') + '>#' + s.index + ' · ' + s.t0.toFixed(2) + ' s · ' + s.notes.length + ' n · ' + nn(s.stats.midi.min) + '–' + nn(s.stats.midi.max) + '</option>').join('');
+    },
+    pickSource(id) {
+        const s = this.db && this.db.strikes && this.db.strikes[id];
+        this.chordId = s ? id : ''; this.chord = s ? s.notes.map(n => ({ midi: n.midi, instKey: n.instKey, id: n.objectId })) : [];
+        const sel = this.el.querySelector('#bpSrc'); if (sel) sel.value = this.chordId;
+        this.rootMode = false; this.drawKeyboard();
+        if (s) this.setStatus('strike #' + s.index + ' (' + s.t0.toFixed(2) + ' s, ' + s.notes.length + ' notes) on the keyboard — click a note, then a pair; the dimmed keys are what the active pair cannot play');
+    },
+    // the strike a bound beating was born on: the note's id in the bank, its strike group's index, or its onset
+    strikeFor(zone) {
+        const db = this.db; if (!db || !zone) return null;
+        const C = C_(), b = zone.beating || {}, note = b.launchedFrom ? C.objects.find(o => o.id === b.launchedFrom) : null;
+        const all = Object.values(db.strikes || {});
+        let s = note ? all.find(q => q.notes.some(n => n.objectId === note.id)) : null;
+        if (!s && note && note.groupId) { const m = /^grp-strike-(\d+)-/.exec(note.groupId); if (m) s = this.sourceList().find(q => q.index === +m[1]) || all.find(q => q.index === +m[1]); }
+        if (!s) { const t = note ? note.startSeconds : zone.startTime; s = all.find(q => Math.abs(q.t0 - t) < 0.1) || null; }
+        return s;
+    },
+    range() { return this.show88 ? FULL : SPAN; },
+    pcColor(pc) { const pcs = [...new Set(this.chord.map(n => ((n.midi % 12) + 12) % 12))].sort((a, b) => a - b); const i = pcs.indexOf(pc); return PC_PALETTE[(i >= 0 ? i : pc) % PC_PALETTE.length]; },
+    // can this row's pair play the note as its lower note (step 1's table: at unison both hold it; at an interval one the lower, one the upper)
+    rowCanPlay(row, m) {
+        const C = C_(), b = row.b, me = TRK()[row.layer] && TRK()[row.layer].instKey, other = b.partnerLayer != null && TRK()[b.partnerLayer] ? TRK()[b.partnerLayer].instKey : null;
+        if (!me || !other) return false;
+        return C.beatingPartnerCandidates(row.layer, m, b.interval).some(c => c.instKey === other);
+    },
+    // the keyboard: the drawer's drawing — vertical keys, the C labels, the chord's notes as dots in their pitch-class colours with their names,
+    // the rows' pair notes as rings in the row colours, the keys the active pair cannot play dimmed; a click arms a note (or sets the root)
+    drawKeyboard() {
+        const svg = this.el && this.el.querySelector('#bpKb'); if (!svg) return;
+        const R = this.range(), h = 8, rows = R.hi - R.lo + 1, H = rows * h + 14, keyY = m => 6 + (R.hi - m) * h;
+        svg.setAttribute('height', H); svg.style.height = H + 'px';
+        const row = this.rows[this.activeRow], rc = ROW_COLORS[this.activeRow % ROW_COLORS.length];
+        let s = '';
+        for (let m = R.hi; m >= R.lo; m--) {
+            const y = keyY(m), black = BLACK.includes(m % 12), can = row ? this.rowCanPlay(row, m) : true;
+            s += '<rect class="bpKey" data-m="' + m + '" x="30" y="' + (y + 0.5) + '" width="' + (black ? 54 : 90) + '" height="' + (h - 1) + '" fill="' + (black ? '#2a2a30' : '#d8d3c8') + '" fill-opacity="' + (can ? 1 : 0.22) + '" stroke="#111" stroke-width="0.5" style="cursor:pointer"><title>' + nn(m) + (can ? '' : ' — the active pair cannot play it') + '</title></rect>';
+            if (m % 12 === 0) s += '<text x="2" y="' + (y + h * 0.85) + '" font-size="8" fill="#777">C' + (m / 12 - 1) + '</text>';
+        }
+        // the rows' pair notes: rings (the lower note filled, the upper hollow) in the row colour, at the right
+        this.rows.forEach((r, i) => {
+            const out = r.out || this.rowOut(r), col = ROW_COLORS[i % ROW_COLORS.length], iv = BC_().INTERVALS[r.b.interval] || BC_().INTERVALS.unison;
+            const lo = r.b.pitch, up = r.b.pitch + iv.semitones;
+            [[lo, true], [up, iv.semitones > 0]].forEach(([m, show]) => { if (!show || m < R.lo || m > R.hi) return; const cy = keyY(m) + h / 2; s += '<circle cx="' + (128 + i * 7) + '" cy="' + cy + '" r="4" fill="' + (m === lo ? col : 'none') + '" stroke="' + col + '" stroke-width="1.5"><title>pair ' + (i + 1) + ': ' + nn(m) + (m === lo ? ' (lower)' : ' (upper)') + '</title></circle>'; });
+        });
+        // the chord's notes: dots with their names, draggable onto a row
+        const byPitch = {}; this.chord.forEach(n => { (byPitch[n.midi] = byPitch[n.midi] || []).push(n); });
+        Object.keys(byPitch).forEach(p => {
+            const m = +p; if (m < R.lo || m > R.hi) return;
+            const pc = ((m % 12) + 12) % 12, col = this.pcColor(pc), cy = keyY(m) + h / 2, k = byPitch[p].length;
+            s += '<circle class="bpDot" data-m="' + m + '" cx="106" cy="' + cy + '" r="' + (3.2 + Math.min(2, k - 1)) + '" fill="' + col + '" stroke="' + (this.armed === m ? '#fff' : col) + '" stroke-width="' + (this.armed === m ? 2.2 : 1) + '" style="cursor:grab"><title>' + nn(m) + (k > 1 ? ' ×' + k : '') + ' — click to arm, drag onto a pair</title></circle>';
+            s += '<text x="27" y="' + (cy + 3) + '" font-size="8" fill="' + col + '" text-anchor="end">' + nn(m) + '</text>';
+        });
+        const above = this.chord.filter(n => n.midi > R.hi).length, below = this.chord.filter(n => n.midi < R.lo).length;
+        if (above) s += '<text x="100" y="8" fill="#e88" font-size="9">▲' + above + '</text>';
+        if (below) s += '<text x="100" y="' + (H - 2) + '" fill="#e88" font-size="9">▼' + below + '</text>';
+        if (this.armed != null && this.armed >= R.lo && this.armed <= R.hi) s += '<rect x="28" y="' + (keyY(this.armed) - 0.5) + '" width="94" height="' + (h + 1) + '" fill="none" stroke="#fff" stroke-width="1.2" pointer-events="none"/>';
+        svg.innerHTML = s;
+        svg.querySelectorAll('.bpKey').forEach(k => k.addEventListener('click', () => this.keyClick(+k.dataset.m)));
+        svg.querySelectorAll('.bpDot').forEach(d => {
+            d.addEventListener('click', ev => { ev.stopPropagation(); this.keyClick(+d.dataset.m); });
+            d.addEventListener('mousedown', ev => { ev.preventDefault(); this.startDotDrag(+d.dataset.m, ev); });
+        });
+    },
+    keyClick(m) {
+        if (this.rootMode) { const rb = this.el.querySelector('#bpRoot'); if (rb) rb.value = nn(m); this.rootMode = false; this.deal(m); return; }
+        this.armed = this.armed === m ? null : m;
+        this.render();
+        if (this.armed != null) this.setStatus(nn(m) + ' armed — click a pair to give it the note (its lower note), ESC or click it again to disarm' + (this.rows[this.activeRow] && !this.rowCanPlay(this.rows[this.activeRow], m) ? ' · the active pair cannot play it' : ''));
+    },
+    // a dot dragged onto a row: our own drag (SVG elements do not take the browser's drag); the row under the pointer at release takes the note
+    startDotDrag(m, e0) {
+        const ghost = document.createElement('div'); ghost.textContent = nn(m); ghost.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;padding:1px 5px;border-radius:3px;background:#7B3FE4;color:#fff;font:11px system-ui;left:' + (e0.clientX + 8) + 'px;top:' + (e0.clientY - 8) + 'px';
+        document.body.appendChild(ghost); let moved = false, over = null;
+        const rows = [...this.el.querySelectorAll('.bpRow')];
+        const mark = rowEl => { over = rowEl; rows.forEach(r => { r.style.outline = r === rowEl ? '2px dashed #c9a8ff' : ''; }); };
+        // the row under the pointer: by the rows' own mouseover (robust when the pane cannot hit-test) and by hit-testing
+        const overs = rows.map(r => { const f = () => mark(r); r.addEventListener('mouseover', f); return f; });
+        const onMove = ev => { moved = true; ghost.style.left = (ev.clientX + 8) + 'px'; ghost.style.top = (ev.clientY - 8) + 'px'; const el = document.elementFromPoint(ev.clientX, ev.clientY); const rowEl = el && el.closest ? el.closest('.bpRow') : null; if (rowEl || !over) mark(rowEl); };
+        const onUp = ev => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); rows.forEach((r, i) => r.removeEventListener('mouseover', overs[i])); ghost.remove(); rows.forEach(r => { r.style.outline = ''; }); if (moved && over) this.assign(+over.dataset.row, m); else if (!moved) this.keyClick(m); };
+        window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
+    },
+    // the note becomes the pair's lower note; the interval places the partner; refused when the pair cannot play it
+    assign(i, m) {
+        const row = this.rows[i]; if (!row) return;
+        this.armed = null; this.activeRow = i;
+        if (!this.rowCanPlay(row, m)) { this.render(); this.setStatus('pair ' + (i + 1) + ' cannot play ' + nn(m) + (row.b.interval === 'unison' ? '' : ' with its ' + row.b.interval) + ' — the dimmed keys are out of its reach; another pair, or another note', true); return; }
+        row.b.pitch = m;
+        this.changed(row, true); this.render();
+        this.setStatus('pair ' + (i + 1) + ' on ' + nn(m) + (row.b.interval === 'unison' ? '' : ' + ' + nn(m + (BC_().INTERVALS[row.b.interval] || {}).semitones)) + ' — ' + (row.out ? row.out.players.lower + ' below, ' + row.out.players.upper + ' above' : ''));
+    },
+    // the relation from a root: every pair's pitch by the relation, folded by octave into what the pair can play (the drawer's fold rule),
+    // the pairs from the bottom up
+    deal(rootIn) {
+        const rb = this.el.querySelector('#bpRoot'), root = rootIn != null ? rootIn : parseNote(rb && rb.value);
+        if (root == null) { this.rootMode = true; this.render(); this.setStatus('no root — click a key, or type one (C4 or 60) and ENTER', true); return; }
+        if (!this.rows.length) return;
+        const rel = this.relation || 'unison1';
+        const stack = (this.el.querySelector('#bpStack').value || '0').trim().split(/[\s,]+/).map(Number).filter(v => !isNaN(v));
+        const offs = rel === 'unison1' ? [0, 0, 0] : rel === 'unisonOcts' ? [0, 12, 24] : rel === 'thirds' ? [0, 4, 7] : rel === 'fourths' ? [0, 5, 10] : rel === 'fifths' ? [0, 7, 14] : stack;
+        const placed = [], skipped = [];
+        this.rows.forEach((row, i) => {
+            const target = root + (offs[i] != null ? offs[i] : offs[offs.length - 1] || 0);
+            let best = null;
+            for (let m = target - 48; m <= target + 48; m += 12) { if (m < 21 || m > 108 || !this.rowCanPlay(row, m)) continue; if (!best || Math.abs(m - target) < Math.abs(best - target)) best = m; }
+            if (best == null) { skipped.push('pair ' + (i + 1)); return; }
+            row.b.pitch = best; this.changed(row, true);
+            placed.push('pair ' + (i + 1) + ' ' + nn(best) + (best !== target ? (best > target ? ' ↑' : ' ↓') : ''));
+        });
+        this.rootMode = false; this.render();
+        this.setStatus('dealt ' + (RELATIONS.find(r => r[0] === rel) || [])[1] + ' from ' + nn(root) + ': ' + placed.join(' · ') + (skipped.length ? ' · out of reach: ' + skipped.join(', ') : ''), !!skipped.length);
     },
 
     // ------------------------------------------------------------------ the audition: all pairs, timestamped, through the tick's event path
