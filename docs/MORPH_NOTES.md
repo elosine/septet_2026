@@ -157,6 +157,29 @@ rate per pair (the difference is what is heard); draw in beats per second so the
 picture, one flat = the anchor form; the pitch and the two players per row; breaths per player; the curves live in the object, edited
 on P; the duration box = the trill's live curve.
 
+### 2026-09-06 — pitch: the strikes menu → the keyboard → a pitch per pair; the sonority between pairs; intervals inside a pair; the axis in beats per second
+
+> *"Okay. Good. So the one thing I didn't talk so much about is pitch. So we should have some sets of pitches that are easy enough to
+> choose. So maybe something like, I think, um, strikes works well, or you have the menu of strikes, the one through forty five or
+> whatever. And then if I click one of those, it appears on the keyboard. And then I can assign a pitch to a pet, and then they'll
+> hover around that pair... or around that pitch. So it's more the cord or minority, the cord or minority, the c h o r d or s o n o r
+> i t y. is between the three pairs. So let's include the ones we did for the tuba piece. the thirds, fifths, and just Unison. But
+> then the relationship... let's say the relationship could be between the three, could be fifths, could be thirds, could be
+> something else. And then internally, there's Unison, but I also would like to try fourths, fifths. and see how beating sounds at
+> that interval as well. and showing the beating is good. Let's try to find an elegant way to do that. Sure. The access should be
+> beach per second. That's fine. And then let's discuss what insertion would look like into the main score. Okay. This sounds pretty
+> clear. let me know if there's anything else to think about. And then if you could organize the top line sections for plan, and
+> we'll go through them one by one. So we... first, any questions or any additional things. The next, let me see the plan top line in
+> order, and then we'll investigate them one by one."*
+> *(2026-09-06, session 4, evening; speech-to-text, content untouched — "a pet" = a pair; "the access should be beach per second" =
+> the axis should be beats per second)*
+
+**AI reading (not the composer's words):** two decisions and a model. The axis is beats per second (the tool converts). The pitch
+model: the strikes menu feeds the keyboard, a centre pitch per pair, the sonority between the pairs (unison, thirds, fifths, other),
+the interval inside a pair (unison, fourths, fifths, thirds to try). For the all-purpose tool: a pair's interval is a parameter, and
+the beating at an interval is between coincident partials (3× / 4× / 5× the unison's rate per cent at the fifth / fourth / major
+third, fainter, timbre-dependent) — the arithmetic and the insertion picture are in RUNNING_LOG §148.
+
 
 ## 4 · For the eventual revision (the digest — rewritten freely)
 

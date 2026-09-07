@@ -4257,3 +4257,55 @@ the same rows and curves are what a deal would fill later. **Consequence for the
 rows, layers, shapes with handles, the derived line, the duration box; steps 1 (the palette) and 2 (the atom's math) unchanged; step 5
 (the shuffles) parked. **One question put to him:** the axis of the beating curves — (a) beats per second (recommended) or (b)
 cents. Nothing built.
+
+## §148. "the one thing I didn't talk so much about is pitch … the menu of strikes … it appears on the keyboard … assign a pitch to a pair … the chord or sonority is between the three pairs … internally, there's Unison, but I also would like to try fourths, fifths" — the axis decided (beats per second), the pitch model, insertion proposed, the top line put to him
+
+Composer (PLAN 1f, phase 1 → 2): *"Okay. Good. So the one thing I didn't talk so much about is pitch. So we should have some sets of
+pitches that are easy enough to choose. So maybe something like, I think, um, strikes works well, or you have the menu of strikes,
+the one through forty five or whatever. And then if I click one of those, it appears on the keyboard. And then I can assign a pitch
+to a pet, and then they'll hover around that pair... or around that pitch. So it's more the cord or minority, the cord or minority,
+the c h o r d or s o n o r i t y. is between the three pairs. So let's include the ones we did for the tuba piece. the thirds,
+fifths, and just Unison. But then the relationship... let's say the relationship could be between the three, could be fifths, could
+be thirds, could be something else. And then internally, there's Unison, but I also would like to try fourths, fifths. and see how
+beating sounds at that interval as well. and showing the beating is good. Let's try to find an elegant way to do that. Sure. The
+access should be beach per second. That's fine. And then let's discuss what insertion would look like into the main score. Okay.
+This sounds pretty clear. let me know if there's anything else to think about. And then if you could organize the top line sections
+for plan, and we'll go through them one by one. So we... first, any questions or any additional things. The next, let me see the plan
+top line in order, and then we'll investigate them one by one."* (speech-to-text: "a pet" = a pair, "the access should be beach per
+second" = the axis should be beats per second)
+
+**DECIDED:** the beating curves' axis is **beats per second** (the tool finds the cents per player from the pair's pitch and
+interval). **The pitch model, his:** the strikes menu (1 … 45) → the chosen strike's chord on the drawer's keyboard → a centre pitch
+assigned to each pair (the pair hovers around it) → the sonority is BETWEEN the pairs (unison, thirds, fifths, anything; the tuba
+piece's relations included) → INSIDE a pair unison by default, fourths / fifths / thirds to be tried. The derived beating line:
+wanted, *"an elegant way"*.
+
+**Insider input put to him — intervals inside a pair:** at an interval the beating is between the partials that coincide (a fifth:
+the lower's 3rd against the upper's 2nd; a fourth: 4th against 3rd; a major third: 5th against 4th), so the same cents of detuning
+beats 3 / 4 / 5 times faster than at unison and fainter (partials are weaker than fundamentals; strong on strings — players tune
+their fifths by it — weak on the flute); the tempered interval already beats (a fifth by 2 c, a major third by 14 c), so the tool's
+zero is the JUST interval and the rate is computed from there; the axis stays beats per second for every interval. (The arithmetic:
+low f1, the just interval p:q, the upper detuned by δ cents → beat = p · f1 · |2^(δ/1200) − 1|; p = 1 at unison, 3 at the fifth, 4 at
+the fourth, 5 at the major third.)
+
+**Insertion into the score, proposed:** one beating object per pair on its two lanes, holding its curves, pitch, players and
+duration, regenerated at play start as the trill (D20) — a stretch regenerates, select + P reopens it in the panel; it generates one
+sustained note per player per breath, each carrying its bend and its crescendo (the crescendo as fill as now, the bend as a line
+inside the note — new); the pattern one group with a META shape (the group drag carries it, §144); from a strike, Insert at the
+strike puts the pattern at its onset and the strike's covered notes are eaten by the mute rule (the trill's §6; removed = restored);
+Insert at the playhead otherwise; a re-insert replaces its own earlier insert (the strikes drawer's rule); the default exit = until
+this player's next strike note (the trill's rule) — his slide show.
+
+**Anything else, put to him:** the bend range per instrument as two numbers (the sampler's and the player's: strings unlimited, flute
+and bass clarinet about a quarter tone by embouchure, the piano none — an anchor only) · the pairing rules (any two players whose
+ranges share the pitch, at least one able to bend) · the audition on the score's loudness path (1g's remap), not the tuba panel's
+map · takes for a configuration he likes (the strikes drawer's).
+
+**The top line put to him (phase 2):** 1 the palette · 2 the beating math (a pure module: rate ↔ cents by pitch and interval, the
+mirrored curves and their difference, the breath rule, the duration stretch) · 3 one pair in the score, heard (unison, then fifth
+and fourth by ear) · 4 the panel (rows, mirrored curves with handles on rails, the crescendo and breath layers, the derived line,
+shapes and freehand, the slide, the space bar, the duration box, takes) · 5 the pitch side (the strikes menu → the keyboard, a pitch
+per pair, the sonority between pairs, the interval inside a pair) · 6 insertion · 7 verify on a copy at 175.7 s, the tool's
+requirements doc (`docs/BEATING_TOOL.md`, the TRILLS_TOOL pattern) and MORPH_NOTES, commit · 8 later: the shuffle as a writer,
+cycles for section 3 (CN-33), the training material, the notation at 2a. His to confirm, reorder, rename; then phase 3, step 1.
+Nothing built.
