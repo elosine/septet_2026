@@ -4482,3 +4482,25 @@ on his go. Nothing built.
 
 Composer: *"on point, good"* (the to-dos of §158). **Written into `docs/PLAN.md` 1f item 5 at once:** the result when done, the
 three things settled with the goal, the seven to-dos. Committed and pushed. Next: step 6's goal (insertion), on his word.
+
+## §160. "ok, step 6" → "keep the beating out of the strike chain so unlike the trills … we'll just add accents manually … it doesn't have to do things like avoid overlaps and gray out notes … it'll just be its own thing" — the beating unchained; step 6's goal restated
+
+Composer: *"ok, step 6"* → the goal put to him (format A): Insert at the strike or at the playhead; the pattern as its objects under
+one group with a META shape (drag, delete, stretch); the launching strike's notes on the pair's lanes muted by the beating as the
+trill mutes its launching note, back when removed, M by hand; the default exit the earlier of the two players' next strike notes (the
+slide show); a stretch past that eating what it covers; a re-insert replacing at its own time; select + P. Two things put with it:
+the attack at the entry — (a) the beating's first note on the instrument's accented sustain, the strike note muted (recommended), or
+(b) the strike's note sounding with the held note under it; the META shape's contour from the crescendo's mean (recommended) or the
+beating band.
+
+Composer: *"Let's actually keep the beating out of the strike chain so unlike the trails. Trellis we'll just add accents manually,
+but it doesn't have to do things like avoid overlaps and gray out notes. I'll just... it'll just be its own thing."* (speech-to-text:
+"trails", "Trellis" = trills)
+
+**DECIDED — the beating is its own thing, outside the strike chain:** no mute rule, no eating, no default exit at the next strike
+note, no overlap avoidance, no greying of notes; the accents added by hand in the score; the score's ordinary conflict marks apply
+to its notes as to any note, nothing more. The attack question (a / b) dissolves — the beating's first note is a plain entry at the
+crescendo's starting level; the META contour from the crescendo's mean stands (no objection). **The goal restated and put to him:**
+Insert at the playhead only (a selected strike note's pitch and onset as a starting point, no link — kept as a convenience unless he
+says otherwise); the group with its META shape (drag, delete, stretch regenerates); a re-insert replaces its own earlier insert at
+its own time; select + P reopens the pattern. Step 3's B launch reads the same way (no link, no mute). Nothing built.

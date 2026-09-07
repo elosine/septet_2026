@@ -222,6 +222,17 @@ continuous, re-bow at will · designated, the marks as dotted go lines on slider
 seeded shuffle that deals staggered breaths of the right length — the tuba carrier's rule (RUNNING_LOG §152) made visible and
 movable. The shuffle returns here first, for the breaths, before any deal of pairs.
 
+### 2026-09-06 — the beating out of the strike chain: its own thing
+
+> *"Let's actually keep the beating out of the strike chain so unlike the trails. Trellis we'll just add accents manually, but it
+> doesn't have to do things like avoid overlaps and gray out notes. I'll just... it'll just be its own thing."*
+> *(2026-09-06, session 4, evening; speech-to-text, content untouched — "trails", "Trellis" = trills)*
+
+**AI reading (not the composer's words):** a boundary for the all-purpose tool: the beating does not chain to the strikes as the
+trill does (no mute rule, no eating, no exit at the next strike, no overlap avoidance); it is placed at the playhead and lives as
+its own group; the accents are the composer's, by hand. The tool stays simple and general; the piece-specific links are left out
+rather than adjusted. RUNNING_LOG §160.
+
 
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
