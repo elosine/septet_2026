@@ -355,7 +355,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 
 - **1f — The beatings: a pair of players on one pitch, a gap that beats — the beating panel (section 2, CN-28 · CN-29 · CN-33)** —
   `doing` — **building since 2026-09-07 at his word (*"will you be able to run the plan independantly? can you do so, and I'll check
-  in after the build"*, RUNNING_LOG §167): step 1 built (§167–168), step 2 built (§169)** (the requirements talk 2026-09-06 evening, RUNNING_LOG
+  in after the build"*, RUNNING_LOG §167): step 1 built (§167–168), step 2 built (§169), step 3 built (§170)** (the requirements talk 2026-09-06 evening, RUNNING_LOG
   §145–166; PLANNING_METHOD phase 3 from step 1) *(composer,
   2026-09-06: CN-28 "strikes with morph chords, like freeze frames or old time slide show … 'morph events'" · CN-29 "the expansion of
   pitch to expand beating, the rebreath … and the Crescendo … the multiple pairs" · "beating is good" · "the atom will be a pair of
@@ -435,7 +435,11 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        per cent; the just offsets (+2 · −2 · −14 · +16 c); mirrored humps in phase = a pulse, slid = a plateau; breath lengths inside
        the ceiling and staggered; the stretch; the flags; the tuba's number reproduced (13.19 c = 1 beat per second at C3, D28).
   3. **One pair in the score, heard** (the object on its two lanes, its notes, playback through the bend and 1g's remap; unison first,
-     then fifth and fourth by ear) — `todo`. *Result when done:* a beating exists as a score object and he has heard one. B on a
+     then fifth and fourth by ear) — `built 2026-09-07 (RUNNING_LOG §170; docs/BEATING_TOOL.md §5): the beating zone with its
+     block, B on a strike note (the nearest pairing lane the partner, a 6 s bloom 0 → 3/s), the snippet regenerated at play with
+     per-event routing and _bend events, the tick's bend through bendRangeSt and the centre after the end, the P row, ▶ hear;
+     verified on a copy at 175.6 s by the decoded MIDI — the beat rate within 0.002/s of the math, the just offsets on the upper
+     note at every interval, save / reload / drag / stretch / delete, the checker clean. HIS EAR PENDING (unison, fifth, fourth)`. *Result when done:* a beating exists as a score object and he has heard one. B on a
      strike note makes a beating on that lane and its partner's: the note's pitch the centre, the partner the nearest lane that can
      pair with it by step 1's table, a bloom from unison to 3 beats per second over 6 s, one breath, the crescendo following the
      beating curve. At play it regenerates its notes from its settings as the trill does (D20): one sustained note per player, bent

@@ -4716,3 +4716,75 @@ notes, 8 s, the contour). First run: 4 of 77 failed — every one a wrong expect
 for 26.27; two tolerances tighter than the samples' three-decimal rounding); the module unchanged. **PASS.**
 
 **Not done, by the plan:** nothing heard — step 3 puts one pair in the score and plays it through the tick.
+
+## §170. PLAN 1f step 3 (one pair in the score) built: the beating zone, B on a strike note, the snippet with per-event routing and bend events, the tick's bend through the measured range, the P row, ▶ hear — verified on a copy by the decoded MIDI; his ear pending
+
+Built 2026-09-07, about 01:40–02:50, after step 2's commit, in the plan's words (PLAN 1f item 3's to-dos); the trill (TRILLS_TOOL §2,
+§5; `createTrill`, `regenerateTrill`, the zone tick) read first as the model. `score/public/composer.html` only — the math stays in
+`beating_calc.js`.
+
+**The object.** A zone with `midiModel: 'beating'` on the launching player's lane and a `beating` block { partnerLayer, pitch (the
+lower note), interval, rateFrom / rateTo / shape (the heard beating; a drawn `beat` curve overrides from step 4), share, levelLo /
+levelHi (the crescendo follows the beating), breath { mode, seed, target, marks }, slide, launchedFrom }. One object, two lanes: the
+partner's lane gets a dashed bracket (`renderBeatingDecor`, kept in a Map on the Composer, never on the object — the save strips only
+`_els`, and a DOM element or a 300-sample render result on the object would have gone into the file). The zone's own rect, label,
+drag, edges, Ctrl-copy and the group drag are the generic zone's; `trillAfterDrag` regenerates a beating as it does a trill.
+
+**The realization — the decisions:**
+- **Timestamped snippet events, not a per-frame bend poll.** The plain-note tick polls `morphBend` per frame (the tuba's path at
+  `composer.html` 10112, the 1.99 constant); D19's lesson (§103: "trill sounds much better" once timestamped) says schedule instead.
+  So `regenerateBeating` turns `BeatingCalc.renderPair`'s notes into zone-snippet events — `_cc` (CC7, CC0), a new `_bend` event kind
+  (14-bit), the notes — and `tickZoneMidiPlayback` learned `_bend` (sent like a note, with its timestamp; the slot registered in
+  `_morphBentChannels` so `resetMorphBend` centres it on stop). The partner's events carry their own port and channel (the tick's
+  per-event routing, the flocking pattern). The tuba's 1.99 constant is untouched on the plain-note path; the beating's bend goes
+  through `bendValueFor(instKey, cents)` = the recipe's measured `bendRangeSt` (full up +8191, full down −8192, the schedule builder's
+  arithmetic).
+- **The lead 300 ms** (the probe: enough on all six; the trill's CC lead is 150), the first bend value with the articulation and CC7
+  at the lead so the note starts at pitch; **the centre 400 ms after the zone's end** (the tuba's reset gap; sent by the tick's
+  exit branch with a future timestamp — a snippet event past the zone's end would never be scheduled) and on every stop.
+- **The articulation re-sent before every note of the beating's own** (20 ms before a later breath): a strike on the same slot
+  (Bartók, cc0 79, on channel 1 of the same Kontakt instrument) switches the preset for that channel; the held voice keeps its
+  samples, the next breath would not. Its own thing (§160): no arbitration, the strike sends what it sends — its CC7 and its
+  articulation land on the shared channel while the beating holds. For his ear; the strings' curve channels (D11: 2–4) are the way
+  out if it bites.
+- **The velocity for the note's top level through 1g's remap** (`heldNote`), **CC7 following the level** (`cc7ForHeight`), only the
+  changes sent — the viola gets 127 and the cello 87 for the same level 0.9 (the measured curves; to be heard).
+- **A play start inside the zone** lands the latest articulation, CC7 and bend of each slot first (`beatingCatchUp`) — the trill
+  has no such catch-up; a bloom from unison needs none, a held rate would scoop without it.
+- **B:** the selected strike note's pitch and onset; the partner = the nearest lane that can pair on that note at unison (step 1's
+  table; ties to the higher lane); a 6 s bloom 0 → 3 beats per second, one breath; the strike note untouched (no `mutedBy`, no
+  eating). At the playhead with nothing selected: the lane's nearest earlier note (the trill's anchor rule) or the middle of the
+  range. Refused with a message: the piano lane (CN-34) and a note no other player holds.
+- **At unison who bends up and who down follows score order** (the table lists players in D10 order; the lower slot bends down):
+  Vc + Va on F3 → the viola down, the cello up. It cannot matter at unison; at an interval the roles come from the table (the
+  cello below, the viola above at the fifth on F3 — both could, the higher range takes the upper).
+- **"The space bar with the object selected"** (the plan's to-do) is NOT bound: SPACE stays the transport's; the panel of step 4
+  gets its own focus and space. ▶ hear in the P row plays the pair alone (`playBeatingEvents`: the same events, timestamped from
+  now, the bends included, centred after; ■ stop centres and silences at once).
+- **The P row:** partner (only the lanes that can play the note and interval — a partner that no longer can is shown as "cannot play
+  this"), pitch, interval chips, rate from / to and the shape (ramp · hump · arc · flat), length (the right edge too), breath mode and
+  seed, level low / high, the readout (max beats per second, each player's cents against its limit, the just offset, the notes,
+  the flags, the events and slots), ▶ hear. A pitch or interval change keeps the partner where it still can play, else takes the
+  first that can.
+
+**Verified on a copy** (`scores/zz-ai-beating.json`, deleted after with its `-work`; the server on :5301 stopped first):
+1. B on the last strike note (the cello's F3, 53, at 175.636 s, `wc-1357`, group grp-strike-23-1868) → `zn-1359` Vc + Va on F3,
+   175.636 → 181.636 s, 293 events, two slots (Va ch 1, Vc ch 1), the bracket in the viola lane ("beating with Vc — F3"), the note
+   untouched, the label "beating Vc + Va on F3 (unison) · 0 → 3/s ramp · max 2.987/s · 2 notes · one".
+2. The tick driven synchronously with `performance.now` patched and fake outputs on every port, decoded: only Va and Vc sent to;
+   the bend 300 ms before both note-ons; CC0 5 and CC7 105 / 98 at the lead, then 22 / 25 CC7 steps; 122 bend steps each, mirrored
+   (−14.8 / +14.8 c at the peak); note-on at the zone start (viola 127, cello 87), note-off at 6 s; **the beat rate from the decoded
+   bends within 0.0018 beats per second of the module's line** at every sample (1 s: 0.5, 2 s: 1.0, 3 s: 1.5, 4 s: 2.0, 5 s: 2.5);
+   the centre (0 c) at 6.4 s on both; `_morphBentChannels` = Va|0, Vc|0.
+3. The intervals, each regenerated: the upper note's first bend +1.958 c (fifth, Va on C4), −1.958 (fourth, A#3), −13.68 (major
+   third, A3), +15.64 (minor third, G#3) — the just offsets through the 0.99 st quantization; the roles cello below / viola above.
+4. Autosave → `openScore` → the block identical, 293 events again, the bracket back.
+5. A body drag through the real handler (+2 s, shift-locked horizontal): 177.636, the lane kept, regenerated, the bracket's x = the
+   zone's; a right-edge stretch through the real handler to 8.964 s: regenerated, both notes 8964 ms, the curve stretched (the same
+   peak 2.987, the ramp's middle 1.503 at half); the strike note still unmuted.
+6. `tools/range_check.js` on the saved copy: 516 notes, 69 trills, every one inside its range (the checker does not read a
+   beating's snippet — a nit; its notes are inside the limits by construction).
+7. Delete: the zone and its bracket gone, the strike still there, 639 objects again.
+
+**Not done, by the plan:** his ear — unison first, then the fifth and the fourth — when he checks in; the verdicts to MORPH_NOTES
+§3 and BEATING_TOOL.md. **Carried to step 4:** the panel's space bar; a drawn `beat` curve (the row's shapes until then).

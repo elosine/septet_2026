@@ -2091,6 +2091,7 @@ const Composer = {
 
     startPlay() {
         this.regenerateTrills();   // every trill fresh from its curve (TRILLS_TOOL phase 1)
+        this.regenerateBeatings();   // every beating fresh from its settings (PLAN 1f step 3, D20)
         this.isPlaying = true;
         this.playStartTime = performance.now();
         this.playStartOffset = this.scrollOffset;
@@ -2164,6 +2165,15 @@ const Composer = {
             if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.altKey && !e.target.matches('input, textarea, select')) {
                 e.preventDefault();
                 this.createTrill();
+                return;
+            }
+
+            // B = add a beating (PLAN 1f step 3, 2026-09-07; docs/BEATING_TOOL.md §5): on the selected strike note — its pitch the
+            // centre, the nearest lane that can pair with it the partner, a 6 s bloom 0 → 3 beats per second, one breath — or at
+            // the playhead on the active lane; the strike note stays as it is (no mute, no eating: its own thing, §160)
+            if ((e.key === 'b' || e.key === 'B') && !e.ctrlKey && !e.altKey && !e.target.matches('input, textarea, select')) {
+                e.preventDefault();
+                this.createBeating();
                 return;
             }
 
@@ -5404,6 +5414,7 @@ const Composer = {
             for (const obj of targets) {
                 if (!obj) continue;
                 if (obj.type === 'zone' && obj.midiModel === 'trill') { this.clearMutedBy(obj.id); this._trillLaneToRerender = obj.layer; }
+                if (obj.type === 'zone' && obj.midiModel === 'beating') this.removeBeatingDecor(obj);   // the partner lane's bracket goes with it
                 const idx = this.objects.indexOf(obj);
                 if (idx >= 0) {
                     if (obj._els) {
@@ -5431,7 +5442,7 @@ const Composer = {
             this.hidePropertyPanel();
             return;
         }
-        if (this.selectedObject.type === 'zone' && this.selectedObject.midiModel === 'trill' && !this._panelOverride) {   // trill zones too: P opens it (composer 2026-09-05)
+        if (this.selectedObject.type === 'zone' && (this.selectedObject.midiModel === 'trill' || this.selectedObject.midiModel === 'beating') && !this._panelOverride) {   // trill zones too: P opens it (composer 2026-09-05); beatings the same (1f step 3)
             this.hidePropertyPanel();
             return;
         }
@@ -5526,10 +5537,11 @@ const Composer = {
                     html += '<button id="ppMidiSolo" style="font-size:10px;font-weight:bold;padding:2px 8px;border:1px solid #555;border-radius:3px;cursor:pointer;' + zSolo + '">S</button>';
                     html += '</div>';
                     html += this.ppRow('MIDI Model', 'select', 'midiModel', obj.midiModel || '', '',
-                        [['','— Model —'],['trill','Trill'],['ostinato','Ostinato'],['accelDecel','Accel/Decel'],['oneShot','One-Shot'],['asr','ASR'],['flocking','Flocking'],['threeBody','Three-Body'],['seeAllThePeople','See All the People'],['imitation','Imitation']]);
+                        [['','— Model —'],['trill','Trill'],['beating','Beating'],['ostinato','Ostinato'],['accelDecel','Accel/Decel'],['oneShot','One-Shot'],['asr','ASR'],['flocking','Flocking'],['threeBody','Three-Body'],['seeAllThePeople','See All the People'],['imitation','Imitation']]);
                     if (obj.midiModel === 'trill') html += this.renderTrillPanel(obj);
+                    if (obj.midiModel === 'beating') html += this.renderBeatingPanel(obj);   // PLAN 1f step 3
                     // Single-performer models: show Player/Instrument at zone level
-                    if (obj.midiModel && obj.midiModel !== 'trill' && obj.midiModel !== 'flocking' && obj.midiModel !== 'threeBody' && obj.midiModel !== 'seeAllThePeople') {
+                    if (obj.midiModel && obj.midiModel !== 'trill' && obj.midiModel !== 'beating' && obj.midiModel !== 'flocking' && obj.midiModel !== 'threeBody' && obj.midiModel !== 'seeAllThePeople') {
                         html += this.ppRow('Player', 'select', 'player', obj.player || '', '',
                             [['','— Player —'],['piano1','Piano 1'],['piano2','Piano 2'],['perc1','Perc 1'],['perc2','Perc 2']]);
                         html += this.ppRow('Instrument', 'select', 'instrument', obj.instrument || '', '',
@@ -6746,6 +6758,7 @@ const Composer = {
 
         // Zone chord marker controls
         if (obj.type === 'zone' && obj.midiModel === 'trill') this.bindTrillPanel(panel, obj);
+        if (obj.type === 'zone' && obj.midiModel === 'beating') this.bindBeatingPanel(panel, obj);   // PLAN 1f step 3
         if (obj.type === 'zone' && obj.midiModel === 'ostinato') {
             // Click to select a chord marker
             panel.querySelectorAll('.pp-chord-marker').forEach(el => {
@@ -8610,7 +8623,7 @@ const Composer = {
 
         // Label
         const label = document.createElementNS(svgNS, 'text');
-        let labelText = zone.midiModel === 'trill' ? this.trillLabel(zone) : ([zone.player, zone.instrument].filter(Boolean).join(' — ') || zone.id);
+        let labelText = zone.midiModel === 'trill' ? this.trillLabel(zone) : zone.midiModel === 'beating' ? this.beatingLabel(zone) : ([zone.player, zone.instrument].filter(Boolean).join(' — ') || zone.id);
         if (isMuted) labelText = '[M] ' + labelText;
         if (isSolod) labelText = '[S] ' + labelText;
         label.setAttribute('x', x + 6); label.setAttribute('y', ry + 16);
@@ -8740,7 +8753,7 @@ const Composer = {
                 if (!lockH) {
                     const dx = ev.clientX - startMouseX;
                     const dtSec = dx / this.pixelsPerSecond;
-                    const newStart = Math.max(0, zone.midiModel === 'trill' ? origStart + Math.round(dtSec * 20) / 20 : Math.round((origStart + dtSec) * 20) / 20);   // a trill keeps its start on its attack note; the grid moves it in 50 ms steps (§112)
+                    const newStart = Math.max(0, (zone.midiModel === 'trill' || zone.midiModel === 'beating') ? origStart + Math.round(dtSec * 20) / 20 : Math.round((origStart + dtSec) * 20) / 20);   // a trill keeps its start on its attack note; the grid moves it in 50 ms steps (§112); a beating the same
                     zone.startTime = newStart;
                     zone.endTime = newStart + dur;
                     if (zone.midiSnippet) zone.midiSnippet._stale = true;
@@ -8915,6 +8928,7 @@ const Composer = {
         g.appendChild(topHit);
         g.appendChild(bottomHit);
         if (zone.midiModel === 'trill') this.renderTrillButtons(zone, g, x, w, ry, rh);   // 1 2 3 = curve A / B / C (phase 3)
+        if (zone.midiModel === 'beating') this.renderBeatingDecor(zone, g, x, w, ry, rh);   // the partner lane's bracket (PLAN 1f step 3)
 
         // Render chord markers as vertical lines inside the zone
         if (zone.chordMarkers && zone.chordMarkers.length > 0) {
@@ -9274,7 +9288,9 @@ const Composer = {
 
     // after a drag or a stretch (phase 4): the snippet, the label's count and the mutedBy stamps follow the new span at once
     trillAfterDrag(zone) {
-        if (!zone || zone.midiModel !== 'trill') return;
+        if (!zone) return;
+        if (zone.midiModel === 'beating') { this.regenerateBeating(zone); this.renderZone(zone); return; }   // a beating regenerates the same way (1f step 3)
+        if (zone.midiModel !== 'trill') return;
         this.regenerateTrill(zone); this.renderZone(zone);
     },
 
@@ -9619,6 +9635,309 @@ const Composer = {
         if (allC) allC.addEventListener('click', () => this.convertAllTrills({ curve: true }));
         const allA = panel.querySelector('.tr-all-attack-go'), allASel = panel.querySelector('.tr-all-attack');
         if (allA && allASel) allA.addEventListener('click', () => this.convertAllTrills({ attack: allASel.value }));
+    },
+
+    // ========== BEATINGS (PLAN 1f step 3 — 2026-09-07; docs/BEATING_TOOL.md §5; RUNNING_LOG §170) ==========
+    // A beating is a zone with midiModel 'beating' and a `beating` block: ONE PAIR of players on one pitch, both bending around it by
+    // mirrored curves, the gap beating (the composer's word, RUNNING_LOG §146). The zone lives on the launching player's lane and
+    // carries its partner's lane (`partnerLayer`); its notes — one sustained note per player per breath, each with a bend stream and a
+    // level stream — come from BeatingCalc.renderPair (beating_calc.js, steps 1–2) at every play start (D20) and are embedded as the
+    // zone's midiSnippet (the partner's events routed per event, `_bend` events for the pitch bend), played by tickZoneMidiPlayback
+    // with Web MIDI timestamps. The bend goes through the instrument's MEASURED range (bendRangeSt, the probe of step 1), the level
+    // through 1g's remap (heldNote / cc7ForHeight). Its own thing (§160): no mute rule, no eating, no overlap avoidance — a strike on
+    // the same slot switches the articulation, so the beating re-sends its own before every note of its own. The bend is sent 300 ms
+    // before the first note (the probe: enough), centred BEATING_CENTRE_MS after the zone's end and on every stop (resetMorphBend).
+    _beatingAud: null,
+    _beatingPartnerEls: null,   // zone id → the bracket drawn on the partner's lane (never on the object: the save strips only _els)
+    _beatingOuts: null,         // zone id → the last renderPair result (the panel's readout)
+    BEATING_LEAD_MS: 300,
+    BEATING_CENTRE_MS: 400,
+
+    beatingDefaults(layer, startSec, pitch, partnerLayer) {
+        return { partnerLayer, pitch, interval: 'unison', rateFrom: 0, rateTo: 3, shape: 'ramp', share: 0.5, beat: null,
+                 levelLo: 0.3, levelHi: 0.9, breath: { mode: 'one', seed: 1, target: null, marks: null }, slide: { lower: 0, upper: 0 }, launchedFrom: null };
+    },
+    ensureBeating(zone) {
+        if (!zone.beating) zone.beating = this.beatingDefaults(zone.layer, zone.startTime, 60, null);
+        const b = zone.beating;
+        if (!b.breath) b.breath = { mode: 'one', seed: 1, target: null, marks: null };
+        if (!b.slide) b.slide = { lower: 0, upper: 0 };
+        if (b.share == null) b.share = 0.5;
+        if (b.levelLo == null) b.levelLo = 0.3;
+        if (b.levelHi == null) b.levelHi = 0.9;
+        if (!b.interval) b.interval = 'unison';
+        return b;
+    },
+    // the lanes whose player can pair with this lane's on this pitch and interval (BeatingCalc.pairsFor over the recipe, step 1's table)
+    beatingPartnerCandidates(layer, pitch, interval) {
+        const me = TRACKS[layer] && TRACKS[layer].instKey;
+        if (!me || typeof BeatingCalc === 'undefined') return [];
+        return BeatingCalc.pairsFor(INSTRUMENTS, pitch, interval || 'unison').filter(p => p.players.includes(me)).map(p => {
+            const other = p.players[0] === me ? p.players[1] : p.players[0];
+            return { layer: TRACKS.findIndex(t => t.instKey === other), instKey: other, lower: p.lower, upper: p.upper, flexible: p.flexible };
+        }).filter(c => c.layer >= 0);
+    },
+    // who takes the lower note: from the pairing table when the pair can play the interval, else the launching player (flagged)
+    beatingRoles(zone) {
+        const b = this.ensureBeating(zone), me = TRACKS[zone.layer] && TRACKS[zone.layer].instKey;
+        const other = b.partnerLayer != null && TRACKS[b.partnerLayer] ? TRACKS[b.partnerLayer].instKey : null;
+        if (!other) return { lower: me, upper: null, ok: false, why: 'no partner' };
+        const c = this.beatingPartnerCandidates(zone.layer, b.pitch, b.interval).find(q => q.layer === b.partnerLayer);
+        if (c) return { lower: c.lower, upper: c.upper, ok: true, why: '' };
+        const iv = BeatingCalc.INTERVALS[b.interval] || BeatingCalc.INTERVALS.unison;
+        return { lower: me, upper: other, ok: false, why: 'cannot play ' + BeatingCalc.noteName(b.pitch) + (iv.semitones ? ' + ' + BeatingCalc.noteName(b.pitch + iv.semitones) : '') };
+    },
+    beatingRouting(layer) {
+        const inst = this.trackInstrument(layer); if (!inst) return null;
+        const tech = this.ordinaryTech(layer) || {};
+        return { port: tech.port || inst.port, channel: tech.channel || 1, cc0: tech.cc0 != null ? tech.cc0 : null, tech, inst, instKey: TRACKS[layer].instKey };
+    },
+    beatingCurve(b) {   // the heard-rate curve: a drawn one (step 4) or the row's from / to and shape
+        if (Array.isArray(b.beat) && b.beat.length) return b.beat;
+        const from = +b.rateFrom || 0, to = +b.rateTo || 0;
+        if (b.shape === 'hump') return [[0, from], [0.5, to], [1, from]];
+        if (b.shape === 'arc') return BeatingCalc.shape('arc', { base: from, peak: to });
+        if (b.shape === 'flat') return [[0, to], [1, to]];
+        return [[0, from], [1, to]];
+    },
+    beatingSpec(zone) {
+        const b = this.ensureBeating(zone), roles = this.beatingRoles(zone), beat = this.beatingCurve(b);
+        return { pitch: b.pitch, interval: b.interval, players: { lower: roles.lower, upper: roles.upper }, length: Math.max(0.1, zone.endTime - zone.startTime),
+                 beat, share: b.share, level: BeatingCalc.levelFromBeat(beat, b.levelLo, b.levelHi), breath: b.breath, slide: b.slide, stepS: 0.05 };
+    },
+    // cents → 14-bit through the instrument's measured range (step 1's bendRangeSt; full up = +8191, full down = −8192)
+    bendValueFor(instKey, cents) {
+        const I = (typeof INSTRUMENTS !== 'undefined' && INSTRUMENTS[instKey]) || {}, range = I.bendRangeSt || 2;
+        const f = cents / (100 * range);
+        return Math.max(0, Math.min(16383, Math.round(8192 + f * (f >= 0 ? 8191 : 8192))));
+    },
+    // the pair's notes → the zone's snippet. Per player: the lead BEATING_LEAD_MS before its first note (CC7 at the start level, the
+    // articulation, the first bend value), then per note the articulation and the bend 20 ms before it (a later breath; a strike on
+    // the slot may have switched the preset), the note-on with the remapped velocity, the bend stream and the CC7 stream (only the
+    // changes). The partner's events carry their own port and channel.
+    regenerateBeating(zone) {
+        if (typeof BeatingCalc === 'undefined' || typeof INSTRUMENTS === 'undefined') return null;
+        const b = this.ensureBeating(zone), roles = this.beatingRoles(zone), spec = this.beatingSpec(zone);
+        const out = BeatingCalc.renderPair(spec, INSTRUMENTS);
+        const lanes = {}; if (TRACKS[zone.layer]) lanes[TRACKS[zone.layer].instKey] = zone.layer; if (b.partnerLayer != null && TRACKS[b.partnerLayer]) lanes[TRACKS[b.partnerLayer].instKey] = b.partnerLayer;
+        const LEAD = this.BEATING_LEAD_MS, r1 = x => Math.round(x * 10) / 10;
+        const defaultR = this.beatingRouting(zone.layer) || { port: '', channel: 1 };
+        const ev = [], slots = [];
+        for (const who of ['lower', 'upper']) {
+            const instKey = spec.players[who]; if (!instKey || lanes[instKey] == null) continue;
+            const r = this.beatingRouting(lanes[instKey]); if (!r) continue;
+            const route = (r.port === defaultR.port && r.channel === defaultR.channel) ? {} : { port: r.port, channel: r.channel };
+            if (!slots.some(s => s.port === r.port && s.channel === r.channel)) slots.push({ port: r.port, channel: r.channel });
+            out.notes[who].forEach((n, i) => {
+                const onMs = n.startS * 1000 + LEAD, key = n.key + (n.keyOffset || 0);
+                const lvMax = Math.max.apply(null, n.level.map(l => l[1]));
+                const dyn = this._velRemap ? VelocityRemap.heldNote(this._velRemap, instKey, key, HELD_LO + (HELD_HI - HELD_LO) * lvMax) : null;
+                const vel = dyn ? dyn.vel : 100;
+                const cc7At = h => this._velRemap ? VelocityRemap.cc7ForHeight(this._velRemap, instKey, key, vel, HELD_LO + (HELD_HI - HELD_LO) * Math.max(0, Math.min(1, h))) : this.curveValToCC(h);
+                const pre = i === 0 ? 0 : Math.max(0, onMs - 20);
+                let lastCc = cc7At(n.level[0][1]), lastBend = this.bendValueFor(instKey, n.bend[0][1]);
+                ev.push(Object.assign({ onsetMs: r1(pre), _cc: 7, _ccValue: lastCc }, route));
+                if (r.cc0 != null) ev.push(Object.assign({ onsetMs: r1(pre), _cc: 0, _ccValue: r.cc0 }, route));
+                ev.push(Object.assign({ onsetMs: r1(pre), _bend: lastBend }, route));
+                ev.push(Object.assign({ onsetMs: r1(onMs), notes: [key], velocity: vel, durations: [r1((n.endS - n.startS) * 1000)] }, route));
+                n.bend.forEach((bp, k) => { if (!k) return; const v = this.bendValueFor(instKey, bp[1]); if (v === lastBend) return; ev.push(Object.assign({ onsetMs: r1(onMs + bp[0] * 1000), _bend: v }, route)); lastBend = v; });
+                n.level.forEach((lp, k) => { if (!k) return; const c = cc7At(lp[1]); if (c === lastCc) return; ev.push(Object.assign({ onsetMs: r1(onMs + lp[0] * 1000), _cc: 7, _ccValue: c }, route)); lastCc = c; });
+            });
+        }
+        const rank = e => e._cc != null ? 0 : e._bend != null ? 1 : 2;
+        ev.sort((a, c) => a.onsetMs - c.onsetMs || rank(a) - rank(c));
+        zone.midiSnippet = { port: defaultR.port, channel: defaultR.channel, leadMs: LEAD, events: ev, source: 'beating', slots,
+            count: out.notes.lower.length + out.notes.upper.length, maxBeat: out.maxBeat, maxCents: out.maxCents, players: spec.players,
+            flags: out.flags.map(f => f.flag).filter((v, i, a) => a.indexOf(v) === i), roles: { ok: roles.ok, why: roles.why }, generatedAt: new Date().toISOString() };
+        if (!this._beatingOuts) this._beatingOuts = new Map();
+        this._beatingOuts.set(zone.id, out);
+        return zone.midiSnippet;
+    },
+    regenerateBeatings() {
+        let n = 0;
+        this.objects.forEach(o => { if (o.type === 'zone' && o.midiModel === 'beating') { this.regenerateBeating(o); if (o._els) this.renderZone(o); n++; } });
+        return n;
+    },
+    // the bend centred on each of the snippet's slots, afterMs from now (the zone's end); resetMorphBend does it again on stop
+    centreBeatingSlots(snippet, afterMs) {
+        const at = performance.now() + (afterMs || 0);
+        (snippet.slots || [{ port: snippet.port, channel: snippet.channel }]).forEach(s => {
+            const out = this._zoneMidiOutputs[(s.port || '').toLowerCase()];
+            if (out) out.send([0xE0 | ((s.channel || 1) - 1), 0, 64], at);
+        });
+    },
+    // a play start inside the zone: the latest articulation, CC7 and bend of each slot before the first scheduled event land now
+    beatingCatchUp(snippet, uptoIdx) {
+        const last = {};
+        for (let i = 0; i < uptoIdx; i++) {
+            const e = snippet.events[i], k = (e.port || snippet.port || '') + '|' + (e.channel || snippet.channel || 1);
+            const d = last[k] || (last[k] = {});
+            if (e._bend != null) d.bend = e; else if (e._cc != null) d['cc' + e._cc] = e;
+        }
+        const now = performance.now();
+        Object.values(last).forEach(d => ['cc0', 'cc7', 'bend'].forEach(k => {
+            const e = d[k]; if (!e) return;
+            const out = this._zoneMidiOutputs[(e.port || snippet.port || '').toLowerCase()]; if (!out) return;
+            const ch = (e.channel || snippet.channel || 1) - 1;
+            if (e._bend != null) { out.send([0xE0 | ch, e._bend & 0x7F, (e._bend >> 7) & 0x7F], now); (this._morphBentChannels || (this._morphBentChannels = {}))[(e.port || snippet.port || '') + '|' + ch] = true; }
+            else out.send([0xB0 | ch, e._cc, e._ccValue != null ? e._ccValue : 0], now);
+        }));
+    },
+    beatingLabel(zone) {
+        const b = this.ensureBeating(zone), s = zone.midiSnippet || {};
+        const me = TRACKS[zone.layer] ? TRACKS[zone.layer].short : '?', pt = b.partnerLayer != null && TRACKS[b.partnerLayer] ? TRACKS[b.partnerLayer].short : '?';
+        const iv = BeatingCalc.INTERVALS[b.interval] || BeatingCalc.INTERVALS.unison;
+        return 'beating ' + me + ' + ' + pt + ' on ' + BeatingCalc.noteName(b.pitch) + (iv.semitones ? ' + ' + BeatingCalc.noteName(b.pitch + iv.semitones) : '') + ' (' + iv.label + ') · '
+            + (+b.rateFrom || 0) + ' → ' + (+b.rateTo || 0) + '/s ' + (b.shape || 'ramp') + (s.maxBeat != null ? ' · max ' + s.maxBeat + '/s' : '') + (s.count != null ? ' · ' + s.count + ' notes' : '')
+            + ' · ' + ((b.breath && b.breath.mode) || 'one') + (s.roles && !s.roles.ok ? ' · ⚠ ' + s.roles.why : '') + (s.flags && s.flags.length ? ' · ⚠ ' + s.flags.join(' ') : '');
+    },
+    beatingPartnerNote(zone) {
+        const b = this.ensureBeating(zone), out = this._beatingOuts && this._beatingOuts.get(zone.id);
+        const other = b.partnerLayer != null && TRACKS[b.partnerLayer] ? TRACKS[b.partnerLayer].instKey : null;
+        const iv = BeatingCalc.INTERVALS[b.interval] || BeatingCalc.INTERVALS.unison;
+        const upper = out ? out.players.upper === other : false;
+        return BeatingCalc.noteName(b.pitch + (upper ? iv.semitones : 0)) + (iv.semitones ? (upper ? ' (the upper note)' : ' (the lower note)') : '');
+    },
+    // the partner lane's bracket: a dashed rect over the same span, no pointer events (the zone on the launching lane is the handle)
+    renderBeatingDecor(zone, g, x, w, ry, rh) {
+        if (!this._beatingPartnerEls) this._beatingPartnerEls = new Map();
+        this.removeBeatingDecor(zone);
+        const b = this.ensureBeating(zone);
+        if (b.partnerLayer == null || !this.contentGroups[b.partnerLayer]) return;
+        const svgNS = 'http://www.w3.org/2000/svg', d = this.getLaneDims(b.partnerLayer);
+        const ph = Math.max(16, d.height * 0.96), py = d.top + (d.height - ph) * 0.5;
+        const pg = document.createElementNS(svgNS, 'g'); pg.setAttribute('class', 'beatingPartner'); pg.setAttribute('data-for', zone.id); pg.style.pointerEvents = 'none';
+        const r = document.createElementNS(svgNS, 'rect');
+        r.setAttribute('x', x); r.setAttribute('y', py); r.setAttribute('width', w); r.setAttribute('height', ph);
+        r.setAttribute('fill', zone.color); r.setAttribute('fill-opacity', '0.08'); r.setAttribute('stroke', zone.color); r.setAttribute('stroke-width', '1.5'); r.setAttribute('stroke-dasharray', '6 4'); r.setAttribute('stroke-opacity', '0.7'); r.setAttribute('rx', '3');
+        const t = document.createElementNS(svgNS, 'text');
+        t.setAttribute('x', x + 6); t.setAttribute('y', py + 16); t.setAttribute('fill', '#333'); t.setAttribute('font-size', '11'); t.setAttribute('font-family', "'Segoe UI', sans-serif");
+        t.textContent = 'beating with ' + (TRACKS[zone.layer] ? TRACKS[zone.layer].short : '?') + ' — ' + this.beatingPartnerNote(zone);
+        pg.appendChild(r); pg.appendChild(t);
+        this.contentGroups[b.partnerLayer].appendChild(pg);
+        this._beatingPartnerEls.set(zone.id, pg);
+    },
+    removeBeatingDecor(zone) {
+        if (!this._beatingPartnerEls) return;
+        const old = this._beatingPartnerEls.get(zone.id);
+        if (old) { old.remove(); this._beatingPartnerEls.delete(zone.id); }
+    },
+    // B: a beating on the selected strike note (its pitch, its onset, the nearest lane that can pair) or at the playhead on the active lane
+    createBeating() {
+        if (typeof BeatingCalc === 'undefined') { this.saveStatus.textContent = 'beating: the math module (beating_calc.js) is not loaded'; return null; }
+        const sel = this.selectedObject;
+        let layer = this.activeLane, start = null, fromNote = null;
+        if (sel && sel.type === 'waveCurve' && sel.layer < META_LAYER && sel.sonifyNote != null) { layer = sel.layer; start = sel.startSeconds; fromNote = sel; }
+        if (layer == null || layer >= META_LAYER) layer = 3;
+        if (start == null) start = Math.max(0, this.getTimeAtPlayhead());
+        const me = TRACKS[layer] && TRACKS[layer].instKey;
+        if (!me || (INSTRUMENTS[me] && INSTRUMENTS[me].beating === false)) { this.saveStatus.textContent = 'beating: ' + (TRACKS[layer] ? TRACKS[layer].label : 'this lane') + ' is out of the beating (CN-34) — select a note on a bending player'; return null; }
+        let pitch = fromNote ? fromNote.sonifyNote : null;
+        if (pitch == null) { const a = this.trillAnchorNote(layer, start); pitch = a ? a.sonifyNote : null; }
+        if (pitch == null) { const r = BeatingCalc.ordinaryRange(INSTRUMENTS, me); pitch = r ? Math.round((r[0] + r[1]) / 2) : 60; }
+        const cands = this.beatingPartnerCandidates(layer, pitch, 'unison');
+        if (!cands.length) { this.saveStatus.textContent = 'beating: no other player can hold ' + BeatingCalc.noteName(pitch) + ' with ' + TRACKS[layer].label + (BeatingCalc.holds(INSTRUMENTS, me, pitch) ? '' : ' (nor can ' + TRACKS[layer].label + ')') + ' — pick another note'; return null; }
+        cands.sort((a, c) => Math.abs(a.layer - layer) - Math.abs(c.layer - layer) || a.layer - c.layer);
+        const partnerLayer = cands[0].layer;
+        const zone = this.createZone({ layer, startTime: Math.round(start * 1000) / 1000, endTime: Math.round((start + 6) * 1000) / 1000,
+            zoneFunction: 'midiPreview', midiModel: 'beating', color: '#7B3FE4', opacity: 0.16, zoneHeight: 0.96, yOffset: 0.5, performanceNotes: 'beating' });
+        zone.beating = this.beatingDefaults(layer, start, pitch, partnerLayer);
+        if (fromNote) zone.beating.launchedFrom = fromNote.id;
+        this.regenerateBeating(zone);
+        this.renderZone(zone);
+        this.selectObject(zone);
+        this._panelOverride = true;
+        this.showPropertyPanel();
+        this.markDirty();
+        this.saveStatus.textContent = 'beating ' + TRACKS[layer].short + ' + ' + TRACKS[partnerLayer].short + ' on ' + BeatingCalc.noteName(pitch) + ', ' + zone.startTime.toFixed(2) + ' → ' + zone.endTime.toFixed(2) + ' s: a bloom 0 → 3 beats/s, one breath — the row edits it, ▶ hear plays the pair, the right edge stretches it' + (fromNote ? '; the strike note stays as it is' : '');
+        return zone;
+    },
+    // ---- the audition: the pair alone, timestamped, with the bends; one at a time ----
+    stopBeatingAudition() {
+        const a = this._beatingAud; if (!a) return;
+        this._beatingAud = null; clearTimeout(a.timer);
+        const now = performance.now();
+        a.slots.forEach(s => { try { if (typeof s.out.clear === 'function') s.out.clear(); } catch (e) { } });
+        a.notes.forEach(n => n.out.send([0x80 | n.ch, n.key, 0], now));
+        a.slots.forEach(s => { s.out.send([0xE0 | s.ch, 0, 64], now); s.out.send([0xB0 | s.ch, 7, 127], now); });
+        if (a.btn && a.btn.isConnected) a.btn.textContent = a.label;
+    },
+    async playBeatingEvents(zone, events, btn, label) {
+        if (!this._zoneMidiInited) await this.initZoneMidi();
+        const snip = zone.midiSnippet; if (!snip) return;
+        this.stopBeatingAudition();
+        if (!this._zoneMidiOutputs[(snip.port || '').toLowerCase()]) { this.saveStatus.textContent = 'beating: no MIDI output "' + snip.port + '" — is the rack up?'; return; }
+        const now = performance.now() + 5;
+        const a = { slots: [], notes: [], btn, label: label || (btn && btn.textContent), timer: null };
+        let last = 0;
+        events.forEach(e => {
+            const port = (e.port || snip.port || '').toLowerCase(), out = this._zoneMidiOutputs[port]; if (!out) return;
+            const ch = (e.channel || snip.channel || 1) - 1;
+            if (!a.slots.some(s => s.port === port && s.ch === ch)) a.slots.push({ out, port, ch });
+            const at = now + e.onsetMs;
+            if (e._bend != null) { out.send([0xE0 | ch, e._bend & 0x7F, (e._bend >> 7) & 0x7F], at); (this._morphBentChannels || (this._morphBentChannels = {}))[(e.port || snip.port || '') + '|' + ch] = true; return; }
+            if (e._cc != null) { out.send([0xB0 | ch, e._cc, e._ccValue != null ? e._ccValue : 0], at); return; }
+            e.notes.forEach((k, i) => { const dur = e.durations[i] || 100; out.send([0x90 | ch, k, Math.max(1, Math.min(127, Math.round(e.velocity)))], at); out.send([0x80 | ch, k, 0], at + dur); a.notes.push({ out, ch, key: k }); last = Math.max(last, e.onsetMs + dur); });
+        });
+        a.slots.forEach(s => s.out.send([0xE0 | s.ch, 0, 64], now + last + this.BEATING_CENTRE_MS));
+        if (btn) btn.textContent = '■ stop';
+        a.timer = setTimeout(() => { if (this._beatingAud === a) { this._beatingAud = null; if (btn && btn.isConnected) btn.textContent = a.label; } }, last + this.BEATING_CENTRE_MS + 80);
+        this._beatingAud = a;
+    },
+    hearBeating(zone, btn) {
+        if (this._beatingAud) { this.stopBeatingAudition(); return; }
+        const snip = this.regenerateBeating(zone); if (!snip) return;
+        this.renderZone(zone);
+        this.playBeatingEvents(zone, snip.events, btn, '▶ hear');
+    },
+    // ---- the properties row (P): partner · pitch · interval · rate from / to and shape · length · breath · level · the readout · hear ----
+    renderBeatingPanel(obj) {
+        const b = this.ensureBeating(obj), out = this._beatingOuts && this._beatingOuts.get(obj.id), nn = m => BeatingCalc.noteName(m);
+        const cands = this.beatingPartnerCandidates(obj.layer, b.pitch, b.interval), sel = 'background:#7B3FE4;color:#fff;border-color:#7B3FE4;';
+        let h = '<div class="pp-section"><h5>Beating</h5>';
+        h += '<div class="pp-row"><label>Pair</label><span>' + (TRACKS[obj.layer] ? TRACKS[obj.layer].label : '?') + ' + <select data-beating="partnerLayer">'
+            + (cands.length ? '' : '<option value="">no partner can play this</option>')
+            + cands.map(c => '<option value="' + c.layer + '"' + (c.layer === b.partnerLayer ? ' selected' : '') + '>' + TRACKS[c.layer].label + (b.interval === 'unison' ? '' : c.upper === c.instKey ? ' (above)' : ' (below)') + '</option>').join('')
+            + (b.partnerLayer != null && !cands.some(c => c.layer === b.partnerLayer) && TRACKS[b.partnerLayer] ? '<option value="' + b.partnerLayer + '" selected>' + TRACKS[b.partnerLayer].label + ' — cannot play this</option>' : '')
+            + '</select> <span style="font-size:10px;color:#666">the lanes whose player holds the note (step 1&#8217;s table)</span></span></div>';
+        h += '<div class="pp-row"><label>Pitch</label><input type="number" data-beating="pitch" value="' + b.pitch + '" step="1" min="21" max="108" style="width:56px"> <span style="font-size:11px;color:#666">' + nn(b.pitch) + ' — the pair&#8217;s lower note' + (out && out.players.upper ? ' · ' + out.players.lower + ' below, ' + out.players.upper + ' above' : '') + '</span></div>';
+        h += '<div class="pp-row"><label>Interval</label><span>' + Object.values(BeatingCalc.INTERVALS).map(iv => '<button class="bt-int" data-iv="' + iv.key + '" title="' + iv.label + ': the just offset ' + iv.justOffsetCents + ' c on the upper note, the beating ' + iv.partial + '&#215; the unison&#8217;s per cent" style="font-size:10px;padding:1px 5px;margin:1px;cursor:pointer;' + (b.interval === iv.key ? sel : '') + '">' + iv.label + '</button>').join('') + '</span></div>';
+        h += '<div class="pp-row"><label>Rate</label><span>from <input type="number" data-beating="rateFrom" value="' + (+b.rateFrom || 0) + '" step="0.5" min="0" max="30" style="width:48px"> to <input type="number" data-beating="rateTo" value="' + (+b.rateTo || 0) + '" step="0.5" min="0" max="30" style="width:48px"> beats/s &#183; '
+            + ['ramp', 'hump', 'arc', 'flat'].map(k => '<button class="bt-shape" data-shape="' + k + '" title="' + { ramp: 'out of unison: from → to across the length', hump: 'out and back: from → to → from', arc: 'the long arc (a raised cosine)', flat: 'a held rate (to) throughout' }[k] + '" style="font-size:10px;padding:1px 5px;margin:1px;cursor:pointer;' + ((b.shape || 'ramp') === k ? sel : '') + '">' + k + '</button>').join('')
+            + ' <span style="font-size:10px;color:#666">the heard beating; each player bends half of it (the panel of step 4 draws it)</span></span></div>';
+        h += '<div class="pp-row"><label>Length</label><input type="number" data-beating="length" value="' + (obj.endTime - obj.startTime).toFixed(2) + '" step="0.5" min="0.5" max="120" style="width:60px"> <span style="font-size:10px;color:#666">s &#183; the right edge stretches it too; the curves stretch with it</span></div>';
+        h += '<div class="pp-row"><label>Breath</label><select data-beating="breathMode">' + ['one', 'continuous', 'designated'].map(k => '<option value="' + k + '"' + ((b.breath.mode || 'one') === k ? ' selected' : '') + '>' + k + '</option>').join('') + '</select>'
+            + ' seed <input type="number" data-beating="breathSeed" value="' + (b.breath.seed || 1) + '" step="1" min="1" style="width:44px"> <span style="font-size:10px;color:#666">one = a single bow or breath (flagged past the ceiling) &#183; continuous = re-bow at will &#183; designated = dealt marks, the pair staggered</span></div>';
+        h += '<div class="pp-row"><label>Level</label><span>low <input type="number" data-beating="levelLo" value="' + b.levelLo + '" step="0.05" min="0" max="1" style="width:48px"> high <input type="number" data-beating="levelHi" value="' + b.levelHi + '" step="0.05" min="0" max="1" style="width:48px"> <span style="font-size:10px;color:#666">the crescendo follows the beating (0 → 1 = the curve height, through the remap' + (this._velRemap ? '' : ' — no remap loaded') + ')</span></span></div>';
+        if (out) {
+            const lim = k => k ? BeatingCalc.bendLimits(INSTRUMENTS, k) : null, lo = lim(out.players.lower), up = lim(out.players.upper);
+            const fl = out.flags.map(f => f.flag).filter((v, i, a) => a.indexOf(v) === i);
+            h += '<div class="pp-row"><label>Readout</label><span style="font-size:10px;color:#666">max ' + out.maxBeat + ' beats/s &#183; ' + (out.players.lower || '?') + ' &#177;' + out.maxCents.lower + ' c' + (lo ? ' (limit ' + lo.limitCents + ')' : '')
+                + ' &#183; ' + (out.players.upper || '?') + ' &#177;' + out.maxCents.upper + ' c' + (up ? ' (limit ' + up.limitCents + ')' : '') + (out.justOffsetCents ? ' &#183; just ' + (out.justOffsetCents > 0 ? '+' : '') + out.justOffsetCents + ' c on the upper' : '')
+                + ' &#183; ' + out.notes.lower.length + ' + ' + out.notes.upper.length + ' notes' + (fl.length ? ' &#183; &#9888; ' + fl.join(' ') : ' &#183; no flags') + (obj.midiSnippet ? ' &#183; ' + obj.midiSnippet.events.length + ' events on ' + obj.midiSnippet.slots.map(s => s.port + ' ch ' + s.channel).join(', ') : '') + '</span></div>';
+        }
+        h += '<div style="margin-top:4px"><button id="ppBeatingHear" style="font-size:11px;padding:3px 10px;background:#7B3FE4;color:#fff;border:1px solid #7B3FE4;border-radius:3px;cursor:pointer">&#9654; hear</button> <span style="font-size:10px;color:#888">the pair alone, as it will play</span></div>';
+        h += '</div>';
+        return h;
+    },
+    bindBeatingPanel(panel, obj) {
+        const apply = () => { this.regenerateBeating(obj); this.renderZone(obj); this.markDirty(); this.showPropertyPanel(); };
+        const keepPartner = b => { const c = this.beatingPartnerCandidates(obj.layer, b.pitch, b.interval); if (c.length && !c.some(q => q.layer === b.partnerLayer)) b.partnerLayer = c[0].layer; };
+        panel.querySelectorAll('.bt-int').forEach(el => el.addEventListener('click', () => { const b = this.ensureBeating(obj); this.pushUndoStateDebounced(300); b.interval = el.dataset.iv; keepPartner(b); apply(); }));
+        panel.querySelectorAll('.bt-shape').forEach(el => el.addEventListener('click', () => { const b = this.ensureBeating(obj); this.pushUndoStateDebounced(300); b.shape = el.dataset.shape; b.beat = null; apply(); }));
+        panel.querySelectorAll('[data-beating]').forEach(el => el.addEventListener('change', () => {
+            const key = el.dataset.beating, b = this.ensureBeating(obj), v = parseFloat(el.value);
+            this.pushUndoStateDebounced(300);
+            if (key === 'partnerLayer') b.partnerLayer = el.value === '' ? null : +el.value;
+            else if (key === 'pitch') { if (!isNaN(v)) { b.pitch = Math.round(v); keepPartner(b); } }
+            else if (key === 'length') { if (!isNaN(v) && v > 0) obj.endTime = Math.round((obj.startTime + v) * 1000) / 1000; }
+            else if (key === 'breathMode') b.breath.mode = el.value;
+            else if (key === 'breathSeed') { if (!isNaN(v)) b.breath.seed = Math.round(v); }
+            else if (!isNaN(v)) b[key] = v;
+            apply();
+        }));
+        const hear = panel.querySelector('#ppBeatingHear');
+        if (hear) hear.addEventListener('click', () => this.hearBeating(obj, hear));
     },
 
     // ========== SPAN SELECTION + THE LIVE CURVE REFERENCE (TRILLS_TOOL phase 2, composer 2026-09-05; RUNNING_LOG §105) ==========
@@ -13629,6 +13948,7 @@ const Composer = {
             // If playhead left the zone, clean up
             if (currentTimeSec > zoneEnd || currentTimeSec < zoneStart) {
                 if (this._activeZonePlayback[obj.id]) {
+                    if (snippet.source === 'beating') this.centreBeatingSlots(snippet, this.BEATING_CENTRE_MS);   // the bend centred after the note (1f step 3; the residue is real on all six)
                     // Send cutoff CC if snippet requests it (e.g. CC120 All Sound Off for ASR secco)
                     if (snippet.cutoffCC) {
                         const cutPortName = (snippet.port || '').toLowerCase();
@@ -13652,6 +13972,7 @@ const Composer = {
                     startIdx = i + 1;
                 }
                 this._activeZonePlayback[obj.id] = { nextEventIdx: startIdx, startedAtPerf: performance.now() - elapsedInZoneMs, enteredAtSec: zoneStart };
+                if (snippet.source === 'beating' && startIdx > 0) this.beatingCatchUp(snippet, startIdx);   // a start inside the zone: the latest articulation, CC7 and bend of each slot land now
             }
 
             const state = this._activeZonePlayback[obj.id];
@@ -13681,6 +14002,16 @@ const Composer = {
 
                     const delayMs = Math.max(0, evt.onsetMs - elapsedInZoneMs);
                     const now = performance.now();
+
+                    // a pitch-bend event (the beating's bend stream, 1f step 3): 14-bit, timestamped like a note; the slot is
+                    // registered so resetMorphBend centres it on stop
+                    if (evt._bend != null) {
+                        const bv = evt._bend;
+                        evtOutput.send([0xE0 | evtCh, bv & 0x7F, (bv >> 7) & 0x7F], now + delayMs);
+                        (this._morphBentChannels || (this._morphBentChannels = {}))[(evt.port || snippet.port || '') + '|' + evtCh] = true;
+                        state.nextEventIdx++;
+                        continue;
+                    }
 
                     // CC event (e.g. All Sound Off for ring cutoff)
                     if (evt._cc != null) {

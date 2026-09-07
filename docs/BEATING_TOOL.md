@@ -181,10 +181,67 @@ pair's description into each player's chain of notes**: `renderPair(spec, recipe
 note; the pulse, the plateau, the momentary unison; a 40 s event breathed inside the ceilings and staggered; the stretch; every flag;
 a three-pair pattern). Nothing heard until step 3.*
 
-## 5 · The beating object — step 3 `todo`
+## 5 · The beating object — `built 2026-09-07 (PLAN 1f step 3; RUNNING_LOG §170) — verified on a copy by the decoded MIDI; his ear pending`
 
-One pair in the score, heard: the object on its two lanes, its notes regenerated at play (D20), the bend through the instrument's
-own range, 1g's remap; unison first, then fifth and fourth by ear. *(PLAN 1f item 3.)*
+> *"So we'll be able to adjust the maximum beating. Yes."* (composer, §154 — the rate row; the 3 per second is only the birth default)
+
+**A beating is a zone** (`midiModel: 'beating'`) on the launching player's lane with a `beating` block:
+
+| field | meaning |
+|---|---|
+| `partnerLayer` | the partner's lane; the zone carries both players — one object, two lanes (a dashed bracket on the partner's) |
+| `pitch` | the pair's LOWER note (§158); at unison both sit on it |
+| `interval` | `unison · m3 · M3 · P4 · P5` — the partner above by the just interval, its bend carrying the just offset |
+| `rateFrom`, `rateTo`, `shape` | the heard beating in beats per second across the length: `ramp` (out of unison) · `hump` (out and back) · `arc` · `flat`; `beat` (a drawn curve) overrides them from step 4 |
+| `share` | how the beating is split between the two (0.5 = mirrored, half each — the drawn height is the beating heard) |
+| `levelLo`, `levelHi` | the crescendo follows the beating between these two heights (0 → 1 = the curve height, D23) |
+| `breath` | `{ mode: one · continuous · designated, seed, target, marks }` (§4's model) |
+| `slide` | `{ lower, upper }` seconds — a player's curve read later (step 4's phase slide) |
+| `launchedFrom` | the strike note's id when born on one — a record only, no link (§160) |
+
+**Realization** (never stored as notes): at every play start, on Hear and after a drag or a stretch, `BeatingCalc.renderPair` makes one
+sustained note per player per breath, each with its bend and level breakpoints; they become the zone's `midiSnippet` — the partner's
+events routed per event to its own port and channel, `_bend` events (14-bit) for the pitch bend — and `tickZoneMidiPlayback` plays
+them with Web MIDI timestamps (D19). Per player: 300 ms before its first note (the probe's lead) CC7 at the start level, the
+articulation (the ordinary voice's CC0) and the first bend value; then per note the articulation and the bend again 20 ms before it
+(a strike on the same slot may have switched the preset — its own thing, no arbitration), the note-on with the velocity 1g's remap
+gives for the note's top level, the bend stream and the CC7 stream (only the changes; the CC7 through `cc7ForHeight`). **The bend is
+converted through the instrument's measured range** (`bendRangeSt`, §3), **centred 400 ms after the zone's end** and on every stop
+(`resetMorphBend`: the residue is real on all six). A play start inside the zone lands the latest articulation, CC7 and bend of each
+slot first.
+
+**On the page:** **B** on a selected strike note makes a beating there — the note's pitch the centre, the nearest lane that can pair
+with it (step 1's table) the partner, a 6 s bloom 0 → 3 beats per second, one breath, the crescendo following the beating; B at the
+playhead with nothing selected uses the lane's nearest earlier note (the trill's anchor rule) or the middle of the range; the piano
+lane and a note nobody else can hold are refused with a message. The zone: selectable, draggable (50 ms steps, the start kept on
+its note), the right edge a stretch (the curves stretch with it, the breaths re-deal), Ctrl-drag a copy; the group drag carries it
+(§144). **P** opens its row: partner (the lanes that can play it) · pitch · interval chips · rate from / to and the shape · length ·
+breath mode and seed · level low / high · a readout (max beats per second, each player's cents against its limit, the just offset,
+the notes, the flags, the slots) · **▶ hear** (the pair alone, timestamped, with the bends, centred after). The label names the
+pair, the note(s), the interval, the rates and shape, the max rate, the notes, the breath mode and any flag.
+
+**Verified on `zz-ai-beating` (a copy of the piece) on :5301, 2026-09-07 (§170):** launched on the last strike note (the cello's F3
+at 175.636 s) → Vc + Va on F3; the tick's MIDI captured on fake outputs over the zone and decoded: both slots (Va ch 1, Vc ch 1) and
+nothing on any other port; the bend 300 ms before both note-ons; CC0 5 (senza vibrato) and CC7 (105 / 98 from the remap) at the
+lead, 22 / 25 CC7 steps following the level; 122 bend steps each, mirrored (viola −14.8 c, cello +14.8 c at the peak = 3 beats per
+second on F3); **the beat rate from the decoded bends within 0.002 beats per second of the module's line** at every 50 ms sample; the
+centre at end + 0.4 s on both; the channels registered for the stop reset. The intervals: the upper note's first bend +1.958 c at the
+fifth, −1.958 at the fourth, −13.68 at the major third, +15.64 at the minor third (the just offsets through the 0.97–0.99 st
+quantization), the keys and the roles from the table (the cello below, the viola above). Save and reload keep the block byte for
+byte; a body drag of +2 s moves the zone and its bracket and regenerates it; a right-edge stretch to 8.96 s regenerates the notes to
+the new length with the curve stretched (the same peak, the ramp's middle at half); a delete removes the zone and its bracket and
+leaves the strike; the strike note never muted; the range checker clean on the saved copy.
+
+**Decided in the build (the whys in §170):** the notes travel as timestamped snippet events, not a per-frame bend poll (D19's
+lesson); at unison who bends up and who down follows score order (it cannot matter); the partner by default is the nearest lane
+that can pair, ties to the higher lane; "the space bar with the object selected" waits for the panel's own focus (step 4) — SPACE
+stays the transport's; the partner lane's mute and solo are not consulted (the zone is on one lane — step 6's group may change
+that); `tools/range_check.js` does not read a beating's snippet (its notes are inside the limits by construction; a nit).
+
+**Open, for the composer (his ear):** unison first, then the fifth and the fourth; the two players' loudness match (the remap gives
+the viola 127 and the cello 87 for the same level — 1g's measurement, to be heard); a strike on the same slot during a beating (the
+shared channel: its CC7 and articulation land on the held note — if it bites, the strings' curve channels of D11 are the way out);
+the winds' embouchure range; the ceilings (§4).
 
 ## 6 · The panel — step 4 `todo`
 
@@ -235,3 +292,6 @@ every breath, the beat rate at both ends of the gliss — the tuba's settled for
 - **2026-09-07 — step 2 built:** the beating math (§4): the conversion, the heard beating from the two players' cents, the shapes,
   the mirror and the slide, the three breath modes and the seeded deal with the ceiling table, the re-key, the notes with their bend
   and level breakpoints, the pattern and its contour, the stretch, the flags; 77 checks in node. Nothing heard.
+- **2026-09-07 — step 3 built:** the beating object (§5): B on a strike note, the zone on two lanes, the snippet with per-event
+  routing and `_bend` events, the tick's bend and centre, the P row, ▶ hear; verified on a copy by the decoded MIDI (the beat rate
+  within 0.002/s of the math, the just offsets on the upper note, save / reload / drag / stretch / delete). His ear pending.
