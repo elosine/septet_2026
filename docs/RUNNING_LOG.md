@@ -5304,3 +5304,80 @@ pair take saved, the pair flattened and shortened, the take loaded: the shape, t
 note kept; a pattern take carries lengths and offsets; insert → two zones at 179.924→197.924 and 181.824→195.424 with the META shape;
 the bound zone dragged in the strip → 180.874 (= the origin + 0.95), "the zone moved in the score". No page errors from the panel (two
 from synthetic keydowns dispatched on `window`, which real keys never do). The screenshot taken this time.
+
+## §183. Strategy A chosen, B a standing rule, C held; his workflow walk-through written back as a script of 23 lines, each marked works · awkward · missing — the one sweep to build, and the parts I think he left out, put to him
+
+Composer, 2026-09-07 late afternoon: *"ok lets do A, b into how we work, lets hold on c, it might emerge organically as I build the
+first beating sequence"* — then the narration (verbatim in MORPH_NOTES §3). **B written into HOW_WE_WORK** (a panel borrows the score's
+idiom: curves, zones, takes, SPACE — no panel-only invention). **C held** (the listening ladder may come by itself as he builds the first
+sequence).
+
+**The script, his narration read back (the marks against the drawer as committed at 8192361, i.e. after a hard reload):**
+
+*Stage 1 — the harmony for the whole sequence*
+1. Click a chord shape in the list, press SPACE, hear it on the piano, see it on the keyboard. — **works now** (SPACE follows the focus
+   since §182; his drawer at the time lacked it).
+2. See where the ranges fall (the columns). — **works.**
+3. Reshuffle or change the octave so it fits the instruments he wants; try shuffles and hear them. — **works** (the voicing bar).
+4. The pitches for the sequence are settled.
+
+*Stage 2 — a pair*
+5. Make a pair; ASSIGN A PITCH FIRST (double-click the note, click the node); then choose the two instruments by ear, maybe change them,
+   maybe reassign the pitch; hear it. — **works, awkward:** a new pair is born with a default pitch and default players that mean nothing
+   to him. Sweep: a new pair is born EMPTY of pitch (the row says "assign a note") with the nearest free players; the first assignment
+   fills it.
+6. The default curve should already sound like a beating: "eight or nine second ramp or hump that holds at max for a few seconds and then
+   comes back down". — **missing:** the birth default is a 6 s hump 0 → 3/s with no plateau. Sweep: the default is 9 s, attack 2 s ·
+   hold 4 s · release 3 s at 3 Hz — the ADSR shape — and "hold" joins the menu.
+7. Establish the maximum beating: one number box, relabelled "Hz" ("/s" is confusable with the seconds boxes), spun up or down or typed,
+   and "listen to a passage of max beating". — **missing:** the box exists as "to … /s" without an audition. Sweep: "max ▢ Hz" with
+   ▲ / ▼ and the wheel, and a **▶ max** button that plays 4 s flat at that rate on this pair; every "/s" in the drawer becomes "Hz".
+8. The shapes: presets are good but unpredictable; "the first few are custom, but then I can store those as preset shapes". — **missing:**
+   pair takes save a whole pair, not a shape. Sweep: **save shape** stores the heard curve normalised (max = 1) under a name in a
+   `beatingShapes` bucket; his shapes appear as buttons after the built-ins, in both the rate and the crescendo menus.
+9. The burst: adjust how quick it reaches max (instrument-dependent, by ear), how long it holds, the decay to the end — "pretty classic
+   ADSR". — **missing as a shape:** sweep: the ADSR shape with three handles (attack end, hold end, the end) — the hump and burst stay.
+10. "I couldn't drag the final node. That would have been intuitive to change the duration visually." — **missing:** the end handle is
+    pinned at p = 1. Sweep: dragging the last handle sideways changes the PAIR'S LENGTH (the strip follows); vertically its value as before.
+11. Adding points: the draw button on / off is awkward — "if you have a quick, easy alternative". — **awkward:** sweep: **double-click on
+    the curve area adds a point** (ALT-click removes, as now); draw mode stays for freehand.
+12. "change the ramps of the individual curves … the attack a different curve shape". — **works now** (the slope diamonds, §182).
+13. Store the burst shape once it is right. — line 8.
+
+*Stage 3 — the volume and the crescendo*
+14. Easy controls for the level curve, the maximum adjusted quickly. — **works** (the low / high boxes, the handles).
+15. "draw in peaks and values for individual players … maybe they reach max at different times or there's several humps". — **missing:**
+    one crescendo serves both players. Sweep: a level curve PER PLAYER (`levelCurve: { lower, upper }` in the block; `renderPair` takes
+    both), drawn in the two players' colours in the lane, a "together" lock on by default (edit one, both move) like the rate lane's mirror.
+16. A plateau, then "move that plateau around". — **missing:** sweep: dragging a SEGMENT's body sideways moves both its points (a plateau
+    slides); the "hold" (ADSR) shape in the crescendo menu.
+17. "the volume wasn't that intuitive, zero to one … Ultimately a scale from PPP to FFF" — and "the quiet wasn't quite enough … should go
+    from quite quiet to max also based on the volume tests". — **awkward + a defect:** the level 0 maps to 65 on the ensemble scale (the
+    trill's held-note floor, `HELD_LO`), so a beating's softest is about mp. Sweep: the crescendo lane reads ppp … fff (nine steps, the
+    boxes take them), and a beating's level runs the whole measured scale — ppp at the remap's floor, fff at 127 — its own constants,
+    not the trill's.
+18. The breaths: "all the warnings and whatnot are throwing me off" — wanted: faint markers at the ideal maximum breath length (every
+    11 s, say) in the crescendo part; click to place a breath (a dotted line, distinct from the ideal marker), drag it; a randomizer for
+    the whole pair with two choices, random and unison. — **awkward:** sweep: the lane redrawn — the ideal ticks (the ceiling at this
+    level, per player, from the start), the hand marks as dotted lines, no ceiling bars, one ⚠ only where a span is longer than the
+    ceiling; the modes become **random · unison · by hand** (unison = both players at the same marks, phase 0); the shuffle stays.
+19. Save the pair construction. — **works** (pair takes, §182).
+
+*Stage 4 — the sequence*
+20. A pair is in the timeline as a zone from the moment it is made, live-linked both ways; the timeline has its own duration. —
+    **works now** (the strip, §182) except the duration: sweep: the sequence box sets the TIMELINE'S SPAN (room to drag into), not a
+    stretch; the content length is a readout.
+21. More pairs the same way; three zones; drag them, drag an end for the duration, the pair builder follows and vice versa; play a zone. —
+    **works now** (a click on a zone makes its pair the focus; SPACE plays it).
+22. At any point change any stage — e.g. another harmony: pick it, reshuffle; "maybe there's an initial assignment automatic", the
+    assignments changeable, "an easy way to revert back to the original choice". — **missing:** a new harmony clears the pairs' notes.
+    Sweep: on a harmony change a pair takes the note at its SAME INDEX in the new sonority (else the nearest pitch), so the sequence
+    re-voices at once; **auto-assign** deals the sonority to the pairs that have no note (low to high); **revert** brings the previous
+    harmony, voicing and assignments back (one level).
+23. Save the sequence take; insert at the cursor. — **works.**
+
+**The parts I think he left out (put to him):** hearing a pair IN CONTEXT — mute / solo per track in the strip, so one pair is heard
+against the others (his "I wanna hear it in context"); the two players' PHASE (the body slide) and the INTERVAL chips, which the
+narration never reaches — kept, no question; an UNDO inside the drawer (one level, for a wrong drag); LOOP while adjusting (the pair
+plays round while a handle is dragged); the pair's EXIT — the default returns to unison at the end; a pair that ENDS on its maximum (a
+cut) is a shape question the ADSR handles. The build waits for his word on these.

@@ -396,6 +396,73 @@ detail-by-detail troubleshooting. **For the all-purpose tool:** the sequence str
 timeline inside a panel (the strikes' rhythm lane, the trills' zones, now the pairs' tracks) — the revision should have ONE timeline
 widget; and "what SPACE plays follows the focus" is a rule every panel should share.
 
+### 2026-09-07 — the workflow walk-through (strategy A): how he wants to work with the drawer, first click to the pair in the score
+
+> *"ok lets do A, b into how we work, lets hold on c, it might emerge organically as I build the first beating sequence; First, I'll
+> choose the overall harmony for the entire sequence. In this case, for example, I pulled up a number of cord shapes. and then played
+> them to listen to what the harmony sounds like. So that part works pretty good except for the space bar playback. I click on a cord in
+> the menu. Press space, listen to it. Visually see it on the keyboard. If I find one I like, then I could look and see where the ranges
+> fall out. So either reshuffle or change the octave so that it fits into the ranges of the instruments I wanna use. I might try a shuffle
+> and play to hear how it sounds in different voicings. then that's settled, and I know which pitches I'll use or which base pitches I'll
+> use for the sequence, the beating sequence. Then I start working with a pair. I'll want to choose the instruments. So I'll probably want
+> to listen to them. So I choose an initial set of instruments, and then maybe there's a default curve inside already. So I can just
+> listen to them, see if they're the right instruments. Something like a... eight or nine second ramp or hump that holds at max speeding
+> for a few seconds. and then comes back down. Can I choose my instruments, and then I look at the range? And if they're not fitting in
+> the range or if I don't like the way they've been transposed, I can reassign a different note from the cord I chose to that pair. or
+> leave it. with its initial choice. Actually, I haven't assigned yet. So I'm going to... before I choose my instruments, I'll assign a
+> pitch, then I'll do the listening selection. I might change the instruments, might reassign the pitch. and I wanna hear it in context.
+> so the the default. with at least a few seconds at max so I can hear what max beating sounds like. then I'll want to... once that's
+> chosen, I'll want to establish what the maximum beating is. So maybe a quick number box. Let's relabel it too because forward slash s,
+> it's near something else that has seconds as well. So that's confusing. Maybe HC for herbs. H e r t z. H z. then I dial it up or spin it
+> up or spin it down or type in a number, and I can listen to a passage of max beating. So I establish that. Then the curve. I found the
+> curve in the current drawer a little bit hard to work with. I think the idea of preset shapes is good, but I think it'll probably be too
+> difficult to predict exactly what shapes I'll want to work with. So maybe the first few are custom, but then I can store those as preset
+> shapes. I was for... so we have a scenario to work with. I was trying a burst shape, and I found that it didn't hold long enough at the
+> peak. And then I had to adjust the max peak, but in this narration, it was already done. We've already established that. So it's just
+> the three factors. I... want to see how... I want to adjust how quick it bursts to max, and that'll probably be somewhat instrument
+> dependent. So I'll wanna listen to it with each adjustment. then there's the hold... how long it holds at peak, and then there's the...
+> so this is, I guess, pretty classic ADSR. There's the decay to nothing, to end of pair. But, for example, I couldn't drag the final
+> node. That would have been intuitive to change the duration visually. and then I had to add points. and I don't wanna spend too much
+> time on the controls, but the turn on the draw button and the click off the draw button is a little bit awkward. Again, I don't wanna
+> spend too much time getting a strike because I'm not sure what would work better. So we can keep it for now or if you have a quick,
+> easy alternative. So getting the ADSR right, the duration of the curve right, but also being able to change the maximum easily. And then
+> what I couldn't do there was change the ramps of the individual curves. So if I wanted the attack to have a different curve shape, I
+> wanna be able to do that. Then once I get a burst shape that I like, I can store it. Then I'll attend to the volume and the crescendo. I
+> haven't got that far to play with it. But similar to the glissando, I'll want fairly easy controls for the curve, ways to adjust the
+> maximum quickly. If I want to draw in peaks and values for individual players, I can. And then I can shift the points together. So if
+> it's just a classic hump, I guess, It wasn't. There was no plateau, so it was hard to or wasn't hard, but it wasn't intuitive how to
+> have a plateau and then move that plateau around. But that's probably what I'll want to do. Have a timing of when an individual player
+> reaches max, volume, And then be able to shift it around so maybe they reach max at different times or there's several humps, and then
+> I can control how long they stay in max or admin or somewhere in between. Also, the volume wasn't that intuitive, zero to one, and it
+> didn't quite sound like the tube a piece. The quiet wasn't quite enough. Ultimately, it will be a scale from PPP to FFF, so we should be
+> able to extract that from this. But for playback, which isn't a priority, but it would be nice to get a good playback. should go
+> from... I don't know what we're using for adjustment cc7 or velocity, but should go from quite quiet to max also based on the volume
+> tests we did per instrument And then the breaths is pretty straightforward. I think all the warnings and whatnot are throwing me off.
+> Maybe there's just a simple indicator in the crescendo part that shows me ideally a breath length. So if I have a twenty second pair,
+> there'll just be some markers at whatever, eleven seconds or whatever is the optimal max duration. And then I can just click to have a
+> read breath mark, which is just a simple dotted line, which should be distinguished from the ideal max breath indicator, and then I can
+> just grab it and slide it if I want. Also have a simple randomizer for the whole pair where it can slot in breaths. And maybe just two
+> choices, random and unison breaths. And I can save that pair construction. it probably should have already been in the sequence
+> timeline as a zone already, maybe when I create the pair. And those should be dynamically linked. So then I see it in the timeline, and
+> that timeline could have a independent duration. that I go ahead and make the additional pairs moving forward same same way. And then I
+> see... let's say there's three pairs. I see the three zones in the sequence, the timeline. then I can drag those around. I can drag one
+> of the n's to change duration, and that will update automatically the individual pair builder or vice versa. I can make changes in the
+> pair builder and I would see changes in the zone or they would change. and I can playback the zone. And at any point, I can make easy
+> adjustments for any stage. So, for example, this point, I decide I want a different harmony. So I choose another harmony from the list
+> of cords, and I reshuffle, etcetera, do all that. And maybe there's an initial assignment automatic, but then, of course, I can change
+> those assignments. And then an easy way to revert back to the original choice. then save as a combined sequence take. and the various
+> options for insertion. I think in this case is probably just insert at cursor. I can't think of other ones that might be useful here.
+> Let me know if there's any other scenarios I might have also considered, and I can try thinking about it and narrating through it here.
+> are not alternate scenarios, but within my narration scenario, things I'm... parts I missed. potentially."*
+> *(2026-09-07, late afternoon; typed)*
+
+**AI reading (not the composer's words):** the decisions — A (this walk-through, one sweep), B into HOW_WE_WORK (the panel borrows the
+score's idiom), C held. The narration written back as a script of 23 lines, each marked works / awkward / missing, in RUNNING_LOG §183;
+the misses become the one sweep. What it says about the tool beyond the lines: he builds a pair as an instrument — assign the note,
+choose the players by ear, set the maximum, then shape — so the birth default must already SOUND (a held maximum for a few seconds),
+the maximum must be one box with its own audition, and the shape is ADSR before it is anything else. For the all-purpose tool: the
+shape library should be his, saved from what he draws, not a menu guessed in advance.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

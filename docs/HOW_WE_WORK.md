@@ -70,6 +70,15 @@ restate until the understanding is shared · the top line · one step at a time:
 **Before building anything new — quick pre-check**
 1. What exists? 2. What changes? 3. What could break? 4. How do we verify?
 
+**A panel borrows the score's idiom (composer, 2026-09-07 — RUNNING_LOG §182–183; the beating drawer's lesson)**
+- Anything a panel needs that the score already has — curves with slope handles, zones on tracks that drag and stretch, takes, seeds,
+  SPACE playing what is looked at — the panel takes AS IS, the score's behaviour and its look. No panel-only invention of the same thing.
+- **A tool is planned against how the composer WORKS, not against a feature list:** before a build, his walk-through in his own words
+  (first click to the result in the score) is written back as a numbered script, each line marked works · awkward · missing; the
+  misses are built in ONE pass on a copy and verified by walking the script with real events; he tests once against the same script.
+  The script is the unit, not the ticket (strategy A, §183).
+- **His ear early:** the smallest thing that sounds comes first and is heard before the rest is built.
+
 ---
 
 ## If it feels like we lost the thread
