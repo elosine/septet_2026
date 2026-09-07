@@ -191,6 +191,19 @@ third, fainter, timbre-dependent) — the arithmetic and the insertion picture a
 of the beating altogether (no anchor role), which leaves six players → up to three pairs; the top line of RUNNING_LOG §148 stands
 and phase 3 begins at step 1, the palette.
 
+### 2026-09-06 — the bend: as the string quartet did it; a real player's range, within a semitone
+
+> *"So we did string probes for the string quartet, or we figured out how to use pitch bend and to reset it, etcetera. So if you
+> could look there and figure out how we did pitch bend there. And then I imagine it's the same with UVI, but we should figure that
+> out and then just use the realistic range for a real player. So it's embrachure bend, really. but we don't need much movement to...
+> for the beating. usually within semitone at the most. then 1 good"*
+> *(2026-09-06, session 4, evening; speech-to-text, content untouched)*
+
+**AI reading (not the composer's words):** for the all-purpose tool, the bend range is two numbers per instrument — the sampler's
+(measured by a probe; #1's Xsample ran at ±1 semitone, #4's UVI at ±2) and the player's (his rule: within a semitone, the winds by
+embouchure) — and the tool's ceiling is in beats per second with the cents shown. #1's convention (bend before the note-on, centre
+after the note-off, re-key past the range) is the one to keep. RUNNING_LOG §150.
+
 
 ## 4 · For the eventual revision (the digest — rewritten freely)
 

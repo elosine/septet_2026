@@ -4327,3 +4327,32 @@ hard-coded ±1.99 st (`composer.html:10112`), so a per-instrument range is a ste
 measured ranges exist (`MEASURED_RANGES` in `sandbox/instruments.js`: flute ord 60–96, bass clarinet senza 34–65, the violins senza
 55–101 …), so the pairing rules can be computed from them. **Put to him:** step 1's goal in format A (below in the chat, mirrored into
 PLAN 1f once the sub-steps are agreed). Nothing built.
+
+## §150. "we did string probes for the string quartet … figure out how we did pitch bend there … the same with UVI … the realistic range for a real player … embouchure bend … usually within semitone at the most. then 1 good" — #1's bend convention read; step 1's goal accepted; the sub-steps put to him
+
+Composer (PLAN 1f, phase 3, step 1): *"So we did string probes for the string quartet, or we figured out how to use pitch bend and
+to reset it, etcetera. So if you could look there and figure out how we did pitch bend there. And then I imagine it's the same with
+UVI, but we should figure that out and then just use the realistic range for a real player. So it's embrachure bend, really. but we
+don't need much movement to... for the beating. usually within semitone at the most. then 1 good"*
+
+**DECIDED:** step 1's goal stands (*"then 1 good"*). The player's range: a real player's, by embouchure for the winds, **within a
+semitone at the most** for everyone.
+
+**Read in #1 (`string_quartet_no1-composer/docs`: MIDI_MUSIC_GENERATION.md §2, LONG_TONE_IMPLEMENTATION.md,
+PIZZICATO_TREMOLO_GLISSANDO_WORKFLOW.md; `public/index.html` LongToneUI):** the quartet's virtual instruments ran at **±1 semitone
+of pitch bend** ("user-confirmed default for all VIs in this project"; centre 8192, 8192 steps per semitone, a quarter tone = 4096);
+the bend is sent BEFORE the note-on and **reset to centre after the note-off** (`0xE0 0x00 0x40`); a glissando wider than the range
+is **re-keyed**: the MIDI note offset one semitone from the sounding pitch and the bend run across ±1, two semitones per segment, a new
+note at each seam; bend samples every 50 ms; **CC120 / CC123 are not honoured** by the synth (a secco was done with CC7 → 0). The
+same shape as #4's D26 re-key and its registry-driven panic. #4's UVI SI2 tuba measured ±1.99 st with RPN ignored; the SI2 flute in
+UVI is expected the same, to be read by the probe rather than assumed.
+
+**The sub-steps put to him (format B):** the bend convention from #1 adopted (bend before the note, centre after, re-key past the
+range — the reset already in the tick's `resetMorphBend`) · one bend probe for the six players on their ordinary voices (the tuba's
+`probes/bend_probe.ps1` + `analyze_bend_probe.py`, adapted to the septet's kit and ports; 0 · +50 % · +100 % · −100 %, and a second
+note after an unreset bend for the residue), he runs it in the rack, the analyzer writes `bank/bend_ranges.json` (semitones per full
+bend per instrument, RPN honoured or not) · the player's range in the recipe: 1 semitone for all six, the winds' by embouchure; the
+panel's ceiling in beats per second and the cents shown so the limit is visible · the pairing table computed from the ordinary voices'
+measured ranges (any two of the six whose ranges hold the pitch; at an interval each its own note), the panel offering only those ·
+the per-instrument bend range as a recipe field the tick will read at step 3 (the tuba's 1.99 stays until then) · BEATING_TOOL.md §1
+opened with the numbers; MORPH_NOTES §1 updated. Nothing built.
