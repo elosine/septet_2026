@@ -123,6 +123,13 @@ or not at all.**
     (phase 2a): two curves per part — the glissando above, the crescendo below — the two written pitches at least a quarter tone
     apart, a go line at every breath, the beat rate at both ends of the glissando (the tuba's MORPH_NOTATION; BEATING_TOOL §10).
 
+11. **A morph note (the tuba's morph panel on the septet, 2026-09-07; RUNNING_LOG §204)** is an ordinary sounding `waveCurve` —
+    `sonifyNote` the played key, `technique` the player's ordinary voice (the recipe key), the level curve in 0–10 — plus `morphBend`
+    (note-relative `[[dtSec, cents], …]` against the key; the tick sends it through the instrument's measured `bendRangeSt`) and
+    `morphFlags`; a morph is a group `grp-morph-NN` with a marker `MORPH …` on layer 0 and a META contour on `META_LAYER`; the cast
+    (which lanes, the pitches folded per pair) lives in the panel's params (`lanes`, `source`) and in an ACTUAL as saved. The
+    extractor at 2a reads `morphBend` (the tuba's `tools/notate_morph.js`).
+
 ## 3. Not S1's business (where the piece-specific work goes)
 
 - **Technique → notation class** is registry data + classifier rules

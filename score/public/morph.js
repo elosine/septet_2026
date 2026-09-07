@@ -186,6 +186,38 @@ function bendBytes(centsOffset, channel, rangeSt) {
 // how far a single note can be bent before the emit layer must re-key (plan §8)
 function bendReach() { return MEASURED.BEND_RANGE_ST * 100; }
 
+// THE SEPTET'S PALETTE (2026-09-07, RUNNING_LOG §203; MORPH_NOTES §3). render() takes `opts.palette`: one entry per VOICE index —
+// { label, technique (the player's ordinary voice, the recipe key), lo, hi (its measured range, MIDI), reachCents (the smaller of the
+// player's reach and the sampler's measured range), ceiling(level01) → seconds (the breath or the bow), gapS, kind ('breath' | 'bow') }.
+// Absent, every constant above is the tuba's and the render is byte-identical to the tuba piece's (baseline-checked).
+const CLAMP_CENTS = 8;          // a run may overshoot the sampler's range by this much at its START — clamped there, never at its arrival
+const REKEY_OVERLAP_S = 0.005;  // the string quartet's rule: the next key starts 5 ms before the previous ends (the seam hidden)
+
+// THE KEY RULE (the string quartet's, his: "play 61 bent a semitone down, then gliss all the way to the max"): for a run of absolute
+// cents, the key is one that reaches the run's LAST value exactly (the arrival) and the rest within `reach` plus `clampC`; among the
+// keys that do, the least overshoot, then the most central. null = no such key → the run is cut there (a re-key).
+function chooseKey(vals, reach, clampC) {
+    if (!vals.length) return null;
+    let lo = Infinity, hi = -Infinity;
+    for (let i = 0; i < vals.length; i++) { if (vals[i] < lo) lo = vals[i]; if (vals[i] > hi) hi = vals[i]; }
+    const end = vals[vals.length - 1];
+    // every key whose reach (plus the clamp) covers the whole run; the overshoot may sit at either end — a whole tone on a 0.96 st
+    // sampler lands 4 c short at both — but the ARRIVAL is preferred exact (a CONVERGE lands on its unison), then the least overshoot
+    const kLo = Math.ceil((hi - reach - clampC) / 100), kHi = Math.floor((lo + reach + clampC) / 100);
+    let best = null;
+    for (let k = kLo; k <= kHi; k++) {
+        const over = Math.max(0, (k * 100 - reach) - lo, hi - (k * 100 + reach));
+        if (over > clampC + 1e-9) continue;
+        const overEnd = Math.max(0, Math.abs(end - k * 100) - reach);
+        const centre = Math.abs(k * 100 - (lo + hi) / 2);
+        const better = !best || overEnd < best.overEnd - 1e-9
+            || (Math.abs(overEnd - best.overEnd) <= 1e-9 && (over < best.over - 1e-9 || (Math.abs(over - best.over) <= 1e-9 && centre < best.centre)));
+        if (better) best = { key: k, over: over, overEnd: overEnd, centre: centre };
+    }
+    if (!best) return null;
+    return { key: best.key, over: Math.round(best.over * 10) / 10, overEnd: Math.round(best.overEnd * 10) / 10 };
+}
+
 // ===========================================================================
 // 3 · PROGRESS — the dials. Models say WHAT changes; this says HOW FAR ALONG
 //     each voice is at time t. Every model reads it identically.
@@ -463,8 +495,8 @@ function buildCarrier(vi, nVoices, carrier, seedRng, ctxForBreath, sched) {
 
         // breath ceiling for this voice, here
         const info = ctxForBreath(start);
-        let ceiling = maxBreath(info.midi, info.level01);
-        if (info.bending) ceiling *= GLISS_AIR_COST;
+        let ceiling = info.ceilingS != null ? info.ceilingS : maxBreath(info.midi, info.level01);   // the palette's breath or bow (§203)
+        if (info.bending) ceiling *= (info.kind === 'bow' ? 1 : GLISS_AIR_COST);                  // a bow costs no air
         ceiling = Math.min(ceiling, MAX_SEG_HARD_S);
         if (info.fixedLen != null) {
             want = info.fixedLen;              // D9: the sample decides, not us
@@ -488,10 +520,12 @@ function buildCarrier(vi, nVoices, carrier, seedRng, ctxForBreath, sched) {
         }
         if (dur <= 0.02) break;
 
-        const gapBase = Math.max(BREATH_GAP_MIN, MEASURED.RESET_GAP_S);
+        // the palette's gap (the winds re-enter after a breath, a bow changes almost at once — 50 ms so the two notes never touch)
+        const gapBase = info.gapS != null ? Math.max(0.05, info.gapS) : Math.max(BREATH_GAP_MIN, MEASURED.RESET_GAP_S);
         const gapJit = 1 + (seedRng() * 2 - 1) * segVar * 0.5;
         let gap = gapBase * gapJit;
-        if (gap < BREATH_GAP_FLOOR) { gap = BREATH_GAP_FLOOR; flags.push('BREATH'); }
+        if (info.gapS == null && gap < BREATH_GAP_FLOOR) { gap = BREATH_GAP_FLOOR; flags.push('BREATH'); }
+        else if (info.gapS != null && gap < 0.05) gap = 0.05;
 
         segs.push({ idx: idx++, start: round3(start), dur: round3(dur), flags: flags });
         t = start + dur + gap;
@@ -1140,6 +1174,15 @@ function feasibleTechnique(tech, midi) {
 function render(params, opts) {
     const P = normaliseParams(params);
     const o = opts || {};
+    // THE SEPTET'S PALETTE by voice index (see chooseKey above); null = the tuba's constants, byte for byte
+    const PAL = Array.isArray(o.palette) && o.palette.length ? o.palette : null;
+    const palOf = vi => (PAL && PAL[vi]) || null;
+    // a voice's technique and range under the palette: the player's ordinary voice, its measured range — never a technique swap
+    const feasibleFor = (vi, tech, midi) => {
+        const pal = palOf(vi);
+        if (!pal) return feasibleTechnique(tech, midi);
+        return { technique: pal.technique, flagged: !(midi >= pal.lo && midi <= pal.hi) };
+    };
     const rng = mulberry32(P.seed);
     const rawMidi = resolveSource(P.source, o.resolveVert).slice().sort((a, b) => a - b);
     const cap = P.lanes ? P.lanes.length : (P.voices || o.maxVoices || 10);
@@ -1184,7 +1227,8 @@ function render(params, opts) {
         // the answer is "one they can play". So every octave transposition of
         // every partial inside the ord range is a candidate, and each voice
         // takes the nearest free one.
-        const ordLo = TECHNIQUES.ord.lo * 100, ordHi = TECHNIQUES.ord.hi * 100;
+        const ordLo = (PAL ? Math.min.apply(null, PAL.map(p => p.lo)) : TECHNIQUES.ord.lo) * 100,
+              ordHi = (PAL ? Math.max.apply(null, PAL.map(p => p.hi)) : TECHNIQUES.ord.hi) * 100;
         const cand = [];
         parts.forEach(n => {
             const bcents = partialCents(fund, n);
@@ -1432,7 +1476,7 @@ function render(params, opts) {
         const levelFloor = inAttack ? 0 : 0.4;
         const base = {
             cents: startCents[vi],
-            technique: (P.target && P.target.baseTechnique) || 'ord',
+            technique: (P.target && P.target.baseTechnique) || (palOf(vi) ? palOf(vi).technique : 'ord'),
             level: clamp(dynLevel(P.dyn, vi, nVoices, pDyn) * g * relFade, levelFloor, 10),
         };
         const moved = modelFn(ctx, vi, p) || {};
@@ -1464,13 +1508,15 @@ function render(params, opts) {
         const segs = buildCarrier(vi, nVoices, P.carrier, voiceRng, function (t) {
             const s = stateAt(vi, t);
             const midi = midiOf(s.cents);
-            const tech = feasibleTechnique(s.technique, midi).technique;
+            const tech = feasibleFor(vi, s.technique, midi).technique;
             const cls = (TECHNIQUES[tech] || TECHNIQUES.ord).durClass;
             const sMid = stateAt(vi, Math.min(span, t + 1));
+            const pal = palOf(vi);
             return {
                 midi: midi, level01: s.level / 10,
                 bending: Math.abs(sMid.cents - s.cents) > 5,
                 fixedLen: cls === 'fixed' ? fixedLength(tech, midi, o.sampleLengths) : null,
+                ceilingS: pal ? pal.ceiling(s.level / 10) : null, gapS: pal ? pal.gapS : null, kind: pal ? pal.kind : null,
             };
         }, shapeSched[vi]);
 
@@ -1516,9 +1562,25 @@ function render(params, opts) {
             // no gap, so the player slurs across a fingering change — which is
             // what a wide tuba glissando actually is. Anything that still cannot
             // be expressed is flagged, never silently clipped.
-            const reachMax = bendReach();
+            const pal = palOf(vi);
+            const reachMax = pal ? pal.reachCents : bendReach();
             const spans = [];
-            {
+            const absAt = k => s0.cents + bend[k][1];
+            // the key for a run under the palette (the quartet's rule), or the tuba's centred rounding
+            const keyOf = (i0, i1) => {
+                if (!pal) return null;
+                const vals = []; for (let k = i0; k <= i1; k++) vals.push(absAt(k));
+                return chooseKey(vals, reachMax, CLAMP_CENTS);
+            };
+            if (pal) {
+                // THE QUARTET'S SEGMENT RULE (§200, §203): a run keeps one key while some key reaches its arrival exactly and the rest
+                // within the sampler's measured range plus CLAMP_CENTS; where that fails the run is cut and the next starts at the cut
+                let s = 0;
+                for (let k = 1; k < bend.length; k++) {
+                    if (!keyOf(s, k) && k > s + 1) { spans.push([s, k - 1]); s = k - 1; }
+                }
+                spans.push([s, bend.length - 1]);
+            } else {
                 let s = 0, sLo = bend[0][1], sHi = bend[0][1];
                 for (let k = 1; k < bend.length; k++) {
                     const c = bend[k][1];
@@ -1541,11 +1603,12 @@ function render(params, opts) {
                 spans.push([s, bend.length - 1]);
             }
             if (spans.length > 1) flags.push('REKEY');
-            const playedMidi = Math.round(((lo + hi) / 2) / 100);
+            const ck1 = spans.length === 1 ? keyOf(0, bend.length - 1) : null;
+            const playedMidi = ck1 ? ck1.key : Math.round(((lo + hi) / 2) / 100);
             const reach = Math.max(Math.abs(lo - playedMidi * 100), Math.abs(hi - playedMidi * 100));
-            if (spans.length === 1 && reach > reachMax + 1e-6) flags.push('GLISS');
+            if (spans.length === 1 && reach > reachMax + 1e-6) flags.push(pal && ck1 ? 'CLAMP' : 'GLISS');   // CLAMP: a few cents at the start, clamped by the sampler
 
-            const fe = feasibleTechnique(s0.technique, playedMidi);
+            const fe = feasibleFor(vi, s0.technique, playedMidi);
             if (fe.flagged) flags.push('RANGE');
 
             // technique-switch prep: did the previous segment leave enough room?
@@ -1599,7 +1662,10 @@ function render(params, opts) {
                     if (c < aLo) aLo = c;
                     if (c > aHi) aHi = c;
                 }
-                const key = spans.length === 1 ? playedMidi : Math.round(((aLo + aHi) / 2) / 100);
+                const ckS = spans.length === 1 ? null : keyOf(i0, i1);
+                const key = spans.length === 1 ? playedMidi : (ckS ? ckS.key : Math.round(((aLo + aHi) / 2) / 100));
+                // the quartet's 5 ms overlap at a re-key: the previous key ends after this one starts (the palette only)
+                if (pal && si > 0 && notes.length) { const prev = notes[notes.length - 1]; if (prev.voice === vi) prev.dur = round3(prev.dur + REKEY_OVERLAP_S); }
                 const subBend = [];
                 for (let k = i0; k <= i1; k++) {
                     subBend.push([round3(bend[k][0] - t0),
@@ -1785,6 +1851,7 @@ function render(params, opts) {
     // not one. `span` above keeps meaning the gliss length, unchanged.
     // `extended`, not `cycling` — a release-only render is longer than its span
     // too, and the length is what the composer needs in order to place it.
+    if (PAL) meta.palette = PAL.map(p => ({ label: p.label, technique: p.technique, reachCents: p.reachCents, lo: p.lo, hi: p.hi }));
     if (TIMING.extended) {
         meta.duration = round3(TIMING.duration);
         meta.release = round3(TIMING.release);
@@ -1938,6 +2005,8 @@ function toScoreObjects(result, at, opts) {
 
 return {
     MEASURED: MEASURED, RATE: RATE, TECHNIQUES: TECHNIQUES, DEFAULTS: DEFAULTS,
+    chooseKey: chooseKey, CLAMP_CENTS: CLAMP_CENTS, REKEY_OVERLAP_S: REKEY_OVERLAP_S,
+    reduceSource: reduceSource,   // the panel reduces a wider set to its pairs (morph_septet.js)
     BREATH_TABLE: BREATH_TABLE, SWITCH_PREP: SWITCH_PREP, STRIATIONS: STRIATIONS,
     DYN_SHAPES: DYN_SHAPES, dynLevel: dynLevel,
     ENTRY_MODES: ENTRY_MODES, EXIT_MODES: EXIT_MODES, ORDER_MODES: ORDER_MODES,

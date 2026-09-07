@@ -5914,3 +5914,56 @@ the rack; the all-notes-off note of §202 already there.
 **The build begins** (the plan of §201 minus the probe): the engine's palette per voice · the split rule · the fold as one unit (D26)
 · the emitter and the tick per instrument · the six models re-voiced for three pairs · the pair lines with seat pull-downs and insert
 ticks · the box grown with its fonts · node checks · the decoded MIDI on a copy · MORPH_NOTES §1. His listening after.
+
+## §204. THE MORPH PANEL FOR THE SEPTET, BUILT — the palette per voice into the pure engine (the tuba's renders byte-identical), the quartet's key rule, the fold as one unit (D26), the emitter and the tick per instrument, the six models re-voiced for three pairs, the pair lines with seat pull-downs and insert ticks, the box grown with its fonts; 38 checks in node; verified on a copy with real events
+
+Built 2026-09-07 late, at his word (§201, §203), on `zz-ai-morph` (a copy of the piece, deleted after) on :5301 — the plan of §201 minus the
+probe (§203):
+- **`score/public/morph.js`** (the engine, still pure; every change gated on `opts.palette` — absent, the six stock models with the
+  tuba's sets render BYTE-IDENTICAL to before; the sha1 of each frozen in `tools/morph_tuba_baseline.json` and re-checked):
+  `chooseKey` — the string quartet's rule, his *"play 61 bent a semitone down, then gliss all the way"*: a run keeps one key while some
+  key reaches its arrival exactly and the rest within the sampler's measured range plus 8 c, the overshoot clamped at the start
+  (never the arrival); where that fails the run is cut and re-keyed · the split by that rule instead of the tuba's worst-case
+  2 × (reach − 50) · the re-key with the quartet's 5 ms overlap (the previous key ends after the next starts) · the technique per
+  voice = the palette's (the player's ordinary voice; never a technique swap; out of range is flagged, the fold is the panel's) · the
+  breath / bow ceiling and the gap per voice (a bow costs no air; a bow change 50 ms) · M2's partials folded into the palette's union
+  range · `meta.palette` · `reduceSource` exported. One new soft flag, `CLAMP`.
+- **`score/public/morph_septet.js`** (new, pure, page + node): the cast — `DEFAULT_PAIRS` Vc+Va · Vn1+Vn2 · Fl+BCl; `cast(params,
+  pairs, env)`: the model's sorted pitches two per pair (the tuba's eight reduced to six by whole clusters, said), `foldPair` as one
+  unit (D26: as written, then down, then up, by octaves; both seats must hold every note, CONVERGE's targets included; none → the
+  pair silent and named), the voices in pitch order → `lanes`, the palette per voice (`ordinaryVoice`, `ordinaryRange`, the reach =
+  min(a whole tone, the sampler's measured range), `ceilingFor`); `filterResult` (the ticked pairs of the one render); `swapSeat`
+  (the player chosen takes the seat, whoever sat there takes the old one); `describePair`.
+- **`score/public/morph_emit.js`** (the audition): the route falls back to the recipe's `ordinary` (the tuba's `ord` only the flute
+  has) and carries the switch, the instrument's `bendRangeSt` and key; the bend through that range; CC0 (or a keyswitch) sent with
+  the CC7 lead; the loudness as the score plays a held curve note — the velocity for the curve's top through the remap, CC7 by
+  height (`cc7ForHeight`); the tuba's path when there is no remap.
+- **`score/public/composer.html`**: the morphBend tick through `inst.bendRangeSt` (the tuba's 1.99 sat there); `morph_septet.js`
+  loaded before the panel.
+- **`score/public/morph_panel.js`**: the box 500 px at 13 px (his *"make the panel bigger"*); `generate` casts (`castOf`), renders six
+  voices with the palette and keeps the cast params as `_lastParams` (an ACTUAL saves the cast); Play and Insert take `heard()`; the
+  PAIRS lines under the fields — a tick, `pair k`, two seat pull-downs over the six bending lanes, the pitches as given and as folded
+  (`→ … ↑`, red when silent), the palette line; the pairs persist in the browser (`septet.morphPairs.v1`); the marker names the pairs
+  when not all are in; the META shape on `META_LAYER` — 7; the tuba's 10 is this piece's curve window C, a bug the port carried.
+- **`bank/morph_models.json`** rev 9: the six sets re-voiced for three pairs — BLOOM 51·51 56·56 61·61 (E♭3 A♭3 D♭4, unison pairs in
+  fourths; the winds share C4–F4 only) · CONVERGE 50,52 · 55,57 · 60,62 closing to the same unisons · BALANCE / COLOUR / SPACING /
+  SPECTRAL a B♭ major ninth in six (46 53 57 60 62 65); the tuba's sets kept on each model as `tuba`; COLOUR a shell.
+- **`tools/morph_septet_check.js`, 38 checks, ALL PASS:** the six tuba renders unchanged · the default cast on the lanes 6 5 3 4 0 1 ·
+  the reaches Vc 97 · Va 99 · Vn1 96 · Vn2 97 · Fl 200 · BCl 98 c · the winds breathe, the strings bow (flute 8 s, violin 12 s) · the
+  fold up (D3 → D4 for the violins), down (E7 → E5 for Vc + Va), none (Fl + BCl on B♭4 or F♯7 → silent, said) · CONVERGE's targets fold
+  with the pair · the swap · the key rule (C4 → D4 in one key at 0.96 st, 4 c short at the ends; a CONVERGE voice exact at its
+  arrival, 4 c clamped at its start; a minor third re-keys; the flute clamps nothing) · BLOOM under the palette: every note at its
+  player's voice, no re-key / clamp / range flag, no note past its ceiling · CONVERGE arrives on its unison within a cent · SPACING
+  by four steps re-keys with the 5 ms overlap · the ticked filter.
+- **On the copy, with real events:** the page loads the five modules and the remap; BLOOM casts and renders (33 notes, six voices);
+  the panel 500 px at 13 px, three pair lines; Play → per port the switch CC0 5 on the strings and 12 on the bass clarinet, none on
+  the flute (channel 12), CC7 from the remap (Vc 104 · Va 120 · Vn 127 · Fl 122), the bend centred, the note-on velocity the remap's
+  (the cello's 72 = `heldNote` at its curve top); the bend probed at +25 c per instrument = the expected 14-bit value on every one
+  (Vc 10303 · Va 10261 · Vn1 10325 · BCl 10282 · Fl 9216); a seat changed by a real `change` event (BCl into the cello's seat →
+  BCl+Va · Vn1+Vn2 · Fl+Vc on the lanes 1 5 3 4 0 6, stored) and back; pairs 1 and 3 unticked by real clicks → the violins alone
+  heard (10 of 33 notes); Insert @ playhead → 10 notes on lanes 3 and 4 at senza vibrato, every one with its `morphBend`, one
+  group, the META shape on layer 7, the marker "MORPH M1 — BEATING BLOOM · Vn1+Vn2". The score's transport was not run (the
+  hidden pane's rAF); the tick's bend line is the beating's formula, read.
+- **Not done, for his ear:** the seams and the clamps in the rack, the CONVERGE arrival, the loudness; COLOUR a shell; the tuba's
+  shape presets (edge techniques) untouched; the notation at 2a. **His listening next:** a hard reload, [Morph], MODELS, BLOOM,
+  Generate, Play; the sliders; a pair alone; CONVERGE; a seat swapped; then pitch sets by his word.

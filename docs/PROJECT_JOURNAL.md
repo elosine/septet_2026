@@ -82,6 +82,17 @@
 
 ## §2 Resume Here
 
+**2026-09-07, late (after the clear) — where it stands now (RUNNING_LOG §196–204):** the BEATING DRAWER is PARKED at his word (*"keep it
+simple for now … leave it as is"*; its running list in NITS, his words in MORPH_NOTES §3, for a rebuild session later); **THE MORPH
+PANEL is back, the tuba way with two changes, BUILT (§204) and awaiting his listening:** the septet's six players (the piano out)
+cast as three pairs — Vc + Va · Vn1 + Vn2 · Fl + BCl by default, a seat pull-down each, the pair folded as one unit (D26) — the
+engine fed a palette per voice (the ordinary voice, the measured range, the bend reach, the breath / bow), one key per run by the
+string quartet's rule (the Kontakt dial dropped, §203), Play and Insert on the ticked pairs, the box grown with its fonts; the six
+models re-voiced for three pairs; pitches by his word (the scratch file, the tuba way). **Next: his listening — a hard reload,
+[Morph], MODELS, BLOOM, Generate, Play; then a pair alone, Insert; CONVERGE; a seat swapped; then pitch sets by his word.**
+Resume reads for this: RUNNING_LOG §196–204 · MORPH_NOTES §1 (the last bullet) and §3 (the 2026-09-07 late entries) · NITS (the
+last five entries) · NAMING §2.11. The AI's copies (`zz-ai-morph`) deleted; the piece file untouched.
+
 **Session 4 — 2026-09-06 → 07 (in progress, Claude Code / Fable 5.1) — RUNNING_LOG §111–174.** The composer composes and tests on his
 own server (:5300); the AI built at his word, one chunk at a time:
 - **PLAN 1f step 1 built and its probe run, 2026-09-07 about 00:00–01:00 (§167–168), at his word *"run the plan independantly … I'll

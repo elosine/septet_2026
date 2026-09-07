@@ -1,6 +1,6 @@
 {
   "_comment": "MODEL store (PLAN 2y). A model = a point in parameter space, plus the directions worth travelling from it and how far. Seeded from bank/morph_recipes.json, which stays FROZEN as the day-10 audit record and is never regenerated over. The AI edits this file in conversation (recipes, verdicts, tags) and bumps `rev`; the panel polls it the same way it polls morph_params.json. Validate with: node tools/model_bank.js --validate",
-  "rev": 8,
+  "rev": 9,
   "seededFrom": "bank/morph_recipes.json (captured 2026-08-16)",
   "models": {
     "BALANCE": {
@@ -21,14 +21,12 @@
         "source": {
           "kind": "pitches",
           "midi": [
-            34,
-            38,
-            41,
-            45,
-            48,
+            46,
             53,
-            58,
-            62
+            57,
+            60,
+            62,
+            65
           ]
         },
         "target": null,
@@ -180,7 +178,24 @@
       "actuals": [
         "ACT-BALANCE-01"
       ],
-      "seededFrom": "bank/morph_recipes.json slot A"
+      "seededFrom": "bank/morph_recipes.json slot A",
+      "tuba": {
+        "source": {
+          "kind": "pitches",
+          "midi": [
+            34,
+            38,
+            41,
+            45,
+            48,
+            53,
+            58,
+            62
+          ]
+        },
+        "target": null
+      },
+      "septet": "2026-09-07: re-voiced for the septet's three pairs (Vc+Va · Vn1+Vn2 · Fl+BCl); the tuba's set kept as `tuba`"
     },
     "COLOUR": {
       "name": "colour morph, now ramping INTO each technique",
@@ -199,14 +214,12 @@
         "source": {
           "kind": "pitches",
           "midi": [
-            34,
-            38,
-            41,
-            45,
-            48,
+            46,
             53,
-            58,
-            62
+            57,
+            60,
+            62,
+            65
           ]
         },
         "target": {
@@ -336,7 +349,30 @@
         }
       ],
       "actuals": [],
-      "seededFrom": "bank/morph_recipes.json slot B"
+      "seededFrom": "bank/morph_recipes.json slot B",
+      "tuba": {
+        "source": {
+          "kind": "pitches",
+          "midi": [
+            34,
+            38,
+            41,
+            45,
+            48,
+            53,
+            58,
+            62
+          ]
+        },
+        "target": {
+          "path": [
+            "ord",
+            "bisb",
+            "flz"
+          ]
+        }
+      },
+      "septet": "2026-09-07: re-voiced for the septet's three pairs (Vc+Va · Vn1+Vn2 · Fl+BCl); the tuba's set kept as `tuba`; a SHELL on the septet — the technique path is the tuba's, every player keeps its ordinary voice"
     },
     "BLOOM": {
       "name": "BEATING BLOOM",
@@ -356,14 +392,12 @@
         "source": {
           "kind": "pitches",
           "midi": [
-            41,
-            41,
-            46,
-            46,
             51,
             51,
             56,
-            56
+            56,
+            61,
+            61
           ]
         },
         "target": {
@@ -517,7 +551,27 @@
         "ACT-BLOOM-02",
         "ACT-BLOOM-01"
       ],
-      "seededFrom": "bank/morph_recipes.json slot C"
+      "seededFrom": "bank/morph_recipes.json slot C",
+      "tuba": {
+        "source": {
+          "kind": "pitches",
+          "midi": [
+            41,
+            41,
+            46,
+            46,
+            51,
+            51,
+            56,
+            56
+          ]
+        },
+        "target": {
+          "cents": 25,
+          "direction": "alternate"
+        }
+      },
+      "septet": "2026-09-07: re-voiced for the septet's three pairs (Vc+Va · Vn1+Vn2 · Fl+BCl); the tuba's set kept as `tuba`"
     },
     "CONVERGE": {
       "name": "BEATING CONVERGE",
@@ -537,26 +591,22 @@
         "source": {
           "kind": "pitches",
           "midi": [
-            45,
-            47,
             50,
             52,
+            55,
             57,
-            59,
-            62,
-            64
+            60,
+            62
           ]
         },
         "target": {
           "midi": [
-            46,
-            46,
             51,
             51,
-            58,
-            58,
-            63,
-            63
+            56,
+            56,
+            61,
+            61
           ]
         },
         "dials": {
@@ -681,7 +731,35 @@
       "actuals": [
         "ACT-CONVERGE-01"
       ],
-      "seededFrom": "bank/morph_recipes.json slot D"
+      "seededFrom": "bank/morph_recipes.json slot D",
+      "tuba": {
+        "source": {
+          "kind": "pitches",
+          "midi": [
+            45,
+            47,
+            50,
+            52,
+            57,
+            59,
+            62,
+            64
+          ]
+        },
+        "target": {
+          "midi": [
+            46,
+            46,
+            51,
+            51,
+            58,
+            58,
+            63,
+            63
+          ]
+        }
+      },
+      "septet": "2026-09-07: re-voiced for the septet's three pairs (Vc+Va · Vn1+Vn2 · Fl+BCl); the tuba's set kept as `tuba`"
     },
     "SPACING": {
       "name": "SPACING MIGRATION",
@@ -701,14 +779,12 @@
         "source": {
           "kind": "pitches",
           "midi": [
-            43,
-            45,
-            47,
-            48,
-            50,
-            52,
+            46,
             53,
-            55
+            57,
+            60,
+            62,
+            65
           ]
         },
         "target": {
@@ -858,7 +934,26 @@
         }
       ],
       "actuals": [],
-      "seededFrom": "bank/morph_recipes.json slot E"
+      "seededFrom": "bank/morph_recipes.json slot E",
+      "tuba": {
+        "source": {
+          "kind": "pitches",
+          "midi": [
+            43,
+            45,
+            47,
+            48,
+            50,
+            52,
+            53,
+            55
+          ]
+        },
+        "target": {
+          "steps": 4
+        }
+      },
+      "septet": "2026-09-07: re-voiced for the septet's three pairs (Vc+Va · Vn1+Vn2 · Fl+BCl); the tuba's set kept as `tuba`"
     },
     "SPECTRAL": {
       "name": "SPECTRAL DRIFT",
@@ -878,14 +973,12 @@
         "source": {
           "kind": "pitches",
           "midi": [
-            34,
-            38,
-            41,
-            45,
-            48,
+            46,
             53,
-            58,
-            62
+            57,
+            60,
+            62,
+            65
           ]
         },
         "target": {
@@ -1023,7 +1116,39 @@
         }
       ],
       "actuals": [],
-      "seededFrom": "bank/morph_recipes.json slot F"
+      "seededFrom": "bank/morph_recipes.json slot F",
+      "tuba": {
+        "source": {
+          "kind": "pitches",
+          "midi": [
+            34,
+            38,
+            41,
+            45,
+            48,
+            53,
+            58,
+            62
+          ]
+        },
+        "target": {
+          "fundamental": 41,
+          "partials": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            11,
+            13
+          ]
+        }
+      },
+      "septet": "2026-09-07: re-voiced for the septet's three pairs (Vc+Va · Vn1+Vn2 · Fl+BCl); the tuba's set kept as `tuba`"
     }
-  }
+  },
+  "_septet": "2026-09-07 (RUNNING_LOG §203): the stock sets are voiced for six voices in three pairs; a pair takes two adjacent pitches of the sorted set; the panel folds them per pair (D26) and casts the players (morph_septet.js)"
 }

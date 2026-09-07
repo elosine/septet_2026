@@ -51,6 +51,16 @@ freely.
   for a sustained sound (the velocity for the top of its curve, CC7 following the height), measured per instrument and register
   (`bank/velocity_remap.json`). The morph's pitch bend rides on top; its loudness need not be designed again.
 
+- **The morph panel on the septet (2026-09-07 late; RUNNING_LOG §197–204):** the tuba's panel and engine kept, the working mode too
+  (the word-recipe sliders, the seed, the scratch file, Save as ACTUAL); `score/public/morph_septet.js` casts three PAIRS — Vc + Va ·
+  Vn1 + Vn2 · Fl + BCl by default, a seat pull-down each — onto the model's pitches, folds each pair as one unit (D26) and hands the
+  engine a PALETTE per voice (the ordinary voice, the measured range, the bend reach = min(a whole tone, the sampler's measured
+  range), the breath or bow ceiling); the engine keeps one key per run by the string quartet's rule and re-keys with a 5 ms overlap;
+  Play and Insert take the ticked pairs of the one render; the audition and the score play each instrument through its own range and
+  the remap; the META shape on the septet's META layer. The six stock models re-voiced for three pairs; other pitches by his word
+  into a model or the scratch file. 38 checks: `tools/morph_septet_check.js`; the tuba's renders byte-identical without a palette
+  (`tools/morph_tuba_baseline.json`). **Not for this piece:** the beating drawer's pitch side, takes, the notation (2a).
+
 ## 2 · For this piece — "morph events" (CN-28 · CN-29)
 
 His picture: **single morph events** — e.g. unison → maximum beating, "like in convergence", over a set time — then **longer

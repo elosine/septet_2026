@@ -524,6 +524,7 @@
      stays a one-line change. Loaded after Composer exists but before use. -->
 <script src="/morph.js"></script>
 <script src="/morph_emit.js"></script>
+<script src="/morph_septet.js" defer></script>
 <script src="/morph_panel.js" defer></script>
 <!-- PLAN 2x attack-field textures. texture_engine.js is the PURE engine (also
      runs in node under tools/test_texture.js and tools/phase_shift.js);
@@ -10438,7 +10439,7 @@ const Composer = {
                     const bv = Math.round(this.morphBendAt(wc.morphBend, dt));
                     if (bv !== st.lastBend) {
                         const v = Math.max(0, Math.min(16383,
-                            Math.round(8192 + (bv / (100 * 1.99)) * 8192)));   // MEASURED range
+                            Math.round(8192 + (bv / (100 * ((inst && inst.bendRangeSt) || 1.99))) * 8192)));   // the instrument's MEASURED range (2026-09-07, §203); the tuba's 1.99 when unknown
                         output.send([0xE0 | ch, v & 0x7F, (v >> 7) & 0x7F]);
                         st.lastBend = bv;
                         (this._morphBentChannels || (this._morphBentChannels = {}))[

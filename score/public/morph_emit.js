@@ -70,17 +70,24 @@ const EMIT = {
         const C = HOST();
         const inst = C && C.trackInstrument ? C.trackInstrument(lane) : null;
         if (!inst) return null;
-        const tech = (inst.techniques || []).find(t => t.key === techKey)
-                  || (inst.techniques || []).find(t => t.key === 'ord');
+        // the septet (2026-09-07, §203): an unknown key falls back to the instrument's ORDINARY voice (the recipe's `ordinary`),
+        // then to 'ord' as before; the route carries the switch (CC0 or a keyswitch), the instrument's measured bend range and its key
+        const techs = inst.techniques || [];
+        const tech = techs.find(t => t.key === techKey)
+                  || (inst.ordinary && techs.find(t => t.key === inst.ordinary))
+                  || techs.find(t => t.key === 'ord');
         const port = (tech && tech.port) || inst.port;
         const out = this.outputFor(port);
         if (!out) return null;
-        return { out: out, port: port, ch: ((tech && tech.channel) || 1) - 1, tech: tech };
+        const T = (typeof TRACKS !== 'undefined') ? TRACKS : (root.TRACKS || null);
+        return { out: out, port: port, ch: ((tech && tech.channel) || 1) - 1, tech: tech,
+                 instKey: (T && T[lane]) ? T[lane].instKey : null, bendRangeSt: inst.bendRangeSt || null,
+                 cc0: (tech && tech.cc0 != null) ? tech.cc0 : null, ks: (tech && tech.ks != null) ? tech.ks : null };
     },
 
     // ---- primitives -------------------------------------------------------
     sendBend(route, cents) {
-        const v = M.bendValue(cents);
+        const v = M.bendValue(cents, route.bendRangeSt || undefined);   // the instrument's measured range (§203); the tuba's 1.99 st when unknown
         route.out.send([0xE0 | route.ch, v & 0x7F, (v >> 7) & 0x7F]);
         this._bentCh[route.port + '|' + route.ch] = true;
     },
@@ -226,11 +233,25 @@ const EMIT = {
         // now happens ONLY inside an attack window — takes a proportionally
         // softer velocity. MIDI velocity 0 means note-off, so the floor is 1.
         // Everything else is untouched at 96.
-        const velFor = n => {
-            const l0 = (n.level && n.level[0] && n.level[0][1] != null) ? n.level[0][1] : 10;
-            if (l0 >= 0.4) return velBase;
-            return Math.max(1, Math.round(velBase * (l0 / 0.4)));
+        // THE SEPTET'S LOUDNESS (2026-09-07, §203): as the score plays a held curve note (1g item 5) — the velocity for the TOP of the
+        // note's level curve through the measured remap, CC7 following the height — so the audition and the inserted notes agree;
+        // without a remap (or an unknown instrument) the tuba's path below stands
+        const Cr = HOST(), bank = Cr && Cr._velRemap, VR = root.VelocityRemap || null;
+        const LO = (typeof HELD_LO !== 'undefined') ? HELD_LO : 65, HI = (typeof HELD_HI !== 'undefined') ? HELD_HI : 127;
+        const dynOf = (n, route) => {
+            if (!bank || !VR || !route.instKey) return null;
+            const hMax = Math.max.apply(null, n.level.map(l => l[1])) / 10;
+            return VR.heldNote(bank, route.instKey, n.midi, LO + (HI - LO) * Math.max(0, Math.min(1, hMax)));
         };
+        const velFor = (n, dyn) => {
+            const base = dyn ? dyn.vel : velBase;
+            const l0 = (n.level && n.level[0] && n.level[0][1] != null) ? n.level[0][1] : 10;
+            if (l0 >= 0.4) return base;
+            return Math.max(1, Math.round(base * (l0 / 0.4)));
+        };
+        const ccOf = (n, route, dyn) => (h => dyn
+            ? VR.cc7ForHeight(bank, route.instKey, n.midi, dyn.vel, LO + (HI - LO) * Math.max(0, Math.min(1, h / 10)))
+            : this.levelToCC(h));
         const prearm = (M.MEASURED.BEND_PREARM_S || 0.05) * 1000;
         const scheduled = [];
         let skipped = 0;
@@ -284,17 +305,22 @@ const EMIT = {
             // both places at once. See the note in morph.js toScoreObjects.
             const bend = n.bend.map(pt => [pt[0], pt[1]]);
 
+            const dyn = dynOf(n, route), cc7At = ccOf(n, route, dyn);
             // pre-arm the bend so the note STARTS at pitch (probe 0.3)
             this._timers.push(setTimeout(() => this.sendBend(route, bend[0][1]),
                 Math.max(0, r.onMs - prearm)));
-            // CC7 for this note's opening level; the level curve is followed below
+            // the switch (the septet's CC0 preset or a keyswitch) and CC7 for this note's opening level; the level curve is followed below
             this._timers.push(setTimeout(() => {
-                try { route.out.send([0xB0 | route.ch, 7, this.levelToCC(n.level[0][1])]); } catch (e) {}
+                try {
+                    if (route.cc0 != null) route.out.send([0xB0 | route.ch, 0, route.cc0]);
+                    if (route.ks != null) { route.out.send([0x90 | route.ch, route.ks, 100]); route.out.send([0x80 | route.ch, route.ks, 0]); }
+                    route.out.send([0xB0 | route.ch, 7, cc7At(n.level[0][1])]);
+                } catch (e) {}
             }, Math.max(0, cold ? r.onMs - CC_LEAD_MS : r.onMs - prearm + 5)));
-            this._timers.push(setTimeout(() => this.noteOn(route, key, velFor(n)), r.onMs));
+            this._timers.push(setTimeout(() => this.noteOn(route, key, velFor(n, dyn)), r.onMs));
             this._timers.push(setTimeout(() => this.noteOff(route, key), r.offMs));
             scheduled.push({ route: route, bend: bend, level: n.level, onMs: r.onMs, offMs: r.offMs,
-                             lastB: null, lastC: null });
+                             lastB: null, lastC: null, cc7At: cc7At });
         });
 
         if (!scheduled.length) {
@@ -316,7 +342,7 @@ const EMIT = {
                 const dt = (el - s.onMs) / 1000;
                 const bv = Math.round(this.interp(s.bend, dt));
                 if (bv !== s.lastB) { this.sendBend(s.route, bv); s.lastB = bv; }
-                const cc = this.levelToCC(this.interp(s.level, dt));
+                const cc = s.cc7At ? s.cc7At(this.interp(s.level, dt)) : this.levelToCC(this.interp(s.level, dt));
                 if (cc !== s.lastC) {
                     try { s.route.out.send([0xB0 | s.route.ch, 7, cc]); } catch (e) {}
                     s.lastC = cc;

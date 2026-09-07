@@ -76,6 +76,7 @@ const PANEL = {
         btn.title = 'morphing chords: generate, audition, insert at the playhead (never edits)';
         btn.addEventListener('click', () => this.toggle());
         host.parentNode.insertBefore(btn, host.nextSibling);
+        this.pairs = this.loadPairs();   // the septet's cast (morph_septet.js)
         this.build();
         this.startPolling();
     },
@@ -97,12 +98,13 @@ const PANEL = {
         // mode, by construction rather than by fitting. `resize:both` gives a
         // native grip at the bottom-right for anything this does not cover.
         d.style.cssText = [
-            'position:fixed', 'right:16px', 'top:96px', 'width:340px', 'z-index:9000',
+            // the septet (composer, 2026-09-07: "if you are stepping the fonts up pls make the panel bigger"): 13 px and 500 px wide
+            'position:fixed', 'right:16px', 'top:96px', 'width:500px', 'z-index:9000',
             'background:rgba(28,28,32,0.97)', 'border:1px solid #6a5acd', 'border-radius:6px',
-            'padding:10px 12px', 'color:#ddd', 'font:11px/1.45 system-ui,sans-serif',
+            'padding:10px 12px', 'color:#ddd', 'font:13px/1.45 system-ui,sans-serif',
             'box-shadow:0 6px 24px rgba(0,0,0,0.5)', 'display:none',
             'flex-direction:column', 'max-height:calc(100vh - 120px)',
-            'min-width:300px', 'min-height:200px', 'resize:both', 'overflow:hidden',
+            'min-width:440px', 'min-height:200px', 'resize:both', 'overflow:hidden',
         ].join(';');
         d.innerHTML = [
             '<div id="morphDrag" style="cursor:move;font-weight:600;color:#b9a8ff;',
@@ -399,13 +401,18 @@ const PANEL = {
             ? this.readFields(p)
             : JSON.parse(JSON.stringify(p));
         this._fieldStamp = stamp;
-        // exactly what was rendered, so Save as ACTUAL can store what was HEARD
-        this._lastParams = merged;
+        // exactly what was rendered, so Save as ACTUAL can store what was HEARD — the septet's CAST included: the pairs' players,
+        // the pitches folded per pair, the lanes and the palette (morph_septet.js; RUNNING_LOG §203)
+        const cast = this.castOf(merged);
+        this._cast = cast;
+        this._lastParams = cast ? cast.params : merged;
         try {
-            this.result = M.render(merged, {
-                maxVoices: 10,
+            this.result = M.render(cast ? cast.params : merged, {
+                maxVoices: cast ? 6 : 10,
                 sampleLengths: (HOST() && HOST().sampleLen) || null,
+                palette: cast ? cast.palette : null,
             });
+            if (cast && cast.warnings.length) this.result.warnings = (this.result.warnings || []).concat(cast.warnings);
         } catch (e) {
             this.setStatus('render failed: ' + e.message, true);
             console.error(e); return;
@@ -448,7 +455,7 @@ const PANEL = {
         [['models', 'MODELS'], ['variants', 'scratch'], ['actuals', 'ACTUALs']].forEach(([m, lab]) => {
             const b = document.createElement('button');
             b.textContent = lab + (m === 'actuals' && this.actuals.length ? ' (' + this.actuals.length + ')' : '');
-            b.style.cssText = 'margin-right:4px;font-size:10px;' + (m === this.mode
+            b.style.cssText = 'margin-right:4px;font-size:12px;' + (m === this.mode
                 ? 'background:#6a5acd;color:#fff;border-color:#8f7fe0' : '');
             b.addEventListener('click', () => { this.mode = m; this.generate(); });
             modeRow.appendChild(b);
@@ -538,7 +545,7 @@ const PANEL = {
             w.innerHTML = '<span style="color:#9a9">' + label + '</span>';
             const i = document.createElement('input');
             i.type = 'number'; i.step = step; i.value = val; i.dataset.path = path;
-            i.style.cssText = 'width:74px;background:#1b1b20;color:#ddd;border:1px solid #444;padding:1px 4px';
+            i.style.cssText = 'width:84px;background:#1b1b20;color:#ddd;border:1px solid #444;padding:1px 4px;font-size:13px';
             i.addEventListener('change', () => this.generate());
             w.appendChild(i); f.appendChild(w);
         };
@@ -548,7 +555,7 @@ const PANEL = {
             w.innerHTML = '<span style="color:#9a9">' + label + '</span>';
             const s = document.createElement('select');
             s.dataset.path = path;
-            s.style.cssText = 'width:80px;background:#1b1b20;color:#ddd;border:1px solid #444;padding:1px 2px';
+            s.style.cssText = 'width:96px;background:#1b1b20;color:#ddd;border:1px solid #444;padding:1px 2px;font-size:13px';
             opts.forEach(o => {
                 const op = document.createElement('option');
                 op.value = o; op.textContent = o;
@@ -598,7 +605,7 @@ const PANEL = {
                 lab.textContent = rc.recipe;
                 lab.title = rc.description || '';
                 const val = document.createElement('span');
-                val.style.cssText = 'color:#8a8ac0;font-size:10px';
+                val.style.cssText = 'color:#8a8ac0;font-size:12px';
                 val.textContent = on ? (+set[rc.recipe]).toFixed(2) : 'off';
                 head2.appendChild(cb); head2.appendChild(lab); head2.appendChild(val);
                 w.appendChild(head2);
@@ -651,7 +658,7 @@ const PANEL = {
             pw.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin:3px 0';
             pw.innerHTML = '<span style="color:#9a9">shape preset</span>';
             const psel = document.createElement('select');
-            psel.style.cssText = 'width:130px;background:#1b1b20;color:#ddd;border:1px solid #444';
+            psel.style.cssText = 'width:150px;background:#1b1b20;color:#ddd;border:1px solid #444;font-size:13px';
             [''].concat(Object.keys(ps)).forEach(k => {
                 const o = document.createElement('option');
                 o.value = k; o.textContent = k || '(none)';
@@ -687,6 +694,7 @@ const PANEL = {
         sel('dyn shape', 'dyn.shape', p.dyn.shape || 'swell',
             ['swell', 'rise', 'fall', 'rotate', 'flat']);
         row('seed', 'seed', p.seed, 1);
+        this.drawPairs(f, head, note);   // the septet's cast (§203)
 
         // ------------------------------------------------------------ SHAPE
         // PLAN 2z. The panel SHOWS and NUDGES a shape; it does not build one
@@ -918,7 +926,7 @@ const PANEL = {
         if (!this.result) return;
         const btn = this.el.querySelector('#morphPlay');
         btn.textContent = 'starting…';
-        const r = await E.play(this.result, {});
+        const r = await E.play(this.heard(), {});   // the ticked pairs of the one render (§203)
         if (!r.scheduled) {
             btn.textContent = 'Play';
             this.setStatus(r.reason || 'nothing sounded', true);
@@ -948,7 +956,7 @@ const PANEL = {
         let L;
         try {
             L = M.buildLadder(base, lens, {
-                renderOpts: { maxVoices: 10,
+                renderOpts: { maxVoices: this._cast ? 6 : 10, palette: this._cast ? this._cast.palette : null,
                               sampleLengths: (HOST() && HOST().sampleLen) || null },
             });
         } catch (e) {
@@ -988,7 +996,9 @@ const PANEL = {
         let seq = 1;
         while (C.objects.some(o => o.groupId === 'grp-morph-' + String(seq).padStart(2, '0'))) seq++;
         const gid = 'grp-morph-' + String(seq).padStart(2, '0');
-        const objs = M.toScoreObjects(this.result, at, {
+        const res = this.heard();   // the ticked pairs only — an inserted pair keeps its timing in the whole (§203)
+        if (!res.notes.length) { this.setStatus('nothing to insert — tick a pair', true); return; }
+        const objs = M.toScoreObjects(res, at, {
             groupId: gid, startId: (C.nextId || 1) + 1,
             label: (p.label || this.result.meta.model), color: '#7E57C2',
         });
@@ -1000,7 +1010,7 @@ const PANEL = {
         const span = this.result.meta.span;
         C.objects.push({
             id: 'mk-morph-' + seq, type: 'marker', layer: 0, time: +at.toFixed(3),
-            label: 'MORPH ' + this.result.meta.model + (p.label ? ' — ' + p.label : ''),
+            label: 'MORPH ' + this.result.meta.model + (p.label ? ' — ' + p.label : '') + this.castLabel(),
             color: '#7E57C2', groupId: gid, performanceNotes: '', properties: {},
         });
         objs.forEach(o => C.objects.push(o));
@@ -1010,7 +1020,7 @@ const PANEL = {
         const W = 10, prof = [];
         for (let w = 0; w < W; w++) {
             const a = (span * w) / W, b = (span * (w + 1)) / W;
-            const live = this.result.notes.filter(n => n.tStart < b && n.tStart + n.dur > a);
+            const live = res.notes.filter(n => n.tStart < b && n.tStart + n.dur > a);
             prof.push(live.length
                 ? live.reduce((s, n) => s + n.level[n.level.length - 1][1], 0) / live.length
                 : 0.6);
@@ -1020,7 +1030,7 @@ const PANEL = {
         nds.unshift({ pos: 0, y: nds[0].y, smooth: 0.35 });
         nds.push({ pos: 1, y: nds[nds.length - 1].y, smooth: 0.35 });
         C.objects.push({
-            id: 'wc-morphmeta-' + seq, type: 'waveCurve', layer: 10, groupId: gid,
+            id: 'wc-morphmeta-' + seq, type: 'waveCurve', layer: (typeof META_LAYER !== 'undefined') ? META_LAYER : 10, groupId: gid,
             startSeconds: +at.toFixed(3), endSeconds: +(at + span).toFixed(3),
             nodes: nds, segments: nds.slice(1).map(() => ({ model: 'bezier', slope: 0 })),
             color: '#7E57C2', fillMode: 'bottom', opacity: 0.45,
@@ -1032,6 +1042,76 @@ const PANEL = {
         if (C.markDirty) C.markDirty();
         if (C.scheduleConflictRefresh) C.scheduleConflictRefresh();
         this.setStatus('inserted ' + objs.length + ' notes at ' + at.toFixed(2) + ' s as ' + gid);
+    },
+
+    // ------------------------------------------------------------- THE SEPTET'S CAST (morph_septet.js; RUNNING_LOG §197–203; CN-37)
+    // Three pairs of seats; the model's pitches taken two per pair, folded per pair (D26), the players cast on the lanes; Play and
+    // Insert take the ticked pairs of the one render. The pairs persist in the browser; the cast params go into an ACTUAL as saved.
+    PAIRS_KEY: 'septet.morphPairs.v1',
+    loadPairs() {
+        const SEP = root.MorphSeptet;
+        try {
+            const s = JSON.parse(localStorage.getItem(this.PAIRS_KEY) || 'null');
+            if (Array.isArray(s) && s.length) return s.map(p => ({ a: +p.a, b: +p.b, on: p.on !== false }));
+        } catch (e) {}
+        return (SEP ? SEP.DEFAULT_PAIRS : [{ a: 6, b: 5 }, { a: 3, b: 4 }, { a: 0, b: 1 }]).map(p => ({ a: p.a, b: p.b, on: true }));
+    },
+    savePairs() { try { localStorage.setItem(this.PAIRS_KEY, JSON.stringify(this.pairs)); } catch (e) {} },
+    castEnv() {
+        const SEP = root.MorphSeptet, BC = root.BeatingCalc;
+        const recipe = (typeof INSTRUMENTS !== 'undefined') ? INSTRUMENTS : root.INSTRUMENTS;
+        const tracks = (typeof TRACKS !== 'undefined') ? TRACKS : root.TRACKS;
+        if (!SEP || !BC || !recipe || !tracks) return null;
+        return { recipe: recipe, tracks: tracks, BC: BC, M: M, SEP: SEP };
+    },
+    castOf(params) {
+        const env = this.castEnv(); if (!env) return null;
+        if (!this.pairs) this.pairs = this.loadPairs();
+        return env.SEP.cast(params, this.pairs, env);
+    },
+    heard() { const env = this.castEnv(); return (env && this._cast) ? env.SEP.filterResult(this.result, this._cast) : this.result; },
+    castLabel() {
+        const env = this.castEnv(); if (!env || !this._cast) return '';
+        const on = this._cast.pairs.filter(p => p.on && !p.silent);
+        if (on.length === this._cast.pairs.filter(p => !p.silent).length) return '';
+        return ' · ' + on.map(p => env.SEP.labelOf(env, p.a) + '+' + env.SEP.labelOf(env, p.b)).join(' ');
+    },
+    drawPairs(f, head, note) {
+        const env = this.castEnv();
+        if (!env) { head('PAIRS'); note('the cast needs morph_septet.js, beating_calc.js and the recipe on the page', '#e0b062'); return; }
+        const SEP = env.SEP, cast = this._cast;
+        head('PAIRS · the cast — tick = heard by Play, written by Insert; a seat swaps with whoever sat there');
+        const lanes = SEP.bendingLanes(env);
+        this.pairs.forEach((p, k) => {
+            const w = document.createElement('div');
+            w.style.cssText = 'display:flex;align-items:center;gap:5px;margin:3px 0;white-space:nowrap';
+            const cb = document.createElement('input');
+            cb.type = 'checkbox'; cb.checked = p.on !== false; cb.className = 'morphPairOn'; cb.dataset.pair = String(k);
+            cb.title = 'heard by Play and written by Insert';
+            cb.addEventListener('change', () => { this.pairs[k].on = cb.checked; this.savePairs(); this.generate(); });
+            w.appendChild(cb);
+            const lab = document.createElement('span'); lab.style.cssText = 'color:#9a9;width:46px'; lab.textContent = 'pair ' + (k + 1); w.appendChild(lab);
+            ['a', 'b'].forEach((seat, si) => {
+                if (si) { const plus = document.createElement('span'); plus.textContent = '+'; plus.style.color = '#777'; w.appendChild(plus); }
+                const s = document.createElement('select');
+                s.className = 'morphSeat'; s.dataset.pair = String(k); s.dataset.seat = seat;
+                s.style.cssText = 'width:64px;background:#1b1b20;color:#ddd;border:1px solid #444;padding:1px 2px;font-size:13px';
+                lanes.forEach(L => { const o = document.createElement('option'); o.value = String(L); o.textContent = SEP.labelOf(env, L); if (L === p[seat]) o.selected = true; s.appendChild(o); });
+                s.addEventListener('change', () => { this.pairs = SEP.swapSeat(this.pairs, k, seat, +s.value); this.savePairs(); this.generate(); });
+                w.appendChild(s);
+            });
+            const pt = document.createElement('span'); pt.className = 'morphPairPitch'; pt.style.cssText = 'color:#ddd;margin-left:4px';
+            const cp = cast && cast.pairs[k];
+            pt.textContent = cp ? SEP.describePair(env, cp).replace(/^[^·]*· /, '') : '';
+            if (cp && cp.silent) pt.style.color = '#e06666';
+            w.appendChild(pt);
+            f.appendChild(w);
+        });
+        if (cast) {
+            const seen = {}, bits = [];
+            cast.palette.forEach(x => { if (x && !seen[x.lane]) { seen[x.lane] = 1; bits.push(x.label + ' ' + x.technique + ' ±' + (x.reachCents / 100).toFixed(2) + ' st'); } });
+            note(bits.join(' · '), '#666');
+        }
     },
 
     setStatus(msg, bad, html) {
