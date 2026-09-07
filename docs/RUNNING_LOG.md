@@ -3999,3 +3999,24 @@ F2 41 · B4 71 · G#5 80 · A#4 70 · F#5 78 · F3 53 · E3 52 · F5 77. **Flagg
 (each in its instrument's measured range, none assigned to anyone in the take, all from the strike): flute B4 71 · bass clarinet F3 53
 · piano G6 91 (the note no string reaches) · violin 1 A5 81 (A6 folded an octave, in the strike itself) · violin 2 G#5 80 · viola F#4
 66 · cello F4 65. If the drawer shows a different take, the lines in the picture were read as the tie-breaker.
+
+## §141. "135.84 beginning here can you change all of the trills to minor 2 … a console script instead of a button" — the script, proved on a copy: 43 trills, every one sounding pitch and pitch + 1 after
+
+Composer: *"135.84 beginning here can you change all of the trills to minor 2, You can give me a console script instead of a button if
+that works. 20-pretrillm2"* (his version saved before the change). **Read:** his saved score (the working copy gone — saved and
+clean) holds 69 trills, 43 starting at or after 135.84 s, all with `interval` 2 (a major 2nd; the field is signed semitones, the
+sign the direction). **The script** (pasted in the console of his open score; one undo step; Save when it sounds right):
+
+```
+(() => { const C = Composer, T0 = 135.84; C.pushUndoState(); let n = 0; const was = {};
+  C.objects.filter(o => o.type === 'zone' && o.midiModel === 'trill' && o.startTime >= T0 - 0.001).forEach(z => { const t = C.ensureTrill(z); was[t.interval] = (was[t.interval] || 0) + 1; t.interval = t.interval < 0 ? -1 : 1; C.regenerateTrill(z); C.renderZone(z); n++; });
+  C.markDirty(); if (C.selectedObject && C.selectedObject.midiModel === 'trill') C.showPropertyPanel();
+  C.saveStatus.textContent = n + ' trills from ' + T0 + ' s set to a minor 2nd (before: ' + Object.entries(was).map(([k, v]) => v + ' × ' + k).join(', ') + ') — Save when it sounds right, undo restores';
+  return { changed: n, before: was }; })()
+```
+
+**Verified on a copy of his saved score** (the throwaway server; no console errors): 43 changed (before: 43 × 2); every late trill's
+regenerated snippet (`midiSnippet`, its note events carrying `notes: [pitch]`) holds exactly two pitches, the trill's own and one
+semitone above — 43 of 43; the 23 earlier major-2nd trills untouched, still two pitches a whole tone apart; the status line as
+written. The harness lesson: a trill's sounding pitches are read from `midiSnippet`'s events with a `notes` array, the CC events
+(`_cc`) first. The copy deleted after.
