@@ -180,6 +180,17 @@ the interval inside a pair (unison, fourths, fifths, thirds to try). For the all
 the beating at an interval is between coincident partials (3× / 4× / 5× the unison's rate per cent at the fifth / fourth / major
 third, fainter, timbre-dependent) — the arithmetic and the insertion picture are in RUNNING_LOG §148.
 
+### 2026-09-06 — the pitch set holds the strikes' chords; the piano out of the beating; step 1 opens
+
+> *"In the pitch set, let's include the forty five or forty six play courts for the strikes. In addition to those other
+> similarities. sonorities; So the piano probably won't be used in the beating. I'll use it in the main score in other ways. And then
+> good for step one."*
+> *(2026-09-06, session 4, evening; speech-to-text, content untouched — "play courts" = played chords, "similarities" = sonorities)*
+
+**AI reading (not the composer's words):** the pitch set = the strikes' played chords (the bank) + the relations; the piano is out
+of the beating altogether (no anchor role), which leaves six players → up to three pairs; the top line of RUNNING_LOG §148 stands
+and phase 3 begins at step 1, the palette.
+
 
 ## 4 · For the eventual revision (the digest — rewritten freely)
 

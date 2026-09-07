@@ -871,3 +871,15 @@ at both ends of a glissando, MORPH_NOTATION; his rule there: no precise cents, a
 material is made — a rendered reference per event, a demonstration track, the rehearsal notes — is a phase 2 / performance-score
 question; noted for MORPH_NOTES §3 as well, since the morph tool's output would be its source. Held aside during the 1f talk (one
 topic at a time).
+
+---
+
+## CN-34 · 2026-09-06 — the piano stays out of the beating; the beating's pitch set is the strikes' chords
+
+> *"In the pitch set, let's include the forty five or forty six play courts for the strikes. In addition to those other
+> similarities. sonorities; So the piano probably won't be used in the beating. I'll use it in the main score in other ways."*
+> *(2026-09-06, session 4, evening, during the PLAN 1f talk; speech-to-text, content untouched — "play courts" = played chords)*
+
+**AI reading (not the composer's words):** an orchestration decision for section 2: the beatings are for the six bending players
+(flute, bass clarinet, the two violins, viola, cello — up to three pairs); the piano keeps its own material in the score. The
+beatings' pitches come from the strikes' played chords, so section 2's sonorities are section 1's chords held and bent.

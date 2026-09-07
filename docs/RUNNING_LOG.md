@@ -4309,3 +4309,21 @@ per pair, the sonority between pairs, the interval inside a pair) · 6 insertion
 requirements doc (`docs/BEATING_TOOL.md`, the TRILLS_TOOL pattern) and MORPH_NOTES, commit · 8 later: the shuffle as a writer,
 cycles for section 3 (CN-33), the training material, the notation at 2a. His to confirm, reorder, rename; then phase 3, step 1.
 Nothing built.
+
+## §149. "let's include the forty five or forty six play[ed] c[h]ords for the strikes … the piano probably won't be used in the beating … good for step one" — the pitch set holds the strikes' chords; the piano out of the beating; the top line stands; phase 3 opens at step 1
+
+Composer: *"In the pitch set, let's include the forty five or forty six play courts for the strikes. In addition to those other
+similarities. sonorities; So the piano probably won't be used in the beating. I'll use it in the main score in other ways. And then
+good for step one."* (speech-to-text: "play courts" = played chords; "similarities" = sonorities)
+
+**DECIDED:** (1) the pitch set of the beating panel holds the strikes' played chords (the strikes bank, 45–46 of them; the score has
+48 strike groups — the count to be read when built) beside the relations (unison · thirds · fifths · other); (2) **the piano is out
+of the beating** — not even as an anchor; his use for it lies elsewhere in the score (CN-34); (3) the top line of §148 stands;
+**phase 3 opens at step 1, the palette.** Six players in the beating: flute, bass clarinet, violin 1, violin 2, viola, cello.
+
+**Facts read for step 1's goal:** the bend probe kit came over with the port — `probes/bend_probe.ps1`, `probes/analyze_bend_probe.py`,
+`probes/selftest_bend_analyzer.py`, run through `tools/probe_run.sh`; the score's plain tick sends `morphBend` against the tuba's
+hard-coded ±1.99 st (`composer.html:10112`), so a per-instrument range is a step-3 change the palette must feed; the ordinary voices'
+measured ranges exist (`MEASURED_RANGES` in `sandbox/instruments.js`: flute ord 60–96, bass clarinet senza 34–65, the violins senza
+55–101 …), so the pairing rules can be computed from them. **Put to him:** step 1's goal in format A (below in the chat, mirrored into
+PLAN 1f once the sub-steps are agreed). Nothing built.
