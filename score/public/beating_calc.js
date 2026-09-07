@@ -188,20 +188,25 @@
   const r3 = v => Math.round(v * 1000) / 1000;
   function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 
-  // ---- curves: [[p, v], …] over p 0 → 1, linear between the points, held flat beyond the ends; a number is a flat curve ----
+  // ---- curves: [[p, v, slope?], …] over p 0 → 1, held flat beyond the ends; a number is a flat curve. The SLOPE (2026-09-07, the
+  // composer: "curve adjusting features like curves in main score … use mouse to change slope, like in logic pro") is the score's
+  // own power model (computeYAtT 'power'): between a point and the next, y = a + (b − a) · t^(4^slope), slope −1 … +1, 0 = straight;
+  // the slope rides on the segment's FIRST point and survives sorting, scaling and mirroring ----
+  const slopeOf = q => (q && q.length > 2 && isFinite(+q[2]) ? clamp(+q[2], -3, 3) : 0);
   function curveOf(x) {
     if (typeof x === 'number') return [[0, x], [1, x]];
     if (!Array.isArray(x) || !x.length) return [[0, 0], [1, 0]];
-    const pts = x.map(q => [clamp01(+q[0]), +q[1]]).sort((a, b) => a[0] - b[0]);
+    const pts = x.map(q => { const s = slopeOf(q); return s ? [clamp01(+q[0]), +q[1], s] : [clamp01(+q[0]), +q[1]]; }).sort((a, b) => a[0] - b[0]);
     return pts.length === 1 ? [[0, pts[0][1]], [1, pts[0][1]]] : pts;
   }
+  const bend01 = (t, s) => (s ? Math.pow(clamp01(t), Math.pow(4, s)) : clamp01(t));
   function evalCurve(curve, p) {
     const c = curveOf(curve);
     if (p <= c[0][0]) return c[0][1];
-    for (let i = 1; i < c.length; i++) if (p <= c[i][0]) { const a = c[i - 1], b = c[i]; const w = b[0] - a[0]; return w <= 1e-9 ? b[1] : a[1] + (b[1] - a[1]) * (p - a[0]) / w; }
+    for (let i = 1; i < c.length; i++) if (p <= c[i][0]) { const a = c[i - 1], b = c[i]; const w = b[0] - a[0]; return w <= 1e-9 ? b[1] : a[1] + (b[1] - a[1]) * bend01((p - a[0]) / w, slopeOf(a)); }
     return c[c.length - 1][1];
   }
-  const scaleCurve = (curve, k) => curveOf(curve).map(q => [q[0], q[1] * k]);
+  const scaleCurve = (curve, k) => curveOf(curve).map(q => (q.length > 2 ? [q[0], q[1] * k, q[2]] : [q[0], q[1] * k]));
   const maxOf = curve => Math.max(...curveOf(curve).map(q => Math.abs(q[1])));
   // the shapes of the panel's menu (step 4): a few points, each a handle; `arc` is a raised cosine sampled at nine points
   const SHAPES = {
@@ -396,6 +401,6 @@
 
   return { ORDER, INTERVALS, LADDER_ORDER, intervalOf, noteName, midiHz, players, ordinaryVoice, ordinaryRange, bendLimits, holds, pairsFor, pairingTable, describePalette,
            foldPair, foldMark, pairLadder, seatOptions, VOICINGS, voiceChord, shuffled, mulberry32,
-           curveOf, evalCurve, scaleCurve, SHAPES, shape, mirrored, flatPartner, levelFromBeat, rateToCents, centsToRate, beatRate, ZONES, zoneOf,
+           curveOf, evalCurve, scaleCurve, slopeOf, bend01, SHAPES, shape, mirrored, flatPartner, levelFromBeat, rateToCents, centsToRate, beatRate, ZONES, zoneOf,
            CEILINGS, ceilingFor, dealBreaths, breathSpans, renderPair, renderPattern, stretch, describePair };
 });

@@ -111,6 +111,13 @@ own server (:5300); the AI built at his word, one chunk at a time:
   offers, the players' ranges as columns on the keyboard, the three-state keys, the dotted lines from key to node, the take's
   `voicing`; B folds the same way; the labels show the fold. Verified with real DOM events on a copy (`zz-ai-pitch2`, deleted).
   **His test pending (a hard reload first).**
+- **His first hour with the drawer, afternoon (§182; BEATING_TOOL §13; MORPH_NOTES §3), nine asks built in one pass at his word:** the
+  sequence strip (a track per pair, the pair a zone dragged and stretched like the trill zones, a bound zone moving in the score), a
+  length and a play per pair, the sequence box stretching everything in proportion, SPACE by focus (sequence · pair · chord) and the
+  number boxes freed, the score's slope diamonds on the rate curves and the crescendo (`[p, v, slope]` in the block), the level box
+  keeping a drawn shape (the "snaps back" was the level box popping a burst), pair takes (`beatingPairs`), the crosshair; the stutter
+  examined — the emitted streams are as smooth as #1's, his A/B pending; the 0–1 level answered (the curve height). Verified on a copy
+  (`zz-ai-seq`, deleted). **Next: the discussion he asked for on how to proceed — then his test.**
 - **Tools on his hands (§111–114):** the bend cursor only when Points is off; TRILLS phase 4 (a trill runs to the player's next
   strike note, a stretch regenerates at once); a nudged trill keeps its attack note (a 60 ms eating window; the drag keeps a
   trill's start; the articulation switch arbitrated on a shared sampler slot — the tail and the lead); the drawer's pick no

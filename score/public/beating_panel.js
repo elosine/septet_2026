@@ -52,6 +52,11 @@ const KB = { w: 236, top: 18, colX: 6, colGap: 6, colW: 3, cX: 40, nameX: 72, ke
 const INST_COL = { flute: '#ffd479', bass_clarinet: '#e08a8a', violin1: '#8ea9c9', violin2: '#69b7c9', viola: '#b58ec9', cello: '#7ec9a8' };
 const SEED_KEEP = 8;   // the strikes drawer's U8: the last seeds as chips
 const VOICING_DEFAULTS = () => ({ preset: 'original', seed: 1, oct: 0, below: 0, above: 0, hist: [] });
+// the sequence (2026-09-07, the composer: "a length for the entire sequence and a play for the entire sequence … for each pair, there
+// should be a length, a duration, and then the play for just that pair … a track for every pair … drag them like I can the trill zones")
+const PRESET_SHAPES = ['flat', 'rampOut', 'rampIn', 'hump', 'arc', 'burst'];   // the menu's shapes: the level box pops them in again; a drawn one is scaled
+const SEQ_H = 30;                 // a track's height in the sequence strip
+const PAIRS_PANEL = 'beatingPairs';   // the pair takes' bucket in bank/panel_snapshots.json
 const RELATIONS = [['unison1', 'unison · 1 oct', 'every pair on the root, one octave (a field on one pitch — the tuba\'s bloom)'], ['unisonOcts', 'unison · octaves', 'the root\'s pitch class spread across octaves, a pair per octave'],
                    ['thirds', 'thirds', 'a stack of thirds from the root (root · +4 · +7)'], ['fourths', 'fourths', 'a stack of fourths (root · +5 · +10)'], ['fifths', 'fifths', 'a stack of fifths (root · +7 · +14)'], ['stack', 'stack', 'the typed stack: semitones above the root, one per pair']];
 const parseNote = s => { s = String(s || '').trim(); if (!s) return null; if (/^\d+$/.test(s)) return +s; const m = /^([A-Ga-g])([#b]?)(-?\d)$/.exec(s); if (!m) return null; const pc = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1].toUpperCase()] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0); return (parseInt(m[3], 10) + 1) * 12 + pc; };
@@ -61,7 +66,8 @@ const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(
 const nn = m => BC_().noteName(m);
 
 const P = {
-    el: null, rows: [], length: 6, bound: null, takeList: {}, _timer: null, _aud: null, _drag: null, status: '',
+    el: null, rows: [], length: 6, bound: null, takeList: {}, pairTakes: {}, _timer: null, _aud: null, _drag: null, status: '',
+    focus: 'sequence',   // what SPACE plays: 'sequence' | 'pair' (the active row) | 'chord' — set by where he last clicked
     db: null, banks: null, harmony: null, collapsed: {}, chord: [], chordId: '', armed: null, armedIdx: null, activeRow: 0, show88: false, rootMode: false, relation: 'unison1',
     voicing: VOICING_DEFAULTS(),   // the sonority's voicing: the preset, the seed, the octave box, the octave range (saved with the take)
 
@@ -82,10 +88,11 @@ const P = {
             '<span id="bpClose" title="close (ESC)" style="cursor:pointer;color:#888;font-size:18px;padding:0 4px">&#10005;</span></div>',
             '<div id="bpStatus" style="color:#9a9;margin-bottom:6px;flex:0 0 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>',
             '<div id="bpHead" style="flex:0 0 auto;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:6px">',
-            '<label>length <input id="bpLen" type="number" step="0.5" min="0.5" max="180" style="width:56px"> s</label>',
+            '<label title="the whole sequence: typing a new length stretches every pair and its offset in proportion (the shapes kept)">sequence <input id="bpLen" type="number" step="0.5" min="0.5" max="180" style="width:56px"> s</label>',
             '<button id="bpAdd" title="another pair (up to three)">+ pair</button>',
-            '<button id="bpPlay" title="SPACE: the pattern through the score&#8217;s MIDI path, all pairs, real time">&#9654; play (space)</button>',
+            '<button id="bpPlay" title="the whole sequence: all pairs at their offsets, through the score&#8217;s MIDI path">&#9654; sequence</button>',
             '<button id="bpStop">&#9632; stop</button>',
+            '<span id="bpSpace" style="color:#9a9" title="what SPACE plays — the sequence, the active pair, or the chord — set by where you last clicked; SPACE while playing stops"></span>',
             '<span style="margin-left:auto"></span>',
             '<input id="bpTakeName" type="text" placeholder="take name" style="width:110px" title="ENTER saves">',
             '<button id="bpTakeSave" title="save this pattern as a named take in bank/panel_snapshots.json">save take</button>',
@@ -115,6 +122,9 @@ const P = {
             '<button id="bpVRe" title="a different realization of the same voicing preset &#8212; a new seed; with an octave range the notes scatter inside it">&#8635; reshuffle voicing</button>',
             '<span id="bpSeeds"></span>',
             '</div>',
+            // THE SEQUENCE STRIP (2026-09-07): a track per pair, the pair a zone drawn with its heard-beating curve — dragged in time, stretched
+            // at its right edge, started later at its left edge (the trill zones' handling); the rows follow live
+            '<div id="bpSeqWrap" style="flex:0 0 auto;margin-bottom:6px;border:1px solid #3a3a44;border-radius:4px;background:#1a1a20;overflow:hidden"><svg id="bpSeq" style="display:block"></svg></div>',
             // the body: three columns, each scrolling on its own — the harmonies on the left in banners (CN-36, the strikes drawer's list), the
             // keyboard, the rows; over them the LINES from the assigned keys to the pairs' nodes (the strikes drawer's dotted lines)
             '<div id="bpBody" style="flex:1 1 auto;display:flex;gap:8px;overflow:hidden;min-height:0;margin:0 -4px;padding:0 4px;position:relative">',
@@ -136,8 +146,9 @@ const P = {
         this.applyHeight();
         d.querySelector('#bpClose').addEventListener('click', () => this.close());
         d.querySelector('#bpAdd').addEventListener('click', () => this.addRow());
-        d.querySelector('#bpPlay').addEventListener('click', () => this.play());
+        d.querySelector('#bpPlay').addEventListener('click', () => { this.setFocus('sequence'); this.play(); });
         d.querySelector('#bpStop').addEventListener('click', () => this.stop());
+        d.querySelector('#bpSeq').addEventListener('mousedown', ev => { if (ev.target === ev.currentTarget || ev.target.tagName === 'line' || ev.target.tagName === 'text') this.setFocus('sequence'); });
         d.querySelector('#bpLen').addEventListener('change', ev => this.setLength(parseFloat(ev.target.value)));
         d.querySelector('#bpTakeSave').addEventListener('click', () => this.saveTake());
         d.querySelector('#bpTakeName').addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); ev.stopPropagation(); this.saveTake(); });
@@ -145,7 +156,7 @@ const P = {
         d.querySelector('#bpTakeDel').addEventListener('click', () => this.deleteTake());
         d.querySelector('#bpInsert').addEventListener('click', () => this.insert());
         // the pitch side's controls
-        d.querySelector('#bpHear').addEventListener('click', () => this.hearChord());
+        d.querySelector('#bpHear').addEventListener('click', () => { this.setFocus('chord'); this.hearChord(); });
         d.querySelector('#bpRel').innerHTML = RELATIONS.map(([k, l, t]) => '<button class="bpRelBtn" data-rel="' + k + '" title="' + esc(t) + '" style="font-size:12px;padding:1px 5px;margin:1px;cursor:pointer">' + l + '</button>').join('');
         d.querySelectorAll('.bpRelBtn').forEach(b => b.addEventListener('click', () => { this.relation = b.dataset.rel; this.rootMode = true; this.paintRelation(); this.setStatus('relation ' + b.textContent + ' — click a key for the root (or type it) and deal'); }));
         d.querySelector('#bpDeal').addEventListener('click', () => this.deal());
@@ -170,10 +181,10 @@ const P = {
         window.addEventListener('keydown', ev => {
             if (ev.code !== 'Space' || !this.el || this.el.style.display === 'none') return;
             const t = ev.target, m = q => !!(t && t.matches && t.matches(q));
-            if (m('textarea, input[type=text], input[type=number], input[type=search], input:not([type])')) return;
-            if (m('select, button')) t.blur();
+            if (m('textarea, input[type=text], input[type=search], input:not([type])')) return;   // text entry keeps its SPACE
+            if (m('select, button, input[type=number]')) t.blur();   // a number box never traps SPACE (composer, 2026-09-07)
             ev.preventDefault(); ev.stopPropagation();
-            if (this._aud) this.stop(); else this.play();
+            this.spaceBar();
         }, true);
     },
     // the height: full page or half, remembered in the browser (the strikes drawer's way)
@@ -206,9 +217,10 @@ const P = {
         const mates = zone.groupId ? C.objects.filter(o => o.type === 'zone' && o.midiModel === 'beating' && o.groupId === zone.groupId).sort((a, b) => a.startTime - b.startTime) : [zone];
         const first = mates[0].startTime;
         this.patternGroupId = zone.groupId || null; this.insertAt = null;
-        this.rows = mates.map(z => { C.ensureBeating(z); return this.mkRow(z.layer, z.beating, r3(z.startTime - first), z); });
-        this.length = r3(Math.max(0.1, Math.max.apply(null, mates.map(z => z.endTime - z.startTime))));
-        this.activeRow = 0; this.armed = null; this.armedIdx = null; this.voicing = VOICING_DEFAULTS();
+        this.boundFirst = first;
+        this.rows = mates.map(z => { C.ensureBeating(z); return this.mkRow(z.layer, z.beating, r3(z.startTime - first), z, r3(Math.max(0.1, z.endTime - z.startTime))); });
+        this.length = this.seqLength();
+        this.activeRow = 0; this.armed = null; this.armedIdx = null; this.voicing = VOICING_DEFAULTS(); this.focus = 'pair';
         this.show(); this.render();
         this.setStatus((mates.length > 1 ? 'bound to the pattern ' + zone.groupId + ' (' + mates.length + ' pairs) — every edit regenerates its beatings; insert replaces it in place' : 'bound to ' + C.beatingLabel(zone) + ' — every edit regenerates it') + '; SPACE plays; ESC closes');
         // a beating born on a strike note opens on that strike's chord (the strike by the note's id, its group, or its time)
@@ -217,7 +229,7 @@ const P = {
     // the Beating button with nothing bound: an empty pattern that lives here until Insert (step 6)
     openNew() {
         this.init(); const C = C_();
-        this.bound = null; this.patternGroupId = null; this.insertAt = null;
+        this.bound = null; this.patternGroupId = null; this.insertAt = null; this.boundFirst = null; this.focus = 'sequence';
         // the starting point (§160, kept as a convenience): a selected strike note gives the first row its pitch and the insert its time — no link
         const sel = C && C.selectedObject, note = (sel && sel.type === 'waveCurve' && sel.sonifyNote != null && sel.layer < METAL() && sel.layer !== 2) ? sel : null;
         if (!this.rows.length || this.rows.some(r => r.zone) || note) { this.rows = []; const r = this.defaultRow(note ? note.layer : (C ? C.activeLane : 3)); if (r) this.rows.push(r); }
@@ -232,7 +244,7 @@ const P = {
         this.setStatus(this.rows.length ? 'a new pattern' + (note ? ' from the strike note ' + nn(note.sonifyNote) + ' at ' + note.startSeconds.toFixed(2) + ' s (its pitch on the first pair, its onset the insert time — no link)' : '') + ' — pick a strike or deal a relation for the pitches, shapes pop in from the menu, SPACE plays it, insert puts it in the score' : 'no pair can be made on this lane', !this.rows.length);
         this.loadDb().then(() => this.drawKeyboard());
     },
-    mkRow(layer, b, offset, zone) { return { layer, b, offset: offset || 0, zone: zone || null, locked: true, draw: false, scale: 6, out: null }; },
+    mkRow(layer, b, offset, zone, length) { return { layer, b, offset: offset || 0, length: r3(Math.max(0.1, +length || this.length || 6)), zone: zone || null, locked: true, draw: false, scale: 6, out: null }; },
     // a new pair on a lane: the partner the nearest lane that can pair on the lane's middle note — never a player already in the
     // pattern (a player in two pairs would carry two bend streams on one channel: a sum, wrong); the rows warn if it happens by hand
     defaultRow(layer, used) {
@@ -265,7 +277,7 @@ const P = {
     // ------------------------------------------------------------------ the math per row (the panel's lines) and the objects
     rowSpec(row) {
         const C = C_();
-        const z = row.zone || { layer: row.layer, startTime: 0, endTime: this.length, beating: row.b, id: 'bp-row' };
+        const z = row.zone || { layer: row.layer, startTime: 0, endTime: row.length, beating: row.b, id: 'bp-row' };
         return C.beatingSpec(z);
     },
     rowOut(row) { const BC = BC_(); row.out = BC.renderPair(this.rowSpec(row), INST()); return row.out; },
@@ -279,23 +291,60 @@ const P = {
             if (now) go(); else this._timer = setTimeout(go, 120);
         }
     },
+    // ---- the sequence: every pair has its own length and offset; the sequence is as long as the last pair's end ----
+    seqLength() { return r3(Math.max(0.1, ...this.rows.map(r => (r.offset || 0) + (r.length || 0)), 0.1)); },
+    // the whole sequence stretched: every pair's offset and length in proportion (the curves are over normalised time; the slides and the
+    // hand marks scale; dealt breaths re-deal)
     setLength(v) {
         if (!(v > 0)) return;
-        const BC = BC_(), old = this.length; this.length = r3(v);
-        this.rows.forEach(r => {   // the curves are over normalised time; the slides and the hand marks scale; dealt breaths re-deal
-            const s = BC.stretch({ length: old, slide: r.b.slide, breath: r.b.breath }, this.length);
-            r.b.slide = s.slide; r.b.breath = s.breath;
-            if (r.zone) { r.zone.endTime = r3(r.zone.startTime + this.length); }
-            this.changed(r, true);
+        const BC = BC_(), old = this.seqLength(), k = v / old;
+        this.rows.forEach(r => {
+            const s = BC.stretch({ length: r.length, slide: r.b.slide, breath: r.b.breath }, r.length * k);
+            r.b.slide = s.slide; r.b.breath = s.breath; r.offset = r3((r.offset || 0) * k); r.length = r3(Math.max(0.1, r.length * k));
+            this.placeZone(r); this.changed(r, true);
         });
         this.render();
-        this.setStatus('length ' + this.length + ' s — the same shapes over it; the breaths re-dealt');
+        this.setStatus('sequence ' + this.seqLength() + ' s — every pair and its offset stretched in proportion, the shapes kept, the breaths re-dealt');
+    },
+    // one pair's own duration: the same shapes over it (the composer, 2026-09-07: "keep the custom shape and just change the duration")
+    setRowLength(row, v) {
+        if (!(v > 0)) return;
+        const BC = BC_(), s = BC.stretch({ length: row.length, slide: row.b.slide, breath: row.b.breath }, v);
+        row.b.slide = s.slide; row.b.breath = s.breath; row.length = r3(Math.max(0.1, v));
+        this.placeZone(row); this.changed(row, true); this.render();
+    },
+    // a bound zone follows its row's offset and length in the score (the group's first start is the origin)
+    placeZone(row) {
+        if (!row.zone) return;
+        const first = this.boundFirst != null ? this.boundFirst : row.zone.startTime - (row.offset || 0);
+        row.zone.startTime = r3(first + (row.offset || 0)); row.zone.endTime = r3(row.zone.startTime + row.length);
+    },
+    // the level box (the "to" rate): a preset shape pops in again at the new level; a drawn or dragged shape is SCALED to it — the composer,
+    // 2026-09-07: "Can I have the new beating level keep the custom shape" (it used to pop a burst in)
+    setLevel(row, to) {
+        const BC = BC_(), b = row.b; b.rateTo = to;
+        const unlocked = !!(b.rate && b.rate.lower && b.rate.upper);
+        if (PRESET_SHAPES.includes(b.shape) && !unlocked) { this.popShape(row, b.shape); return; }
+        const out = this.rowOut(row), k = out.maxBeat > 1e-6 ? to / out.maxBeat : 0;
+        if (unlocked) { b.rate.lower = BC.scaleCurve(b.rate.lower, k); b.rate.upper = BC.scaleCurve(b.rate.upper, k); }
+        else b.beat = BC.scaleCurve(BC.curveOf(this.heardCurve(row)), k);
+        b.shape = 'drawn';
+    },
+    // what SPACE plays (2026-09-07: "somehow I listen to the entire sequence with space … if I'm working with a pair, I just listen to the
+    // pair with space. And if I'm in the chord shapes, I just listen to the chord with space")
+    setFocus(f) { this.focus = f; this.paintFocus(); },
+    paintFocus() { const s = this.el && this.el.querySelector('#bpSpace'); if (!s) return; const f = this.focus || 'sequence'; s.textContent = 'space → ' + (f === 'pair' ? 'pair ' + (this.activeRow + 1) : f === 'chord' ? 'chord' : 'sequence'); },
+    spaceBar() {
+        if (this._aud) { this.stop(); return; }
+        const f = this.focus || 'sequence';
+        if (f === 'chord') this.hearChord(); else if (f === 'pair' && this.rows[this.activeRow]) this.playRow(this.activeRow); else this.play();
     },
 
     // ------------------------------------------------------------------ the rendering
     render() {
         if (!this.el) return;
         const C = C_(), BC = BC_();
+        this.length = this.seqLength();
         this.el.querySelector('#bpLen').value = this.length;
         this.el.querySelector('#bpTitle').textContent = this.patternGroupId ? '— pattern ' + this.patternGroupId + ' · ' + this.rows.length + ' pair' + (this.rows.length > 1 ? 's' : '') : this.bound ? '— ' + (TRK()[this.bound.layer] || {}).short + ' ' + this.bound.startTime.toFixed(2) + ' s' : '— new pattern' + (this.insertAt != null ? ' @ ' + this.insertAt.toFixed(2) + ' s' : '');
         this.el.querySelector('#bpAdd').disabled = (!!this.bound && !this.patternGroupId) || this.rows.length >= MAX_ROWS;
@@ -305,7 +354,7 @@ const P = {
         this.rows.forEach((row, i) => { this.rowOut(row); host.appendChild(this.buildRow(row, i)); });
         if (!this.rows.length) host.innerHTML = '<div style="color:#888;padding:12px">no pairs — + pair</div>';
         if (this.activeRow >= this.rows.length) this.activeRow = Math.max(0, this.rows.length - 1);
-        this.drawKeyboard(); this.paintRelation(); this.paintVoicing();
+        this.drawKeyboard(); this.paintRelation(); this.paintVoicing(); this.drawSeq(); this.paintFocus();
         const ar = this.el.querySelector('#bpArmed'); if (ar) ar.textContent = this.armed != null ? nn(this.armed) + ' armed — click a pair\'s node (or drag it there)' : (this.rootMode ? 'root mode: click a key' : '');
         requestAnimationFrame(() => this.renderLines());
     },
@@ -409,6 +458,7 @@ const P = {
         box.style.cssText = 'border:1px solid #444;border-left:4px solid ' + ROW_COLORS[i % ROW_COLORS.length] + ';border-radius:5px;padding:6px 8px;margin-bottom:8px;background:' + (i === this.activeRow ? 'rgba(123,63,228,0.08)' : 'rgba(255,255,255,0.03)');
         // the pitch side: a click on the row's header takes the armed note (or makes the row the active one — the keyboard dims for it);
         // a note dragged from the keyboard lands the same way
+        box.addEventListener('mousedown', () => { if (this.activeRow !== i) { this.activeRow = i; this.paintFocus(); } this.focus = 'pair'; this.paintFocus(); });   // the row under the mouse is the pair SPACE plays
         box.addEventListener('click', ev => { if (ev.target.closest('input, select, button, svg')) return; if (this.armed != null) this.assign(i, this.armed); else if (this.activeRow !== i) { this.activeRow = i; this.render(); } });
         box.addEventListener('dragover', ev => { ev.preventDefault(); box.style.outline = '2px dashed ' + ROW_COLORS[i % ROW_COLORS.length]; });
         box.addEventListener('dragleave', () => { box.style.outline = ''; });
@@ -428,6 +478,9 @@ const P = {
             ' ' + chip(RP.partner, !folded),
             ' on <input class="bpPitch" type="number" value="' + src + '" min="21" max="108" step="1" style="width:50px" title="the note as given (the sonority&#8217;s, or typed) &#8212; the pair folds it as one unit to the nearest octave both reach, as written first, a tie down"> <span style="color:#aaa">' + nn(src) + (folded && RP.k ? ' &#8594; ' + nn(b.pitch) + RP.mark : '') + (iv.semitones && folded ? ' + ' + nn(b.pitch + iv.semitones) : '') + (b.noteIndex != null ? ' <span style="color:#777" title="the pair remembers which note of the sonority it holds: the voicings and the octave box move it and the pair follows">note ' + (b.noteIndex + 1) + '</span>' : '') + '</span>',
             ' <span>' + Object.values(BC.INTERVALS).map(q => btn('bpIv', 'data-iv="' + q.key + '"', q.label, b.interval === q.key, q.label + ': the just offset ' + q.justOffsetCents + ' c on the upper note, the beating ' + q.partial + '× per cent')).join('') + '</span>',
+            // this pair's own length and its own play (2026-09-07)
+            ' <label style="color:#888" title="this pair&#8217;s own duration &#8212; the curves keep their shape over it; the sequence strip&#8217;s right edge does the same">len <input class="bpRowLen" type="number" step="0.5" min="0.5" max="180" value="' + row.length + '" style="width:52px"> s</label>',
+            ' ' + btn('bpRowPlay', '', '&#9654; pair', false, 'hear this pair alone — SPACE does the same while the pair is the focus'),
             (b.skip ? ' <span style="color:#e88">&#10005; skipped &#8212; nobody plays it</span> ' + btn('bpUnskip', '', 'play it', false, 'take the skip off') : ''),
             (row.zone ? '' : ' <button class="bpRemove" title="remove this pair" style="margin-left:auto;font-size:12px;cursor:pointer">&#10005; pair</button>'),
             '</div>',
@@ -444,17 +497,21 @@ const P = {
             ' ' + btn('bpLock', '', row.locked ? '&#128274; mirrored' : '&#128275; free', row.locked, 'the mirror lock: drag one curve, the other mirrors (ALT-drag moves one alone)'),
             ' ' + btn('bpDraw', '', '&#10002; draw', row.draw, 'draw: click in the rate area to add points (ESC or click again to end)'),
             ' <label style="color:#888">±<input class="bpScale" type="number" value="' + row.scale + '" min="2" max="40" step="1" style="width:40px" title="the rate axis, beats per second"></label>',
+            // the pair takes (2026-09-07: "a save for individual pairs settings"): the curves, the level, the breaths, the interval, the length, under a name
+            ' <span style="margin-left:auto;display:inline-flex;gap:4px;align-items:center"><input class="bpPairName" type="text" placeholder="pair take" style="width:90px" title="a name for this pair&#8217;s settings (the curves, the level, the breaths, the interval, the length) &#8212; ENTER saves">'
+                + '<button class="bpPairSave" title="save this pair&#8217;s settings as a named pair take (bank/panel_snapshots.json, the beatingPairs bucket)">save pair</button>'
+                + '<select class="bpPairSel" style="max-width:120px" title="load a pair take into this pair: its curves, level, breaths, interval and length; the players and the note stay"><option value="">load pair&#8230;</option>' + Object.keys(this.pairTakes || {}).sort().map(n => '<option value="' + esc(n) + '">' + esc(n) + '</option>').join('') + '</select></span>',
             '</div>',
             '<svg class="bpRates" width="' + W + '" height="' + HR + '" style="display:block;background:#1a1a20;border-radius:3px"></svg>',
             '<div style="display:flex;gap:8px;align-items:center;margin:3px 0 2px"><span style="color:#888">crescendo</span> ' + SHAPES.map(([k, l]) => btn('bpLevShape', 'data-shape="' + k + '"', l, false, 'the level shape between low and high')).join('')
                 + ' ' + btn('bpLevFollow', '', 'follows the beating', !b.levelCurve, 'the crescendo follows the beating between low and high')
-                + ' low <input class="bpLevLo" type="number" value="' + b.levelLo + '" min="0" max="1" step="0.05" style="width:44px"> high <input class="bpLevHi" type="number" value="' + b.levelHi + '" min="0" max="1" step="0.05" style="width:44px"></div>',
+                + ' low <input class="bpLevLo" type="number" value="' + b.levelLo + '" min="0" max="1" step="0.05" style="width:44px" title="the score&#8217;s curve height, not dB and not raw velocity: 0 = the softest held dynamic, 1 = fff, the same loudness on every instrument through the loudness remap (velocity + a CC7 trim per instrument, measured in the rack)"> high <input class="bpLevHi" type="number" value="' + b.levelHi + '" min="0" max="1" step="0.05" style="width:44px" title="the score&#8217;s curve height: 0 = the softest held dynamic, 1 = fff, equal loudness across instruments through the remap"></div>',
             '<svg class="bpLevel" width="' + W + '" height="' + HL + '" style="display:block;background:#1a1a20;border-radius:3px"></svg>',
             '<div style="display:flex;gap:8px;align-items:center;margin:3px 0 2px"><span style="color:#888">breaths</span> <select class="bpBreath">' + ['one', 'continuous', 'designated'].map(k => '<option value="' + k + '"' + ((b.breath.mode || 'one') === k ? ' selected' : '') + '>' + k + '</option>').join('') + '</select>'
                 + ' ' + btn('bpShuffle', '', '&#8635; shuffle', false, 'deal the breaths again from a new seed — the hand-moved marks stay') + ' <span style="color:#888">seed ' + (b.breath.seed || 1) + '</span>'
                 + ' <span class="bpBreathInfo" style="color:#888"></span></div>',
             '<svg class="bpBreaths" width="' + W + '" height="' + HB + '" style="display:block;background:#1a1a20;border-radius:3px"></svg>',
-            '<div style="display:flex;gap:8px;align-items:center;margin-top:3px"><span style="color:#888">offset</span> <input class="bpOffset" type="range" min="0" max="' + Math.max(0.1, this.length) + '" step="0.05" value="' + row.offset + '" style="width:200px"' + (row.zone ? ' disabled' : '') + ' title="slide the whole pair in time against the others"> <span class="bpOffsetVal">' + row.offset.toFixed(2) + ' s</span>',
+            '<div style="display:flex;gap:8px;align-items:center;margin-top:3px"><span style="color:#888" title="this pair&#8217;s place in the sequence — drag its zone in the strip above">@ ' + (row.offset || 0).toFixed(2) + ' s · ' + row.length + ' s</span>',
             ' <span class="bpReadout" style="color:#9a9;margin-left:auto">max ' + out.maxBeat + '/s · ' + (out.players.lower || '?') + ' ±' + out.maxCents.lower + ' c' + (lo ? '/' + lo.limitCents : '') + ' · ' + (out.players.upper || '?') + ' ±' + out.maxCents.upper + ' c' + (up ? '/' + up.limitCents : '')
                 + (out.justOffsetCents ? ' · just ' + (out.justOffsetCents > 0 ? '+' : '') + out.justOffsetCents + ' c' : '') + ' · ' + out.notes.lower.length + '+' + out.notes.upper.length + ' notes' + (fl.length ? ' · <span style="color:#e88">&#9888; ' + fl.join(' ') + '</span>' : '') + '</span></div>',
         ].join('');
@@ -473,7 +530,12 @@ const P = {
         if (q('.bpUnskip')) q('.bpUnskip').addEventListener('click', () => { b.skip = false; redo(); });
         if (q('.bpRemove')) q('.bpRemove').addEventListener('click', () => this.removeRow(i));
         qa('.bpShape').forEach(el => el.addEventListener('click', () => { this.popShape(row, el.dataset.shape); redo(); }));
-        q('.bpRateTo').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (!isNaN(v)) { b.rateTo = v; this.popShape(row, b.shape || 'ramp'); redo(); } });
+        q('.bpRateTo').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (!isNaN(v)) { this.setLevel(row, v); redo(); } });
+        q('.bpRowLen').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (v > 0) this.setRowLength(row, v); });
+        q('.bpRowPlay').addEventListener('click', () => { this.activeRow = i; this.setFocus('pair'); this.playRow(i); });
+        q('.bpPairSave').addEventListener('click', () => this.savePair(i, q('.bpPairName').value));
+        q('.bpPairName').addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); ev.stopPropagation(); this.savePair(i, q('.bpPairName').value); });
+        q('.bpPairSel').addEventListener('change', ev => { if (ev.target.value) this.loadPair(i, ev.target.value); ev.target.value = ''; });
         q('.bpLock').addEventListener('click', () => { row.locked = !row.locked; if (row.locked) { this.relock(row); } else { this.unlock(row); } redo(); });
         q('.bpDraw').addEventListener('click', () => { row.draw = !row.draw; this.render(); this.setStatus(row.draw ? 'draw: click in the rate area to add points; a point drags; ALT-click removes it; click draw again to end' : 'draw off'); });
         q('.bpScale').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (v > 0) { row.scale = v; this.render(); } });
@@ -483,7 +545,6 @@ const P = {
         q('.bpLevHi').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (!isNaN(v)) { b.levelHi = clamp(v, 0, 1); redo(); } });
         q('.bpBreath').addEventListener('change', ev => { b.breath.mode = ev.target.value; redo(); });
         q('.bpShuffle').addEventListener('click', () => { b.breath.mode = 'designated'; b.breath.seed = (b.breath.seed || 1) + 1; delete b.breath.deal; redo(); this.setStatus('breaths dealt again (seed ' + b.breath.seed + '); the hand-moved marks kept'); });
-        q('.bpOffset').addEventListener('input', ev => { row.offset = r3(parseFloat(ev.target.value)); q('.bpOffsetVal').textContent = row.offset.toFixed(2) + ' s'; });
         this.drawRates(row, q('.bpRates'));
         this.drawLevel(row, q('.bpLevel'));
         this.drawBreaths(row, q('.bpBreaths'), q('.bpBreathInfo'));
@@ -504,21 +565,35 @@ const P = {
         b.beat = key === 'flat' ? BC.shape('flat', { level: to }) : key === 'rampOut' ? [[0, 0], [1, to]] : key === 'rampIn' ? [[0, to], [1, 0]] : key === 'hump' ? BC.shape('hump', { peak: to, base: from }) : key === 'arc' ? BC.shape('arc', { peak: to, base: from }) : BC.shape('burst', { peak: to });
         b.rate = null; row.locked = true;
     },
-    unlock(row) { const c = this.curvesOf(row); row.b.rate = { lower: c.lower.map(p => [p[0], p[1]]), upper: c.upper.map(p => [p[0], p[1]]) }; },
-    relock(row) {   // the upper curve becomes the heard curve's upper half again; the lower mirrors it
-        const c = this.curvesOf(row); row.b.beat = c.upper.map(p => [p[0], r3(p[1] * 2)]); row.b.share = 0.5; row.b.rate = null; row.b.shape = 'drawn';
+    unlock(row) { const c = this.curvesOf(row); row.b.rate = { lower: c.lower.map(p => p.slice()), upper: c.upper.map(p => p.slice()) }; },
+    relock(row) {   // the upper curve becomes the heard curve's upper half again; the lower mirrors it (the slopes kept)
+        const BC = BC_(), c = this.curvesOf(row); row.b.beat = c.upper.map(p => (BC.slopeOf(p) ? [p[0], r3(p[1] * 2), BC.slopeOf(p)] : [p[0], r3(p[1] * 2)])); row.b.share = 0.5; row.b.rate = null; row.b.shape = 'drawn';
     },
-    // an edit of one curve's point: locked → the heard curve's point (the other mirrors); unlocked → that curve alone
+    withSlope(pt, p, v, s) { return s ? [p, v, s] : [p, v]; },
+    // an edit of one curve's point: locked → the heard curve's point (the other mirrors); unlocked → that curve alone; the segment's slope stays
     setPoint(row, who, idx, p, v) {
         const BC = BC_(), b = row.b;
         if (row.locked) {
             const beat = BC.curveOf(this.heardCurve(row)); if (!beat[idx]) return;
-            beat[idx] = [p, r3(Math.abs(v) * 2)]; b.beat = beat; b.shape = 'drawn';
+            beat[idx] = this.withSlope(beat[idx], p, r3(Math.abs(v) * 2), BC.slopeOf(beat[idx])); b.beat = beat; b.shape = 'drawn';
         } else {
             if (!b.rate) this.unlock(row);
             const c = BC.curveOf(b.rate[who]); if (!c[idx]) return;
-            c[idx] = [p, r3(v)]; b.rate[who] = c;
+            c[idx] = this.withSlope(c[idx], p, r3(v), BC.slopeOf(c[idx])); b.rate[who] = c;
         }
+    },
+    // the SLOPE of the segment after a point (2026-09-07, "like in logic pro" — the score's power model, BeatingCalc.evalCurve): locked → on
+    // the heard curve (both mirror); unlocked → that curve alone
+    setSlope(row, who, idx, s) {
+        const BC = BC_(), b = row.b; s = clamp(r3(s), -1, 1);
+        if (row.locked) { const beat = BC.curveOf(this.heardCurve(row)); if (!beat[idx]) return; beat[idx] = this.withSlope(beat[idx], beat[idx][0], beat[idx][1], s); b.beat = beat; b.shape = 'drawn'; }
+        else { if (!b.rate) this.unlock(row); const c = BC.curveOf(b.rate[who]); if (!c[idx]) return; c[idx] = this.withSlope(c[idx], c[idx][0], c[idx][1], s); b.rate[who] = c; }
+    },
+    dragSlope(row, who, idx, e0, svg, get, set) {
+        const y0 = e0.clientY, s0 = get();
+        const onMove = ev => { set(clamp(s0 + (y0 - ev.clientY) / (HR / 2), -1, 1)); this.rowOut(row); this.drawRates(row, svg); this.changed(row, false); };
+        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); };
+        window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
     addPoint(row, who, p, v) {
         const BC = BC_(), b = row.b;
@@ -531,14 +606,14 @@ const P = {
         else { if (!b.rate) this.unlock(row); const c = BC.curveOf(b.rate[who]); if (c.length <= 2) return; c.splice(idx, 1); b.rate[who] = c; }
     },
     slideCurve(row, who, dSec) {
-        const b = row.b; if (!b.slide) b.slide = { lower: 0, upper: 0 };
-        if (row.locked) { b.slide.lower = r3(clamp(b.slide.lower + dSec, -this.length, this.length)); b.slide.upper = r3(clamp(b.slide.upper + dSec, -this.length, this.length)); }
-        else b.slide[who] = r3(clamp((b.slide[who] || 0) + dSec, -this.length, this.length));
+        const b = row.b, L = row.length; if (!b.slide) b.slide = { lower: 0, upper: 0 };
+        if (row.locked) { b.slide.lower = r3(clamp(b.slide.lower + dSec, -L, L)); b.slide.upper = r3(clamp(b.slide.upper + dSec, -L, L)); }
+        else b.slide[who] = r3(clamp((b.slide[who] || 0) + dSec, -L, L));
     },
 
     // ---- the rate area: the two curves, the band by zone, the handles on rails ----
     drawRates(row, svg) {
-        const BC = BC_(), out = row.out, cur = this.curvesOf(row), b = row.b, S = row.scale, L = this.length;
+        const BC = BC_(), out = row.out, cur = this.curvesOf(row), b = row.b, S = row.scale, L = row.length;
         const x0 = PADL, x1 = W - PADR, mid = HR / 2, sy = (HR / 2 - 6) / S;
         const X = p => x0 + p * (x1 - x0), Y = v => mid - v * sy, ns = 'http://www.w3.org/2000/svg';
         const mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
@@ -559,10 +634,21 @@ const P = {
         lineOf('rateU', COL.upper); lineOf('rateL', COL.lower);
         const drawCurve = (who, pts, col) => {
             const slide = (b.slide && b.slide[who]) || 0, sp = slide / Math.max(0.1, L);
-            const d = pts.map((p, k) => (k ? 'L' : 'M') + X(clamp(p[0] + sp, 0, 1)).toFixed(1) + ' ' + Y(p[1]).toFixed(1)).join(' ');
-            const path = mk('path', { d, fill: 'none', stroke: col, 'stroke-width': 2.2, 'stroke-linejoin': 'round' }); path.style.cursor = 'ew-resize'; path.style.pointerEvents = 'stroke';
+            // the curve sampled through its slopes (the score's power model); the points are its handles, the diamonds its slopes
+            const N = 120, d = []; for (let i = 0; i <= N; i++) { const p = i / N; d.push((i ? 'L' : 'M') + X(clamp(p + sp, 0, 1)).toFixed(1) + ' ' + Y(BC.evalCurve(pts, p)).toFixed(1)); }
+            const path = mk('path', { d: d.join(' '), fill: 'none', stroke: col, 'stroke-width': 2.2, 'stroke-linejoin': 'round' }); path.style.cursor = 'ew-resize'; path.style.pointerEvents = 'stroke';
             path.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); this.dragBody(row, who, e, svg); });
             svg.appendChild(path);
+            for (let k = 0; k + 1 < pts.length; k++) {   // a slope diamond at each segment's middle (2026-09-07): drag up / down bends it, the wheel steps it
+                const a = pts[k], c = pts[k + 1]; if (c[0] - a[0] < 0.03) continue;
+                const pm = (a[0] + c[0]) / 2, cx = X(clamp(pm + sp, 0, 1)), cy = Y(BC.evalCurve(pts, pm)), s = BC.slopeOf(a);
+                const dm = mk('rect', { x: cx - 4, y: cy - 4, width: 8, height: 8, transform: 'rotate(45 ' + cx + ' ' + cy + ')', fill: s ? col : '#1a1a20', stroke: col, 'stroke-width': 1.5, 'fill-opacity': s ? 0.8 : 1 });
+                dm.style.cursor = 'ns-resize';
+                dm.innerHTML = '<title>curve ' + s.toFixed(2) + ' — drag up / down to bend this segment (the score\'s curve), the wheel steps it, ALT-click straightens</title>';
+                dm.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.altKey) { this.setSlope(row, who, k, 0); this.changed(row, true); this.render(); return; } this.dragSlope(row, who, k, e, svg, () => BC.slopeOf(this.curvesOf(row)[who][k]), v => this.setSlope(row, who, k, v)); });
+                dm.addEventListener('wheel', e => { e.preventDefault(); e.stopPropagation(); this.setSlope(row, who, k, BC.slopeOf(this.curvesOf(row)[who][k]) + (e.deltaY > 0 ? -0.05 : 0.05)); this.rowOut(row); this.drawRates(row, svg); this.changed(row, false); }, { passive: false });
+                svg.appendChild(dm);
+            }
             pts.forEach((p, idx) => {
                 const h = mk('circle', { cx: X(clamp(p[0] + sp, 0, 1)), cy: Y(p[1]), r: 5, fill: '#1a1a20', stroke: col, 'stroke-width': 2 });
                 h.style.cursor = 'move';
@@ -589,7 +675,7 @@ const P = {
         svg._geom = { x0, x1, mid, sy, X, Y };
     },
     dragHandle(row, who, idx, e0, svg) {
-        const g = svg._geom, r = svg.getBoundingClientRect(), b = row.b, L = this.length, cur = this.curvesOf(row)[who], n = cur.length;
+        const g = svg._geom, r = svg.getBoundingClientRect(), b = row.b, L = row.length, cur = this.curvesOf(row)[who], n = cur.length;
         const slide = (b.slide && b.slide[who]) || 0, sp = slide / Math.max(0.1, L);
         const tip = document.createElementNS('http://www.w3.org/2000/svg', 'text'); tip.setAttribute('fill', '#fff'); tip.setAttribute('font-size', '12'); svg.appendChild(tip);
         const onMove = ev => {
@@ -609,7 +695,7 @@ const P = {
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
     dragBody(row, who, e0, svg) {
-        const g = svg._geom, L = this.length, x0 = e0.clientX; let last = 0;
+        const g = svg._geom, L = row.length, x0 = e0.clientX; let last = 0;
         const onMove = ev => { const d = (ev.clientX - x0) / (g.x1 - g.x0) * L; const step = r3(d - last); if (!step) return; last = r3(last + step); if (ev.altKey && row.locked) { row.locked = false; this.unlock(row); } this.slideCurve(row, who, step); this.rowOut(row); this.drawRates(row, svg); this.changed(row, false); };
         const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); };
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
@@ -623,11 +709,28 @@ const P = {
         svg.innerHTML = '';
         const d = out.samples.map((s, k) => (k ? 'L' : 'M') + X(s.p).toFixed(1) + ' ' + Y(s.level).toFixed(1)).join(' ');
         svg.appendChild(mk('path', { d: d + ' L' + X(1).toFixed(1) + ' ' + Y(0) + ' L' + X(0) + ' ' + Y(0) + ' Z', fill: COL.level, 'fill-opacity': 0.18, stroke: 'none' }));
+        svg.innerHTML += '<title>the crescendo: the score\'s curve height — 0 the softest held dynamic, 1 fff, equal loudness across instruments through the remap</title>';
         svg.appendChild(mk('path', { d, fill: 'none', stroke: COL.level, 'stroke-width': 1.6 }));
         [0, 0.5, 1].forEach(v => { const t = mk('text', { x: 2, y: Y(v) + 3, fill: '#777', 'font-size': 11 }); t.textContent = v; svg.appendChild(t); });
         const lbl = mk('text', { x: x1 - 4, y: 11, fill: COL.level, 'font-size': 12, 'text-anchor': 'end' }); lbl.textContent = b.levelCurve ? 'own curve' : 'follows the beating · ' + b.levelLo + ' → ' + b.levelHi; svg.appendChild(lbl);
         if (b.levelCurve) {
             const pts = BC.curveOf(b.levelCurve);
+            for (let k = 0; k + 1 < pts.length; k++) {   // the crescendo's segment slopes too (2026-09-07), the same diamonds
+                const a = pts[k], c = pts[k + 1]; if (c[0] - a[0] < 0.03) continue;
+                const pm = (a[0] + c[0]) / 2, cx = X(pm), cy = Y(clamp(BC.evalCurve(pts, pm), 0, 1)), s = BC.slopeOf(a);
+                const dm = mk('rect', { x: cx - 3.5, y: cy - 3.5, width: 7, height: 7, transform: 'rotate(45 ' + cx + ' ' + cy + ')', fill: s ? COL.level : '#1a1a20', stroke: COL.level, 'stroke-width': 1.3 });
+                dm.style.cursor = 'ns-resize'; dm.innerHTML = '<title>curve ' + s.toFixed(2) + ' — drag up / down to bend this segment; ALT-click straightens</title>';
+                const setS = v => { const cur = BC.curveOf(b.levelCurve); cur[k] = v ? [cur[k][0], cur[k][1], clamp(r3(v), -1, 1)] : [cur[k][0], cur[k][1]]; b.levelCurve = cur; };
+                dm.addEventListener('mousedown', e => {
+                    e.preventDefault(); e.stopPropagation();
+                    if (e.altKey) { setS(0); this.changed(row, true); this.render(); return; }
+                    const y0 = e.clientY, s0 = s;
+                    const onMove = ev => { setS(s0 + (y0 - ev.clientY) / (HL - 10)); this.rowOut(row); this.drawLevel(row, svg); this.changed(row, false); };
+                    const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); };
+                    window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
+                });
+                svg.appendChild(dm);
+            }
             pts.forEach((p, idx) => {
                 const h = mk('circle', { cx: X(p[0]), cy: Y(clamp(p[1], 0, 1)), r: 4.5, fill: '#1a1a20', stroke: COL.level, 'stroke-width': 2 }); h.style.cursor = 'move';
                 h.addEventListener('mousedown', e => {
@@ -647,7 +750,7 @@ const P = {
 
     // ---- the breath lane: per player the marks as dotted go lines on sliders, the ceiling bar, the warning ----
     drawBreaths(row, svg, info) {
-        const BC = BC_(), out = row.out, b = row.b, ns = 'http://www.w3.org/2000/svg', L = this.length;
+        const BC = BC_(), out = row.out, b = row.b, ns = 'http://www.w3.org/2000/svg', L = row.length;
         const x0 = PADL, x1 = W - PADR, X = t => x0 + (t / Math.max(0.1, L)) * (x1 - x0);
         const mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
         svg.innerHTML = '';
@@ -727,7 +830,7 @@ const P = {
         }
         host.innerHTML = h;
         host.querySelectorAll('.bpBanner').forEach(el => el.addEventListener('click', () => { const k = el.dataset.bank; this.collapsed[k] = !this.collapsed[k]; this.renderList(); }));
-        host.querySelectorAll('.bpEntry').forEach(el => el.addEventListener('click', () => this.pickHarmony(el.dataset.bank, el.dataset.id)));
+        host.querySelectorAll('.bpEntry').forEach(el => el.addEventListener('click', () => { this.focus = 'chord'; this.pickHarmony(el.dataset.bank, el.dataset.id); }));
         const on = host.querySelector('.bpEntry[style*="rgba(123,63,228"]'); if (on && typeof on.scrollIntoView === 'function') { try { on.scrollIntoView({ block: 'nearest' }); } catch (e) { } }
     },
     pickHarmony(bank, id) {
@@ -806,7 +909,7 @@ const P = {
         for (let m = R.hi; m >= R.lo; m--) {
             const y = keyY(m), black = BLACK.includes(m % 12), f = row ? this.rowFold(row, m) : { k: 0 };
             const op = !f ? 0.22 : f.k ? 0.55 : 1;
-            s += '<rect class="bpKey" data-m="' + m + '" x="' + KB.keyX + '" y="' + (y + 0.5) + '" width="' + (black ? KB.blackW : KB.whiteW) + '" height="' + (h - 1) + '" fill="' + (black ? '#2a2a30' : '#d8d3c8') + '" fill-opacity="' + op + '" stroke="#111" stroke-width="0.5" style="cursor:pointer"><title>' + nn(m) + (!f ? ' — no octave where the active pair both reach it' : f.k ? ' — the active pair would fold it to ' + nn(f.pitch) + BC.foldMark(f.k) : '') + '</title></rect>';
+            s += '<rect class="bpKey" data-m="' + m + '" x="' + KB.keyX + '" y="' + (y + 0.5) + '" width="' + (black ? KB.blackW : KB.whiteW) + '" height="' + (h - 1) + '" fill="' + (black ? '#2a2a30' : '#d8d3c8') + '" fill-opacity="' + op + '" stroke="#111" stroke-width="0.5" style="cursor:crosshair"><title>' + nn(m) + (!f ? ' — no octave where the active pair both reach it' : f.k ? ' — the active pair would fold it to ' + nn(f.pitch) + BC.foldMark(f.k) : '') + '</title></rect>';
             if (m % 12 === 0) s += '<text x="' + KB.cX + '" y="' + (y + h * 0.85) + '" font-size="10" fill="#777">C' + (m / 12 - 1) + '</text>';
         }
         // the rows' pair notes AS SOUNDED: rings (the lower note filled, the upper hollow) in the row colour, at the right
@@ -821,7 +924,7 @@ const P = {
             const m = +p; if (m < R.lo || m > R.hi) return;
             const pc = ((m % 12) + 12) % 12, col = this.pcColor(pc), cy = keyY(m) + h / 2, k = byPitch[p].length, idx = byPitch[p][0];
             const held = this.rows.some(r => r.b.noteIndex != null && byPitch[p].includes(r.b.noteIndex));
-            s += '<circle class="bpDot" data-m="' + m + '" data-i="' + idx + '" cx="' + KB.dotX + '" cy="' + cy + '" r="' + (3.2 + Math.min(2, k - 1)) + '" fill="' + col + '" stroke="' + (this.armed === m || held ? '#fff' : col) + '" stroke-width="' + (this.armed === m ? 2.2 : held ? 1.4 : 1) + '" style="cursor:grab"><title>' + nn(m) + (k > 1 ? ' ×' + k : '') + (this.chord[idx].midi0 != null && this.chord[idx].midi0 !== m ? ' (voiced from ' + nn(this.chord[idx].midi0) + ')' : '') + ' — double-click to arm, then a pair\'s node; or drag it onto a pair</title></circle>';
+            s += '<circle class="bpDot" data-m="' + m + '" data-i="' + idx + '" cx="' + KB.dotX + '" cy="' + cy + '" r="' + (3.2 + Math.min(2, k - 1)) + '" fill="' + col + '" stroke="' + (this.armed === m || held ? '#fff' : col) + '" stroke-width="' + (this.armed === m ? 2.2 : held ? 1.4 : 1) + '" style="cursor:crosshair"><title>' + nn(m) + (k > 1 ? ' ×' + k : '') + (this.chord[idx].midi0 != null && this.chord[idx].midi0 !== m ? ' (voiced from ' + nn(this.chord[idx].midi0) + ')' : '') + ' — double-click to arm, then a pair\'s node; or drag it onto a pair</title></circle>';
             s += '<text x="' + KB.nameX + '" y="' + (cy + 3) + '" font-size="10" fill="' + col + '" text-anchor="end">' + nn(m) + '</text>';
         });
         const above = this.chord.filter(n => n.midi > R.hi).length, below = this.chord.filter(n => n.midi < R.lo).length;
@@ -837,10 +940,10 @@ const P = {
         });
     },
     indexAt(m) { const i = this.chord.findIndex(n => n.midi === m); return i >= 0 ? i : null; },
-    arm(m, idx) { this.armed = m; this.armedIdx = idx != null ? idx : this.indexAt(m); this.rootMode = false; this.render(); this.setStatus(nn(m) + ' armed — click a pair\'s node (or anywhere on its row) to give it the note; the pair folds it as one unit to the nearest octave both reach; ESC disarms'); },
+    arm(m, idx) { this.armed = m; this.armedIdx = idx != null ? idx : this.indexAt(m); this.rootMode = false; this.focus = 'chord'; this.render(); this.setStatus(nn(m) + ' armed — click a pair\'s node (or anywhere on its row) to give it the note; the pair folds it as one unit to the nearest octave both reach; ESC disarms'); },
     keyClick(m) {
         if (this.rootMode) { const rb = this.el.querySelector('#bpRoot'); if (rb) rb.value = nn(m); this.rootMode = false; this.deal(m); return; }
-        this.armed = this.armed === m ? null : m; this.armedIdx = this.armed != null ? this.indexAt(m) : null;
+        this.armed = this.armed === m ? null : m; this.armedIdx = this.armed != null ? this.indexAt(m) : null; this.focus = 'chord';
         this.render();
         if (this.armed != null) { const r = this.rows[this.activeRow], f = r ? this.rowFold(r, m) : null; this.setStatus(nn(m) + ' armed — click a pair\'s node to give it the note, ESC or click it again to disarm' + (r ? (f ? (f.k ? ' · the active pair would fold it to ' + nn(f.pitch) + BC_().foldMark(f.k) : ' · the active pair holds it as written') : ' · no octave where the active pair both reach it — the row will offer the ways out') : '')); }
     },
@@ -895,32 +998,82 @@ const P = {
     },
 
     // ------------------------------------------------------------------ the audition: all pairs, timestamped, through the tick's event path
-    async play() {
-        const C = C_(); if (!C || !this.rows.length) return;
+    async play() { return this.playRows(this.rows, 'the sequence', false); },
+    async playRow(i) { const row = this.rows[i]; if (row) return this.playRows([row], 'pair ' + (i + 1), true); },
+    // the rows given, at their offsets (a pair alone from its own start), timestamped through the tick's event path
+    async playRows(list, label, alone) {
+        const C = C_(); if (!C || !list.length) return;
         this.stop();
         const events = [], slots = new Map();
         let firstPort = null, firstCh = 1;
-        const firstStart = Math.min.apply(null, this.rows.filter(r => r.zone).map(r => r.zone.startTime).concat([Infinity]));
-        for (const row of this.rows) {
-            const z = row.zone || { id: 'bp-row-' + this.rows.indexOf(row), type: 'zone', layer: row.layer, startTime: 0, endTime: this.length, beating: row.b };
+        const firstStart = Math.min.apply(null, list.filter(r => r.zone).map(r => r.zone.startTime).concat([Infinity]));
+        for (const row of list) {
+            const z = row.zone || { id: 'bp-row-' + this.rows.indexOf(row), type: 'zone', layer: row.layer, startTime: 0, endTime: row.length, beating: row.b };
             const s = C.regenerateBeating(z); if (!s) continue;
             if (row.zone) C.renderZone(row.zone);
             if (!firstPort) { firstPort = s.port; firstCh = s.channel; }
-            const off = row.zone ? (isFinite(firstStart) ? (row.zone.startTime - firstStart) * 1000 : 0) : row.offset * 1000;   // a bound group plays at its own offsets
+            const off = alone ? 0 : (row.zone ? (isFinite(firstStart) ? (row.zone.startTime - firstStart) * 1000 : 0) : (row.offset || 0) * 1000);   // a bound group plays at its own offsets
             s.events.forEach(e => events.push(Object.assign({}, e, { onsetMs: e.onsetMs + off, port: e.port || s.port, channel: e.channel || s.channel })));
             s.slots.forEach(q => slots.set(q.port + '|' + q.channel, q));
         }
-        if (!events.length) { this.setStatus('nothing to play', true); return; }
+        if (!events.length) { this.setStatus('nothing to play' + (list.some(r => r.b.skip) ? ' — the pair is skipped' : ''), true); return; }
         events.sort((a, c) => a.onsetMs - c.onsetMs);
         const fake = { id: 'bp-pattern', midiSnippet: { port: firstPort, channel: firstCh, events, slots: [...slots.values()], source: 'beating' } };
         await C.playBeatingEvents(fake, events, null, null);
         this._aud = C._beatingAud;
-        const btn = this.el.querySelector('#bpPlay'); if (btn) btn.textContent = '■ playing (space)';
+        const btn = this.el.querySelector('#bpPlay'); if (btn) btn.textContent = '■ playing ' + label;
         const last = events.reduce((m, e) => Math.max(m, e.onsetMs + (e.durations ? e.durations[0] : 0)), 0);
-        clearTimeout(this._audTimer); this._audTimer = setTimeout(() => { this._aud = null; if (btn) btn.innerHTML = '&#9654; play (space)'; }, last + C.BEATING_CENTRE_MS + 100);
-        this.setStatus('playing ' + this.rows.length + ' pair' + (this.rows.length > 1 ? 's' : '') + ' · ' + events.length + ' events · SPACE stops');
+        clearTimeout(this._audTimer); this._audTimer = setTimeout(() => { this._aud = null; if (btn) btn.innerHTML = '&#9654; sequence'; }, last + C.BEATING_CENTRE_MS + 100);
+        this.setStatus('playing ' + label + ' · ' + list.length + ' pair' + (list.length > 1 ? 's' : '') + ' · ' + events.length + ' events · SPACE stops');
     },
-    stop() { const C = C_(); if (C) C.stopBeatingAudition(); this._aud = null; clearTimeout(this._audTimer); const btn = this.el && this.el.querySelector('#bpPlay'); if (btn) btn.innerHTML = '&#9654; play (space)'; },
+    stop() { const C = C_(); if (C) C.stopBeatingAudition(); this._aud = null; clearTimeout(this._audTimer); const btn = this.el && this.el.querySelector('#bpPlay'); if (btn) btn.innerHTML = '&#9654; sequence'; },
+
+    // ------------------------------------------------------------------ the sequence strip (2026-09-07): a track per pair, the pair a zone
+    // drawn with its heard-beating curve — the body dragged moves it in time, the right edge stretches it (the pair's own length, its
+    // shapes kept), the left edge starts it later keeping its end; a bound zone moves in the score too. The rows follow live.
+    drawSeq() {
+        const svg = this.el && this.el.querySelector('#bpSeq'), wrap = this.el && this.el.querySelector('#bpSeqWrap'); if (!svg || !wrap) return;
+        const rows = this.rows; if (!rows.length) { wrap.style.display = 'none'; return; } wrap.style.display = '';
+        const BC = BC_(), ns = 'http://www.w3.org/2000/svg', mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
+        const W2 = Math.max(400, (wrap.clientWidth || W) - 2), seq = this.seqLength(), L = Math.max(1, seq * 1.15), H = 16 + rows.length * SEQ_H + 4;
+        const x0 = PADL, x1 = W2 - PADR, X = t => x0 + (t / L) * (x1 - x0), secPerPx = L / (x1 - x0);
+        svg.setAttribute('width', W2); svg.setAttribute('height', H); svg.style.width = W2 + 'px'; svg.style.height = H + 'px'; svg.innerHTML = '';
+        const step = L > 40 ? 10 : L > 16 ? 5 : 1;
+        for (let t = 0; t <= L + 1e-6; t += step) { svg.appendChild(mk('line', { x1: X(t), x2: X(t), y1: 12, y2: H, stroke: '#2e2e36' })); const tx = mk('text', { x: X(t) + 2, y: 10, fill: '#777', 'font-size': 10 }); tx.textContent = t + ' s'; svg.appendChild(tx); }
+        const lbl = mk('text', { x: 2, y: 10, fill: '#9a9', 'font-size': 10 }); lbl.textContent = 'sequence ' + seq + ' s'; svg.appendChild(lbl);
+        rows.forEach((row, i) => {
+            const out = row.out || this.rowOut(row), col = ROW_COLORS[i % ROW_COLORS.length], y = 16 + i * SEQ_H, h = SEQ_H - 4, active = i === this.activeRow;
+            const xa = X(row.offset || 0), xb = X((row.offset || 0) + row.length);
+            svg.appendChild(mk('line', { x1: x0, x2: x1, y1: y + h / 2, y2: y + h / 2, stroke: '#2a2a32' }));
+            const body = mk('rect', { x: xa, y, width: Math.max(2, xb - xa), height: h, rx: 3, fill: col, 'fill-opacity': active ? 0.3 : 0.16, stroke: col, 'stroke-width': active ? 1.5 : 1 });
+            body.style.cursor = 'move'; body.innerHTML = '<title>pair ' + (i + 1) + ' — drag to move it in time; the edges stretch it</title>'; svg.appendChild(body);
+            const mb = out.maxBeat || 1, d = out.samples.map((s, k) => (k ? 'L' : 'M') + (xa + (s.t / Math.max(0.1, row.length)) * (xb - xa)).toFixed(1) + ' ' + (y + h - 2 - (s.beat / mb) * (h - 4)).toFixed(1)).join(' ');
+            svg.appendChild(mk('path', { d, fill: 'none', stroke: col, 'stroke-width': 1.2, 'pointer-events': 'none', opacity: row.b.skip ? 0.3 : 0.9 }));
+            const t = mk('text', { x: xa + 5, y: y + 11, fill: '#ddd', 'font-size': 10, 'pointer-events': 'none' });
+            t.textContent = 'pair ' + (i + 1) + ' · ' + (out.players.lower || '?').slice(0, 5) + ' + ' + (out.players.upper || '?').slice(0, 5) + ' · ' + nn(row.b.pitch) + ' · ' + row.length + ' s' + (row.offset ? ' @ ' + row.offset + ' s' : '') + (row.b.skip ? ' · skipped' : '');
+            svg.appendChild(t);
+            const edgeL = mk('rect', { x: xa - 3, y, width: 6, height: h, fill: col, 'fill-opacity': 0.02 }); edgeL.style.cursor = 'ew-resize'; edgeL.innerHTML = '<title>start later, the end kept</title>';
+            const edgeR = mk('rect', { x: xb - 3, y, width: 6, height: h, fill: col, 'fill-opacity': 0.02 }); edgeR.style.cursor = 'ew-resize'; edgeR.innerHTML = '<title>the pair\'s length — its shapes kept over it</title>';
+            svg.appendChild(edgeL); svg.appendChild(edgeR);
+            const drag = (mode, e0) => {
+                e0.preventDefault(); e0.stopPropagation(); this.activeRow = i; this.setFocus('pair');
+                const o0 = row.offset || 0, l0 = row.length, xs = e0.clientX;
+                const onMove = ev => {
+                    const dt = (ev.clientX - xs) * secPerPx;
+                    let off = o0, len = l0;
+                    if (mode === 'move') off = Math.max(0, o0 + dt);
+                    else if (mode === 'right') len = Math.max(0.5, l0 + dt);
+                    else { off = clamp(o0 + dt, 0, o0 + l0 - 0.5); len = o0 + l0 - off; }
+                    off = r3(Math.round(off / 0.05) * 0.05); len = r3(Math.max(0.5, Math.round(len / 0.05) * 0.05));
+                    if (len !== row.length) { const s = BC.stretch({ length: row.length, slide: row.b.slide, breath: row.b.breath }, len); row.b.slide = s.slide; row.b.breath = s.breath; row.length = len; }
+                    row.offset = off; this.placeZone(row); this.rowOut(row); this.drawSeq();
+                };
+                const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); this.setStatus('pair ' + (i + 1) + ' @ ' + (row.offset || 0) + ' s · ' + row.length + ' s' + (row.zone ? ' — the zone moved in the score' : '')); };
+                window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
+            };
+            body.addEventListener('mousedown', e => drag('move', e)); edgeR.addEventListener('mousedown', e => drag('right', e)); edgeL.addEventListener('mousedown', e => drag('left', e));
+        });
+    },
 
     // ------------------------------------------------------------------ insertion (step 6, §160: its own thing — nothing around it touched)
     // the pattern into the score as one gesture: a `beating` zone per row on its launching lane at the insert time + the row's offset, all
@@ -940,7 +1093,7 @@ const P = {
         const M = METAL();
         const groupStart = this.patternGroupId ? Math.min.apply(null, C.objects.filter(o => o.groupId === this.patternGroupId && o.type === 'zone').map(o => o.startTime).concat([Infinity])) : Infinity;
         const t = isFinite(groupStart) ? groupStart : (this.insertAt != null ? this.insertAt : Math.max(0, +C.getTimeAtPlayhead().toFixed(3)));
-        const rowsSpec = this.rows.map(r => ({ layer: r.layer, b: JSON.parse(JSON.stringify(r.b)), offset: r.zone && isFinite(groupStart) ? r3(r.zone.startTime - groupStart) : (r.offset || 0), length: r.zone ? r3(r.zone.endTime - r.zone.startTime) : this.length }));
+        const rowsSpec = this.rows.map(r => ({ layer: r.layer, b: JSON.parse(JSON.stringify(r.b)), offset: r.zone && isFinite(groupStart) ? r3(r.zone.startTime - groupStart) : (r.offset || 0), length: r.zone ? r3(r.zone.endTime - r.zone.startTime) : r.length }));
         C.pushUndoState();
         let replaced = 0;
         if (this.patternGroupId && (isFinite(groupStart) ? true : false)) { if (Math.abs(groupStart - t) < 0.1) replaced = this.removeGroup(this.patternGroupId); }
@@ -955,7 +1108,7 @@ const P = {
             zones.push(z);
         });
         // the META shape: the crescendo's mean across the pattern as its contour (§160), the pattern's whole span
-        const pat = BC.renderPattern({ length: this.length, pairs: rowsSpec.map(rs => Object.assign({}, C.beatingSpec({ layer: rs.layer, startTime: 0, endTime: rs.length, beating: rs.b }), { length: rs.length })), offsets: rowsSpec.map(rs => rs.offset) }, INST());
+        const pat = BC.renderPattern({ length: this.seqLength(), pairs: rowsSpec.map(rs => Object.assign({}, C.beatingSpec({ layer: rs.layer, startTime: 0, endTime: rs.length, beating: rs.b }), { length: rs.length })), offsets: rowsSpec.map(rs => rs.offset) }, INST());
         const patLen = Math.max(0.1, pat.length);
         const nodes = pat.contour.map(([tt, lv], i, a) => ({ pos: i === a.length - 1 ? 1 : Math.round((tt / patLen) * 10000) / 10000, y: Math.round(Math.max(0, Math.min(1, lv)) * 100) / 10, smooth: 0 }));
         const shape = { id: 'wc-' + (C.nextId++), type: 'waveCurve', layer: M, groupId: group, startSeconds: r3(t), endSeconds: r3(t + patLen),
@@ -971,32 +1124,54 @@ const P = {
     },
 
     // ------------------------------------------------------------------ takes (bank/panel_snapshots.json, the `beatings` bucket)
-    state() { return { length: this.length, harmony: this.harmony ? { bank: this.harmony.bank, id: this.harmony.id } : null, voicing: JSON.parse(JSON.stringify(this.voicing)), rows: this.rows.map(r => ({ layer: r.layer, offset: r.offset, locked: r.locked, scale: r.scale, b: JSON.parse(JSON.stringify(r.b)) })) }; },
+    state() { return { length: this.seqLength(), harmony: this.harmony ? { bank: this.harmony.bank, id: this.harmony.id } : null, voicing: JSON.parse(JSON.stringify(this.voicing)), rows: this.rows.map(r => ({ layer: r.layer, offset: r.offset, length: r.length, locked: r.locked, scale: r.scale, b: JSON.parse(JSON.stringify(r.b)) })) }; },
     applyState(st) {
         if (!st || !Array.isArray(st.rows)) return;
         this.voicing = Object.assign(VOICING_DEFAULTS(), st.voicing || {});   // the voicing saves with the take (2026-09-07); the rows' note indices survive where the voiced note matches
         if (st.harmony && st.harmony.bank && st.harmony.id) this.loadDb().then(() => this.pickHarmony(st.harmony.bank, st.harmony.id));   // the harmony chosen saves with the take (CN-36)
-        this.length = r3(+st.length || 6);
-        if (this.bound) {   // a bound zone takes the FIRST row's block; the length stretches the zone
+        const seqLen = r3(+st.length || 6);
+        if (this.bound) {   // a bound zone takes the FIRST row's block; its length stretches the zone
             const r0 = st.rows[0]; if (!r0) return;
             Object.assign(this.bound.beating, r0.b, { partnerLayer: r0.b.partnerLayer });
-            this.bound.endTime = r3(this.bound.startTime + this.length);
-            this.rows = [this.mkRow(this.bound.layer, this.bound.beating, 0, this.bound)]; this.rows[0].locked = r0.locked !== false; this.rows[0].scale = r0.scale || 6;
+            const len = r3(+r0.length || seqLen);
+            this.bound.endTime = r3(this.bound.startTime + len);
+            this.rows = [this.mkRow(this.bound.layer, this.bound.beating, 0, this.bound, len)]; this.rows[0].locked = r0.locked !== false; this.rows[0].scale = r0.scale || 6;
             this.changed(this.rows[0], true);
         } else {
-            this.rows = st.rows.slice(0, MAX_ROWS).map(r => { const row = this.mkRow(r.layer, JSON.parse(JSON.stringify(r.b)), r.offset || 0, null); row.locked = r.locked !== false; row.scale = r.scale || 6; return row; });
+            this.rows = st.rows.slice(0, MAX_ROWS).map(r => { const row = this.mkRow(r.layer, JSON.parse(JSON.stringify(r.b)), r.offset || 0, null, r.length || seqLen); row.locked = r.locked !== false; row.scale = r.scale || 6; return row; });
         }
         this.render();
     },
+    // ---- the pair takes (2026-09-07, "a save for individual pairs settings"): one row's settings under a name, the beatingPairs bucket ----
+    pairState(row) { return { layer: row.layer, length: row.length, locked: row.locked, scale: row.scale, b: JSON.parse(JSON.stringify(row.b)) }; },
+    async savePair(i, name) {
+        const row = this.rows[i]; if (!row) return;
+        const d = new Date(), pad = x => String(x).padStart(2, '0');
+        name = (name || '').trim() || ('pair ' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + pad(d.getMinutes()));
+        if (!TAKE_NAME.test(name)) { this.setStatus('pair take not saved: a name is 1–64 letters, digits, dot, underscore, space or hyphen', true); return; }
+        const T = TRK(), b = row.b;
+        try { const r = await this.postTake({ name, comment: (T[row.layer] || {}).short + '+' + (T[b.partnerLayer] || {}).short + ' ' + nn(b.pitch) + ' ' + b.interval + ' · ' + (b.shape || 'drawn') + ' to ' + (+b.rateTo || 0) + '/s · ' + row.length + ' s', state: this.pairState(row) }, PAIRS_PANEL); await this.refreshTakes(); this.render(); this.setStatus('pair take saved: ' + name + (r.existed ? ' (replaced)' : '')); }
+        catch (e) { this.setStatus('pair take not saved: ' + e.message, true); }
+    },
+    // into a row: the curves, the level, the breaths, the interval, the length, the lock and the axis; the row's players and its note stay
+    loadPair(i, name) {
+        const t = this.pairTakes[name], row = this.rows[i]; if (!t || !row || !t.state || !t.state.b) { this.setStatus('no pair take named "' + name + '"', true); return; }
+        const nb = JSON.parse(JSON.stringify(t.state.b)), keep = ['partnerLayer', 'pitch', 'srcPitch', 'noteIndex', 'fold', 'launchedFrom'];
+        keep.forEach(k => { delete nb[k]; });
+        Object.assign(row.b, nb); row.locked = t.state.locked !== false; row.scale = t.state.scale || row.scale;
+        this.setRowLength(row, +t.state.length || row.length);
+        this.refold(row); this.render();
+        this.setStatus('pair take "' + name + '" loaded into pair ' + (i + 1) + ': its curves, level, breaths, interval and length — the players and the note kept');
+    },
     async refreshTakes() {
-        try { const file = await fetch('/api/snapshots', { cache: 'no-store' }).then(x => x.json()); this.takeList = (file && file.panels && file.panels[TAKES_PANEL]) || {}; }
-        catch (e) { this.takeList = {}; }
+        try { const file = await fetch('/api/snapshots', { cache: 'no-store' }).then(x => x.json()); this.takeList = (file && file.panels && file.panels[TAKES_PANEL]) || {}; this.pairTakes = (file && file.panels && file.panels[PAIRS_PANEL]) || {}; }
+        catch (e) { this.takeList = {}; this.pairTakes = {}; }
         this.fillTakes();
     },
     takeNames() { const t = this.takeList; return Object.keys(t).sort((a, b) => String(t[b].saved || '').localeCompare(String(t[a].saved || ''))); },
     fillTakes() { const sel = this.el && this.el.querySelector('#bpTakeSel'); if (!sel) return; sel.innerHTML = '<option value="">load take…</option>' + this.takeNames().map(n => '<option value="' + esc(n) + '">' + esc(n) + '</option>').join(''); },
-    async postTake(body) { const r = await fetch('/api/snapshots', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ panel: TAKES_PANEL }, body)) }).then(x => x.json()); if (!r.success) throw new Error(r.error || '?'); return r; },
-    takeComment() { const v = this.voicing; return (this.harmony ? this.harmony.bank + ' ' + this.harmony.id + ' · ' : '') + ((v.preset !== 'original' || v.oct || v.below || v.above) ? v.preset + (v.oct ? ' oct' + (v.oct > 0 ? '+' : '') + v.oct : '') + ((v.below || v.above) ? ' −' + v.below + '…+' + v.above : '') + ' seed ' + v.seed + ' · ' : '') + this.rows.map(r => (TRK()[r.layer] || {}).short + '+' + (TRK()[r.b.partnerLayer] || {}).short + ' ' + nn(r.b.pitch) + ' ' + r.b.interval).join(' · ') + ' · ' + this.length + ' s'; },
+    async postTake(body, panel) { const r = await fetch('/api/snapshots', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ panel: panel || TAKES_PANEL }, body)) }).then(x => x.json()); if (!r.success) throw new Error(r.error || '?'); return r; },
+    takeComment() { const v = this.voicing; return (this.harmony ? this.harmony.bank + ' ' + this.harmony.id + ' · ' : '') + ((v.preset !== 'original' || v.oct || v.below || v.above) ? v.preset + (v.oct ? ' oct' + (v.oct > 0 ? '+' : '') + v.oct : '') + ((v.below || v.above) ? ' −' + v.below + '…+' + v.above : '') + ' seed ' + v.seed + ' · ' : '') + this.rows.map(r => (TRK()[r.layer] || {}).short + '+' + (TRK()[r.b.partnerLayer] || {}).short + ' ' + nn(r.b.pitch) + ' ' + r.b.interval + ' ' + r.length + 's' + (r.offset ? '@' + r.offset : '')).join(' · ') + ' · ' + this.seqLength() + ' s'; },
     async saveTake() {
         const box = this.el.querySelector('#bpTakeName'), d = new Date(), pad = x => String(x).padStart(2, '0');
         const name = (box.value || '').trim() || ('beating ' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + pad(d.getMinutes()));

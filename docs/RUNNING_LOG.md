@@ -5251,3 +5251,56 @@ node (x 534, y 18) in the row's colour; two pairs → two lines. No console erro
 scripts without waits) and `requestAnimationFrame` never fired (`renderLines` called directly); with the pane hidden the layout had
 no height, so the lines' out-of-sight rule drew nothing until the viewport was emulated. No screenshot could be taken (the page did
 not draw); his own reload shows it.
+
+## §182. His first hour with the drawer — nine asks built in one pass (the sequence strip, per-pair length and play, SPACE by focus, the number boxes freed, the slopes, the level box keeping a drawn shape, pair takes, the crosshair), the stutter examined (the streams are smooth), the level scale answered; his call for a different way of working held for the discussion
+
+Composer, 2026-09-07 afternoon (verbatim in MORPH_NOTES §3): *"go ahead and make these changes, but then afterwards, can we have a
+discussion about how to proceed? … make the changes above first. and put it in to the drawer so I can start using it"*.
+
+**Found first, then built:**
+- **"when I change the duration the pair. It snaps back to the original shape"** — not the duration: the LEVEL box (`to … /s`). Its
+  handler popped the row's preset in again at the new level, and for a drawn or dragged shape (`shape: 'drawn'`) the pop fell through
+  to a BURST. Now `setLevel`: a preset shape pops in again at the new level; a drawn or dragged shape (and any unlocked pair) is SCALED
+  so its heard maximum is the new level — the shape kept. A duration change never touched the curves (they are over normalised time).
+- **The stutter "in bigger intervals … sounds like bcl"** — examined, not heard here. The emitted streams for his pair (Fl + BCl on D4,
+  a hump to 7/s over 6 s, the crescendo following the beating 0 → 1) computed in node: the bend sent every 50 ms, 120 events per
+  player, the largest step 0.34 c (29 units of 16384 on the bass clarinet's 0.98-st range); CC7 108 / 78 events, steps of 1–2, rising
+  monotone then falling. The string quartet's crescendo and glissando generators used the same 50 ms grid for bend and CC7
+  (AI_CRESCENDO_PROMPT_GUIDE, AI_GLISSANDO_PROMPT_GUIDE) and were smooth there. So the data leaving the app is as smooth as #1's; the
+  cause is not the emitted stream. Three candidates left, only his ear can separate them: (a) the beating itself — at 7/s the beating is
+  a fast tremolo, and at his ±6 axis a "bigger interval" between the curves is a faster beating, which reads as a stutter; (b) the
+  sampler's response to the bend + CC7 pair on the bass clarinet (Kontakt / Xsample), which #1 never asked of a wind; (c) in the
+  TRANSPORT only, the tick's 100 ms lookahead under a slow frame — an event older than 50 ms is dropped (`tickZoneMidiPlayback`), which
+  cannot happen in the panel's own play (all events are queued at once with timestamps). The A/B for him: the same pair at 2/s (a → gone),
+  with the crescendo flat (b's CC7 half → gone), from the panel vs from the transport (c). No change made to the streams.
+- **"what is the 0-1 volume scale? … db, velocity?"** — neither: the score's curve height (D23, NAMING §2.9): 0 = the softest held
+  dynamic, 1 = fff, mapped per instrument by 1g's loudness remap (a velocity for the note and a CC7 trim, measured in the rack) so the
+  same height is the same loudness on every instrument; for a held note the height runs over the ensemble scale 65–127 (`HELD_LO/HI`).
+  Now in the boxes' titles.
+- **The sequence (his items 1 and 9):** a row has its own `length` and `offset`; the sequence is as long as the last pair's end; the head's
+  box stretches the whole sequence in proportion; a `len` box and **▶ pair** in every row; **the sequence strip** under the voicing bar:
+  a track per pair, the pair a zone drawn with its heard-beating curve and its label, the body dragged moves it in time, the right edge
+  is its length (the shapes kept — `stretch`), the left edge starts it later keeping its end, 0.05 s steps; a bound zone moves in the
+  score as it is dragged (the group's first start is the origin). The offset rail is gone. The strip and the rows follow each other live.
+- **SPACE follows the focus:** `space → sequence / pair N / chord` in the head; a click in a row makes its pair the focus, a click in the
+  harmony list or on the keyboard the chord, the ▶ sequence button or the strip's background the sequence; SPACE while playing stops.
+  **A number box never traps SPACE**: it is blurred and SPACE plays (text boxes keep their SPACE).
+- **The slopes:** the calc module's curves carry an optional third number per point, the slope of the segment after it (−1 … +1), the
+  score's own power model (`y = a + (b − a) · t^(4^slope)`); it survives sorting, scaling, mirroring and the lock; a diamond at every
+  segment's middle on both rate curves and on the crescendo — drag up / down bends it, the wheel steps it by 0.05, ALT-click straightens;
+  the bold curve is drawn sampled through its slopes. 107 checks in node.
+- **Pair takes:** `save pair` / `load pair…` in every row — the curves, the level, the breaths, the interval, the length, the lock and the
+  axis under a name in the `beatingPairs` bucket of bank/panel_snapshots.json; a load keeps the row's players and note.
+- **The crosshair** on the keys and the dots instead of the hand.
+
+**Verified on `zz-ai-seq` (a copy, deleted) with real DOM events:** the strip with two tracks (80 × 1372 px), the len boxes, ▶ pair ×2,
+save pair ×2, four slope diamonds on a hump, 61 keys and 19 dots with the crosshair, no offset rail; the level box on a dragged shape:
+the three points kept, the peak 4 → 5.03 so the heard maximum is 4.99 (the sampling grid); the pair's length 6 → 9 with the shape byte
+for byte the same; a slope 0.8 on the first segment: both mirrored curves carry it, the rate at 15 % of the segment 0.31 where a
+straight line gives 1.25, two diamonds lit; the second pair dragged 120 px → @ 0.95 s, its right edge +100 px → 6.8 s, the sequence 9 s;
+the sequence box 9 → 18: every offset and length doubled; SPACE with a number box focused: blurred, the active pair alone (Fl + Vn1, two
+notes from 0); the sequence: BCl + Va at 312 ms and Fl + Vn1 at 2212 ms (= 300 ms lead + 1.9 s); the chord: 19 notes on the piano; a
+pair take saved, the pair flattened and shortened, the take loaded: the shape, the length and the interval back, the players and the
+note kept; a pattern take carries lengths and offsets; insert → two zones at 179.924→197.924 and 181.824→195.424 with the META shape;
+the bound zone dragged in the strip → 180.874 (= the origin + 0.95), "the zone moved in the score". No page errors from the panel (two
+from synthetic keydowns dispatched on `window`, which real keys never do). The screenshot taken this time.

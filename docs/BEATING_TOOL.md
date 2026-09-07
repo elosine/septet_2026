@@ -468,6 +468,27 @@ from the assigned note's dot (or its key) to the pair's node — double-click th
 way (the nearest lane that holds it as written, else the fewest octaves). The three pairs that cannot reach a unison on some pitch
 class: flute + bass clarinet on F# G G# A A# B, bass clarinet + either violin on F# (§179) — an octave apart or a fifth serves them.
 
+## 13 · His first hour: the sequence, SPACE, the slopes, the level box, pair takes — `built 2026-09-07 (RUNNING_LOG §182; MORPH_NOTES §3) — verified with real DOM events on a copy; his test pending`
+
+- **A pair has its own length and offset; the sequence is as long as the last pair's end.** The head's box stretches the whole sequence
+  in proportion; each row has a `len` box and **▶ pair**. **The sequence strip** under the voicing bar: a track per pair, the pair a zone
+  drawn with its heard-beating curve — drag the body to move it in time, the right edge for its length (the shapes kept), the left edge
+  to start it later keeping its end; a bound zone moves in the score as you drag. The rows and the strip follow each other live.
+- **SPACE follows where you work:** `space → sequence / pair N / chord` in the head — a click in a row, in the harmony list or on the
+  keyboard, or on ▶ sequence sets it; SPACE while playing stops; **a number box never traps SPACE** (it is blurred and SPACE plays).
+- **The level box (`to … /s`)** pops a menu shape in again at the new level; a drawn or dragged shape is SCALED to it — the shape kept.
+  A duration never touches the curves.
+- **The slopes:** a diamond at every segment's middle on both rate curves and on the crescendo — drag up / down bends the segment (the
+  score's power curve, −1 … +1), the wheel steps it by 0.05, ALT-click straightens. The slope rides on the segment's first point in the
+  block (`[p, v, slope]`) and survives the mirror lock, scaling and the take.
+- **The 0–1 level** is the score's curve height (D23, NAMING §2.9): 0 the softest held dynamic, 1 fff, equal loudness across instruments
+  through the remap — not dB, not raw velocity.
+- **Pair takes:** `save pair` / `load pair…` in every row (the `beatingPairs` bucket): the curves, the level, the breaths, the interval,
+  the length, the lock, the axis; a load keeps the row's players and note.
+- **The crosshair** on the keyboard. **The stutter he heard** (§182): the emitted streams are as smooth as the string quartet's (the
+  same 50 ms grid, steps under half a cent and 1–2 CC7 units); the A/B that separates the beating itself from the sampler and from the
+  transport's tick is his: the same pair at 2/s; with the crescendo flat; from the panel vs from the transport.
+
 ## Log (append-only)
 
 - **2026-09-07 — step 1 built:** the palette (§3): the recipe fields, `beating_calc.js` (the palette part, 37 checks), the bend
@@ -505,3 +526,7 @@ class: flute + bass clarinet on F# G G# A A# B, bass clarinet + either violin on
   one unit with the arrows and the ladder; every player in the partner menu; the voicing bar with the octave box and the octave range,
   the seeded reshuffle with its chips; the lines from key to node; the players' ranges as columns; skip; the block's `srcPitch · fold ·
   noteIndex · skip`, the take's `voicing`; 102 checks in node; verified with real DOM events on a copy. His test pending.
+- **2026-09-07 — his first hour's nine asks built** (§13; RUNNING_LOG §182): the sequence strip with a track per pair, a length and a play
+  per pair, SPACE by focus, the number boxes freed, the slopes on the curves, the level box keeping a drawn shape, pair takes, the
+  crosshair; the stutter examined (the streams smooth — his A/B pending); the level scale answered. His test pending; the discussion on
+  how to proceed next.

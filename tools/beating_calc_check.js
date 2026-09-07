@@ -243,5 +243,15 @@ const HUMP3 = BC.shape('hump', { peak: 3 });
   ok(pcsOf(hl) === pcsOf(H) && hl.filter(p => p < 60).length >= 2 && hl.filter(p => p > 72).length >= 2, 'high + low: half the notes low, half high');
   ok(!same(BC.voiceChord(H, { preset: 'spread', seed: 2 }), BC.voiceChord(H, { preset: 'spread', seed: 3 })), 'a reshuffle (a new seed) is a different spread');
   ok(BC.voiceChord(H, { preset: 'original', oct: 3 }).every(p => p <= 108) && BC.voiceChord(H, { preset: 'original', oct: -3 }).every(p => p >= 21), 'the piano\'s ends clamp the octave box'); }
+// ---- the slopes (2026-09-07, "like in logic pro"): the score's power model on a segment's first point; kept through scale and mirror ----
+{ const c = [[0, 0, 1], [1, 4]];   // slope +1 → t^4: below the straight line
+  ok(near(BC.evalCurve(c, 0.5), 4 * Math.pow(0.5, 4)) && near(BC.evalCurve([[0, 0, -1], [1, 4]], 0.5), 4 * Math.pow(0.5, 0.25)) && near(BC.evalCurve([[0, 0], [1, 4]], 0.5), 2),
+     'a slope of +1 bends a segment to t^4, −1 to t^(1/4), none is straight (the score\'s power model)');
+  ok(BC.evalCurve(c, 0) === 0 && BC.evalCurve(c, 1) === 4, '… the ends stay at the ends');
+  const sc = BC.scaleCurve(c, -0.5), m = BC.mirrored(c, 0.5);
+  ok(sc[0][2] === 1 && sc[0][1] === 0 && sc[1][1] === -2 && m.lower[0][2] === 1 && m.upper[0][2] === 1, '… the slope survives scaling and mirroring');
+  ok(BC.curveOf([[1, 4], [0, 0, 0.5]])[0][2] === 0.5 && BC.curveOf([[0, 1, 0], [1, 2]])[0].length === 2, '… and sorting; a zero slope is not stored');
+  const o = BC.renderPair({ pitch: 60, interval: 'unison', players: { lower: 'cello', upper: 'viola' }, length: 4, beat: [[0, 0, 1], [1, 4]] }, recipe);
+  ok(o.samples[Math.round(o.samples.length / 2)].beat < 1 && near(o.maxBeat, 4, 0.05), 'a pair on a bent ramp: the beating stays low through the middle and reaches 4 at the end'); }
 console.log(fails ? 'FAIL — ' + fails + ' check' + (fails > 1 ? 's' : '') + ' failed' : 'PASS — every check passed');
 process.exit(fails ? 1 : 0);

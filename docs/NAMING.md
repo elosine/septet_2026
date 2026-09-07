@@ -98,7 +98,8 @@ or not at all.**
     pair's fold by octaves as one unit, BEATING_TOOL §12), **fold** (the octaves moved, `pitch − srcPitch` in octaves), **noteIndex**
     (which note of the panel's sonority the pair holds, or null — the take's `harmony` + `voicing` name that sonority), **skip** (true =
     nobody plays it: the snippet has no events and says `skipped`),
-    rateFrom, rateTo, shape | beat (the heard-rate curve: breakpoints over normalised time, beats per second), share (how the
+    rateFrom, rateTo, shape | beat (the heard-rate curve: breakpoints over normalised time, beats per second — a point may carry a
+    third number, the SLOPE of the segment after it, −1 … +1, the score's power model; BEATING_TOOL §13), share (how the
     beating is split between the two, 0.5 = mirrored), rate { lower, upper } (two explicit rate curves when the mirror is
     unlocked), levelLo, levelHi | levelCurve (the crescendo, 0 → 1), breath { mode: 'one' | 'continuous' | 'designated', seed,
     marks { lower, upper } (hand-placed marks, seconds), deal }, slide { lower, upper } (seconds), launchedFrom (a record of the
@@ -110,7 +111,9 @@ or not at all.**
     `pitch` + the interval's semitones), which player has the upper note (`renderPair(...).players`), the beat rate over the span
     (`.beat`), each player's cents over time (`.samples[].centsL / centsU`), the breaths (`.breaths.lower / upper.spans`) and the
     level (the curve height IS the dynamic, item 9). **A pattern is a group** (item 5): its beatings and a META shape share a
-    `groupId` of the form `grp-beating-<t×10>-<n>`, the shape's contour the crescendo's mean across the pattern. The notation form
+    `groupId` of the form `grp-beating-<t×10>-<n>`, the shape's contour the crescendo's mean across the pattern. **The panel's takes**
+    (`bank/panel_snapshots.json`): the `beatings` bucket holds a sequence — `{ length, harmony, voicing, rows: [{ layer, offset, length,
+    locked, scale, b }] }` — and the `beatingPairs` bucket one pair's settings — `{ layer, length, locked, scale, b }` (2026-09-07). The notation form
     (phase 2a): two curves per part — the glissando above, the crescendo below — the two written pitches at least a quarter tone
     apart, a go line at every breath, the beat rate at both ends of the glissando (the tuba's MORPH_NOTATION; BEATING_TOOL §10).
 

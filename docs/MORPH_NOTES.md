@@ -352,6 +352,50 @@ menus, the dotted lines from key to node, the players' ranges as columns, skip. 
 of a note) and the offer-never-apply ladder are the two ideas worth keeping; the voicing engine is now a pure function shared by
 name with the strikes drawer's presets — the harmony module (CN-35) should take it from `beating_calc.js` rather than copy it again.
 
+### 2026-09-07 — his first hour with the drawer: the sequence, SPACE, the level scale, the slopes, a stutter, the level box, pair takes, the pointer, a sequence organizer — and a call for a different way of working
+
+> *"should be duration per pair and audition per pair; So a length for the entire sequence and a play for the entire sequence. And there
+> should be a way to move the spacebar. So somehow I listen to the entire sequence with space. And, otherwise, if I'm working with a
+> pair, I just listen to the pair with space. And if I'm in the chord shapes, I just listen to the chord with space. Then for each pair,
+> there should be a length, a duration, and then the play for just that pair.*
+> *The num boxes are trapping space.*
+> *what is the 0-1 volume scale? what is it based on db, velocity?*
+> *Could I get the curve adjusting features like curves in main score. use mouse to change slope, like in logic pro, already implemented
+> in main score*
+> *in bigger intervals something in playback studders either flute or bcl, could it be the playback on animation clock like before? or
+> something to do with the way pitch bend is implemented. sounds like bcl, check carefully in string quartet, we had it smooth there and
+> the ai looked there for this build, but it sounds like it is implemented incorrectly.*
+> *when I change the duration the pair. It snaps back to the original shape. Can I have the new beating level keep the custom shape and
+> just change the duration?*
+> *a save for individual pairs settings.*
+> *hand mouse pointer for assigning a keyboard pitch to a pair. No good. Can we get something with a point so I can know which key I'm
+> double clicking and... or dragging?*
+> *I would like a sequence organizer. So, like, not too different than the way we're managing the trills in the main score . So let's just
+> keep the pair panels for now. But then below everything or above , there is a track for every pair that I made. So two pairs gets two
+> tracks, etcetera. And then pairs represented by zones, I can drag them like I can the trill zones. and they will maintain the pair shapes
+> and settings dynamically in real time just like the trill zones refer to the curve. And if I change the curve the trill zone updates, and
+> then I could shift those zones in the track so I create a different time relationship between the different pairs. And then I could
+> extend the zones or shrink them in the zone tracks and change the duration dynamically of the pairs in the pair maker.*
+> *go ahead and make these changes, but then afterwards, can we have a discussion about how to proceed? I wanted to avoid this sort of
+> little detail by little detail troubleshooting. I don't wanna get bogged down in it. So maybe you can recommend some strategies. somehow
+> there were some overall conceptual misses in the plan. maybe we trace what I actually want to do or how I like to work or something, not
+> too onerous, but a straightforward plan that will get this panel working quickly so I can get back to composing and hearing things. make
+> the changes above first. and put it in to the drawer so I can start using it, And then let's see if we can do a reorg that will sweep up
+> any blockers and individual details. in one go"*
+> *(2026-09-07, afternoon; typed, with a screenshot of pair 1 — Flute + Bass Cl. on D4, a hump to 7/s; the whole message in RUNNING_LOG
+> §182 with what was found and built)*
+
+**AI reading (not the composer's words):** nine asks and one process point. (1) a length and a play per pair, a length and a play for the
+sequence, SPACE following where he works (the sequence · the pair · the chord); (2) the number boxes must not trap SPACE; (3) what the
+0–1 level is; (4) the score's slope handles on the panel's curves; (5) a stutter heard on the bass clarinet at "bigger intervals" —
+suspected the animation clock or the bend; (6) the level box popping a preset over a custom shape (the "duration snaps back" — it was the
+LEVEL box: it re-popped the preset, a burst for a drawn shape); (7) pair takes; (8) a crosshair instead of the hand; (9) a track per pair
+with the pair as a zone, dragged and stretched like the trill zones, the pair maker following live. **The process point:** the plan had
+"overall conceptual misses" — the drawer was built to the requirements talk but not to how he works; he wants strategies, not
+detail-by-detail troubleshooting. **For the all-purpose tool:** the sequence strip is the third time this family of tools has grown a
+timeline inside a panel (the strikes' rhythm lane, the trills' zones, now the pairs' tracks) — the revision should have ONE timeline
+widget; and "what SPACE plays follows the focus" is a rule every panel should share.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·
