@@ -4516,3 +4516,9 @@ behaviour (drag, delete, an edge stretch scaling the pattern with the breaths re
 its own earlier group, a new time = a new group · select + P loads the whole group, Insert then = replace · nothing else touched, the
 checker reading its notes like any · the verification on a copy at 175.7 s, his test, the verdicts filed. Into PLAN 1f on his go.
 Nothing built.
+
+## §162. "on point, good" — step 6 written into PLAN 1f
+
+Composer: *"on point, good"* (the to-dos of §161). **Written into `docs/PLAN.md` 1f item 6 at once:** the result when done, the
+decision of §160 quoted, the seven to-dos; the item's summary line no longer names the mute rule. Committed and pushed. Next: step
+7's goal (verify and document), on his word — then step 8 (later), and the whole item shown once.

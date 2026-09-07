@@ -523,8 +523,37 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        interval changed moves the partner and its just offset in the decoded MIDI; a note outside a pair's range dimmed and refused; a
        relation dealt from a root gives the pairs' pitches as predicted, folded; a launched pattern opens on its strike; then his
        test, the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md, commit, push.
-  6. **Insertion** (at the strike or the playhead, the group and its META shape, the mute rule, re-insert replaces, select-and-P,
-     stretch regenerates) — *to be laid out when we discuss it.*
+  6. **Insertion** (at the playhead, its own group and META shape, re-insert replaces, select-and-P, stretch regenerates; nothing
+     around it touched) — `todo`. *Result when done:* a pattern made in the panel lands in the score at the playhead as one gesture,
+     its own thing. It arrives as its beating objects under one group with a META shape, so the group drag carries it, a delete
+     removes all of it, and a stretch of the shape regenerates it. It touches nothing around it: no note muted, no note greyed, no
+     overlap avoided; the score's ordinary conflict marks apply to its notes as to any other, and the accents are his to add by hand.
+     Its length is the pattern's own. Inserting again from the same panel replaces the earlier insert at its own time and nowhere
+     else. Select a beating and P reopens its pattern in the panel. One convenience: with a strike note selected, B and the panel
+     take its pitch and its onset as a starting point, with no link made. The META shape's contour from the crescendo's mean, as the
+     tuba's. **Decided with the goal (RUNNING_LOG §160, composer): "keep the beating out of the strike chain so unlike the trills …
+     we'll just add accents manually, but it doesn't have to do things like avoid overlaps and gray out notes … it'll just be its
+     own thing"** — the mute rule, the eating and the exit at the next strike note of the first proposal dropped; step 3's B launch
+     reads the same way. The to-dos:
+     - Insert @ playhead from the panel: the pattern's objects on their pairs' lanes at the playhead time, the row offsets kept, under
+       one new group with a META shape on the META layer whose contour is the crescendo's mean across the pattern; the panel
+       remembers which group it made;
+     - the starting point: with a strike note selected, its pitch goes to the first row and its onset becomes the insert time;
+       nothing stored linking the two;
+     - the group's behaviour: the group drag carries every object (the single-shape path and §144's multi-selection path alike); a
+       delete of the shape removes all of it; an edge stretch of the shape scales the pattern by step 2's stretch (the curves
+       normalised, the breaths re-dealt), each object regenerated on mouseup;
+     - re-insert: from the same panel state the earlier group is removed and the new one placed at its own time; an insert at another
+       time makes a second group (the strikes drawer's rule, CN-28 / §112);
+     - select + P: a selected beating loads its whole group into the panel, all rows, edits live; the panel's Insert then acts as a
+       replace;
+     - nothing else touched: no mute stamps, no eating, no greying; the conflict checker reads its notes like any other — verified,
+       not assumed;
+     - verified on a `zz-ai-*` copy at 175.7 s: a three-pair pattern inserted lands on six lanes under one group with its shape; the
+       group dragged 2 s moves all of it with the offsets kept; the shape stretched × 1.5 regenerates with the breaths re-dealt; a
+       re-insert replaces and the object count holds; an insert elsewhere makes a second group; a delete removes all and nothing
+       else changes; save and reload keep it; the checker clean; then his test, the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md,
+       commit, push.
   7. **Verify and document** (on a copy of the piece at 175.7 s; BEATING_TOOL.md and MORPH_NOTES; commit) — *to be laid out when we
      discuss it.*
   8. **Later** (the shuffle as a writer; cycles of beatings for section 3, CN-33; the training material on the full beating curve;
