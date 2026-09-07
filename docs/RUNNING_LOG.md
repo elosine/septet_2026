@@ -5586,3 +5586,18 @@ end; the card shows eleven rows; a region trimmed to 3 s sounds 3 s notes, no Na
 (a screenshot and a line each), the fix comes back as one commit with a walk of each item; gestures are tested as real mouse
 sequences including the click-then-render trap; the gesture card is the memory of what is taken; and for anything conceptual — a
 model, not a control — one line of behaviour agreed before it is built.
+
+## §189. The column that jumped to pair 1 — fixed at once; the zoom's sensitivity and its centre saved as feature requests at his word
+
+Composer, 2026-09-07 night (MORPH_NOTES §3): *"if I enter a number in pair 2 and hit enter, actually any change, even scroll auto
+scrolls up to pair 1 … fix the auto scroll now, impossible to work with it"*; the zoom's sensitivity and its centre *"save these all as
+feature requests"*.
+
+**The cause:** every render of the drawer rebuilds the rows column (`host.innerHTML = ''` then the rows again), and an emptied column
+scrolls to the top — so any edit in pair 2 or 3 (a number, a wheel that zooms, a drag's release) brought pair 1 back into view.
+**The fix:** `render` keeps the rows column's and the keyboard column's scroll and puts them back after the rebuild. **Verified on
+`zz-ai-scroll` (a copy, deleted):** three pairs, the column scrolled to the bottom; a number typed in pair 3 → the scroll unchanged;
+an ALT + wheel zoom over pair 3 → unchanged; the keyboard column scrolled to 200 and a length typed → unchanged. No page errors.
+
+**Saved (NITS):** the zoom steps by the score's factor per wheel EVENT, which a fine wheel or a trackpad fires many times per notch — too
+sensitive; and the window's start is clamped at 0, so near the start the zoom cannot centre on the mouse and he has to scroll after.

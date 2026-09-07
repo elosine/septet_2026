@@ -549,6 +549,16 @@ cut of it; nodes belong to the timeline, not to the region.** The hours went on 
 gesture after another. For the all-purpose tool this is the founding rule of every lane. The process point is in HOW_WE_WORK and
 RUNNING_LOG §188.
 
+### 2026-09-07, night — the zoom, and the column that jumped
+
+> *"zoom scroll too sensitive; and zoom center point should be at mouse, I now have to zoom and scroll; if I enter a number in pair 2
+> and hit enter , actually any change, even scroll auto scrolls up to pair 1; save these all as feature requests and we'll update them at
+> a later time. but fix the auto scroll now, impossible to work with it"* *(typed, with a screenshot of the hold shape with its beats)*
+
+**AI reading (not the composer's words):** the jump was every render rebuilding the rows column and losing its scroll — fixed at once
+(RUNNING_LOG §189); the two zoom points are in NITS as feature requests at his word. For the all-purpose tool: a re-render must never
+move what he is looking at.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

@@ -368,10 +368,13 @@ const P = {
         this.el.querySelector('#bpTitle').textContent = this.patternGroupId ? '— pattern ' + this.patternGroupId + ' · ' + this.rows.length + ' pair' + (this.rows.length > 1 ? 's' : '') : this.bound ? '— ' + (TRK()[this.bound.layer] || {}).short + ' ' + this.bound.startTime.toFixed(2) + ' s' : '— new pattern' + (this.insertAt != null ? ' @ ' + this.insertAt.toFixed(2) + ' s' : '');
         this.el.querySelector('#bpAdd').disabled = (!!this.bound && !this.patternGroupId) || this.rows.length >= MAX_ROWS;
         this.el.querySelector('#bpInsert').textContent = this.patternGroupId ? 'insert (replace the pattern)' : 'insert @ ' + (this.insertAt != null ? this.insertAt.toFixed(2) + ' s' : 'playhead');
-        const host = this.el.querySelector('#bpRows'); host.innerHTML = '';
+        const host = this.el.querySelector('#bpRows'), kbWrap = this.el.querySelector('#bpKbWrap');
+        const keepRows = host.scrollTop, keepKb = kbWrap ? kbWrap.scrollTop : 0;   // a render rebuilds the columns: their scroll stays where he left it (2026-09-07 night: "any change … auto scrolls up to pair 1")
+        host.innerHTML = '';
         W = Math.max(520, (host.clientWidth || 0) - 24);   // the drawings fill the page
         this.rows.forEach((row, i) => { this.rowOut(row); host.appendChild(this.buildRow(row, i)); });
         if (!this.rows.length) host.innerHTML = '<div style="color:#888;padding:12px">no pairs — + pair</div>';
+        host.scrollTop = keepRows; if (kbWrap) kbWrap.scrollTop = keepKb;
         if (this.activeRow >= this.rows.length) this.activeRow = Math.max(0, this.rows.length - 1);
         this.drawKeyboard(); this.paintRelation(); this.paintVoicing(); this.drawSeq(); this.paintFocus(); this.paintZoom();
         const ar = this.el.querySelector('#bpArmed'); if (ar) ar.textContent = this.armed != null ? nn(this.armed) + ' armed — click a pair\'s node (or drag it there)' : (this.rootMode ? 'root mode: click a key' : '');

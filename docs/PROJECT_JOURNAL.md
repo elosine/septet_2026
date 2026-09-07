@@ -135,7 +135,9 @@ own server (:5300); the AI built at his word, one chunk at a time:
   on the timeline"*): **the region model** — the lanes on the sequence timeline, every node at its own time, the region's edges as
   cuts, the score's zoom and scroll, a cursor while it plays, a gesture card; the double-click on a node that never fired (a click
   re-rendered the lane) fixed; HOW_WE_WORK: one round per sitting, gestures as real mouse sequences, a model agreed in one line
-  before it is built. **Next: his test of the region model, then the first beating sequence in the piece; the stutter A/B still his.**
+  before it is built. Then (§189) the rows column jumping to pair 1 at every edit — a render rebuilt it and lost its scroll — fixed;
+  the zoom's sensitivity and its centre saved in NITS as feature requests at his word. **Next: his test of the region model, then the
+  first beating sequence in the piece; the stutter A/B still his.**
 - **Tools on his hands (§111–114):** the bend cursor only when Points is off; TRILLS phase 4 (a trill runs to the player's next
   strike note, a stretch regenerates at once); a nudged trill keeps its attack note (a 60 ms eating window; the drag keeps a
   trill's start; the articulation switch arbitrated on a shared sampler slot — the tail and the lead); the drawer's pick no

@@ -87,3 +87,9 @@
 - **2026-09-06 — the compiler's own accel (`compiler.js` `spec.accel`, the tuba's clouds) keeps its copy of the law** the calculator
   now carries (`accel_calc.js`; the `raw` route reproduces it with `curveZero: −0.4`): route it through the module when the clouds are
   next touched, so one law lives in one place.
+- **The beating drawer's zoom is too sensitive and does not centre on the mouse as expected** (composer, 2026-09-07 night, "zoom
+  scroll too sensitive; and zoom center point should be at mouse, I now have to zoom and scroll" — saved as feature requests at his
+  word, RUNNING_LOG §189). The zoom steps by the score's 1.18 / 0.85 per wheel event, which a fine-stepping wheel or a trackpad fires
+  many times per notch; `zoomBy` keeps the second under the mouse in place but clamps the window's start at 0, so near the start the
+  view cannot centre. To do: scale the factor by the wheel's delta (one notch = one step), and let the window start before 0 when the
+  mouse asks for it.
