@@ -4477,3 +4477,8 @@ marks per row in the row's colour; the upper player by range; the players change
 a root and folded, the pairs from the bottom · the interval menu per row with the just offset in the cents readout · the row's label
 mirrored into the object's fields, regenerated on a change · the verification on a copy, his test, the verdicts filed. Into PLAN 1f
 on his go. Nothing built.
+
+## §159. "on point, good" — step 5 written into PLAN 1f
+
+Composer: *"on point, good"* (the to-dos of §158). **Written into `docs/PLAN.md` 1f item 5 at once:** the result when done, the
+three things settled with the goal, the seven to-dos. Committed and pushed. Next: step 6's goal (insertion), on his word.

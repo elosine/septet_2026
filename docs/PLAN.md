@@ -491,8 +491,38 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - verified on a `zz-ai-*` copy with real DOM events (a shape popped, a level dragged, a slide, an unlock and slide, a row offset, a
        duration change, a shuffle), each changing the objects' notes as predicted and decoded; the takes round-trip; nothing outside
        the pattern touched; then his test, the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md, commit, push.
-  5. **The pitch side** (the strikes menu → the keyboard, a pitch per pair, the sonority between pairs, the interval inside a pair) —
-     *to be laid out when we discuss it.*
+  5. **The pitch side** (the strikes menu → the keyboard, a pitch per pair, the sonority between pairs, the interval inside a pair)
+     — `todo`. *Result when done:* the panel's pitches are chosen the way the strikes drawer chooses them. A strikes menu lists the
+     played chords from the bank; clicking one puts that chord on a keyboard inside the panel. A click on a keyboard note and then on
+     a row gives that pair its pitch, and the keyboard dims the notes the pair cannot play (step 1's table). The sonority between the
+     pairs can also be dealt by relation from a root note — unison, thirds, fourths, fifths, or a typed stack — folded into range.
+     Each row's interval places the partner's note above the pitch at the just interval (unison by default; fourths, fifths and the
+     thirds to try), and the keyboard shows both notes of the pair. Which player takes the upper note follows the ranges. A pattern
+     launched from a strike starts with that strike's chord as its source. **Settled with the goal (RUNNING_LOG §158):** the
+     assigned pitch is the pair's lower note, the partner above it by the interval; unison between the pairs offered two ways — all
+     pairs on one note in one octave (a six-player field on one pitch, the tuba's bloom) and the pitch class spread across octaves;
+     the strikes drawer's own keyboard reused inside the panel (the fold arrows and the range dimming for free). *(composer,
+     2026-09-06, §148–149: "the menu of strikes … it appears on the keyboard … assign a pitch to a pair … the chord or sonority is
+     between the three pairs … the forty five or forty six played chords … internally, there's Unison, but I also would like to try
+     fourths, fifths")*. The to-dos:
+     - the source menu: the bank's played chords, numbered as the strikes drawer numbers them; beside it the relations from a root —
+       unison in one octave · unison across octaves · thirds · fourths · fifths · a typed stack; a pattern launched from a strike
+       opens on that strike;
+     - the keyboard: the strikes drawer's own, reused inside the panel; the chosen chord lit; with a row selected, the notes outside
+       both its players' ranges dimmed from step 1's table; the fold arrows as in the drawer;
+     - assigning: click a note then a row, or drag the note onto the row; the note is the pair's lower note; the row's interval places
+       the partner above it at the just interval; the keyboard shows both notes in the row's colour; the player above chosen by range;
+       a row's players changed by chips and re-checked against the table;
+     - the relations dealt: from the root (a keyboard click or typed), the pairs' pitches by the relation, folded into the pairs'
+       ranges by the drawer's fold rule, the pairs from the bottom up;
+     - the interval per row: unison · minor third · major third · fourth · fifth; the just offset applied by step 2's module and shown
+       in the cents readout;
+     - the row's label (the two players, the lower note, the interval, the upper note) mirrored into the beating object's fields; the
+       objects regenerated on any pitch change;
+     - verified on a `zz-ai-*` copy: a strike picked puts its chord on the keyboard; a note assigned sets the object's pitch; an
+       interval changed moves the partner and its just offset in the decoded MIDI; a note outside a pair's range dimmed and refused; a
+       relation dealt from a root gives the pairs' pitches as predicted, folded; a launched pattern opens on its strike; then his
+       test, the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md, commit, push.
   6. **Insertion** (at the strike or the playhead, the group and its META shape, the mute rule, re-insert replaces, select-and-P,
      stretch regenerates) — *to be laid out when we discuss it.*
   7. **Verify and document** (on a copy of the piece at 175.7 s; BEATING_TOOL.md and MORPH_NOTES; commit) — *to be laid out when we
