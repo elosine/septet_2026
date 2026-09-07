@@ -4426,3 +4426,8 @@ into the object's own snippet · the tick (the bend per frame through the instru
 centred at the note's end and on stop; the level through 1g's held-note path; the timestamped scheduler) · the launch by B with the
 defaults · the P row · Hear through the same path · the verification on a copy by decoding the MIDI · his ear at unison, fifth,
 fourth, the verdicts filed. Into PLAN 1f on his go. Nothing built.
+
+## §155. "on point, good" — step 3 written into PLAN 1f
+
+Composer: *"on point, good"* (the to-dos of §154). **Written into `docs/PLAN.md` 1f item 3 at once:** the result when done and the
+eight to-dos in the fixed format. Committed and pushed. Next: step 4's goal (the panel), on his word.

@@ -425,7 +425,35 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        per cent; the just offsets (+2 · −2 · −14 · +16 c); mirrored humps in phase = a pulse, slid = a plateau; breath lengths inside
        the ceiling and staggered; the stretch; the flags; the tuba's number reproduced (13.19 c = 1 beat per second at C3, D28).
   3. **One pair in the score, heard** (the object on its two lanes, its notes, playback through the bend and 1g's remap; unison first,
-     then fifth and fourth by ear) — *to be laid out when we discuss it.*
+     then fifth and fourth by ear) — `todo`. *Result when done:* a beating exists as a score object and he has heard one. B on a
+     strike note makes a beating on that lane and its partner's: the note's pitch the centre, the partner the nearest lane that can
+     pair with it by step 1's table, a bloom from unison to 3 beats per second over 6 s, one breath, the crescendo following the
+     beating curve. At play it regenerates its notes from its settings as the trill does (D20): one sustained note per player, bent
+     per frame through that instrument's own range from step 1, the bend set before the note starts and centred when it stops, the
+     loudness through 1g's remap; a stretch of its edge regenerates it; a minimal properties row on P changes the partner, the
+     interval, the two rates, the length and the breath mode (the maximum beating adjustable from here on — the 3 per second is only
+     the birth default; a handle at step 4; the ceiling the player's semitone, flagged). The curve panel is step 4, the mute rule and
+     the group step 6. Verified on a copy of the piece at 175.7 s by decoding the MIDI the tick sends, then by his ear. *(composer,
+     2026-09-06, RUNNING_LOG §154)*. The to-dos:
+     - the object: a `beating` on the launching lane carrying its partner's lane, the trill's zone as the model — the pair's settings
+       (centre pitch, interval, the two rate curves, the crescendo curve, length, breath mode and marks, seed); drawn as a bracket on
+       both lanes, selectable, draggable, its right edge a stretch; saved and loaded; the group drag carries it (§144);
+     - regeneration at play start and after a drag or stretch: step 2's module makes the notes, one per breath per player, kept as
+       the object's own snippet (the trill's `midiSnippet` pattern), never as loose score notes — removing the beating removes all;
+     - the tick: the bend per frame from the note's breakpoints through that instrument's range (step 1's recipe field replacing the
+       tuba's 1.99 at `composer.html:10112`); the bend joined to the pre-arm so the note starts at pitch; centred at the note's end
+       and on stop (`resetMorphBend`); the level through 1g's held-note path (`heldNote / cc7ForHeight`); the timestamped scheduler
+       (D19);
+     - the launch: B on a strike note, or at the playhead with nothing selected, makes the beating with the defaults above; the
+       strike note itself stays as it is (the mute rule is step 6);
+     - the properties row on P: partner · interval (unison, fourth, fifth, the thirds) · rate from and to · length · breath mode; the
+       zone's label names the pair, the interval and the top rate;
+     - Hear from the row, or the space bar with the object selected: the pair alone through the same tick path;
+     - verified on a `zz-ai-*` copy of the piece at 175.7 s on :5301: launched on a strike, the notes on both lanes, the tick's MIDI
+       captured and decoded — the beat rate over time matching the curve within 0.1 beats per second, the just offsets at the fifth
+       (+2 c) and the fourth (−2 c), the bend before the note-on and centred after, the CC7 through the remap, nothing stray on other
+       channels; save, reload, drag and stretch keep it; the checker clean;
+     - his ear: unison first, then the fifth and the fourth; the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md; commit, push.
   4. **The panel** (rows, the mirrored curves with handles on rails, the crescendo and breath layers, the derived beating line, shapes
      and freehand, the slide, the space bar, the duration box, takes) — *to be laid out when we discuss it.*
   5. **The pitch side** (the strikes menu → the keyboard, a pitch per pair, the sonority between pairs, the interval inside a pair) —
