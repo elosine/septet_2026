@@ -4020,3 +4020,22 @@ regenerated snippet (`midiSnippet`, its note events carrying `notes: [pitch]`) h
 semitone above — 43 of 43; the 23 earlier major-2nd trills untouched, still two pitches a whole tone apart; the status line as
 written. The harness lesson: a trill's sounding pitches are read from `midiSnippet`'s events with a `notes` array, the CC events
 (`_cc`) first. The copy deleted after.
+
+## §142. "a spread out strike, evenly spread out, but then have it last a certain duration and have a return or loop like the acceleration … the same mix of the instruments and pitches" — the even run: one entry in the run menu
+
+Composer: *"I would like to do a spread out, strike, evenly spread out, but then have it last a certain duration and have a return or
+loop like the acceleration. But, again, the same mix of the instruments and pitches around and choose from the full range of played
+pitches."* **Read:** the dealing (round robin or free) and the whole-strike pool of §138 never cared about the timing law, so an even
+run is a shape that holds one gap. **Built:** `even` at the top of the calculator's `SHAPES` (`flat: true` — gapEnd := gapStart; by
+duration every gap is exactly the length ÷ the count, the gap box the target; by notes the gap itself) and in the drawer's `run`
+menu; choosing it moves the length to the ms box when steep was in charge, greys `steep` and `→ last`; the readout says even · steep
+1.000. **Two things found on the way:** the calculator's default shape had become the list's first entry (the check script caught it
+— five checks fell over with every gap 542) → the default pinned to geometric; the readout's tail check read the ignored `→ last` →
+it reads the run's actual smallest gap now (an even run of 300 → 7 × 299; jitter 30 % on a 45 landing → 7 × 31 = 215 < 250 ✗, an
+honest warning). `tools/accel_calc_check.js`: the even cases (57 checks, PASS).
+
+**Verified on a copy** (take 34-a, real DOM events, no console errors): `run` even · `gap` 300 · `=` 20000 · `deal` free · `pitches`
+the whole strike → 68 notes, every gap 298.507 ms (20000 ÷ 67), the closest two notes of one player 597 ms apart, no player twice in
+a row, per player 8 – 11, ten pitch classes, 29 folds, 0 violations; `notes` 40 → 40 notes at exactly 300 ms, 11700 ms; round robin +
+the cards over 12 s → 6 laps, 41 notes, 300 ms; back to geometric → the boxes live again. **For him:** `run` even · `gap` the spacing ·
+`=` the length (or `notes` the count) · `deal` free · `pitches` the whole strike; the hard reload first.

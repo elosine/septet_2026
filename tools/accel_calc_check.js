@@ -30,10 +30,16 @@ ok(countMismatch === 0 && maxd < 1e-6, 'the current run reproduced on ' + n + ' 
 
 // 2. every shape, both directions, every way of giving the length: the ends exact, the gaps monotone, the length honoured
 for (const sh of AC.SHAPES) for (const [g1, g2] of [[542, 45], [45, 542]]) for (const L of [{ ratio: 0.85 }, { count: 12 }, { duration: 3300 }]) {
+  if (sh.flat && L.ratio != null) continue;   // an even run has no steepness
   const r = AC.run({ gapStart: g1, gapEnd: g2, length: L, shape: sh.key });
   const first = r.gaps[0], last = r.gaps[r.gaps.length - 1];
   const mono = r.gaps.every((g, i) => i === 0 || (g1 > g2 ? g <= r.gaps[i - 1] + 1e-9 : g >= r.gaps[i - 1] - 1e-9));
   const lenOk = L.count != null ? r.notes === 12 : (L.duration != null ? (r.gapCount <= 2 || near(r.duration, 3300, 1e-6)) : true);
+  if (sh.flat) {   // even: every gap the same, T ÷ k by duration (the gap box the target), the gap itself by count
+    const same = r.gaps.every(g => near(g, r.gaps[0], 1e-9)); const target = L.duration != null ? 3300 / Math.round(3300 / g1) : g1;
+    ok(same && near(r.gaps[0], target, 1e-9) && lenOk, sh.key.padEnd(10) + 'gap ' + g1 + ' by ' + Object.keys(L)[0].padEnd(8) + ' → ' + String(r.notes).padStart(3) + ' notes · ' + String(Math.round(r.duration)).padStart(5) + ' ms · every gap ' + r.gaps[0].toFixed(2));
+    continue;
+  }
   ok(near(first, g1) && near(last, g2) && mono && lenOk && r.fit.iterations < 80,
      sh.key.padEnd(10) + (g1 > g2 ? 'accel' : 'decel') + ' by ' + Object.keys(L)[0].padEnd(8) + ' → ' + String(r.notes).padStart(3) + ' notes · ' + String(Math.round(r.duration)).padStart(5) + ' ms · ends ' + first.toFixed(2) + ' / ' + last.toFixed(2) + ' · monotone ' + mono + ' · fit ' + r.fit.iterations + ' it');
 }

@@ -558,7 +558,10 @@ call, as the chart decides (§86).
 > were; the round robin is untouched. Added the same evening (§138, "c, build both pls"): a `deal` menu — round robin (as built) or free (no lap: each note to any player the
 > re-attack rule allows, at random, never the one who just played while another is free, a lean toward whoever has waited longest; the
 > rule stays a guarantee, a ✗ when nobody is free) — and a `pitches` menu — the cards, or every distinct pitch the strike holds, drawn to
-> completion then reshuffled, each folded into the receiving player's range. The calibration of words to numbers waits for his go.
+> completion then reshuffled, each folded into the receiving player's range. And `even` at the top of the `run` menu (§142, "a spread out strike, evenly spread
+> out … have it last a certain duration and have a return or loop like the acceleration"): one gap throughout — the gap box, `→ last`
+> ignored, the length by ms (every gap exactly the length ÷ the count) or by notes — with the same dealing and pool as a run. The
+> calibration of words to numbers waits for his go.
 
 
 ## Open questions for the composer (only what blocks the next piece)

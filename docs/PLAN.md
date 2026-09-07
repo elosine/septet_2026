@@ -445,7 +445,12 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      the rule a guarantee, flagged when nobody is free) — and a `pitches` menu — the cards, or every distinct pitch the strike holds,
      drawn to completion then reshuffled, folded into the receiving player's range as before. Verified on the copy: 102 notes, the
      closest two of one player 267 ms apart, ten pitch classes; the old round robin deals identically.
-  5. **Later, on his go:** the calibration ladder (his words → the dial's numbers, done the way the tuba's dens8 ladder was); other
+  5. **The even run** — `built 2026-09-06 (§142)` *(composer: "a spread out strike, evenly spread out, but then have it last a certain
+     duration and have a return or loop like the acceleration … the same mix of the instruments and pitches around and choose from the
+     full range of played pitches")*: `run` → even — one gap throughout (the gap box; `→ last` ignored), the length by ms (every gap
+     exactly the length ÷ the count) or by notes; the dealing (round robin or free) and the pitch pool as for any run. The calculator's
+     default shape pinned to geometric; the tail check reads the run's actual smallest gap.
+  6. **Later, on his go:** the calibration ladder (his words → the dial's numbers, done the way the tuba's dens8 ladder was); other
      panels adopting the module — the trills, the compiler's clouds (its own copy of the law stays until touched; NITS), the morph
      events.
   *Result when done:* any feel of the rush is reachable by dialing, and one calculator serves every panel that accelerates. *Why:* the

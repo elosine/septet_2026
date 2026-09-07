@@ -546,7 +546,8 @@ const D = {
     // the length by steep / notes / ms, jitter, hold, mirror, a level ramp; the dealing below is untouched
     accelSpec() {
         const c = this.cfg; const blank = v => v === '' || v == null;
-        const L = c.aLen === 'count' ? { count: +c.aCount || 2 } : c.aLen === 'duration' ? { duration: +c.aDur || 1 } : { ratio: +c.aRatio || 0.85 };
+        const lenBy = (c.aShape === 'even' && c.aLen !== 'count') ? 'duration' : c.aLen;   // §142: an even run has no steepness — the ms box or the notes
+        const L = lenBy === 'count' ? { count: +c.aCount || 2 } : lenBy === 'duration' ? { duration: +c.aDur || 1 } : { ratio: +c.aRatio || 0.85 };
         return { gapStart: Math.max(1, +c.aFirst || 1), gapEnd: Math.max(1, +c.aFloor || 45), length: L, shape: c.aShape || 'geometric',
                  curve: +c.aCurve || 0, ease: +c.aEase || 2, knee: +c.aKnee || 0, gamma: +c.aGamma || 2,
                  jitter: { pct: +c.aJit || 0, pctEnd: blank(c.aJitEnd) ? null : +c.aJitEnd, seed: +c.aSeed || 1 },
@@ -559,7 +560,7 @@ const D = {
         const key = JSON.stringify([spec, c.aMin, c.aRedeal, c.aDeal, c.aPool, c.durX, this.voices.map(v => v.pitch), units.map(u => [u.v.i, u.pitch, u.players.map(x => x.lane + ':' + x.tech)])]);
         if (this._accel && this._accel.key === key) return this._accel.out;
         const AC = AC_(); const R = AC.run(spec);
-        const fastest = Math.min(spec.gapStart, spec.gapEnd), minMs = Math.max(0, +c.aMin || 0);
+        const fastest = R.gaps.length ? Math.min.apply(null, R.gaps) : Math.min(spec.gapStart, spec.gapEnd), minMs = Math.max(0, +c.aMin || 0);   // the tail check on the run as dealt (an even run, the jitter)
         const on = R.onsets, N = on.length, k = R.gapCount;
         const out = { units: n, notes: N, gaps: k, total: R.duration, ratio: R.ratio, calc: R, spec, events: [], cycles: [], info: '' };
         if (!n) { out.info = 'no sounding notes — assign players first'; this._accel = { key, out }; return out; }
@@ -877,7 +878,7 @@ const D = {
                 '<label title="U12: checked — a note nobody plays leaves the rhythm and the sounding notes are spaced by themselves; unchecked — it stays as a rest on the recorded grid"><input id="skDrop" type="checkbox"> drop rests</label>' +
                 '<div id="skAccel" style="display:none;flex-direction:column;gap:3px;margin-top:3px;padding-top:3px;border-top:1px solid #333">' +
                 '<span style="color:#9a9" title="U13: one accelerating run — the gap box is its FIRST gap, every next gap is steep × the one before, down to → last; the notes needed are computed and the players come round again (cycle 1 in your order, later cycles shuffled under the re-attack rule, or the rotation with the pitches shuffled when no shuffle fits)">accel · round robin</span>' +
-                '<label title="1h: the run\'s shape — geometric: each gap a fixed fraction of the one before (a still head, then the collapse) · curve: the speed changes by a percentage per second, the dial from bloom (the change early) through even to surge (a still head, then the swell) · S-curve: even, accelerating, then the last gaps nearly equal · two-phase: a flat head, then the rush · late rush: the gaps stay near the first, then collapse · linear ms: each gap shorter by the same milliseconds">run <select id="skAShape" style="' + inp + ';width:84px"></select></label>' +
+                '<label title="1h: the run\'s shape — even: the same gap throughout, the gap box, → last ignored, the length by ms or notes (§142) · geometric: each gap a fixed fraction of the one before (a still head, then the collapse) · curve: the speed changes by a percentage per second, the dial from bloom (the change early) through even to surge (a still head, then the swell) · S-curve: even, accelerating, then the last gaps nearly equal · two-phase: a flat head, then the rush · late rush: the gaps stay near the first, then collapse · linear ms: each gap shorter by the same milliseconds">run <select id="skAShape" style="' + inp + ';width:84px"></select></label>' +
                 '<label id="skADialRow" title="the shape\'s one number"><span id="skADialName">dial</span> <input id="skADial" type="number" step="0.05" style="' + inp + '"></label>' +
                 '<span style="color:#9a9" title="the run\'s length by any ONE of the three — type one and the other two follow; the one in charge is outlined">length</span>' +
                 '<label title="the steepness: each gap about this fraction of the one before (the count of notes follows; the last gap lands exactly on → last, so the fraction is adjusted a little); for a run that slows, the same number read as its inverse">steep <input id="skASteep" type="number" min="0.5" max="0.99" step="0.01" style="' + inp + '"></label>' +
@@ -917,7 +918,7 @@ const D = {
             q('#skDrop').addEventListener('change', e => { this.snapshot(); this.cfg.dropRests = !!e.target.checked; this.save(); this.render(); });
             q('#skASteep').addEventListener('change', e => { this.snapshot(); this.cfg.aRatio = clamp(+e.target.value || 0.85, 0.5, 0.99); this.cfg.aLen = 'ratio'; this.save(); this.render(); });
             // 1h: the run's shape, its dial, the length by notes, the jitter, the hold, the mirror, the level ramp
-            q('#skAShape').addEventListener('change', e => { this.snapshot(); this.cfg.aShape = e.target.value; this.save(); this.render(); });
+            q('#skAShape').addEventListener('change', e => { this.snapshot(); this.cfg.aShape = e.target.value; if (this.cfg.aShape === 'even' && this.cfg.aLen === 'ratio') this.cfg.aLen = 'duration'; this.save(); this.render(); });
             q('#skADial').addEventListener('change', e => { const AC = AC_(); const sh = AC && AC.shapeOf(this.cfg.aShape); if (!sh || !sh.dial) return; this.snapshot(); this.cfg[DIAL_CFG[sh.dial.key]] = clamp(+e.target.value || 0, sh.dial.min, sh.dial.max); this.save(); this.render(); });
             q('#skACount').addEventListener('change', e => { this.snapshot(); this.cfg.aCount = clamp(Math.round(+e.target.value || 2), 2, 500); this.cfg.aLen = 'count'; this.save(); this.render(); });
             q('#skAJit').addEventListener('change', e => { this.snapshot(); this.cfg.aJit = clamp(+e.target.value || 0, 0, 100); this.save(); this.render(); });
@@ -962,7 +963,9 @@ const D = {
             const sh = AC && AC.shapeOf(c.aShape); const dialRow = Q('#skADialRow'), dial = Q('#skADial');
             if (sh && sh.dial) { dialRow.style.display = ''; Q('#skADialName').textContent = sh.dial.label; dial.min = sh.dial.min; dial.max = sh.dial.max; dial.step = sh.dial.step; dial.value = c[DIAL_CFG[sh.dial.key]]; dialRow.title = sh.note; } else dialRow.style.display = 'none';
             Q('#skASteep').value = c.aLen === 'ratio' ? c.aRatio : +A.ratio.toFixed(3); Q('#skACount').value = c.aLen === 'count' ? c.aCount : A.notes;
-            const master = { ratio: '#skASteep', count: '#skACount', duration: '#skSpanMs' }; Object.keys(master).forEach(k => { Q(master[k]).style.outline = (c.aLen || 'ratio') === k ? '1px solid #C9A05A' : ''; });
+            const even = c.aShape === 'even', lenBy = (even && c.aLen !== 'count') ? 'duration' : (c.aLen || 'ratio');
+            const master = { ratio: '#skASteep', count: '#skACount', duration: '#skSpanMs' }; Object.keys(master).forEach(k => { Q(master[k]).style.outline = lenBy === k ? '1px solid #C9A05A' : ''; });
+            Q('#skASteep').disabled = even; Q('#skAFloor').disabled = even;   // §142: no steepness and no landing in an even run
             Q('#skAJit').value = c.aJit || 0; Q('#skAJitEnd').value = c.aJitEnd === '' || c.aJitEnd == null ? '' : c.aJitEnd; Q('#skAHold').value = c.aHold || 0; Q('#skAMirror').checked = !!c.aMirror;
             Q('#skAVel0').value = c.aVel0 === '' || c.aVel0 == null ? '' : c.aVel0; Q('#skAVel1').value = c.aVel1 === '' || c.aVel1 == null ? '' : c.aVel1; Q('#skAVelCurve').value = c.aVelCurve || 0;
             Q('#skADeal').value = c.aDeal === 'free' ? 'free' : 'robin'; Q('#skAPool').value = c.aPool === 'strike' ? 'strike' : 'cards'; Q('#skARedeal').disabled = c.aDeal === 'free'; }

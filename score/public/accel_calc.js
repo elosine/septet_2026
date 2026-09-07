@@ -11,7 +11,7 @@
 // spec = {
 //   gapStart, gapEnd,                    ms; either order (gapEnd > gapStart = a deceleration)
 //   length: { ratio } | { count } | { duration },   the per-note ratio (a magnitude, 0.5 … 0.99), the notes, or the ms
-//   shape: 'geometric' | 'curve' | 's' | 'twoPhase' | 'lateRush' | 'linear' | 'raw',
+//   shape: 'even' | 'geometric' | 'curve' | 's' | 'twoPhase' | 'lateRush' | 'linear' | 'raw',   even = one gap throughout (gapEnd ignored)
 //   curve, curveZero, gamma, ease, knee,  the shapes' dials (SHAPES); curveZero = a panel's calibrated zero (0 here)
 //   domain, warp, interp,                'raw' only: 'index' | 'time'; a WARPS key; 'log' | 'lin'
 //   jitter: { pct, pctEnd, seed },       % of each gap; pctEnd (blank = pct) ramps it along the run; seeded
@@ -44,6 +44,8 @@
 
   // ---- the named shapes, in the menu's order; dial = the one number a panel shows for it ----
   const SHAPES = [
+    { key: 'even', label: 'even', domain: 'index', warp: 'linear', interp: 'lin', dial: null, flat: true,
+      note: 'the same gap throughout (the gap box; → last ignored) — the length by ms or notes; the dealing and the pool as for a run (§142)' },
     { key: 'geometric', label: 'geometric', domain: 'index', warp: 'linear', interp: 'log', dial: null,
       note: 'each gap a fixed fraction of the one before (U13): a still head, then the collapse' },
     { key: 'curve', label: 'curve', domain: 'time', warp: 'exp', interp: 'log', dial: { key: 'curve', label: 'curve', min: -1, max: 1, step: 0.05, def: 0 },
@@ -57,7 +59,7 @@
     { key: 'linear', label: 'linear ms', domain: 'index', warp: 'linear', interp: 'lin', dial: null,
       note: 'each gap shorter by the same milliseconds: a push that eases as it goes (§W)' },
   ];
-  const shapeOf = key => SHAPES.find(s => s.key === key) || SHAPES[0];
+  const shapeOf = key => SHAPES.find(s => s.key === key) || SHAPES.find(s => s.key === 'geometric');   // the default stays the drawer's geometric run
   const interpOf = (kind, g1, g2) => kind === 'lin' ? (w => g1 + (g2 - g1) * w) : (w => g1 * Math.pow(g2 / g1, w));
 
   // how many gaps a per-note ratio needs from g1 to g2 (the drawer's rule of U13: the last gap lands exactly, the ratio re-fitted)
@@ -110,15 +112,16 @@
 
   function run(spec) {
     const s = spec || {};
-    const g1 = Math.max(0.1, +s.gapStart || 1), g2 = Math.max(0.1, +s.gapEnd || g1);
     const sh = s.shape === 'raw' ? { key: 'raw', domain: s.domain || 'index', warp: s.warp || 'linear', interp: s.interp || 'log', dial: null } : shapeOf(s.shape);
+    const g1 = Math.max(0.1, +s.gapStart || 1), g2 = sh.flat ? g1 : Math.max(0.1, +s.gapEnd || g1);
     const w = (WARPS[sh.warp] || WARPS.linear)(s);
     const interp = interpOf(sh.interp, g1, g2);
     const L = s.length || {};
     let k, gaps, fit = { iterations: 0, residual: 0 }, lengthBy;
     if (L.duration != null && L.count == null && L.ratio == null) {
       lengthBy = 'duration'; const T = Math.max(0.1, +L.duration || 0);
-      if (sh.domain === 'time') { k = countForDuration(T, w, interp, g1); const r = timeGaps(k, T, w, interp, g1, g2); gaps = r.gaps; fit = { iterations: r.iterations, residual: r.residual }; }
+      if (sh.flat) { k = Math.max(1, Math.round(T / g1)); gaps = new Array(k).fill(T / k); }   // even: every gap exactly T ÷ k, the gap box the target
+      else if (sh.domain === 'time') { k = countForDuration(T, w, interp, g1); const r = timeGaps(k, T, w, interp, g1, g2); gaps = r.gaps; fit = { iterations: r.iterations, residual: r.residual }; }
       else { const r = indexGapsForDuration(T, w, interp, g1, g2); gaps = r.gaps; k = gaps.length; fit = { iterations: 0, residual: r.residual }; }
     } else {
       if (L.count != null && L.ratio == null) { lengthBy = 'count'; k = Math.max(1, Math.round(+L.count || 2) - 1); }
