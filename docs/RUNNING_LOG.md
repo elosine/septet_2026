@@ -5106,3 +5106,32 @@ console errors.
 
 **Not done, by his words:** the voicing presets, the seeded shuffle, the lines and the articulation per player — the harmony
 MODULE's (CN-35, PLAN 1d), not the beating drawer's. His listening still to come.
+
+## §178. "i still have a trapped viola note playing" — the rack silenced again; the second way a long note could be trapped (any audition's stop clears the shared queue) closed: a long note's off is never queued ahead now — the tick sends it when due, an audition from a timer
+
+Composer, 2026-09-07 late morning: *"i still have a trapped viola note playing"*. The panic script run again (every port silenced);
+his server was serving the fixed page (the ■ Panic button and `releaseSounding` present), Reaper idle.
+
+**What §176 had left open, found by reading every `clear()` in the page:** `stopTrillAudition` and `stopBeatingAudition` call
+`out.clear()` on the outputs they use — the SHARED Web MIDI outputs. A trill's ▶ hear or an interval chip, or the panel's own stop,
+while a beating was sounding through the transport (or another audition), cancelled every queued message on that output — the
+long note's note-off among them, queued up to 30 s ahead. The transport's stop would have released it (§176's registry), but with
+the transport idle nothing did; and an audition that ended by its own timer released nothing either (`_beatingAud` already null).
+The viola: the partner of the last strike's cello — the pair the B launch makes — its bow trapped by exactly that.
+
+**The fix — a long note's release is never in the queue:** (1) the zone tick no longer schedules a long note's off with its on; the
+note is registered (`noteSounding`) and **`tickSoundingOffs` sends the off when its end enters the 100 ms lookahead** — the
+plain-note tick's own rule (`OFF_HORIZON_S`) — timestamped at the end; (2) an audition (`playBeatingEvents`, the panel's ▶ chord),
+which no tick serves, registers each note **with a timer that sends the off at its end** (a JS timer: ±5–80 ms on a long note's
+release, inaudible; measured 686 ms for a 600 ms note); `stopBeatingAudition` releases through the registry (the timers cleared);
+(3) a stop or a panic still releases everything registered. Short notes (≤ 150 ms — the trills') keep the queued off: a clear
+within 150 ms of a note-on costs nothing audible.
+
+**Verified in the pane (a copy, fake outputs):** the tick — two beating notes on, **no offs queued** (2 registered, no timers);
+driven on, the offs go out 0.1 s before the end, timestamped exactly at the end, the registry empty; the audition — a 0.6 s
+beating, 2 notes registered by timer, **eight foreign clears issued, the two offs still arrive** 686 ms after the on, the registry
+empty; ▶ chord — 3 notes on the piano, 3 offs 1.5 s later from timers. No console errors.
+
+**For the tool's memory (MORPH_NOTES §3, the trapped-note entry):** never queue a long note's release ahead of time on a shared
+output — a stop, a panic, another audition's stop may clear the queue; send the release when it is due, from the tick or a timer,
+and keep a registry a stop can drain.

@@ -278,7 +278,10 @@ floor for every panel of the tool, with the row drawings widened to the page. RU
 **AI reading (not the composer's words):** the first long notes through the scheduled-ahead path: a stop cancelled their pending
 note-offs (`clear()`), and the all-notes-off after it is ignored by the Xsample instruments. Fixed for every long note (remembered
 and released on stop) and a ■ Panic button added; `probes/panic.ps1` for the rack alone. For the all-purpose tool: a sustained note
-must always have its own release path — never rely on CC123. RUNNING_LOG §176.
+must always have its own release path — never rely on CC123. RUNNING_LOG §176. *Then* — *"i still have a trapped viola note
+playing"* (§178): any audition's stop clears the same shared queue; so a long note's release is never queued ahead at all — the tick
+sends it when due, an audition from a timer. The rule for the tool: **never queue a long note's release; send it when it is due,
+from a tick or a timer, and keep a registry a stop can drain.**
 
 ### 2026-09-07 — the harmonies on the left, in banners; hear the chord on the piano; assign a note to a pair by hand
 

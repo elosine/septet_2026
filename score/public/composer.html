@@ -9900,7 +9900,7 @@ const Composer = {
         this._beatingAud = null; clearTimeout(a.timer);
         const now = performance.now();
         a.slots.forEach(s => { try { if (typeof s.out.clear === 'function') s.out.clear(); } catch (e) { } });
-        a.notes.forEach(n => { n.out.send([0x80 | n.ch, n.key, 0], now); if (this._sounding) this._sounding.delete((n.out.name || '?') + '|' + n.ch + '|' + n.key); });
+        a.notes.forEach(n => { if (!this.releaseOne((n.out.name || '?') + '|' + n.ch + '|' + n.key, now)) n.out.send([0x80 | n.ch, n.key, 0], now); });
         a.slots.forEach(s => { s.out.send([0xE0 | s.ch, 0, 64], now); s.out.send([0xB0 | s.ch, 7, 127], now); });
         if (a.btn && a.btn.isConnected) a.btn.textContent = a.label;
     },
@@ -9919,7 +9919,7 @@ const Composer = {
             const at = now + e.onsetMs;
             if (e._bend != null) { out.send([0xE0 | ch, e._bend & 0x7F, (e._bend >> 7) & 0x7F], at); (this._morphBentChannels || (this._morphBentChannels = {}))[(e.port || snip.port || '') + '|' + ch] = true; return; }
             if (e._cc != null) { out.send([0xB0 | ch, e._cc, e._ccValue != null ? e._ccValue : 0], at); return; }
-            e.notes.forEach((k, i) => { const dur = e.durations[i] || 100; out.send([0x90 | ch, k, Math.max(1, Math.min(127, Math.round(e.velocity)))], at); out.send([0x80 | ch, k, 0], at + dur); a.notes.push({ out, ch, key: k }); this.noteSounding(out, ch, k, at + dur); last = Math.max(last, e.onsetMs + dur); });   // remembered: a transport stop releases it too (§176)
+            e.notes.forEach((k, i) => { const dur = e.durations[i] || 100; out.send([0x90 | ch, k, Math.max(1, Math.min(127, Math.round(e.velocity)))], at); a.notes.push({ out, ch, key: k }); this.noteSounding(out, ch, k, at + dur, true); last = Math.max(last, e.onsetMs + dur); });   // the off from a timer, never queued ahead (§178); a transport stop releases it too (§176)
         });
         a.slots.forEach(s => s.out.send([0xE0 | s.ch, 0, 64], now + last + this.BEATING_CENTRE_MS));
         if (btn) btn.textContent = '■ stop';
@@ -10472,15 +10472,35 @@ const Composer = {
     // through a Web MIDI timestamp gets its note-off scheduled with it; a stop calls out.clear(), which cancels that note-off; and
     // Kontakt's Xsample instruments do not honour the CC123 all-notes-off sent after (piece #1's finding) — so a long note (a
     // beating's 6–30 s bow) stayed on. Every long note is remembered here as it is scheduled, and released explicitly on every stop.
+    // §178 (the viola trapped again): a long note's note-off is NEVER queued seconds ahead any more — every audition's stop clears the
+    // shared queue (stopTrillAudition, stopBeatingAudition) and would cancel it. The zone tick sends a long note's off when its end
+    // enters the lookahead (the plain-note tick's own rule); an audition (no tick runs for it) sends it from a timer. A stop or a
+    // panic releases whatever is still registered.
     _sounding: null,
-    noteSounding(out, ch, key, untilPerf) {
+    noteSounding(out, ch, key, untilPerf, byTimer) {
         if (!this._sounding) this._sounding = new Map();
-        this._sounding.set((out.name || '?') + '|' + ch + '|' + key, { out, ch, key, until: untilPerf });
+        const k = (out.name || '?') + '|' + ch + '|' + key;
+        const prev = this._sounding.get(k); if (prev && prev.timer) clearTimeout(prev.timer);
+        const e = { out, ch, key, until: untilPerf, timer: null };
+        if (byTimer) e.timer = setTimeout(() => this.releaseOne(k, untilPerf), Math.max(0, untilPerf - performance.now()));
+        this._sounding.set(k, e);
+    },
+    releaseOne(k, atPerf) {
+        const e = this._sounding && this._sounding.get(k); if (!e) return false;
+        if (e.timer) clearTimeout(e.timer);
+        const now = performance.now();
+        try { e.out.send([0x80 | e.ch, e.key, 0], atPerf == null ? now : Math.max(now, atPerf)); } catch (x) { }
+        this._sounding.delete(k);
+        return true;
+    },
+    tickSoundingOffs(nowPerf, lookaheadMs) {   // the tick's long notes whose end is within the lookahead: the off goes out now, timestamped at the end
+        if (!this._sounding || !this._sounding.size) return;
+        for (const [k, e] of [...this._sounding]) if (!e.timer && e.until <= nowPerf + lookaheadMs) this.releaseOne(k, e.until);
     },
     releaseSounding(atPerf) {
         if (!this._sounding || !this._sounding.size) return 0;
         const at = atPerf == null ? performance.now() : atPerf; let n = 0;
-        for (const s of this._sounding.values()) { try { s.out.send([0x80 | s.ch, s.key, 0], at); n++; } catch (e) { } }
+        for (const s of this._sounding.values()) { if (s.timer) clearTimeout(s.timer); try { s.out.send([0x80 | s.ch, s.key, 0], at); n++; } catch (e) { } }
         this._sounding.clear();
         return n;
     },
@@ -14054,14 +14074,15 @@ const Composer = {
                     evt.notes.forEach((note, ni) => {
                         const dur = evt.durations[ni] || 100;
                         evtOutput.send([0x90 | evtCh, note, vel], now + delayMs);
-                        evtOutput.send([0x80 | evtCh, note, 0], now + delayMs + dur);
-                        if (dur > 150) this.noteSounding(evtOutput, evtCh, note, now + delayMs + dur);   // a long note: released explicitly on a stop (§176)
+                        if (dur > 150) this.noteSounding(evtOutput, evtCh, note, now + delayMs + dur);   // a long note: its off sent by tickSoundingOffs when due, released on a stop (§176, §178)
+                        else evtOutput.send([0x80 | evtCh, note, 0], now + delayMs + dur);
                     });
                 }
 
                 state.nextEventIdx++;
             }
         });
+        this.tickSoundingOffs(performance.now(), 100);   // the long notes' offs, as they come due (§178)
 
         // Marker playback (oneShot + anticipationReaction): fire when playhead crosses marker time
         this.objects.forEach(obj => {

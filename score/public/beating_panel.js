@@ -616,7 +616,7 @@ const P = {
         const ch = (r.channel || 1) - 1, now = performance.now() + 5, dur = 1500;
         out.send([0xB0 | ch, 7, 127], now); if (r.cc0 != null) out.send([0xB0 | ch, 0, r.cc0], now);
         const keys = [...new Set(this.chord.map(n => n.midi))].sort((a, b) => a - b);
-        keys.forEach(k => { out.send([0x90 | ch, k, 88], now + 5); out.send([0x80 | ch, k, 0], now + 5 + dur); C.noteSounding(out, ch, k, now + 5 + dur); });
+        keys.forEach(k => { out.send([0x90 | ch, k, 88], now + 5); C.noteSounding(out, ch, k, now + 5 + dur, true); });   // the offs from timers, never queued ahead (§178)
         this.setStatus('the chord on the piano: ' + keys.map(nn).join(' '));
     },
     // the strikes in sequence order, numbered as the drawer numbers them (index · t0 · notes)
