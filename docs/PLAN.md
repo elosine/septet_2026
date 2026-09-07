@@ -554,8 +554,30 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        re-insert replaces and the object count holds; an insert elsewhere makes a second group; a delete removes all and nothing
        else changes; save and reload keep it; the checker clean; then his test, the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md,
        commit, push.
-  7. **Verify and document** (on a copy of the piece at 175.7 s; BEATING_TOOL.md and MORPH_NOTES; commit) — *to be laid out when we
-     discuss it.*
+  7. **Verify and document** (the whole tool end to end on a copy; the tool's doc, the morph notes, the naming doc, the journal; his
+     listening) — `todo`. *Result when done:* the whole tool has run end to end on a copy of the piece at 175.7 s — from the strikes
+     menu to a three-pair pattern shaped, slid, breathed, inserted and played in context among the strikes around it, its MIDI
+     decoded and matching what the panel shows. `docs/BEATING_TOOL.md` exists, gathered piece by piece with what was built stamped
+     (the STRIKES_TOOL / TRILLS_TOOL pattern). MORPH_NOTES says what exists now and carries the digest for the revision. NAMING §2
+     carries the beating object's conventions for the IR (D9: the composer save is the ground truth). The journal holds the
+     decisions with their whys. PLAN 1f is marked built. The app's help line says how a beating is made. He has heard the first
+     pattern in the piece on his own server after a hard reload, his verdicts filed. The piece file stays his: every run on a copy,
+     the first pattern in the piece placed by him. *(RUNNING_LOG §163)*. The to-dos:
+     - the end-to-end on a `zz-ai-*` copy at 175.7 s: a strike picked from the menu, three pairs assigned, shapes popped and dragged,
+       one pair unlocked and slid, a row offset, breaths dealt, a duration set, inserted at the playhead, played among the strikes
+       around it; the tick's MIDI decoded for the whole pattern against the panel; the checker clean; the copy and its working file
+       deleted after;
+     - `docs/BEATING_TOOL.md`: the requirements gathered piece by piece — the anatomy, the panel, the pitch side, the breaths, the
+       insertion — each with his words and stamped with what was built and when; the open questions for him at the end;
+     - MORPH_NOTES: §1 rewritten to what exists now (the beating math, the object, the panel; what the tuba files still hold); §4 the
+       digest for the revision;
+     - NAMING §2: the beating object for the IR — its type and fields, its generated notes, the curve height as the dynamic (D23) —
+       so the extractor at 2a knows what it reads;
+     - the journal: §4 the decisions with their whys and the rejected alternatives (the name and the atom · the panel · the axis ·
+       the piano out · the beating out of the strike chain · the breath model); §2 updated; PLAN 1f marked built;
+     - the app's help line (`?`): how a beating is made — B, P, the panel, Insert;
+     - his hard reload and his listening on his server, the first pattern in the piece placed by him; the verdicts to MORPH_NOTES §3
+       and BEATING_TOOL.md; commit, push.
   8. **Later** (the shuffle as a writer; cycles of beatings for section 3, CN-33; the training material on the full beating curve;
      the notation at 2a) — *to be laid out when we discuss it.*
   *Why:* section 2's material in his form of 2026-09-06 — strikes whose chords are held and beat, the slide show — and the beating

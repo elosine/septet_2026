@@ -4533,3 +4533,8 @@ The to-dos put to him (format B): the end-to-end on the copy (a strike picked, t
 offset, breaths dealt, a duration, inserted, played among the strikes; the MIDI decoded; the checker clean; the copy deleted after)
 · BEATING_TOOL.md · MORPH_NOTES §1 and §4 · NAMING §2 · the journal §4 and §2, PLAN 1f built · the help line · his reload, listening
 and verdicts, commit, push. Into PLAN 1f on his go. Nothing built.
+
+## §164. "on point, good" — step 7 written into PLAN 1f
+
+Composer: *"on point, good"* (the to-dos of §163). **Written into `docs/PLAN.md` 1f item 7 at once:** the result when done and the
+seven to-dos. Committed and pushed. Next: step 8 (later), then the whole item shown once and "is that it?".
