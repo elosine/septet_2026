@@ -679,6 +679,19 @@ conversation, the AI as the hands, the composer's ear as the judge — and the r
 made to fit the rack. For the all-purpose tool: the sampler's bend range is a rack setting the tool should ASK FOR and then measure,
 not a constant it carries; the probe is the tool's, the dial is the composer's. RUNNING_LOG §201.
 
+### 2026-09-07, late — the bend range in Kontakt: "do I do that now?" · "make the panel bigger" · "even with this you cannot access the pitch bend range?"
+
+> *"Can you give me instructions on the pitch bend range? And do I do that now?"* — then, with four screenshots of Kontakt (Options →
+> Developer; the Xsample Bass Clarinet panel; Instrument Options → Controller; Instrument Options → Instrument): *"also if you are
+> stepping the fonts up pls make the panel bigger; and previous ai looked into the developer features, even with this you cannot
+> access the pitch bend range? look at other images pls and see where the pb range might be"* *(2026-09-07, late; typed)*
+
+**AI reading (not the composer's words):** the tool's palette has one number it cannot set itself — the sampler's bend range — and
+the composer is walked through a sampler's edit view to change it, with the tool's probe as the only trustworthy check. For the
+all-purpose tool: keep the probe (measure, never assume), keep the "set the rack" step explicit in the setup docs with the exact
+control per library once found, and note that Kontakt's Lua API reaches scripts, groups and zones but not the modulators. The
+panel's size follows its fonts — a readability floor is a size floor too. RUNNING_LOG §202.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

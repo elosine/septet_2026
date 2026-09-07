@@ -5852,3 +5852,37 @@ default pairs first, then the others; the pitch sets by his word; the swap and t
 **Put to him as the check-in:** the one step on his side (the Kontakt dial on five instruments, the rack left armed), the rest
 autonomous; if the rack is not armed the probe aborts (the stale-take guard, §168) and the build goes on with the old numbers until
 it is. Nothing built yet.
+
+## §202. "Can you give me instructions on the pitch bend range? And do I do that now?" · "if you are stepping the fonts up pls make the panel bigger; and previous ai looked into the developer features, even with this you cannot access the pitch bend range? look at other images pls and see where the pb range might be" — the Kontakt Lua API checked against its manual (no modulators), the Xsample manuals on disk (nothing on bend), the two candidates named from his screenshots
+
+Composer, 2026-09-07 late, four screenshots: Kontakt 8 Options → Developer (developer features off) · the Xsample Bass Clarinet panel
+("1 Senza Vibrato MW"; Edit Preset · Preset Menu · Store KS · KS Setup · Save Preset; Legato; Ensemble Setup with V 2 3 4 5, Panwide
+30, Alive 63, Detune 11 c, Delay 285 ms; **Toggle Mode · Standard · Slot rr off · ind. PB : 0 · Ending (Timer) · Timer (s) 0.31**;
+Key Switch Mode) · Instrument Options → Controller (**"Accept All Notes Off (#123) and All Sounds Off (#120)" UNCHECKED**, "Accept
+standard controllers for Volume (#7) and Pan (#10)" unchecked, CC7 range −∞ … −6 dB) · Instrument Options → Instrument (default
+keyswitch C0, transpose 0, velocity 1–127, the Xsample wallpaper and resource container). His words verbatim in MORPH_NOTES §3.
+
+**Answered "do I do that now?" first (the reply before this one):** yes, now, before the probe; then save the Reaper project, since
+the setting lives in the Kontakt instance inside the `.rpp`; the beating drawer's numbers are off by half between the dial and the
+probe.
+
+**The developer features (his question):** the Kontakt 8 Lua API reference (NI, 64 pages, text-extracted again: `scratchpad/
+kontakt_api.txt`) has the multi (load, channels, outputs, volumes, scripts), the instrument (options, scripts — `get_ /
+set_instrument_script_source`), the group (name, pan, playback mode, start options, tune, volume), the zone (keys, velocities,
+sample, tune, volume), presets, options, files, MIR — **no modulators, no pitch-bend intensity**. So the developer features cannot
+set the range. What they could do is read the Xsample instrument's own KSP script (if its script governs the bend) — a detour, not
+taken. **Not in Instrument Options either:** the Instrument and Controller tabs he sent hold the keyswitch default, transpose, the
+velocity range, CC64 / CC123 / CC7 handling — Kontakt has no bend-range field there; the range is the Modulation Intensity of the
+Pitch Bend source on the Source module's tune, per group (NI's Kontakt manual, Modulation). **The Xsample manuals on disk**
+(`Xsample_AIL_Contemporary_Solo_Strings.pdf`, 6 pages; `Xsample_Woodwinds_Bass_Clarinet.pdf`, 3 pages — keyswitch tables) say
+nothing about pitch bend or the panel's controls; the preset designer's manual is a separate download.
+
+**The two candidates given him:** (1) the Xsample panel's own **`ind. PB : 0`** (in the preset row beside Toggle Mode, Standard, Slot rr,
+Ending, Timer) — if it is an individual pitch-bend range per preset in semitones, 0 = the instrument's default; the test is the
+wheel: set 2, play a note, push the wheel up, a whole tone = found (else back to 0); (2) the standard Kontakt route — wrench → edit
+mode → Group Editor → Edit All Groups → Source module → the Modulation router → the Pitch Bend row → intensity 2.00 st; a scripted
+library may re-set it at init, which the probe would show. Either way: save the Reaper project after; the probe verifies.
+
+**Found in his screenshot, told him:** "Accept All Notes Off (#123) and All Sounds Off (#120)" is unchecked on the bass clarinet —
+the sampler-side reason the all-notes-off never stopped a trapped note (§176, §178); ticking it on the five gives ■ Panic a second
+path. Saved in NITS as a rack note, his call. **His ask saved for the build:** the morph panel's box grows with its fonts.

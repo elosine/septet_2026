@@ -124,3 +124,8 @@
   velocity box on a selected strike note; and let a partial insert ADD to an earlier insert of the same strike at the same time when
   the players differ. The strikes' five velocity bands (≤ 45 ppp · 75 p · 100 mf · 118 f · 127 fff, `notation/registry/container.json`)
   are the tuba's provisional thresholds — re-set for the septet at 2a.
+- **The Xsample instruments do not accept All Notes Off / All Sounds Off** (seen 2026-09-07 late in the composer's screenshot of the
+  bass clarinet's Instrument Options → Controller: "Accept All Notes Off (#123) and All Sounds Off (#120)" unchecked; RUNNING_LOG §202).
+  This is the sampler-side reason CC123 never stopped a trapped note (§176, §178); the app's cure — every long note released
+  explicitly, ■ Panic — stands on its own. Ticking the box on the five Xsample instruments (and saving the Reaper project) would give
+  Panic a second path at the sampler. His rack, his call; not needed for the piece.
