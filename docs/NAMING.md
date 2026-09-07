@@ -129,6 +129,9 @@ or not at all.**
     `morphFlags`; a morph is a group `grp-morph-NN` with a marker `MORPH …` on layer 0 and a META contour on `META_LAYER`; the cast
     (which lanes, the pitches folded per pair) lives in the panel's params (`lanes`, `source`) and in an ACTUAL as saved. The
     extractor at 2a reads `morphBend` (the tuba's `tools/notate_morph.js`).
+    **The pitch source (RUNNING_LOG §208):** a kept sonority lives in `bank/panel_snapshots.json` under the `morphPitches` bucket —
+    `{ state: { notes (MIDI), from, take, k, seed, perPair }, comment }` — and the starters in `bank/morph_pitches.json` (`sets[]`, the
+    same fields plus `name`); the panel's own state (the source chosen, the root, the take) is the browser's, never the score's.
 
 ## 3. Not S1's business (where the piece-specific work goes)
 

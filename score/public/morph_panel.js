@@ -77,6 +77,7 @@ const PANEL = {
         btn.addEventListener('click', () => this.toggle());
         host.parentNode.insertBefore(btn, host.nextSibling);
         this.pairs = this.loadPairs();   // the septet's cast (morph_septet.js)
+        this.pitch = this.loadPitch(); this.loadPitchSources();   // the pitch source (§208)
         this.build();
         this.startPolling();
     },
@@ -403,16 +404,18 @@ const PANEL = {
         this._fieldStamp = stamp;
         // exactly what was rendered, so Save as ACTUAL can store what was HEARD — the septet's CAST included: the pairs' players,
         // the pitches folded per pair, the lanes and the palette (morph_septet.js; RUNNING_LOG §203)
-        const cast = this.castOf(merged);
+        const pitched = this.applyPitch(merged);   // the pitch source into the model's params (§208)
+        const cast = this.castOf(pitched);
         this._cast = cast;
-        this._lastParams = cast ? cast.params : merged;
+        this._lastParams = cast ? cast.params : pitched;
         try {
-            this.result = M.render(cast ? cast.params : merged, {
+            this.result = M.render(cast ? cast.params : pitched, {
                 maxVoices: cast ? 6 : 10,
                 sampleLengths: (HOST() && HOST().sampleLen) || null,
                 palette: cast ? cast.palette : null,
             });
             if (cast && cast.warnings.length) this.result.warnings = (this.result.warnings || []).concat(cast.warnings);
+            if (this._pitchWarnings && this._pitchWarnings.length) this.result.warnings = (this.result.warnings || []).concat(this._pitchWarnings);
         } catch (e) {
             this.setStatus('render failed: ' + e.message, true);
             console.error(e); return;
@@ -575,6 +578,7 @@ const PANEL = {
             d.style.cssText = 'color:' + (colour || '#777') + ';margin:1px 0';
             d.innerHTML = t; f.appendChild(d);
         };
+        this.drawPitch(f, head, note);   // the pitch source (§205–208)
 
         // ---------------------------------------------- MODEL: recipes + seed
         if (this.mode === 'models' && this.model()) {
@@ -1112,6 +1116,139 @@ const PANEL = {
             cast.palette.forEach(x => { if (x && !seen[x.lane]) { seen[x.lane] = 1; bits.push(x.label + ' ' + x.technique + ' ±' + (x.reachCents / 100).toFixed(2) + ' st'); } });
             note(bits.join(' · '), '#666');
         }
+    },
+
+    // ------------------------------------------------------------- THE PITCH SOURCE (morph_septet.js; RUNNING_LOG §205–208; CN-38)
+    // A sonority — the model's own set, a kept set, a starter, a model's set, a stack or a Messiaen mode from the root, an entry of the
+    // harmony list — reduced to the pairs' notes by a named take rule, then written into the model's params before the cast.
+    PITCH_KEY: 'septet.morphPitch.v1',
+    PITCH_PANEL: 'morphPitches',
+    loadPitch() {
+        const d = { src: 'model', root: 'F2', take: 'byRegister', k: 1, seed: 1, perPair: 1 };
+        try { const s = JSON.parse(localStorage.getItem(this.PITCH_KEY) || 'null'); if (s && typeof s === 'object') return Object.assign(d, s); } catch (e) {}
+        return d;
+    },
+    savePitch() { try { localStorage.setItem(this.PITCH_KEY, JSON.stringify(this.pitch)); } catch (e) {} },
+    async loadPitchSources() {
+        const S = { harm: { strikes: [], blasts: [], chordShapes: [] }, starters: [], kept: {} };
+        const SEP = root.MorphSeptet;
+        try { const db = await fetch('/bank/scattered_strikes.json?t=' + Date.now(), { cache: 'no-store' }).then(x => x.json());
+              S.harm.strikes = Object.values(db.strikes || {}).sort((a, b) => a.index - b.index).map(s => ({ id: s.id, label: '#' + s.index, name: (+s.t0).toFixed(2) + ' s', pitches: (s.notes || []).map(n => n.midi) })); } catch (e) {}
+        try { const b = await fetch('/bank/harmonies.json?t=' + Date.now(), { cache: 'no-store' }).then(x => x.json());
+              ['blasts', 'chordShapes'].forEach(k => { const e = b && b.banks && b.banks[k] && b.banks[k].entries; if (e) S.harm[k] = e.map(x => ({ id: x.id, label: x.id, name: x.name, pitches: x.pitches })); }); } catch (e) {}
+        try { const st = await fetch('/bank/morph_pitches.json?t=' + Date.now(), { cache: 'no-store' }).then(x => x.json()); S.starters = (st && st.sets) || []; } catch (e) {}
+        try { const f = await fetch('/api/snapshots', { cache: 'no-store' }).then(x => x.json()); S.kept = (f && f.panels && f.panels[this.PITCH_PANEL]) || {}; } catch (e) {}
+        this.pitchSources = S;
+        if (this.result && SEP) this.generate();   // a source chosen before the lists arrived takes effect now
+    },
+    // the chosen source → { notes (the sonority), from } — null = the model's own set
+    pitchSonority() {
+        const SEP = root.MorphSeptet, S = this.pitchSources, p = this.pitch;
+        if (!SEP || !p || !p.src || p.src === 'model') return null;
+        const rootMidi = SEP.parseNote(p.root);
+        const [kind, ...rest] = p.src.split(':'); const key = rest.join(':');
+        if (kind === 'fam') { if (rootMidi == null) return null; const n = SEP.familyNotes(key, rootMidi); const fam = SEP.STACKS.concat(SEP.MODES).find(x => x.id === key); return n ? { notes: n, from: (fam ? fam.name : key) + ' from ' + SEP.nm(rootMidi) } : null; }
+        if (kind === 'model' || kind === 'tuba') { const m = this.models && this.models.models && this.models.models[key]; if (!m) return null; const src = kind === 'tuba' ? (m.tuba && m.tuba.source) : (m.baseParams && m.baseParams.source); return src && src.midi ? { notes: src.midi.slice(), from: (kind === 'tuba' ? 'the tuba\'s ' : 'the model ') + key } : null; }
+        if (!S) return null;
+        if (kind === 'kept') { const t = S.kept[key]; const st = t && t.state; if (!st || !st.notes) return null; return { notes: st.notes.slice(), from: 'kept · ' + key + (st.from ? ' (' + st.from + ')' : '') }; }
+        if (kind === 'starter') { const st = S.starters[+key]; if (!st) return null; return { notes: st.notes.slice(), from: st.name + (st.from ? ' (' + st.from + ')' : '') }; }
+        if (kind === 'harm') { const [bank, id] = [rest[0], rest.slice(1).join(':')]; const e = (S.harm[bank] || []).find(x => x.id === id); if (!e) return null; return { notes: e.pitches.slice(), from: bank + ' ' + e.label + (e.name ? ' · ' + e.name : '') }; }
+        return null;
+    },
+    // the pairs in register order (the midpoint of each pair's shared range), for the by-register take
+    pairOrder() {
+        const env = this.castEnv(); if (!env) return this.pairs.map((p, i) => i);
+        return this.pairs.map((p, i) => { const r = env.SEP.pairRange(env, p.a, p.b); return { i: i, mid: r ? (r[0] + r[1]) / 2 : 0, r: r }; }).sort((x, y) => x.mid - y.mid);
+    },
+    applyPitch(params) {
+        const SEP = root.MorphSeptet, son = this.pitchSonority();
+        this._pitchInfo = null;
+        if (!SEP || !son) return params;
+        const env = this.castEnv(), order = this.pairOrder(), p = this.pitch;
+        const holds = (band, midi) => { const o = order[band]; if (!o || !env) return true; const a = env.SEP.instOf(env, this.pairs[o.i].a), b = env.SEP.instOf(env, this.pairs[o.i].b); return env.BC.holds(env.recipe, a, midi) && env.BC.holds(env.recipe, b, midi); };
+        const res = SEP.takeForPairs(son.notes, this.pairs.length, p.take || 'byRegister', { k: +p.k || 1, seed: +p.seed || 1, perPair: +p.perPair === 2 ? 2 : 1, holds: holds });
+        const out = SEP.deriveParams(params, res.notes, { perPair: +p.perPair === 2 ? 2 : 1, root: SEP.parseNote(p.root), warnings: (this._pitchWarnings = []) });
+        this._pitchInfo = { from: son.from, sonority: res.sorted, taken: res.taken, dropped: res.dropped, notes: res.notes };
+        return out;
+    },
+    drawPitch(f, head, note) {
+        const SEP = root.MorphSeptet; if (!SEP) return;
+        const S = this.pitchSources || { harm: { strikes: [], blasts: [], chordShapes: [] }, starters: [], kept: {} }, p = this.pitch;
+        const nmList = arr => arr.slice(0, 8).map(SEP.nm).join(' ') + (arr.length > 8 ? ' …' : '');
+        head('PITCHES · the sonority, then the take (three notes doubled, or two per pair) — §205–207');
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:3px 0';
+        const sel = document.createElement('select'); sel.id = 'morphPitchSrc';
+        sel.style.cssText = 'max-width:330px;background:#1b1b20;color:#ddd;border:1px solid #444;padding:1px 2px;font-size:13px';
+        const og = (label, items) => { if (!items.length) return; const g = document.createElement('optgroup'); g.label = label; items.forEach(it => { const o = document.createElement('option'); o.value = it.value; o.textContent = it.text; if (it.value === p.src) o.selected = true; g.appendChild(o); }); sel.appendChild(g); };
+        og('the model', [{ value: 'model', text: 'the model\'s own set' }]);
+        og('kept (yours)', Object.keys(S.kept).sort().map(n => ({ value: 'kept:' + n, text: n + ' · ' + nmList((S.kept[n].state && S.kept[n].state.notes) || []) })));
+        og('starters', S.starters.map((st, i) => ({ value: 'starter:' + i, text: st.name + ' · ' + nmList(st.notes) })));
+        const mk = this.models && this.models.models ? Object.keys(this.models.models) : [];
+        og('the models\' sets', mk.map(id => ({ value: 'model:' + id, text: id + ' · ' + nmList(((this.models.models[id].baseParams || {}).source || {}).midi || []) }))
+            .concat(mk.filter(id => this.models.models[id].tuba && this.models.models[id].tuba.source).map(id => ({ value: 'tuba:' + id, text: 'tuba ' + id + ' · ' + nmList(this.models.models[id].tuba.source.midi || []) }))));
+        og('stacks from the root', SEP.STACKS.map(s => ({ value: 'fam:' + s.id, text: s.name })));
+        og('Messiaen\'s modes from the root', SEP.MODES.map(s => ({ value: 'fam:' + s.id, text: s.name })));
+        og('strikes', S.harm.strikes.map(e => ({ value: 'harm:strikes:' + e.id, text: e.label + ' · ' + e.name + ' · ' + nmList(e.pitches) })));
+        og('blasts · the tuba piece', S.harm.blasts.map(e => ({ value: 'harm:blasts:' + e.id, text: e.id + ' · ' + e.name + ' · ' + nmList(e.pitches) })));
+        og('chord shapes · 2 pianos 2 percussion', S.harm.chordShapes.map(e => ({ value: 'harm:chordShapes:' + e.id, text: e.id + ' · ' + e.name + ' · ' + nmList(e.pitches) })));
+        sel.addEventListener('change', () => { p.src = sel.value; this.savePitch(); this.generate(); });
+        row.appendChild(sel);
+        const box = (label, id, val, width, onchange, type) => {
+            const w = document.createElement('label'); w.style.cssText = 'color:#9a9;white-space:nowrap'; w.textContent = label + ' ';
+            const i = document.createElement('input'); i.type = type || 'text'; i.id = id; i.value = val; i.style.cssText = 'width:' + width + 'px;background:#1b1b20;color:#ddd;border:1px solid #444;padding:1px 4px;font-size:13px';
+            if (type === 'number') i.min = 1;
+            i.addEventListener('change', () => { onchange(i.value); this.savePitch(); this.generate(); });
+            i.addEventListener('keydown', e => { if (e.key === ' ') e.stopPropagation(); });
+            w.appendChild(i); row.appendChild(w); return i;
+        };
+        box('root', 'morphPitchRoot', p.root, 46, v => { p.root = v; });
+        const tk = document.createElement('label'); tk.style.cssText = 'color:#9a9;white-space:nowrap'; tk.textContent = 'take ';
+        const ts = document.createElement('select'); ts.id = 'morphPitchTake'; ts.style.cssText = 'background:#1b1b20;color:#ddd;border:1px solid #444;padding:1px 2px;font-size:13px';
+        SEP.TAKES.forEach(t => { const o = document.createElement('option'); o.value = t.id; o.textContent = t.name; if (t.id === p.take) o.selected = true; ts.appendChild(o); });
+        ts.addEventListener('change', () => { p.take = ts.value; this.savePitch(); this.generate(); });
+        tk.appendChild(ts); row.appendChild(tk);
+        box('k', 'morphPitchK', p.k, 40, v => { p.k = Math.max(1, +v || 1); }, 'number');
+        box('seed', 'morphPitchSeed', p.seed, 46, v => { p.seed = Math.max(1, +v || 1); }, 'number');
+        const pp = document.createElement('label'); pp.style.cssText = 'color:#9a9;white-space:nowrap'; pp.textContent = 'per pair ';
+        const ps = document.createElement('select'); ps.id = 'morphPitchPer'; ps.style.cssText = 'background:#1b1b20;color:#ddd;border:1px solid #444;padding:1px 2px;font-size:13px';
+        [[1, 'one, doubled'], [2, 'two']].forEach(([v, t]) => { const o = document.createElement('option'); o.value = String(v); o.textContent = t; if (+p.perPair === v) o.selected = true; ps.appendChild(o); });
+        ps.addEventListener('change', () => { p.perPair = +ps.value; this.savePitch(); this.generate(); });
+        pp.appendChild(ps); row.appendChild(pp);
+        const keep = document.createElement('button'); keep.id = 'morphPitchKeep'; keep.textContent = 'keep'; keep.title = 'keep this sonority with its take under a name (bank/panel_snapshots.json, the morphPitches bucket)';
+        keep.addEventListener('click', () => this.keepPitch()); row.appendChild(keep);
+        const rm = document.createElement('button'); rm.id = 'morphPitchRemove'; rm.textContent = '✕'; rm.title = 'remove the kept set chosen above';
+        rm.addEventListener('click', () => this.removePitch()); row.appendChild(rm);
+        f.appendChild(row);
+        const info = this._pitchInfo;
+        if (!info) note(p.src === 'model' ? 'the model\'s own set (the pairs take it two by two)' : 'the chosen source is not loaded yet, or its root is not a note — the model\'s own set plays', '#9a9');
+        else note('<b>' + info.from + '</b> — ' + nmList(info.sonority) + ' · take <b>' + (SEP.TAKES.find(t => t.id === p.take) || {}).name + '</b> → ' + info.taken.map(SEP.nm).join(' ') + (info.dropped.length ? ' · dropped ' + nmList(info.dropped) : ''), '#9a9');
+    },
+    async keepPitch() {
+        const SEP = root.MorphSeptet, son = this.pitchSonority();
+        if (!SEP || !son) { this.setStatus('nothing to keep — choose a sonority first', true); return; }
+        const name = (window.prompt('Keep this sonority as — a name (1–64 letters, digits, dot, underscore, space, hyphen):', son.from.slice(0, 40)) || '').trim();
+        if (!name) return;
+        if (!/^[A-Za-z0-9._ -]{1,64}$/.test(name)) { this.setStatus('not kept: a name is 1–64 letters, digits, dot, underscore, space or hyphen', true); return; }
+        const p = this.pitch;
+        try {
+            const r = await fetch('/api/snapshots', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ panel: this.PITCH_PANEL, name: name, comment: son.from, state: { notes: son.notes.slice(), from: son.from, take: p.take, k: p.k, seed: p.seed, perPair: p.perPair } }) }).then(x => x.json());
+            if (r && r.success === false) throw new Error(r.error || 'the server said no');
+            await this.loadPitchSources();
+            p.src = 'kept:' + name; this.savePitch(); this.generate();
+            this.setStatus('kept: ' + name + (r && r.existed ? ' (replaced)' : ''));
+        } catch (e) { this.setStatus('not kept: ' + e.message, true); }
+    },
+    async removePitch() {
+        const p = this.pitch; if (!p.src || p.src.indexOf('kept:') !== 0) { this.setStatus('choose one of your kept sets first, then ✕', true); return; }
+        const name = p.src.slice(5);
+        if (!window.confirm('Remove the kept set "' + name + '"?')) return;
+        try {
+            await fetch('/api/snapshots', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ panel: this.PITCH_PANEL, name: name, delete: true }) }).then(x => x.json());
+            p.src = 'model'; this.savePitch(); await this.loadPitchSources(); this.generate();
+            this.setStatus('removed: ' + name);
+        } catch (e) { this.setStatus('not removed: ' + e.message, true); }
     },
 
     setStatus(msg, bad, html) {

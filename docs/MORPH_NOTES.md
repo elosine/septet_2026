@@ -61,6 +61,13 @@ freely.
   into a model or the scratch file. 38 checks: `tools/morph_septet_check.js`; the tuba's renders byte-identical without a palette
   (`tools/morph_tuba_baseline.json`). **Not for this piece:** the beating drawer's pitch side, takes, the notation (2a).
 
+- **The pitch source (2026-09-07 late; RUNNING_LOG §205–208; CN-38):** the PITCHES row — a sonority from a pull-down (kept sets ·
+  starters · the models' sets · stacks and Messiaen's modes from a typed root · the harmony list: strikes, blasts, chord shapes, the
+  notes spelled) reduced to the pairs' notes by a named take rule (by register · lowest · highest · spread · consecutive from k · every
+  other · random by seed), one note per pair doubled or two per pair; keep / remove by name (the takes file's `morphPitches` bucket);
+  the root box is also SPECTRAL's fundamental; CONVERGE opens each note a whole tone and closes onto it. No keyboard: the note names
+  are text. `bank/morph_pitches.json` holds the starters.
+
 ## 2 · For this piece — "morph events" (CN-28 · CN-29)
 
 His picture: **single morph events** — e.g. unison → maximum beating, "like in convergence", over a set time — then **longer

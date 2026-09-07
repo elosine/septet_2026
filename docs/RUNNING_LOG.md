@@ -6036,3 +6036,38 @@ register B3 · C♯4 · D♯4 (the low pair folds B3 down or plays it as written
 **The modes' question of §206 dissolves into this:** a mode from the root is a sonority; "consecutive from 1, two per pair" is (a),
 "spread, doubled" is (b) — the strategy pull-down serves the modes, the stacks, the harmony list and the models' sets alike.
 **Put to him:** which of these to carry (all are cheap) and the default; nothing built.
+
+## §208. THE PITCH SOURCE BUILT — the PITCHES row in the morph panel: the sonority pull-down (kept · starters · the models' sets · stacks and Messiaen's modes from a root · the harmony list), the root box, the take rule, k, the seed, one or two per pair, keep / remove; 56 checks; verified on a copy with real events
+
+Built 2026-09-07 late at his "good to go" (§205–207), on `zz-ai-morph` (a copy, deleted after) on :5301:
+- **`score/public/morph_septet.js`** (the pure part): `parseNote` (F2 · C#4 · Db4 · a number) · the families — six STACKS (5ths · 4ths ·
+  major 3rds · minor 3rds · whole tones · semitones; six notes up from the root) and Messiaen's seven MODES (their degrees from the
+  root over two octaves, so every pair's register holds some) · the TAKE rules on a sorted sonority — by register (the set in bands,
+  from each band the note the band's pair holds as written, else the band's middle) · lowest · highest · spread · consecutive from k
+  · every other · random (seed) · `takeForPairs` (three doubled, or two per pair, adjacent) · `deriveParams` (the notes into the model:
+  CONVERGE opens each note a whole tone and closes onto it — a pair within a whole tone of its neighbour opens on ONE side only, or
+  holds a unison, said, because the engine pairs voices by sorted pitch; SPECTRAL's fundamental = the root) · `pairRange`.
+- **`score/public/morph_panel.js`**: the PITCHES row above the model's fields — the pull-down in eight groups (the model's own set ·
+  kept (his) · starters · the models' sets, the septet's six and the tuba's six · stacks from the root · Messiaen's modes from the
+  root · strikes · blasts · chord shapes — every entry spelling its notes), the `root` box, `take`, `k`, `seed`, `per pair`,
+  **keep** (a name → the takes file's `morphPitches` bucket through `/api/snapshots`, with the sonority, its provenance and the
+  settings) and **✕**; a line under it: the source, the sonority, the take and its result, what was dropped; the pitch state kept in
+  the browser (`septet.morphPitch.v1`); the sources loaded once (the strikes DB, `bank/harmonies.json`, `bank/morph_pitches.json`,
+  the kept bucket) and the render redone when they arrive; `applyPitch` before the cast in `generate`; the derivation's warnings in
+  the flags.
+- **`bank/morph_pitches.json`** — the five STARTERS of CN-38 with their provenance and the default take (by register).
+- **`tools/morph_septet_check.js`, 56 checks, ALL PASS** (+18): the note names · the stack of fifths from C3 · modes 1 and 2 from C3 over
+  two octaves, every mode closing the octave · the rules on cs-050 (lowest B3 C4 C♯4 · highest C4 C♯4 D♯4 · spread B3 C♯4 D♯4 · from 2
+  C4 C♯4 D♯4 · every other · random · by register) and on the nine-note S001 (lowest F♯1 D2 F2 · spread F♯1 C3 D4) · three doubled
+  and two per pair · CONVERGE derived on separated pairs (C3 G3 D4 → 47,49 · 54,56 · 61,63) and on close pairs (E3 F♯3 G3 → one-sided,
+  three warnings, no interleave in the cast) · SPECTRAL's fundamental · the five starters.
+- **On the copy, real events:** the pull-down's groups — the model (1) · starters (5) · the models' sets (12) · stacks (6) · modes (7) ·
+  strikes (46) · blasts (45) · chord shapes (54); cs-050 by register → B3 C4 C♯4 (D♯4 dropped, said), the pairs Vc+Va B3 · Vn C4 · Fl+BCl
+  C♯4, 33 notes; the take switched to lowest by a real change; the root typed C3 and Messiaen mode 2 chosen → C3 C♯3 D♯3 with the
+  violins and the winds folded up an octave (shown with ↑); from k = 4 → E3 F♯3 G3 (the winds silent on G — said); CONVERGE on those
+  close pairs → 51·52 and 65·66, the one-sided openings in the flags; SPECTRAL → the fundamental 48; cs-019 → the winds silent on A
+  (said); **keep** as "zz-ai-test" → the bucket entry with the sonority, the take and k, the option "zz-ai-test · C3 C♯3 D♯3 …" in the
+  kept group, the source switched to it; **✕** → removed, the option gone, the source back to the model's; the bucket left empty
+  in his takes file (an empty `morphPitches` key; his file, unstaged).
+- **The default:** by register. **Not in it:** spread pairs (1-4 · 2-5 · 3-6) — the engine pairs by sorted pitch, so only adjacent pairs
+  exist for now (the module keeps the code; a note for the revision).

@@ -88,8 +88,10 @@ PANEL is back, the tuba way with two changes, BUILT (§204) and awaiting his lis
 cast as three pairs — Vc + Va · Vn1 + Vn2 · Fl + BCl by default, a seat pull-down each, the pair folded as one unit (D26) — the
 engine fed a palette per voice (the ordinary voice, the measured range, the bend reach, the breath / bow), one key per run by the
 string quartet's rule (the Kontakt dial dropped, §203), Play and Insert on the ticked pairs, the box grown with its fonts; the six
-models re-voiced for three pairs; pitches by his word (the scratch file, the tuba way). **Next: his listening — a hard reload,
-[Morph], MODELS, BLOOM, Generate, Play; then a pair alone, Insert; CONVERGE; a seat swapped; then pitch sets by his word.**
+models re-voiced for three pairs; pitches by his word (the scratch file, the tuba way). **The PITCH SOURCE built after the discussion of §205–207 (§208): the PITCHES row — a sonority pull-down (kept · starters · the models'
+sets · stacks and Messiaen's modes from a root · the harmony list), the take rule, keep / remove.** **Next: his listening — a hard reload,
+[Morph], MODELS, BLOOM, Generate, Play; then a pair alone, Insert; CONVERGE; a seat swapped; a pitch set from the menu (cs-015 …),
+kept by name.**
 Resume reads for this: RUNNING_LOG §196–204 · MORPH_NOTES §1 (the last bullet) and §3 (the 2026-09-07 late entries) · NITS (the
 last five entries) · NAMING §2.11. The AI's copies (`zz-ai-morph`) deleted; the piece file untouched.
 
