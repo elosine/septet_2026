@@ -5613,3 +5613,8 @@ when he says so; the exceptions are what he marks "fix now".
 Composer, 2026-09-07 night. Saved under the standing rule (§190). The likely cause is the focus rule of §182 — SPACE plays what was
 last clicked, and any control in a row makes its pair the focus — so after an edit in pair 2 SPACE plays pair 2 until ▶ sequence or
 the strip's background is clicked; the head's `space → …` says which. Three ways out put in NITS for his decision.
+
+## §192. "dbl clk in numbers highlights number" — saved (NITS)
+
+Composer, 2026-09-07 night. Saved under the standing rule; the browser normally selects a number box's content on a double-click,
+so if it does not here it is a defect to catch on the next round (select-all on focus is the cheap alternative).

@@ -100,3 +100,6 @@
   in a row SPACE plays that pair until ▶ sequence or the strip's background is clicked. To decide with him: keep the rule and make
   the head's `space → …` more visible, or make SPACE the sequence unless a row was clicked EMPTY (not a control), or give the
   sequence its own key. Saved at his word.
+- **A double-click in a number box should highlight the number** (composer, 2026-09-07 night, "dbl clk in numbers highlights number").
+  Chrome selects the number on a double-click by itself; if it does not in the drawer, something in the row is taking the click —
+  to look at with him on the next round (a single click could also select all on focus). Saved at his word.
