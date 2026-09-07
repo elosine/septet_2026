@@ -198,21 +198,39 @@
   // composer: "curve adjusting features like curves in main score … use mouse to change slope, like in logic pro") is the score's
   // own power model (computeYAtT 'power'): between a point and the next, y = a + (b − a) · t^(4^slope), slope −1 … +1, 0 = straight;
   // the slope rides on the segment's FIRST point and survives sorting, scaling and mirroring ----
-  const slopeOf = q => (q && q.length > 2 && isFinite(+q[2]) ? clamp(+q[2], -3, 3) : 0);
+  // The BEND, the score's curve windows' way (2026-09-07, the composer: "you need 2 degrees of freedom to achieve the proper bend,
+  // whatever way it works for trill curves … in the main score"): the segment after a point may carry a CONTROL POINT `[cx, cy]` — a
+  // quadratic Bézier, cx the fraction along the segment where the line was grabbed, cy the control's value in the curve's own units —
+  // so the held point of the line follows the mouse. A plain number is the older power slope, still read.
+  const slopeOf = q => (q && q.length > 2 && !Array.isArray(q[2]) && isFinite(+q[2]) ? clamp(+q[2], -3, 3) : 0);
+  const ctrlOf = q => (q && q.length > 2 && Array.isArray(q[2]) && q[2].length === 2 && isFinite(+q[2][0]) && isFinite(+q[2][1]) ? [clamp(+q[2][0], 0.02, 0.98), +q[2][1]] : null);
+  const withExtra = (p, v, extra) => (extra == null ? [p, v] : [p, v, extra]);
   function curveOf(x) {
     if (typeof x === 'number') return [[0, x], [1, x]];
     if (!Array.isArray(x) || !x.length) return [[0, 0], [1, 0]];
-    const pts = x.map(q => { const s = slopeOf(q); return s ? [clamp01(+q[0]), +q[1], s] : [clamp01(+q[0]), +q[1]]; }).sort((a, b) => a[0] - b[0]);
+    const pts = x.map(q => { const c = ctrlOf(q), s = c ? 0 : slopeOf(q); return withExtra(clamp01(+q[0]), +q[1], c ? c : (s || null)); }).sort((a, b) => a[0] - b[0]);
     return pts.length === 1 ? [[0, pts[0][1]], [1, pts[0][1]]] : pts;
   }
   const bend01 = (t, s) => (s ? Math.pow(clamp01(t), Math.pow(4, s)) : clamp01(t));
+  // the Bézier parameter whose x reaches the column u when the control sits at cx (x runs 0 → 1 over the segment)
+  function bezierT(cx, u) {
+    u = clamp01(u); const a = 1 - 2 * cx, b = 2 * cx, c = -u;
+    if (Math.abs(a) < 1e-6) return u;
+    const d = Math.sqrt(Math.max(0, b * b - 4 * a * c)), t1 = (-b + d) / (2 * a), t2 = (-b - d) / (2 * a);
+    return clamp01((t1 >= 0 && t1 <= 1) ? t1 : t2);
+  }
   function evalCurve(curve, p) {
     const c = curveOf(curve);
     if (p <= c[0][0]) return c[0][1];
-    for (let i = 1; i < c.length; i++) if (p <= c[i][0]) { const a = c[i - 1], b = c[i]; const w = b[0] - a[0]; return w <= 1e-9 ? b[1] : a[1] + (b[1] - a[1]) * bend01((p - a[0]) / w, slopeOf(a)); }
+    for (let i = 1; i < c.length; i++) if (p <= c[i][0]) {
+      const a = c[i - 1], b = c[i]; const w = b[0] - a[0]; if (w <= 1e-9) return b[1];
+      const u = (p - a[0]) / w, k = ctrlOf(a);
+      if (k) { const t = bezierT(k[0], u), omt = 1 - t; return omt * omt * a[1] + 2 * omt * t * k[1] + t * t * b[1]; }
+      return a[1] + (b[1] - a[1]) * bend01(u, slopeOf(a));
+    }
     return c[c.length - 1][1];
   }
-  const scaleCurve = (curve, k) => curveOf(curve).map(q => (q.length > 2 ? [q[0], q[1] * k, q[2]] : [q[0], q[1] * k]));
+  const scaleCurve = (curve, k) => curveOf(curve).map(q => { const c = ctrlOf(q); return withExtra(q[0], q[1] * k, c ? [c[0], c[1] * k] : (q.length > 2 ? q[2] : null)); });
   const maxOf = curve => Math.max(...curveOf(curve).map(q => Math.abs(q[1])));
   // the shapes of the panel's menu (step 4): a few points, each a handle; `arc` is a raised cosine sampled at nine points
   const SHAPES = {
@@ -224,7 +242,19 @@
     burst:   o => { const pk = +o.peak || 0, at = clamp(o.at == null ? 0.1 : +o.at, 0.02, 0.5); return [[0, 0], [at, pk], [clamp(at + 0.25, 0.3, 0.9), pk * 0.35], [1, 0]]; },
     // the ADSR (2026-09-07, his walk-through lines 6 and 9: "holds at max for a few seconds … pretty classic ADSR"): the attack to the
     // peak, the hold, the release to the base — three handles; the birth default (9 s: 2 · 4 · 3)
-    adsr:    o => { const base = +o.base || 0, pk = +o.peak || 0, a = clamp(o.attack == null ? 0.22 : +o.attack, 0.02, 0.9), h = clamp(o.hold == null ? 0.67 : +o.hold, a + 0.02, 0.98); return [[0, base], [r3(a), pk], [r3(h), pk], [1, base]]; },
+    // the attack and the release are SECONDS when a length is given (2026-09-07, the composer: "short attack and short release, and
+    // medium sustain, the shape isn't changing if I adjust the len number") — the hold absorbs the length; when the two do not fit
+    // they shrink in proportion, a hold of at least 0.2 s kept
+    adsr:    o => {
+      const base = +o.base || 0, pk = +o.peak || 0;
+      let a, h;
+      if (o.length > 0 && (o.attackS != null || o.releaseS != null)) {
+        const L = +o.length; let aS = Math.max(0.05, +o.attackS || 2), rS = Math.max(0.05, +o.releaseS || 3);
+        const room = Math.max(0.1, L - 0.2); if (aS + rS > room) { const k = room / (aS + rS); aS *= k; rS *= k; }
+        a = aS / L; h = 1 - rS / L;
+      } else { a = clamp(o.attack == null ? 0.22 : +o.attack, 0.02, 0.9); h = clamp(o.hold == null ? 0.67 : +o.hold, a + 0.02, 0.98); }
+      return [[0, base], [r3(a), pk], [r3(h), pk], [1, base]];
+    },
   };
   const shape = (name, o) => (SHAPES[name] || SHAPES.flat)(o || {});
   // the two players from ONE heard-rate curve: mirrored (bipolar, half each by default — the heard beating is the drawn height) or a
@@ -426,6 +456,6 @@
 
   return { ORDER, INTERVALS, LADDER_ORDER, INVERSION, intervalOf, noteName, midiHz, players, ordinaryVoice, ordinaryRange, bendLimits, holds, pairsFor, pairingTable, describePalette,
            foldPair, foldMark, pairLadder, seatOptions, VOICINGS, voiceChord, shuffled, mulberry32,
-           curveOf, evalCurve, scaleCurve, slopeOf, bend01, SHAPES, shape, mirrored, flatPartner, levelFromBeat, rateToCents, centsToRate, beatRate, ZONES, zoneOf,
+           curveOf, evalCurve, scaleCurve, slopeOf, ctrlOf, withExtra, bezierT, bend01, SHAPES, shape, mirrored, flatPartner, levelFromBeat, rateToCents, centsToRate, beatRate, ZONES, zoneOf,
            CEILINGS, ceilingFor, dealBreaths, breathSpans, renderPair, renderPattern, stretch, describePair };
 });

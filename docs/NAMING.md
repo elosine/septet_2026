@@ -99,7 +99,9 @@ or not at all.**
     (which note of the panel's sonority the pair holds, or null — the take's `harmony` + `voicing` name that sonority), **skip** (true =
     nobody plays it: the snippet has no events and says `skipped`),
     rateFrom, rateTo, shape | beat (the heard-rate curve: breakpoints over normalised time, beats per second — a point may carry a
-    third number, the SLOPE of the segment after it, −1 … +1, the score's power model; BEATING_TOOL §13), share (how the
+    third element for the segment after it: `[cx, cy]`, a quadratic Bézier CONTROL POINT in the curve's units (the score's curve
+    windows' bend, BEATING_TOOL §14), or a number, the older power slope), adsr { attackS, releaseS } (the hold shape's attack and
+    release in SECONDS — the hold absorbs the length), share (how the
     beating is split between the two, 0.5 = mirrored), rate { lower, upper } (two explicit rate curves when the mirror is
     unlocked), levelLo, levelHi | levelCurve (the crescendo, 0 → 1 = ppp → fff: one curve, or `{ lower, upper }` — one per player,
     2026-09-07), breath { mode: 'one' | 'continuous' | 'designated', seed, marks { lower, upper } (hand-placed marks, seconds), deal,

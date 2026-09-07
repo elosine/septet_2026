@@ -487,6 +487,20 @@ exactly the miss rule B names; taken out, the line's gestures put in. "Fourths a
 the pair's identity: the two pitch classes, not the direction — the fold may turn the one into the other. Built as RUNNING_LOG §184,
 BEATING_TOOL §14.
 
+### 2026-09-07, evening — his first test of the sweep: the bend, the end handle, the hold shape's seconds
+
+> *"shift + move node to clamp; the curve bend isnt working that great, different way to move the segment and I believe you need 2
+> degrees of freedom to achieve the proper bend, whatever way it works for trill curves in the individual curve tracks in the main
+> score; drag end point not working cant change duration; I want it to have short attack and short release, and medium sustain, the
+> shape isn't changing if I adjust the len number"* · *"image for my reference so I can remember my settings so far"*
+> *(2026-09-07, evening; typed, with two screenshots — his settings in RUNNING_LOG §185)*
+
+**AI reading (not the composer's words):** three misses of the same kind — I reinvented what the score already had (a slope where the
+score has a grab-and-pull control point), and I kept a design rule (curves over normalised time) past the point where his shape
+needed seconds. Rule B again, and a corollary for the all-purpose tool: **an envelope's attack and release are seconds, its sustain is
+what the length leaves** — the ADSR is the natural unit of a held gesture, and a tool that stretches it with the duration is wrong.
+Fixed as §185.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

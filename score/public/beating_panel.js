@@ -317,6 +317,7 @@ const P = {
         if (!(v > 0)) return;
         const BC = BC_(), s = BC.stretch({ length: row.length, slide: row.b.slide, breath: row.b.breath }, v);
         row.b.slide = s.slide; row.b.breath = s.breath; row.length = r3(Math.max(0.1, v));
+        this.fitShapeToLength(row);   // the hold shape keeps its attack and release in seconds
         this.placeZone(row); this.changed(row, true); this.render();
     },
     // a bound zone follows its row's offset and length in the score (the group's first start is the origin)
@@ -630,38 +631,56 @@ const P = {
         const BC = BC_(), b = row.b, to = +b.rateTo || 0, from = +b.rateFrom || 0;
         if (String(key).indexOf('u:') === 0) { const sh = this.shapesBank[key.slice(2)]; if (!sh) return; b.shape = key; b.beat = BC.scaleCurve(sh.curve, to); b.rate = null; row.locked = true; return; }   // his stored shape at the maximum
         b.shape = key;
-        b.beat = key === 'flat' ? BC.shape('flat', { level: to }) : key === 'rampOut' ? [[0, 0], [1, to]] : key === 'rampIn' ? [[0, to], [1, 0]] : key === 'hump' ? BC.shape('hump', { peak: to, base: from }) : key === 'adsr' ? BC.shape('adsr', { peak: to, base: from }) : key === 'arc' ? BC.shape('arc', { peak: to, base: from }) : BC.shape('burst', { peak: to });
+        const a = b.adsr || (b.adsr = { attackS: 2, releaseS: 3 });
+        b.beat = key === 'flat' ? BC.shape('flat', { level: to }) : key === 'rampOut' ? [[0, 0], [1, to]] : key === 'rampIn' ? [[0, to], [1, 0]] : key === 'hump' ? BC.shape('hump', { peak: to, base: from }) : key === 'adsr' ? BC.shape('adsr', { peak: to, base: from, length: row.length, attackS: a.attackS, releaseS: a.releaseS }) : key === 'arc' ? BC.shape('arc', { peak: to, base: from }) : BC.shape('burst', { peak: to });
         b.rate = null; row.locked = true;
     },
-    unlock(row) { const c = this.curvesOf(row); row.b.rate = { lower: c.lower.map(p => p.slice()), upper: c.upper.map(p => p.slice()) }; },
-    relock(row) {   // the upper curve becomes the heard curve's upper half again; the lower mirrors it (the slopes kept)
-        const BC = BC_(), c = this.curvesOf(row); row.b.beat = c.upper.map(p => (BC.slopeOf(p) ? [p[0], r3(p[1] * 2), BC.slopeOf(p)] : [p[0], r3(p[1] * 2)])); row.b.share = 0.5; row.b.rate = null; row.b.shape = 'drawn';
+    unlock(row) { const c = this.curvesOf(row); row.b.rate = { lower: c.lower.map(p => JSON.parse(JSON.stringify(p))), upper: c.upper.map(p => JSON.parse(JSON.stringify(p))) }; },
+    relock(row) {   // the upper curve becomes the heard curve's upper half again; the lower mirrors it (the bends kept)
+        const BC = BC_(), c = this.curvesOf(row);
+        row.b.beat = c.upper.map(p => { const k = BC.ctrlOf(p); return BC.withExtra(p[0], r3(p[1] * 2), k ? [k[0], r3(k[1] * 2)] : (BC.slopeOf(p) || null)); });
+        row.b.share = 0.5; row.b.rate = null; if (!this.isAdsr(row)) row.b.shape = 'drawn';
     },
-    withSlope(pt, p, v, s) { return s ? [p, v, s] : [p, v]; },
-    // an edit of one curve's point: locked → the heard curve's point (the other mirrors); unlocked → that curve alone; the segment's slope stays
+    isAdsr(row) { return row.b.shape === 'adsr' && BC_().curveOf(this.heardCurve(row)).length === 4; },
+    // an edit of one curve's point: locked → the heard curve's point (the other mirrors); unlocked → that curve alone; the segment's bend stays
     setPoint(row, who, idx, p, v) {
         const BC = BC_(), b = row.b;
         if (row.locked) {
             const beat = BC.curveOf(this.heardCurve(row)); if (!beat[idx]) return;
-            beat[idx] = this.withSlope(beat[idx], p, r3(Math.abs(v) * 2), BC.slopeOf(beat[idx])); b.beat = beat; b.shape = 'drawn';
+            beat[idx] = BC.withExtra(p, r3(Math.abs(v) * 2), beat[idx].length > 2 ? beat[idx][2] : null); b.beat = beat; if (b.shape !== 'adsr') b.shape = 'drawn';
         } else {
             if (!b.rate) this.unlock(row);
             const c = BC.curveOf(b.rate[who]); if (!c[idx]) return;
-            c[idx] = this.withSlope(c[idx], p, r3(v), BC.slopeOf(c[idx])); b.rate[who] = c;
+            c[idx] = BC.withExtra(p, r3(v), c[idx].length > 2 ? c[idx][2] : null); b.rate[who] = c;
         }
     },
-    // the SLOPE of the segment after a point (2026-09-07, "like in logic pro" — the score's power model, BeatingCalc.evalCurve): locked → on
-    // the heard curve (both mirror); unlocked → that curve alone
-    setSlope(row, who, idx, s) {
-        const BC = BC_(), b = row.b; s = clamp(r3(s), -1, 1);
-        if (row.locked) { const beat = BC.curveOf(this.heardCurve(row)); if (!beat[idx]) return; beat[idx] = this.withSlope(beat[idx], beat[idx][0], beat[idx][1], s); b.beat = beat; b.shape = 'drawn'; }
-        else { if (!b.rate) this.unlock(row); const c = BC.curveOf(b.rate[who]); if (!c[idx]) return; c[idx] = this.withSlope(c[idx], c[idx][0], c[idx][1], s); b.rate[who] = c; }
+    // the BEND of the segment after a point: a control point [cx, cy] (the score's curve windows — 2026-09-07 evening, "you need 2 degrees
+    // of freedom"), null = straight. Locked → on the heard curve, in its units (the drawn curve is the heard one scaled by the share);
+    // unlocked → that curve alone.
+    setCtrl(row, who, idx, ctrl) {
+        const BC = BC_(), b = row.b;
+        if (row.locked) {
+            const beat = BC.curveOf(this.heardCurve(row)); if (!beat[idx]) return;
+            const share = b.share == null ? 0.5 : clamp(+b.share, 0.05, 0.95), k = who === 'upper' ? 1 / (1 - share) : -1 / share;
+            beat[idx] = BC.withExtra(beat[idx][0], beat[idx][1], ctrl ? [ctrl[0], r3(ctrl[1] * k)] : null); b.beat = beat;
+        } else {
+            if (!b.rate) this.unlock(row);
+            const c = BC.curveOf(b.rate[who]); if (!c[idx]) return;
+            c[idx] = BC.withExtra(c[idx][0], c[idx][1], ctrl ? [ctrl[0], r3(ctrl[1])] : null); b.rate[who] = c;
+        }
     },
-    dragSlope(row, who, idx, e0, svg, get, set) {
-        const y0 = e0.clientY, s0 = get();
-        const onMove = ev => { set(clamp(s0 + (y0 - ev.clientY) / (HR / 2), -1, 1)); this.rowOut(row); this.drawRates(row, svg); this.changed(row, false); };
-        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); };
-        window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
+    setSlope(row, who, idx, s) { this.setCtrl(row, who, idx, null); },   // ALT-click: straight (the older power slope is gone too)
+    // the hold shape's attack and release in seconds, kept through a length change (the hold absorbs it); the segments' bends kept
+    fitShapeToLength(row) {
+        const BC = BC_(), b = row.b; if (!this.isAdsr(row)) return;
+        const old = BC.curveOf(this.heardCurve(row)), a = b.adsr || (b.adsr = { attackS: 2, releaseS: 3 });
+        const fresh = BC.shape('adsr', { peak: +b.rateTo || 0, base: +b.rateFrom || 0, length: row.length, attackS: a.attackS, releaseS: a.releaseS });
+        b.beat = fresh.map((p, i) => BC.withExtra(p[0], old[i] ? old[i][1] : p[1], old[i] && old[i].length > 2 ? old[i][2] : null));
+    },
+    // after a node of the hold shape is dragged: its attack and release remembered in seconds
+    noteAdsrFromPoints(row) {
+        const BC = BC_(), b = row.b; if (!this.isAdsr(row)) return;
+        const pts = BC.curveOf(this.heardCurve(row)); b.adsr = { attackS: r3(pts[1][0] * row.length), releaseS: r3((1 - pts[2][0]) * row.length) };
     },
     addPoint(row, who, p, v) {
         const BC = BC_(), b = row.b;
@@ -712,16 +731,15 @@ const P = {
                 for (let j = 0; j <= N; j++) { const p = a[0] + (c[0] - a[0]) * j / N; d.push((j ? 'L' : 'M') + X(clamp(p + sp, 0, 1)).toFixed(1) + ' ' + Y(BC.evalCurve(pts, p)).toFixed(1)); }
                 const path = mk('path', { d: d.join(' '), fill: 'none', stroke: col, 'stroke-width': 2.2, 'stroke-linejoin': 'round' }); path.style.pointerEvents = 'none'; svg.appendChild(path);
                 const hit = mk('path', { d: d.join(' '), fill: 'none', stroke: 'transparent', 'stroke-width': 14 }); hit.style.cursor = 'ns-resize'; hit.style.pointerEvents = 'stroke';
-                hit.innerHTML = '<title>' + (BC.slopeOf(a) ? 'curve ' + BC.slopeOf(a).toFixed(2) + ' · ' : '') + 'hold the line: drag up / down to bend this segment, sideways to move its points · SHIFT-drag slides the whole curve in time · the wheel bends a step · ALT-click straightens · double-click adds a point</title>';
-                hit.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.shiftKey) { this.snapshot(); this.dragBody(row, who, e, svg); return; } if (e.altKey) { this.snapshot(); this.setSlope(row, who, k, 0); this.changed(row, true); this.render(); return; } this.dragSegment(row, who, k, e, svg); });
-                hit.addEventListener('wheel', e => { e.preventDefault(); e.stopPropagation(); this.setSlope(row, who, k, BC.slopeOf(this.curvesOf(row)[who][k]) + (e.deltaY > 0 ? -0.05 : 0.05)); this.rowOut(row); this.drawRates(row, svg); this.changed(row, false); }, { passive: false });
+                hit.innerHTML = '<title>' + (BC.ctrlOf(a) ? 'bent · ' : '') + 'hold the line and pull: the point you hold follows the mouse (the bend) · drag sideways to move the segment\'s points · CTRL-drag slides the whole curve in time · ALT-click straightens · double-click adds a point</title>';
+                hit.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.ctrlKey || e.metaKey) { this.snapshot(); this.dragBody(row, who, e, svg); return; } if (e.altKey) { this.snapshot(); this.setCtrl(row, who, k, null); this.changed(row, true); this.render(); return; } this.dragSegment(row, who, k, e, svg); });
                 svg.appendChild(hit);
             }
             pts.forEach((p, idx) => {
                 const last = idx === pts.length - 1;
                 const h = mk('circle', { cx: X(clamp(p[0] + sp, 0, 1)), cy: Y(p[1]), r: 5, fill: last ? col : '#1a1a20', stroke: col, 'stroke-width': 2 });
                 h.style.cursor = last ? 'ew-resize' : 'move';
-                h.innerHTML = '<title>' + (last ? 'the end: drag sideways for the pair\'s length, up / down for its value' : idx === 0 ? 'the start: up / down for its value' : 'drag; ALT-click removes') + '</title>';
+                h.innerHTML = '<title>' + (last ? 'the end: drag sideways for the pair\'s length (50 px = 1 s), up / down for its value' : idx === 0 ? 'the start: up / down for its value' : 'drag (SHIFT clamps to one axis); ALT-click removes') + '</title>';
                 h.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.altKey && !last && idx !== 0) { this.snapshot(); this.removePoint(row, who, idx); this.changed(row, true); this.render(); return; } this.dragHandle(row, who, idx, e, svg); });
                 svg.appendChild(h);
             });
@@ -741,17 +759,26 @@ const P = {
         if (row.draw) { svg.style.cursor = 'crosshair'; svg.addEventListener('mousedown', e => { if (!onEmpty(e)) return; addAt(e); }); }
         svg._geom = { x0, x1, mid, sy, X, Y };
     },
-    // hold the line: up / down bends the segment (toward the mouse), sideways moves its points; the mode from the first movement
+    // hold the line and pull (the score's startBendDrag): the column where the line was grabbed is the control's x, and as the mouse moves
+    // the control's y is solved so the held point of the line follows the mouse — two degrees of freedom; a sideways pull moves the
+    // segment's points instead (the mode from the first movement)
     dragSegment(row, who, k, e0, svg) {
         this.snapshot();
-        const BC = BC_(), g = svg._geom, x0 = e0.clientX, y0 = e0.clientY; let mode = null;
+        const BC = BC_(), g = svg._geom, r = svg.getBoundingClientRect(), b = row.b, x0 = e0.clientX, y0 = e0.clientY; let mode = null;
         const cur0 = this.curvesOf(row)[who], a0 = cur0[k], c0 = cur0[k + 1]; if (!a0 || !c0) return;
-        const s0 = BC.slopeOf(a0), dir = Math.sign(c0[1] - a0[1]) || 1, n = cur0.length, pA = a0[0], pC = c0[0];
+        const n = cur0.length, pA = a0[0], pC = c0[0], y1 = a0[1], y2 = c0[1];
+        const sp = ((b.slide && b.slide[who]) || 0) / Math.max(0.1, row.length);
+        const pGrab = clamp((e0.clientX - r.left - g.x0) / (g.x1 - g.x0) - sp, 0, 1);
+        const cx = clamp((pGrab - pA) / Math.max(1e-6, pC - pA), 0.08, 0.92), bT = BC.bezierT(cx, cx), w2 = 2 * (1 - bT) * bT;
         const movA = k > 0, movC = k + 1 < n - 1, lo = k > 0 ? cur0[k - 1][0] + 0.01 : 0, hi = k + 2 < n ? cur0[k + 2][0] - 0.01 : 1;
         const onMove = ev => {
             const dx = ev.clientX - x0, dy = ev.clientY - y0;
             if (!mode) { if (Math.abs(dx) < 3 && Math.abs(dy) < 3) return; mode = Math.abs(dy) >= Math.abs(dx) ? 'bend' : 'shift'; svg.style.cursor = mode === 'bend' ? 'ns-resize' : 'ew-resize'; }
-            if (mode === 'bend') this.setSlope(row, who, k, s0 + dir * dy / (HR / 2));   // up = the curve toward the mouse, whichever way the segment runs
+            if (mode === 'bend') {
+                const v = clamp((g.mid - (ev.clientY - r.top)) / g.sy, -row.scale, row.scale);   // the value under the mouse, in the curve's units
+                const cy = (v - (1 - bT) * (1 - bT) * y1 - bT * bT * y2) / Math.max(1e-6, w2);
+                this.setCtrl(row, who, k, [cx, cy]);
+            }
             else if (movA || movC) {
                 let s = dx / (g.x1 - g.x0);
                 if (movA) s = clamp(s, lo - pA, (movC ? hi - (pC - pA) : pC - 0.01) - pA);
@@ -761,20 +788,24 @@ const P = {
             }
             this.rowOut(row); this.drawRates(row, svg); this.changed(row, false);
         };
-        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); svg.style.cursor = ''; this.changed(row, true); this.render(); };
+        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); svg.style.cursor = ''; this.noteAdsrFromPoints(row); this.changed(row, true); this.render(); };
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
+    // a node: drag; SHIFT clamps it to one axis (the first movement decides — "shift + move node to clamp"); the end handle sideways is
+    // the pair's length at 50 px per second; the hold shape remembers its attack and release in seconds afterwards
     dragHandle(row, who, idx, e0, svg) {
         this.snapshot();
-        const g = svg._geom, r = svg.getBoundingClientRect(), b = row.b, cur = this.curvesOf(row)[who], n = cur.length;
-        const slide = (b.slide && b.slide[who]) || 0, L0 = row.length, sp = slide / Math.max(0.1, L0), xs = e0.clientX, secPerPx = L0 / (g.x1 - g.x0);
+        const BC = BC_(), g = svg._geom, r = svg.getBoundingClientRect(), b = row.b, cur = this.curvesOf(row)[who], n = cur.length;
+        const slide = (b.slide && b.slide[who]) || 0, L0 = row.length, sp = slide / Math.max(0.1, L0), xs = e0.clientX, ys = e0.clientY, PX_PER_S = 50;
+        const p0 = cur[idx][0], v0 = cur[idx][1]; let axis = null;
         const tip = document.createElementNS('http://www.w3.org/2000/svg', 'text'); tip.setAttribute('fill', '#fff'); tip.setAttribute('font-size', '12'); svg.appendChild(tip);
         const onMove = ev => {
-            let p = clamp((ev.clientX - r.left - g.x0) / (g.x1 - g.x0) - sp, 0, 1); const v = clamp((g.mid - (ev.clientY - r.top)) / g.sy, -row.scale, row.scale);
+            let p = clamp((ev.clientX - r.left - g.x0) / (g.x1 - g.x0) - sp, 0, 1); let v = clamp((g.mid - (ev.clientY - r.top)) / g.sy, -row.scale, row.scale);
+            if (ev.shiftKey) { if (!axis) { const dx = Math.abs(ev.clientX - xs), dy = Math.abs(ev.clientY - ys); if (dx < 3 && dy < 3) return; axis = dx >= dy ? 'x' : 'y'; } if (axis === 'x') v = v0; else p = p0; }
             if (idx === 0) p = 0;
             if (idx === n - 1) {   // the end handle: sideways = the pair's length (his line 10), up / down its value
-                p = 1; const len = r3(Math.max(0.5, Math.round((L0 + (ev.clientX - xs) * secPerPx) / 0.05) * 0.05));
-                if (len !== row.length) { const s = BC_().stretch({ length: row.length, slide: b.slide, breath: b.breath }, len); b.slide = s.slide; b.breath = s.breath; row.length = len; this.placeZone(row); }
+                p = 1; const len = r3(Math.max(0.5, Math.round((L0 + (ev.clientX - xs) / PX_PER_S) / 0.05) * 0.05));
+                if (len !== row.length) { const s = BC.stretch({ length: row.length, slide: b.slide, breath: b.breath }, len); b.slide = s.slide; b.breath = s.breath; row.length = len; this.placeZone(row); this.fitShapeToLength(row); }
             }
             const vv = who === 'upper' ? Math.max(0, v) : Math.min(0, v);   // above the centre for the upper, below for the lower
             const wasLocked = row.locked; if (ev.altKey && row.locked) { row.locked = false; this.unlock(row); }
@@ -782,11 +813,11 @@ const P = {
             row.locked = row.locked && wasLocked;
             this.rowOut(row);
             tip.setAttribute('x', clamp(ev.clientX - r.left + 8, 4, W - 90)); tip.setAttribute('y', clamp(ev.clientY - r.top - 8, 10, HR - 4));
-            tip.textContent = (row.locked ? (Math.abs(vv) * 2).toFixed(2) + ' Hz heard' : Math.abs(vv).toFixed(2) + ' Hz ' + who) + ' · ' + (idx === n - 1 ? row.length + ' s long' : (p * row.length).toFixed(2) + ' s');
+            tip.textContent = (row.locked ? (Math.abs(vv) * 2).toFixed(2) + ' Hz heard' : Math.abs(vv).toFixed(2) + ' Hz ' + who) + ' · ' + (idx === n - 1 ? row.length + ' s long' : (p * row.length).toFixed(2) + ' s') + (axis ? (axis === 'x' ? ' · time only' : ' · value only') : '');
             this.drawRates(row, svg); svg.appendChild(tip); if (idx === n - 1) this.drawSeq();
             this.changed(row, false);
         };
-        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); tip.remove(); this.changed(row, true); this.render(); };
+        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); tip.remove(); this.noteAdsrFromPoints(row); this.changed(row, true); this.render(); };
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
     dragBody(row, who, e0, svg) {
@@ -806,7 +837,7 @@ const P = {
         return { lower: BC.curveOf(lc.lower || lc.upper || 0.6), upper: BC.curveOf(lc.upper || lc.lower || 0.6) };
     },
     setLevelPts(row, who, pts) {   // together: both players take the edit; each: this player alone
-        const cur = this.levelPts(row) || { lower: pts, upper: pts }, copy = a => a.map(p => p.slice());
+        const cur = this.levelPts(row) || { lower: pts, upper: pts }, copy = a => JSON.parse(JSON.stringify(a));
         row.b.levelCurve = row.levelLock !== false ? { lower: copy(pts), upper: copy(pts) } : Object.assign(cur, { [who]: copy(pts) });
     },
     popLevelShape(row, key) {
@@ -843,9 +874,8 @@ const P = {
                 svg.appendChild(mk('path', { d: d.join(' '), fill: 'none', stroke: col, 'stroke-width': together && who === 'lower' ? 1 : 1.8, 'stroke-opacity': together && who === 'lower' ? 0.5 : 1, 'pointer-events': 'none' }));
                 if (together && who === 'lower') continue;   // one set of gestures while the two are the same curve
                 const hit = mk('path', { d: d.join(' '), fill: 'none', stroke: 'transparent', 'stroke-width': 12 }); hit.style.cursor = 'ns-resize'; hit.style.pointerEvents = 'stroke';
-                hit.innerHTML = '<title>hold the line: drag up / down to bend this segment, sideways to move its points (a plateau slides) · the wheel bends a step · ALT-click straightens · double-click adds a point</title>';
+                hit.innerHTML = '<title>hold the line and pull: the point you hold follows the mouse (the bend) · drag sideways to move the segment\'s points (a plateau slides) · ALT-click straightens · double-click adds a point</title>';
                 hit.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.altKey) { this.snapshot(); const cur = this.levelPts(row)[who]; cur[k] = [cur[k][0], cur[k][1]]; this.setLevelPts(row, who, cur); this.changed(row, true); this.render(); return; } this.dragLevelSegment(row, who, k, e, svg); });
-                hit.addEventListener('wheel', e => { e.preventDefault(); e.stopPropagation(); const cur = this.levelPts(row)[who]; const s = clamp(BC.slopeOf(cur[k]) + (e.deltaY > 0 ? -0.05 : 0.05), -1, 1); cur[k] = s ? [cur[k][0], cur[k][1], s] : [cur[k][0], cur[k][1]]; this.setLevelPts(row, who, cur); this.rowOut(row); this.drawLevel(row, svg); this.changed(row, false); }, { passive: false });
                 svg.appendChild(hit);
             }
             if (together && who === 'lower') return;
@@ -874,15 +904,16 @@ const P = {
     },
     dragLevelSegment(row, who, k, e0, svg) {
         this.snapshot();
-        const BC = BC_(), x0 = e0.clientX, y0 = e0.clientY, xw = W - PADR - PADL; let mode = null;
-        const cur0 = this.levelPts(row)[who].map(p => p.slice()), a0 = cur0[k], c0 = cur0[k + 1]; if (!a0 || !c0) return;
-        const s0 = BC.slopeOf(a0), dir = Math.sign(c0[1] - a0[1]) || 1, n = cur0.length, pA = a0[0], pC = c0[0];
+        const BC = BC_(), r = svg.getBoundingClientRect(), x0 = e0.clientX, y0 = e0.clientY, xw = W - PADR - PADL; let mode = null;
+        const cur0 = this.levelPts(row)[who].map(p => JSON.parse(JSON.stringify(p))), a0 = cur0[k], c0 = cur0[k + 1]; if (!a0 || !c0) return;
+        const n = cur0.length, pA = a0[0], pC = c0[0], y1 = a0[1], y2 = c0[1];
+        const pGrab = clamp((e0.clientX - r.left - PADL) / xw, 0, 1), cx = clamp((pGrab - pA) / Math.max(1e-6, pC - pA), 0.08, 0.92), bT = BC.bezierT(cx, cx), w2 = 2 * (1 - bT) * bT;
         const movA = k > 0, movC = k + 1 < n - 1, lo = k > 0 ? cur0[k - 1][0] + 0.01 : 0, hi = k + 2 < n ? cur0[k + 2][0] - 0.01 : 1;
         const onMove = ev => {
             const dx = ev.clientX - x0, dy = ev.clientY - y0;
             if (!mode) { if (Math.abs(dx) < 3 && Math.abs(dy) < 3) return; mode = Math.abs(dy) >= Math.abs(dx) ? 'bend' : 'shift'; svg.style.cursor = mode === 'bend' ? 'ns-resize' : 'ew-resize'; }
-            const cur = cur0.map(p => p.slice());
-            if (mode === 'bend') { const s = clamp(s0 + dir * dy / (HL - 10), -1, 1); cur[k] = s ? [cur[k][0], cur[k][1], r3(s)] : [cur[k][0], cur[k][1]]; }
+            const cur = cur0.map(p => JSON.parse(JSON.stringify(p)));
+            if (mode === 'bend') { const v = clamp((HL - 4 - (ev.clientY - r.top)) / (HL - 10), -0.2, 1.2); const cy = clamp((v - (1 - bT) * (1 - bT) * y1 - bT * bT * y2) / Math.max(1e-6, w2), -0.5, 1.5); cur[k] = [cur[k][0], cur[k][1], [cx, r3(cy)]]; }
             else if (movA || movC) {
                 let s = dx / xw;
                 if (movA) s = clamp(s, lo - pA, (movC ? hi - (pC - pA) : pC - 0.01) - pA);
@@ -1233,7 +1264,7 @@ const P = {
                     else if (mode === 'right') len = Math.max(0.5, l0 + dt);
                     else { off = clamp(o0 + dt, 0, o0 + l0 - 0.5); len = o0 + l0 - off; }
                     off = r3(Math.round(off / 0.05) * 0.05); len = r3(Math.max(0.5, Math.round(len / 0.05) * 0.05));
-                    if (len !== row.length) { const s = BC.stretch({ length: row.length, slide: row.b.slide, breath: row.b.breath }, len); row.b.slide = s.slide; row.b.breath = s.breath; row.length = len; }
+                    if (len !== row.length) { const s = BC.stretch({ length: row.length, slide: row.b.slide, breath: row.b.breath }, len); row.b.slide = s.slide; row.b.breath = s.breath; row.length = len; this.fitShapeToLength(row); }
                     row.offset = off; this.placeZone(row); this.rowOut(row); this.drawSeq();
                 };
                 const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); this.setStatus('pair ' + (i + 1) + ' @ ' + (row.offset || 0) + ' s · ' + row.length + ' s' + (row.zone ? ' — the zone moved in the score' : '')); };

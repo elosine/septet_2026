@@ -123,8 +123,11 @@ own server (:5300); the AI built at his word, one chunk at a time:
   score's idiom; a tool is planned against how he works, the script is the unit); C (the listening ladder) held. **The sweep built in
   one pass at his "go ahead"** with his refinements (born empty, hold the line, ppp … fff over the whole scale, fourths ↔ fifths one
   family, a–d): see §184. Walked on a copy (`zz-ai-sweep`, deleted) with real events; two defects found on the walk and fixed (the
-  per-player crescendo not reaching the sound; revert remembering the wrong harmony). **Next: his test against the same script
-  (a hard reload first), then the first beating sequence in the piece; the stutter A/B still his.**
+  per-player crescendo not reaching the sound; revert remembering the wrong harmony).
+- **His first test, late evening (§185):** the bend rebuilt as the score's grab-and-pull control point (two degrees of freedom; the
+  slope gone), the hold shape's attack and release in seconds (`adsr { attackS, releaseS }`, the hold absorbs the length), the end
+  handle 1 s per 50 px, SHIFT clamps a node; his settings so far recorded (cs-015, BCl + Fl on D4, 2.1 s, 8 Hz, hold, p → ff). Verified
+  on a copy (`zz-ai-bend`, deleted). **Next: his test goes on, then the first beating sequence in the piece; the stutter A/B still his.**
 - **Tools on his hands (§111–114):** the bend cursor only when Points is off; TRILLS phase 4 (a trill runs to the player's next
   strike note, a stretch regenerates at once); a nudged trill keeps its attack note (a 60 ms eating window; the drag keeps a
   trill's start; the articulation switch arbitrated on a shared sampler slot — the tail and the lead); the drawer's pick no

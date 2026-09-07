@@ -5446,3 +5446,42 @@ per-player object fell back to "follows the beating", so a crescendo per player 
 reached the sound; now both forms pass. (2) `revert` remembered the NEW harmony: the pickers set `this.harmony` before the memory
 was taken; now `rememberHarmony()` runs at the top of both pickers. One test artifact: `openNew` keeps unbound rows when nothing is
 selected, so a second script saw the first script's lock state — not a defect.
+
+## §185. His first test of the sweep: the bend rebuilt as the score's grab-and-pull control point (two degrees of freedom), the hold shape's attack and release in SECONDS, the end handle at 50 px per second, SHIFT clamps a node — and his settings so far, on record
+
+Composer, 2026-09-07 evening, with two screenshots: *"shift + move node to clamp; the curve bend isnt working that great, different way
+to move the segment and I believe you need 2 degrees of freedom to achieve the proper bend, whatever way it works for trill curves in
+the individual curve tracks in the main score; drag end point not working cant change duration; I want it to have short attack and
+short release, and medium sustain, the shape isn't changing if I adjust the len number"* — and *"image for my reference so I can remember
+my settings so far"*.
+
+**His settings so far (the second screenshot, for his own reference):** the harmony **cs-015 · M3 P4 [0,4,5]** (the two-piano chord
+shapes), the voicing original · oct 0 · range 0 … 0 · seed 1; **pair 1 = Bass Cl. + Flute on D4 at unison** (note 3 of the sonority, both
+as written), **len 2.1 s, max 8 Hz, the hold shape** (the attack to about 0.5 s, the plateau to 1.5 s, the release to the end), mirrored,
+±6; the crescendo **follows the beating, p → ff** (0.3 → 0.9), together; the breaths **one**; the timeline 3 s; the relation unison · 1 oct,
+the stack 0 7 12; the pattern new, not yet inserted.
+
+**What was wrong and what was done:**
+- **The bend** — mine was a one-number power slope on the segment (the diamonds, then the line drag): a shape with no say in WHERE the
+  bulge sits. The score's curve windows (`startBendDrag`) do it with a quadratic Bézier whose control point the mouse sets: the column
+  where the line is grabbed is the control's x, and as the mouse moves the control's y is solved so the held point of the line follows
+  the mouse. Now the same: a curve point may carry `[cx, cy]` (`ctrlOf`, `bezierT`, `evalCurve` — the score's arithmetic), scaled and
+  mirrored with the curve (the heard curve holds it in its own units, the drawn curves by the share), kept through `save shape`; the
+  older number slope is still read. Hold the line and pull; a sideways pull still moves the segment's points; CTRL-drag slides the
+  whole curve in time (SHIFT is the node clamp now); ALT-click straightens. The crescodo bends the same way.
+- **The hold shape in seconds** — the curves were over normalised time by design (a stretch keeps the shape), so "len" scaled the attack
+  and the release with everything else. Now `SHAPES.adsr` takes the attack and the release in SECONDS with the length, the hold absorbs
+  the difference, and when the two do not fit they shrink in proportion with a 0.2 s hold kept; the block carries `adsr: { attackS,
+  releaseS }` (2 · 3 by birth); every length change — the len box, the end handle, the strip's edges — refits the hold shape keeping
+  its seconds and its bends; a node of the hold shape dragged rewrites the seconds (the shape stays "hold"); a drawn shape still
+  stretches.
+- **The end handle** — it worked, at the current scale: 2.1 s across 1300 px made 100 px of drag 0.16 s, invisible. Now 50 px per second,
+  whatever the length; the tip says the length.
+- **SHIFT + a node** clamps it to one axis (the first movement decides): time only, or value only.
+
+**Verified on `zz-ai-bend` (a copy, deleted) with real events:** born as the hold shape 2 · 4 · 3 over 9 s; len 2.1 → attack 0.76,
+hold 0.2, release 1.14 (proportional); len 9 → 2 · 4.01 · 3 again; the attack segment grabbed at its middle and pulled 30 px up → the
+curve's value at the grabbed column 3.41 for a mouse value of 3.36, the control on the heard curve (0.497, 12.1) mirrored as ±6.06 on
+the two players, the shape still "hold"; len 12 → the control kept, the attack still 2 s; the end handle +100 px → 12 → 14 s, the attack
+still 2 s; SHIFT + the attack's node dragged diagonally → the value kept, the time moved, the attack now 2.7 s; the crescendo's hump
+grabbed and pulled → a control on both players' curves (together), the samples bent. 121 checks in node. No page errors.

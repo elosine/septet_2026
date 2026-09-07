@@ -271,5 +271,17 @@ const HUMP3 = BC.shape('hump', { peak: 3 });
   ok(nL.level.every(l => near(l[1], 0.2)) && nU.level.every(l => near(l[1], 0.9)) && near(pp.samples[10].level, 0.55) && near(pp.samples[10].levelL, 0.2) && near(pp.samples[10].levelU, 0.9), 'a level per player: the cello at 0.2, the viola at 0.9, the samples carry both and their mean');
   const one = BC.renderPair({ pitch: 60, interval: 'unison', players: { lower: 'cello', upper: 'viola' }, length: 4, beat: 2, level: [[0, 0.5], [1, 0.5]] }, recipe);
   ok(one.notes.lower[0].level.every(l => near(l[1], 0.5)) && one.notes.upper[0].level.every(l => near(l[1], 0.5)), '… one curve still serves both'); }
+// ---- the bend as a control point (the score's curve windows) and the ADSR in seconds (2026-09-07 evening, RUNNING_LOG §185) ----
+{ const c = [[0, 0, [0.5, 4]], [1, 0]];   // a flat segment pulled up to 4 at its middle: a quadratic through (0.5, 2)
+  ok(near(BC.evalCurve(c, 0.5), 2) && near(BC.evalCurve(c, 0), 0) && near(BC.evalCurve(c, 1), 0) && BC.evalCurve(c, 0.25) > 1.4 && BC.evalCurve(c, 0.25) < 1.6, 'a control point at (0.5, 4) on a flat segment: the curve reaches 2 at the middle, 1.5 at a quarter (the score\'s quadratic)');
+  const off = [[0, 0, [0.2, 4]], [1, 0]];
+  ok(BC.evalCurve(off, 0.2) > BC.evalCurve(off, 0.8) && near(BC.evalCurve(off, 0), 0) && near(BC.evalCurve(off, 1), 0), '… grabbed at 0.2: the bulge leans left (two degrees of freedom — where, and how far)');
+  const sc = BC.scaleCurve(c, -0.5), m = BC.mirrored(c, 0.5);
+  ok(sc[0][2][0] === 0.5 && sc[0][2][1] === -2 && m.lower[0][2][1] === -2 && m.upper[0][2][1] === 2, '… the control scales and mirrors with the curve');
+  ok(BC.ctrlOf([0, 0, [0.5, 4]])[1] === 4 && BC.slopeOf([0, 0, [0.5, 4]]) === 0 && BC.slopeOf([0, 0, 0.5]) === 0.5 && BC.ctrlOf([0, 0, 0.5]) === null, 'ctrlOf and slopeOf tell the two forms apart');
+  ok(near(BC.bezierT(0.5, 0.3), 0.3) && near(2 * (1 - BC.bezierT(0.2, 0.3)) * BC.bezierT(0.2, 0.3) * 0.2 + BC.bezierT(0.2, 0.3) * BC.bezierT(0.2, 0.3), 0.3, 1e-6), 'bezierT solves the column: the identity at cx 0.5, the x of the parameter at cx 0.2');
+  const s9 = BC.shape('adsr', { peak: 3, length: 9, attackS: 2, releaseS: 3 }), s20 = BC.shape('adsr', { peak: 3, length: 20, attackS: 2, releaseS: 3 }), s2 = BC.shape('adsr', { peak: 3, length: 2.1, attackS: 2, releaseS: 3 });
+  ok(near(s9[1][0], 2 / 9, 1e-3) && near(s9[2][0], 1 - 3 / 9, 1e-3) && near(s20[1][0], 0.1, 1e-3) && near(s20[2][0], 0.85, 1e-3), 'the ADSR in seconds: 2 s attack, 3 s release — the hold absorbs the length (9 s → 4 s of hold, 20 s → 15 s)');
+  ok(near(s2[1][0] * 2.1, 0.76, 0.01) && near((1 - s2[2][0]) * 2.1, 1.14, 0.01), '… too short for them: the attack and the release shrink in proportion, a 0.2 s hold kept'); }
 console.log(fails ? 'FAIL — ' + fails + ' check' + (fails > 1 ? 's' : '') + ' failed' : 'PASS — every check passed');
 process.exit(fails ? 1 : 0);

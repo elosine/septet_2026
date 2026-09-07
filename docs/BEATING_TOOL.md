@@ -517,6 +517,13 @@ class: flute + bass clarinet on F# G G# A A# B, bass clarinet + either violin on
 **Fourths and fifths are one family:** a fifth that no octave serves for the two players sounds as the fourth below the same note
 (and a fourth as the fifth); the row says "inverted". The other intervals keep the ladder of §12.
 
+**His first test, the same evening (RUNNING_LOG §185):** the bend is now the score's — hold the line and PULL: the point you hold
+follows the mouse (a control point `[cx, cy]` on the segment; two degrees of freedom — where you grab, how far you pull); a sideways
+pull moves the segment's points; CTRL-drag slides the curve in time; ALT-click straightens; SHIFT clamps a dragged node to one axis.
+The **hold shape's attack and release are seconds** (2 and 3 by birth, rewritten when you drag its nodes): a length change — the len
+box, the end handle, the strip's edges — leaves them and gives the hold the rest; too short a pair shrinks them in proportion. The
+**end handle** moves 1 s per 50 px.
+
 ## Log (append-only)
 
 - **2026-09-07 — step 1 built:** the palette (§3): the recipe fields, `beating_calc.js` (the palette part, 37 checks), the bend
@@ -563,3 +570,5 @@ class: flute + bass clarinet on F# G G# A A# B, bass clarinet + either violin on
   the length, a crescendo per player, ppp … fff over the whole measured scale, the breath lane simplified with unison, the timeline's
   span, auto-assign and revert on a harmony change, fourths ↔ fifths, mute / solo, undo, loop; two defects found on the walk and
   fixed. His test pending, against the same script.
+- **2026-09-07, late evening — his first test answered** (§14, RUNNING_LOG §185): the bend as the score's grab-and-pull control point,
+  the hold shape's attack and release in seconds, the end handle at 50 px per second, SHIFT clamps a node; verified on a copy.

@@ -9691,7 +9691,7 @@ const Composer = {
         // pitch may be null — a pair born empty in the panel (2026-09-07, his walk-through line 5); the birth shape the ADSR at 3 Hz (line 6:
         // "holds at max for a few seconds and then comes back down"), over 9 s by createBeating and the panel
         const pitchOrNull = (typeof pitch === 'number' && isFinite(pitch)) ? pitch : null;
-        return { partnerLayer, pitch: pitchOrNull, srcPitch: pitchOrNull, fold: 0, noteIndex: null, noteIs: 'lower', skip: false, interval: 'unison', rateFrom: 0, rateTo: 3, shape: 'adsr', share: 0.5, beat: BeatingCalc.shape('adsr', { peak: 3 }),
+        return { partnerLayer, pitch: pitchOrNull, srcPitch: pitchOrNull, fold: 0, noteIndex: null, noteIs: 'lower', skip: false, interval: 'unison', rateFrom: 0, rateTo: 3, shape: 'adsr', share: 0.5, adsr: { attackS: 2, releaseS: 3 }, beat: BeatingCalc.shape('adsr', { peak: 3, length: 9, attackS: 2, releaseS: 3 }),
                  levelLo: 0.3, levelHi: 0.9, levelCurve: null, breath: { mode: 'one', seed: 1, target: null, marks: null, phase: 0.5 }, slide: { lower: 0, upper: 0 }, launchedFrom: null };
     },
     ensureBeating(zone) {
