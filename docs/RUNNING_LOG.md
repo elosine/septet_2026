@@ -4452,3 +4452,8 @@ lock and the phase slide · the row offset, the pattern length and the duration 
 the ceiling and its warning, the three modes, the seeded shuffle) · the audition on the space bar through the score's tick, the
 objects regenerated live · the verification on a copy with real DOM events, then his test and verdicts filed. Into PLAN 1f on his
 go. Nothing built.
+
+## §157. "on point, good" — step 4 written into PLAN 1f
+
+Composer: *"on point, good"* (the to-dos of §156). **Written into `docs/PLAN.md` 1f item 4 at once:** the result when done, the
+three things settled with the goal, the eight to-dos. Committed and pushed. Next: step 5's goal (the pitch side), on his word.

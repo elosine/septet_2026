@@ -454,8 +454,43 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        (+2 c) and the fourth (−2 c), the bend before the note-on and centred after, the CC7 through the remap, nothing stray on other
        channels; save, reload, drag and stretch keep it; the checker clean;
      - his ear: unison first, then the fifth and the fourth; the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md; commit, push.
-  4. **The panel** (rows, the mirrored curves with handles on rails, the crescendo and breath layers, the derived beating line, shapes
-     and freehand, the slide, the space bar, the duration box, takes) — *to be laid out when we discuss it.*
+  4. **The panel** (rows, the mirrored curves with handles on rails, the crescendo and breath lanes, the beating band, shapes and
+     freehand, the slide, the space bar, the duration box, takes) — `todo`. *Result when done:* the beating panel opens on P for a
+     selected beating, or empty from the toolbar for a new one, and holds a pattern of up to three pairs, one row each. In a row the
+     two players' rate curves as mirror images above and below a centre line, the beating that results drawn between them, a
+     crescendo lane and a breath lane beneath. Every curve has handles on rails: the top sets the level, the ends resize, the body
+     slides. A shape pops in from a menu (a flat line, a ramp out or in, a hump, the long arc) and can be reshaped or redrawn freehand
+     with the trill's curve tool (D21). The two curves of a pair move as mirrors until unlocked and slid for phase. A whole row slides
+     in time against the others. The breath lane shows the dotted go lines on sliders and the warning past the ceiling, with a shuffle
+     that deals staggered breaths of the right length. The space bar plays the configuration through the same path as the score; a
+     duration box replays it stretched; a take saves a configuration he likes. Every edit regenerates the objects, so a pattern in the
+     score changes as he drags. **Settled with the goal (RUNNING_LOG §156):** a floating panel like the strikes drawer with the curve
+     tool's gestures inside it, the score's curve windows A / B / C left to the trills; the beating shown as the band between the two
+     curves, filled and tinted by zone (flanger · beating · roughness) with the rate in numbers at the handle while dragging; mirror
+     lock on by default, one modifier key to move a single curve. *(composer, 2026-09-06, §147: "a panel, and I can see the pair
+     represented by some sort of curve … it'll be bipolar … everything should have handles … hit space bar to play that
+     configuration … audition that configuration over different durations")*. The to-dos:
+     - the chassis: a floating, draggable panel on the strikes drawer's pattern; P on a selected beating loads its pattern and edits it
+       live; a Beating button opens an empty pattern that lives in the panel until Insert (step 6); keys scoped to the panel's focus;
+       takes as in the strikes drawer (`bank/panel_snapshots.json`, a `beatings` bucket), named, saved with the repo;
+     - the row, one per pair, up to three: the pair's label (players, centre pitch, interval — step 3's fields; the pitch side proper
+       is step 5); the two rate curves mirrored above and below a centre line; the band between them tinted by zone with the rate in
+       numbers at the handle; the crescendo lane; the breath lane; add and remove a row;
+     - shapes with handles: the menu — flat · ramp out · ramp in · hump · the long arc · burst — each a few points with handles for the
+       level, the ends, the peak's place and the body on a rail, numbers typed beside them; the crescendo lane from the same menu in
+       level units; freehand: the trill's curve tool inside the row to redraw any curve, a shape becoming editable points;
+     - the mirror lock and the phase slide: on by default (drag one, the other mirrors); one modifier key moves a curve alone; the band
+       shows the result at once;
+     - the row offset and the length: a rail handle slides a whole pair in time against the others; the duration box sets the
+       pattern's length — the curves normalised, the marks scaled, the breaths re-dealt past the ceiling;
+     - the breath lane: the marks as dotted go lines on sliders per player; the ceiling drawn and a warning past it; the three modes
+       (one · continuous · designated); the shuffle button dealing staggered breaths of the right length from a seed, hand-moved marks
+       kept;
+     - audition: the space bar with the panel focused plays the pattern through the score's tick — all pairs, real time — and stops on
+       space again; every edit regenerates the pattern's objects, debounced;
+     - verified on a `zz-ai-*` copy with real DOM events (a shape popped, a level dragged, a slide, an unlock and slide, a row offset, a
+       duration change, a shuffle), each changing the objects' notes as predicted and decoded; the takes round-trip; nothing outside
+       the pattern touched; then his test, the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md, commit, push.
   5. **The pitch side** (the strikes menu → the keyboard, a pitch per pair, the sonority between pairs, the interval inside a pair) —
      *to be laid out when we discuss it.*
   6. **Insertion** (at the strike or the playhead, the group and its META shape, the mute rule, re-insert replaces, select-and-P,
