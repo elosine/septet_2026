@@ -101,7 +101,8 @@ own server (:5300); the AI built at his word, one chunk at a time:
 - **PLAN 1h built (§125–129, CN-30):** the acceleration calculator (`score/public/accel_calc.js`, the math alone, page and tools;
   `tools/accel_calc_check.js`, 52 checks) and the drawer's run dials — `run` (six shapes, the tuba curve dial among them), its dial, the
   length by steep / notes / ms, jitter, hold, mirror, a level ramp through the remap, decelerations; his take 34-a unchanged; the same evening the free dealer and the whole-strike pitch pool (§135–138), the even run (§142); §139: the version suggestion
-  counts suffixed names, the All-trills attack batch, a free trill ends 0.17 s before the next strike note; §141: the minor-2nd script. No
+  counts suffixed names, the All-trills attack batch, a free trill ends 0.17 s before the next strike note; §141: the minor-2nd script; §143: Reload is the way back to a named version (Name version saves the file too); §144: a
+  multi-selection drag carries the strikes' groups. No
   calibration (his word). **107.81 s = the next section's start** (CN-30). CN-31: Lake George's pointillistic multitempo section.
 - **Process:** `docs/PLANNING_METHOD.md` (state and restate → the top line → one step at a time: goal, sub-steps, into the plan),
   the user-level `/plan-item` skill and trigger lines; `docs/MORPH_NOTES.md` (D22, a standing practice); CN-28 (the form's
@@ -112,38 +113,52 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
 
 **NEXT STEPS · MODEL · CLEAR:**
 1. ☑ 0a · 0b · 0d · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1a · 1b · 1c (U1–U13b) · 1e phases 0–4 · 1g · 1h DONE and pushed.
-2. ► **The composer composes and tests** (any model): the trills at the new loudness, the folded strikes, the piece from #33; **the run's dials at 107.81 s (1h)** — the dials adjusted together on his report, the calibration ladder on his go.
-3. **TRILLS_TOOL phase 5, the weave** (Fable) on his go; **1f the morph events** (talk first, PLANNING_METHOD; MORPH_NOTES §2)
-   when he reaches section 2; the notation of trills at 2a.
+2. ► **The composer composes** (any model): section 1 drafted to 175.7 s (v1.23-sec1DraftDone; 48 strikes, 69 trills, minor 2nds from 135.84 s); his report on the day's tools (the run dials, the free dealer, the even run, the attack batch, the group drag) — a bug: the data first, fix, verify on a copy, journal, commit, push.
+3. **1f the morph events** (Fable; talk first — PLANNING_METHOD, MORPH_NOTES §1–2) as section 2 begins; **TRILLS_TOOL phase 5, the
+   weave** on his go; the run dials' calibration ladder (1h item 6) on his go; the notation of trills at 2a.
 4. **0c / 0h** (the recipes' completion; the phase-0 gate) when the music asks; 0d.3 / 0d.4 remain as the remainder.
 
-**Open at session end** *(mid-session checkpoint, 2026-09-06 ~15:30, for an AI that has never seen this conversation):*
-- **Task and state:** the composer's testing pass on the piece with every tool of this session; nothing half-built; everything
-  verified on the throwaway server and pushed. His app needs a hard reload (CTRL+SHIFT+R) then the app's Reload for the folds.
-- **Latest deliverable:** PLAN 1h (§129) — the acceleration calculator and the drawer's run dials, verified on a copy, pushed; before it the folds (§124) and 0d's ranges (§122).
-- **Next concrete step:** read his report; for a bug, look at the data first (his working copy / the recipe / the bank), fix,
-  verify on a `zz-ai-*` copy, journal, commit, push. For a planning ask, run `/plan-item` (or follow
-  `docs/PLANNING_METHOD.md`) — one topic, the answer first, the goal before the method.
-- **Resume reads:** `docs/PLANNING_METHOD.md` · `docs/TRILLS_TOOL.md` §2 (the trill block's fields now: velMode / velLo / velHi,
-  the attack, the ordinary voice) and §11 · `docs/PLAN.md` 1g and 0d (done; the sub-steps say what exists) · RUNNING_LOG §119
-  (the hybrid remap and the analyzer lesson) and §122 (the ranges) · `docs/MORPH_NOTES.md` §1–2 only when 1f comes.
-- **How the AI works the app and the rack:** the Browser pane on :5301 (`preview_start score-5301`), a `zz-ai-*` copy of a
-  score, deleted after; the pane's hidden tab collapses rects and its console log is cumulative across loads (count the load
-  blocks); drive the ticks synchronously with `performance.now` patched; this shell's heredoc collapses a double backslash —
-  scripts with escapes go through the file tool; the rack through `tools/reaper_job.js` (heartbeat · tracks · fader · run · chunk),
-  a probe run = `bash tools/probe_run.sh <schedule> <analyzer flags>` (PROBE_SCRATCH = a scratch dir for its logs) (record → play → stop with action 40667 → analyze →
-  the recording's items removed, cursor to 0); the probe kit: `tools/balance_schedule.js` (--sweep, --sweep2, --proof
-  [--repeat], --held, --ranges) → `probes/balance_probe.ps1` → `probes/analyze_balance.py` (--sweep, --proof, --ranges,
-  --bank, --tol); the self-tests `probes/selftest_sweep.py` / `selftest_ranges.py`.
-- **Pending the composer:** his hands on the run's dials at 107.81 s (1h; the calibration ladder on his go) · the attack batch run by him on his open score (§139: strings → marcato sfz; the bass clarinet's articulation his to pick) · his verdict on the trills at the new loudness and on a crescendo drawn on a note · the cello's
-  attack (the marcato has a sample at G#5; lengthen the attack ms if it still does not register) · "the range walk" (his
-  reminder, meaning unconfirmed) · the plucked piano silent in the rack (NITS) · the 0j piano trim +7 vs +5.3 (NITS; the remap
-  absorbs it) · CN-2 (piccolo vs bass flute) · Q6 closed by the measurement (the Bartók tops) · Q7 (the low-C bass clarinet).
-- **Deliberately uncommitted (his, not the AI's to commit):** `scores/piece-septet.json` (his saved score with the folds and his
-  own work since) · `scores/piece-septet-v1.7 / v1.8 / v1.8-startTrills / v1.9 / v1.10-preAccelNear105.json` (his named versions) ·
-  `scores/piece-septet-v1.9-beforeFold.json` and `-beforeTrillFold.json` (the AI's snapshots before the folds) ·
-  `scores/trillBuildTst.json` (his test score) · `bank/panel_snapshots.json` (his takes; committed with the repo at
-  session end on his word).
+**Open at session end** *(mid-session checkpoint, 2026-09-06 ~22:30, for an AI that has never seen this conversation):*
+- **Task and state:** the composer composes and tests with the day's tools; **section 1 is drafted** — his `v1.23-sec1DraftDone` is
+  the saved `scores/piece-septet.json` (175.7 s, 639 objects, 48 strike groups, 69 trills, the ones from 135.84 s minor 2nds, CN-32).
+  Nothing half-built; every page change of the day verified on a `zz-ai-*` copy on :5301 and pushed (RUNNING_LOG §125–144). His app
+  needs a hard reload (CTRL+SHIFT+R) for the page changes since his last one.
+- **Latest deliverable:** §144 — a multi-selection drag carries a strike's whole group (`composer.html` `startGroupDrag`). Before it:
+  §142 the even run · §139 the version suggestion, the All-trills attack batch, the free trill's 0.17 s end · §138 the free dealer and
+  the whole-strike pool · §129 the acceleration calculator (`score/public/accel_calc.js`, `tools/accel_calc_check.js`, 57 checks) and
+  the drawer's run dials (PLAN 1h, six items built).
+- **Next concrete step:** read his report. A bug: the data first — `scores/piece-septet.json` (or `-work.json` when it is newer: his
+  unsaved edits), the recipe, the bank — then fix, verify on a copy (`cp scores/piece-septet.json scores/zz-ai-<x>.json` ·
+  `preview_start score-5301` · `Composer.loadSession('zz-ai-<x>')` · real DOM events · delete the copy and its `-work` after), journal,
+  commit, push. When he reaches the morph section: **PLAN 1f, talk first** — `/plan-item` (PLANNING_METHOD: the data first, one topic,
+  the top line, one step at a time) after reading `docs/MORPH_NOTES.md` §1–2. The run dials' calibration ladder (1h item 6) only on
+  his go.
+- **Resume reads:** `docs/PLANNING_METHOD.md` · `docs/PLAN.md` 1h (built; its six items say what exists) and 1f · `docs/STRIKES_TOOL.md`
+  §W (the run menu, the dealing, the pool) · RUNNING_LOG §125–126 (the shapes in numbers), §138 (the free dealer), §143 (the save
+  system's rule for versions), §144 (the group drag) · `docs/NAMING.md` §1 (a suffixed version name counts as its number; the AI's
+  snapshots carry his current number with a suffix, never a new one) · `docs/MORPH_NOTES.md` §1–2 when 1f comes.
+- **How the AI works the app and the rack:** the Browser pane on :5301 (`preview_start score-5301`), a `zz-ai-*` copy of a score,
+  deleted after (its `-work` too; stop the server first); the pane's hidden tab collapses rects; its console log is cumulative across
+  loads (count the load blocks); a trill's property panel renders only with `Composer._panelOverride = true` set AFTER
+  `selectObject(z)`; a trill's sounding pitches are the `notes` arrays of its `midiSnippet` events (the `_cc` events come first); a
+  drag is driven through the real handler (`startGroupDrag` / `startWCBodyDrag` with a fake startEvent, then MouseEvents on
+  window); drive the ticks synchronously with `performance.now` patched. **This shell's heredoc** collapses a double backslash AND
+  refuses a text carrying a quoted single letter (`'s'`) — such files go through the file tool, then `cat >>`; patches to the page go
+  through a node script with `String.raw` anchors that must match exactly once (`${}` inside String.raw still interpolates — avoid).
+  The rack: `tools/reaper_job.js` (heartbeat · tracks · fader · run · chunk); a probe run = `bash tools/probe_run.sh <schedule>
+  <analyzer flags>` (PROBE_SCRATCH = a scratch dir); the probe kit `tools/balance_schedule.js` (--sweep, --sweep2, --proof
+  [--repeat], --held, --ranges) → `probes/balance_probe.ps1` → `probes/analyze_balance.py`; the self-tests `probes/selftest_*.py`.
+- **Pending the composer:** the calibration ladder of the run dials (his words → the numbers; §130–134 hold the first entries) on his
+  go · the bass clarinet's attack articulation for the batch (no marcato sfz in its library: With Accent #20 / Staccato #19 / Secco
+  #27) · his verdict on the trills at the new loudness · the cello's attack (the marcato has a sample at G#5) · "the range walk"
+  (meaning unconfirmed) · the plucked piano silent in the rack (NITS) · the 0j piano trim +7 vs +5.3 (NITS) · CN-2 (piccolo vs bass
+  flute) · Q7 (the low-C bass clarinet).
+- **Deliberately uncommitted (his, not the AI's to commit):** `scores/piece-septet.json` (his saved score = v1.23) · his named versions
+  `scores/piece-septet-v1.7 · v1.8 · v1.8-startTrills · v1.9 · v1.10-preAccelNear105 · v1.12-preTrillFix · v1.15-newAccel ·
+  v1.18-preReload · v1.19-marcatoApplied · v1.20-preTrillm2 · v1.21-postm2Trill · v1.22-beforeDelete · v1.23-sec1DraftDone.json`
+  (NAMING §1 says versions are committed — at session end on his word) · `scores/piece-septet-v1.9-beforeFold.json` and
+  `-beforeTrillFold.json` (the AI's snapshots before the folds) · `scores/trillBuildTst.json` (his test score) ·
+  `bank/panel_snapshots.json` (his takes).
 
 **Open questions:** Q1 the flute doubling (piccolo vs bass flute; SI2 flute in C until then) · Q5 print format (A3 landscape;
 #4's tabloid is 432 mm) · ~~Q6 the violins' Bartók top~~ measured 2026-09-06: E6 (88), the viola's E5, the cello's B4 (§122) ·

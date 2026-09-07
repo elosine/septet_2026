@@ -837,3 +837,19 @@ he likes quickly — "most of the way there already" (the tuba's multitempo and 
 not only quarter notes: two eighths, a triplet, a dotted eighth and a sixteenth, and so on. For the notation: each player keeps their
 own tempo, a single pulsed tempo shown by the bouncing balls (the gravitational conductors), so the tempo stays visible through the
 rests. Nothing planned or built — a note for the next piece's sketch pad, carried in the memory too.
+
+---
+
+## CN-32 · 2026-09-06 — from 135.84 s the trills are minor 2nds; section 1 drafted (v1.23-sec1DraftDone)
+
+> *"135.84 beginning here can you change all of the trills to minor 2, You can give me a console script instead of a button if that
+> works. 20-pretrillm2"* · *"I would like to do a spread out, strike, evenly spread out, but then have it last a certain duration and
+> have a return or loop like the acceleration. But, again, the same mix of the instruments and pitches around and choose from the
+> full range of played pitches."*
+> *(2026-09-06, session 4, evening; speech-to-text, content untouched)*
+
+**AI reading (not the composer's words):** two compositional facts for the record. (1) From 135.84 s the trills are minor 2nds — 43 of
+them, set by the console script of RUNNING_LOG §141 on his saved score (before: major 2nds); the earlier trills keep their major
+2nds. (2) An evenly spread strike over a chosen length, with the players and the strike's whole pitch set dealt round as in the
+accelerating runs — built as the `even` run (§142). His own version names tell the day's shape: v1.20-preTrillm2 → v1.21-postm2Trill →
+v1.22-beforeDelete → **v1.23-sec1DraftDone**: the first section drafted. The next section is the morph events (CN-28, PLAN 1f).
