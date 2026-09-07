@@ -5618,3 +5618,10 @@ the strip's background is clicked; the head's `space → …` says which. Three 
 
 Composer, 2026-09-07 night. Saved under the standing rule; the browser normally selects a number box's content on a double-click,
 so if it does not here it is a defect to catch on the next round (select-all on focus is the cheap alternative).
+
+## §193. His expected behaviours for the curves, saved: the endpoints are the duration, the attack and release ride on them
+
+Composer, 2026-09-07 night (verbatim in MORPH_NOTES §3): the vertical edge lines go; the curve's endpoints control the duration; the
+first point carries the attack's end node, the last point carries the release's start node (the attack and the release keep their
+lengths, the sustain takes the rest); the nodes inside move on their own; the strip's zone acts as the endpoints. Saved (NITS) under
+the standing rule — to be worked out with him later, one line of behaviour agreed before it is built.

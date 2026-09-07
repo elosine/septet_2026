@@ -103,3 +103,9 @@
 - **A double-click in a number box should highlight the number** (composer, 2026-09-07 night, "dbl clk in numbers highlights number").
   Chrome selects the number on a double-click by itself; if it does not in the drawer, something in the row is taking the click —
   to look at with him on the next round (a single click could also select all on focus). Saved at his word.
+- **The curve's endpoints as the duration, the attack and release attached to them** (composer, 2026-09-07 night — "visual controls for
+  the curves still not working … a list of things, behaviors I expect, and then we can work it out later"): forget the vertical edge
+  lines; the curve's two ENDPOINTS control the duration; moving the first point carries the attack's end node with it (the attack
+  keeps its length), moving the last point carries the release's start node with it (the release keeps its length), the sustain
+  absorbs; the nodes inside still move on their own; moving or trimming the zone in the strip does the same as moving the endpoints.
+  Saved at his word — the next model change to the lanes, to be agreed in one line before it is built (HOW_WE_WORK).

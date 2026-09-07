@@ -564,6 +564,19 @@ move what he is looking at.
 **AI reading (not the composer's words):** a zoom for the strip (NITS); and the standing rule — his remarks are saved as feature
 requests by default, built only at his word (HOW_WE_WORK, RUNNING_LOG §190).
 
+### 2026-09-07, night — the curves' controls, his expected behaviours (for later)
+
+> *"visual controls for Her curves still not working. So I'll just give a list of things, behaviors I expect, and then we can work it out
+> later. So I want when I shrink... I guess I'd need to unify The endpoint movement. So forgive about the vertical lines. Let's just have
+> the endpoints control the duration. And if I move the first point, it moves the first node, the end of the attack and the beginning of
+> the decay. And the endpoint on the right moves the second node with it. the beginning of the release. and the endpoint or the end of
+> the release. And the sequence, the... moving the zone does the same thing. It acts as moving the endpoint."* *(typed)*
+
+**AI reading (not the composer's words):** the third model in a day, and it reconciles the other two: the region's ends ARE the curve's
+endpoints; the attack and the release are attached to them (they keep their seconds when an end moves — §185's rule, at the ends
+only); the nodes between are free on the timeline (§188's rule, inside). Saved (NITS, RUNNING_LOG §193), to be agreed in one line
+and built in one pass when he says so.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·
