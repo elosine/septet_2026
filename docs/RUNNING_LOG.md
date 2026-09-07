@@ -4356,3 +4356,11 @@ panel's ceiling in beats per second and the cents shown so the limit is visible 
 measured ranges (any two of the six whose ranges hold the pitch; at an interval each its own note), the panel offering only those ·
 the per-instrument bend range as a recipe field the tick will read at step 3 (the tuba's 1.99 stays until then) · BEATING_TOOL.md §1
 opened with the numbers; MORPH_NOTES §1 updated. Nothing built.
+
+## §151. "on point, good" — step 1 written into PLAN 1f; the 1f entry rewritten with the talk's decisions and the eight-line top line
+
+Composer: *"on point, good"* (the sub-steps of §150). **Written into `docs/PLAN.md` 1f at once** (PLANNING_METHOD phase 3, step 5):
+the entry retitled "The beatings: a pair of players on one pitch, a gap that beats — the beating panel", status `doing`, his words
+quoted, the decisions of §145–150 (the name, the seven elements, the panel, the axis, the pitch side, the piano out, the shuffle
+parked), the top line as items 1–8 — item 1 in the fixed format with its result and its seven to-dos, items 2–8 carrying *to be
+laid out when we discuss it*. Committed and pushed. Next: step 2's goal, on his word.

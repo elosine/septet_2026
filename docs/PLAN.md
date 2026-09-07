@@ -353,15 +353,62 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   id, date) per entry; the 1c panel reads it as a second source. *Why:* the composer's
   harmonic vocabulary as one addressable table.
 
-- **1f — Morph events: a morph launched from a strike (section 2, CN-28)** — `todo` *(composer, 2026-09-06, CN-28: "strikes with
-  morph chords, like freeze frames or old time slide show, work with ai to use morph engine from tuba piece to create 'morph
-  events'")* — the tuba piece's morph engine (in this port: the Morph panel, `morphBend` notes, the bend in the plain tick) made
-  launchable from a strike the way the trill is (TRILLS_TOOL §5: the strike's chord held and morphing into the next — each
-  strike a slide, the morph the dissolve); the requirements to be talked through with him first, as the trill module was (CN-19 →
-  §97–98); consult #4's morph docs (`for_seven_tubas`) when reached. **The notes: `docs/MORPH_NOTES.md`** (CN-29, 2026-09-06 — the central
-  document for the morph tool, this piece's adjustments and the eventual all-purpose revision; the morph event's four elements:
-  pitch expansion → beating · re-breath / re-bow · crescendo · the pairs' own glissandi; short events of one breath, long ones with
-  re-breaths). *Why:* section 2's material in his form of 2026-09-06.
+- **1f — The beatings: a pair of players on one pitch, a gap that beats — the beating panel (section 2, CN-28 · CN-29 · CN-33)** —
+  `doing` (the requirements talk 2026-09-06 evening, RUNNING_LOG §145–150; PLANNING_METHOD phase 3 from step 1) *(composer,
+  2026-09-06: CN-28 "strikes with morph chords, like freeze frames or old time slide show … 'morph events'" · CN-29 "the expansion of
+  pitch to expand beating, the rebreath … and the Crescendo … the multiple pairs" · "beating is good" · "the atom will be a pair of
+  players" · "a panel, and I can see the pair represented by some sort of curve … it'll be bipolar … everything should have handles …
+  hit space bar to play that configuration" · "the axis should be beats per second")*. **Was:** "1f — Morph events" — the tuba
+  piece's morph engine made launchable from a strike; superseded by the talk, the engine's parts reused where they fit (the bend
+  arithmetic, the re-key, the breath rule; `docs/MORPH_NOTES.md` is the memory for the all-purpose revision, D22).
+  **Decided in the talk:** the object is a **beating** (his word; a strike, a trill, a run, a beating): one pair of players on one
+  centre pitch, both bending around it by mirrored curves (a flat partner = one holds), the gap beating; its seven elements — the
+  pair · its pitch · the beating curve (bloom out of unison, close into it, hold) · the crescendo · the breaths · the timing between
+  players (inside a pair the phase, between pairs the offsets) · the entry and the exit; the frame the length and the pair count. The
+  **panel** (his picture): a row per pair, up to three; per row the two mirrored pitch curves slid against each other for phase, a
+  crescendo layer, a breath layer, a derived line showing the beat rate that results; shapes from a menu with handles on rails (a
+  flat line for a held level, a hump, the long arc) or redrawn with the trill's curve tool (D21); a whole pair slid in time; the space
+  bar plays the configuration; a typed duration replays it stretched; takes. **The axis is beats per second** (the tool finds the cents
+  per player from the pitch and the interval; at a fifth / fourth / major third the beating is between coincident partials — 3× / 4× /
+  5× the unison's rate per cent, fainter). **The pitch side:** the strikes' played chords (the bank) on the drawer's keyboard → a
+  centre pitch per pair; the sonority between the pairs (unison · thirds · fifths · other); inside a pair unison, fourths / fifths /
+  thirds to try. **The piano is out of the beating** (CN-34): six players, up to three pairs. The shuffle drawer of §146 parked —
+  the same rows and curves are what a deal would fill later. The top line agreed 2026-09-06 (§148–149):
+  1. **The palette** (how far each player may bend, by sampler and by hand, and who may pair with whom) — `todo`. *Result when
+     done:* the tool knows, for each of the six bending players, how far a note may bend and by whom — the sampler's range, measured
+     in his rack, and the player's, his rule; which two players can sit on which pitch, from the ordinary voices' measured ranges,
+     so the panel offers only pairs that can play; the score's bend path, still fixed at the tuba's two semitones, ready to read the
+     instrument's range instead. The to-dos:
+     - adopt the quartet's convention (#1, RUNNING_LOG §150): the bend before the note, the centre after, re-key past the range —
+       the centring already in the score's tick (`resetMorphBend`);
+     - one bend probe for the six players on their ordinary voices: the tuba's `probes/bend_probe.ps1` + `analyze_bend_probe.py`
+       adapted to this repo's kit and ports (0 · +50 % · +100 % · −100 %, then a second note after an unreset bend, for the residue);
+       he runs it in the rack;
+     - the analyzer writes the sampler's range per instrument to the bank (`bank/bend_ranges.json`: semitones per full bend, and
+       whether the range can be changed by MIDI);
+     - the player's range in the recipe: one semitone for all six, the winds' by embouchure (his rule: "usually within semitone at the
+       most"); the panel's ceiling stays in beats per second, the cents shown so the limit is visible;
+     - the pairing table computed from the ordinary voices' measured ranges (`MEASURED_RANGES`): any two of the six whose ranges hold
+       the pitch; at a fourth or fifth each holds its own note; the panel offers only those;
+     - the sampler's range as a recipe field the tick reads at step 3 (the tuba's 1.99 stays until then);
+     - `docs/BEATING_TOOL.md` opened with the numbers (the TRILLS_TOOL pattern); MORPH_NOTES §1 updated.
+  2. **The beating math** (a pure module: rate ↔ cents by pitch and interval, the mirrored curves and their difference, the breath
+     rule, the duration stretch) — *to be laid out when we discuss it.*
+  3. **One pair in the score, heard** (the object on its two lanes, its notes, playback through the bend and 1g's remap; unison first,
+     then fifth and fourth by ear) — *to be laid out when we discuss it.*
+  4. **The panel** (rows, the mirrored curves with handles on rails, the crescendo and breath layers, the derived beating line, shapes
+     and freehand, the slide, the space bar, the duration box, takes) — *to be laid out when we discuss it.*
+  5. **The pitch side** (the strikes menu → the keyboard, a pitch per pair, the sonority between pairs, the interval inside a pair) —
+     *to be laid out when we discuss it.*
+  6. **Insertion** (at the strike or the playhead, the group and its META shape, the mute rule, re-insert replaces, select-and-P,
+     stretch regenerates) — *to be laid out when we discuss it.*
+  7. **Verify and document** (on a copy of the piece at 175.7 s; BEATING_TOOL.md and MORPH_NOTES; commit) — *to be laid out when we
+     discuss it.*
+  8. **Later** (the shuffle as a writer; cycles of beatings for section 3, CN-33; the training material on the full beating curve;
+     the notation at 2a) — *to be laid out when we discuss it.*
+  *Why:* section 2's material in his form of 2026-09-06 — strikes whose chords are held and beat, the slide show — and the beating
+  textures he means to use "a lot in the future for this piece and the next piece"; the pair as the unit is the one thing the tuba
+  engine never had (#4 day 13, finding 3).
 - **1g — Balanced dynamics for curve-driven playback: trills first, then crescendos and the morph events** — `done 2026-09-06 (RUNNING_LOG §115–120; D23)`
   *(composer, 2026-09-06: "get balanced level playback through MIDI for trills using the curve shapes, and hopefully this will extend
   to other types of articulations like crescendos")*. Reordered 2026-09-06 at his word: one item at a time, the simplest terms.
