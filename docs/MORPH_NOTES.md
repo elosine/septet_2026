@@ -613,6 +613,25 @@ sound — a beating, a morph pair; one harmony browser (CN-35); one takes model 
 (voice, range, bend reach, breath) supplied per player to a pure engine — the tuba's constants as the example, not the rule. The
 data and the proposal in RUNNING_LOG §197.
 
+### 2026-09-07, late — "keep it simple for now": the beating drawer left as it is; the morph panel the tuba way, two changes
+
+> *"No. I think I want to keep it simple for now. The beating drawer has a lot of features, and I wanna leave it as is. I wasn't quite
+> getting what I wanted, but I might revisit it later. For this piece, I basically just want to use the morph panel in a very similar
+> way to the way I used it for the tube a piece, to be able to generate a whole sequence using those value based sliders. But then I
+> want to have two changes one is I want to not use tubas, but these instruments for my septet. And then I want to maybe break the the
+> texture, the ensemble texture up into their individual pairs in case I wanted to just insert one pair part of the ensemble or a
+> second pair part of the ensemble. But, basically, I want to try the same way I did with the tube a piece to use the morph panel and
+> generate an entire ensemble sequence with everything in place such as crescendos, crescendos, red breaths, just like I did with the
+> tuber piece. talk to me about how this might look."* *(2026-09-07, late; typed — "red breaths" = re-breaths)*
+
+**AI reading (not the composer's words):** the verdict on the beating drawer after one day: many features, and *"I wasn't quite
+getting what I wanted"* — parked, not rejected. What he reaches for instead is the tuba panel's working mode: a few word-based
+sliders, a seed, speech to the AI for everything else, and an ensemble sequence generated whole with its crescendos and re-breaths.
+**For the all-purpose tool, the lesson of the day:** the number of controls is not the measure; a tool he can drive by ear with five
+sliders beat a tool with every gesture built, because it answered *"generate the whole thing, let me listen"*. The two changes that
+carry the septet — the players and their palette under the hood, the texture split into pairs at insert — are the tool's, not the
+composer's, to know about. RUNNING_LOG §198.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

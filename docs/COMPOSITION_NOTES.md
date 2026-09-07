@@ -937,3 +937,14 @@ the drawer's (STRIKES_TOOL F, U7 → U10). The blasts and the chord shapes come 
 winds as the third — with the piano out of the morphs as it is out of the beatings (CN-34); the pairs re-orchestrable after the fact,
 so a morph is written once and cast later; a pair or any combination of the three placed on its own. The tool's adaptation: the data
 in RUNNING_LOG §197, his words in MORPH_NOTES §3.
+
+> *Later the same night, narrowing it:* *"For this piece, I basically just want to use the morph panel in a very similar way to the way
+> I used it for the tube a piece, to be able to generate a whole sequence using those value based sliders … not use tubas, but these
+> instruments for my septet … break the the texture, the ensemble texture up into their individual pairs in case I wanted to just insert
+> one pair part of the ensemble or a second pair part of the ensemble … generate an entire ensemble sequence with everything in place
+> such as crescendos, crescendos, red breaths, just like I did with the tuber piece."* *(2026-09-07, late; typed — "red breaths" =
+> re-breaths)*
+
+**AI reading (not the composer's words):** the morph section is made the tuba way — an ensemble sequence generated whole, its
+crescendos and re-breaths from the engine — and placed by pairs; the re-orchestration and the fold of the first ask are withdrawn for
+now (RUNNING_LOG §198).

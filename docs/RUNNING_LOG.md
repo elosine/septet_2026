@@ -5728,3 +5728,32 @@ the pairs) — load, swap a seat, refold, re-render; ACTUALs left as they are; (
 then his listening: the three default pairs on one harmony, BLOOM ± 25 c over 30 s (the tuba's keeper). **One question:** the models
 to carry — the three keepers (BLOOM, CONVERGE, BALANCE) or all six (COLOUR needs technique paths the septet lacks; SPECTRAL /
 SPACING carry as they are). Nothing built.
+
+## §198. "No. I think I want to keep it simple for now … use the morph panel in a very similar way to the way I used it for the tube a piece … two changes" — the proposal of §197 declined; the beating drawer left as it is; the morph panel the tuba way with the septet's players and a pair-wise insert; the picture put to him
+
+Composer, 2026-09-07 late (verbatim in MORPH_NOTES §3): *"No. I think I want to keep it simple for now. The beating drawer has a lot of
+features, and I wanna leave it as is. I wasn't quite getting what I wanted, but I might revisit it later. For this piece, I basically
+just want to use the morph panel in a very similar way to the way I used it for the tube a piece, to be able to generate a whole
+sequence using those value based sliders. But then I want to have two changes one is I want to not use tubas, but these instruments
+for my septet. And then I want to maybe break the the texture, the ensemble texture up into their individual pairs in case I wanted
+to just insert one pair part of the ensemble or a second pair part of the ensemble. But, basically, I want to try the same way I did
+with the tube a piece to use the morph panel and generate an entire ensemble sequence with everything in place such as crescendos,
+crescendos, red breaths, just like I did with the tuber piece. talk to me about how this might look."*
+
+**Decided (his):** the §197 proposal (a drawer on the beating drawer's chassis, seats, the fold, takes) is off. The beating drawer is
+left as it is — *"I wasn't quite getting what I wanted, but I might revisit it later"* — its running list stays in NITS for the rebuild
+session (§196). The morph panel keeps the tuba's working mode: the MODELS tab with the word-recipe sliders and the seed, the scratch
+variants written by the AI at his word, Generate · Play · Stop · Insert @ cursor · Save as ACTUAL. **Two changes only:** the septet's
+six players instead of the tubas (the piano out, §197), and the ensemble texture broken into its pairs so one pair or another can be
+inserted on its own.
+
+**The picture put to him (nothing built):** the same panel in the same place; each stock model re-voiced once by the AI for three
+pairs — the cello + viola pair low, the violins in the middle, the flute + bass clarinet on top, each pitch inside the register both
+players share (the tuba's eight pitches were four pairs, MIDI 41–64) — and new pitch sets by his word into the scratch file, as in the
+tuba piece; under the fields three lines, one per pair (players · pitch), each with a tick — Play sounds the ticked pairs of the one
+render of all six, Insert writes them as their own group with the META shape, so a second pair can go in later at the same time or
+another; the palette under the hood — each player's ordinary voice with its switch, the bend through its measured range (the Xsample
+five about a semitone, the flute two), the winds' breath and the strings' bow ceilings in place of the tuba's breath table, the
+loudness through 1g's remap in the audition as in the score; a glissando wider than the sampler's semitone re-keys, on these
+instruments an audible re-articulation (BLOOM's ± 25–50 c stays inside; CONVERGE's whole-tone opening would carry one per voice
+unless its slider narrows it). Not done: nothing. His confirmation of the picture awaited, then the build in one pass on a copy.
