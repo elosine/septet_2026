@@ -194,25 +194,31 @@ const P = {
         this.loadDb().then(() => this.drawKeyboard());
     },
     mkRow(layer, b, offset, zone) { return { layer, b, offset: offset || 0, zone: zone || null, locked: true, draw: false, scale: 6, out: null }; },
-    defaultRow(layer) {
+    // a new pair on a lane: the partner the nearest lane that can pair on the lane's middle note — never a player already in the
+    // pattern (a player in two pairs would carry two bend streams on one channel: a sum, wrong); the rows warn if it happens by hand
+    defaultRow(layer, used) {
         const C = C_(), BC = BC_(); if (!C || !BC) return null;
         const M = METAL(); if (layer == null || layer >= M || layer === 2) layer = 3;
         const me = TRK()[layer] && TRK()[layer].instKey; if (!me) return null;
         const r = BC.ordinaryRange(INST(), me); let pitch = r ? Math.round((r[0] + r[1]) / 2) : 60;
-        let cands = C.beatingPartnerCandidates(layer, pitch, 'unison');
-        if (!cands.length) { pitch = 60; cands = C.beatingPartnerCandidates(layer, pitch, 'unison'); }
+        const free = c => !used || !used.has(c.layer);
+        let cands = C.beatingPartnerCandidates(layer, pitch, 'unison').filter(free);
+        if (!cands.length) { pitch = 60; cands = C.beatingPartnerCandidates(layer, pitch, 'unison').filter(free); }
+        if (!cands.length && r) { for (let p = r[0]; p <= r[1] && !cands.length; p += 3) { cands = C.beatingPartnerCandidates(layer, p, 'unison').filter(free); if (cands.length) pitch = p; } }
         if (!cands.length) return null;
         cands.sort((a, c) => Math.abs(a.layer - layer) - Math.abs(c.layer - layer) || a.layer - c.layer);
         const b = C.beatingDefaults(layer, 0, pitch, cands[0].layer);
         b.shape = 'hump';
         return this.mkRow(layer, b, 0, null);
     },
+    usedLayers(except) { const used = new Set(); this.rows.forEach(r => { if (r === except) return; used.add(r.layer); if (r.b.partnerLayer != null) used.add(r.b.partnerLayer); }); return used; },
     addRow() {
         if (this.rows.length >= MAX_ROWS) { this.setStatus('three pairs at most (the six bending players)', true); return; }
         if (this.bound && !this.patternGroupId) { this.setStatus('a lone beating is one pair — for a pattern of several open a new pattern (Beating with nothing selected), or insert this one and add to its group', true); return; }
-        const used = new Set(); this.rows.forEach(r => { used.add(r.layer); used.add(r.b.partnerLayer); });
+        const used = this.usedLayers();
         const free = [0, 1, 3, 4, 5, 6].filter(L => !used.has(L));
-        const r = this.defaultRow(free[0] != null ? free[0] : 3); if (!r) { this.setStatus('no free pair', true); return; }
+        let r = null; for (const L of free) { r = this.defaultRow(L, used); if (r) break; }
+        if (!r) { this.setStatus('no free pair — every bending player is in the pattern', true); return; }
         this.rows.push(r); this.render();
     },
     removeRow(i) { if (this.bound) return; this.rows.splice(i, 1); this.render(); },
@@ -268,6 +274,7 @@ const P = {
         const me = T[row.layer] ? T[row.layer].label : '?', cands = C.beatingPartnerCandidates(row.layer, b.pitch, b.interval);
         const lim = k => k ? BC.bendLimits(INST(), k) : null, lo = lim(out.players.lower), up = lim(out.players.upper);
         const fl = out.flags.map(f => f.flag).filter((v, j, a) => a.indexOf(v) === j);
+        { const used = this.usedLayers(row); const twice = [row.layer, b.partnerLayer].filter(L => L != null && used.has(L)).map(L => T[L].short); if (twice.length) fl.push('⚠ ' + twice.join(', ') + ' also in another pair — one channel would carry two bends'); }
         const iv = BC.INTERVALS[b.interval] || BC.INTERVALS.unison;
         const box = document.createElement('div');
         box.className = 'bpRow'; box.dataset.row = i;

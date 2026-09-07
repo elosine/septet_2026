@@ -354,9 +354,11 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   harmonic vocabulary as one addressable table.
 
 - **1f — The beatings: a pair of players on one pitch, a gap that beats — the beating panel (section 2, CN-28 · CN-29 · CN-33)** —
-  `doing` — **building since 2026-09-07 at his word (*"will you be able to run the plan independantly? can you do so, and I'll check
-  in after the build"*, RUNNING_LOG §167): step 1 built (§167–168), step 2 built (§169), step 3 built (§170), step 4 built (§171), step 5 built (§172), step 6 built (§173)** (the requirements talk 2026-09-06 evening, RUNNING_LOG
-  §145–166; PLANNING_METHOD phase 3 from step 1) *(composer,
+  `built 2026-09-07 — steps 1–7 overnight at his word (*"will you be able to run the plan independantly? can you do so, and I'll
+  check in after the build"*, RUNNING_LOG §167): the palette (§167–168, the probe run in the rack), the math (§169), the object
+  (§170), the panel (§171), the pitch side (§172), the insertion (§173), verify and document (§174); his listening at 3–7 pending;
+  item 8's four held things stand — docs/BEATING_TOOL.md is the tool's document, D24 / D25 the decisions` (the requirements talk
+  2026-09-06 evening, RUNNING_LOG §145–166; PLANNING_METHOD phase 3 from step 1) *(composer,
   2026-09-06: CN-28 "strikes with morph chords, like freeze frames or old time slide show … 'morph events'" · CN-29 "the expansion of
   pitch to expand beating, the rebreath … and the Crescendo … the multiple pairs" · "beating is good" · "the atom will be a pair of
   players" · "a panel, and I can see the pair represented by some sort of curve … it'll be bipolar … everything should have handles …
@@ -581,7 +583,12 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        else changes; save and reload keep it; the checker clean; then his test, the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md,
        commit, push.
   7. **Verify and document** (the whole tool end to end on a copy; the tool's doc, the morph notes, the naming doc, the journal; his
-     listening) — `todo`. *Result when done:* the whole tool has run end to end on a copy of the piece at 175.7 s — from the strikes
+     listening) — `built 2026-09-07 (RUNNING_LOG §174): the end-to-end on a copy at 175.7 s — a strike from the menu, three pairs
+     from its chord, shapes popped and dragged, one pair at a fifth unlocked and slid, a row offset, breaths dealt, 8 s, inserted,
+     the tick's MIDI decoded for the whole pattern within 0.006 beats/s of the panel on every pair; a defect found and fixed on the
+     way (the new-pair picker could give a player to two pairs — one channel, two bends); BEATING_TOOL complete, MORPH_NOTES §1 and
+     §4, NAMING §2.10, the journal's D24 / D25 and §6, the help line (?); the checker clean. HIS LISTENING PENDING — his hard reload,
+     the first pattern in the piece placed by him`. *Result when done:* the whole tool has run end to end on a copy of the piece at 175.7 s — from the strikes
      menu to a three-pair pattern shaped, slid, breathed, inserted and played in context among the strikes around it, its MIDI
      decoded and matching what the panel shows. `docs/BEATING_TOOL.md` exists, gathered piece by piece with what was built stamped
      (the STRIKES_TOOL / TRILLS_TOOL pattern). MORPH_NOTES says what exists now and carries the digest for the revision. NAMING §2

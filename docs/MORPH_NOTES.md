@@ -11,26 +11,40 @@ verbatim, the AI's reading marked. The tool is adjusted for the current use in t
 into an easy all-purpose tool, after this piece or the next. §3 is append-only, like the lab journal; §4 is the digest, rewritten
 freely.
 
-## 1 · What exists (2026-09-06)
+## 1 · What exists (2026-09-07 — the beating tool built, PLAN 1f steps 1–7; `docs/BEATING_TOOL.md` is its document)
 
-- The tuba piece's morph engine, carried by the port: `score/public/morph.js` · `morph_emit.js` · `morph_panel.js`; a morph note
-  carries `morphBend` (note-relative cents breakpoints), sent as pitch bend by the plain-note tick and centred again on stop.
-- Its documentation in #4 (`for_seven_tubas/docs`): `MORPH_FINDINGS.md`, `MORPH_NOTATION.md`; the convergence textures in
-  `CURVE_DATABASE.md`. The beating-frequency apparatus of #4 is parked here (PLAN's parking lot: "only if the music asks").
-- Not yet adapted to the septet's palette: the notation (phase 2a). *(The pairs and the bend range per instrument: the beating
-  tool's palette, below, 2026-09-07.)*
-
-- **The beating tool is this piece's successor to the morph tool (PLAN 1f, `docs/BEATING_TOOL.md`; the requirements talk of
-  2026-09-06, RUNNING_LOG §145–166).** The object is a *beating* — one pair of players on one pitch, mirrored bends, the gap beating;
-  the panel of direct manipulation replaces the tuba's word-recipe sliders; the axis is beats per second. **Step 1 built
-  2026-09-07 (the palette):** `score/public/beating_calc.js` (the players, the ordinary voices' measured ranges, the bend limits,
-  the pairing rule — `tools/beating_calc_check.js`); the recipe's `playerBendSt` (his semitone) · `bendRangeSt` (the sampler's,
-  provisional until measured) · `beating: false` (the piano); the bend probe on this repo's kit — `balance_schedule.js --bend` →
-  `balance_probe.ps1` (bend / RPN / reset events) → `probe_run.sh` → `analyze_bend.py` (the tuba's f0 method, self-tested) →
-  `bank/bend_ranges.json` → `apply_bend_ranges.js` → `MEASURED_BEND` in the recipe. What the tuba files still hold for the beating:
-  the tick's bend arithmetic (`morphBend` → 14-bit at a fixed 1.99 st; step 3 reads the instrument's `bendRangeSt` instead) and
-  `resetMorphBend` (the centre on stop, kept); `morph.js`'s `buildCarrier` (the breath rule step 2 re-derives per instrument) and
-  `toScoreObjects` (the note format with note-relative bend and level breakpoints, the model for step 3's snippet).
+- **The beating tool is this piece's morph tool** (the requirements talk 2026-09-06, RUNNING_LOG §145–166; built overnight
+  2026-09-07 at his word, §167–174). The object is a *beating* — one pair of players on one pitch, both bending around it by
+  mirrored curves, the gap beating — and a *pattern* is up to three of them under one META shape. What exists:
+  - **the math** — `score/public/beating_calc.js` (page and tools): the palette (the six bending players, the ordinary voices'
+    measured ranges, the bend limits, the pairing rule at unison and at the intervals), the conversion (a rate in beats per second
+    ↔ cents against the centre on the interval's coincident partial; the register law inside), the heard beating from the two
+    players' cents, the shapes, the mirror and the slide, the three breath modes and the seeded deal with a ceiling table, the
+    re-key past the sampler's range, `renderPair` → each player's chain of notes with bend and level breakpoints, `renderPattern`
+    (offsets, the META contour), `stretch`; `tools/beating_calc_check.js` (77 checks);
+  - **the palette's numbers** — the recipe's `playerBendSt` (his semitone) · `bendRangeSt` measured by the bend probe run in the
+    rack (SI2 flute ±2.00 st, the Xsample five ±0.96–0.99 — set to a semitone in Kontakt; RPN 0 ignored on all six; the residue
+    real on all six) · `beating: false` on the piano; the probe kit `balance_schedule.js --bend` → `balance_probe.ps1` →
+    `probe_run.sh` → `analyze_bend.py` (self-tested) → `bank/bend_ranges.json` → `apply_bend_ranges.js`;
+  - **the object** — a zone `midiModel: 'beating'` with its `beating` block, on the launching lane, its partner's lane carried (a
+    dashed bracket there); its notes generated at every play start into the zone's snippet — per-event routing for the partner,
+    `_bend` events for the pitch bend through the measured range, CC7 through 1g's remap; the tick's bend branch, the centre after
+    the end and on stop; B on a strike note makes one; the label; NAMING §2.10;
+  - **the panel** — `score/public/beating_panel.js`: rows, the mirrored rate curves with handles on rails, the band tinted by zone,
+    shapes and draw, the mirror lock and ALT-drag, the body slide, the crescendo lane, the breath lane with sliders / the ceiling /
+    shuffle, the offset rail, the length box, SPACE (the pattern through the tick's event path), takes (`beatings` in
+    `bank/panel_snapshots.json`); **the pitch side** — the strike menu from the bank, the keyboard with the chord lit and the
+    unplayable keys dimmed, a note armed and clicked or dragged onto a pair, the relations from a root dealt and folded;
+    **insertion** — insert @ playhead as one group with a META shape (the crescendo's mean), the shape's drag / stretch / delete
+    carrying the beatings, re-insert replacing at the same time, select + P loading the group; nothing around it touched (§160).
+- **The tuba piece's morph engine, still carried by the port and untouched:** `score/public/morph.js` · `morph_emit.js` ·
+  `morph_panel.js`; a morph note's `morphBend` on the plain-note tick (its 1.99 st constant at `composer.html` ~10112 is the tuba's —
+  the beating does not use that path); `resetMorphBend` (kept, now shared: the beating registers its slots there). Its documentation
+  in #4 (`for_seven_tubas/docs`): `MORPH_FINDINGS.md`, `MORPH_NOTATION.md` (the notation form the beating will take at 2a),
+  `CURVE_DATABASE.md`. The word-recipe panel is the tuba's; nothing of it was reused but the ideas (the carrier's breath rule, the
+  bend hygiene, the timeline's pinning).
+- **Not yet:** the notation (phase 2a, BEATING_TOOL §10); item 8's four held things (the shuffle as a writer, cycles for section 3,
+  the training material, the notation); his listening at steps 3–7.
 
 - **The dynamics are solved for any curve-driven object (2026-09-06, PLAN 1g, RUNNING_LOG §115–120):** `score/public/velocity_remap.js` gives
   a morph event its loudness in the ensemble's one scale — `velocityFor / cc7For` per note (attacks, trills), `heldNote / cc7ForHeight`
@@ -254,3 +268,16 @@ rather than adjusted. RUNNING_LOG §160.
   of two independent staggers; cycling the pair's gap as a unit = the true repeated bloom #4 deferred.
 - *(seed)* The all-purpose form: instrument-agnostic pairs, the bend range from the recipe, the curves from the score's curve
   windows, the notation as a rate / beating curve (as the trill's `tr` + span).
+- *(from the build, 2026-09-07 — what the all-purpose tool has now and what it still lacks)* **Has:** the pair as the unit, its gap
+  designed (the mirrored curves, the phase slide); the axis in beats per second with the register law inside; the interval inside a
+  pair on the coincident partial, the just interval as the zero; the palette from the recipe (the ranges and the bend limits
+  measured, the pairing table computed, nothing instrument-specific in the tool); direct manipulation (handles on rails, shapes,
+  draw, the mirror lock); the breaths as a model (one · continuous · designated; a seeded deal with hand marks kept; the ceilings
+  as a table to tune by ear); the pattern as one gesture (the group with a META shape, the drawer's re-insert rule); takes.
+  **Lacks, for "an easier to use all purpose tool":** more than three pairs (the six players is this piece's cap); a player in two
+  pairs; a flat partner as a first-class row mode (it is `share` 0 / 1 — the panel has no button); the cycling of the pair's gap as a
+  unit over a long event (the tuba's out-and-back at the timeline level — here a hump or a drawn curve does it once); the shuffle as
+  a writer (item 8); the crescendo's own dynamics layer per pair with phase (the tuba's D24 — here the crescendo follows the beating
+  or is drawn); the exit as a rule (a release to unison and the floor — here the curve's own end); the notation; a way to hear a
+  pair's beating rate as a number while the score plays (the readout is the panel's, before playing); the ceilings by register and
+  by loudness measured, not defaulted.

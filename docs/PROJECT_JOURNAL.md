@@ -82,7 +82,7 @@
 
 ## §2 Resume Here
 
-**Session 4 — 2026-09-06 → 07 (in progress, Claude Code / Fable 5.1) — RUNNING_LOG §111–168.** The composer composes and tests on his
+**Session 4 — 2026-09-06 → 07 (in progress, Claude Code / Fable 5.1) — RUNNING_LOG §111–174.** The composer composes and tests on his
 own server (:5300); the AI built at his word, one chunk at a time:
 - **PLAN 1f step 1 built and its probe run, 2026-09-07 about 00:00–01:00 (§167–168), at his word *"run the plan independantly … I'll
   check in after the build"*:** the palette — the recipe's `playerBendSt` (his semitone) · `bendRangeSt` · `beating: false` (the
@@ -93,6 +93,11 @@ own server (:5300); the AI built at his word, one chunk at a time:
   in the rack** (the bridge up and idle): SI2 ±2.00 st, the Xsample five ±0.96–0.99 st (set to a semitone in Kontakt), RPN 0 ignored
   on all six, the residue real on all six, the pre-arm at 300 ms fine (the scoop is the samples' own attack — measured against the
   unbent reference after a first false flag); `MEASURED_BEND` in the recipe; `docs/BEATING_TOOL.md` opened.
+- **PLAN 1f steps 2–7 built the same night (§169–174):** the math (77 checks) · one pair in the score (B, the snippet's bend
+  events, the tick) · the panel (`beating_panel.js`) · the pitch side (the strike menu, the keyboard, the relations) · the insertion
+  (one group with a META shape, the shape's drag / stretch / delete) · the end-to-end (within 0.006 beats/s of the panel on every
+  pair; a double-booked player found and fixed) · the documents (BEATING_TOOL, MORPH_NOTES §1 / §4, NAMING §2.10, D24 / D25, the
+  help line `?`). **1f built; his listening pending.**
 - **Tools on his hands (§111–114):** the bend cursor only when Points is off; TRILLS phase 4 (a trill runs to the player's next
   strike note, a stretch regenerates at once); a nudged trill keeps its attack note (a 60 ms eating window; the drag keeps a
   trill's start; the articulation switch arbitrated on a shared sampler slot — the tail and the lead); the drawer's pick no
@@ -137,110 +142,63 @@ own server (:5300); the AI built at his word, one chunk at a time:
 windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
 
 **NEXT STEPS · MODEL · CLEAR:**
-1. ☑ 0a · 0b · 0d · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1a · 1b · 1c (U1–U13b) · 1e phases 0–4 · 1g · 1h DONE and pushed; **1f planned
-   whole** (eight steps in PLAN.md).
-2. ► **Build PLAN 1f, one step at a time, in the plan's words** (Fable, at his word 2026-09-07: *"will you be able to run the plan
-   independantly? can you do so, and I'll check in after the build"*, §167): **step 1 the palette DONE** (§167–168 — the bend probe
-   run in his rack, the numbers in the recipe); **step 2 the beating math DONE** (§169 — `beating_calc.js`'s second half, 77 checks,
-   nothing heard); **step 3 one pair in the score DONE** (§170 — the beating zone, B, the snippet's bend events, the P row, ▶ hear;
-   verified by the decoded MIDI on a copy; HIS EAR PENDING); **step 4 the panel DONE** (§171 — `beating_panel.js`; verified with
-   real DOM events on a copy; HIS TEST PENDING); **step 5 the pitch side DONE** (§172 — the strike menu, the keyboard, arming /
-   dragging a note onto a pair, the relations dealt from a root; verified with real DOM events on a copy; HIS TEST PENDING);
-   **step 6 insertion DONE** (§173 — insert @ playhead: the beatings under one group with a META shape, the shape's drag / stretch /
-   delete carrying them, re-insert replacing at the same time, select + P loading the group; verified on a copy; HIS TEST PENDING);
-   **► step 7 verify and document**; his listening verdicts at 3–7 filed when he checks in. Section 1 stays drafted at 175.7 s
-   (v1.23-sec1DraftDone); the piece file is his.
-3. **TRILLS_TOOL phase 5, the weave** on his go; the run dials' calibration ladder (1h item 6) on his go; the notation of trills and
-   beatings at 2a; 1f step 8's four held things when their lines come.
+1. ☑ 0a · 0b · 0d · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1a · 1b · 1c (U1–U13b) · 1e phases 0–4 · 1g · 1h · **1f steps 1–7** DONE and pushed
+   (1f built overnight 2026-09-07 at his word, RUNNING_LOG §167–174; D24 / D25; `docs/BEATING_TOOL.md`).
+2. ► **HIS CHECK-IN on the beating tool** (the plan's "his listening" at steps 3–7, BEATING_TOOL §11, in that order): a hard reload
+   (CTRL+SHIFT+R) · B on a strike note, unison, then the fifth and the fourth (step 3) · the panel's feel (step 4) · the pitch side
+   (step 5) · an insertion (step 6) · the first pattern in the piece placed by him; the verdicts to MORPH_NOTES §3 and BEATING_TOOL,
+   each a new entry in the lab journal; the piece file is his (every AI run was on a copy). Section 1 stays drafted at 175.7 s
+   (v1.23-sec1DraftDone).
+3. **After his verdicts:** the fixes they ask for (the chunk cadence); 1f item 8's four held things when their lines come (the
+   shuffle as a writer, cycles for section 3 — CN-33, the training material, the notation at 2a); TRILLS_TOOL phase 5 (the weave) on
+   his go; the run dials' calibration ladder (1h item 6) on his go; the notation of trills and beatings at 2a.
 4. **0c / 0h** (the recipes' completion; the phase-0 gate) when the music asks; 0d.3 / 0d.4 remain as the remainder.
 
-**Open at session end** *(mid-build checkpoint, 2026-09-07 about 01:00, for an AI that has never seen this conversation):*
-- **Task and state:** PLAN 1f — the beatings — is being **built autonomously at his word** (§167: *"run the plan independantly … I'll
-  check in after the build"*). **Step 1 (the palette) is built and its probe run** (§167–168; `docs/BEATING_TOOL.md` §3 has every
-  number). The plan is the source of truth: `docs/PLAN.md` 1f, steps 2–7 each with its *result when done* and its to-dos, 8 the held
-  things. The talk is in RUNNING_LOG §145–166, every tool remark in `docs/MORPH_NOTES.md` §3. The piece: section 1 drafted to 175.7 s,
-  his `v1.23-sec1DraftDone` = the saved `scores/piece-septet.json`; untouched by the AI. His app sees the page changes after a hard
-  reload (CTRL+SHIFT+R).
-- **Latest deliverable:** step 1 — the recipe's palette fields and `MEASURED_BEND`; `score/public/beating_calc.js` (the palette part)
-  + `tools/beating_calc_check.js`; the bend probe on this kit (`balance_schedule.js --bend` · `balance_probe.ps1`'s bend events ·
-  `probe_run.sh`'s analyzer switch and stale-take guard · `probes/analyze_bend.py` + `selftest_bend.py` · `tools/apply_bend_ranges.js`
-  · `bank/bend_ranges.json`); `docs/BEATING_TOOL.md` opened.
-- **Step 2 is built too (§169; BEATING_TOOL §4):** `beating_calc.js`'s second half — `renderPair(spec, recipe)` → each player's chain of
-  notes `{ key, keyOffset, startS, endS, bend: [[dt, cents]…], level: [[dt, 0…1]…], flags }`, the panel's lines, the flags;
-  `renderPattern` (offsets, the META contour), `stretch`, `mirrored` / `flatPartner` / `shape` / `levelFromBeat`, the breath deal and
-  ceilings; 77 checks. Nothing heard.
-- **Step 3 is built too (§170; BEATING_TOOL §5):** in `composer.html` — the `beating` zone (`midiModel: 'beating'`, a `beating` block:
-  partnerLayer · pitch · interval · rateFrom / rateTo / shape (or a drawn `beat`) · share · levelLo / levelHi · breath · slide ·
-  launchedFrom), `createBeating` (B), `regenerateBeating` (the snippet: per-event routing for the partner, `_bend` events through
-  `bendValueFor` = `bendRangeSt`, CC7 through the remap, the articulation before every note), the tick's `_bend` branch +
-  `centreBeatingSlots` + `beatingCatchUp`, `renderBeatingDecor` (the partner's bracket, in `_beatingPartnerEls`), `beatingLabel`,
-  `renderBeatingPanel` / `bindBeatingPanel` (the P row), `hearBeating` / `playBeatingEvents`; `trillAfterDrag` regenerates beatings
-  too. Verified on a copy by the decoded MIDI (the beat rate within 0.002/s of the math). **His ear pending** — unison, fifth, fourth.
-- **Step 4 is built too (§171; BEATING_TOOL §6):** `score/public/beating_panel.js` (window.BeatingPanel) — `openFor(zone)` (P, B: bound,
-  the row's block IS the zone's), `openNew()` (the Beating button: a pattern until Insert), `rows[] = { layer, b, offset, zone, locked,
-  scale, out }`, `render / buildRow / drawRates / drawLevel / drawBreaths`, the handle / body / mark drags, `popShape / unlock /
-  relock / setPoint / addPoint / slideCurve`, `setLength` (stretch), `play / stop` (SPACE, the merged events through
-  `playBeatingEvents`), the takes (`beatings` bucket); `beatingSpec` honours `rate.lower / upper` (unlocked) and `levelCurve`; the
-  step-3 property row removed. Verified with real DOM events on a copy. **His test pending.**
-- **Step 5 is built too (§172; BEATING_TOOL §7):** in `beating_panel.js` — `loadDb / sourceList / fillSources / pickSource` (the bank's
-  chords), `strikeFor(zone)` (a launched beating's strike: the note's id, its group index, its onset), `drawKeyboard` (the drawer's
-  picture; the dots, the rings, the dimming by `rowCanPlay`), `keyClick` / `startDotDrag` / `assign` (the armed note → the pair's
-  lower note), `deal` (the relations from a root, folded). Verified with real DOM events on a copy. **His test pending.**
-- **Step 6 is built too (§173; BEATING_TOOL §9):** in `beating_panel.js` — `insert()` (the group, the zones via `createZone` with the
-  undo steps popped, the META shape from `renderPattern`'s contour, the replace-at-the-same-time rule, the panel re-bound),
-  `removeGroup`, `openFor` loading a whole group, `openNew`'s strike starting point (`insertAt`), `play` at a bound group's offsets;
-  in `composer.html` the three group paths (`startWCBodyDrag`, `startBoxDrag`, the node-handle stretch) carry zones and regenerate
-  them on a stretch. Verified on a copy. **His test pending.**
-- **Next concrete step — build step 7, verify and document, in the plan's words:** read PLAN 1f item 7's to-dos, then: (1) the
-  end-to-end on a `zz-ai-*` copy at 175.7 s on :5301 — a strike picked from the menu, three pairs assigned from its chord, shapes
-  popped and dragged, one pair unlocked and slid, a row offset, breaths dealt, a duration set, inserted at the playhead, then the
-  score's tick driven over the pattern with fake outputs (the recipe of step 3) and the MIDI decoded for the WHOLE pattern against
-  the panel's rows (each pair's beat rate vs its `out.beat`, the offsets, the just offsets, the slots, nothing stray); the checker
-  clean; the copy and its `-work` deleted, the server stopped first; (2) `docs/BEATING_TOOL.md` — a final pass: §0–§11 read whole,
-  the open questions for him gathered at the end (§11), every stamp right; (3) MORPH_NOTES §1 rewritten to what exists now (the
-  beating tool: the math, the object, the panel, the pitch side, the insertion; what the tuba files still hold) and §4 the digest
-  for the revision (what an all-purpose morph / beating tool needs, from this build); (4) NAMING §2 — the beating object for the IR:
-  its type (`zone` with `midiModel: 'beating'`), the `beating` block's fields, the generated notes (the snippet: per-player, bend
-  and level breakpoints), the curve height as the dynamic (D23), the group and its META shape — so the extractor at 2a knows what it
-  reads; (5) the journal: §4 the decisions with their whys and the rejected alternatives (the name and the atom · the panel over the
-  shuffle · the axis in beats per second · the piano out · the beating out of the strike chain · the breath model · the snippet path
-  over the per-frame poll · one truth in the panel), the D-numbers continuing from the last; §2 rewritten (the checkpoint block for
-  his check-in); PLAN 1f marked built (the header `doing` → `built`, item 7 stamped, item 8's four held things standing); (6) the
-  app's help line (`?` — find it: grep the help text in composer.html) — how a beating is made: B, P, the panel, insert; (7) commit,
-  push; then the checkpoint for his check-in (his hard reload, his listening at 3–7, the first pattern in the piece placed by him —
-  the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md). Narrate briefly; do not re-plan.
-- **Resume reads:** `docs/PLAN.md` 1f whole (the build's words) · `docs/MORPH_NOTES.md` §1–2 · RUNNING_LOG §145 (what the tuba tool is —
-  the digest for reusing its parts: the bend arithmetic, the re-key, `buildCarrier`'s breath rule, `toScoreObjects`' note format),
-  §147 (the panel picture), §148 (the interval arithmetic: beat = p · f1 · |2^(δ/1200) − 1|), §150 (#1's bend convention), §152 (the
-  breath model), §160 (the beating out of the chain) · `docs/TRILLS_TOOL.md` §2 (the trill object — the model for the beating object)
-  · `docs/STRIKES_TOOL.md` A (the keyboard view), O (takes), Q (the score link) · `docs/PLANNING_METHOD.md` only if the plan itself
-  must change.
-- **How the AI works the app and the rack:** the Browser pane on :5301 (`preview_start score-5301`), a `zz-ai-*` copy of a score,
-  deleted after (its `-work` too; stop the server first); the pane's hidden tab collapses rects; its console log is cumulative across
-  loads (count the load blocks); a trill's property panel renders only with `Composer._panelOverride = true` set AFTER
-  `selectObject(z)`; a trill's sounding pitches are the `notes` arrays of its `midiSnippet` events (the `_cc` events come first); a
-  drag is driven through the real handler (`startGroupDrag` / `startWCBodyDrag` with a fake startEvent, then MouseEvents on
-  window); drive the ticks synchronously with `performance.now` patched. **This shell's heredoc** collapses a double backslash AND
-  refuses a text carrying a quoted single letter (`'s'`) — such files go through the file tool, then `cat >>` or a node script;
-  patches to the page go through a node script with `String.raw` anchors that must match exactly once (`${}` inside String.raw still
-  interpolates — avoid). `cd` persists between Bash calls — use absolute paths. A `grep -r` over the quartet repo times out
-  (node_modules, renders): use the Grep tool with a path. Node needs `C:/…` paths, not `/c/…`. The rack: `tools/reaper_job.js`
-  (heartbeat · tracks · fader · run · chunk); a probe run = `bash tools/probe_run.sh <schedule> <analyzer flags>` (PROBE_SCRATCH = a
-  scratch dir); the probe kit `tools/balance_schedule.js` (--sweep, --sweep2, --proof [--repeat], --held, --ranges) →
-  `probes/balance_probe.ps1` → `probes/analyze_balance.py`; the self-tests `probes/selftest_*.py`; the score's bend path
-  `composer.html:10112` (the tuba's 1.99 st constant, to be replaced at step 3).
-- **Pending the composer:** his check-in after the build — the listening verdicts at steps 3–7 (to MORPH_NOTES §3 and
-  BEATING_TOOL.md) · the winds' embouchure range by his ear when a beating is heard (the semitone is his ceiling, not a measurement) · the
-  calibration ladder of the run dials (§130–134) on his go · the bass clarinet's attack articulation for the batch (With Accent #20 /
-  Staccato #19 / Secco #27) · his verdict on the trills at the new loudness · the cello's attack (the marcato has a sample at G#5) ·
-  "the range walk" (meaning unconfirmed) · the plucked piano silent in the rack (NITS) · the 0j piano trim +7 vs +5.3 (NITS) · CN-2
-  (piccolo vs bass flute) · Q7 (the low-C bass clarinet).
+**Open at session end** *(checkpoint 2026-09-07 about 05:45, the build done, for an AI that has never seen this conversation):*
+- **Task and state:** PLAN 1f — the beatings — is **built, steps 1–7**, at his word (*"will you be able to run the plan
+  independantly? can you do so, and I'll check in after the build"*, §167); **nothing of it has been heard by him.** The tool's
+  document is `docs/BEATING_TOOL.md` (§0–§11 — §11 is his check-in list); the plan's words in `docs/PLAN.md` 1f (item 8 held); the
+  decisions D24 (his) and D25 (the build's) in §4; the lab journal §167–174 has every number and every dead end. The piece: section 1
+  drafted to 175.7 s, his `v1.23-sec1DraftDone` = the saved `scores/piece-septet.json` (639 objects) — **never touched by the AI**;
+  every run was on a `zz-ai-*` copy, deleted after. His app sees the night's page changes only after a hard reload.
+- **Latest deliverable — the beating tool:** `score/public/beating_calc.js` (the math, page and tools; `tools/beating_calc_check.js`
+  77 checks) · in `composer.html` the beating zone (`createBeating` on B, `regenerateBeating` → the snippet with `_bend` events, the
+  tick's bend branch, the centre after the end, the partner bracket, the label, the `?` help line, the three group paths carrying
+  zones) · `score/public/beating_panel.js` (the panel: rows, curves, band, shapes, lock, slide, crescendo and breath lanes, offset,
+  length, SPACE, takes; the strike menu and the keyboard; insert @ playhead) · the bend probe kit and its numbers (`bank/bend_ranges.json`,
+  `MEASURED_BEND` in the recipe: SI2 ±2.00 st, the Xsample five ±0.96–0.99, RPN ignored, the residue real) · NAMING §2.10 ·
+  MORPH_NOTES §1 / §4. Commits de88ba3 → (this checkpoint), all pushed.
+- **Next concrete step — his check-in, nothing to build until he speaks:** when he reports, take each verdict as a new lab-journal
+  entry (his words verbatim), file it in MORPH_NOTES §3 and BEATING_TOOL §11, fix what he asks in the chunk cadence (build → verify
+  on a copy → docs → commit → push), never touch the piece file. If he has not yet looked: point him to the help line (`?`) and
+  BEATING_TOOL §11's order; the first test is B on a strike note on his server after a hard reload.
+- **Resume reads:** `docs/BEATING_TOOL.md` whole (the tool, its stamps, §11) · `docs/PLAN.md` 1f (item 8's held things) ·
+  `docs/MORPH_NOTES.md` §1 and §4 · RUNNING_LOG §167–174 (the build's numbers, the dead ends: the false pre-arm flag §168, the wrong
+  check numbers §169, the drag's hit-test §172, the double-booked player §174) · journal §4 D24–D25.
+- **How the AI works the app and the rack:** the Browser pane on :5301 (`preview_start score-5301`), a `zz-ai-*` copy of a score
+  (`cp`, then `Composer.openScore('zz-ai-…')`), deleted after with its `-work` (stop the server first); the pane's console log is
+  cumulative across loads; the pane's synthetic pointer cannot hit-test (`elementFromPoint`) — the panel's drag listens to the rows'
+  own mouseover as well; a beating's MIDI is captured by installing fake outputs in `_zoneMidiOutputs` (keyed by port lower-case),
+  `_zoneMidiInited = true`, `performance.now` patched to the clock, `tickZoneMidiPlayback(t)` driven at 20 ms, the `0xE0` values →
+  cents through `INSTRUMENTS[k].bendRangeSt` (the recipe of §170); a zone drag = the real handler (`startWCBodyDrag` / the bodyHit's
+  mousedown, then MouseEvents on window); the panel's handles = MouseEvents on its SVG circles and paths. **This shell's heredoc**
+  collapses a double backslash and refuses a quoted single letter — such files go through the file tool then `cat >>`; patches to
+  the page through the Edit tool on exact anchors (a node script with indexOf anchors for a block removal). `cd` persists — use
+  absolute paths. The rack: `tools/reaper_job.js` (heartbeat · tracks · fader · run · chunk); a probe run = `bash tools/probe_run.sh
+  <schedule>` (the analyzer by the schedule's flag; PROBE_SCRATCH a scratch dir; the REC track must be armed — the guard aborts on a
+  stale take); the bend probe = `node tools/balance_schedule.js --bend` → the run → `node tools/apply_bend_ranges.js`.
+- **Pending the composer:** his check-in (above) · the winds' embouchure range by his ear when a beating is heard (the semitone is
+  his ceiling, not a measurement) · the breath and bow ceilings (BEATING_TOOL §4's defaults) · the calibration ladder of the run
+  dials (§130–134) on his go · the bass clarinet's attack articulation for the batch (With Accent #20 / Staccato #19 / Secco #27) ·
+  his verdict on the trills at the new loudness · the cello's attack (the marcato has a sample at G#5) · "the range walk" (meaning
+  unconfirmed) · the plucked piano silent in the rack (NITS) · the 0j piano trim +7 vs +5.3 (NITS) · CN-2 (piccolo vs bass flute) ·
+  Q7 (the low-C bass clarinet).
 - **Deliberately uncommitted (his, not the AI's to commit):** `scores/piece-septet.json` (his saved score = v1.23) · his named versions
   `scores/piece-septet-v1.7 · v1.8 · v1.8-startTrills · v1.9 · v1.10-preAccelNear105 · v1.12-preTrillFix · v1.15-newAccel ·
   v1.18-preReload · v1.19-marcatoApplied · v1.20-preTrillm2 · v1.21-postm2Trill · v1.22-beforeDelete · v1.23-sec1DraftDone.json`
   (NAMING §1 says versions are committed — at session end on his word) · `scores/piece-septet-v1.9-beforeFold.json` and
   `-beforeTrillFold.json` (the AI's snapshots before the folds) · `scores/trillBuildTst.json` (his test score) ·
-  `bank/panel_snapshots.json` (his takes).
+  `bank/panel_snapshots.json` (his takes — the night's tests left it one empty `beatings` bucket, nothing else).
 
 **Open questions:** Q1 the flute doubling (piccolo vs bass flute; SI2 flute in C until then) · Q5 print format (A3 landscape;
 #4's tabloid is 432 mm) · ~~Q6 the violins' Bartók top~~ measured 2026-09-06: E6 (88), the viola's E5, the cello's B4 (§122) ·
@@ -506,6 +464,41 @@ sources; verified here only when they bite.)*
   rendering must never leak into the notation (M3); the MIDI has to be tweaked to sound right and the page must not inherit the
   tweak. *Rejected:* a named dynamics table as the scale (p = 49 …) — he moved to a measured velocity floor; velocities read as
   dynamics by the extractor (the tuba piece's velocity band — kept for the strikes only, whose velocities are as played).
+- **D24** *(2026-09-06, composer, the PLAN 1f requirements talk — RUNNING_LOG §146–160; CN-28, CN-29, CN-33, CN-34)* — **The
+  beating: the object, the panel, the axis, the piano, the chain, the breaths.** (1) **The object is a *beating*** ("beating is
+  good"): one pair of players on one centre pitch, both bending around it by mirrored curves, the gap beating — **the pair is the
+  unit**, scheduled and designed as one. *Why:* what is heard is the gap between two players; the tuba engine never had it (#4 day
+  13, finding 3: "the pair is not the unit; the voice is" — the gap fell out of two independent staggers). *Rejected:* the voice as
+  the unit with the pair emergent (the tuba's engine reused as it was). (2) **The panel of direct manipulation** — a row per pair,
+  the two curves as mirror images, handles on rails, shapes from a menu, the space bar, a typed duration — over the shuffle drawer
+  the AI first proposed (§146). *Why:* his picture, §147: "I can see the pair represented by some sort of curve … it'll be bipolar … I
+  can slide one over … everything should have handles". *Parked, not rejected:* the shuffle as a writer into the same rows (item 8).
+  (3) **The axis is beats per second** — the tool finds the cents per player from the pitch and the interval. *Why:* the register
+  law (D28 of the tuba piece: a fixed cents doubles per octave) — a drawn height must mean the same beating on any pitch; "beat
+  about twice a second" is an instruction, a cents value is not. *Rejected:* cents as the axis. (4) **The piano is out of the
+  beating** (CN-34): six players, up to three pairs; the piano an anchor only. (5) **The beating is out of the strike chain**
+  (§160: "it'll just be its own thing"): no mute rule, no eating, no exit at the next strike note, no overlap avoidance, no greying;
+  the accents by hand. *Rejected:* the trill's chain (the mute rule, the eating, the default exit at the next strike note) that
+  the AI's first proposal for insertion carried. (6) **The breath model** (§152): single events on one bow or breath; longer ones
+  with the dotted go line at each breath, on sliders, a warning at the ceiling, *continuous* (re-bow at will) or *designated* (the
+  marks placed), a seeded shuffle so he need not place each. The plan: PLAN 1f (eight steps), the document `docs/BEATING_TOOL.md`,
+  the tool notes `docs/MORPH_NOTES.md` (D22).
+- **D25** *(2026-09-07, the AI's build of PLAN 1f steps 1–7 at his word "run the plan independantly … I'll check in after the
+  build" — RUNNING_LOG §167–174; his listening pending)* — **The build's own decisions, each verified in the running app.**
+  (1) **The sampler's bend range is measured, not assumed** — the bend probe run in his rack: SI2 ±2.00 st, the five Xsample
+  instruments ±0.96–0.99 (set to a semitone in Kontakt), RPN 0 ignored on all six (no range can be changed by MIDI), the residue real
+  on all six; the player's limit is the smaller of his semitone and the sampler's (§168). *Rejected:* the tuba's 1.99 as a constant.
+  (2) **The beating's notes travel as timestamped snippet events** — `_bend` events beside the notes and CC7, through the zone tick —
+  not the plain-note tick's per-frame bend poll (D19's lesson, §103; §170). (3) **One truth in the panel:** a bound row's block IS
+  the zone's (a live reference); edits regenerate the zone, debounced; no copy, no apply (§171). *Rejected:* an apply button.
+  (4) **The drawn curve wins:** the row's *from / to / shape* until a handle moves; then the heard curve is breakpoints (§171).
+  (5) **The mirror lock:** a locked drag edits the heard curve (half each); ALT-drag unlocks into two explicit curves; the body
+  slide is the phase (§147's prediction proven: in phase a pulse, slid a plateau, both on one side a momentary unison). (6) **The
+  breath deal keeps hand marks and re-deals the rest** (`keep`); the ceilings a default table for his ear (§169, §171). (7) **A
+  pattern is a group with a META shape whose contour is the crescendo's mean**; a re-insert replaces only at the same time (the
+  strikes drawer's §113 rule); the zones ride the existing group machinery (§173). (8) **The keyboard is drawn again in the panel,
+  the drawer's picture** — not a call into the drawer, whose drawing is bound to its own DOM (§172). *Why all of these:* the plan's
+  words, and every one proven on a copy of the piece by the decoded MIDI or real DOM events before it was called built.
 
 ---
 
@@ -551,6 +544,10 @@ cut mid-way — write patch scripts to the scratchpad, splice by exact anchor, a
 
 ## §6 Done
 
+- 2026-09-07 — **1f** the beatings, steps 1–7 built overnight at his word (RUNNING_LOG §167–174; D24, D25): the palette with the
+  bend probe run in the rack (§168), the math (77 checks), the object (B, the snippet's bend events, the tick), the panel, the pitch
+  side, the insertion — each verified on a copy by the decoded MIDI or real DOM events — `built`; **his listening at 3–7 pending**;
+  item 8's four held things stand.
 - 2026-09-03 — **0a** PM kit installed (journal, plan, planner, lab journal, sketch pad,
   methodology, protocol, hygiene, commands, gitignore, CLAUDE.md, README).
 - 2026-09-03 — **0b** composer module ported from piece #4 and verified live: score app

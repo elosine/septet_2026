@@ -1,9 +1,14 @@
 # BEATING_TOOL — the beatings: a pair of players on one pitch, a gap that beats
 
 *Requirements gathered 2026-09-06 evening (RUNNING_LOG §145–166; CN-28, CN-29, CN-33, CN-34), planned whole as PLAN 1f (eight
-steps, the fixed format); built step by step from 2026-09-07. Status per section as it gets built, the way STRIKES_TOOL.md and
-TRILLS_TOOL.md do it. The composer's word for the object: **"beating is good"** (§146). The tool is the successor, for this piece, of
-the tuba piece's morph tool — `docs/MORPH_NOTES.md` is the memory for that tool's all-purpose revision (D22).*
+steps, the fixed format); **built 2026-09-07, steps 1–7, overnight at the composer's word** ("run the plan independantly … I'll check
+in after the build", §167–174) — each step verified on a copy of the piece by the decoded MIDI or real DOM events; **his listening at
+steps 3–7 pending** (§11). Status per section, the way STRIKES_TOOL.md and TRILLS_TOOL.md do it. The composer's word for the
+object: **"beating is good"** (§146). The tool is the successor, for this piece, of the tuba piece's morph tool — `docs/MORPH_NOTES.md`
+is the memory for that tool's all-purpose revision (D22). The decisions: journal D24 (his, the talk) and D25 (the build's). How a
+beating is made, in one line (the app's `?`): **B** on a strike note makes one (P reopens its panel) · the **Beating** button opens a
+new pattern · in the panel the strike menu and the keyboard give the pairs their pitches, the rows their curves, SPACE plays it,
+**insert @ playhead** puts it in the score under one META shape (drag = move, box = stretch, DELETE = all of it).*
 
 ## 0 · The picture
 
@@ -399,10 +404,28 @@ those; insert makes groups).
 Two curves per part (the gliss above, the crescendo below), the two written pitches at least a quarter tone apart, a go line at
 every breath, the beat rate at both ends of the gliss — the tuba's settled form (`for_seven_tubas/docs/MORPH_NOTATION.md`).
 
-## 11 · Open, for the composer, when reached
+## 11 · Open, for the composer — his check-in after the build (2026-09-07)
 
-- the winds' embouchure range by ear (§3) · the breath and bow ceilings per instrument, tuned by ear (step 2's defaults) · his
-  verdicts on the fifth and the fourth inside a pair (step 3) · where the first pattern goes in the piece (step 7).
+**His listening, in the plan's order** (the verdicts to MORPH_NOTES §3 and here): a hard reload of his app (CTRL+SHIFT+R) first.
+1. **Step 3 — one pair heard:** B on a strike note (a bloom 0 → 3 beats per second over 6 s), unison first, then the fifth and the
+   fourth from the panel's interval chips; the loudness match of the two players (the remap gives the viola 127 and the cello 87 for
+   the same level — 1g's measurement); a strike on the same slot during a beating (the shared channel — if it bites, the strings'
+   curve channels of D11 are the way out).
+2. **Step 4 — the panel:** the feel of the handles on rails and the body slide; whether the rate axis should follow the loudest row;
+   the band's zone colours; whether a bound panel should take a whole pattern from a lone beating.
+3. **Step 5 — the pitch side:** whether the relations should also take the strike's own bass as the root; the pitch-class colours
+   against the row colours; a doubling between pairs (two pairs on one note — allowed).
+4. **Step 6 — insertion:** the shape's contour (the crescendo's mean) — or the beating instead; the shape's purple among the strikes'
+   gold on META.
+5. **The first pattern in the piece, placed by him** (the piece file is his: every AI run was on a copy).
+
+**Numbers his ear decides:** the winds' embouchure range (§3: the semitone is his ceiling, not a measurement) · the breath and bow
+ceilings per instrument (§4's defaults: flute 8 s, bass clarinet 10, violins and viola 12, cello 10; louder shorter) · the zones'
+edges (1 and 15 per second) · the birth default (0 → 3 per second over 6 s, one breath, the crescendo 0.3 → 0.9).
+
+**Known limits, told:** a player in two pairs is not stopped (the rows warn; one channel would carry two bends — a sum, wrong); the
+partner lane's mute and solo are not consulted (the zone is on one lane); `tools/range_check.js` does not read a beating's snippet;
+a play start inside a beating lands its latest state first but a note already sounding is not restarted (the trill's rule too).
 
 ## Log (append-only)
 
@@ -425,3 +448,9 @@ every breath, the beat rate at both ends of the gliss — the tuba's settled for
 - **2026-09-07 — step 6 built:** insertion (§9): insert @ playhead from the panel — the pattern's beatings under one group with a
   META shape (the crescendo's mean), the shape's drag / stretch / delete carrying the beatings, re-insert replacing at the same
   time, a second group elsewhere, select + P loading the group, nothing around it touched; verified on a copy. His test pending.
+- **2026-09-07 — step 7 built:** the end-to-end on a copy at 175.7 s (a strike from the menu → three pairs → shaped, one unlocked
+  and slid at a fifth, offset, breathed, 8 s → inserted → the tick's MIDI decoded for the whole pattern within 0.006 beats/s of the
+  panel on every pair, six ports and nothing stray, the centres after each end); a defect found and fixed on the way — the new-pair
+  picker could give one player to two pairs (one channel, two bends), now it never does and the rows warn when it is done by hand;
+  the help line (`?`); this document complete; MORPH_NOTES §1 and §4; NAMING §2.10; the journal's D24 / D25; PLAN 1f marked built.
+  **His listening pending (§11).**

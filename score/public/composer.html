@@ -2165,6 +2165,13 @@ const Composer = {
             if (e.key === 'Escape' && this.spanSel) { this.clearSpanSel(); this.saveStatus.textContent = 'span cleared'; return; }
             if (e.key === 'Escape' && this.pointsMode) { this.setPointsMode(false); return; }
 
+            // ? = the help line (PLAN 1f step 7, 2026-09-07): the keys, and how a beating is made
+            if (e.key === '?' && !e.ctrlKey && !(e.target && e.target.matches && e.target.matches('input, textarea, select'))) {
+                e.preventDefault();
+                this.saveStatus.textContent = 'keys: T = a trill on the selected note · B = a BEATING on the selected strike note (its pitch the centre, the nearest lane that can pair the partner, a 6 s bloom 0 → 3 beats/s; the strike untouched) · P = the panel of the selected trill or beating — the beating panel: the pair\'s mirrored rate curves with handles on rails, the crescendo and breath lanes, the strike menu and the keyboard for the pitches, SPACE plays, insert @ playhead puts a pattern of up to three pairs in the score under one META shape (drag = move, box = stretch, DELETE = all of it) · the Beating button = a new pattern · G surge · O ord · A column · C cuivre · SPACE play · ESC clear · ? this line';
+                return;
+            }
+
             // T = add a trill (TRILLS_TOOL phase 1, composer 2026-09-05)
             if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.altKey && !e.target.matches('input, textarea, select')) {
                 e.preventDefault();

@@ -4954,3 +4954,48 @@ neither moved nor stretched by its shape.** The multi-selection group drag of §
 **Not done, by the plan:** his test (the three-pair pattern in context, the shape's contour and colour) — when he checks in.
 **Next:** step 7 — the end-to-end on a copy, BEATING_TOOL complete, MORPH_NOTES §1 and §4, NAMING §2, the journal's decisions, the
 help line, PLAN 1f marked built.
+
+## §174. PLAN 1f step 7 (verify and document): the whole tool end to end on a copy — a defect found and fixed on the way (a player in two pairs); the decoded MIDI within 0.006 beats per second of the panel on every pair; the help line; the documents complete; PLAN 1f built — his listening pending
+
+Built 2026-09-07, about 05:00–05:40, after step 6's commit; the last of the seven steps.
+
+**The end-to-end, on the copy (`zz-ai-beating`, :5301), with real DOM events, then the tick driven with fake outputs:** the Beating
+button with nothing selected → a new pattern; strike #5 picked from the menu (21 notes, D2–B6); + pair twice → three pairs; each
+pair's pitch armed from the chord's dots and dropped on its row (D3 · E4 · E4); a hump popped on row 1, a long arc on row 2 and its
+peak handle dragged up (the shape becoming `drawn`, max 7.83 per second), a ramp out on row 3; row 3 at a fifth, its lower curve
+ALT-dragged (unlocked, slid 0.672 s); row 2's offset 1 s; row 1's breaths shuffled (designated); the length 8 s; **insert @ 175.7 s**
+→ 4 objects (three beatings, the shape 175.7 → 184.7 s, 33 nodes); the zone tick driven from 174.7 to 185.7 s on fake outputs and
+decoded per pair against each row's own `out.beat` (the two slots' bend streams → cents → the coincident partials' gap):
+
+| pair | interval | start | length | notes | worst beat diff (per s) | the upper's first bend | centre after the end |
+|---|---|---|---|---|---|---|---|
+| bass clarinet + viola | unison | 0 | 8 s | 2 | 0.0014 | 0 | 0.4 s, both |
+| cello + violin 2 | fifth | 0 | 8 s | 2 | 0.0055 | +1.954 c (just +1.955) | 0.4 s, both |
+| flute + violin 1 | unison | 1 s | 8 s | 2 | 0.0037 | 0 | 0.4 s, both |
+
+Six ports used (basscl · va · vc · vn2 · flute · vn1), nothing stray; the bent slots registered for the stop reset; the help line
+on `?`; the autosave; `tools/range_check.js` on the saved copy clean (516 notes, 69 trills). The copy and its `-work` removed, the
+server stopped first.
+
+**The defect, found on the first pass and fixed:** the first run's third pair decoded 4.2 beats per second off the panel. Not the
+math — **violin 1 was in two pairs** (Fl + Vn1 and Vn2 + Vn1): `addRow`'s default partner was the nearest lane that could pair,
+blind to the other rows, so one channel carried two bend streams (a sum, wrong). Fixed: `defaultRow(layer, used)` never picks a
+player already in the pattern (and walks the lane's range for a note some free partner holds); `addRow` tries the free lanes in
+order; the rows **warn** when a player is in two pairs by hand ("⚠ Vn1 also in another pair — one channel would carry two bends")
+— not stopped: it is his to do on purpose. The second pass: distinct players (BCl + Va · Fl + Vn1 · Vn2 + Vc), every pair within
+0.006 per second.
+
+**The help line:** the app had no `?` key (the plan assumed one); one added — the keys and how a beating is made, into the status
+line. Its first test threw on a window-dispatched event (`e.target.matches` — the existing handlers assume an element target, as
+a real keyboard gives); the new handler guards it; a keydown on the body shows the line.
+
+**The documents:** `docs/BEATING_TOOL.md` complete (the status line rewritten, §11 his check-in in the plan's order with the
+numbers his ear decides and the known limits told, the log stamped); MORPH_NOTES §1 rewritten to what exists, §4 the digest for
+the all-purpose revision (what the tool has, what it still lacks — more than three pairs, a player in two pairs, a flat partner as a
+row mode, the cycling of the gap, the shuffle as a writer, a dynamics layer with phase, the exit as a rule, the notation, a live
+readout, the ceilings measured); NAMING §2.10 the beating object for the IR; the journal's D24 (his decisions of the talk, with
+the whys and the rejected) and D25 (the build's, each verified), §6 Done; PLAN 1f `doing` → `built`, item 7 stamped, item 8's four
+held things standing.
+
+**Not done, by the plan — his:** the hard reload, his listening at steps 3–7 (BEATING_TOOL §11), the first pattern in the piece
+placed by him. The piece file was never touched: every run on a copy.

@@ -91,6 +91,24 @@ or not at all.**
    span, beside the sampled curve, so the notation can draw the curve at its true heights or redraw it at full height with the
    range named at its start (NOTATION_WORKFLOW §7). The strikes' notes (`sonifyMode: 'plain'`, `recVel`) keep
    NOTATION_STANDARDS' velocity band: their velocities are as played, the composition's own.
+10. **A beating (PLAN 1f, 2026-09-07; `docs/BEATING_TOOL.md`) is a zone with `midiModel: 'beating'`** on the launching player's
+    lane, carrying its partner's lane in its `beating` block: `{ partnerLayer, pitch (the pair's LOWER note, MIDI), interval
+    ('unison' | 'm3' | 'M3' | 'P4' | 'P5' — the partner above at the JUST interval, its bend carrying the just offset),
+    rateFrom, rateTo, shape | beat (the heard-rate curve: breakpoints over normalised time, beats per second), share (how the
+    beating is split between the two, 0.5 = mirrored), rate { lower, upper } (two explicit rate curves when the mirror is
+    unlocked), levelLo, levelHi | levelCurve (the crescendo, 0 → 1), breath { mode: 'one' | 'continuous' | 'designated', seed,
+    marks { lower, upper } (hand-placed marks, seconds), deal }, slide { lower, upper } (seconds), launchedFrom (a record of the
+    strike note it was born on — no link) }`. **Its sounding notes are never loose score objects:** they are generated at every play
+    start (`BeatingCalc.renderPair` in `score/public/beating_calc.js`) and embedded as the zone's `midiSnippet` — per player one
+    sustained note per breath (`notes` events, the partner's with their own `port` / `channel`), each with a bend stream (`_bend`
+    events, 14-bit through the recipe's measured `bendRangeSt`) and a level stream (`_cc: 7` through the remap). **The extractor at
+    2a reads the block, not the snippet:** the two parts (the zone's layer and `partnerLayer`), the two written pitches (`pitch` and
+    `pitch` + the interval's semitones), which player has the upper note (`renderPair(...).players`), the beat rate over the span
+    (`.beat`), each player's cents over time (`.samples[].centsL / centsU`), the breaths (`.breaths.lower / upper.spans`) and the
+    level (the curve height IS the dynamic, item 9). **A pattern is a group** (item 5): its beatings and a META shape share a
+    `groupId` of the form `grp-beating-<t×10>-<n>`, the shape's contour the crescendo's mean across the pattern. The notation form
+    (phase 2a): two curves per part — the glissando above, the crescendo below — the two written pitches at least a quarter tone
+    apart, a go line at every breath, the beat rate at both ends of the glissando (the tuba's MORPH_NOTATION; BEATING_TOOL §10).
 
 ## 3. Not S1's business (where the piece-specific work goes)
 
