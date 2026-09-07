@@ -143,8 +143,9 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
    independantly? can you do so, and I'll check in after the build"*, §167): **step 1 the palette DONE** (§167–168 — the bend probe
    run in his rack, the numbers in the recipe); **step 2 the beating math DONE** (§169 — `beating_calc.js`'s second half, 77 checks,
    nothing heard); **step 3 one pair in the score DONE** (§170 — the beating zone, B, the snippet's bend events, the P row, ▶ hear;
-   verified by the decoded MIDI on a copy; HIS EAR PENDING); **► step 4 the panel**, then 5 → 7; his listening verdicts at 3–7
-   filed when he checks in. Section 1 stays drafted at 175.7 s (v1.23-sec1DraftDone); the piece file is his.
+   verified by the decoded MIDI on a copy; HIS EAR PENDING); **step 4 the panel DONE** (§171 — `beating_panel.js`; verified with
+   real DOM events on a copy; HIS TEST PENDING); **► step 5 the pitch side**, then 6 → 7; his listening verdicts at 3–7 filed when
+   he checks in. Section 1 stays drafted at 175.7 s (v1.23-sec1DraftDone); the piece file is his.
 3. **TRILLS_TOOL phase 5, the weave** on his go; the run dials' calibration ladder (1h item 6) on his go; the notation of trills and
    beatings at 2a; 1f step 8's four held things when their lines come.
 4. **0c / 0h** (the recipes' completion; the phase-0 gate) when the music asks; 0d.3 / 0d.4 remain as the remainder.
@@ -171,31 +172,33 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   `centreBeatingSlots` + `beatingCatchUp`, `renderBeatingDecor` (the partner's bracket, in `_beatingPartnerEls`), `beatingLabel`,
   `renderBeatingPanel` / `bindBeatingPanel` (the P row), `hearBeating` / `playBeatingEvents`; `trillAfterDrag` regenerates beatings
   too. Verified on a copy by the decoded MIDI (the beat rate within 0.002/s of the math). **His ear pending** — unison, fifth, fourth.
-- **Next concrete step — build step 4, the panel, in the plan's words:** read PLAN 1f item 4's to-dos (the goal, the settled points
-  of §156, the eight to-dos), then read what the panel copies: `score/public/strike_drawer.js` (the floating draggable drawer's
-  chassis, its keys scoped to its focus, the takes through `/api/snapshots` into `bank/panel_snapshots.json` — a `beatings` bucket
-  for ours), the trill's curve tool (D21: `setPointsMode` / the points → fill → bend gesture in `composer.html`, TRILLS_TOOL §3) and
-  step 3's block (`beatingSpec` reads `beat` — a drawn heard-rate curve — `share`, `slide`, `breath.marks`; the panel writes those).
-  Then build, each to-do verified on a `zz-ai-*` copy on :5301 with real DOM events: (1) the chassis — a floating panel on the
-  drawer's pattern; P on a selected beating loads its row and edits it live (regenerate + renderZone, debounced); a Beating button
-  opens an empty pattern that lives in the panel until Insert (step 6); takes named and saved with the repo; (2) the row, one per
-  pair, up to three: the pair's label (players, the lower note, the interval — step 3's fields), the two rate curves mirrored above
-  and below a centre line, the band between them filled and tinted by zone (flanger · beating · roughness) with the rate in numbers
-  at the handle while dragging, the crescendo lane, the breath lane; add and remove a row; (3) shapes with handles: flat · ramp out ·
-  ramp in · hump · the long arc · burst (`BeatingCalc.SHAPES`), each a few points with handles for the level, the ends, the peak's
-  place and the body on a rail, numbers typed beside; the crescendo lane from the same menu; freehand with the trill's curve tool
-  inside the row (a shape becoming editable points); (4) the mirror lock on by default (drag one, the other mirrors), one modifier key
-  moves a curve alone (`share` / two explicit curves), the band shows the result at once; (5) the row offset (a rail handle slides a
-  whole pair in time) and the duration box (`stretch`: the curves normalised, the marks scaled, the breaths re-dealt past the
-  ceiling); (6) the breath lane: the marks as dotted go lines on sliders per player, the ceiling drawn and a warning past it, the
-  three modes, the shuffle button dealing staggered breaths from a seed with hand-moved marks kept (`dealBreaths`' `keep`); (7)
-  audition: the space bar with the panel focused plays the pattern through the score's tick — all pairs, real time — and stops on
-  space again (for an un-inserted pattern: `playBeatingEvents` at the rows' offsets); every edit regenerates the objects, debounced;
-  (8) verified on the copy with real DOM events (a shape popped, a level dragged, a slide, an unlock and slide, a row offset, a
-  duration change, a shuffle), each changing the objects' notes as predicted and decoded; the takes round-trip; nothing outside the
-  pattern touched; then his test when he checks in — the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md. Then BEATING_TOOL §6
-  stamped, the journal (§171), commit, push; then step 5 (the pitch side). Narrate briefly; do not re-plan; the chunk cadence of
-  HOW_WE_WORK per to-do.
+- **Step 4 is built too (§171; BEATING_TOOL §6):** `score/public/beating_panel.js` (window.BeatingPanel) — `openFor(zone)` (P, B: bound,
+  the row's block IS the zone's), `openNew()` (the Beating button: a pattern until Insert), `rows[] = { layer, b, offset, zone, locked,
+  scale, out }`, `render / buildRow / drawRates / drawLevel / drawBreaths`, the handle / body / mark drags, `popShape / unlock /
+  relock / setPoint / addPoint / slideCurve`, `setLength` (stretch), `play / stop` (SPACE, the merged events through
+  `playBeatingEvents`), the takes (`beatings` bucket); `beatingSpec` honours `rate.lower / upper` (unlocked) and `levelCurve`; the
+  step-3 property row removed. Verified with real DOM events on a copy. **His test pending.**
+- **Next concrete step — build step 5, the pitch side, in the plan's words:** read PLAN 1f item 5's to-dos (the goal, the settled
+  points of §158, the seven to-dos), then read what it copies: the strikes drawer's keyboard (`score/public/strike_drawer.js`: the
+  vertical keyboard, the pitch-class dots, the fold arrows, the range dimming — STRIKES_TOOL A and F), how the drawer numbers and
+  loads the played chords from `bank/scattered_strikes.json` (`loadDb`, `select(strikeId)`, the sequence list), the drawer's fold rule
+  (`foldInto`), and `BeatingCalc.pairsFor / holds` (step 1's table) for the dimming. Then build inside `beating_panel.js`, each to-do
+  verified on a `zz-ai-*` copy on :5301 with real DOM events: (1) the source menu — the bank's played chords numbered as the drawer
+  numbers them; beside it the relations from a root: unison in one octave · unison across octaves · thirds · fourths · fifths · a
+  typed stack; a pattern launched from a strike (B) opens on that strike's chord; (2) the keyboard — the drawer's own drawing reused
+  inside the panel; the chosen chord lit; with a row selected, the notes outside both its players' ranges dimmed from step 1's table;
+  the fold arrows as in the drawer; (3) assigning — click a note then a row, or drag the note onto the row: the note is the pair's
+  lower note; the row's interval places the partner above it at the just interval; the keyboard shows both notes in the row's colour;
+  the player above chosen by range; a row's players changed by chips and re-checked against the table; (4) the relations dealt from
+  a root (a keyboard click or typed): the pairs' pitches by the relation, folded into the pairs' ranges by the drawer's fold rule,
+  the pairs from the bottom up; (5) the interval per row (unison · m3 · M3 · P4 · P5 — the chips are there) with the just offset in
+  the cents readout; (6) the row's label (the two players, the lower note, the interval, the upper note) mirrored into the beating
+  object's fields; the objects regenerated on any pitch change; (7) verified on the copy: a strike picked puts its chord on the
+  keyboard; a note assigned sets the object's pitch; an interval changed moves the partner and its just offset in the decoded MIDI; a
+  note outside a pair's range dimmed and refused; a relation dealt from a root gives the pairs' pitches as predicted, folded; a
+  launched pattern opens on its strike; then his test when he checks in — the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md. Then
+  BEATING_TOOL §7 stamped, the journal (§172), commit, push; then step 6 (insertion). Narrate briefly; do not re-plan; the chunk
+  cadence of HOW_WE_WORK per to-do.
 - **Resume reads:** `docs/PLAN.md` 1f whole (the build's words) · `docs/MORPH_NOTES.md` §1–2 · RUNNING_LOG §145 (what the tuba tool is —
   the digest for reusing its parts: the bend arithmetic, the re-key, `buildCarrier`'s breath rule, `toScoreObjects`' note format),
   §147 (the panel picture), §148 (the interval arithmetic: beat = p · f1 · |2^(δ/1200) − 1|), §150 (#1's bend convention), §152 (the

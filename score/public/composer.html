@@ -469,6 +469,8 @@
     <span style="color:#ccc">|</span>
     <button id="trillBtn" title="Add Trill (T): over the selected curve, from the selected note (its pitch, 4 s — the note becomes the attack), or 4 s from the playhead on the active lane. Then click an interval to hear it and take it.">Add Trill</button>
     <span style="color:#ccc">|</span>
+    <button id="beatingBtn" title="Beating (B on a strike note makes one there): the panel — a pattern of up to three pairs, the mirrored rate curves with handles, the crescendo and breath lanes, SPACE plays it; P on a selected beating opens it bound to that one">Beating</button>
+    <span style="color:#ccc">|</span>
     <button id="lwBtn">Add Line Wedge</button>
     <span style="color:#ccc">|</span>
     <select id="motiveSelect"><option value="">— motives —</option></select>
@@ -544,6 +546,7 @@
 <script src="/multitempo.js"></script>
 <script src="/multitempo_panel.js" defer></script>
 <script src="/strike_drawer.js" defer></script>   <!-- PLAN 1c.2: the STRIKES drawer (docs/STRIKES_TOOL.md) -->
+<script src="/beating_panel.js" defer></script>   <!-- PLAN 1f step 4: the BEATING panel (docs/BEATING_TOOL.md §6) -->
 <script>
 // ============================================
 // INSTRUMENT REGISTRY — Loads instrument_map.json, bridges Layer 2 (musical intent) ↔ Layer 3 (MIDI/sampler)
@@ -1471,6 +1474,7 @@ const Composer = {
         document.getElementById('markerBtn').addEventListener('click', () => this.createMarker());
         document.getElementById('zoneBtn').addEventListener('click', () => this.createZone());
         document.getElementById('trillBtn').addEventListener('click', () => this.createTrill());
+        document.getElementById('beatingBtn').addEventListener('click', () => { if (typeof BeatingPanel !== 'undefined') BeatingPanel.toggle(); });   // PLAN 1f step 4
         document.getElementById('lwBtn').addEventListener('click', () => this.createLineWedge());
         const mpBtn = document.getElementById('motivePlaceBtn');
         if (mpBtn) mpBtn.addEventListener('click', () => {
@@ -2214,6 +2218,10 @@ const Composer = {
 
             // P = open property panel for current selection (META curves need this)
             if ((e.key === 'p' || e.key === 'P') && !e.ctrlKey && !e.target.matches('input, textarea, select')) {
+                if (this.selectedObject && this.selectedObject.type === 'zone' && this.selectedObject.midiModel === 'beating' && typeof BeatingPanel !== 'undefined') {   // a beating: its panel, bound to it (PLAN 1f step 4)
+                    BeatingPanel.openFor(this.selectedObject);
+                    return;
+                }
                 if (this.selectedObject) {
                     this._panelOverride = true;
                     this.showPropertyPanel();
@@ -5539,7 +5547,7 @@ const Composer = {
                     html += this.ppRow('MIDI Model', 'select', 'midiModel', obj.midiModel || '', '',
                         [['','— Model —'],['trill','Trill'],['beating','Beating'],['ostinato','Ostinato'],['accelDecel','Accel/Decel'],['oneShot','One-Shot'],['asr','ASR'],['flocking','Flocking'],['threeBody','Three-Body'],['seeAllThePeople','See All the People'],['imitation','Imitation']]);
                     if (obj.midiModel === 'trill') html += this.renderTrillPanel(obj);
-                    if (obj.midiModel === 'beating') html += this.renderBeatingPanel(obj);   // PLAN 1f step 3
+                    if (obj.midiModel === 'beating') html += '<div class="pp-section"><h5>Beating</h5><div class="pp-row"><span style="font-size:10px;color:#666">' + this.beatingLabel(obj).replace(/</g, '&lt;') + ' — <b>P</b> opens the beating panel</span></div></div>';   // PLAN 1f step 4: the panel is the editor
                     // Single-performer models: show Player/Instrument at zone level
                     if (obj.midiModel && obj.midiModel !== 'trill' && obj.midiModel !== 'beating' && obj.midiModel !== 'flocking' && obj.midiModel !== 'threeBody' && obj.midiModel !== 'seeAllThePeople') {
                         html += this.ppRow('Player', 'select', 'player', obj.player || '', '',
@@ -6758,7 +6766,6 @@ const Composer = {
 
         // Zone chord marker controls
         if (obj.type === 'zone' && obj.midiModel === 'trill') this.bindTrillPanel(panel, obj);
-        if (obj.type === 'zone' && obj.midiModel === 'beating') this.bindBeatingPanel(panel, obj);   // PLAN 1f step 3
         if (obj.type === 'zone' && obj.midiModel === 'ostinato') {
             // Click to select a chord marker
             panel.querySelectorAll('.pp-chord-marker').forEach(el => {
@@ -9702,8 +9709,19 @@ const Composer = {
     },
     beatingSpec(zone) {
         const b = this.ensureBeating(zone), roles = this.beatingRoles(zone), beat = this.beatingCurve(b);
-        return { pitch: b.pitch, interval: b.interval, players: { lower: roles.lower, upper: roles.upper }, length: Math.max(0.1, zone.endTime - zone.startTime),
-                 beat, share: b.share, level: BeatingCalc.levelFromBeat(beat, b.levelLo, b.levelHi), breath: b.breath, slide: b.slide, stepS: 0.05 };
+        const spec = { pitch: b.pitch, interval: b.interval, players: { lower: roles.lower, upper: roles.upper }, length: Math.max(0.1, zone.endTime - zone.startTime),
+                       beat, share: b.share, breath: b.breath, slide: b.slide, stepS: 0.05 };
+        // the panel (step 4): two explicit curves when the mirror is unlocked; a drawn crescendo, else the level follows the beating —
+        // the heard curve while mirrored, the gap between the two curves when not
+        let heard = beat;
+        if (b.rate && b.rate.lower && b.rate.upper) {
+            spec.rate = b.rate; delete spec.beat;
+            const lo = BeatingCalc.curveOf(b.rate.lower), up = BeatingCalc.curveOf(b.rate.upper);
+            const ps = [...new Set(lo.concat(up).map(p => p[0]))].sort((x, y) => x - y);
+            heard = ps.map(p => [p, Math.abs(BeatingCalc.evalCurve(up, p) - BeatingCalc.evalCurve(lo, p))]);
+        }
+        spec.level = (Array.isArray(b.levelCurve) && b.levelCurve.length) ? b.levelCurve : BeatingCalc.levelFromBeat(heard, b.levelLo, b.levelHi);
+        return spec;
     },
     // cents → 14-bit through the instrument's measured range (step 1's bendRangeSt; full up = +8191, full down = −8192)
     bendValueFor(instKey, cents) {
@@ -9846,10 +9864,9 @@ const Composer = {
         this.regenerateBeating(zone);
         this.renderZone(zone);
         this.selectObject(zone);
-        this._panelOverride = true;
-        this.showPropertyPanel();
         this.markDirty();
-        this.saveStatus.textContent = 'beating ' + TRACKS[layer].short + ' + ' + TRACKS[partnerLayer].short + ' on ' + BeatingCalc.noteName(pitch) + ', ' + zone.startTime.toFixed(2) + ' → ' + zone.endTime.toFixed(2) + ' s: a bloom 0 → 3 beats/s, one breath — the row edits it, ▶ hear plays the pair, the right edge stretches it' + (fromNote ? '; the strike note stays as it is' : '');
+        if (typeof BeatingPanel !== 'undefined') BeatingPanel.openFor(zone);   // step 4: the panel, bound to the new beating
+        this.saveStatus.textContent = 'beating ' + TRACKS[layer].short + ' + ' + TRACKS[partnerLayer].short + ' on ' + BeatingCalc.noteName(pitch) + ', ' + zone.startTime.toFixed(2) + ' → ' + zone.endTime.toFixed(2) + ' s: a bloom 0 → 3 beats/s, one breath — the panel edits it (P reopens it), SPACE there plays the pair, the right edge stretches it' + (fromNote ? '; the strike note stays as it is' : '');
         return zone;
     },
     // ---- the audition: the pair alone, timestamped, with the bends; one at a time ----
@@ -9890,56 +9907,6 @@ const Composer = {
         this.renderZone(zone);
         this.playBeatingEvents(zone, snip.events, btn, '▶ hear');
     },
-    // ---- the properties row (P): partner · pitch · interval · rate from / to and shape · length · breath · level · the readout · hear ----
-    renderBeatingPanel(obj) {
-        const b = this.ensureBeating(obj), out = this._beatingOuts && this._beatingOuts.get(obj.id), nn = m => BeatingCalc.noteName(m);
-        const cands = this.beatingPartnerCandidates(obj.layer, b.pitch, b.interval), sel = 'background:#7B3FE4;color:#fff;border-color:#7B3FE4;';
-        let h = '<div class="pp-section"><h5>Beating</h5>';
-        h += '<div class="pp-row"><label>Pair</label><span>' + (TRACKS[obj.layer] ? TRACKS[obj.layer].label : '?') + ' + <select data-beating="partnerLayer">'
-            + (cands.length ? '' : '<option value="">no partner can play this</option>')
-            + cands.map(c => '<option value="' + c.layer + '"' + (c.layer === b.partnerLayer ? ' selected' : '') + '>' + TRACKS[c.layer].label + (b.interval === 'unison' ? '' : c.upper === c.instKey ? ' (above)' : ' (below)') + '</option>').join('')
-            + (b.partnerLayer != null && !cands.some(c => c.layer === b.partnerLayer) && TRACKS[b.partnerLayer] ? '<option value="' + b.partnerLayer + '" selected>' + TRACKS[b.partnerLayer].label + ' — cannot play this</option>' : '')
-            + '</select> <span style="font-size:10px;color:#666">the lanes whose player holds the note (step 1&#8217;s table)</span></span></div>';
-        h += '<div class="pp-row"><label>Pitch</label><input type="number" data-beating="pitch" value="' + b.pitch + '" step="1" min="21" max="108" style="width:56px"> <span style="font-size:11px;color:#666">' + nn(b.pitch) + ' — the pair&#8217;s lower note' + (out && out.players.upper ? ' · ' + out.players.lower + ' below, ' + out.players.upper + ' above' : '') + '</span></div>';
-        h += '<div class="pp-row"><label>Interval</label><span>' + Object.values(BeatingCalc.INTERVALS).map(iv => '<button class="bt-int" data-iv="' + iv.key + '" title="' + iv.label + ': the just offset ' + iv.justOffsetCents + ' c on the upper note, the beating ' + iv.partial + '&#215; the unison&#8217;s per cent" style="font-size:10px;padding:1px 5px;margin:1px;cursor:pointer;' + (b.interval === iv.key ? sel : '') + '">' + iv.label + '</button>').join('') + '</span></div>';
-        h += '<div class="pp-row"><label>Rate</label><span>from <input type="number" data-beating="rateFrom" value="' + (+b.rateFrom || 0) + '" step="0.5" min="0" max="30" style="width:48px"> to <input type="number" data-beating="rateTo" value="' + (+b.rateTo || 0) + '" step="0.5" min="0" max="30" style="width:48px"> beats/s &#183; '
-            + ['ramp', 'hump', 'arc', 'flat'].map(k => '<button class="bt-shape" data-shape="' + k + '" title="' + { ramp: 'out of unison: from → to across the length', hump: 'out and back: from → to → from', arc: 'the long arc (a raised cosine)', flat: 'a held rate (to) throughout' }[k] + '" style="font-size:10px;padding:1px 5px;margin:1px;cursor:pointer;' + ((b.shape || 'ramp') === k ? sel : '') + '">' + k + '</button>').join('')
-            + ' <span style="font-size:10px;color:#666">the heard beating; each player bends half of it (the panel of step 4 draws it)</span></span></div>';
-        h += '<div class="pp-row"><label>Length</label><input type="number" data-beating="length" value="' + (obj.endTime - obj.startTime).toFixed(2) + '" step="0.5" min="0.5" max="120" style="width:60px"> <span style="font-size:10px;color:#666">s &#183; the right edge stretches it too; the curves stretch with it</span></div>';
-        h += '<div class="pp-row"><label>Breath</label><select data-beating="breathMode">' + ['one', 'continuous', 'designated'].map(k => '<option value="' + k + '"' + ((b.breath.mode || 'one') === k ? ' selected' : '') + '>' + k + '</option>').join('') + '</select>'
-            + ' seed <input type="number" data-beating="breathSeed" value="' + (b.breath.seed || 1) + '" step="1" min="1" style="width:44px"> <span style="font-size:10px;color:#666">one = a single bow or breath (flagged past the ceiling) &#183; continuous = re-bow at will &#183; designated = dealt marks, the pair staggered</span></div>';
-        h += '<div class="pp-row"><label>Level</label><span>low <input type="number" data-beating="levelLo" value="' + b.levelLo + '" step="0.05" min="0" max="1" style="width:48px"> high <input type="number" data-beating="levelHi" value="' + b.levelHi + '" step="0.05" min="0" max="1" style="width:48px"> <span style="font-size:10px;color:#666">the crescendo follows the beating (0 → 1 = the curve height, through the remap' + (this._velRemap ? '' : ' — no remap loaded') + ')</span></span></div>';
-        if (out) {
-            const lim = k => k ? BeatingCalc.bendLimits(INSTRUMENTS, k) : null, lo = lim(out.players.lower), up = lim(out.players.upper);
-            const fl = out.flags.map(f => f.flag).filter((v, i, a) => a.indexOf(v) === i);
-            h += '<div class="pp-row"><label>Readout</label><span style="font-size:10px;color:#666">max ' + out.maxBeat + ' beats/s &#183; ' + (out.players.lower || '?') + ' &#177;' + out.maxCents.lower + ' c' + (lo ? ' (limit ' + lo.limitCents + ')' : '')
-                + ' &#183; ' + (out.players.upper || '?') + ' &#177;' + out.maxCents.upper + ' c' + (up ? ' (limit ' + up.limitCents + ')' : '') + (out.justOffsetCents ? ' &#183; just ' + (out.justOffsetCents > 0 ? '+' : '') + out.justOffsetCents + ' c on the upper' : '')
-                + ' &#183; ' + out.notes.lower.length + ' + ' + out.notes.upper.length + ' notes' + (fl.length ? ' &#183; &#9888; ' + fl.join(' ') : ' &#183; no flags') + (obj.midiSnippet ? ' &#183; ' + obj.midiSnippet.events.length + ' events on ' + obj.midiSnippet.slots.map(s => s.port + ' ch ' + s.channel).join(', ') : '') + '</span></div>';
-        }
-        h += '<div style="margin-top:4px"><button id="ppBeatingHear" style="font-size:11px;padding:3px 10px;background:#7B3FE4;color:#fff;border:1px solid #7B3FE4;border-radius:3px;cursor:pointer">&#9654; hear</button> <span style="font-size:10px;color:#888">the pair alone, as it will play</span></div>';
-        h += '</div>';
-        return h;
-    },
-    bindBeatingPanel(panel, obj) {
-        const apply = () => { this.regenerateBeating(obj); this.renderZone(obj); this.markDirty(); this.showPropertyPanel(); };
-        const keepPartner = b => { const c = this.beatingPartnerCandidates(obj.layer, b.pitch, b.interval); if (c.length && !c.some(q => q.layer === b.partnerLayer)) b.partnerLayer = c[0].layer; };
-        panel.querySelectorAll('.bt-int').forEach(el => el.addEventListener('click', () => { const b = this.ensureBeating(obj); this.pushUndoStateDebounced(300); b.interval = el.dataset.iv; keepPartner(b); apply(); }));
-        panel.querySelectorAll('.bt-shape').forEach(el => el.addEventListener('click', () => { const b = this.ensureBeating(obj); this.pushUndoStateDebounced(300); b.shape = el.dataset.shape; b.beat = null; apply(); }));
-        panel.querySelectorAll('[data-beating]').forEach(el => el.addEventListener('change', () => {
-            const key = el.dataset.beating, b = this.ensureBeating(obj), v = parseFloat(el.value);
-            this.pushUndoStateDebounced(300);
-            if (key === 'partnerLayer') b.partnerLayer = el.value === '' ? null : +el.value;
-            else if (key === 'pitch') { if (!isNaN(v)) { b.pitch = Math.round(v); keepPartner(b); } }
-            else if (key === 'length') { if (!isNaN(v) && v > 0) obj.endTime = Math.round((obj.startTime + v) * 1000) / 1000; }
-            else if (key === 'breathMode') b.breath.mode = el.value;
-            else if (key === 'breathSeed') { if (!isNaN(v)) b.breath.seed = Math.round(v); }
-            else if (!isNaN(v)) b[key] = v;
-            apply();
-        }));
-        const hear = panel.querySelector('#ppBeatingHear');
-        if (hear) hear.addEventListener('click', () => this.hearBeating(obj, hear));
-    },
-
     // ========== SPAN SELECTION + THE LIVE CURVE REFERENCE (TRILLS_TOOL phase 2, composer 2026-09-05; RUNNING_LOG §105) ==========
     spanSel: null,
 

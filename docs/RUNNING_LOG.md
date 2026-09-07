@@ -4788,3 +4788,64 @@ drag, edges, Ctrl-copy and the group drag are the generic zone's; `trillAfterDra
 
 **Not done, by the plan:** his ear — unison first, then the fifth and the fourth — when he checks in; the verdicts to MORPH_NOTES
 §3 and BEATING_TOOL.md. **Carried to step 4:** the panel's space bar; a drawn `beat` curve (the row's shapes until then).
+
+## §171. PLAN 1f step 4 (the panel) built: `beating_panel.js` — rows, the mirrored curves with handles on rails, the band by zone, shapes and draw, the mirror lock and the slide, the crescendo and breath lanes, the offset rail, the length box, SPACE, takes — verified with real DOM events on a copy; his test pending
+
+Built 2026-09-07, about 02:50–03:40, after step 3's commit, in the plan's words (PLAN 1f item 4's to-dos; the settled points of
+§156). The models read first: the morph panel's chassis (`morph_panel.js`: a fixed, draggable, capped flex column; the clamp into
+view; the z-order on grab), the strikes drawer's takes (`/api/snapshots`, the `strikes` bucket → ours `beatings`) and its SPACE rule
+(a capture-phase listener while the drawer is open, text entry excepted), the curve windows' points → line gesture (D21).
+
+**The decisions:**
+- **One truth.** A bound row's block IS the zone's `beating` (a live reference): the panel writes it, `regenerateBeating` + `renderZone`
+  follow, debounced 120 ms during a drag and at once on mouseup. No copy, no apply button. An unbound pattern's rows hold their own
+  blocks until Insert (step 6); `state()` deep-copies them for a take.
+- **The drawn curve wins.** The row's *from / to / shape* of step 3 make the heard curve until a handle moves: then `beat` (the
+  heard-rate curve, breakpoints) is written and `shape = 'drawn'`; the shape menu writes `beat` outright (a `flat` at the *to* rate,
+  a `ramp out` 0 → to, a `ramp in` to → 0, a hump / arc from → to → from, a burst). `beatingSpec` was extended: two explicit curves
+  (`rate.lower / upper`) when the mirror is unlocked, a drawn crescendo (`levelCurve`), else the level follows the heard curve —
+  the gap between the two curves when unlocked.
+- **The mirror lock** (§156: on by default, one modifier to move a single curve): a locked drag edits the heard curve's point (the
+  value = twice the handle's |rate|, both curves mirror by `share`); ALT-drag unlocks — the two curves are copied out as explicit
+  points and only the dragged one changes; the lock button relocks with the upper's shape as the heard curve. A locked body drag
+  slides both curves (`slide.lower = slide.upper`), unlocked one.
+- **The band as slivers.** A rect per 50 ms sample between the two players' rates, tinted by that sample's zone (grey < 1, purple,
+  red > 15) — the zone can change along the curve, a single polygon could not show it; 120 slivers per row, cheap.
+- **The breath lane's rule** (the plan: "hand-moved marks kept, the rest re-dealt"): a dragged or clicked mark joins the block's hand
+  list (`breath.marks[who]`), the deal keeps it (`dealBreaths`' `keep` — the nearest dealt mark gives way); the rest stay the deal's;
+  shuffle = a new seed with the hand marks kept; ALT-click drops a hand mark, or — on a dealt one — makes every current mark a hand
+  mark but that one (the deal stops, `deal: false`; the next shuffle starts it again). The first draft froze every mark on a drag;
+  corrected before the test.
+- **SPACE is the panel's while it is open** (the drawer's rule): the pattern through `Composer.playBeatingEvents` — every row's
+  snippet regenerated, the events merged with the rows' offsets, every event given its port and channel, one timestamped
+  schedule; SPACE again stops. The transport gets SPACE back at ESC / close. This is step 3's "space bar with the object selected".
+- **The step-3 property row retired:** P on a beating opens the panel bound to it; B opens it on the new beating; the property
+  panel's zone section says "P opens the beating panel". `renderBeatingPanel` / `bindBeatingPanel` removed from composer.html (51
+  lines) — the panel is the editor, nothing dead left.
+- The rate axis is per row (± the row's scale, default 6, typed); a bound panel is one row (a whole pattern is step 6's group).
+
+**Verified on the copy (`zz-ai-beating`, :5301; the server stopped and the copy and its `-work` removed after), with real
+`MouseEvent`s on the panel's SVG:**
+1. B on the last strike (the cello's F3 at 175.636 s) → the panel open and bound to `zn-…`, one row, 4 handles (a ramp: two points
+   per curve), 120 band slivers, 4 paths (the two curves as played thin, the two drawn bold), the level lane, the breath lane, the
+   readout "max 2.987/s · viola ±14.808 c/99 · cello ±14.808 c/97 · 1+1 notes".
+2. `hump` popped → `beat` [[0,0],[0.5,3],[1,0]], the zone regenerated, its peak bend event at 3300 ms (the note's middle + the lead).
+3. The upper curve's peak handle dragged up 30 px → the heard peak 9.176, the curves ±4.588 mirrored, max 9.059/s, the readout
+   ±44.9 c against the limits 99 / 97; regenerated.
+4. The upper curve's body dragged 52 px right → `slide` 0.655 s on both (locked); the beat 0 at the start, 7.1 at half, 2.0 at the
+   end (the hump pushed past the end); regenerated.
+5. ALT-drag on the lower curve's body 52 px left → unlocked ("🔓 free"), `rate.lower / upper` explicit, the lower's slide back to 0,
+   the upper's 0.655 kept; regenerated.
+6. Length 12 → the zone 12 s, both notes 12000 ms, the slide scaled 0.655 → 1.31 s; regenerated.
+7. Shuffle → designated, seed 2, the marks upper 3.628 / lower 8.8 (the cello's ceiling 8.5 s, the viola's 10.2 at the mean level),
+   4 notes; the upper's mark dragged 40 px → a hand mark at 4.613 (the dealt one gave way); shuffle again → seed 3, the hand mark
+   kept, the deal added 8.8 for the upper.
+8. A take `zz-ai-take` saved ("1 in bank/panel_snapshots.json"), listed, loaded after the block was changed (rateTo 3 and the
+   unlocked curves restored, length 12), deleted ("0 left"); his 151 strikes takes untouched; the file keeps an empty `beatings`
+   bucket (the server creates a panel's bucket on its first save) — one line in his uncommitted takes file.
+9. Beating with nothing selected → a new pattern: bass clarinet + viola on D3 (the active lane's middle, the nearest partner);
+   + pair → flute + violin 1 on F#5; the second row's offset slider to 1.5 s; play with fake outputs: 1177 events on basscl / va /
+   flute / vn1, the second pair's note-ons at 1.81 s = 0.31 + 1.5; the button "■ playing (space)"; stop → silent.
+
+**Not done, by the plan:** his test — the feel of the handles, the colours, the axis — when he checks in; the verdicts to
+MORPH_NOTES §3 and BEATING_TOOL.md. **Carried:** Insert (step 6); the keyboard and the strikes menu inside the panel (step 5).

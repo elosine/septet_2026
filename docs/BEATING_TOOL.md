@@ -243,13 +243,63 @@ the viola 127 and the cello 87 for the same level — 1g's measurement, to be he
 shared channel: its CC7 and articulation land on the held note — if it bites, the strings' curve channels of D11 are the way out);
 the winds' embouchure range; the ceilings (§4).
 
-## 6 · The panel — step 4 `todo`
+## 6 · The panel — `built 2026-09-07 (PLAN 1f step 4; RUNNING_LOG §171) — verified with real DOM events on a copy; his test pending`
 
 > *"a screen, a panel, and I can see the pair represented by some sort of curve … it'll be bipolar … I can slide one over … everything
 > should have handles … hit space bar to play that configuration … audition that configuration over different durations"* (§147)
 
-Rows, the mirrored curves with handles on rails, the crescendo and breath lanes, the beating band tinted by zone, shapes and
-freehand, the slide, the space bar, the duration box, takes. *(PLAN 1f item 4.)*
+`score/public/beating_panel.js` — a floating, draggable panel (the morph panel's chassis, the strikes drawer's takes and its
+space-bar rule) holding a **pattern of up to three pairs, one row each**. Two ways in: **P on a selected beating binds the panel to
+that zone** — the row IS the zone's block, every edit regenerates the zone live (debounced 120 ms) and redraws it on the score;
+**B** makes a beating and opens the panel bound to it; the **Beating** button with nothing selected opens an **empty pattern that
+lives in the panel until Insert** (step 6). ESC closes.
+
+**A row:** the pair (the launching lane · the partner from the lanes that can play the note, step 1's table · the lower note ·
+the interval chips) — then three lanes drawn in SVG:
+- **the rate area:** the two players' rate curves as mirror images above and below a centre line (beats per second, ± the row's
+  scale), the **band between them filled and tinted by zone** (grey flanger below 1, purple beating, red roughness above 15 — the
+  gap IS the heard beating); the thin lines are the curves as played (slid), the bold ones the drawn curves with a **handle at every
+  point** (drag up / down = the rate, sideways = its place; the ends stay at the ends; ALT-click removes a point; **the rate in
+  numbers at the handle while dragging** — "2.35/s heard · 1.8 s"); a **shape** pops in from the menu (flat · ramp out · ramp in ·
+  hump · long arc · burst) at the row's *to* rate; **draw** mode adds points by clicking (the trill's curve tool's gesture); the
+  **mirror lock** on by default — drag one curve, the other mirrors; **ALT-drag moves a curve alone** (the block then carries two
+  explicit curves, `rate.lower / upper`; the lock button relocks — the upper's shape becomes the heard curve again); **the body
+  dragged sideways slides the curve in time** (the phase, `slide`; both while locked);
+- **the crescendo lane:** the level 0 → 1 — *follows the beating* between low and high by default, or its own curve from the same
+  shape menu, its points draggable, drawn by clicking (`levelCurve`);
+- **the breath lane** per player: the spans as bars, the **marks as dotted go lines on sliders** — drag one and it becomes a hand mark
+  the deal keeps (the nearest dealt mark gives way), click on the lane to add one, ALT-click to drop one; the **ceiling** named at
+  the right and drawn as a red frame on any span past it, with a warning in the lane's line; the three modes; **shuffle** = a new
+  seed, the hand marks kept.
+- The **offset rail** slides a whole pair in time against the others (an unbound pattern's rows; a bound row sits at its zone).
+
+**The pattern:** the **length box** (a typed duration re-samples every row: the curves are over normalised time, the slides and the
+hand marks scale, the dealt breaths re-deal; a bound zone stretches with it); **+ pair** (up to three, the free lanes first);
+**SPACE** with the panel open plays the pattern — all pairs, at their offsets, timestamped through the score's own event path
+(`Composer.playBeatingEvents`, the tick's events) — and stops on SPACE again (the transport gets SPACE back when the panel closes);
+**takes** — named, in `bank/panel_snapshots.json` under `beatings` (save · load · delete; a bound zone takes the first row's block);
+**insert** waits for step 6.
+
+**Verified on a copy (`zz-ai-beating`, :5301, 2026-09-07; §171), with real DOM events:** B on the last strike → the panel bound
+(one row, the handles, 120 band slivers, the readout "max 2.987/s · viola ±14.8 c/99 · cello ±14.8 c/97"); **a hump popped** → the
+block's `beat` = three points, the zone regenerated, its peak bend at the note's middle; **the peak handle dragged up 30 px** → the
+heard peak 3 → 9.18 per second, the two curves ±4.59 mirrored, the readout ±44.9 c; **the upper curve's body dragged 52 px** → both
+slides 0.655 s (locked), the beat 0 at the start, 7.1 at half, 2.0 at the end (the hump pushed right); **ALT-drag on the lower** →
+unlocked ("free"), two explicit curves, only the lower's slide changed; **length 12** → the zone 12 s, both notes 12000 ms, the slide
+scaled to 1.31 s; **shuffle** → designated, seed 2, one mark each (3.63 / 8.8 s), four notes; **the upper's mark dragged 40 px** → a
+hand mark at 4.61 s, the dealt one gone; **shuffle again** → seed 3, the hand mark kept, a second dealt mark; **a take** saved, listed,
+loaded (the state restored over a changed block), deleted — his strikes takes untouched, an empty `beatings` bucket left in the
+file; **a new pattern** (Beating with nothing selected): bass clarinet + viola on D3, **+ pair** → flute + violin 1 on F#5, **the
+second row's offset 1.5 s** → played with fake outputs: 1177 events on four ports, the second pair's note-ons 1.5 s after the
+first's, stop silences.
+
+**Decided in the build (§171):** the panel edits the zone's block in place (one truth, no copy); the drawn heard curve `beat`
+replaces the row's *from / to / shape* the moment a handle moves (`shape: 'drawn'`); the band is drawn as a sliver per sample (the
+zone can change along the way); the step-3 property row is retired — the panel is the editor, the property panel says so; the
+"space bar with the object selected" of step 3 is the panel's SPACE.
+
+**Open, for the composer (his test):** the feel of the handles on rails; whether the rate axis should follow the loudest row;
+whether a bound panel should also take a whole pattern (step 6 groups it); the colours of the band's zones.
 
 ## 7 · The pitch side — step 5 `todo`
 
@@ -295,3 +345,6 @@ every breath, the beat rate at both ends of the gliss — the tuba's settled for
 - **2026-09-07 — step 3 built:** the beating object (§5): B on a strike note, the zone on two lanes, the snippet with per-event
   routing and `_bend` events, the tick's bend and centre, the P row, ▶ hear; verified on a copy by the decoded MIDI (the beat rate
   within 0.002/s of the math, the just offsets on the upper note, save / reload / drag / stretch / delete). His ear pending.
+- **2026-09-07 — step 4 built:** the panel (§6): `beating_panel.js` — rows, the mirrored curves with handles on rails, the band by
+  zone, the shapes and draw mode, the mirror lock and the slide, the crescendo and breath lanes, the offset rail, the length box,
+  SPACE, takes; P / B / the Beating button; verified with real DOM events on a copy. His test pending.

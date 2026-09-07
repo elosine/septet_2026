@@ -355,7 +355,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 
 - **1f — The beatings: a pair of players on one pitch, a gap that beats — the beating panel (section 2, CN-28 · CN-29 · CN-33)** —
   `doing` — **building since 2026-09-07 at his word (*"will you be able to run the plan independantly? can you do so, and I'll check
-  in after the build"*, RUNNING_LOG §167): step 1 built (§167–168), step 2 built (§169), step 3 built (§170)** (the requirements talk 2026-09-06 evening, RUNNING_LOG
+  in after the build"*, RUNNING_LOG §167): step 1 built (§167–168), step 2 built (§169), step 3 built (§170), step 4 built (§171)** (the requirements talk 2026-09-06 evening, RUNNING_LOG
   §145–166; PLANNING_METHOD phase 3 from step 1) *(composer,
   2026-09-06: CN-28 "strikes with morph chords, like freeze frames or old time slide show … 'morph events'" · CN-29 "the expansion of
   pitch to expand beating, the rebreath … and the Crescendo … the multiple pairs" · "beating is good" · "the atom will be a pair of
@@ -469,7 +469,11 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        channels; save, reload, drag and stretch keep it; the checker clean;
      - his ear: unison first, then the fifth and the fourth; the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md; commit, push.
   4. **The panel** (rows, the mirrored curves with handles on rails, the crescendo and breath lanes, the beating band, shapes and
-     freehand, the slide, the space bar, the duration box, takes) — `todo`. *Result when done:* the beating panel opens on P for a
+     freehand, the slide, the space bar, the duration box, takes) — `built 2026-09-07 (RUNNING_LOG §171; docs/BEATING_TOOL.md §6):
+     score/public/beating_panel.js — a floating panel bound to a selected beating (P, B) or holding a pattern until Insert; per row
+     the mirrored rate curves with handles on rails, the band by zone, shapes and draw mode, the mirror lock and ALT-drag, the
+     body slide, the crescendo lane, the breath lane with sliders / ceiling / shuffle, the offset rail; the length box, SPACE, the
+     takes (the beatings bucket); verified with real DOM events on a copy. HIS TEST PENDING`. *Result when done:* the beating panel opens on P for a
      selected beating, or empty from the toolbar for a new one, and holds a pattern of up to three pairs, one row each. In a row the
      two players' rate curves as mirror images above and below a centre line, the beating that results drawn between them, a
      crescendo lane and a breath lane beneath. Every curve has handles on rails: the top sets the level, the ends resize, the body
