@@ -5757,3 +5757,30 @@ five about a semitone, the flute two), the winds' breath and the strings' bow ce
 loudness through 1g's remap in the audition as in the score; a glissando wider than the sampler's semitone re-keys, on these
 instruments an audible re-articulation (BLOOM's ± 25–50 c stays inside; CONVERGE's whole-tone opening would carry one per voice
 unless its slider narrows it). Not done: nothing. His confirmation of the picture awaited, then the build in one pass on a copy.
+
+## §199. "Ordinary voice and or Sensa vibrato … the ability to swap out instruments among the pairs … talk about the active displacement … a whole tone falls well within the range … react to this, and let's discuss some more" — the discussion goes on: the swap as seat pull-downs, the fold put to him as two models, the whole tone accepted with the sampler's seam named
+
+Composer, 2026-09-07 late (verbatim in MORPH_NOTES §3): *"Okay. Ordinary voice and or Sensa vibrato. for the voices. And then I want to
+add the ability to swap out instruments among the pairs. So you have the default pairing above. But if I wanted to change, for
+example, Trello and base clarinet. and then talk about the active displacement as well. For the glissando, I believe, uh, whole tone
+falls well within the range for a... any player of any of those instruments to reach with their ambrosure. So I think it's fine. I'm
+not sure if I'm answering the question, though. Anyways, react to this, and let's discuss some more."* ("Sensa vibrato" = senza
+vibrato; "Trello" = cello; "active displacement" = octave displacement; "ambrosure" = embouchure.)
+
+**Read back to him:** (1) the strings' ordinary voice is senza vibrato — the recipes already say so (`ordinary: senza_vel` on the four
+strings, `ord` on the flute, `senza_vel` on the bass clarinet), nothing to change; (2) players swap among the pairs — the three pair
+lines get a pull-down per seat listing the six players; picking a player seated elsewhere trades the two seats, every player sits
+once; the pitches stay with the pairs; the render is the same morph recast (the same seed, times and curves; only the lanes change)
+— the cast saved with an ACTUAL as part of its params (`lanes`); (3) the whole tone: the players' reach is not in doubt; the
+SAMPLERS bend about a semitone (the Xsample five, §168), so in the mock-up a whole-tone glissando re-keys once per voice — on these
+instruments an audible re-articulation, a seam the score never shows (the notation reads the curve, D23 / NAMING §2.9); the wide
+models stay, the morph's player limit becomes a whole tone (the beating's stays a semitone, §180), the mock-up carries the seam.
+
+**The octave displacement, put to him as two models (HOW_WE_WORK: a model agreed in one line before it is built):** the question arises
+only after a swap — the default cast is voiced to fit its registers — e.g. the cello in the flute's seat above the cello's top, the
+flute in the cello's seat below C4. (a) **the pair folds as one unit** to the nearest octave both players hold — the unison kept, the
+beating as designed, the pair an octave from where the model voiced it; no octave serving both → the line names the player who
+cannot, the pair silent until he swaps again (the beating drawer's rule, §180) — recommended; (b) **only the player who cannot reach
+folds**, the pair an octave apart — the register kept, but an octave pair beats between the upper note and the lower's second
+partial: twice the rate for the same cents, and a thinner sound than a unison splitting. The fold shown on the line as in the drawers
+("F3 → F4 ↑"); the folded pitch is what the extractor reads. **His answer pending; nothing built.**

@@ -632,6 +632,22 @@ sliders beat a tool with every gesture built, because it answered *"generate the
 carry the septet — the players and their palette under the hood, the texture split into pairs at insert — are the tool's, not the
 composer's, to know about. RUNNING_LOG §198.
 
+### 2026-09-07, late — the voices, the swap among the pairs, the octave displacement, the whole tone
+
+> *"Okay. Ordinary voice and or Sensa vibrato. for the voices. And then I want to add the ability to swap out instruments among the
+> pairs. So you have the default pairing above. But if I wanted to change, for example, Trello and base clarinet. and then talk about
+> the active displacement as well. For the glissando, I believe, uh, whole tone falls well within the range for a... any player of any
+> of those instruments to reach with their ambrosure. So I think it's fine. I'm not sure if I'm answering the question, though. Anyways,
+> react to this, and let's discuss some more."* *(2026-09-07, late; typed — "Sensa vibrato" = senza vibrato, "Trello" = cello, "active
+> displacement" = octave displacement, "ambrosure" = embouchure)*
+
+**AI reading (not the composer's words):** the "simple" morph panel grows its first two controls of the day beyond the tuba's — a seat
+pull-down per pair (the cast), and a fold when the cast no longer fits the model's voicing — the same two ideas the beating drawer
+carries (the seats and the pair's fold as a unit, §180), asked for again the moment the pairs became real. **For the all-purpose
+tool:** the cast and the fold belong to the pair widget, whatever engine sits behind it; and the player's bend limit is a per-TOOL
+number, not a per-instrument one — a semitone for a beating pair, a whole tone for a morph glissando, both his by ear. The sampler's
+seam on a whole tone is a mock-up fact, not a notation fact. RUNNING_LOG §199.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·
