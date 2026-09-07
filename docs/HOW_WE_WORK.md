@@ -90,6 +90,9 @@ one thing right"; RUNNING_LOG §188)**
 - The tool carries its own memory of what is taken (a gesture card); the AI never asks him to remember a modifier.
 - **Save, don't build (composer, 2026-09-07 night — "save all unless I say otherwise"):** a remark about the drawer is saved — the
   request in NITS, his words in MORPH_NOTES §3 — and built only when he says so; what he marks "fix now" is fixed now.
+- **The takes and the ACTUALs are committed at every wrap (composer, 2026-09-07 late — "yes pls"; RUNNING_LOG §209):** `bank/panel_snapshots.json`
+  and `bank/actuals/*.json` are the AI's to stage and commit at each wrap and whenever he asks — they are data with provenance, as the
+  tuba piece kept them. The SCORE files (`scores/piece-septet.json`, the named versions) stay his to name; never staged unasked.
 
 ---
 

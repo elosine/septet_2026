@@ -267,7 +267,7 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   harmony module (CN-35, to be planned on his word) · the trills' phase 5 and the run dials' calibration on his go.
 - **The deliberately-uncommitted list (all his, never staged by the AI):** `bank/panel_snapshots.json` (his takes — the AI's test takes
   were deleted again) · `scores/piece-septet.json` (his working score) · the untracked named versions `scores/piece-septet-v1.7 …
-  v1.23-sec1DraftDone.json` and `scores/trillBuildTst.json`.
+  v1.23-sec1DraftDone.json` and `scores/trillBuildTst.json`. **Amended 2026-09-07 late (§209): the takes file and the ACTUALs (`bank/actuals/*.json`) are the AI's to commit at every wrap; the score files stay his to name.**
 
 **Open questions:** Q1 the flute doubling (piccolo vs bass flute; SI2 flute in C until then) · Q5 print format (A3 landscape;
 #4's tabloid is 432 mm) · ~~Q6 the violins' Bartók top~~ measured 2026-09-06: E6 (88), the viola's E5, the cello's B4 (§122) ·
