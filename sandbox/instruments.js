@@ -33,7 +33,12 @@ const INSTRUMENTS = {
   // → MIDI 59–96 (manual p. 51); per-preset ranges are read from the UVI GUI at 0c, never
   // ear-scanned. Multiphonics Menu: one multiphonic per key, display C3–F5 = MIDI 60–89 (manual
   // "FLUTE Multiphonics"). Piccolo / bass flute are NOT here yet — undecided (D6; CN-2, CN-4).
-  flute: { balanceDb: -21, ordinary: "ord",   // `ordinary` (PLAN 1g item 4, 2026-09-06): the instrument's ordinary voice — a new trill's default, the voice the sweep measured
+  flute: { balanceDb: -21, ordinary: "ord", playerBendSt: 1, bendRangeSt: 1.99,   // `ordinary` (PLAN 1g item 4, 2026-09-06): the instrument's ordinary voice — a new trill's default, the voice the sweep measured
+    // THE BEATING PALETTE (PLAN 1f step 1, 2026-09-07): `playerBendSt` = how far the real player may bend, his rule "usually within semitone at the most" (1 for
+    // all six; the winds by embouchure, to be narrowed by his ear when heard); `bendRangeSt` = the sampler's range in semitones per full pitch bend — PROVISIONAL
+    // until the bend probe (`node tools/balance_schedule.js --bend` → the rack → probes/analyze_bend.py → tools/apply_bend_ranges.js) writes MEASURED_BEND below:
+    // 1.99 for the UVI flute (the tuba piece measured SI2 at 1.99, RPN ignored), 2 (Kontakt's default) for the Xsample instruments. `beating: false` = never a
+    // beating player (the piano, CN-34: an anchor only). The tick reads bendRangeSt from PLAN 1f step 3 on (the tuba's 1.99 constant until then).
     label: "Flute",
     port: "Flute",
     rangeLow: 59,
@@ -112,7 +117,7 @@ const INSTRUMENTS = {
   //   the four slides — CC#0 122 + the function key, then CC#0 118 to leave the mode.
   // Started from piece #3 sandbox/instruments.js `bass_clarinet_xs` (13 starter presets); the FULL menu
   // the deep map is #3/docs/XSAMPLE_BASSCL_map.md. Floor rule: never send below MIDI 34.
-  bass_clarinet: { balanceDb: -9, ordinary: "senza_vel",
+  bass_clarinet: { balanceDb: -9, ordinary: "senza_vel", playerBendSt: 1, bendRangeSt: 2,
     label: "Bass Clarinet",
     port: "BassCl",
     rangeLow: 34,   // floor rule: never send below MIDI 34 (keyswitch/function zone)
@@ -166,7 +171,7 @@ const INSTRUMENTS = {
   // CC64 pedal) · plucked ch 2 (Spitfire, added at R6) · harmonics ch 3 (+ch 4 second layer; CC21 pitch shift, 19.048 cents/step,
   // 85 ms CC lead; sounding cap MIDI 101) · muted ch 5. Preparations are TECHNIQUES of one
   // piano track. Plucked piano had no library in #2 ("TBD"); the septet has Spitfire's, on ch 2.
-  piano: { balanceDb: 7, ordinary: "main",
+  piano: { balanceDb: 7, ordinary: "main", beating: false, playerBendSt: 0,
     label: "Piano",
     port: "Piano",
     rangeLow: 21,
@@ -194,10 +199,10 @@ const INSTRUMENTS = {
   // them. Keyswitch zone = the bass clarinet's (green 21–23 function keys, red 24–33 bank slots,
   // all reachable by CC#0 — never sent as notes); the blue key at the very top is the Preset /
   // Phrase Mode switch (manual: A#7, or CC#0 126/127). Channels per D11: 1 main · 2–4 curve A/B/C.
-  violin1: { balanceDb: 0, ordinary: "senza_vel", label: "Violin 1", port: "Vn1", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
-  violin2: { balanceDb: 0, ordinary: "senza_vel", label: "Violin 2", port: "Vn2", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
-  viola:   { balanceDb: -3.5, ordinary: "senza_vel", label: "Viola",    port: "Va",  rangeLow: 48, rangeHigh: 93,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 48, 93) },
-  cello:   { balanceDb: -1, ordinary: "senza_vel", label: "Cello",    port: "Vc",  rangeLow: 36, rangeHigh: 83,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 36, 83) },
+  violin1: { balanceDb: 0, ordinary: "senza_vel", playerBendSt: 1, bendRangeSt: 2, label: "Violin 1", port: "Vn1", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
+  violin2: { balanceDb: 0, ordinary: "senza_vel", playerBendSt: 1, bendRangeSt: 2, label: "Violin 2", port: "Vn2", rangeLow: 55, rangeHigh: 101, mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["G", "D", "A", "E"], 55, 101, vnRanges()) },
+  viola:   { balanceDb: -3.5, ordinary: "senza_vel", playerBendSt: 1, bendRangeSt: 2, label: "Viola",    port: "Va",  rangeLow: 48, rangeHigh: 93,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 48, 93) },
+  cello:   { balanceDb: -1, ordinary: "senza_vel", playerBendSt: 1, bendRangeSt: 2, label: "Cello",    port: "Vc",  rangeLow: 36, rangeHigh: 83,  mechanism: "cc0", channels: { main: 1, curve: [2, 3, 4] }, techniques: xsStringTechs(["C", "G", "D", "A"], 36, 83) },
 };
 
 // Per-preset zones read from the GUI as the composer uses a preset (his rule at R8: "there are too many
@@ -381,6 +386,24 @@ function applyMeasuredRanges(all, measured) {   // the measured span replaces th
 }
 applyMeasuredRanges(INSTRUMENTS, MEASURED_RANGES);
 // ---- end of the measured ranges ----
+
+// ---- MEASURED BEND RANGES (generated by tools/apply_bend_ranges.js — do not edit by hand) ----
+const MEASURED_BEND = {   // measured 2026-09-07T00:22 (01-REC-260907_0015.wav): semitones per full bend on the ordinary voice; RPN 0 honoured = MIDI can change it
+  flute: { rangeSt: 2, spreadSt: 0, mutableByMidi: false, residueCents: 100.2, pitch: 78 },
+  bass_clarinet: { rangeSt: 0.98, spreadSt: 0.01, mutableByMidi: false, residueCents: 49.4, pitch: 50 },
+  violin1: { rangeSt: 0.96, spreadSt: 0.02, mutableByMidi: false, residueCents: 49.9, pitch: 78 },
+  violin2: { rangeSt: 0.97, spreadSt: 0.01, mutableByMidi: false, residueCents: 50.4, pitch: 78 },
+  viola: { rangeSt: 0.99, spreadSt: 0.04, mutableByMidi: false, residueCents: 49.3, pitch: 71 },
+  cello: { rangeSt: 0.97, spreadSt: 0.03, mutableByMidi: false, residueCents: 48.3, pitch: 60 },
+};
+function applyMeasuredBend(all, measured) {   // the measured range replaces the provisional bendRangeSt
+  for (const [inst, m] of Object.entries(measured || {})) {
+    const I = all[inst]; if (!I || !m) continue;
+    I.bendRangeSt = m.rangeSt; I.bendMeasured = true; I.bendMutableByMidi = !!m.mutableByMidi; I.bendResidueCents = m.residueCents;
+  }
+}
+applyMeasuredBend(INSTRUMENTS, MEASURED_BEND);
+// ---- end of the measured bend ranges ----
 
 // Hardware capture input. Keystation 88 MK3 exposes "Keystation 88 MK3" (keys) and
 // "MIDIIN2 (Keystation 88 MK3)" (DAW control - never bind). See piece #3's SAMPLER_QUIRKS.md.

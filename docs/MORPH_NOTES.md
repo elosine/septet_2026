@@ -17,8 +17,20 @@ freely.
   carries `morphBend` (note-relative cents breakpoints), sent as pitch bend by the plain-note tick and centred again on stop.
 - Its documentation in #4 (`for_seven_tubas/docs`): `MORPH_FINDINGS.md`, `MORPH_NOTATION.md`; the convergence textures in
   `CURVE_DATABASE.md`. The beating-frequency apparatus of #4 is parked here (PLAN's parking lot: "only if the music asks").
-- Not yet adapted to the septet's palette: the pairs (seven unlike instruments, not seven tubas), the pitch-bend range per
-  instrument (Xsample: editable in ¼-tone steps; SI2 flute, the pianos: to check), the notation (phase 2a).
+- Not yet adapted to the septet's palette: the notation (phase 2a). *(The pairs and the bend range per instrument: the beating
+  tool's palette, below, 2026-09-07.)*
+
+- **The beating tool is this piece's successor to the morph tool (PLAN 1f, `docs/BEATING_TOOL.md`; the requirements talk of
+  2026-09-06, RUNNING_LOG §145–166).** The object is a *beating* — one pair of players on one pitch, mirrored bends, the gap beating;
+  the panel of direct manipulation replaces the tuba's word-recipe sliders; the axis is beats per second. **Step 1 built
+  2026-09-07 (the palette):** `score/public/beating_calc.js` (the players, the ordinary voices' measured ranges, the bend limits,
+  the pairing rule — `tools/beating_calc_check.js`); the recipe's `playerBendSt` (his semitone) · `bendRangeSt` (the sampler's,
+  provisional until measured) · `beating: false` (the piano); the bend probe on this repo's kit — `balance_schedule.js --bend` →
+  `balance_probe.ps1` (bend / RPN / reset events) → `probe_run.sh` → `analyze_bend.py` (the tuba's f0 method, self-tested) →
+  `bank/bend_ranges.json` → `apply_bend_ranges.js` → `MEASURED_BEND` in the recipe. What the tuba files still hold for the beating:
+  the tick's bend arithmetic (`morphBend` → 14-bit at a fixed 1.99 st; step 3 reads the instrument's `bendRangeSt` instead) and
+  `resetMorphBend` (the centre on stop, kept); `morph.js`'s `buildCarrier` (the breath rule step 2 re-derives per instrument) and
+  `toScoreObjects` (the note format with note-relative bend and level breakpoints, the model for step 3's snippet).
 
 - **The dynamics are solved for any curve-driven object (2026-09-06, PLAN 1g, RUNNING_LOG §115–120):** `score/public/velocity_remap.js` gives
   a morph event its loudness in the ensemble's one scale — `velocityFor / cc7For` per note (attacks, trills), `heldNote / cc7ForHeight`

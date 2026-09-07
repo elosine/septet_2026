@@ -354,7 +354,9 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   harmonic vocabulary as one addressable table.
 
 - **1f — The beatings: a pair of players on one pitch, a gap that beats — the beating panel (section 2, CN-28 · CN-29 · CN-33)** —
-  `doing` (the requirements talk 2026-09-06 evening, RUNNING_LOG §145–150; PLANNING_METHOD phase 3 from step 1) *(composer,
+  `doing` — **building since 2026-09-07 at his word (*"will you be able to run the plan independantly? can you do so, and I'll check
+  in after the build"*, RUNNING_LOG §167): step 1 built (§167–168)** (the requirements talk 2026-09-06 evening, RUNNING_LOG
+  §145–166; PLANNING_METHOD phase 3 from step 1) *(composer,
   2026-09-06: CN-28 "strikes with morph chords, like freeze frames or old time slide show … 'morph events'" · CN-29 "the expansion of
   pitch to expand beating, the rebreath … and the Crescendo … the multiple pairs" · "beating is good" · "the atom will be a pair of
   players" · "a panel, and I can see the pair represented by some sort of curve … it'll be bipolar … everything should have handles …
@@ -374,7 +376,12 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   centre pitch per pair; the sonority between the pairs (unison · thirds · fifths · other); inside a pair unison, fourths / fifths /
   thirds to try. **The piano is out of the beating** (CN-34): six players, up to three pairs. The shuffle drawer of §146 parked —
   the same rows and curves are what a deal would fill later. The top line agreed 2026-09-06 (§148–149):
-  1. **The palette** (how far each player may bend, by sampler and by hand, and who may pair with whom) — `todo`. *Result when
+  1. **The palette** (how far each player may bend, by sampler and by hand, and who may pair with whom) — `built 2026-09-07
+     (RUNNING_LOG §167–168; docs/BEATING_TOOL.md §3): the recipe's playerBendSt · bendRangeSt · beating fields; beating_calc.js
+     (the palette part: players, ranges, bend limits, the pairing rule; 37 checks); the bend probe on this kit (balance_schedule.js
+     --bend → balance_probe.ps1 → probe_run.sh → analyze_bend.py, self-tested → bank/bend_ranges.json → apply_bend_ranges.js) —
+     RUN IN HIS RACK THE SAME NIGHT: SI2 ±2.00 st, the Xsample five ±0.96–0.99 st (set to a semitone in Kontakt), RPN 0 ignored on
+     all six, the residue real on all six, the pre-arm at 300 ms fine; the numbers in the recipe as MEASURED_BEND`. *Result when
      done:* the tool knows, for each of the six bending players, how far a note may bend and by whom — the sampler's range, measured
      in his rack, and the player's, his rule; which two players can sit on which pitch, from the ordinary voices' measured ranges,
      so the panel offers only pairs that can play; the score's bend path, still fixed at the tuba's two semitones, ready to read the

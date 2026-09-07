@@ -52,7 +52,31 @@ const RANGES_PLAN = {
 const RANGE_TIMING = { one: { holdMs: +opt('onehold', 200), gapMs: +opt('onegap', 1300) }, sus: { holdMs: +opt('sushold', 600), gapMs: +opt('susgap', 500) } };
 const held = args.includes('--held');   // 1g item 5's proof: a held note at three heights — the velocity for the top, CC7 for the height
 const proof = args.includes('--proof') || held;
+// --bend (PLAN 1f step 1, 2026-09-07 — the palette): the PITCH-BEND probe of the six bending players (the piano is out of the
+// beating, CN-34) on their ordinary voices (`ordinary`), each at the middle of the voice's measured range, velocity 100, held 2 s
+// with 2 s of settle (the tuba's probes/bend_probe.ps1, adapted to this kit). Per player eight slots: an unbent REFERENCE ·
+// +50 % · +100 % · −100 % of full bend (the sampler's range in semitones = the measured cents ÷ the fraction) · a bent note
+// left UNRESET and the plain note after it (the residue the tick's resetMorphBend guards against) · RPN 0 asked for 12
+// semitones then +100 % (can MIDI change the range?) · RPN 0 back to 2 and +100 % again (did the range come back?). The bend is
+// sent with the prelude (preMs before the note, after CC7 / CC0 / the keyswitch) and centred `bendResetMs` after the note-off.
+// Played by probes/balance_probe.ps1 (the bend / rpn / reset events), read by probes/analyze_bend.py → bank/bend_ranges.json.
+const bend = args.includes('--bend');
+const BEND_CENTRE = 8192;
+const bendValue = f => Math.max(0, Math.min(16383, Math.round(BEND_CENTRE + f * (f >= 0 ? 8191 : 8192))));   // full up = +8191, full down = −8192
+const bendFraction = v => (v - BEND_CENTRE) / (v >= BEND_CENTRE ? 8191 : 8192);                             // the exact fraction the value is
+const BEND_SLOTS = [   // [step, fraction | null (no bend message), reset after the note?, RPN 0 value | null, what the analyzer reads]
+    ['ref',   0.0,  true,  null, 'the unbent baseline every cents figure is measured against'],
+    ['+50',   0.5,  true,  null, 'half of full bend up'],
+    ['+100',  1.0,  true,  null, 'full bend up'],
+    ['-100', -1.0,  true,  null, 'full bend down'],
+    ['res_a', 0.5,  false, null, 'bent +50 %, NOT reset after — the residue trap set'],
+    ['res_b', null, true,  null, 'the next note with no bend message — sharp = the residue is real'],
+    ['rpn12', 1.0,  true,  12,   'RPN 0 asked for 12 semitones, then full bend up — wider than +100 = RPN honoured'],
+    ['rest',  1.0,  true,  2,    'RPN 0 back to 2, full bend up — the same as +100 = restored'],
+];
+const BEND_HOLD_MS = +opt('bendhold', 2000), BEND_SETTLE_MS = +opt('bendsettle', 2000), BEND_VEL = +opt('bendvel', 100), BEND_RESET_AFTER_MS = +opt('bendreset', 400);
 if (ranges && (sweep || proof)) { console.error('--ranges stands alone'); process.exit(1); }
+if (bend && (sweep || proof || ranges)) { console.error('--bend stands alone'); process.exit(1); }
 const PROOF_H = opt('proofh', '0,0.5,1').split(',').map(Number);
 const PROOF_LO = +opt('prooflo', 65), PROOF_HI = +opt('proofhi', 127);
 const REPEAT = Math.max(1, +opt('repeat', 1));   // each proof note played this many times in a row: the sampler's note-to-note scatter (round robins) averages out
@@ -78,7 +102,7 @@ const vels = opt('vels', '127,64').split(',').map(Number);
 const only = opt('only', '').split(',').filter(Boolean);
 const noStrike = args.includes('--nostrike');
 opt('strike', '').split(',').filter(Boolean).forEach(kv => { const [k, v] = kv.split('='); STRIKE_TECHS[k] = v; });
-const out = path.resolve(ROOT, opt('out', ranges ? 'probes/ranges_schedule.json' : held ? 'probes/held_schedule.json' : proof ? 'probes/proof_schedule.json' : sweep2 ? 'probes/sweep2_schedule.json' : sweep ? 'probes/sweep_schedule.json' : 'probes/balance_schedule.json'));
+const out = path.resolve(ROOT, opt('out', bend ? 'probes/bend_schedule.json' : ranges ? 'probes/ranges_schedule.json' : held ? 'probes/held_schedule.json' : proof ? 'probes/proof_schedule.json' : sweep2 ? 'probes/sweep2_schedule.json' : sweep ? 'probes/sweep_schedule.json' : 'probes/balance_schedule.json'));
 
 const notes = [];
 let t = leadMs, i = 0;
@@ -116,6 +140,27 @@ if (ranges) {
         t += instGapMs;
     }
 }
+if (bend) {   // the six bending players, the ordinary voice, its middle measured pitch; eight slots each (BEND_SLOTS)
+    for (const inst of ORDER) {
+        if (only.length && !only.includes(inst)) continue;
+        const I = INSTRUMENTS[inst]; if (!I) { console.error('no recipe for', inst); process.exit(1); }
+        if (I.beating === false || inst === 'piano') continue;   // the piano is out of the beating (CN-34): an anchor only, never bent
+        const tech = I.techniques.find(q => q.key === I.ordinary) || PLAIN_PREF.map(k => I.techniques.find(q => q.key === k)).find(Boolean);
+        if (!tech) { console.error('no ordinary voice on ' + inst); process.exit(1); }
+        const lo = tech.rangeLow != null ? tech.rangeLow : I.rangeLow, hi = tech.rangeHigh != null ? tech.rangeHigh : I.rangeHigh;
+        const pitch = Math.round(lo + (hi - lo) * 0.5);
+        plan.push({ inst, role: 'bend', tech: tech.key, pitch });
+        for (const [step, frac, reset, rpn, what] of BEND_SLOTS) {
+            const v = frac == null ? null : bendValue(frac);
+            notes.push({ i: i++, inst, label: I.label, role: 'bend', step, what, tech: tech.key, techLabel: tech.label, port: tech.port || I.port, ch: tech.channel || 1,
+                         cc0: tech.cc0 != null ? tech.cc0 : null, ks: tech.ks != null ? tech.ks : null, pitch, vel: BEND_VEL, cc7: 127,
+                         bend: v, bendFraction: v == null ? null : +bendFraction(v).toFixed(5), rpn, bendResetMs: reset ? t + BEND_HOLD_MS + BEND_RESET_AFTER_MS : null,
+                         tPreMs: t - preMs, tOnMs: t, tOffMs: t + BEND_HOLD_MS });
+            t += BEND_HOLD_MS + BEND_SETTLE_MS;
+        }
+        t += instGapMs;
+    }
+}
 if (proof) {   // one note per height per instrument, the middle register, the remapped velocity
     for (const inst of ORDER) {
         if (only.length && !only.includes(inst)) continue;
@@ -138,7 +183,7 @@ if (proof) {   // one note per height per instrument, the middle register, the r
         t += instGapMs;
     }
 }
-for (const role of ((proof || ranges) ? [] : sweep2 ? ['ref', 'vel'] : sweep ? ['ref', 'vel', 'cc7'] : ['plain', 'strike'])) {
+for (const role of ((proof || ranges || bend) ? [] : sweep2 ? ['ref', 'vel'] : sweep ? ['ref', 'vel', 'cc7'] : ['plain', 'strike'])) {
     if (role === 'strike' && noStrike) continue;
     for (const inst of ORDER) {
         if (only.length && !only.includes(inst)) continue;
@@ -156,7 +201,7 @@ for (const role of ((proof || ranges) ? [] : sweep2 ? ['ref', 'vel'] : sweep ? [
     }
 }
 const schedule = { generatedAt: new Date().toISOString(), source: 'sandbox/instruments.js', order: ORDER.filter(k => !only.length || only.includes(k)),
-                   strikeTechs: noStrike ? {} : STRIKE_TECHS, ranges, rangesPlan: ranges ? plan : null, rangeTiming: ranges ? RANGE_TIMING : null, proof, proofH: proof ? PROOF_H : null, proofScale: proof ? { lo: PROOF_LO, hi: PROOF_HI } : null, proofRepeat: proof ? REPEAT : null, remapMeasuredAt: remapBank ? remapBank.measuredAt : null, trims: Object.fromEntries(ORDER.map(k => [k, INSTRUMENTS[k] && INSTRUMENTS[k].balanceDb != null ? INSTRUMENTS[k].balanceDb : 0])), sweep, sweepVels: sweep2 ? [...new Set(notes.filter(n => n.role === 'vel').map(n => n.vel))].sort((a, b) => b - a) : sweep ? SWEEP_VELS : null, sweep2, sweep2Plan: sweep2 ? Object.fromEntries(Object.entries(SWEEP2).map(([k, v]) => [k, { velocities: v[0] || SWEEP_VELS, repeats: v[1] }])) : null, sweepCc7s: sweep ? SWEEP_CC7S : null, cc7Vel: sweep ? cc7Vel : null, plan, leadInMs: leadMs, preMs, noteMs, gapMs, instGapMs, vels, fracs: FRACS, totalMs: t, notes };
+                   strikeTechs: noStrike ? {} : STRIKE_TECHS, bend, bendPlan: bend ? { slots: BEND_SLOTS.map(s => ({ step: s[0], fraction: s[1], reset: s[2], rpn: s[3], what: s[4] })), holdMs: BEND_HOLD_MS, settleMs: BEND_SETTLE_MS, vel: BEND_VEL, resetAfterMs: BEND_RESET_AFTER_MS, bendLeadMs: preMs, players: plan.map(p => p.inst) } : null, ranges, rangesPlan: ranges ? plan : null, rangeTiming: ranges ? RANGE_TIMING : null, proof, proofH: proof ? PROOF_H : null, proofScale: proof ? { lo: PROOF_LO, hi: PROOF_HI } : null, proofRepeat: proof ? REPEAT : null, remapMeasuredAt: remapBank ? remapBank.measuredAt : null, trims: Object.fromEntries(ORDER.map(k => [k, INSTRUMENTS[k] && INSTRUMENTS[k].balanceDb != null ? INSTRUMENTS[k].balanceDb : 0])), sweep, sweepVels: sweep2 ? [...new Set(notes.filter(n => n.role === 'vel').map(n => n.vel))].sort((a, b) => b - a) : sweep ? SWEEP_VELS : null, sweep2, sweep2Plan: sweep2 ? Object.fromEntries(Object.entries(SWEEP2).map(([k, v]) => [k, { velocities: v[0] || SWEEP_VELS, repeats: v[1] }])) : null, sweepCc7s: sweep ? SWEEP_CC7S : null, cc7Vel: sweep ? cc7Vel : null, plan, leadInMs: leadMs, preMs, noteMs, gapMs, instGapMs, vels, fracs: FRACS, totalMs: t, notes };
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, JSON.stringify(schedule, null, 1));
 console.log('balance schedule → ' + path.relative(ROOT, out) + ' · ' + notes.length + ' notes · ' + (t / 1000).toFixed(1) + ' s');

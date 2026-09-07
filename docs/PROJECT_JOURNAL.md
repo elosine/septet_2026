@@ -82,8 +82,17 @@
 
 ## §2 Resume Here
 
-**Session 4 — 2026-09-06 (in progress, Claude Code / Fable 5.1) — RUNNING_LOG §111–166.** The composer composes and tests on his
+**Session 4 — 2026-09-06 → 07 (in progress, Claude Code / Fable 5.1) — RUNNING_LOG §111–168.** The composer composes and tests on his
 own server (:5300); the AI built at his word, one chunk at a time:
+- **PLAN 1f step 1 built and its probe run, 2026-09-07 about 00:00–01:00 (§167–168), at his word *"run the plan independantly … I'll
+  check in after the build"*:** the palette — the recipe's `playerBendSt` (his semitone) · `bendRangeSt` · `beating: false` (the
+  piano); `score/public/beating_calc.js` (the players, the ordinary voices' measured ranges, the bend limits, the pairing rule, the
+  intervals with their partials and just offsets; 37 checks); the bend probe on this repo's kit (`balance_schedule.js --bend`, the
+  player's bend / RPN / reset events, `probe_run.sh`'s analyzer switch and stale-take guard, `analyze_bend.py` with the octave band
+  for the RPN slots and the reference subtracted, `selftest_bend.py` on six unlike simulated players, `apply_bend_ranges.js`) — **run
+  in the rack** (the bridge up and idle): SI2 ±2.00 st, the Xsample five ±0.96–0.99 st (set to a semitone in Kontakt), RPN 0 ignored
+  on all six, the residue real on all six, the pre-arm at 300 ms fine (the scoop is the samples' own attack — measured against the
+  unbent reference after a first false flag); `MEASURED_BEND` in the recipe; `docs/BEATING_TOOL.md` opened.
 - **Tools on his hands (§111–114):** the bend cursor only when Points is off; TRILLS phase 4 (a trill runs to the player's next
   strike note, a stretch regenerates at once); a nudged trill keeps its attack note (a 60 ms eating window; the drag keeps a
   trill's start; the articulation switch arbitrated on a shared sampler slot — the tail and the lead); the drawer's pick no
@@ -130,34 +139,41 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
 **NEXT STEPS · MODEL · CLEAR:**
 1. ☑ 0a · 0b · 0d · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1a · 1b · 1c (U1–U13b) · 1e phases 0–4 · 1g · 1h DONE and pushed; **1f planned
    whole** (eight steps in PLAN.md).
-2. ► **Build PLAN 1f, one step at a time, in the plan's words** (Fable): **step 1 the palette** (the bend probe — needs his rack window),
-   **step 2 the beating math** (no rack; can be built while the probe waits), then 3 → 7 each on a `zz-ai-*` copy, his listening at 3,
-   4, 5, 6, 7. Section 1 stays drafted at 175.7 s (v1.23-sec1DraftDone); the composer composes on his server meanwhile.
+2. ► **Build PLAN 1f, one step at a time, in the plan's words** (Fable, at his word 2026-09-07: *"will you be able to run the plan
+   independantly? can you do so, and I'll check in after the build"*, §167): **step 1 the palette DONE** (§167–168 — the bend probe
+   run in his rack, the numbers in the recipe); **► step 2 the beating math** (`beating_calc.js` extended, `beating_calc_check.js`,
+   nothing heard), then 3 → 7 each on a `zz-ai-*` copy; his listening verdicts at 3–7 filed when he checks in. Section 1 stays
+   drafted at 175.7 s (v1.23-sec1DraftDone); the piece file is his.
 3. **TRILLS_TOOL phase 5, the weave** on his go; the run dials' calibration ladder (1h item 6) on his go; the notation of trills and
    beatings at 2a; 1f step 8's four held things when their lines come.
 4. **0c / 0h** (the recipes' completion; the phase-0 gate) when the music asks; 0d.3 / 0d.4 remain as the remainder.
 
-**Open at session end** *(mid-session checkpoint, 2026-09-06 late evening, for an AI that has never seen this conversation):*
-- **Task and state:** PLAN 1f — the beatings — is **planned whole and agreed, nothing of it built.** The plan is the source of truth:
-  `docs/PLAN.md` 1f, eight steps, 1–7 each with its *result when done* and its to-dos, 8 the held things. The evening's talk is in
-  RUNNING_LOG §145–166 (his words verbatim, the AI's proposals, the decisions) and every tool remark in `docs/MORPH_NOTES.md` §3.
-  The piece: section 1 drafted to 175.7 s, his `v1.23-sec1DraftDone` = the saved `scores/piece-septet.json` (639 objects, 48 strike
-  groups, 69 trills); untouched this evening. His app has the day's page changes only after a hard reload (CTRL+SHIFT+R).
-- **Latest deliverable:** PLAN 1f as written (commits ff7c9b7 → 75167d8). Before it, the day's tools: §144 the group drag, §142 the
-  even run, §138 the free dealer, §129 the acceleration calculator and the run dials (PLAN 1h).
-- **Next concrete step — build step 1, the palette, in the plan's words:** read PLAN 1f item 1's to-dos, then (1) adapt the tuba's bend
-  probe to this repo's kit — read `probes/bend_probe.ps1`, `probes/analyze_bend_probe.py`, `probes/selftest_bend_analyzer.py`,
-  `tools/probe_run.sh` and `tools/balance_schedule.js` (the schedule format this repo's kit plays), `sandbox/instruments.js` (the six
-  ordinary voices: flute ord · bass clarinet senza_vel · the strings' senza_vel, their ports and channels); build one schedule — six
-  players, one held note each on the ordinary voice with the bend at 0 · +50 % · +100 % · −100 %, then a second note after an unreset
-  bend for the residue; run the analyzer's self-test; (2) give him the one-line run command (he runs it in the rack: record → the
-  analyzer); (3) the analyzer writes `bank/bend_ranges.json` (semitones per full bend per instrument; RPN honoured or not); (4) the
-  player's range (1 semitone for all six) and the pairing table from `MEASURED_RANGES` into the recipe; the sampler's range as a
-  recipe field the tick will read at step 3; (5) open `docs/BEATING_TOOL.md` (the TRILLS_TOOL pattern: the anatomy §146, the panel
-  §147, the pitch side §148/§158, the breaths §152, the insertion §160, each with his words, the built stamps as they come), update
-  MORPH_NOTES §1; journal, commit, push. **While the probe waits for his rack: step 2, the beating math** — `score/public/beating_calc.js`
-  (pure, page and tools, the accel calculator's pattern) + `tools/beating_calc_check.js`, exactly the plan's to-dos. Narrate briefly;
-  do not re-plan; the chunk cadence of HOW_WE_WORK (build → verify → docs → commit → push) per to-do.
+**Open at session end** *(mid-build checkpoint, 2026-09-07 about 01:00, for an AI that has never seen this conversation):*
+- **Task and state:** PLAN 1f — the beatings — is being **built autonomously at his word** (§167: *"run the plan independantly … I'll
+  check in after the build"*). **Step 1 (the palette) is built and its probe run** (§167–168; `docs/BEATING_TOOL.md` §3 has every
+  number). The plan is the source of truth: `docs/PLAN.md` 1f, steps 2–7 each with its *result when done* and its to-dos, 8 the held
+  things. The talk is in RUNNING_LOG §145–166, every tool remark in `docs/MORPH_NOTES.md` §3. The piece: section 1 drafted to 175.7 s,
+  his `v1.23-sec1DraftDone` = the saved `scores/piece-septet.json`; untouched by the AI. His app sees the page changes after a hard
+  reload (CTRL+SHIFT+R).
+- **Latest deliverable:** step 1 — the recipe's palette fields and `MEASURED_BEND`; `score/public/beating_calc.js` (the palette part)
+  + `tools/beating_calc_check.js`; the bend probe on this kit (`balance_schedule.js --bend` · `balance_probe.ps1`'s bend events ·
+  `probe_run.sh`'s analyzer switch and stale-take guard · `probes/analyze_bend.py` + `selftest_bend.py` · `tools/apply_bend_ranges.js`
+  · `bank/bend_ranges.json`); `docs/BEATING_TOOL.md` opened.
+- **Next concrete step — build step 2, the beating math, in the plan's words:** read PLAN 1f item 2's to-dos, then extend
+  `score/public/beating_calc.js` (the palette and INTERVALS are there) with: the conversion (a player's signed rate in beats per
+  second ↔ cents against the centre: cents = 1200·log2(1 + rate / (p · f_centre)), p the interval's coincident partial; the upper
+  player on the just interval); curves as breakpoints over normalised time 0 → 1 (linear, clamped; a slide = an offset of one player's
+  curve; a typed duration re-samples them); the beat-rate line from the two players' cents (beat = p · f_c · |2^(c_u/1200) − 2^(c_l/1200)|)
+  with the zones (< 1 flanger, > ~15 roughness); the three breath modes (one · continuous · designated) and the seeded breath deal
+  (the tuba's `buildCarrier` rule per instrument: a target with jitter, a ceiling table by instrument and loudness, the winds' gap
+  ~0.5 s, none for a bow change, the pair's two players half a breath apart, hand-moved marks kept); continuity across a breath; the
+  re-key where the sampler's range is passed (flagged); the output per player (a chain of notes with note-relative bend and level
+  breakpoints in the score's units, the tuba's `morphBend` shape) and per pattern (several pairs at their offsets), the flags (the
+  player's semitone, the sampler's range, the roughness zone, the ceiling); then `tools/beating_calc_check.js` extended with the
+  plan's checks (rate → cents → rate; the fifth at 3× per cent; the just offsets; mirrored humps in phase = a pulse, slid = a plateau;
+  breaths inside the ceiling and staggered; the stretch; the flags; 13.19 c = 1 beat per second at C3). Nothing heard at step 2. Then
+  BEATING_TOOL §4 stamped, the journal (§169), commit, push; then step 3 (one pair in the score, heard — on a `zz-ai-*` copy on :5301).
+  Narrate briefly; do not re-plan; the chunk cadence of HOW_WE_WORK (build → verify → docs → commit → push) per to-do.
 - **Resume reads:** `docs/PLAN.md` 1f whole (the build's words) · `docs/MORPH_NOTES.md` §1–2 · RUNNING_LOG §145 (what the tuba tool is —
   the digest for reusing its parts: the bend arithmetic, the re-key, `buildCarrier`'s breath rule, `toScoreObjects`' note format),
   §147 (the panel picture), §148 (the interval arithmetic: beat = p · f1 · |2^(δ/1200) − 1|), §150 (#1's bend convention), §152 (the
@@ -178,7 +194,8 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   scratch dir); the probe kit `tools/balance_schedule.js` (--sweep, --sweep2, --proof [--repeat], --held, --ranges) →
   `probes/balance_probe.ps1` → `probes/analyze_balance.py`; the self-tests `probes/selftest_*.py`; the score's bend path
   `composer.html:10112` (the tuba's 1.99 st constant, to be replaced at step 3).
-- **Pending the composer:** a rack window for the bend probe (step 1) · the winds' embouchure range by his ear when heard · the
+- **Pending the composer:** his check-in after the build — the listening verdicts at steps 3–7 (to MORPH_NOTES §3 and
+  BEATING_TOOL.md) · the winds' embouchure range by his ear when a beating is heard (the semitone is his ceiling, not a measurement) · the
   calibration ladder of the run dials (§130–134) on his go · the bass clarinet's attack articulation for the batch (With Accent #20 /
   Staccato #19 / Secco #27) · his verdict on the trills at the new loudness · the cello's attack (the marcato has a sample at G#5) ·
   "the range walk" (meaning unconfirmed) · the plucked piano silent in the rack (NITS) · the 0j piano trim +7 vs +5.3 (NITS) · CN-2

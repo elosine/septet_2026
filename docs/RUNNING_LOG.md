@@ -4558,3 +4558,111 @@ agreed one at a time this evening (§146–165), nothing built. Named as his, ou
 current; journal §2 rewritten cold (the session's 1f bullet in its final form, NEXT STEPS, the checkpoint block with the next
 concrete step as an instruction — build step 1, the palette; step 2 while the probe waits — the resume reads, the uncommitted
 list); PLANNER's NOW ► refreshed; committed and pushed. Resume on Fable, `/postclear`.
+
+## §167. "will you be able to run the plan independantly? can you do so, and I'll check in after the build" — PLAN 1f step 1 (the palette) built: the recipe fields, the palette module, the bend probe on this kit with its self-test; the probe started in his rack
+
+Composer, mid-way through the AI's resume reads after `/postclear` (2026-09-07, early morning): *"will you be able to run the plan
+independantly? can you do so, and I'll check in after the build"*. → Yes: PLAN 1f steps 1 → 7 built one at a time in the plan's
+words, on `zz-ai-*` copies; the bend probe run in his rack only if the bridge reports it up and idle; his listening verdicts at
+steps 3–7 stay his to file when he checks in. This entry is step 1; the probe's numbers follow in §168.
+
+**Built, in the order of the plan's to-dos (HOW_WE_WORK's cadence per to-do):**
+
+1. **The recipe fields** (`sandbox/instruments.js`, on the instrument, not the technique — in Kontakt the bend range belongs to the
+   instrument, every preset alike; in UVI to the part, SI2's presets uniform; the beating uses the ordinary voice only):
+   `playerBendSt: 1` on the six (his rule, §150: *"usually within semitone at the most"*) · `bendRangeSt` PROVISIONAL — 1.99 on the
+   flute (the tuba piece's SI2 measurement, D26; the same UVI engine), 2 on the five Xsample instruments (Kontakt's default) — until
+   the probe writes `MEASURED_BEND` · `beating: false, playerBendSt: 0` on the piano (CN-34).
+2. **`score/public/beating_calc.js` opened** (the accel calculator's pattern: window.BeatingCalc on the page, require in node) with
+   the palette: `players` (six, D10 order) · `ordinaryVoice` / `ordinaryRange` (the recipe's `ordinary`, the measured range of 0d) ·
+   `bendLimits` (player · sampler · the smaller as the limit in cents) · `holds` (in range, able to bend, no silent key) · `pairsFor`
+   (unison: both hold the pitch; an interval: one holds the lower note, one the upper — the pitch assigned is the pair's lower note,
+   §158; when either could take either, the higher-ranged player takes the upper) · `pairingTable` · `INTERVALS` (unison 1:1 · m3
+   6:5 · M3 5:4 · P4 4:3 · P5 3:2; the coincident partial p = 1 · 6 · 5 · 4 · 3; the just offsets 0 · +15.641 · −13.686 · −1.955 ·
+   +1.955 c). `tools/beating_calc_check.js`: 35 checks against the live recipe — one of the AI's own checks was wrong on the first run
+   (it claimed the flute could not take D#4's lower note at a fifth; the flute holds 60–96, so it can) and was rewritten on G3, below
+   the flute's bottom, where the rule shows. The page loads it (`<script src="/beating_calc.js">` after accel_calc.js); verified on
+   :5301: `BeatingCalc` defined, 15 pairs at C4, no console errors.
+3. **The pairing table** (from the measured ordinary ranges): C2 → one pair (bass clarinet + cello) · C3 → 3 · G3 → 10 (the flute
+   out below C4) · C4 → all 15 · C5 → 10 (the bass clarinet out above F4) · C6 → 6 (the cello out above B5) · C7 → 3 (the flute and
+   the violins) · F7 → the violins alone. At a fifth the flute below C4 can only be the upper voice; at C7 no pair (G7 is above every
+   range). The full table in `docs/BEATING_TOOL.md` §3.
+4. **The bend probe adapted to this repo's kit.** The decision: NOT the tuba's standalone sender (`probes/bend_probe.ps1`, which
+   needs Reaper armed by hand and its own `slots + actions` schedule) but this kit — `tools/balance_schedule.js --bend` writes
+   `probes/bend_schedule.json` in the balance format (48 notes, 207 s: the six players on their ordinary voices at the middle of the
+   measured range — F#5 78 · D3 50 · F#5 78 · F#5 78 · B4 71 · C4 60 — velocity 100, 2 s held, 2 s settle; per player the eight
+   slots: reference · +50 % · +100 % · −100 % · a +50 % bend left unreset then the plain note (the residue) · RPN 0 = 12 then +100 % ·
+   RPN 0 = 2 then +100 %); `probes/balance_probe.ps1` learned the `bend` (14-bit, in the prelude 300 ms before the note, after CC7 /
+   CC0), `rpn` (CC101 0 · CC100 0 · CC6 · CC38 0) and `reset` (the centre 400 ms after the note-off) events, and its CloseAll now
+   centres the bend on every channel it opened; `tools/probe_run.sh` picks the analyzer by the schedule's `"bend": true` (or
+   `PROBE_ANALYZER`) and ABORTS when the newest wav predates the run (an unarmed REC track used to leave the analyzer a stale take).
+   Regression: the committed builder and the edited one rebuild the held and ranges schedules IDENTICALLY; the stored
+   `probes/ranges_schedule.json` differs from a rebuild only because 0d narrowed the recipe after that probe (1347 → 1298 notes).
+5. **`probes/analyze_bend.py`** — the tuba's f0 method kept whole (energy-normalised autocorrelation, parabolic peak, ±6 semitones
+   around the written note, the onset-train alignment), three things changed: (a) the unbent reference is SUBTRACTED before the range
+   is derived (a sampler's own tuning offset would otherwise read as bend); (b) the RPN slots are read in a second band an octave up —
+   a periodic tone at 2f also peaks at the lag of f, so the nominal band reads an honoured RPN 0 = 12 as "nothing happened"; the
+   tuba's analyzer could never have detected an honoured RPN, and its self-test never simulated one (the tuba's SI2 ignored it, so it
+   never showed); (c) the residue rule is relative (> 5 c and at least half the bent amount) instead of the tuba's fixed 20 c — a
+   0.5 st sampler at +50 % is 25 c. Writes `bank/bend_ranges.json` (per player: range st, spread, linear, residue, scoop / pre-arm
+   OK, RPN honoured = mutable by MIDI, restored, verdict) and `probes/last_bend_analysis.json`. On the first self-test run the
+   reported offset was 115 ms early — the grid search stops at the FIRST offset matching every slot within 120 ms — fixed by the
+   median residual of the matched onsets (2.34 s found for 2.345 s true).
+6. **`probes/selftest_bend.py`** — six deliberately unlike simulated players (ranges 1.99 · 0.5 · 1 · 2 · 1.5 · 2 st; violin 2 and
+   the cello honouring RPN; tuning offsets 0 · −4 · 0 · 0 · +6 · −3 c; the residue real on all): 48 readings within 0.2 c, every
+   derivation right per player (the RPN-honoured pair read at +1200 c through the octave band, rpn12 range 12.0). **PASS.**
+7. **`tools/apply_bend_ranges.js`** (apply_ranges.js's sibling) proven on a COPY of the recipe with the self-test's synthetic bank:
+   the `MEASURED_BEND` block written before the hardware-capture lines, `applyMeasuredBend` at load sets `bendRangeSt` ·
+   `bendMeasured` · `bendMutableByMidi` · `bendResidueCents`; a second run replaces the block (one block after two runs).
+8. **Docs:** `docs/BEATING_TOOL.md` opened (§0 the picture · §1 the decisions · §2 the anatomy · §3 the palette, built · §4–9 the
+   steps to come with his words · §10 the notation · §11 open for him · the log); MORPH_NOTES §1 rewritten to what exists.
+
+**The probe, started:** the bridge alive (Reaper 7.72, `septet_rack.rpp`, not playing, 12 tracks) → at his word the run went
+ahead in the background after an arm check: `bash tools/probe_run.sh probes/bend_schedule.json`. Its numbers → §168.
+
+**Assumptions to carry:** the probe reads each technique's own channel; the Xsample curve channels (D11: 2–4) are assumed to share
+the main channel's bend range until a beating plays on one. The winds' embouchure range stays his semitone until he hears one.
+
+## §168. The bend probe run in his rack — SI2 ±2.00 st, the Xsample five ±0.96–0.99 st, RPN ignored on all six, the residue real on all six, the pre-arm fine; the numbers in the recipe
+
+The run (2026-09-07 00:15, `bash tools/probe_run.sh probes/bend_schedule.json`; the bridge alive, Reaper 7.72 on `septet_rack.rpp`,
+REC and the nine instrument tracks armed as for the sweeps): recorded → played 204.9 s → stopped with 40667 → `01-REC-260907_0015.wav`
+(206.6 s, 44.1 kHz; gitignored under `reaper/Media/`) → analysed → 10 items removed, the cursor back to 0. **48 of 48 slots aligned
+(t=0 at 1.62 s), every slot voiced (confidence 0.99–1.0, 154–156 frames), every player OK.**
+
+| player | pitch | ref c | +50 c | +100 c | −100 c | range st | spread | residue | RPN 0 = 12 | restored |
+|---|---|---|---|---|---|---|---|---|---|---|
+| flute | F#5 (78) | +4.7 | +104.9 | +204.8 | −195.4 | 2.00 | 0.00 | +100.2 | +204.8 (ignored) | +204.8 yes |
+| bass clarinet | D3 (50) | −1.7 | +46.9 | +96.1 | −99.6 | 0.98 | 0.01 | +49.4 | +96.9 (ignored) | +97.4 yes |
+| violin 1 | F#5 (78) | +1.6 | +49.4 | +98.0 | −96.3 | 0.96 | 0.02 | +49.9 | +101.0 (ignored) | +97.8 yes |
+| violin 2 | F#5 (78) | +1.5 | +49.8 | +99.0 | −95.1 | 0.97 | 0.01 | +50.4 | +100.3 (ignored) | +100.7 yes |
+| viola | B4 (71) | −1.3 | +48.3 | +97.3 | −96.6 | 0.99 | 0.04 | +49.3 | +98.1 (ignored) | +99.0 yes |
+| cello | C4 (60) | −0.3 | +47.9 | +99.1 | −96.9 | 0.97 | 0.03 | +48.3 | +99.5 (ignored) | +97.4 yes |
+
+**Found:**
+- **The five Xsample instruments are set to ±1 semitone in Kontakt** (0.96–0.99 st measured, linear to 0.04 st) — the quarter-tone-step
+  bend setting MORPH_NOTES §1 had named as "to check"; **the SI2 flute is at ±2.00** (the tuba piece's 1.99 of D26 confirmed on the
+  flute). The measured Xsample values sit 1–4 c short of a full semitone; the cause was not chased — the tool uses the measured number,
+  so a request for the full range lands where it lands. Consequence for the palette: on the five the LIMIT is the sampler's (96–99 c),
+  a hair under his semitone; on the flute the player's (100 c). If he ever widens the Kontakt setting, the probe is one command.
+- **No range can be changed by MIDI:** RPN 0 (pitch-bend sensitivity) ignored on all six (full bend after asking for 12 semitones read
+  what it read before, 97–101 c on the Xsample, 205 c on SI2), and the "restore" slot matched +100 % within 4 c everywhere. The re-key
+  (§150, #1's convention) is the only way past a sampler's range — under the player's semitone never needed.
+- **The residue is real on every instrument:** the plain note after an unreset +50 % bend sounded at the bent pitch on all six
+  (+48–50 c on the Xsample, +100 c on SI2) — the tuba's Probe 0 finding (+49.4 c) is the whole ensemble's. The tick's `resetMorphBend`
+  stays essential; `balance_probe.ps1` now centres the bend on every channel it closes.
+- **The pre-arm at 300 ms is enough — and the first reading said otherwise.** The analyzer's first pass flagged three players' onset
+  scoop past 5 c (flute +7.0, bass clarinet −15.6, cello +7.3 on the +100 slot). The UNBENT reference slots showed the same onsets
+  (flute +4.8, bass clarinet −15.9, violins +7, viola +4, cello +9.9): it is the samples' own attack — the bass clarinet's reed starts
+  14 c SHARP and settles, the bows start 5–10 c FLAT and settle, the flute is in tune from the start — inside the first 80 ms, whatever
+  the bend. A bend that landed late would have read tens of cents beyond that. **Corrected in the analyzer:** the scoop is now the +100
+  slot's onset-vs-settled LESS the reference's own (`attackScoopCents` kept beside it), pre-arm OK within 10 c; re-run on the same wav:
+  flute +2.2 · bass clarinet +0.3 · violin 1 −7.0 · violin 2 −6.4 · viola −0.4 · cello −2.6 — all OK. The tuba's self-test (a synthetic
+  tone, no attack) could not have shown this; the self-test here still passes (its reference scoop is 0).
+- The baselines: SI2's F#5 sample is **4.7 c sharp**; the Xsample notes within ±2 c. The reference is subtracted before the range is
+  derived, so a sharp sample does not read as bend.
+
+**Applied:** `node tools/apply_bend_ranges.js` → `MEASURED_BEND` in `sandbox/instruments.js` (bendRangeSt 2 · 0.98 · 0.96 · 0.97 ·
+0.99 · 0.97, bendMeasured true, bendMutableByMidi false, the residues); `tools/beating_calc_check.js` extended (37 checks: the limit
+the smaller of the two, every range measured, the flute at 2 and the five at 0.96–0.99) — PASS; `probes/selftest_bend.py` — PASS.
+BEATING_TOOL §3 stamped with the numbers. PLAN 1f step 1 marked built.
