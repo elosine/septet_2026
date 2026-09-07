@@ -4431,3 +4431,24 @@ fourth, the verdicts filed. Into PLAN 1f on his go. Nothing built.
 
 Composer: *"on point, good"* (the to-dos of §154). **Written into `docs/PLAN.md` 1f item 3 at once:** the result when done and the
 eight to-dos in the fixed format. Committed and pushed. Next: step 4's goal (the panel), on his word.
+
+## §156. "ok, step 4" → "on point, good" — step 4's goal (the panel) accepted; the to-dos put to him
+
+Composer: *"ok, step 4"* → the goal put to him (format A): the beating panel, opened on P for a selected beating or empty from the
+toolbar; up to three rows, one per pair; in a row the two players' rate curves as mirror images above and below a centre line, the
+beating that results drawn between them, a crescendo lane and a breath lane beneath; every curve with handles on rails (the top =
+the level, the ends = resize, the body = slide); shapes from a menu (flat, ramp out / in, hump, the long arc) reshaped or redrawn
+freehand with the trill's curve tool; the pair's two curves mirrored until unlocked for phase; a whole row slid in time; the breath
+lane's dotted go lines on sliders, the warning past the ceiling, the breath shuffle; the space bar through the score's path; a
+duration box; takes; every edit regenerating the objects live. Three things put with it: where it lives — (a) a floating panel like
+the strikes drawer with the curve tool's gestures inside, the score's curve windows A / B / C left to the trills (recommended), or
+(b) the three curve windows themselves; the beating display — the band between the two curves filled and tinted by zone (flanger ·
+beating · roughness) with the rate in numbers at the handle while dragging; the lock — mirror on by default, one modifier key to
+move a single curve. Composer: *"on point, good"* — **the goal stands, (a) and the two proposals with it.**
+
+**The to-dos put to him (format B):** the chassis (floating, on P or the Beating button, takes) · the row (label, the mirrored
+curves, the tinted band, the crescendo lane, the breath lane; up to three) · shapes with handles and the freehand redraw · the mirror
+lock and the phase slide · the row offset, the pattern length and the duration box · the breath lane (marks on sliders per player,
+the ceiling and its warning, the three modes, the seeded shuffle) · the audition on the space bar through the score's tick, the
+objects regenerated live · the verification on a copy with real DOM events, then his test and verdicts filed. Into PLAN 1f on his
+go. Nothing built.
