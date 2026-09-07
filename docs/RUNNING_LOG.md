@@ -4144,3 +4144,65 @@ pattern) and seven unlike instruments.
 
 **Not done:** no requirements proposed, no plan. Checked in with the digest (the data first); the open topics of MORPH_NOTES §2 held
 aside for his order, one at a time.
+
+## §146. "let's discuss an anatomy of a morph event. and maybe come up with a different name" → "beating is good" → "the atom will be a pair of players … what this would look like for a beating drawer?" — the seven elements read back, the name decided, the architecture and the top line put to him
+
+Composer (PLAN 1f, phase 1): *"Okay. Then let's discuss an anatomy of a morph event. and maybe come up with a different name. You can
+give me some recommendations. So as far as I understand it... so, actually, let's enumerate the elements, and you can help me. Just
+very simply. So as far as I understand, there's pairs, and they create beating between them. And then the second main element is the
+crescendo. That intensifies the beating or not. And then there is the the breaths or rearticulation. There's also the curvature.
+how... or what shape do players follow? they're in their glissando, their crescendo. And there's also the overlap. Well, there's
+overlap between players. So players on the same pair. I'm not sure if they always move together. or they were on different cycles. So
+did they achieve full beating at the same time? But there's definitely different cycles between different pairs. So if you have more
+than one pair, So I wanna talk about... no. Break it down. Figure out the elements, and then talk about how we can create shorter
+events and then what the dials are within those events. Like, if I create a six or seven second event, it could be something like
+start at a certain bidding rate more or less and then not move, or it can move the whole range, or it can move just a little bit,
+etcetera. Well, let's just start there. Let's break it down by elements and talk about what it might look like to build smaller
+events, and let's narrow down the name."* (speech-to-text; "bidding rate" = beating rate)
+
+**Read back to him — the seven elements:** 1 the pairs (one pitch, two players, the gap beats; the RATE is the dial, not the cents —
+the register law) · 2 the pitch of each pair (from the strike's chord; the register: a crawl low, a shimmer high) · 3 the beating
+curve (from → to → the shape: bloom / close / hold — his "start at a rate and stay · the whole range · a little") · 4 the crescendo
+(loudness leaves the rate alone and changes the presence; its own curve or the beating's, the trill precedent) · 5 the breaths (one =
+a short event; re-breaths staggered inside a pair or together as a pulse) · 6 the timing between players (inside a pair: who moves,
+together or not; between pairs: each its own curve or offset — CN-29's element 4, the thing #4's engine never scheduled) · 7 the
+entry and the exit (from a strike or from nothing; a release, a cut, or the next strike). The frame: the length, the number of pairs.
+His "curvature" = the shape inside 3 and 4; his "overlap" = 6. **The name put to him:** (a) beating — recommended, one word from the
+tool to the page to the player, in the line strike · trill · run; (b) bloom (the opening direction only); (c) dissolve (the
+transition between strikes, not a held beating); (d) morph event.
+
+**DECIDED — the name is "beating"** (*"Okay. beating is good."*). Its three directions: bloom (out of unison), close (into unison),
+hold. A key B on a strike note is the proposed launch, as T is the trill's.
+
+Composer, the scenario (verbatim): *"Let's talk through the scenario. So in composing, when I'm using the beating machine, I want to
+try different things, and the atom will be a pair of players. MDI, the Adam could have various behaviors. So I could target a beating
+level, just a single one. So I suppose a analogy could be just simple crescendo so we can have the pair come in at a certain volume
+or beating level. It just maintained that or just burst it for a small duration. think of have the long arc like we did in the tube
+a piece or they can have shorter glissandos so move from one beating level to another. So like a convergence, move from unison to
+full maximum beating, but in a short duration. And then these atoms can interact so I could have, for example, in this piece, three
+pairs, and they could all come in together at their own beating levels, or they can overlap in different ways, or they can reach
+their full beating or back to unison in different arrangements. like, some sort of counterpoint. So, like, in the strikes, that
+turned out to be a useful drawer because I could assemble these patterns and do things like shuffle and then listen to it run away.
+and then create certain patterns and then listen to to that. So can we think about what this would look like for a beating drawer?
+And in a similar way that it's facile, I don't have to turn a lot of dials, and I can do shuffles and things like that. But it's just
+figuring out what the right thing to shuffle and what the right kind of order is. So help me organize this. tool just but talk about
+the architecture and try to build it one part at a time."* (speech-to-text: "MDI, the Adam" = the atom; "tube a piece" = the tuba piece)
+
+**Put to him — the architecture in three layers.** The ATOM, a beating: one pair on one pitch; its dials the rate from → to in beats
+per second (the tool finds the cents from the pitch), the travel shape, the loudness from → to, the length, the entry (a strike or
+nothing), the exit (a release, a cut, the next strike); five cards cover his behaviours — hold · burst · bloom · close · arc. The
+PATTERN: several atoms in time — the pairing, the chord's pitches dealt to the pairs, a card and a rate per pair, the entries
+(together / staggered / canon), the peaks (aligned or spread), the exits; the counterpoint lives here; **the tuba's models are
+patterns of this atom** (BLOOM = every pair blooms, staggered; CONVERGE = every pair closes). The DRAWER: rows per pair (the
+orchestration panel's kin), the cards and rates, a timing column (the rhythm column's kin), Hear / Stop, takes, Insert as a group
+with one META shape. **What to shuffle:** the deal of cards to pairs · the rates · the entry order and offsets (rotate, reverse) ·
+the pairing · the pitch assignment — each seeded; "order" = the order of entries in time, as the note order was in the strikes. **In
+the score (proposed for its step):** each pair its own object on its two lanes, regenerated from its dials as the trill is (a stretch
+or a curve change regenerates); the pattern a group with one META shape; playback through the bend the port already plays.
+
+**The top line put to him (phase 2, his to reorder):** 1 the palette — which instruments can bend and how far (measured in the
+rack), the pairing rules, the piano as an anchor only · 2 the atom's math — a pure module: rate ↔ cents by pitch, the curves, the
+breaths · 3 the atom in the score and its playback, launched from a strike with B — one pair heard · 4 the drawer · 5 the shuffles
+and seeds · 6 verify on a copy of the piece at 175.7 s, document · 7 later: cycles of beatings for section 3 (CN-33), the training
+material, the notation at 2a. **A decision held for step 2:** inside a pair, one player holds while the other moves (the trainable
+form — a fixed reference to beat against, CN-33), or both move apart (#4's way, alternating directions). Nothing built.

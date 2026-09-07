@@ -87,6 +87,44 @@ section's material — section 3's strike cycles carry them under crescendos, so
 cycle, short, repeatable. And the tool's output is the source of a performer-training material: the full curve of the beating heard
 as sound (bottom, middle, top), so that the written curve has a heard target. Neither is a build now; both are requirements to carry.
 
+### 2026-09-06 — the anatomy, the name "beating", the scenario: the atom is a pair; a beating drawer
+
+> *"Okay. Then let's discuss an anatomy of a morph event. and maybe come up with a different name. You can give me some
+> recommendations. So as far as I understand it... so, actually, let's enumerate the elements, and you can help me. Just very simply.
+> So as far as I understand, there's pairs, and they create beating between them. And then the second main element is the crescendo.
+> That intensifies the beating or not. And then there is the the breaths or rearticulation. There's also the curvature. how... or
+> what shape do players follow? they're in their glissando, their crescendo. And there's also the overlap. Well, there's overlap
+> between players. So players on the same pair. I'm not sure if they always move together. or they were on different cycles. So did
+> they achieve full beating at the same time? But there's definitely different cycles between different pairs. So if you have more
+> than one pair, So I wanna talk about... no. Break it down. Figure out the elements, and then talk about how we can create shorter
+> events and then what the dials are within those events. Like, if I create a six or seven second event, it could be something like
+> start at a certain bidding rate more or less and then not move, or it can move the whole range, or it can move just a little bit,
+> etcetera. Well, let's just start there. Let's break it down by elements and talk about what it might look like to build smaller
+> events, and let's narrow down the name."*
+>
+> *"Okay. beating is good. Let's talk through the scenario. So in composing, when I'm using the beating machine, I want to try
+> different things, and the atom will be a pair of players. MDI, the Adam could have various behaviors. So I could target a beating
+> level, just a single one. So I suppose a analogy could be just simple crescendo so we can have the pair come in at a certain
+> volume or beating level. It just maintained that or just burst it for a small duration. think of have the long arc like we did in
+> the tube a piece or they can have shorter glissandos so move from one beating level to another. So like a convergence, move from
+> unison to full maximum beating, but in a short duration. And then these atoms can interact so I could have, for example, in this
+> piece, three pairs, and they could all come in together at their own beating levels, or they can overlap in different ways, or
+> they can reach their full beating or back to unison in different arrangements. like, some sort of counterpoint. So, like, in the
+> strikes, that turned out to be a useful drawer because I could assemble these patterns and do things like shuffle and then listen
+> to it run away. and then create certain patterns and then listen to to that. So can we think about what this would look like for
+> a beating drawer? And in a similar way that it's facile, I don't have to turn a lot of dials, and I can do shuffles and things
+> like that. But it's just figuring out what the right thing to shuffle and what the right kind of order is. So help me organize
+> this. tool just but talk about the architecture and try to build it one part at a time."*
+> *(2026-09-06, session 4, evening; speech-to-text, content untouched — "bidding rate" = beating rate, "MDI, the Adam" = the atom,
+> "tube a piece" = the tuba piece)*
+
+**AI reading (not the composer's words):** the revision's shape, said by him: the object is a **beating** (the name decided), its
+atom a **pair** with a behaviour (hold · burst · bloom · close · the long arc), the atoms arranged into patterns (entries together
+or overlapping, the peaks and the returns to unison in arrangements — counterpoint), assembled in a **drawer** with few dials and
+shuffles, as the strikes drawer. The seven elements and the architecture put to him are in RUNNING_LOG §146. For the all-purpose
+tool: the tuba's six models become patterns of this atom (BLOOM = every pair blooms, staggered), which is the inversion #4's day 13
+found missing — the pair as the unit.
+
 
 ## 4 · For the eventual revision (the digest — rewritten freely)
 

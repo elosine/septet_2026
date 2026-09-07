@@ -108,6 +108,13 @@ own server (:5300); the AI built at his word, one chunk at a time:
   the user-level `/plan-item` skill and trigger lines; `docs/MORPH_NOTES.md` (D22, a standing practice); CN-28 (the form's
   middle: strikes with morph chords → PLAN 1f; patterned / call-and-response strikes) and CN-29 (the morph event's four elements).
 
+- **PLAN 1f opened (§145–146, evening):** #4's morph tool read cold (the engine, the panel, the banks, the build days, the feature
+  requests, the section form, the notation; the port byte-identical to the tuba's; the one structural fact: the pair was never the
+  unit). **The object is a *beating*** (his word): one pair of players on one pitch, a gap that beats; seven elements read back; the
+  atom's cards hold · burst · bloom · close · arc; a beating drawer as the strikes drawer's kin (rows per pair, the deal of cards /
+  rates / entries / pairings / pitches shuffled); the top line put to him, his to reorder. CN-33: section 3 = cycles of strikes with
+  crescendos on the beating pairs; train the performers on the full beating curve.
+
 **Last session (3, 2026-09-04 → 06):** the piece to #31 / 72 s; the drawer U5–U13b; the trill module phases 0–3 and the curve
 windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
 
