@@ -204,6 +204,24 @@ and phase 3 begins at step 1, the palette.
 embouchure) — and the tool's ceiling is in beats per second with the cents shown. #1's convention (bend before the note-on, centre
 after the note-off, re-key past the range) is the one to keep. RUNNING_LOG §150.
 
+### 2026-09-06 — the breaths: single events on one bow; long events with the dotted go lines on sliders, a maximum-length warning, continuous or designated, a shuffle for the breaths
+
+> *"So there'll be single events. We talked just on one bow or breath. There'll also be potentially longer events. And in that,
+> let's bring in the indicator from the tuba piece. This was just the dotted go line, and then those should be on sliders two where
+> we can just move when the breath happens. And there should be some sort of warning or indicator or something so we understand
+> maximum breath length or bone length. So we can indicate continuous and just let the performer rebo when they will, or we can also
+> designate when the bows should change, and those would be the dotted line. Oh, and this would be an opportunity for the shuffle.
+> So I'm not sure how we determined read breaths and stagger in the tuba piece, but have something similar. So I don't have to
+> actually place each breath, but I can have a shuffle where the breaths are staggered and the appropriate length, same with the
+> bows. Otherwise, good to go."*
+> *(2026-09-06, session 4, evening; speech-to-text, content untouched — "bone length" = bow length, "rebo" = re-bow, "read
+> breaths" = re-breaths)*
+
+**AI reading (not the composer's words):** the breath layer of the all-purpose tool: three modes per player (one breath ·
+continuous, re-bow at will · designated, the marks as dotted go lines on sliders), a ceiling per instrument with a warning, and a
+seeded shuffle that deals staggered breaths of the right length — the tuba carrier's rule (RUNNING_LOG §152) made visible and
+movable. The shuffle returns here first, for the breaths, before any deal of pairs.
+
 
 ## 4 · For the eventual revision (the digest — rewritten freely)
 

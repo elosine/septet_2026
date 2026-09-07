@@ -4364,3 +4364,35 @@ the entry retitled "The beatings: a pair of players on one pitch, a gap that bea
 quoted, the decisions of §145–150 (the name, the seven elements, the panel, the axis, the pitch side, the piano out, the shuffle
 parked), the top line as items 1–8 — item 1 in the fixed format with its result and its seven to-dos, items 2–8 carrying *to be
 laid out when we discuss it*. Committed and pushed. Next: step 2's goal, on his word.
+
+## §152. "ok, step 2" → "there'll be single events … longer events … bring in the indicator from the tuba piece … the dotted go line … on sliders … a warning … maximum breath length or bow length … continuous … or designate when the bows should change … an opportunity for the shuffle" — step 2's goal accepted with the breath model; the to-dos put to him
+
+Composer: *"ok, step 2"* → the goal of step 2 (the beating math) put to him in format A: one pure module turning a pair's description
+(the centre pitch, the interval, two signed rate curves in beats per second, the crescendo curve, the length, the breath rule) into
+each player's chain of notes, one per breath, with bend and level over time; the upper player on the just interval; the beat-rate
+line, the cents, the flags (a player's semitone, the sampler's range, the roughness zone), the re-key; a typed duration re-sampling;
+checked in node, nothing heard. Two things named to settle in the to-dos: the breath rule per instrument (winds a gap, strings a
+bow change without one), the stagger inside a pair.
+
+Composer: *"So there'll be single events. We talked just on one bow or breath. There'll also be potentially longer events. And in
+that, let's bring in the indicator from the tuba piece. This was just the dotted go line, and then those should be on sliders two
+where we can just move when the breath happens. And there should be some sort of warning or indicator or something so we understand
+maximum breath length or bone length. So we can indicate continuous and just let the performer rebo when they will, or we can also
+designate when the bows should change, and those would be the dotted line. Oh, and this would be an opportunity for the shuffle. So
+I'm not sure how we determined read breaths and stagger in the tuba piece, but have something similar. So I don't have to actually
+place each breath, but I can have a shuffle where the breaths are staggered and the appropriate length, same with the bows.
+Otherwise, good to go."* (speech-to-text: "bone length" = bow length, "rebo" = re-bow, "read breaths" = re-breaths)
+
+**DECIDED — the breath model:** single events on one bow or breath; longer events with the tuba piece's indicator, the **dotted go
+line at each breath** (MORPH_NOTATION: a go line at every breath onset, no onset noteheads), the marks **on sliders**; a **warning**
+for the maximum breath or bow length; two ways for a long event — **continuous** (the performer re-bows / re-breathes at will) or
+**designated** (the bow changes placed, the dotted lines); **a shuffle for the breaths** — staggered, the appropriate lengths,
+seeded — so he need not place each; the same for the bows. Step 2's goal stands with these (*"Otherwise, good to go"*).
+
+**How #4 determined re-breaths and stagger (answered for him):** the carrier in `morph.js` `buildCarrier` — per voice a segment
+length = segLen (8 s) × (1 ± 35 % random), capped by a breath ceiling from a table by register and loudness (louder = shorter, × 0.7
+while bending), a gap of ~0.75 s (a floor of 0.4 s, flagged), the first entry staggered per voice by a striation pattern, all from a
+seeded random (another version = a new seed). The same shape here, per instrument: a target length with jitter, a ceiling, a gap
+for the winds and none for a bow change, the pair's two players half a breath apart by default.
+
+**The to-dos put to him (format B)** — in the chat, mirrored into PLAN 1f on his go. Nothing built.
