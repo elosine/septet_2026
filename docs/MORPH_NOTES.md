@@ -593,6 +593,26 @@ height through the measured remap; and the strikes drawer has no per-player dyna
 scale for every panel — ppp … fff per player, rendered through the remap — with a dynamic per row, and a partial insert (solo) that
 can be stacked with another at the same time.
 
+### 2026-09-07, late — "lets go back to the morph panel": the morph tool for the septet — six players, three pairs, re-orchestrable, the fold, a pair or any combination inserted
+
+> *"lets go back to the morph panel, can you adapt it for the current instrumentation, -piano, And then I'll create the morphs. with
+> three pairs. the two violins, cello and viola, and flute and base clarinet by default. But they'd be able to reorchestrate the pairs.
+> So in other words, I'll listen and create a morph with those defaults and then be able to save it and then be able to rearrange the
+> orchestration of those three pairs. And then I'll need that facility from the beating drawer that will change the octaves of notes
+> that are out of range for any of those instruments. And then I want a facility to insert just a single pair or any combination of
+> those three pairs as well. no need to go through the whole plan protocol, but investigate first and collect the data, and then
+> check-in and tell me what you think you need to do. And what the results will be? before doing it."*
+> *(2026-09-07, late, after the clear; typed)*
+
+**AI reading (not the composer's words):** the tuba's morph tool comes to the septet not as a port but as a RE-ORCHESTRATION: the
+sound engine (the models, the carrier of breaths, the dynamics layer) is kept, and the pair becomes the orchestration unit — two
+seats, one note, the fold — which is the beating drawer's row. Three things the tuba never had are asked in one breath: the players
+chosen in the panel (FR-5), a saved morph re-orchestrated after the fact (an ACTUAL cannot be; a take of the params can), and a
+partial insert. **For the all-purpose tool:** one pair-row widget (seats · note · fold · ladder · insert tick) serving every pair-based
+sound — a beating, a morph pair; one harmony browser (CN-35); one takes model (params, never frozen renders); and the palette
+(voice, range, bend reach, breath) supplied per player to a pure engine — the tuba's constants as the example, not the rule. The
+data and the proposal in RUNNING_LOG §197.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

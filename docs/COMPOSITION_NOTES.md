@@ -922,3 +922,18 @@ a ▶ hears the chord alone on the piano voice; no lines to instruments — a no
 and given to a pair by clicking the pair's node; the harmony chosen and the pairs' notes save with the take. The two-click assign is
 the drawer's (STRIKES_TOOL F, U7 → U10). The blasts and the chord shapes come from a first scrape of the two earlier pieces
 (`tools/harmony_scrape.js` → `bank/harmonies.json`); the full scrape is the harmony module's (CN-35, PLAN 1d).
+
+## CN-37 · 2026-09-07 — the morphs for the septet: three pairs by default (the two violins · cello and viola · flute and bass clarinet), the piano out, the pairs re-orchestrable
+
+> *"lets go back to the morph panel, can you adapt it for the current instrumentation, -piano, And then I'll create the morphs. with
+> three pairs. the two violins, cello and viola, and flute and base clarinet by default. But they'd be able to reorchestrate the pairs.
+> So in other words, I'll listen and create a morph with those defaults and then be able to save it and then be able to rearrange the
+> orchestration of those three pairs. And then I'll need that facility from the beating drawer that will change the octaves of notes
+> that are out of range for any of those instruments. And then I want a facility to insert just a single pair or any combination of
+> those three pairs as well."*
+> *(2026-09-07, late; typed — "base clarinet" = the bass clarinet)*
+
+**AI reading (not the composer's words):** the morph section's instrumentation decided as pairs — the strings in two like pairs, the
+winds as the third — with the piano out of the morphs as it is out of the beatings (CN-34); the pairs re-orchestrable after the fact,
+so a morph is written once and cast later; a pair or any combination of the three placed on its own. The tool's adaptation: the data
+in RUNNING_LOG §197, his words in MORPH_NOTES §3.

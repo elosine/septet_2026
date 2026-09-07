@@ -5674,3 +5674,57 @@ session. NITS updated; nothing built.
 
 **Saved (NITS):** a per-player dynamic in the strikes drawer (or a velocity box on a strike note in the score) and the stacking of
 partial inserts — for the rebuild session. Nothing built; the piece file untouched.
+
+## §197. "lets go back to the morph panel, can you adapt it for the current instrumentation, -piano … three pairs … reorchestrate … the octaves … insert just a single pair or any combination … investigate first and collect the data, and then check-in" — the port's morph tool read against his six asks; the proposal put to him, nothing built
+
+Composer, 2026-09-07 late (verbatim in MORPH_NOTES §3 and CN-37): *"lets go back to the morph panel, can you adapt it for the current
+instrumentation, -piano, And then I'll create the morphs. with three pairs. the two violins, cello and viola, and flute and base
+clarinet by default. But they'd be able to reorchestrate the pairs. So in other words, I'll listen and create a morph with those
+defaults and then be able to save it and then be able to rearrange the orchestration of those three pairs. And then I'll need that
+facility from the beating drawer that will change the octaves of notes that are out of range for any of those instruments. And then I
+want a facility to insert just a single pair or any combination of those three pairs as well. no need to go through the whole plan
+protocol, but investigate first and collect the data, and then check-in and tell me what you think you need to do. And what the
+results will be? before doing it."*
+
+**Read:** `morph.js` (the constants, the six models, `reduceSource`, `render`'s source → voices, `feasibleTechnique`, the result's meta,
+`toScoreObjects`) · `morph_emit.js` (`routeFor`, the bend and level sends) · `morph_panel.js` (the box, `current` / `generate` /
+`insert`, the ACTUALs) · `bank/morph_models.json` (the six stock models and their pitch sets) · `composer.html` (the morphBend tick
+branch, the beating's per-instrument bend, `trackInstrument`) · `score/server.js` (the APIs) · `beating_calc.js` (`players`,
+`foldPair`, `pairLadder`, `seatOptions`, `bendLimits`, `ceilingFor`) · `beating_panel.js` (the rows, the harmony list, `insert`, the
+takes) · §145 and MORPH_NOTES §1–2.
+
+**Found — the port as it stands would not run on the septet:**
+- The engine's voices map 1:1 to lanes 0 … n−1 (or a `lanes` list typed into the params by the AI — FR-5, the players and the pitch
+  set from the panel, was never built); the stock models have eight pitches → lanes 0–7: lane 2 is the piano (no bend) and lane 7 is
+  META.
+- Every constant is the tuba's: the technique table (ord / bisb / cuivre / flz … with the tuba's 30–65 range) — a note out of range
+  swaps TECHNIQUE (`feasibleTechnique`), never the octave; the breath table by register (p / mf / f); the bend reach 1.99 st (SI2) in
+  the engine's re-key rule, in the emitter's `bendValue` and in the score's morphBend tick (`100 * 1.99`) — on the Xsample five
+  (0.96–0.99 st measured, §168) every morph bend would sound about double.
+- The emitter routes a voice by `routeFor(lane, technique)`; the key falls back to `ord`, which only the flute has — the others would
+  land on channel 1 with no CC0 (the wrong voice, or none). Its loudness is velocity 96 + CC7 through the tuba's `curveValToCC` map;
+  in the SCORE a morph note is a held curve note and already takes 1g's remap — the audition and the score would differ.
+- The panel is the floating box at the top right (340 px) — what he could not find with the beating panel (§175); no player choice,
+  no pitch choice (the AI edited the store); `Save as ACTUAL` freezes a render, placed verbatim, never re-orchestrated; Insert writes
+  every voice.
+- The pitch sets are the tuba's chords (MIDI 41–64). In BLOOM a pair is a DOUBLED pitch (voices 2k / 2k+1, detuned + / −); in CONVERGE
+  a pair is two pitches closing to one doubled target. Thinning keeps whole clusters (`reduceSource`).
+- No `tools/test_morph.js` here (the tuba's harness was not copied); `model_bank.js` and `notate_morph.js` are.
+- The beating drawer already has what he names: the six bending players (`BeatingCalc.players`), the pair's fold as one unit with the
+  ladder of offers, the harmony banners + the keyboard + the assignment, the takes in `bank/panel_snapshots.json`, insert as one group
+  with a META shape, the drawer chrome, SPACE by focus, undo.
+
+**Proposed (put to him in the reply):** (1) the pair as the ORCHESTRATION unit — three rows, two seats each, a note from the harmony,
+the fold by `foldPair`, the ladder; the engine's `source` / `target` DERIVED from the rows (BLOOM: each note doubled; CONVERGE: the
+note ± the opening interval → the note doubled; BALANCE: the note doubled) and `lanes` from the seats in pitch order — the voice-based
+scheduler untouched; (2) the palette per voice into `Morph.render` as options — technique = the lane's ordinary voice, range, bend
+reach = the player's semitone or the sampler's measured range, the breath / bow ceiling and gap — the tuba's constants staying the
+defaults when absent, the engine pure; (3) the emitter and the tick per instrument — the ordinary voice's route, the bend through
+`bendRangeSt`, the level through the remap as the score plays it; (4) the panel as a DRAWER on the beating drawer's chassis, the pitch
+side shared as a mixin (recommended; or copied), the morph's own middle — model · recipes · seed · span / duration / release ·
+segments · dynamics · Generate · Play · Stop; (5) a tick per pair — Play and Insert take the ticked pairs (the render is of all six, so a
+pair heard alone is heard in its place; the insert filters the notes); (6) takes in a `morphs` bucket (params + harmony + voicing +
+the pairs) — load, swap a seat, refold, re-render; ACTUALs left as they are; (7) node checks and a copy in the pane with decoded MIDI,
+then his listening: the three default pairs on one harmony, BLOOM ± 25 c over 30 s (the tuba's keeper). **One question:** the models
+to carry — the three keepers (BLOOM, CONVERGE, BALANCE) or all six (COLOUR needs technique paths the septet lacks; SPECTRAL /
+SPACING carry as they are). Nothing built.
