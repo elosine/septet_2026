@@ -853,3 +853,21 @@ them, set by the console script of RUNNING_LOG §141 on his saved score (before:
 2nds. (2) An evenly spread strike over a chosen length, with the players and the strike's whole pitch set dealt round as in the
 accelerating runs — built as the `even` run (§142). His own version names tell the day's shape: v1.20-preTrillm2 → v1.21-postm2Trill →
 v1.22-beforeDelete → **v1.23-sec1DraftDone**: the first section drafted. The next section is the morph events (CN-28, PLAN 1f).
+
+---
+
+## CN-33 · 2026-09-06 — section 3: cycles of strikes with crescendos on the beating pairs; training the performers on the full beating curve
+
+> *"composition note for third section cycles of strikes combined with crescendos using the beating pairs and then find a way to
+> train performers the full curve of the beating So they'll know that the top of the curve or what the top of the curve sounds like."*
+> *(2026-09-06, session 4, evening, during the PLAN 1f requirements talk; speech-to-text, content untouched)*
+
+**AI reading (not the composer's words):** two things. (1) **Section 3 refined** (CN-28 had it as patterned or call-and-response
+strikes with crescendos): cycles of strikes, each combined with a crescendo, and the crescendo carried by the beating pairs — the
+morph event's material (CN-29) returning inside the strike cycles, so the pairs are section 2's and section 3's alike. (2) **A
+performance-material need, not a tool feature:** the players are to be trained on the whole beating curve — what the bottom, the
+middle and above all the top of the curve sound like — so that a written curve has a heard target (the tuba piece wrote the beat rate
+at both ends of a glissando, MORPH_NOTATION; his rule there: no precise cents, a beating speed they estimate). How that training
+material is made — a rendered reference per event, a demonstration track, the rehearsal notes — is a phase 2 / performance-score
+question; noted for MORPH_NOTES §3 as well, since the morph tool's output would be its source. Held aside during the 1f talk (one
+topic at a time).

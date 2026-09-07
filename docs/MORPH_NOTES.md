@@ -76,6 +76,17 @@ material is its data (RUNNING_LOG §145). One fact from the read bears on the re
 scheduled one by one and a pair's gap, the audible thing, falls out (#4 day 13, finding 3; "cycling the pair's gap as a unit"
 deferred there). His fourth element makes the pair the unit.
 
+### 2026-09-06 — CN-33: the beating pairs in section 3's strike cycles; training the performers on the full beating curve
+
+> *"composition note for third section cycles of strikes combined with crescendos using the beating pairs and then find a way to
+> train performers the full curve of the beating So they'll know that the top of the curve or what the top of the curve sounds like."*
+> *(2026-09-06, session 4, evening; speech-to-text, content untouched — filed as CN-33)*
+
+**AI reading (not the composer's words):** for the tool's revision, two consequences. The beating pairs are not only the morph
+section's material — section 3's strike cycles carry them under crescendos, so a morph event must be placeable inside a strike
+cycle, short, repeatable. And the tool's output is the source of a performer-training material: the full curve of the beating heard
+as sound (bottom, middle, top), so that the written curve has a heard target. Neither is a build now; both are requirements to carry.
+
 
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
