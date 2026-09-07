@@ -5985,3 +5985,27 @@ their provenance ("cs-015 · M3 P4") in the takes file's `morphPitches` bucket (
 bucket is born on first contact — snapshots.js rule 2); **[✕]** removes one; the kept sets head the pull-down next time; an ACTUAL
 keeps its pitches as always. The five of CN-38 pre-kept under their ids at the build. Not in it: a keyboard picture or note-by-note
 editing (the beating drawer's pitch side, parked). His go pending; nothing built.
+
+## §206. "no keyboard display correct? then what will display the note names in the menu?" · "can i just have a box to type in root? … all the messiaen modes, all the pitch sets we currently have in the model, and the various transpositions … stack of 5ths … 3rds" · a to-do for the piano's solo scattered strikes — the pitch menu's design grown; one question put to him
+
+Composer, 2026-09-07 late (verbatim in MORPH_NOTES §3; the piano note in CN-39). **Answered first:** no keyboard; the note names are
+text in three places — each menu entry spells its notes (`cs-015 · M3 P4 · A3 C♯4 D4`), a line under the menu gives the chosen set
+as given (and what a reduction dropped), the PAIRS lines give what each pair plays after the fold.
+
+**The design, grown (put to him):**
+- **A `root` box** (a note name or a MIDI number) beside the pitch menu. For SPECTRAL it is the fundamental (`target.fundamental`,
+  41 = F2 in the stock model); for every generated family below it is the transposition — one box, both jobs.
+- **The menu's groups:** the model's own set · **kept** (his, by name) · **the models' sets** (the six as re-voiced, and the tuba's
+  six as they were) · **the harmony list** (strikes · blasts · chord shapes, notes spelled) · **stacks from the root** — fifths
+  (0 7 14), fourths (0 5 10), major thirds (0 4 8), minor thirds (0 3 6), whole tones (0 2 4), semitones (0 1 2): three notes, one
+  per pair, doubled · **Messiaen's modes from the root** — the seven modes of limited transposition (1 whole-tone · 2 octatonic · 3
+  · 4 · 5 · 6 · 7): the root box is the transposition, so every transposition is one number away (listed twelvefold only if he
+  wants them side by side).
+- **The one question — how a MODE becomes six voices:** (a) the mode's first six degrees up from the root, voiced across the pairs'
+  registers (two per pair: the pairs beat between two different notes, the sonority the mode's) · (b) three of its degrees doubled —
+  the root, the third and the fifth degree — one per pair (the beating inside each pair as in BLOOM) · (c) both, as two entries per
+  mode. Recommended (c). The stacks stay three doubled.
+- **The reduction** of a set with more or fewer than three or six notes as said in §205 (whole clusters; said); **[keep]** and **[✕]**
+  as in §205; the five of CN-38 pre-kept.
+
+**Not built; his answer on the mode rule and his go pending.**

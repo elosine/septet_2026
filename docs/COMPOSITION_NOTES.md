@@ -964,3 +964,13 @@ The five he pointed at (the two-piano chord shapes and the tuba's blasts, as the
 *AI reading (not the composer's words):* three-note sets of a semitone or a ninth apart — one note per pair, doubled, the beating
 inside each pair and the sonority between them; a four-note cluster and an octave stack as the outliers. The facility to try and
 keep them: RUNNING_LOG §205.
+
+## CN-39 · 2026-09-07 — a to-do: an animation / technique for the piano to play scattered strikes SOLO
+
+> *"then a composition/todo note, come up for an animation/technique for piano to play scattared strikes solo"* *(2026-09-07, late;
+> typed, in the middle of the pitch-menu asks)*
+
+*AI reading (not the composer's words):* the scattered strikes as a piano solo passage — the piano, the anchor of the beatings and out
+of the morphs (CN-34, CN-37), gets its own material; what is asked for is the DEVICE: how the animated score animates a solo run of
+scattered strikes for one player (the tuba's strike devices are ensemble ones), and the playing technique it implies. To come up
+with when the notation and the animation are reached (PLAN §2); parked there.

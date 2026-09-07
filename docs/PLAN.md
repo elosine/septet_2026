@@ -786,3 +786,6 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 - Rehearsal marks as score data; the conductor role — the tuba performance arc (its
   `ARCHITECTURE.md`) will settle these; inherit, don't redo.
 - Beating-frequency / demo-recording apparatus from #4 — only if the music asks.
+- **The piano playing scattered strikes SOLO — an animation device and a playing technique to come up with** (composer,
+  2026-09-07, CN-39: *"come up for an animation/technique for piano to play scattared strikes solo"*) — at §2, when the notation
+  and the animation are reached; the tuba's strike devices are ensemble ones.

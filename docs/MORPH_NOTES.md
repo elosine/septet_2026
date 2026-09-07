@@ -734,6 +734,20 @@ a provenance (which harmony, which voicing), kept in a bank the panel lists, nev
 browser (CN-35) is the natural source for it in every panel — the morph panel included, even in the simple form of a pull-down.
 RUNNING_LOG §205.
 
+### 2026-09-07, late — the pitch menu grows: a root box, the Messiaen modes, the models' sets, stacks by transposition; and no keyboard
+
+> *"please clarify, no keyboard display correct? then what will display the note names in the menu?"* — then — *"and then things like
+> spectral, can i just have a box to type in root? and then can you add all the messiaen modes, all the pitch sets we currently have
+> in the model, and the various transpositions, so like stack of 5ths + all transpositions, or 3rds + all transpositions? then a
+> composition/todo note, come up for an animation/technique for piano to play scattared strikes solo"* *(2026-09-07, late; typed)*
+
+**AI reading (not the composer's words):** the menu he wants is not a list of chords but a GENERATOR with a memory: named sets from
+the harmony list, the models' own sets, and families made from a root — the seven modes of limited transposition, stacks of one
+interval — with the transposition as a number he types (the root), and the kept ones by name. Note names as text are enough; the
+keyboard is not asked for. For the all-purpose tool: a pitch source is (a family, a root, a voicing rule) with a name, and the same
+root box should drive a spectral fundamental and a transposition alike. The piano's solo scattered strikes are a composition note
+(CN-39), not the tool's. RUNNING_LOG §206.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·
