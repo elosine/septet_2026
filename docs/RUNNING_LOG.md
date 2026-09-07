@@ -5601,3 +5601,9 @@ an ALT + wheel zoom over pair 3 → unchanged; the keyboard column scrolled to 2
 
 **Saved (NITS):** the zoom steps by the score's factor per wheel EVENT, which a fine wheel or a trackpad fires many times per notch — too
 sensitive; and the window's start is clamped at 0, so near the start the zoom cannot centre on the mouse and he has to scroll after.
+
+## §190. "zoom func for sequence, save all unless I say otherwise pls" — a standing rule: his remarks are saved as feature requests by default
+
+Composer, 2026-09-07 night. The request (a zoom for the sequence strip) is in NITS with the two zoom points of §189. **The rule from
+here (HOW_WE_WORK):** every remark about the drawer is SAVED — NITS for the request, MORPH_NOTES §3 for his words — and built only
+when he says so; the exceptions are what he marks "fix now".

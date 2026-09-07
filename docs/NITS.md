@@ -93,3 +93,5 @@
   many times per notch; `zoomBy` keeps the second under the mouse in place but clamps the window's start at 0, so near the start the
   view cannot centre. To do: scale the factor by the wheel's delta (one notch = one step), and let the window start before 0 when the
   mouse asks for it.
+- **A zoom for the sequence strip** (composer, 2026-09-07 night, "zoom func for sequence") — the strip has its own fixed span (the
+  timeline box); it should zoom and scroll like the lanes, ideally sharing their window. Saved, not built.

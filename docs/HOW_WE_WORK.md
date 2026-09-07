@@ -88,6 +88,8 @@ one thing right"; RUNNING_LOG §188)**
 - Anything that is a MODEL (how a lane, a region, a node behaves), not a control, is stated in one line and agreed before it is built;
   a control is just built.
 - The tool carries its own memory of what is taken (a gesture card); the AI never asks him to remember a modifier.
+- **Save, don't build (composer, 2026-09-07 night — "save all unless I say otherwise"):** a remark about the drawer is saved — the
+  request in NITS, his words in MORPH_NOTES §3 — and built only when he says so; what he marks "fix now" is fixed now.
 
 ---
 

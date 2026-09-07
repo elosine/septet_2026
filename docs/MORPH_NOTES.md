@@ -559,6 +559,11 @@ RUNNING_LOG §188.
 (RUNNING_LOG §189); the two zoom points are in NITS as feature requests at his word. For the all-purpose tool: a re-render must never
 move what he is looking at.
 
+### 2026-09-07, night — "zoom func for sequence, save all unless I say otherwise pls"
+
+**AI reading (not the composer's words):** a zoom for the strip (NITS); and the standing rule — his remarks are saved as feature
+requests by default, built only at his word (HOW_WE_WORK, RUNNING_LOG §190).
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·
