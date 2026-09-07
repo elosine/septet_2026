@@ -5607,3 +5607,9 @@ sensitive; and the window's start is clamped at 0, so near the start the zoom ca
 Composer, 2026-09-07 night. The request (a zoom for the sequence strip) is in NITS with the two zoom points of §189. **The rule from
 here (HOW_WE_WORK):** every remark about the drawer is SAVED — NITS for the request, MORPH_NOTES §3 for his words — and built only
 when he says so; the exceptions are what he marks "fix now".
+
+## §191. "space in sequence unreliable sometimes just plays a pair" — saved (NITS), the likely cause named
+
+Composer, 2026-09-07 night. Saved under the standing rule (§190). The likely cause is the focus rule of §182 — SPACE plays what was
+last clicked, and any control in a row makes its pair the focus — so after an edit in pair 2 SPACE plays pair 2 until ▶ sequence or
+the strip's background is clicked; the head's `space → …` says which. Three ways out put in NITS for his decision.

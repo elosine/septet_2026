@@ -95,3 +95,8 @@
   mouse asks for it.
 - **A zoom for the sequence strip** (composer, 2026-09-07 night, "zoom func for sequence") — the strip has its own fixed span (the
   timeline box); it should zoom and scroll like the lanes, ideally sharing their window. Saved, not built.
+- **SPACE "unreliable" in the sequence — sometimes it plays a pair** (composer, 2026-09-07 night). Most likely the focus rule at work:
+  SPACE plays what was last clicked (a row's controls make its pair the focus; the head reads `space → pair N`), so after an edit
+  in a row SPACE plays that pair until ▶ sequence or the strip's background is clicked. To decide with him: keep the rule and make
+  the head's `space → …` more visible, or make SPACE the sequence unless a row was clicked EMPTY (not a control), or give the
+  sequence its own key. Saved at his word.
