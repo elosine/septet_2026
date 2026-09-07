@@ -131,7 +131,11 @@ own server (:5300); the AI built at his word, one chunk at a time:
   mouse in seconds — after his "I still can't move it" (the drag worked; the dot was pinned by the normalised drawing). Then (§187), his
   "I can't get the visual to look like the sound": the beats themselves drawn and counted (the integral of the heard rate), the hold
   shape typed in seconds, a node typed by double-click, one time scale for every row with a zoom, CTRL+Z the drawer's undo from
-  anywhere. **Next: his test goes on, then the first beating sequence in the piece; the stutter A/B still his.**
+  anywhere. Then (§188), after his *"this working process is not working"* and his correction (*"all the points should be independent
+  on the timeline"*): **the region model** — the lanes on the sequence timeline, every node at its own time, the region's edges as
+  cuts, the score's zoom and scroll, a cursor while it plays, a gesture card; the double-click on a node that never fired (a click
+  re-rendered the lane) fixed; HOW_WE_WORK: one round per sitting, gestures as real mouse sequences, a model agreed in one line
+  before it is built. **Next: his test of the region model, then the first beating sequence in the piece; the stutter A/B still his.**
 - **Tools on his hands (§111–114):** the bend cursor only when Points is off; TRILLS phase 4 (a trill runs to the player's next
   strike note, a stretch regenerates at once); a nudged trill keeps its attack note (a 60 ms eating window; the drag keeps a
   trill's start; the articulation switch arbitrated on a shared sampler slot — the tail and the lead); the drawer's pick no

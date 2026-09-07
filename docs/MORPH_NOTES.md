@@ -524,6 +524,31 @@ near zero is inaudible as a rate, and the ear counts beats. **For the all-purpos
 as well as the rate; the envelope should be typed in seconds; every node should take a typed value; one time scale for every lane
 with a zoom; and undo must answer from anywhere while the tool is open. Done as RUNNING_LOG §187.
 
+### 2026-09-07, night — "this working process is not working"; the region model
+
+> *"Okay. First of all, this working process is not working. I've already spent several hours trying to get this one thing right. So we
+> need to figure out a way to cut to the chase and get these small issues sorted out. Too much time on things that aren't that
+> consequential and should be easy enough to figure out and solve. Secondly, give me a concrete proposal for the pair visual and pair
+> audio. Let's go with something like just what you've seen a doll. So a region. And then we just have to reconcile the window length
+> and how to potentially change the window length or maybe a Zoom, like I said, and the region within, which is the pair curve length.
+> But if I'm looking at a... a curve pair, and it lasts six seconds. and I have the attack for one third, sustained for one third, and
+> release for one third. I wanna be able to drag the right end, make the duration four seconds, keep the proportions of the curve, but
+> the entire shape, the region will look two seconds shorter. And then I want to be able to drag the points inside. Let's say I drag the
+> attack to halfway, then that now lasts two seconds, etcetera. And then I need a Zoom just like in the main score. Alt. horizontal
+> scroll and then the double click on the nodes isn't working. Don't we already have double click for adding a node or something like
+> that? please be more thorough and sort this out. So we don't have to iterate many times. We have to use shift click. I think alt click
+> is taken, but I don't have in my memory what things are taken. But I just wanna click on a note or shift click on a note and then type
+> in a value."*
+> *"I'm sorry. I think I misspoke about change of size. All the points should be independent on the timeline. So if I... if it's six
+> seconds and I move the endpoint to four seconds, the curve notes stay where they are in their timeline. Same with the front point. I
+> think that's the main thing that's going wrong. If I move the front point forward, nothing else changes. Everything stays anchored to
+> their time in the timeline."* *(typed)*
+
+**AI reading (not the composer's words):** the tool's second model in a day — and the right one: **a lane is the timeline; a region is a
+cut of it; nodes belong to the timeline, not to the region.** The hours went on the wrong model (normalised curves) dressed in one
+gesture after another. For the all-purpose tool this is the founding rule of every lane. The process point is in HOW_WE_WORK and
+RUNNING_LOG §188.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

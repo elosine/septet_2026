@@ -525,8 +525,17 @@ box, the end handle, the strip's edges — leaves them and gives the hold the re
 lanes are a piece of time** (§186): the pair ends at its length, the space beyond is dimmed, and the end dot sits at the length and
 follows the mouse in seconds. **The beats themselves** (§187): a mark on the centre line at every beat the pair makes and the count
 — the picture of the sound (a beating near zero is inaudible as a rate; the ear counts beats). **Typed:** the hold shape's `attack` and
-`release` in seconds beside the shape buttons; a double-click on a node opens a box for its time and value (Hz heard, or a dynamic).
-**One time scale for every row** with zoom − / + / fit in the head. **CTRL+Z** is the drawer's undo whenever the drawer is open.
+`release` in seconds beside the shape buttons; a double-click or SHIFT-click on a node opens a box for its time and value (Hz heard,
+or a dynamic). **CTRL+Z** is the drawer's undo whenever the drawer is open.
+
+**THE REGION MODEL (§188, his DAW picture, the rule from here on):** the lanes show the SEQUENCE timeline — the same second is the same
+x in every row and in the strip; a pair is a REGION at its offset with its length, dimmed outside; **every node has its own time on
+the timeline**; the region's dashed start and end are CUTS — drag the end from 6 s to 4 s and every node stays where it is (a node
+beyond the cut waits in the dim and comes back when the edge is pulled out), drag the start later and the nodes and the end stay;
+the nodes inside are dragged in real time; the typed `len` and the strip's edges cut the same way; a body drag in the strip moves
+the whole region. **The window:** ALT (or CTRL) + wheel over a lane zooms at the mouse, a horizontal wheel scrolls, − / + / fit in
+the head (the score's gestures). **A cursor** runs across the lanes and the strip while a pair or the sequence plays. **? gestures**
+in the head lists every gesture. A click on a node without movement changes nothing (so a double-click works).
 
 ## Log (append-only)
 

@@ -5540,3 +5540,49 @@ nature; what the ear gets is the beats' count and spacing.
 and 6 Hz → the point at 0.4 s, 6 Hz, the attack seconds rewritten; a second pair of 9 s → both rows on a 10.35 s window, the 2 s pair
 ending at 192 px where the 9 s pair ends at 725; zoom out → 51 px/s, 15.5 s; fit; CTRL+Z with the focus on the body → the drawer's
 maximum back from 12 to 8, the score's undo stack untouched. No page errors.
+
+## §188. "This working process is not working" — the region model in one pass: the lanes on the sequence timeline, every node at its own time, the region's edges as cuts, the bend as the score's, a cursor while it plays, a gesture card; and the process changed
+
+Composer, 2026-09-07 night: *"First of all, this working process is not working. I've already spent several hours trying to get this one
+thing right … Secondly, give me a concrete proposal for the pair visual and pair audio … like … a DAW. So a region … I wanna be able to
+drag the right end, make the duration four seconds … And then I want to be able to drag the points inside … And then I need a Zoom just
+like in the main score. Alt. horizontal scroll and then the double click on the nodes isn't working … please be more thorough and sort
+this out. So we don't have to iterate many times … I just wanna click on a note or shift click on a note and then type in a value."*
+Then the correction: *"I misspoke about change of size. All the points should be independent on the timeline. So if … it's six seconds
+and I move the endpoint to four seconds, the curve notes stay where they are in their timeline. Same with the front point … If I move
+the front point forward, nothing else changes. Everything stays anchored to their time in the timeline."*
+
+**The model (his, the DAW's):** the lanes show the SEQUENCE timeline (the same second is the same x in every row, as in the strip); a
+pair is a REGION at its offset with its length; every node has its own time on the timeline; the region's two edges are CUTS — dragging
+the end from 6 s to 4 s leaves every node where it is (a node beyond the cut waits in the dimmed area and comes back when the edge is
+pulled out); dragging the start later leaves the nodes and the end; the nodes inside are dragged in real time; the window zooms with
+ALT (or CTRL) + wheel at the mouse and scrolls with a horizontal wheel — the score's own gestures — with − / + / fit in the head.
+
+**Built (`beating_panel.js`, `beating_calc.js`):**
+- `resizeKeepTimes(row, newL, keepEnd)`: every curve (the beating, the two unlocked rates, the crescendo per player) re-expressed so
+  its nodes keep their timeline seconds; the breath marks likewise (a mark outside the region goes); `curveOf` accepts nodes outside
+  0 … 1 (the curve holds its value before the first and after the last). The typed `len`, the lane's edge handles and the strip's
+  edges all go through it; a body drag in the strip moves everything.
+- The three lanes on one window: `windowOf` (the sequence's content × 1.15 by default), `laneWheel` (the score's ALT / CTRL + wheel
+  zoom at the mouse, horizontal scroll), the region dimmed outside, the timeline's seconds along the bottom, the region's start and end
+  as dashed handles.
+- **The double-click that never fired:** a click on a node started a drag and the mouseup re-rendered the lane, so the second click of a
+  double-click hit a new element — a real-mouse failure a synthetic test could not see. A click without movement now changes nothing
+  and re-draws nothing; a double-click and a SHIFT-click on a node both open the value box (time on the timeline, Hz heard or a dynamic).
+- The bend is the score's (§185), the beats drawn (§187), the hold boxes type seconds at the current length and pin the shape's ends;
+  **a cursor** runs across every lane and the strip while a pair or the sequence plays (the first note-on is the curve's zero);
+  **? gestures** in the head — every gesture on one card ("I don't have in my memory what things are taken"); fit resets the scroll.
+
+**Verified on `zz-ai-region` (a copy, deleted), the gestures as real mouse sequences:** a 6 s pair typed 2 · 2 · 2; the end dragged to
+4 s → the nodes at 0 · 2 · 4 · 6 s still (the 6 s node beyond the region, drawn dim, four dim handles), the end back to 6 s → the same
+shape byte for byte; the start dragged to 1 s → the region 1 → 6 s, the nodes unmoved; a node dragged to 3 s → only it; a click
+without movement keeps the element and a double-click on it opens the editor; SHIFT-click opens it, 2.5 s typed moves the node;
+the bend follows the mouse within a pixel (0.08 Hz at this scale — the earlier 0.09 was the synthetic event's integer rounding); ALT
++ wheel → 114 → 135 px/s with the second under the mouse kept, a horizontal wheel → the window at 0.97 s, fit → 0; a second pair at
+3 s begins at the same x as 3 s in the first row's lane; the cursor at 2 s of a 6 s pair sits at the expected x and hides after the
+end; the card shows eleven rows; a region trimmed to 3 s sounds 3 s notes, no NaN in the bend stream. No page errors.
+
+**The process, changed (his first point, put to him in the reply):** one round per sitting, not per message — he collects what he sees
+(a screenshot and a line each), the fix comes back as one commit with a walk of each item; gestures are tested as real mouse
+sequences including the click-then-render trap; the gesture card is the memory of what is taken; and for anything conceptual — a
+model, not a control — one line of behaviour agreed before it is built.

@@ -79,6 +79,16 @@ restate until the understanding is shared · the top line · one step at a time:
   The script is the unit, not the ticket (strategy A, §183).
 - **His ear early:** the smallest thing that sounds comes first and is heard before the rest is built.
 
+**Small issues, one round per sitting (composer, 2026-09-07 night — "this working process is not working … several hours … to get this
+one thing right"; RUNNING_LOG §188)**
+- He collects what he sees — a screenshot and one line each — and sends them together; the fix comes back as ONE commit with a
+  walk of every item, not a fix per message.
+- A gesture is tested as a real mouse sequence (mousedown · move · up; click then double-click, with the re-render between them),
+  never only as a state call — the double-click that never fired was invisible to a state test.
+- Anything that is a MODEL (how a lane, a region, a node behaves), not a control, is stated in one line and agreed before it is built;
+  a control is just built.
+- The tool carries its own memory of what is taken (a gesture card); the AI never asks him to remember a modifier.
+
 ---
 
 ## If it feels like we lost the thread

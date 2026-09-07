@@ -208,7 +208,9 @@
   function curveOf(x) {
     if (typeof x === 'number') return [[0, x], [1, x]];
     if (!Array.isArray(x) || !x.length) return [[0, 0], [1, 0]];
-    const pts = x.map(q => { const c = ctrlOf(q), s = c ? 0 : slopeOf(q); return withExtra(clamp01(+q[0]), +q[1], c ? c : (s || null)); }).sort((a, b) => a[0] - b[0]);
+    // a point may sit OUTSIDE 0 … 1 (2026-09-07 night, the region model: nodes keep their time when a region is trimmed — a node beyond
+    // the trim waits there); before the first point the curve holds its value, after the last its last
+    const pts = x.map(q => { const c = ctrlOf(q), s = c ? 0 : slopeOf(q); return withExtra(+q[0], +q[1], c ? c : (s || null)); }).sort((a, b) => a[0] - b[0]);
     return pts.length === 1 ? [[0, pts[0][1]], [1, pts[0][1]]] : pts;
   }
   const bend01 = (t, s) => (s ? Math.pow(clamp01(t), Math.pow(4, s)) : clamp01(t));

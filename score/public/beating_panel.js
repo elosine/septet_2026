@@ -100,7 +100,8 @@ const P = {
             '<button id="bpStop">&#9632; stop</button>',
             '<button id="bpLoop" title="loop: the play goes round until stop &#8212; adjust while it plays, every round takes the edits">&#10227; loop</button>',
             '<button id="bpUndo" title="undo the last edit in the drawer (one level) &#8212; CTRL+Z while the drawer is open does the same">&#8630; undo</button>',
-            '<span style="display:inline-flex;gap:2px;align-items:center;color:#888" title="the lanes&#8217; time scale, shared by every pair (the same second is the same width in every row): zoom out to see a pair small against time, fit = the longest pair fills the width"><button id="bpZoomOut">&#8722;</button><span id="bpZoomLbl" style="min-width:64px;text-align:center">fit</span><button id="bpZoomIn">+</button><button id="bpZoomFit">fit</button></span>',
+            '<span style="display:inline-flex;gap:2px;align-items:center;color:#888" title="the lanes&#8217; time window, shared by every pair (the sequence timeline: the same second is the same x in every row); ALT + wheel over a lane zooms at the mouse, a horizontal wheel scrolls; fit = the sequence fills the width"><button id="bpZoomOut">&#8722;</button><span id="bpZoomLbl" style="min-width:64px;text-align:center">fit</span><button id="bpZoomIn">+</button><button id="bpZoomFit">fit</button></span>',
+            '<button id="bpHelp" title="every gesture of the drawer, on one card">? gestures</button>',
             '<span id="bpSpace" style="color:#9a9" title="what SPACE plays — the sequence, the active pair, or the chord — set by where you last clicked; SPACE while playing stops"></span>',
             '<span style="margin-left:auto"></span>',
             '<input id="bpTakeName" type="text" placeholder="take name" style="width:110px" title="ENTER saves">',
@@ -174,9 +175,10 @@ const P = {
         d.querySelector('#bpAuto').addEventListener('click', ev => this.autoAssign(ev.shiftKey));
         d.querySelector('#bpRevert').addEventListener('click', () => this.revertHarmony());
         d.querySelector('#bpUndo').addEventListener('click', () => this.undo());
+        d.querySelector('#bpHelp').addEventListener('click', () => this.showGestures());
         d.querySelector('#bpZoomOut').addEventListener('click', () => this.zoomBy(1 / 1.5));
         d.querySelector('#bpZoomIn').addEventListener('click', () => this.zoomBy(1.5));
-        d.querySelector('#bpZoomFit').addEventListener('click', () => { this.pxPerS = null; this.render(); this.setStatus('the lanes fit the longest pair; every row on the same scale'); });
+        d.querySelector('#bpZoomFit').addEventListener('click', () => { this.pxPerS = null; this.viewStart = 0; this.render(); this.setStatus('the lanes fit the sequence; every row on the same timeline'); });
         // CTRL+Z while the drawer is open is the drawer's undo, wherever the focus sits (the score's undo would answer otherwise)
         window.addEventListener('keydown', ev => {
             if (!(ev.ctrlKey || ev.metaKey) || ev.shiftKey || (ev.key !== 'z' && ev.key !== 'Z') || !this.isOpen()) return;
@@ -323,12 +325,10 @@ const P = {
         this.setStatus('timeline ' + this.seqSpan + ' s' + (this.seqSpan > v ? ' (the pairs reach ' + this.seqLength() + ' s)' : '') + ' — the pairs keep their lengths; drag them in the strip');
     },
     // one pair's own duration: the same shapes over it (the composer, 2026-09-07: "keep the custom shape and just change the duration")
-    setRowLength(row, v) {
+    setRowLength(row, v) {   // the typed length trims or extends the END; the nodes keep their time
         if (!(v > 0)) return;
-        const BC = BC_(), s = BC.stretch({ length: row.length, slide: row.b.slide, breath: row.b.breath }, v);
-        row.b.slide = s.slide; row.b.breath = s.breath; row.length = r3(Math.max(0.1, v));
-        this.fitShapeToLength(row);   // the hold shape keeps its attack and release in seconds
-        this.placeZone(row); this.changed(row, true); this.render();
+        this.resizeKeepTimes(row, v, false);
+        this.changed(row, true); this.render();
     },
     // a bound zone follows its row's offset and length in the score (the group's first start is the origin)
     placeZone(row) {
@@ -611,9 +611,9 @@ const P = {
         q('.bpRateTo').addEventListener('wheel', ev => { ev.preventDefault(); ev.stopPropagation(); const v = Math.max(0, r3((+ev.target.value || 0) + (ev.deltaY > 0 ? -0.5 : 0.5))); ev.target.value = v; this.snapshot(); this.setLevel(row, v); redo(); }, { passive: false });
         q('.bpHearMax').addEventListener('click', () => { this.activeRow = i; this.setFocus('pair'); this.hearMax(row); });
         if (q('.bpAtt')) {
-            const setHold = () => { const a = parseFloat(q('.bpAtt').value), r = parseFloat(q('.bpRel').value); if (!(a > 0) || !(r > 0)) return; this.snapshot(); b.adsr = { attackS: r3(a), releaseS: r3(r) }; this.fitShapeToLength(row); redo(); const pts = BC.curveOf(this.heardCurve(row)); this.setStatus('hold: attack ' + r3(pts[1][0] * row.length) + ' s · hold ' + r3((pts[2][0] - pts[1][0]) * row.length) + ' s · release ' + r3((1 - pts[2][0]) * row.length) + ' s' + (pts[1][0] * row.length < a - 0.01 ? ' (the pair is too short for ' + a + ' + ' + r + ' s — both shrunk in proportion)' : '')); };
+            const setHold = () => { const a = parseFloat(q('.bpAtt').value), r = parseFloat(q('.bpRel').value); if (!(a > 0) || !(r > 0)) return; this.snapshot(); this.setHoldSeconds(row, a, r); redo(); const hs = this.holdSeconds(row); if (hs) this.setStatus('hold: attack ' + hs.attackS + ' s · hold ' + hs.holdS + ' s · release ' + hs.releaseS + ' s' + (hs.attackS < a - 0.01 || hs.releaseS < r - 0.01 ? ' (the pair is too short for ' + a + ' + ' + r + ' s)' : '')); };
             q('.bpAtt').addEventListener('change', setHold); q('.bpRel').addEventListener('change', setHold);
-            const pts = BC.curveOf(this.heardCurve(row)); q('.bpHoldInfo').textContent = 'hold ' + r3((pts[2][0] - pts[1][0]) * row.length) + ' s';
+            const hs = this.holdSeconds(row); if (hs) { q('.bpAtt').value = hs.attackS; q('.bpRel').value = hs.releaseS; q('.bpHoldInfo').textContent = 'hold ' + hs.holdS + ' s'; }
         }
         q('.bpRowLen').addEventListener('change', ev => { const v = parseFloat(ev.target.value); if (v > 0) { this.snapshot(); this.setRowLength(row, v); } });
         q('.bpRowPlay').addEventListener('click', () => { this.activeRow = i; this.setFocus('pair'); this.playRow(i); });
@@ -689,17 +689,37 @@ const P = {
         }
     },
     setSlope(row, who, idx, s) { this.setCtrl(row, who, idx, null); },   // ALT-click: straight (the older power slope is gone too)
-    // the hold shape's attack and release in seconds, kept through a length change (the hold absorbs it); the segments' bends kept
-    fitShapeToLength(row) {
-        const BC = BC_(), b = row.b; if (!this.isAdsr(row)) return;
-        const old = BC.curveOf(this.heardCurve(row)), a = b.adsr || (b.adsr = { attackS: 2, releaseS: 3 });
-        const fresh = BC.shape('adsr', { peak: +b.rateTo || 0, base: +b.rateFrom || 0, length: row.length, attackS: a.attackS, releaseS: a.releaseS });
-        b.beat = fresh.map((p, i) => BC.withExtra(p[0], old[i] ? old[i][1] : p[1], old[i] && old[i].length > 2 ? old[i][2] : null));
+    // THE REGION MODEL (2026-09-07, night — the composer's DAW picture): the pair is a region on a time axis; its curve is drawn over the
+    // region in PROPORTION, so dragging the region's end keeps the shape's proportions ("make the duration four seconds, keep the
+    // proportions of the curve"); the points inside are dragged in real time within the region. The hold shape's attack and release
+    // boxes TYPE seconds at the current length (they set the points); nothing is kept in seconds through a resize.
+    fitShapeToLength(row) { /* nothing: the nodes keep their own time (resizeKeepTimes) */ },
+    // A TRIM (2026-09-07 night, his correction: "All the points should be independent on the timeline … if it's six seconds and I move the
+    // endpoint to four seconds, the curve notes stay where they are in their timeline. Same with the front point"): the region's length
+    // changes, every node keeps its time on the timeline — its place inside the region is re-expressed; a node beyond the new end (or
+    // before the new start) is kept where it is, drawn dim, and comes back when the edge is pulled out again; the breath marks and the
+    // slides keep their time too (a mark outside the region goes). keepEnd = the START moved (the region starts later or earlier).
+    resizeKeepTimes(row, newL, keepEnd) {
+        const BC = BC_(), b = row.b, oldL = Math.max(0.1, row.length); newL = r3(clamp(newL, 0.5, 180));
+        const dStart = keepEnd ? r3(oldL - newL) : 0;
+        const remap = c => (c == null ? c : (typeof c === 'number' ? c : BC.curveOf(c).map(p => BC.withExtra(r3((p[0] * oldL - dStart) / newL), p[1], p.length > 2 ? p[2] : null))));
+        if (Array.isArray(b.beat) && b.beat.length) b.beat = remap(b.beat);
+        if (b.rate && b.rate.lower && b.rate.upper) b.rate = { lower: remap(b.rate.lower), upper: remap(b.rate.upper) };
+        if (b.levelCurve) b.levelCurve = Array.isArray(b.levelCurve) ? remap(b.levelCurve) : { lower: remap(b.levelCurve.lower), upper: remap(b.levelCurve.upper) };
+        if (b.breath && b.breath.marks) for (const who of ['lower', 'upper']) if (Array.isArray(b.breath.marks[who])) b.breath.marks[who] = b.breath.marks[who].map(t => r3(t - dStart)).filter(t => t >= 0.1 && t <= newL - 0.1);
+        if (b.slide) for (const who of ['lower', 'upper']) if (b.slide[who]) b.slide[who] = r3(b.slide[who] - dStart * 0);   // a slide is a lag of the curve, kept as it is
+        row.length = newL; if (keepEnd) row.offset = r3(Math.max(0, (row.offset || 0) + dStart));
+        this.placeZone(row);
     },
-    // after a node of the hold shape is dragged: its attack and release remembered in seconds
-    noteAdsrFromPoints(row) {
-        const BC = BC_(), b = row.b; if (!this.isAdsr(row)) return;
-        const pts = BC.curveOf(this.heardCurve(row)); b.adsr = { attackS: r3(pts[1][0] * row.length), releaseS: r3((1 - pts[2][0]) * row.length) };
+    holdSeconds(row) { const BC = BC_(), pts = BC.curveOf(this.heardCurve(row)); return this.isAdsr(row) ? { attackS: r3(pts[1][0] * row.length), holdS: r3((pts[2][0] - pts[1][0]) * row.length), releaseS: r3((1 - pts[2][0]) * row.length) } : null; },
+    setHoldSeconds(row, a, r) {
+        const BC = BC_(), b = row.b, L = Math.max(0.1, row.length); if (!this.isAdsr(row)) return;
+        let pa = clamp(a / L, 0.01, 0.97), ph = clamp(1 - r / L, pa + 0.02, 0.99);
+        const pts = BC.curveOf(this.heardCurve(row));
+        pts[0] = BC.withExtra(0, pts[0][1], pts[0].length > 2 ? pts[0][2] : null);   // the hold shape spans the region: its first node at the start, its last at the end
+        pts[1] = BC.withExtra(r3(pa), pts[1][1], pts[1].length > 2 ? pts[1][2] : null); pts[2] = BC.withExtra(r3(ph), pts[2][1], pts[2].length > 2 ? pts[2][2] : null);
+        pts[3] = BC.withExtra(1, pts[3][1], pts[3].length > 2 ? pts[3][2] : null);
+        b.beat = pts; b.rate = null; row.locked = true;
     },
     addPoint(row, who, p, v) {
         const BC = BC_(), b = row.b;
@@ -717,43 +737,102 @@ const P = {
         else b.slide[who] = r3(clamp((b.slide[who] || 0) + dSec, -L, L));
     },
 
-    // ---- the rate area: the two curves, the band by zone, the handles on rails ----
-    // The curves are the score's curve windows' (2026-09-07, "works like logic pro or daw"): HOLD THE LINE and drag up / down to bend
-    // the segment under the mouse, sideways to move its points (a hump's place, a plateau); SHIFT-drag slides the whole curve in time
-    // (the phase); the wheel bends a step; ALT-click straightens; a double-click adds a point; the END HANDLE dragged sideways is the
-    // pair's length.
-    // the lanes' time axis is REAL (2026-09-07 evening, "I'm meant to be able to move the final dot at the right horizontally"): a pair
-    // ends at its length, the window shows a little beyond it, the end dot sits at the length and follows the mouse in seconds
-    // one time scale for every row (2026-09-07 late evening, "an absolute horizontal scale and then just a zoom"): by default the longest
-    // pair fills the width and the others sit on the same seconds; zoom out to see a pair small against time; a pair always fits its lane
-    viewSpan(row) {
-        if (row._viewLock) return row._viewLock;
-        const longest = Math.max(1, ...this.rows.map(r => r.length || 0));
-        const shared = this.pxPerS ? (W - PADL - PADR) / this.pxPerS : longest * 1.15;
-        return r3(Math.max(shared, (row.length || 0) * 1.05, 1));
+    // ONE TIME WINDOW for every row — the SEQUENCE timeline (2026-09-07 night: a region sits at its offset, the same second is the same x
+    // in every row): the window starts at viewStart seconds and spans the lane's width at pxPerS; by default the sequence fills the width
+    // (fit); ALT (or CTRL) + wheel over a lane zooms at the mouse, a horizontal wheel scrolls (the score's gestures); − / + / fit in the head
+    windowOf(row) {
+        if (row && row._viewLock) return row._viewLock;
+        const content = Math.max(1, this.seqLength());
+        const span = this.pxPerS ? (W - PADL - PADR) / this.pxPerS : content * 1.15;
+        return { span: r3(Math.max(span, 0.5)), start: Math.max(0, +this.viewStart || 0) };
     },
-    zoomBy(k) {
-        const longest = Math.max(1, ...this.rows.map(r => r.length || 0));
-        const cur = this.pxPerS || (W - PADL - PADR) / (longest * 1.15);
-        this.pxPerS = clamp(cur * k, 2, 600); this.render();
-        this.setStatus('zoom ' + Math.round(this.pxPerS) + ' px per second — every row on the same scale');
+    viewSpan(row) { return this.windowOf(row).span; },
+    effectivePxPerS() { return this.pxPerS || (W - PADL - PADR) / this.windowOf(null).span; },
+    zoomBy(k, tAtMouse, frac) {
+        const cur = this.effectivePxPerS(), next = clamp(cur * k, 2, 800);
+        if (tAtMouse != null && frac != null) { const span = (W - PADL - PADR) / next; this.viewStart = Math.max(0, tAtMouse - frac * span); }
+        this.pxPerS = next; this.render();
+        this.setStatus('zoom ' + Math.round(this.pxPerS) + ' px per second — every row on the same timeline (ALT + wheel over a lane zooms at the mouse, a horizontal wheel scrolls, fit resets)');
     },
-    paintZoom() { const l = this.el && this.el.querySelector('#bpZoomLbl'); if (l) l.textContent = this.pxPerS ? Math.round(this.pxPerS) + ' px/s' : 'fit'; },
+    scrollView(dSec) {
+        const content = Math.max(1, this.seqLength()), span = this.windowOf(null).span;
+        this.viewStart = clamp((+this.viewStart || 0) + dSec, 0, Math.max(0, content - span * 0.25)); this.render();
+    },
+    laneWheel(ev, row, svg) {   // the score's wheel: ALT / CTRL = zoom at the mouse, horizontal = scroll, vertical alone passes
+        if (ev.ctrlKey || ev.altKey) { ev.preventDefault(); ev.stopPropagation(); const delta = ev.deltaX || ev.deltaY; if (!delta) return; const r = svg.getBoundingClientRect(), frac = clamp((ev.clientX - r.left - PADL) / (W - PADL - PADR), 0, 1), w = this.windowOf(row); this.zoomBy(delta > 0 ? 1.18 : 0.85, w.start + frac * w.span, frac); return; }
+        if (Math.abs(ev.deltaX) > 0) { ev.preventDefault(); ev.stopPropagation(); this.scrollView(ev.deltaX / this.effectivePxPerS()); }
+    },
+    paintZoom() { const l = this.el && this.el.querySelector('#bpZoomLbl'); if (l) l.textContent = this.pxPerS ? Math.round(this.pxPerS) + ' px/s' + (this.viewStart ? ' @ ' + r3(this.viewStart) + ' s' : '') : 'fit'; },
+    // THE CURSOR: a playhead line across every lane and the strip while a pair or the sequence plays, so the curve is read as it sounds;
+    // the curve's zero is the first note-on (the lead before it is the bend's pre-arm)
+    startCursor(list, alone, firstStartSec) {
+        const C = C_(); this.stopCursor();
+        const t0 = performance.now() + 5 + (C ? C.BEATING_LEAD_MS : 300);
+        this._cursor = { t0, rows: list.map(r => ({ row: r, offset: alone ? 0 : (r.zone ? (isFinite(firstStartSec) ? r.zone.startTime - firstStartSec : 0) : (r.offset || 0)) })) };
+        const tick = () => { if (!this._cursor) return; this.tickCursor(performance.now()); this._cursorRaf = requestAnimationFrame(tick); };
+        this._cursorRaf = requestAnimationFrame(tick);
+    },
+    tickCursor(nowMs) {
+        const cur = this._cursor; if (!cur || !this.el) return;
+        const tSeq = (nowMs - cur.t0) / 1000;
+        this.rows.forEach((row, i) => {
+            const entry = cur.rows.find(e => e.row === row); const t = entry ? tSeq - entry.offset : null;
+            const on = !!entry && t >= 0 && t <= row.length;
+            ['.bpRates', '.bpLevel', '.bpBreaths'].forEach(cls => { const svg = this.el.querySelector('.bpRow[data-row="' + i + '"] ' + cls); const line = svg && svg.querySelector('.bpCursor'); if (!line || !svg._X) return; line.style.display = on ? '' : 'none'; if (on) { const x = svg._X(t / Math.max(0.1, row.length)); line.setAttribute('x1', x); line.setAttribute('x2', x); } });
+        });
+        const seq = this.el.querySelector('#bpSeq'), sl = seq && seq.querySelector('.bpCursor');
+        if (sl && seq._X) { const on = tSeq >= 0 && tSeq <= this.seqLength(); sl.style.display = on ? '' : 'none'; if (on) { const x = seq._X(tSeq); sl.setAttribute('x1', x); sl.setAttribute('x2', x); } }
+    },
+    stopCursor() { if (this._cursorRaf) cancelAnimationFrame(this._cursorRaf); this._cursorRaf = null; this._cursor = null; if (this.el) this.el.querySelectorAll('.bpCursor').forEach(l => { l.style.display = 'none'; }); },
+    // the gesture card (2026-09-07 night: "I don't have in my memory what things are taken")
+    showGestures() {
+        this.closeNodeEditor();
+        const rows = [
+            ['THE LANES (the sequence timeline; the region = the pair, at its offset)', ''],
+            ['a node', 'drag = time and value · SHIFT-drag = one axis only · SHIFT-click = type its time and value · ALT-click = remove'],
+            ['the line', 'hold and pull = bend (the point you hold follows the mouse) · pull sideways = move the segment\'s points · CTRL-drag = slide the whole curve in time · ALT-click = straighten'],
+            ['the lane', 'double-click = a new node there · draw on = a click adds'],
+            ['the region\'s edges', 'drag the dashed start or end = trim or extend; every node keeps its time'],
+            ['the window', 'ALT (or CTRL) + wheel = zoom at the mouse · horizontal wheel = scroll · − / + / fit in the head'],
+            ['the breath lane', 'click = your breath · drag it · ALT-click = remove'],
+            ['THE KEYBOARD', 'double-click a note, then click a pair\'s node = assign · click a note = arm / disarm · ESC = disarm'],
+            ['THE STRIP', 'drag a zone = move it · its edges = trim · M / S = mute / solo · a click = that pair is what SPACE plays'],
+            ['SPACE', 'plays what you last clicked (sequence · pair · chord); again = stop · CTRL+Z = undo (one level) · ESC = close'],
+        ];
+        const box = document.createElement('div'); box.id = 'bpNodeEd';
+        box.style.cssText = 'position:fixed;z-index:9500;left:50%;top:80px;transform:translateX(-50%);max-width:820px;background:#26262e;border:1px solid #7B3FE4;border-radius:6px;padding:10px 14px;color:#ddd;font:12px/1.5 system-ui;box-shadow:0 6px 24px rgba(0,0,0,.6)';
+        box.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="color:#c9a8ff">the drawer\'s gestures</b><button id="bpNeX">&#10005;</button></div>'
+            + rows.map(([k, v]) => v ? '<div style="display:flex;gap:10px;padding:2px 0;border-top:1px solid #333"><span style="flex:0 0 150px;color:#c9a8ff">' + esc(k) + '</span><span>' + esc(v) + '</span></div>' : '<div style="color:#9a9;margin-top:6px">' + esc(k) + '</div>').join('');
+        document.body.appendChild(box);
+        box.querySelector('#bpNeX').addEventListener('click', () => this.closeNodeEditor());
+        const esc1 = ev => { if (ev.key === 'Escape') { this.closeNodeEditor(); window.removeEventListener('keydown', esc1, true); } }; window.addEventListener('keydown', esc1, true);
+    },
+
+    // ---- the rate area: the two curves over the REGION on the sequence timeline (2026-09-07 night, the composer's DAW picture) ----
+    // The region sits at the pair's offset and ends at its length; its two edges TRIM it — every node keeps its own time on the timeline,
+    // a node beyond a trim waits in the dimmed area until the edge comes back; the nodes inside move in real time. The line: hold and
+    // pull to bend (the held point follows the mouse), sideways to move the segment's points, CTRL-drag to slide the whole curve;
+    // SHIFT-click a node to type it; ALT-click removes a node or straightens a segment; a double-click on the lane adds a node; ALT /
+    // CTRL + wheel zooms at the mouse, a horizontal wheel scrolls (the score's gestures). The beats themselves are marked on the centre.
+    secAt(g, r, x) { return g.start + (x - r.left - g.x0) / (g.x1 - g.x0) * g.view; },   // the mouse → the timeline's seconds
     drawRates(row, svg) {
-        const BC = BC_(), out = row.out, cur = this.curvesOf(row), b = row.b, S = row.scale, L = row.length, view = this.viewSpan(row);
+        const BC = BC_(), out = row.out, cur = this.curvesOf(row), b = row.b, S = row.scale, L = Math.max(0.1, row.length), off = row.offset || 0, win = this.windowOf(row), view = win.span, start = win.start;
         const x0 = PADL, x1 = W - PADR, mid = HR / 2, sy = (HR / 2 - 6) / S;
-        const X = p => x0 + (p * L / view) * (x1 - x0), Y = v => mid - v * sy, ns = 'http://www.w3.org/2000/svg';
+        const X = p => x0 + ((off + p * L - start) / view) * (x1 - x0), Y = v => mid - v * sy, ns = 'http://www.w3.org/2000/svg';
         const mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
-        svg.innerHTML = '';
-        // beyond the pair's end: empty, dimmed; a dashed line at the end with the length
-        svg.appendChild(mk('rect', { x: X(1), y: 0, width: Math.max(0, x1 - X(1)), height: HR, fill: '#000', 'fill-opacity': 0.25 }));
-        svg.appendChild(mk('line', { x1: X(1), x2: X(1), y1: 0, y2: HR, stroke: '#777', 'stroke-dasharray': '3 3' }));
-        for (let t = 1; t < view; t += (view > 40 ? 10 : view > 16 ? 5 : 1)) { svg.appendChild(mk('line', { x1: X(t / L), x2: X(t / L), y1: HR - 6, y2: HR, stroke: '#555' })); }
+        svg.innerHTML = ''; svg._X = X;
+        const xa = X(0), xb = X(1);
+        // outside the region: dimmed
+        if (xb < x1) svg.appendChild(mk('rect', { x: Math.max(x0, xb), y: 0, width: Math.max(0, x1 - Math.max(x0, xb)), height: HR, fill: '#000', 'fill-opacity': 0.3 }));
+        if (xa > x0) svg.appendChild(mk('rect', { x: x0, y: 0, width: Math.max(0, Math.min(x1, xa) - x0), height: HR, fill: '#000', 'fill-opacity': 0.3 }));
+        // the timeline's seconds along the bottom
+        const tickStep = view > 40 ? 10 : view > 16 ? 5 : 1;
+        for (let t = Math.ceil(start / tickStep) * tickStep; t < start + view; t += tickStep) { const x = x0 + ((t - start) / view) * (x1 - x0); svg.appendChild(mk('line', { x1: x, x2: x, y1: HR - 6, y2: HR, stroke: '#555' })); const tt = mk('text', { x: x + 2, y: HR - 8, fill: '#555', 'font-size': 9 }); tt.textContent = t; svg.appendChild(tt); }
         // the zone bands: a sliver per sample between the two players' rates (the gap = the heard beating)
         out.samples.forEach((s, k) => {
             const n = out.samples[k + 1]; if (!n) return;
-            const xa = X(s.p), xb = X(n.p), top = Y(Math.max(s.rateL, s.rateU)), bot = Y(Math.min(s.rateL, s.rateU));
-            svg.appendChild(mk('rect', { x: xa, y: Math.min(top, bot), width: Math.max(0.5, xb - xa), height: Math.max(0.5, Math.abs(bot - top)), fill: ZONE_FILL[s.zone] || ZONE_FILL.beating }));
+            const xs = X(s.p), xe = X(n.p), top = Y(Math.max(s.rateL, s.rateU)), bot = Y(Math.min(s.rateL, s.rateU));
+            svg.appendChild(mk('rect', { x: xs, y: Math.min(top, bot), width: Math.max(0.5, xe - xs), height: Math.max(0.5, Math.abs(bot - top)), fill: ZONE_FILL[s.zone] || ZONE_FILL.beating }));
         });
         // the axis: the centre line and the rate marks (Hz)
         svg.appendChild(mk('line', { x1: x0, x2: x1, y1: mid, y2: mid, stroke: '#666', 'stroke-width': 1 }));
@@ -763,9 +842,7 @@ const P = {
         // the slid curves as played (the samples) — thin
         const lineOf = (key, col) => { const d = out.samples.map((s, k) => (k ? 'L' : 'M') + X(s.p).toFixed(1) + ' ' + Y(s[key]).toFixed(1)).join(' '); svg.appendChild(mk('path', { d, fill: 'none', stroke: col, 'stroke-width': 1, 'stroke-opacity': 0.55 })); };
         lineOf('rateU', COL.upper); lineOf('rateL', COL.lower);
-        // THE BEATS THEMSELVES (2026-09-07 late evening, "I can't get the visual to look like the sound"): a mark on the centre line at every
-        // beat the pair makes — the integral of the heard rate — so the picture shows what the ear gets: nothing while the rate is near
-        // zero, a dense run on the plateau, thinning out on the release
+        // THE BEATS THEMSELVES: a mark on the centre line at every beat the pair makes (the integral of the heard rate) — the picture of the sound
         let phase = 0, beats = 0;
         for (let k = 1; k < out.samples.length; k++) {
             const s0 = out.samples[k - 1], s1 = out.samples[k], dt = s1.t - s0.t; if (dt <= 0) continue;
@@ -773,65 +850,88 @@ const P = {
             if (Math.floor(next) > Math.floor(phase)) { const f = (Math.floor(next) - phase) / Math.max(1e-9, next - phase); const t = s0.t + f * dt; beats++; svg.appendChild(mk('line', { x1: X(t / L), x2: X(t / L), y1: mid - 5, y2: mid + 5, stroke: s1.beat < 1 ? '#667' : '#e6d8ff', 'stroke-width': 1.2, 'stroke-opacity': s1.beat < 1 ? 0.5 : 0.9 })); }
             phase = next;
         }
-        const bt = mk('text', { x: x0 + 4, y: HR - 5, fill: '#c9a8ff', 'font-size': 11 }); bt.textContent = beats + ' beat' + (beats === 1 ? '' : 's') + ' in ' + L + ' s'; svg.appendChild(bt);
-        // the drawn curves — bold, sampled through their slopes; a hit stroke per segment carries the line's gestures; the points are handles
+        const bt = mk('text', { x: x0 + 4, y: HR - 5, fill: '#c9a8ff', 'font-size': 11 }); bt.textContent = beats + ' beat' + (beats === 1 ? '' : 's') + ' in ' + row.length + ' s'; svg.appendChild(bt);
+        // the drawn curves — bold, sampled through their bends; a hit stroke per segment carries the line's gestures; the nodes are handles
         const drawCurve = (who, pts, col) => {
-            const slide = (b.slide && b.slide[who]) || 0, sp = slide / Math.max(0.1, L);
+            const slide = (b.slide && b.slide[who]) || 0, sp = slide / L;
             for (let k = 0; k + 1 < pts.length; k++) {
                 const a = pts[k], c = pts[k + 1], N = 24, d = [];
-                for (let j = 0; j <= N; j++) { const p = a[0] + (c[0] - a[0]) * j / N; d.push((j ? 'L' : 'M') + X(clamp(p + sp, 0, 1)).toFixed(1) + ' ' + Y(BC.evalCurve(pts, p)).toFixed(1)); }
+                for (let j = 0; j <= N; j++) { const p = a[0] + (c[0] - a[0]) * j / N; d.push((j ? 'L' : 'M') + X(p + sp).toFixed(1) + ' ' + Y(BC.evalCurve(pts, p)).toFixed(1)); }
                 const path = mk('path', { d: d.join(' '), fill: 'none', stroke: col, 'stroke-width': 2.2, 'stroke-linejoin': 'round' }); path.style.pointerEvents = 'none'; svg.appendChild(path);
                 const hit = mk('path', { d: d.join(' '), fill: 'none', stroke: 'transparent', 'stroke-width': 14 }); hit.style.cursor = 'ns-resize'; hit.style.pointerEvents = 'stroke';
-                hit.innerHTML = '<title>' + (BC.ctrlOf(a) ? 'bent · ' : '') + 'hold the line and pull: the point you hold follows the mouse (the bend) · drag sideways to move the segment\'s points · CTRL-drag slides the whole curve in time · ALT-click straightens · double-click adds a point</title>';
+                hit.innerHTML = '<title>' + (BC.ctrlOf(a) ? 'bent · ' : '') + 'hold the line and pull: the point you hold follows the mouse · sideways moves the segment\'s points · CTRL-drag slides the whole curve in time · ALT-click straightens · double-click on the lane adds a node</title>';
                 hit.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.ctrlKey || e.metaKey) { this.snapshot(); this.dragBody(row, who, e, svg); return; } if (e.altKey) { this.snapshot(); this.setCtrl(row, who, k, null); this.changed(row, true); this.render(); return; } this.dragSegment(row, who, k, e, svg); });
                 svg.appendChild(hit);
             }
             pts.forEach((p, idx) => {
-                const last = idx === pts.length - 1;
-                const h = mk('circle', { cx: X(clamp(p[0] + sp, 0, 1)), cy: Y(p[1]), r: 5, fill: last ? col : '#1a1a20', stroke: col, 'stroke-width': 2 });
-                h.style.cursor = last ? 'ew-resize' : 'move';
-                h.innerHTML = '<title>' + (last ? 'the end: drag sideways for the pair\'s length, up / down for its value' : idx === 0 ? 'the start: up / down for its value' : 'drag (SHIFT clamps to one axis); ALT-click removes') + ' · double-click to type its time and value</title>';
-                h.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.altKey && !last && idx !== 0) { this.snapshot(); this.removePoint(row, who, idx); this.changed(row, true); this.render(); return; } this.dragHandle(row, who, idx, e, svg); });
+                const outside = p[0] < -1e-6 || p[0] > 1 + 1e-6;
+                const h = mk('circle', { cx: X(clamp(p[0] + sp, -1, 2)), cy: Y(p[1]), r: 5, fill: '#1a1a20', stroke: col, 'stroke-width': 2, opacity: outside ? 0.45 : 1 });
+                h.style.cursor = 'move';
+                h.innerHTML = '<title>' + (outside ? 'beyond the region — it waits here until the edge is pulled out · ' : '') + r3(off + p[0] * L) + ' s · drag (time and value; SHIFT clamps to one axis) · SHIFT-click or double-click to type · ALT-click removes</title>';
+                h.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.altKey) { if (pts.length > 2) { this.snapshot(); this.removePoint(row, who, idx); this.changed(row, true); this.render(); } return; } this.dragHandle(row, who, idx, e, svg); });
                 h.addEventListener('dblclick', e => { e.preventDefault(); e.stopPropagation(); this.openNodeEditor(row, who, idx, e, 'rate'); });
                 svg.appendChild(h);
             });
         };
         drawCurve('upper', cur.upper, COL.upper); drawCurve('lower', cur.lower, COL.lower);
-        // the players' names and the lock state
+        // the region's edges: a handle at the start and at the end — a trim, the nodes keep their time
+        [['start', xa], ['end', xb]].forEach(([which, x]) => {
+            svg.appendChild(mk('line', { x1: x, x2: x, y1: 0, y2: HR, stroke: '#bbb', 'stroke-dasharray': '3 3' }));
+            const hnd = mk('rect', { x: x - 4, y: 0, width: 8, height: HR, fill: '#fff', 'fill-opacity': 0.06 }); hnd.style.cursor = 'ew-resize';
+            hnd.innerHTML = '<title>' + (which === 'end' ? 'the region\'s end (' + r3(off + L) + ' s): drag to trim or extend the pair — every node keeps its time' : 'the region\'s start (' + r3(off) + ' s): drag to start the pair later or earlier — every node keeps its time, the end stays') + '</title>';
+            hnd.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); this.dragRegionEdge(row, which, e, svg); });
+            svg.appendChild(hnd);
+        });
+        // the players' names and the lock state; the cursor; the wheel; a double-click adds a node; draw mode
         const nmU = mk('text', { x: x1 - 4, y: 12, fill: COL.upper, 'font-size': 12, 'text-anchor': 'end' }); nmU.textContent = (out.players.upper || '?') + ' ↑' + (b.slide && b.slide.upper ? ' slid ' + b.slide.upper + ' s' : ''); svg.appendChild(nmU);
         const nmL = mk('text', { x: x1 - 4, y: HR - 5, fill: COL.lower, 'font-size': 12, 'text-anchor': 'end' }); nmL.textContent = (out.players.lower || '?') + ' ↓' + (b.slide && b.slide.lower ? ' slid ' + b.slide.lower + ' s' : ''); svg.appendChild(nmL);
-        const beatT = mk('text', { x: x0 + 4, y: 12, fill: '#c9a8ff', 'font-size': 12 }); beatT.textContent = 'beating ' + out.maxBeat + ' Hz max' + (row.locked ? ' · mirrored' : ' · free') + (row.length ? ' · ' + row.length + ' s' : ''); svg.appendChild(beatT);
-        const addAt = e => {   // a point where the mouse is, on the curve above or below the centre
-            const r = svg.getBoundingClientRect(); const p = clamp((e.clientX - r.left - x0) / (x1 - x0) * view / L, 0, 1), v = (mid - (e.clientY - r.top)) / sy;
+        const beatT = mk('text', { x: x0 + 4, y: 12, fill: '#c9a8ff', 'font-size': 12 }); beatT.textContent = 'beating ' + out.maxBeat + ' Hz max' + (row.locked ? ' · mirrored' : ' · free') + ' · ' + r3(off) + ' → ' + r3(off + L) + ' s'; svg.appendChild(beatT);
+        svg.appendChild(mk('line', { class: 'bpCursor', x1: x0, x2: x0, y1: 0, y2: HR, stroke: '#fff', 'stroke-width': 1.5, 'pointer-events': 'none', style: 'display:none' }));
+        if (!svg._wheelBound) { svg._wheelBound = true; svg.addEventListener('wheel', e => this.laneWheel(e, row, svg), { passive: false }); }
+        const geom = { x0, x1, mid, sy, X, Y, view, L, start, off }; svg._geom = geom;
+        const addAt = e => {   // a node where the mouse is, on the curve above or below the centre
+            const r = svg.getBoundingClientRect(); const p = clamp((this.secAt(geom, r, e.clientX) - off) / L, -1, 2), v = (mid - (e.clientY - r.top)) / sy;
             const who = v >= 0 ? 'upper' : 'lower';
             this.snapshot(); this.addPoint(row, who, r3(p), r3(v)); this.changed(row, true); this.render();
         };
-        const onEmpty = e => e.target === svg || e.target.tagName === 'rect' || e.target.tagName === 'line' || (e.target.tagName === 'path' && e.target.getAttribute('stroke') !== 'transparent');
+        const onEmpty = e => e.target === svg || e.target.tagName === 'rect' || e.target.tagName === 'line' || e.target.tagName === 'text' || (e.target.tagName === 'path' && e.target.getAttribute('stroke') !== 'transparent');
         svg.addEventListener('dblclick', e => { if (e.target.tagName === 'circle') return; e.preventDefault(); addAt(e); });
         if (row.draw) { svg.style.cursor = 'crosshair'; svg.addEventListener('mousedown', e => { if (!onEmpty(e)) return; addAt(e); }); }
-        svg._geom = { x0, x1, mid, sy, X, Y, view, L };
+    },
+    // the region's edge dragged: a trim or an extension; the time window stays put so the edge follows the mouse
+    dragRegionEdge(row, which, e0, svg) {
+        this.snapshot();
+        const g = svg._geom, r = svg.getBoundingClientRect(); row._viewLock = { span: g.view, start: g.start }; let moved = false;
+        const onMove = ev => {
+            moved = true; const t = r3(Math.round(this.secAt(g, r, ev.clientX) / 0.05) * 0.05), off = row.offset || 0;
+            if (which === 'end') { const len = clamp(t - off, 0.5, 180); if (len !== row.length) this.resizeKeepTimes(row, len, false); }
+            else { const ns = clamp(t, 0, off + row.length - 0.5); if (Math.abs(ns - off) > 1e-9) this.resizeKeepTimes(row, off + row.length - ns, true); }
+            this.rowOut(row); this.drawRates(row, svg); this.drawSeq(); this.changed(row, false);
+        };
+        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); delete row._viewLock; if (!moved) { this._undo = null; this.paintUndo(); return; } this.changed(row, true); this.render(); this.setStatus('pair ' + (this.rows.indexOf(row) + 1) + ' ' + r3(row.offset || 0) + ' → ' + r3((row.offset || 0) + row.length) + ' s — the nodes kept their time'); };
+        window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
     // hold the line and pull (the score's startBendDrag): the column where the line was grabbed is the control's x, and as the mouse moves
     // the control's y is solved so the held point of the line follows the mouse — two degrees of freedom; a sideways pull moves the
-    // segment's points instead (the mode from the first movement)
+    // segment's points instead (the mode from the first movement); a click without movement changes nothing
     dragSegment(row, who, k, e0, svg) {
         this.snapshot();
-        const BC = BC_(), g = svg._geom, r = svg.getBoundingClientRect(), b = row.b, x0 = e0.clientX, y0 = e0.clientY; let mode = null;
+        const BC = BC_(), g = svg._geom, r = svg.getBoundingClientRect(), b = row.b, x0 = e0.clientX, y0 = e0.clientY; let mode = null, moved = false;
         const cur0 = this.curvesOf(row)[who], a0 = cur0[k], c0 = cur0[k + 1]; if (!a0 || !c0) return;
         const n = cur0.length, pA = a0[0], pC = c0[0], y1 = a0[1], y2 = c0[1];
-        const sp = ((b.slide && b.slide[who]) || 0) / Math.max(0.1, row.length);
-        const pGrab = clamp((e0.clientX - r.left - g.x0) / (g.x1 - g.x0) * g.view / g.L - sp, 0, 1);
+        const sp = ((b.slide && b.slide[who]) || 0) / g.L;
+        const pGrab = (this.secAt(g, r, e0.clientX) - g.off) / g.L - sp;
         const cx = clamp((pGrab - pA) / Math.max(1e-6, pC - pA), 0.08, 0.92), bT = BC.bezierT(cx, cx), w2 = 2 * (1 - bT) * bT;
-        const movA = k > 0, movC = k + 1 < n - 1, lo = k > 0 ? cur0[k - 1][0] + 0.01 : 0, hi = k + 2 < n ? cur0[k + 2][0] - 0.01 : 1;
+        const movA = k > 0, movC = k + 1 < n - 1, lo = k > 0 ? cur0[k - 1][0] + 0.01 : -1, hi = k + 2 < n ? cur0[k + 2][0] - 0.01 : 2;
         const onMove = ev => {
             const dx = ev.clientX - x0, dy = ev.clientY - y0;
             if (!mode) { if (Math.abs(dx) < 3 && Math.abs(dy) < 3) return; mode = Math.abs(dy) >= Math.abs(dx) ? 'bend' : 'shift'; svg.style.cursor = mode === 'bend' ? 'ns-resize' : 'ew-resize'; }
+            moved = true;
             if (mode === 'bend') {
                 const v = clamp((g.mid - (ev.clientY - r.top)) / g.sy, -row.scale, row.scale);   // the value under the mouse, in the curve's units
                 const cy = (v - (1 - bT) * (1 - bT) * y1 - bT * bT * y2) / Math.max(1e-6, w2);
                 this.setCtrl(row, who, k, [cx, cy]);
-            }
-            else if (movA || movC) {
+            } else if (movA || movC) {
                 let s = dx / (g.x1 - g.x0) * g.view / g.L;
                 if (movA) s = clamp(s, lo - pA, (movC ? hi - (pC - pA) : pC - 0.01) - pA);
                 if (movC) s = clamp(s, (movA ? lo + (pC - pA) : pA + 0.01) - pC, hi - pC);
@@ -840,63 +940,59 @@ const P = {
             }
             this.rowOut(row); this.drawRates(row, svg); this.changed(row, false);
         };
-        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); svg.style.cursor = ''; this.noteAdsrFromPoints(row); this.changed(row, true); this.render(); };
+        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); svg.style.cursor = ''; if (!moved) { this._undo = null; this.paintUndo(); return; } this.changed(row, true); this.render(); };
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
-    // a node: drag; SHIFT clamps it to one axis (the first movement decides — "shift + move node to clamp"); the end handle sideways is
-    // the pair's length at 50 px per second; the hold shape remembers its attack and release in seconds afterwards
+    // a node: drag in time and value (between its neighbours); SHIFT-drag clamps to one axis; SHIFT-click (no movement) types it; a click
+    // without movement changes nothing, so a double-click finds the same node twice
     dragHandle(row, who, idx, e0, svg) {
         this.snapshot();
         const BC = BC_(), g = svg._geom, r = svg.getBoundingClientRect(), b = row.b, cur = this.curvesOf(row)[who], n = cur.length;
-        const slide = (b.slide && b.slide[who]) || 0, L0 = row.length, sp = slide / Math.max(0.1, L0), xs = e0.clientX, ys = e0.clientY;
-        const p0 = cur[idx][0], v0 = cur[idx][1]; let axis = null;
-        row._viewLock = g.view;   // the time axis stays put while the end is dragged, so the dot follows the mouse
-        const secAt = x => (x - r.left - g.x0) / (g.x1 - g.x0) * g.view;   // the mouse in seconds on the lane's axis
+        const slide = (b.slide && b.slide[who]) || 0, sp = slide / g.L, xs = e0.clientX, ys = e0.clientY, shiftAtStart = !!e0.shiftKey;
+        const p0 = cur[idx][0], v0 = cur[idx][1], lo = idx > 0 ? cur[idx - 1][0] + 0.005 : -1, hi = idx + 1 < n ? cur[idx + 1][0] - 0.005 : 2; let axis = null, moved = false;
         const tip = document.createElementNS('http://www.w3.org/2000/svg', 'text'); tip.setAttribute('fill', '#fff'); tip.setAttribute('font-size', '12'); svg.appendChild(tip);
         const onMove = ev => {
-            let p = clamp(secAt(ev.clientX) / Math.max(0.1, row.length) - sp, 0, 1); let v = clamp((g.mid - (ev.clientY - r.top)) / g.sy, -row.scale, row.scale);
-            if (ev.shiftKey) { if (!axis) { const dx = Math.abs(ev.clientX - xs), dy = Math.abs(ev.clientY - ys); if (dx < 3 && dy < 3) return; axis = dx >= dy ? 'x' : 'y'; } if (axis === 'x') v = v0; else p = p0; }
-            if (idx === 0) p = 0;
-            if (idx === n - 1) {   // the end handle: sideways = the pair's length (his line 10), the dot under the mouse; up / down its value
-                p = 1; const len = r3(clamp(Math.round(secAt(ev.clientX) / 0.05) * 0.05, 0.5, 180));
-                if (len !== row.length) { const s = BC.stretch({ length: row.length, slide: b.slide, breath: b.breath }, len); b.slide = s.slide; b.breath = s.breath; row.length = len; this.placeZone(row); this.fitShapeToLength(row); }
-            }
+            if (!moved) { if (Math.abs(ev.clientX - xs) < 3 && Math.abs(ev.clientY - ys) < 3) return; moved = true; }
+            let p = clamp((this.secAt(g, r, ev.clientX) - g.off) / g.L - sp, lo, hi); let v = clamp((g.mid - (ev.clientY - r.top)) / g.sy, -row.scale, row.scale);
+            if (ev.shiftKey) { if (!axis) { const dx = Math.abs(ev.clientX - xs), dy = Math.abs(ev.clientY - ys); axis = dx >= dy ? 'x' : 'y'; } if (axis === 'x') v = v0; else p = p0; }
             const vv = who === 'upper' ? Math.max(0, v) : Math.min(0, v);   // above the centre for the upper, below for the lower
             const wasLocked = row.locked; if (ev.altKey && row.locked) { row.locked = false; this.unlock(row); }
             this.setPoint(row, who, idx, r3(p), r3(vv));
             row.locked = row.locked && wasLocked;
             this.rowOut(row);
-            tip.setAttribute('x', clamp(ev.clientX - r.left + 8, 4, W - 90)); tip.setAttribute('y', clamp(ev.clientY - r.top - 8, 10, HR - 4));
-            tip.textContent = (row.locked ? (Math.abs(vv) * 2).toFixed(2) + ' Hz heard' : Math.abs(vv).toFixed(2) + ' Hz ' + who) + ' · ' + (idx === n - 1 ? row.length + ' s long' : (p * row.length).toFixed(2) + ' s') + (axis ? (axis === 'x' ? ' · time only' : ' · value only') : '');
-            this.drawRates(row, svg); svg.appendChild(tip); if (idx === n - 1) this.drawSeq();
+            tip.setAttribute('x', clamp(ev.clientX - r.left + 8, 4, W - 110)); tip.setAttribute('y', clamp(ev.clientY - r.top - 8, 10, HR - 4));
+            tip.textContent = (row.locked ? (Math.abs(vv) * 2).toFixed(2) + ' Hz heard' : Math.abs(vv).toFixed(2) + ' Hz ' + who) + ' · ' + r3(g.off + p * g.L) + ' s' + (axis ? (axis === 'x' ? ' · time only' : ' · value only') : '');
+            this.drawRates(row, svg); svg.appendChild(tip);
             this.changed(row, false);
         };
-        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); tip.remove(); delete row._viewLock; this.noteAdsrFromPoints(row); this.changed(row, true); this.render(); };
+        const onUp = ev => {
+            window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); tip.remove();
+            if (!moved) { this._undo = null; this.paintUndo(); if (shiftAtStart) this.openNodeEditor(row, who, idx, ev, 'rate'); return; }   // a click: nothing moved, nothing re-drawn; SHIFT-click types
+            this.changed(row, true); this.render();
+        };
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
-    // a node typed (2026-09-07 late evening, "way to type in node amplitude, dbl-click or shift click"): a small box at the node with its
-    // time in seconds and its value — Hz on a rate curve, a dynamic (ppp … fff) or 0 … 1 on the crescendo; ENTER applies, ESC closes
+    // a node typed (SHIFT-click, or a double-click): a small box at the node with its time on the timeline in seconds and its value — Hz
+    // heard on a rate curve, a dynamic (ppp … fff) or 0 … 1 on the crescendo; ENTER applies, ESC closes
     openNodeEditor(row, who, idx, e, lane) {
         this.closeNodeEditor();
-        const BC = BC_(), b = row.b, L = row.length;
+        const BC = BC_(), L = Math.max(0.1, row.length), off = row.offset || 0;
         const pts = lane === 'rate' ? this.curvesOf(row)[who] : (this.levelPts(row) || {})[who]; if (!pts || !pts[idx]) return;
-        const p = pts[idx], n = pts.length, isRate = lane === 'rate';
+        const p = pts[idx], isRate = lane === 'rate';
         const box = document.createElement('div'); box.id = 'bpNodeEd';
-        box.style.cssText = 'position:fixed;z-index:9500;left:' + Math.min(window.innerWidth - 230, e.clientX + 10) + 'px;top:' + Math.max(4, e.clientY - 40) + 'px;background:#26262e;border:1px solid #7B3FE4;border-radius:4px;padding:6px 8px;color:#ddd;font:12px system-ui;display:flex;gap:6px;align-items:center;box-shadow:0 4px 16px rgba(0,0,0,.5)';
-        const fixedT = idx === 0 || idx === n - 1;
-        box.innerHTML = '<label>time <input id="bpNeT" type="number" step="0.05" min="0" value="' + r3(p[0] * L) + '" style="width:60px"' + (fixedT ? ' disabled title="the start and the end stay where they are (the end handle sets the length)"' : '') + '> s</label>'
+        box.style.cssText = 'position:fixed;z-index:9500;left:' + Math.min(window.innerWidth - 250, e.clientX + 10) + 'px;top:' + Math.max(4, e.clientY - 40) + 'px;background:#26262e;border:1px solid #7B3FE4;border-radius:4px;padding:6px 8px;color:#ddd;font:12px system-ui;display:flex;gap:6px;align-items:center;box-shadow:0 4px 16px rgba(0,0,0,.5)';
+        box.innerHTML = '<label>time <input id="bpNeT" type="number" step="0.05" value="' + r3(off + p[0] * L) + '" style="width:64px" title="on the timeline, in seconds"> s</label>'
             + '<label>' + (isRate ? 'value <input id="bpNeV" type="text" value="' + r3(Math.abs(p[1]) * (row.locked ? 2 : 1)) + '" style="width:56px"> Hz' + (row.locked ? ' heard' : ' ' + who) : 'level <input id="bpNeV" type="text" value="' + dynName(p[1]) + '" style="width:56px" title="ppp … fff or 0 … 1">') + '</label>'
             + '<button id="bpNeOk">set</button><button id="bpNeX" title="ESC">&#10005;</button>';
         document.body.appendChild(box);
         const apply = () => {
             const tIn = parseFloat(box.querySelector('#bpNeT').value), vRaw = box.querySelector('#bpNeV').value;
-            const pNew = fixedT ? p[0] : clamp((isNaN(tIn) ? p[0] * L : tIn) / Math.max(0.1, L), 0, 1);
+            const pNew = clamp(((isNaN(tIn) ? off + p[0] * L : tIn) - off) / L, -1, 2);
             this.snapshot();
             if (isRate) {
                 const v = parseFloat(vRaw); if (isNaN(v)) { this.setStatus('a number of Hz, please', true); return; }
                 const heardOrOwn = Math.max(0, v), val = row.locked ? heardOrOwn / 2 : heardOrOwn;
                 this.setPoint(row, who, idx, r3(pNew), r3(who === 'upper' ? val : -val));
-                this.noteAdsrFromPoints(row);
             } else {
                 const v = parseLevel(vRaw); if (v == null) { this.setStatus('a dynamic (ppp … fff) or a number 0 … 1, please', true); return; }
                 const cur = this.levelPts(row)[who]; cur[idx] = cur[idx].length > 2 ? [r3(pNew), v, cur[idx][2]] : [r3(pNew), v]; this.setLevelPts(row, who, BC.curveOf(cur));
@@ -906,20 +1002,20 @@ const P = {
         box.querySelector('#bpNeOk').addEventListener('click', apply);
         box.querySelector('#bpNeX').addEventListener('click', () => this.closeNodeEditor());
         box.addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); ev.stopPropagation(); apply(); } else if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); this.closeNodeEditor(); } else ev.stopPropagation(); });
-        const first = box.querySelector(fixedT ? '#bpNeV' : '#bpNeT'); first.focus(); first.select();
+        const first = box.querySelector('#bpNeV'); first.focus(); first.select();
     },
     closeNodeEditor() { const old = document.getElementById('bpNodeEd'); if (old) old.remove(); },
     dragBody(row, who, e0, svg) {
-        const g = svg._geom, x0 = e0.clientX; let last = 0;
-        const onMove = ev => { const d = (ev.clientX - x0) / (g.x1 - g.x0) * g.view; const step = r3(d - last); if (!step) return; last = r3(last + step); if (ev.altKey && row.locked) { row.locked = false; this.unlock(row); } this.slideCurve(row, who, step); this.rowOut(row); this.drawRates(row, svg); this.changed(row, false); };
-        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); };
+        const g = svg._geom, x0 = e0.clientX; let last = 0, moved = false;
+        const onMove = ev => { const d = (ev.clientX - x0) / (g.x1 - g.x0) * g.view; const step = r3(d - last); if (!step) return; moved = true; last = r3(last + step); if (ev.altKey && row.locked) { row.locked = false; this.unlock(row); } this.slideCurve(row, who, step); this.rowOut(row); this.drawRates(row, svg); this.changed(row, false); };
+        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); if (!moved) return; this.changed(row, true); this.render(); };
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
 
     // ---- the crescendo lane ----
-    // One curve for both players, or one per player (2026-09-07, his line 15); the same gestures as the rate curves: hold the line to bend
-    // or shift, double-click adds a point, ALT-click removes; the axis in dynamics (ppp … fff, NAMING §2.9); the players' ideal breath
-    // lengths as faint ticks (his line 18: "a simple indicator in the crescendo part that shows me ideally a breath length")
+    // One curve for both players, or one per player; on the same timeline window as the rates (the region at its offset, the nodes at
+    // their own time); the same gestures: hold the line to bend or shift, SHIFT-click a node to type, ALT-click removes, a double-click
+    // adds; the axis in dynamics (ppp … fff); the players' ideal breath lengths as faint ticks
     levelPts(row) {   // the edited crescendo curves, or null while it follows the beating (a legacy single array serves both players)
         const BC = BC_(), lc = row.b.levelCurve; if (!lc) return null;
         if (Array.isArray(lc)) return { lower: BC.curveOf(lc), upper: BC.curveOf(lc) };
@@ -933,16 +1029,18 @@ const P = {
         const BC = BC_(), b = row.b, lo = b.levelLo == null ? 0.3 : b.levelLo, hi = b.levelHi == null ? 0.9 : b.levelHi;
         let pts;
         if (key.indexOf('u:') === 0) { const sh = this.shapesBank[key.slice(2)]; if (!sh) return; pts = BC.curveOf(sh.curve).map(p => (p.length > 2 ? [p[0], r3(lo + (hi - lo) * p[1]), p[2]] : [p[0], r3(lo + (hi - lo) * p[1])])); }
-        else pts = BC.shape(key, { level: hi, from: key === 'rampIn' ? hi : lo, to: key === 'rampIn' ? lo : hi, peak: hi, base: lo });
+        else pts = BC.shape(key, { level: hi, from: key === 'rampIn' ? hi : lo, to: key === 'rampIn' ? lo : hi, peak: hi, base: lo, length: row.length, attackS: b.adsr && b.adsr.attackS, releaseS: b.adsr && b.adsr.releaseS });
         b.levelCurve = { lower: pts.map(p => p.slice()), upper: pts.map(p => p.slice()) };
     },
     drawLevel(row, svg) {
-        const BC = BC_(), out = row.out, b = row.b, ns = 'http://www.w3.org/2000/svg', L = row.length, view = this.viewSpan(row);
-        const x0 = PADL, x1 = W - PADR, X = p => x0 + (p * L / view) * (x1 - x0), Y = v => HL - 4 - clamp(v, 0, 1) * (HL - 10);
+        const BC = BC_(), out = row.out, b = row.b, ns = 'http://www.w3.org/2000/svg', L = Math.max(0.1, row.length), off = row.offset || 0, win = this.windowOf(row), view = win.span, start = win.start;
+        const x0 = PADL, x1 = W - PADR, X = p => x0 + ((off + p * L - start) / view) * (x1 - x0), Y = v => HL - 4 - clamp(v, 0, 1) * (HL - 10);
         const mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
-        svg.innerHTML = '';
-        svg.appendChild(mk('rect', { x: X(1), y: 0, width: Math.max(0, x1 - X(1)), height: HL, fill: '#000', 'fill-opacity': 0.25 }));
-        svg.appendChild(mk('line', { x1: X(1), x2: X(1), y1: 0, y2: HL, stroke: '#777', 'stroke-dasharray': '3 3' }));
+        svg.innerHTML = ''; svg._X = X;
+        const xa = X(0), xb = X(1);
+        if (xb < x1) svg.appendChild(mk('rect', { x: Math.max(x0, xb), y: 0, width: Math.max(0, x1 - Math.max(x0, xb)), height: HL, fill: '#000', 'fill-opacity': 0.3 }));
+        if (xa > x0) svg.appendChild(mk('rect', { x: x0, y: 0, width: Math.max(0, Math.min(x1, xa) - x0), height: HL, fill: '#000', 'fill-opacity': 0.3 }));
+        [xa, xb].forEach(x => svg.appendChild(mk('line', { x1: x, x2: x, y1: 0, y2: HL, stroke: '#bbb', 'stroke-dasharray': '3 3' })));
         // the ideal breath lengths as faint ticks, per player (the ceiling at this level, from the start)
         for (const who of ['lower', 'upper']) { const br = out.breaths[who], col = who === 'upper' ? COL.upper : COL.lower; if (!br || !br.ceiling || !(br.ceiling.seconds > 0)) continue; for (let t = br.ceiling.seconds; t < L - 0.05; t += br.ceiling.seconds) svg.appendChild(mk('line', { x1: X(t / L), x2: X(t / L), y1: 2, y2: HL - 2, stroke: col, 'stroke-opacity': 0.35, 'stroke-dasharray': '1 3' })); }
         const lp = this.levelPts(row);
@@ -951,6 +1049,9 @@ const P = {
         svg.appendChild(mk('path', { d: fillOf('levelL'), fill: COL.lower, 'fill-opacity': 0.1, stroke: 'none' }));
         [[0, 'ppp'], [4 / 7, 'mf'], [1, 'fff']].forEach(([v, name]) => { const t = mk('text', { x: 2, y: Y(v) + 3, fill: '#777', 'font-size': 10 }); t.textContent = name; svg.appendChild(t); });
         const lbl = mk('text', { x: x1 - 4, y: 11, fill: COL.level, 'font-size': 12, 'text-anchor': 'end' }); lbl.textContent = (lp ? (row.levelLock !== false ? 'one crescendo, both players' : 'a crescendo per player') : 'follows the beating') + ' · ' + dynName(b.levelLo == null ? 0.3 : b.levelLo) + ' → ' + dynName(b.levelHi == null ? 0.9 : b.levelHi); svg.appendChild(lbl);
+        svg.appendChild(mk('line', { class: 'bpCursor', x1: x0, x2: x0, y1: 0, y2: HL, stroke: '#fff', 'stroke-width': 1.5, 'pointer-events': 'none', style: 'display:none' }));
+        if (!svg._wheelBound) { svg._wheelBound = true; svg.addEventListener('wheel', e => this.laneWheel(e, row, svg), { passive: false }); }
+        const geom = { x0, x1, view, L, start, off }; svg._geom = geom;
         if (!lp) {   // following: the two sample lines
             [['levelU', COL.upper], ['levelL', COL.lower]].forEach(([key, col]) => { const d = out.samples.map((s, k) => (k ? 'L' : 'M') + X(s.p).toFixed(1) + ' ' + Y(s[key]).toFixed(1)).join(' '); svg.appendChild(mk('path', { d, fill: 'none', stroke: col, 'stroke-width': 1.4 })); });
             svg.innerHTML += '<title>the crescendo follows the beating between low and high — pick a shape or double-click to draw one</title>';
@@ -965,76 +1066,84 @@ const P = {
                 svg.appendChild(mk('path', { d: d.join(' '), fill: 'none', stroke: col, 'stroke-width': together && who === 'lower' ? 1 : 1.8, 'stroke-opacity': together && who === 'lower' ? 0.5 : 1, 'pointer-events': 'none' }));
                 if (together && who === 'lower') continue;   // one set of gestures while the two are the same curve
                 const hit = mk('path', { d: d.join(' '), fill: 'none', stroke: 'transparent', 'stroke-width': 12 }); hit.style.cursor = 'ns-resize'; hit.style.pointerEvents = 'stroke';
-                hit.innerHTML = '<title>hold the line and pull: the point you hold follows the mouse (the bend) · drag sideways to move the segment\'s points (a plateau slides) · ALT-click straightens · double-click adds a point</title>';
+                hit.innerHTML = '<title>hold the line and pull: the point you hold follows the mouse · sideways moves the segment\'s points (a plateau slides) · ALT-click straightens · double-click on the lane adds a node</title>';
                 hit.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); if (e.altKey) { this.snapshot(); const cur = this.levelPts(row)[who]; cur[k] = [cur[k][0], cur[k][1]]; this.setLevelPts(row, who, cur); this.changed(row, true); this.render(); return; } this.dragLevelSegment(row, who, k, e, svg); });
                 svg.appendChild(hit);
             }
             if (together && who === 'lower') return;
             pts.forEach((p, idx) => {
-                const h = mk('circle', { cx: X(p[0]), cy: Y(p[1]), r: 4.5, fill: '#1a1a20', stroke: col, 'stroke-width': 2 }); h.style.cursor = 'move';
-                h.innerHTML = '<title>' + dynName(p[1]) + ' at ' + (p[0] * L).toFixed(2) + ' s — drag; ALT-click removes; double-click to type</title>';
+                const outside = p[0] < -1e-6 || p[0] > 1 + 1e-6;
+                const h = mk('circle', { cx: X(clamp(p[0], -1, 2)), cy: Y(p[1]), r: 4.5, fill: '#1a1a20', stroke: col, 'stroke-width': 2, opacity: outside ? 0.45 : 1 }); h.style.cursor = 'move';
+                h.innerHTML = '<title>' + dynName(p[1]) + ' at ' + r3(off + p[0] * L) + ' s — drag (SHIFT clamps to one axis) · SHIFT-click or double-click to type · ALT-click removes</title>';
                 h.addEventListener('dblclick', e => { e.preventDefault(); e.stopPropagation(); this.openNodeEditor(row, who, idx, e, 'level'); });
                 h.addEventListener('mousedown', e => {
                     e.preventDefault(); e.stopPropagation();
-                    if (e.altKey) { if (pts.length > 2 && idx > 0 && idx < pts.length - 1) { this.snapshot(); const cur = this.levelPts(row)[who]; cur.splice(idx, 1); this.setLevelPts(row, who, cur); this.changed(row, true); this.render(); } return; }
+                    if (e.altKey) { if (pts.length > 2) { this.snapshot(); const cur = this.levelPts(row)[who]; cur.splice(idx, 1); this.setLevelPts(row, who, cur); this.changed(row, true); this.render(); } return; }
                     this.snapshot();
-                    const r = svg.getBoundingClientRect(), n = pts.length;
-                    const onMove = ev => { let pp = clamp((ev.clientX - r.left - x0) / (x1 - x0) * view / L, 0, 1); if (idx === 0) pp = 0; if (idx === n - 1) pp = 1; const v = clamp((HL - 4 - (ev.clientY - r.top)) / (HL - 10), 0, 1); const cur = this.levelPts(row)[who]; cur[idx] = cur[idx].length > 2 ? [r3(pp), r3(v), cur[idx][2]] : [r3(pp), r3(v)]; this.setLevelPts(row, who, cur); this.rowOut(row); this.drawLevel(row, svg); this.changed(row, false); };
-                    const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); };
+                    const r = svg.getBoundingClientRect(), n = pts.length, xs = e.clientX, ys = e.clientY, shiftAtStart = !!e.shiftKey, p0 = p[0], v0 = p[1];
+                    const lo = idx > 0 ? pts[idx - 1][0] + 0.005 : -1, hi = idx + 1 < n ? pts[idx + 1][0] - 0.005 : 2; let moved = false, axis = null;
+                    const onMove = ev => {
+                        if (!moved) { if (Math.abs(ev.clientX - xs) < 3 && Math.abs(ev.clientY - ys) < 3) return; moved = true; }
+                        let pp = clamp((this.secAt(geom, r, ev.clientX) - off) / L, lo, hi); let v = clamp((HL - 4 - (ev.clientY - r.top)) / (HL - 10), 0, 1);
+                        if (ev.shiftKey) { if (!axis) { axis = Math.abs(ev.clientX - xs) >= Math.abs(ev.clientY - ys) ? 'x' : 'y'; } if (axis === 'x') v = v0; else pp = p0; }
+                        const cur = this.levelPts(row)[who]; cur[idx] = cur[idx].length > 2 ? [r3(pp), r3(v), cur[idx][2]] : [r3(pp), r3(v)]; this.setLevelPts(row, who, cur); this.rowOut(row); this.drawLevel(row, svg); this.changed(row, false);
+                    };
+                    const onUp = ev => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); if (!moved) { this._undo = null; this.paintUndo(); if (shiftAtStart) this.openNodeEditor(row, who, idx, ev, 'level'); return; } this.changed(row, true); this.render(); };
                     window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
                 });
                 svg.appendChild(h);
             });
         };
         drawOne('lower', lp.lower, COL.lower); drawOne('upper', lp.upper, COL.upper);
-        svg.addEventListener('dblclick', e => {   // a point on the curve nearer the mouse (the upper when together)
+        svg.addEventListener('dblclick', e => {   // a node on the curve nearer the mouse (the upper when together)
             if (e.target.tagName === 'circle') return; e.preventDefault();
-            const r = svg.getBoundingClientRect(); const p = clamp((e.clientX - r.left - x0) / (x1 - x0) * view / L, 0, 1), v = clamp((HL - 4 - (e.clientY - r.top)) / (HL - 10), 0, 1);
+            const r = svg.getBoundingClientRect(); const p = clamp((this.secAt(geom, r, e.clientX) - off) / L, -1, 2), v = clamp((HL - 4 - (e.clientY - r.top)) / (HL - 10), 0, 1);
             const who = row.levelLock !== false ? 'upper' : (Math.abs(BC.evalCurve(lp.upper, p) - v) <= Math.abs(BC.evalCurve(lp.lower, p) - v) ? 'upper' : 'lower');
             this.snapshot(); const cur = this.levelPts(row)[who]; cur.push([r3(p), r3(v)]); this.setLevelPts(row, who, BC.curveOf(cur)); this.changed(row, true); this.render();
         });
     },
     dragLevelSegment(row, who, k, e0, svg) {
         this.snapshot();
-        const BC = BC_(), r = svg.getBoundingClientRect(), x0 = e0.clientX, y0 = e0.clientY, xw = W - PADR - PADL, vL = this.viewSpan(row) / Math.max(0.1, row.length); let mode = null;
+        const BC = BC_(), g = svg._geom, r = svg.getBoundingClientRect(), x0 = e0.clientX, y0 = e0.clientY; let mode = null, moved = false;
         const cur0 = this.levelPts(row)[who].map(p => JSON.parse(JSON.stringify(p))), a0 = cur0[k], c0 = cur0[k + 1]; if (!a0 || !c0) return;
         const n = cur0.length, pA = a0[0], pC = c0[0], y1 = a0[1], y2 = c0[1];
-        const pGrab = clamp((e0.clientX - r.left - PADL) / xw * vL, 0, 1), cx = clamp((pGrab - pA) / Math.max(1e-6, pC - pA), 0.08, 0.92), bT = BC.bezierT(cx, cx), w2 = 2 * (1 - bT) * bT;
-        const movA = k > 0, movC = k + 1 < n - 1, lo = k > 0 ? cur0[k - 1][0] + 0.01 : 0, hi = k + 2 < n ? cur0[k + 2][0] - 0.01 : 1;
+        const pGrab = (this.secAt(g, r, e0.clientX) - g.off) / g.L, cx = clamp((pGrab - pA) / Math.max(1e-6, pC - pA), 0.08, 0.92), bT = BC.bezierT(cx, cx), w2 = 2 * (1 - bT) * bT;
+        const movA = k > 0, movC = k + 1 < n - 1, lo = k > 0 ? cur0[k - 1][0] + 0.01 : -1, hi = k + 2 < n ? cur0[k + 2][0] - 0.01 : 2;
         const onMove = ev => {
             const dx = ev.clientX - x0, dy = ev.clientY - y0;
             if (!mode) { if (Math.abs(dx) < 3 && Math.abs(dy) < 3) return; mode = Math.abs(dy) >= Math.abs(dx) ? 'bend' : 'shift'; svg.style.cursor = mode === 'bend' ? 'ns-resize' : 'ew-resize'; }
+            moved = true;
             const cur = cur0.map(p => JSON.parse(JSON.stringify(p)));
             if (mode === 'bend') { const v = clamp((HL - 4 - (ev.clientY - r.top)) / (HL - 10), -0.2, 1.2); const cy = clamp((v - (1 - bT) * (1 - bT) * y1 - bT * bT * y2) / Math.max(1e-6, w2), -0.5, 1.5); cur[k] = [cur[k][0], cur[k][1], [cx, r3(cy)]]; }
             else if (movA || movC) {
-                let s = dx / xw * vL;
+                let s = dx / (g.x1 - g.x0) * g.view / g.L;
                 if (movA) s = clamp(s, lo - pA, (movC ? hi - (pC - pA) : pC - 0.01) - pA);
                 if (movC) s = clamp(s, (movA ? lo + (pC - pA) : pA + 0.01) - pC, hi - pC);
                 if (movA) cur[k][0] = r3(pA + s); if (movC) cur[k + 1][0] = r3(pC + s);
             }
             this.setLevelPts(row, who, cur); this.rowOut(row); this.drawLevel(row, svg); this.changed(row, false);
         };
-        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); svg.style.cursor = ''; this.changed(row, true); this.render(); };
+        const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); svg.style.cursor = ''; if (!moved) { this._undo = null; this.paintUndo(); return; } this.changed(row, true); this.render(); };
         window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
     },
 
     // ---- the breath lane: per player the ideal breath lengths as faint ticks, the marks as dotted lines (yours bold, the dealt ones thin),
-    // drag to move, click to add, ALT-click to remove; one ⚠ where a span is longer than the ceiling — nothing else (2026-09-07, his line
-    // 18: "all the warnings and whatnot are throwing me off") ----
+    // drag to move, click to add, ALT-click to remove; one ⚠ where a span is longer than the ceiling; on the same timeline window ----
     drawBreaths(row, svg, info) {
-        const BC = BC_(), out = row.out, b = row.b, ns = 'http://www.w3.org/2000/svg', L = row.length, view = this.viewSpan(row);
-        const x0 = PADL, x1 = W - PADR, X = t => x0 + (t / view) * (x1 - x0), secAt = x => (x - x0) / (x1 - x0) * view;
+        const BC = BC_(), out = row.out, b = row.b, ns = 'http://www.w3.org/2000/svg', L = Math.max(0.1, row.length), off = row.offset || 0, win = this.windowOf(row), view = win.span, start = win.start;
+        const x0 = PADL, x1 = W - PADR, X = t => x0 + ((off + t - start) / view) * (x1 - x0), tAt = x => start + (x - x0) / (x1 - x0) * view - off;
         const mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
-        svg.innerHTML = '';
-        svg.appendChild(mk('rect', { x: X(L), y: 0, width: Math.max(0, x1 - X(L)), height: HB, fill: '#000', 'fill-opacity': 0.25 }));
-        svg.appendChild(mk('line', { x1: X(L), x2: X(L), y1: 0, y2: HB, stroke: '#777', 'stroke-dasharray': '3 3' }));
+        svg.innerHTML = ''; svg._X = p => X(p * L);
+        const xa = X(0), xb = X(L);
+        if (xb < x1) svg.appendChild(mk('rect', { x: Math.max(x0, xb), y: 0, width: Math.max(0, x1 - Math.max(x0, xb)), height: HB, fill: '#000', 'fill-opacity': 0.3 }));
+        if (xa > x0) svg.appendChild(mk('rect', { x: x0, y: 0, width: Math.max(0, Math.min(x1, xa) - x0), height: HB, fill: '#000', 'fill-opacity': 0.3 }));
+        [xa, xb].forEach(x => svg.appendChild(mk('line', { x1: x, x2: x, y1: 0, y2: HB, stroke: '#bbb', 'stroke-dasharray': '3 3' })));
         const rowsY = { upper: 15, lower: 41 };
         const over = [];
         for (const who of ['upper', 'lower']) {
             const br = out.breaths[who], inst = out.players[who], y = rowsY[who], col = who === 'upper' ? COL.upper : COL.lower;
             const nm = mk('text', { x: 2, y: y + 4, fill: col, 'font-size': 11 }); nm.textContent = (inst || '?').slice(0, 5); svg.appendChild(nm);
             svg.appendChild(mk('line', { x1: x0, x2: x1, y1: y, y2: y, stroke: '#444' }));
-            // the ideal breath length, from the start and from every mark: faint ticks
             const ceil = br.ceiling && br.ceiling.seconds > 0 ? br.ceiling.seconds : 0;
             if (ceil) for (let t = ceil; t < L - 0.05; t += ceil) svg.appendChild(mk('line', { x1: X(t), x2: X(t), y1: y - 7, y2: y + 7, stroke: col, 'stroke-opacity': 0.35, 'stroke-dasharray': '1 2' }));
             (br.spans || []).forEach(sp => { if (br.mode !== 'continuous' && ceil && sp[1] - sp[0] > ceil + 1e-6) { over.push(who); svg.appendChild(mk('rect', { x: X(sp[0]), y: y - 3, width: Math.max(1, X(sp[1]) - X(sp[0])), height: 6, fill: COL.bad, 'fill-opacity': 0.25, rx: 2 })); } });
@@ -1042,7 +1151,7 @@ const P = {
                 const hand = b.breath.marks && b.breath.marks[who] && b.breath.marks[who].includes(m);
                 svg.appendChild(mk('line', { x1: X(m), x2: X(m), y1: y - 11, y2: y + 11, stroke: COL.breath, 'stroke-width': hand ? 2 : 1, 'stroke-dasharray': hand ? '3 2' : '2 3', 'stroke-opacity': hand ? 1 : 0.7 }));
                 const h = mk('circle', { cx: X(m), cy: y, r: 4.5, fill: hand ? COL.breath : '#1a1a20', stroke: COL.breath, 'stroke-width': 1.5 }); h.style.cursor = 'ew-resize';
-                h.innerHTML = '<title>' + (hand ? 'your breath' : 'a dealt breath') + ' at ' + m.toFixed(2) + ' s — drag; ALT-click removes</title>';
+                h.innerHTML = '<title>' + (hand ? 'your breath' : 'a dealt breath') + ' at ' + r3(off + m) + ' s — drag; ALT-click removes</title>';
                 h.addEventListener('mousedown', e => {
                     e.preventDefault(); e.stopPropagation(); this.snapshot();
                     if (!b.breath.marks) b.breath.marks = { lower: [], upper: [] }; if (!b.breath.marks[who]) b.breath.marks[who] = [];
@@ -1052,22 +1161,25 @@ const P = {
                         else { b.breath.deal = false; b.breath.marks[who] = (br.marks || []).filter(x => x !== m); }
                         b.breath.mode = 'designated'; this.changed(row, true); this.render(); return;
                     }
-                    const r = svg.getBoundingClientRect(); const others = handList.filter(x => x !== m);
-                    const onMove = ev => { const cur = r3(clamp(secAt(ev.clientX - r.left), 0.1, L - 0.1)); b.breath.mode = 'designated'; b.breath.marks[who] = others.concat([cur]).sort((p, q) => p - q); this.rowOut(row); this.drawBreaths(row, svg, info); this.changed(row, false); };
-                    const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); };
+                    const r = svg.getBoundingClientRect(); const others = handList.filter(x => x !== m); let moved = false;
+                    const onMove = ev => { moved = true; const cur = r3(clamp(tAt(ev.clientX - r.left), 0.1, L - 0.1)); b.breath.mode = 'designated'; b.breath.marks[who] = others.concat([cur]).sort((p, q) => p - q); this.rowOut(row); this.drawBreaths(row, svg, info); this.changed(row, false); };
+                    const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); if (!moved) { this._undo = null; this.paintUndo(); return; } this.changed(row, true); this.render(); };
                     window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
                 });
                 svg.appendChild(h);
             });
             if (ceil) { const ct = mk('text', { x: x1 - 4, y: y + 4, fill: '#666', 'font-size': 10, 'text-anchor': 'end' }); ct.textContent = 'ideal ≤ ' + ceil + ' s'; svg.appendChild(ct); }
         }
+        svg.appendChild(mk('line', { class: 'bpCursor', x1: x0, x2: x0, y1: 0, y2: HB, stroke: '#fff', 'stroke-width': 1.5, 'pointer-events': 'none', style: 'display:none' }));
+        if (!svg._wheelBound) { svg._wheelBound = true; svg.addEventListener('wheel', e => this.laneWheel(e, row, svg), { passive: false }); }
         svg.style.cursor = 'copy';
-        svg.addEventListener('mousedown', e => {   // a click on the lane places your breath for that player
+        svg.addEventListener('mousedown', e => {   // a click on the lane places your breath for that player (inside the region)
             if (e.target.tagName === 'circle') return;
+            const r = svg.getBoundingClientRect(); const t = tAt(e.clientX - r.left); if (t < 0.1 || t > L - 0.1) return;
             this.snapshot();
-            const r = svg.getBoundingClientRect(); const who = (e.clientY - r.top) < 28 ? 'upper' : 'lower'; const t = r3(clamp(secAt(e.clientX - r.left), 0.1, L - 0.1));
+            const who = (e.clientY - r.top) < 28 ? 'upper' : 'lower';
             if (!b.breath.marks) b.breath.marks = { lower: [], upper: [] }; if (!b.breath.marks[who]) b.breath.marks[who] = [];
-            b.breath.mode = 'designated'; b.breath.marks[who] = b.breath.marks[who].concat([t]).sort((p, q) => p - q);   // yours; a deal keeps it
+            b.breath.mode = 'designated'; b.breath.marks[who] = b.breath.marks[who].concat([r3(t)]).sort((p, q) => p - q);   // yours; a deal keeps it
             this.changed(row, true); this.render();
         });
         if (info) { const mode = (b.breath.mode || 'one') !== 'designated' ? 'one breath each' : (b.breath.deal === false ? 'your marks only' : ((b.breath.phase == null ? 0.5 : +b.breath.phase) === 0 ? 'unison' : 'random') + ' · ' + (out.breaths.lower.marks || []).length + ' + ' + (out.breaths.upper.marks || []).length + ' marks'); info.textContent = mode + (over.length ? ' · ⚠ ' + [...new Set(over)].map(w => out.players[w]).join(', ') + ' past the ideal length' : ''); info.style.color = over.length ? COL.bad : '#888'; }
@@ -1291,13 +1403,14 @@ const P = {
         const fake = { id: 'bp-pattern', midiSnippet: { port: firstPort, channel: firstCh, events, slots: [...slots.values()], source: 'beating' } };
         await C.playBeatingEvents(fake, events, null, null);
         this._aud = C._beatingAud; this._loopArgs = [listIn, label, alone];
+        this.startCursor(list, alone, firstStart);
         const btn = this.el.querySelector('#bpPlay'); if (btn) btn.textContent = '■ playing ' + label;
         const last = events.reduce((m, e) => Math.max(m, e.onsetMs + (e.durations ? e.durations[0] : 0)), 0);
         clearTimeout(this._audTimer);
         this._audTimer = setTimeout(() => { this._aud = null; if (this.loop && this._loopArgs) { this.playRows.apply(this, this._loopArgs); return; } if (btn) btn.innerHTML = '&#9654; sequence'; }, last + C.BEATING_CENTRE_MS + 100);
         this.setStatus('playing ' + label + ' · ' + list.length + ' pair' + (list.length > 1 ? 's' : '') + ' · ' + events.length + ' events' + (this.loop ? ' · looping' : '') + ' · SPACE stops');
     },
-    stop() { const C = C_(); if (C) C.stopBeatingAudition(); this._aud = null; this._loopArgs = null; clearTimeout(this._audTimer); const btn = this.el && this.el.querySelector('#bpPlay'); if (btn) btn.innerHTML = '&#9654; sequence'; },
+    stop() { const C = C_(); if (C) C.stopBeatingAudition(); this._aud = null; this._loopArgs = null; clearTimeout(this._audTimer); this.stopCursor(); const btn = this.el && this.el.querySelector('#bpPlay'); if (btn) btn.innerHTML = '&#9654; sequence'; },
     // 4 s flat at the maximum on this pair (his line 7: "listen to a passage of max beating")
     hearMax(row) {
         const C = C_(), BC = BC_(), b = row.b; if (!C || b.pitch == null) { this.setStatus('the pair has no note yet — assign one first', true); return; }
@@ -1320,7 +1433,8 @@ const P = {
         // the timeline's own span (his line 20: "that timeline could have an independent duration"): typed in the head, never less than the content
         const W2 = Math.max(400, (wrap.clientWidth || W) - 2), seq = this.seqLength(), L = Math.max(1, seq * 1.05, +this.seqSpan || 0), H = 16 + rows.length * SEQ_H + 4;
         const x0 = PADL, x1 = W2 - PADR - 40, X = t => x0 + (t / L) * (x1 - x0), secPerPx = L / (x1 - x0);
-        svg.setAttribute('width', W2); svg.setAttribute('height', H); svg.style.width = W2 + 'px'; svg.style.height = H + 'px'; svg.innerHTML = '';
+        svg.setAttribute('width', W2); svg.setAttribute('height', H); svg.style.width = W2 + 'px'; svg.style.height = H + 'px'; svg.innerHTML = ''; svg._X = X;
+        svg.appendChild(mk('line', { class: 'bpCursor', x1: x0, x2: x0, y1: 12, y2: H, stroke: '#fff', 'stroke-width': 1.5, 'pointer-events': 'none', style: 'display:none' }));
         const step = L > 40 ? 10 : L > 16 ? 5 : 1;
         for (let t = 0; t <= L + 1e-6; t += step) { svg.appendChild(mk('line', { x1: X(t), x2: X(t), y1: 12, y2: H, stroke: '#2e2e36' })); const tx = mk('text', { x: X(t) + 2, y: 10, fill: '#777', 'font-size': 10 }); tx.textContent = t + ' s'; svg.appendChild(tx); }
         const lbl = mk('text', { x: 2, y: 10, fill: '#9a9', 'font-size': 10 }); lbl.textContent = 'sequence ' + seq + ' s'; svg.appendChild(lbl);
@@ -1358,8 +1472,9 @@ const P = {
                     else if (mode === 'right') len = Math.max(0.5, l0 + dt);
                     else { off = clamp(o0 + dt, 0, o0 + l0 - 0.5); len = o0 + l0 - off; }
                     off = r3(Math.round(off / 0.05) * 0.05); len = r3(Math.max(0.5, Math.round(len / 0.05) * 0.05));
-                    if (len !== row.length) { const s = BC.stretch({ length: row.length, slide: row.b.slide, breath: row.b.breath }, len); row.b.slide = s.slide; row.b.breath = s.breath; row.length = len; this.fitShapeToLength(row); }
-                    row.offset = off; this.placeZone(row); this.rowOut(row); this.drawSeq();
+                    if (mode === 'move') { row.offset = off; this.placeZone(row); }
+                    else if (len !== row.length) { this.resizeKeepTimes(row, len, mode === 'left'); if (mode === 'left') row.offset = off; this.placeZone(row); }   // a trim: the nodes keep their time
+                    this.rowOut(row); this.drawSeq();
                 };
                 const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); this.changed(row, true); this.render(); this.setStatus('pair ' + (i + 1) + ' @ ' + (row.offset || 0) + ' s · ' + row.length + ' s' + (row.zone ? ' — the zone moved in the score' : '')); };
                 window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp);
