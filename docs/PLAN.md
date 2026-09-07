@@ -355,7 +355,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 
 - **1f — The beatings: a pair of players on one pitch, a gap that beats — the beating panel (section 2, CN-28 · CN-29 · CN-33)** —
   `doing` — **building since 2026-09-07 at his word (*"will you be able to run the plan independantly? can you do so, and I'll check
-  in after the build"*, RUNNING_LOG §167): step 1 built (§167–168), step 2 built (§169), step 3 built (§170), step 4 built (§171), step 5 built (§172)** (the requirements talk 2026-09-06 evening, RUNNING_LOG
+  in after the build"*, RUNNING_LOG §167): step 1 built (§167–168), step 2 built (§169), step 3 built (§170), step 4 built (§171), step 5 built (§172), step 6 built (§173)** (the requirements talk 2026-09-06 evening, RUNNING_LOG
   §145–166; PLANNING_METHOD phase 3 from step 1) *(composer,
   2026-09-06: CN-28 "strikes with morph chords, like freeze frames or old time slide show … 'morph events'" · CN-29 "the expansion of
   pitch to expand beating, the rebreath … and the Crescendo … the multiple pairs" · "beating is good" · "the atom will be a pair of
@@ -546,7 +546,11 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        relation dealt from a root gives the pairs' pitches as predicted, folded; a launched pattern opens on its strike; then his
        test, the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md, commit, push.
   6. **Insertion** (at the playhead, its own group and META shape, re-insert replaces, select-and-P, stretch regenerates; nothing
-     around it touched) — `todo`. *Result when done:* a pattern made in the panel lands in the score at the playhead as one gesture,
+     around it touched) — `built 2026-09-07 (RUNNING_LOG §173; docs/BEATING_TOOL.md §9): insert @ playhead from the panel — a
+     beating zone per row under one group with a META shape (the crescendo's mean, 33 nodes); the shape's drag, box stretch and
+     delete carry the beatings (the three group paths learned zones); re-insert replaces at the same time, elsewhere a second
+     group; select + P loads the group; a selected strike note's pitch and onset as the starting point, no link; no mute, no
+     eating; verified on a copy. HIS TEST PENDING`. *Result when done:* a pattern made in the panel lands in the score at the playhead as one gesture,
      its own thing. It arrives as its beating objects under one group with a META shape, so the group drag carries it, a delete
      removes all of it, and a stretch of the shape regenerates it. It touches nothing around it: no note muted, no note greyed, no
      overlap avoided; the score's ordinary conflict marks apply to its notes as to any other, and the accents are his to add by hand.

@@ -351,13 +351,48 @@ between pairs (two pairs on one note) — allowed, nothing stops it; the pitch-c
 > warning … maximum breath length or bow length … continuous … or designate when the bows should change … an opportunity for the
 > shuffle"* (§152)
 
-## 9 · Insertion — step 6 `todo`
+## 9 · Insertion — `built 2026-09-07 (PLAN 1f step 6; RUNNING_LOG §173) — verified on a copy; his test pending`
 
 > *"keep the beating out of the strike chain so unlike the trills … we'll just add accents manually, but it doesn't have to do things
 > like avoid overlaps and gray out notes … it'll just be its own thing"* (§160)
 
-At the playhead, its own group and META shape, re-insert replaces, select-and-P, stretch regenerates; nothing around it touched.
-*(PLAN 1f item 6.)*
+**insert @ playhead** in the panel puts the pattern into the score as **one gesture**: a `beating` zone per row on its launching
+lane at the insert time plus the row's offset (its partner lane carried), all under **one new group** (`grp-beating-<t×10>-<n>`)
+with a **META shape** on the META layer whose contour is **the crescendo's mean across the pattern** (`renderPattern`'s 33-point
+contour, 0 → 1 as the window's 0 → 10) and whose span is the pattern's. The shape is the handle: **a drag moves the whole pattern**
+(the single-shape path and §144's multi-selection path both carry zones now), **the box stretches it** (every beating's length by
+the same factor, each regenerated on mouseup — the curves over the new length, the breaths re-dealt past the ceilings), **DELETE
+removes all of it** (the beatings, their partner brackets, the shape). One undo step. The panel stays bound to the pattern after
+the insert (`select + P` on any of its beatings opens the whole group, a row each with their offsets, edits live).
+
+- **The starting point** (kept as a convenience): with a strike note selected when the panel opens new, its pitch goes to the first
+  row and **its onset is the insert time** — the button says `insert @ 175.64 s`; nothing is stored linking the two
+  (`launchedFrom` is cleared on the inserted beatings).
+- **Re-insert:** the same panel inserting again **at the same time (within 100 ms) replaces its earlier insert** — the earlier
+  group's objects removed, the new ones placed; a panel bound to a group replaces that group in place (its own time, wherever the
+  playhead is) — so a row added or removed takes effect; **an insert at another time makes a second group**, the earlier kept
+  (the strikes drawer's rule, §113).
+- **Nothing else touched:** no `mutedBy`, no eating, no greying, no overlap avoidance; the score's ordinary conflict marks apply to
+  its notes as to any other; the accents are his to add by hand.
+
+**Verified on a copy (`zz-ai-beating`, :5301, 2026-09-07; §173):** the last strike note selected → Beating → three pairs (Vc + Va
+on F3 · Fl + Vn1 on F#5 · BCl + Va on D3, offsets 0 · 1 · 2 s) → **insert** → 4 objects added at 175.636 s (the note's onset): three
+beatings on their lanes with their brackets, the shape on META (33 nodes, 0.3 at the ends, 0.77 in the middle), the shape
+selected, the panel bound to the pattern, the strike note untouched, no `mutedBy` anywhere; **the shape dragged 2 s** (through the
+real handler) → every beating moved the same (1.964 s on the 50 ms grid), the lengths and the offsets kept, the brackets with them;
+**the box stretched × 1.5** → the span and every beating's length × 1.5, all regenerated, the cello's 9 s bow re-dealt into 2 + 7 s
+(past its 8.5 s ceiling), the viola's single bow under its 10.2; **re-insert** from the bound panel → the earlier group removed and
+a new one placed at its own time (177.6 s), the object count holding; **an insert at 100 s** → a second group, the first kept;
+**the first group's shape deleted** → its 4 objects and its brackets gone, everything else intact, the second group kept; **save
+and reload** → the second group whole (3 beatings with their blocks, the shape), regenerated; `tools/range_check.js` clean.
+
+**Decided in the build (§173):** the group id carries the insert time as the drawer's does; the zones ride the existing group
+machinery (the three drag / stretch paths learned the zone's own time fields — nothing new on the zones); a re-insert replaces
+only at the same time — a pattern may recur (CN-28); the panel binds to the pattern it inserts, so the next edit is live.
+
+**Open, for the composer (his test):** whether the shape's contour should show the beating instead of the crescendo; the shape's
+colour among the strikes' shapes on META; a pattern of one pair inserted from a bound lone beating (it stays a lone zone — B makes
+those; insert makes groups).
 
 ## 10 · Notation (phase 2a) `deferred`
 
@@ -387,3 +422,6 @@ every breath, the beat rate at both ends of the gliss — the tuba's settled for
 - **2026-09-07 — step 5 built:** the pitch side (§7): the strike menu from the bank, the keyboard beside the rows with the chord lit
   and the unplayable keys dimmed, arming and dropping a note on a pair, the drag, the relations dealt from a root and folded, a
   launched beating opening on its strike; verified with real DOM events on a copy. His test pending.
+- **2026-09-07 — step 6 built:** insertion (§9): insert @ playhead from the panel — the pattern's beatings under one group with a
+  META shape (the crescendo's mean), the shape's drag / stretch / delete carrying the beatings, re-insert replacing at the same
+  time, a second group elsewhere, select + P loading the group, nothing around it touched; verified on a copy. His test pending.

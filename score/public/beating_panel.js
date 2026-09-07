@@ -78,7 +78,7 @@ const P = {
             '<button id="bpTakeSave" title="save this pattern as a named take in bank/panel_snapshots.json">save take</button>',
             '<select id="bpTakeSel" style="max-width:130px"><option value="">load take&#8230;</option></select>',
             '<button id="bpTakeDel" title="delete the named take">&#10005;</button>',
-            '<button id="bpInsert" disabled title="Insert at the playhead — step 6">insert</button>',
+            '<button id="bpInsert" title="Insert @ playhead: the pattern into the score as its beatings under one group with a META shape (the crescendo&#8217;s mean); the same panel inserting again at the same time replaces its earlier insert, elsewhere makes another; nothing around it touched">insert @ playhead</button>',
             '</div>',
             // THE PITCH SIDE (step 5, §148 / §158): the strikes menu → the keyboard; a note armed by a click lands on the pair whose row is
             // clicked next (or is dragged onto it) as the pair's LOWER note; the relations deal every pair's pitch from a root
@@ -108,6 +108,7 @@ const P = {
         d.querySelector('#bpTakeName').addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); ev.stopPropagation(); this.saveTake(); });
         d.querySelector('#bpTakeSel').addEventListener('change', ev => { if (ev.target.value) this.loadTake(ev.target.value); ev.target.value = ''; });
         d.querySelector('#bpTakeDel').addEventListener('click', () => this.deleteTake());
+        d.querySelector('#bpInsert').addEventListener('click', () => this.insert());
         // the pitch side's controls
         d.querySelector('#bpSrc').addEventListener('change', ev => { this.pickSource(ev.target.value); });
         d.querySelector('#bpRel').innerHTML = RELATIONS.map(([k, l, t]) => '<button class="bpRelBtn" data-rel="' + k + '" title="' + esc(t) + '" style="font-size:10px;padding:1px 5px;margin:1px;cursor:pointer">' + l + '</button>').join('');
@@ -164,22 +165,32 @@ const P = {
     openFor(zone) {
         this.init(); const C = C_();
         this.bound = zone; C.ensureBeating(zone);
-        this.rows = [this.mkRow(zone.layer, zone.beating, 0, zone)];
-        this.length = r3(Math.max(0.1, zone.endTime - zone.startTime));
+        // a beating of a pattern (step 6): the whole group comes in — every beating with its groupId, a row each, their offsets from the first
+        const mates = zone.groupId ? C.objects.filter(o => o.type === 'zone' && o.midiModel === 'beating' && o.groupId === zone.groupId).sort((a, b) => a.startTime - b.startTime) : [zone];
+        const first = mates[0].startTime;
+        this.patternGroupId = zone.groupId || null; this.insertAt = null;
+        this.rows = mates.map(z => { C.ensureBeating(z); return this.mkRow(z.layer, z.beating, r3(z.startTime - first), z); });
+        this.length = r3(Math.max(0.1, Math.max.apply(null, mates.map(z => z.endTime - z.startTime))));
         this.activeRow = 0; this.armed = null;
         this.show(); this.render();
-        this.setStatus('bound to ' + C.beatingLabel(zone) + ' — every edit regenerates it; SPACE plays the pair; ESC closes');
+        this.setStatus((mates.length > 1 ? 'bound to the pattern ' + zone.groupId + ' (' + mates.length + ' pairs) — every edit regenerates its beatings; insert replaces it in place' : 'bound to ' + C.beatingLabel(zone) + ' — every edit regenerates it') + '; SPACE plays; ESC closes');
         // a beating born on a strike note opens on that strike's chord (the strike by the note's id, its group, or its time)
         this.loadDb().then(() => { const s = this.strikeFor(zone); if (s) this.pickSource(s.id); else this.drawKeyboard(); });
     },
     // the Beating button with nothing bound: an empty pattern that lives here until Insert (step 6)
     openNew() {
         this.init(); const C = C_();
-        this.bound = null;
-        if (!this.rows.length || this.rows.some(r => r.zone)) { this.rows = []; const r = this.defaultRow(C ? C.activeLane : 3); if (r) this.rows.push(r); }
+        this.bound = null; this.patternGroupId = null; this.insertAt = null;
+        // the starting point (§160, kept as a convenience): a selected strike note gives the first row its pitch and the insert its time — no link
+        const sel = C && C.selectedObject, note = (sel && sel.type === 'waveCurve' && sel.sonifyNote != null && sel.layer < METAL() && sel.layer !== 2) ? sel : null;
+        if (!this.rows.length || this.rows.some(r => r.zone) || note) { this.rows = []; const r = this.defaultRow(note ? note.layer : (C ? C.activeLane : 3)); if (r) this.rows.push(r); }
+        if (note && this.rows[0]) {
+            const r = this.rows[0]; if (this.rowCanPlay(r, note.sonifyNote)) r.b.pitch = note.sonifyNote; else { const c = C.beatingPartnerCandidates(r.layer, note.sonifyNote, 'unison'); if (c.length) { r.b.pitch = note.sonifyNote; r.b.partnerLayer = c[0].layer; } }
+            this.insertAt = r3(note.startSeconds);
+        }
         this.activeRow = 0; this.armed = null;
         this.show(); this.render();
-        this.setStatus(this.rows.length ? 'a new pattern — pick a strike or deal a relation for the pitches, shapes pop in from the menu, SPACE plays it; Insert comes at step 6' : 'no pair can be made on this lane', !this.rows.length);
+        this.setStatus(this.rows.length ? 'a new pattern' + (note ? ' from the strike note ' + nn(note.sonifyNote) + ' at ' + note.startSeconds.toFixed(2) + ' s (its pitch on the first pair, its onset the insert time — no link)' : '') + ' — pick a strike or deal a relation for the pitches, shapes pop in from the menu, SPACE plays it, insert puts it in the score' : 'no pair can be made on this lane', !this.rows.length);
         this.loadDb().then(() => this.drawKeyboard());
     },
     mkRow(layer, b, offset, zone) { return { layer, b, offset: offset || 0, zone: zone || null, locked: true, draw: false, scale: 6, out: null }; },
@@ -198,7 +209,7 @@ const P = {
     },
     addRow() {
         if (this.rows.length >= MAX_ROWS) { this.setStatus('three pairs at most (the six bending players)', true); return; }
-        if (this.bound) { this.setStatus('a bound beating is one pair — a pattern of several is inserted from a new pattern (Beating button), or grouped at step 6', true); return; }
+        if (this.bound && !this.patternGroupId) { this.setStatus('a lone beating is one pair — for a pattern of several open a new pattern (Beating with nothing selected), or insert this one and add to its group', true); return; }
         const used = new Set(); this.rows.forEach(r => { used.add(r.layer); used.add(r.b.partnerLayer); });
         const free = [0, 1, 3, 4, 5, 6].filter(L => !used.has(L));
         const r = this.defaultRow(free[0] != null ? free[0] : 3); if (!r) { this.setStatus('no free pair', true); return; }
@@ -241,8 +252,9 @@ const P = {
         if (!this.el) return;
         const C = C_(), BC = BC_();
         this.el.querySelector('#bpLen').value = this.length;
-        this.el.querySelector('#bpTitle').textContent = this.bound ? '— ' + (TRK()[this.bound.layer] || {}).short + ' ' + this.bound.startTime.toFixed(2) + ' s' : '— new pattern';
-        this.el.querySelector('#bpAdd').disabled = !!this.bound || this.rows.length >= MAX_ROWS;
+        this.el.querySelector('#bpTitle').textContent = this.patternGroupId ? '— pattern ' + this.patternGroupId + ' · ' + this.rows.length + ' pair' + (this.rows.length > 1 ? 's' : '') : this.bound ? '— ' + (TRK()[this.bound.layer] || {}).short + ' ' + this.bound.startTime.toFixed(2) + ' s' : '— new pattern' + (this.insertAt != null ? ' @ ' + this.insertAt.toFixed(2) + ' s' : '');
+        this.el.querySelector('#bpAdd').disabled = (!!this.bound && !this.patternGroupId) || this.rows.length >= MAX_ROWS;
+        this.el.querySelector('#bpInsert').textContent = this.patternGroupId ? 'insert (replace the pattern)' : 'insert @ ' + (this.insertAt != null ? this.insertAt.toFixed(2) + ' s' : 'playhead');
         const host = this.el.querySelector('#bpRows'); host.innerHTML = '';
         this.rows.forEach((row, i) => { this.rowOut(row); host.appendChild(this.buildRow(row, i)); });
         if (!this.rows.length) host.innerHTML = '<div style="color:#888;padding:12px">no pairs — + pair</div>';
@@ -670,12 +682,13 @@ const P = {
         this.stop();
         const events = [], slots = new Map();
         let firstPort = null, firstCh = 1;
+        const firstStart = Math.min.apply(null, this.rows.filter(r => r.zone).map(r => r.zone.startTime).concat([Infinity]));
         for (const row of this.rows) {
             const z = row.zone || { id: 'bp-row-' + this.rows.indexOf(row), type: 'zone', layer: row.layer, startTime: 0, endTime: this.length, beating: row.b };
             const s = C.regenerateBeating(z); if (!s) continue;
             if (row.zone) C.renderZone(row.zone);
             if (!firstPort) { firstPort = s.port; firstCh = s.channel; }
-            const off = row.zone ? 0 : row.offset * 1000;
+            const off = row.zone ? (isFinite(firstStart) ? (row.zone.startTime - firstStart) * 1000 : 0) : row.offset * 1000;   // a bound group plays at its own offsets
             s.events.forEach(e => events.push(Object.assign({}, e, { onsetMs: e.onsetMs + off, port: e.port || s.port, channel: e.channel || s.channel })));
             s.slots.forEach(q => slots.set(q.port + '|' + q.channel, q));
         }
@@ -690,6 +703,54 @@ const P = {
         this.setStatus('playing ' + this.rows.length + ' pair' + (this.rows.length > 1 ? 's' : '') + ' · ' + events.length + ' events · SPACE stops');
     },
     stop() { const C = C_(); if (C) C.stopBeatingAudition(); this._aud = null; clearTimeout(this._audTimer); const btn = this.el && this.el.querySelector('#bpPlay'); if (btn) btn.innerHTML = '&#9654; play (space)'; },
+
+    // ------------------------------------------------------------------ insertion (step 6, §160: its own thing — nothing around it touched)
+    // the pattern into the score as one gesture: a `beating` zone per row on its launching lane at the insert time + the row's offset, all
+    // under one new group id with a META shape whose contour is the crescendo's mean across the pattern (BeatingCalc.renderPattern);
+    // the panel remembers the group. The same panel inserting again at the same time (within 100 ms) REPLACES its earlier insert; at
+    // another time it makes a second group (the strikes drawer's rule, §113); a panel bound to a group replaces that group in place.
+    // No note is muted or eaten or greyed; the accents are his to add by hand.
+    removeGroup(groupId) {
+        const C = C_(); if (!groupId) return 0;
+        const gone = C.objects.filter(o => o.groupId === groupId);
+        gone.forEach(o => { if (o.type === 'zone' && o.midiModel === 'beating') C.removeBeatingDecor(o); if (o._els) { if (o._els.group) o._els.group.remove(); if (o._els.groups) o._els.groups.forEach(g => g.remove()); } C.elementCache.delete(o.id); if (C.selectedObject === o) C.deselectAll(); });
+        C.objects = C.objects.filter(o => o.groupId !== groupId);
+        return gone.length;
+    },
+    insert() {
+        const C = C_(), BC = BC_(); if (!C || !BC || !this.rows.length) { this.setStatus('nothing to insert', true); return; }
+        const M = METAL();
+        const groupStart = this.patternGroupId ? Math.min.apply(null, C.objects.filter(o => o.groupId === this.patternGroupId && o.type === 'zone').map(o => o.startTime).concat([Infinity])) : Infinity;
+        const t = isFinite(groupStart) ? groupStart : (this.insertAt != null ? this.insertAt : Math.max(0, +C.getTimeAtPlayhead().toFixed(3)));
+        const rowsSpec = this.rows.map(r => ({ layer: r.layer, b: JSON.parse(JSON.stringify(r.b)), offset: r.zone && isFinite(groupStart) ? r3(r.zone.startTime - groupStart) : (r.offset || 0), length: r.zone ? r3(r.zone.endTime - r.zone.startTime) : this.length }));
+        C.pushUndoState();
+        let replaced = 0;
+        if (this.patternGroupId && (isFinite(groupStart) ? true : false)) { if (Math.abs(groupStart - t) < 0.1) replaced = this.removeGroup(this.patternGroupId); }
+        else if (this.lastInsert && Math.abs(this.lastInsert.t - t) < 0.1) replaced = this.removeGroup(this.lastInsert.group);
+        const group = 'grp-beating-' + Math.floor(t * 10) + '-' + (C.nextId++);
+        const zones = [];
+        rowsSpec.forEach(rs => {
+            const z = C.createZone({ layer: rs.layer, startTime: r3(t + rs.offset), endTime: r3(t + rs.offset + rs.length), zoneFunction: 'midiPreview', midiModel: 'beating', color: '#7B3FE4', opacity: 0.16, zoneHeight: 0.96, yOffset: 0.5, performanceNotes: 'beating' });
+            C.undoStack.pop();   // createZone pushes its own undo step; the insert is ONE step
+            z.groupId = group; z.beating = rs.b; z.beating.launchedFrom = null;
+            C.regenerateBeating(z); C.renderZone(z);
+            zones.push(z);
+        });
+        // the META shape: the crescendo's mean across the pattern as its contour (§160), the pattern's whole span
+        const pat = BC.renderPattern({ length: this.length, pairs: rowsSpec.map(rs => Object.assign({}, C.beatingSpec({ layer: rs.layer, startTime: 0, endTime: rs.length, beating: rs.b }), { length: rs.length })), offsets: rowsSpec.map(rs => rs.offset) }, INST());
+        const patLen = Math.max(0.1, pat.length);
+        const nodes = pat.contour.map(([tt, lv], i, a) => ({ pos: i === a.length - 1 ? 1 : Math.round((tt / patLen) * 10000) / 10000, y: Math.round(Math.max(0, Math.min(1, lv)) * 100) / 10, smooth: 0 }));
+        const shape = { id: 'wc-' + (C.nextId++), type: 'waveCurve', layer: M, groupId: group, startSeconds: r3(t), endSeconds: r3(t + patLen),
+            nodes, segments: nodes.slice(0, -1).map(() => ({ model: 'power', slope: 0 })), color: '#7B3FE4', fillMode: 'bottom', opacity: 0.6,
+            performanceNotes: 'beating pattern · ' + zones.length + ' pair' + (zones.length > 1 ? 's' : '') + ' (drag = move, box = stretch)', properties: {} };
+        C.objects.push(shape);
+        C.lastInsertGroup = group; this.lastInsert = { group, t };
+        if (typeof C.openMetaWin === 'function') C.openMetaWin();
+        C.renderAll(); C.markDirty();
+        C.selectObject(shape);   // the handle: a drag moves the whole pattern, the box stretches it, DELETE removes all of it
+        this.openFor(zones[0]);
+        this.setStatus('inserted ' + zones.length + ' pair' + (zones.length > 1 ? 's' : '') + ' at ' + t.toFixed(3) + ' s as ' + group + (replaced ? ' · replaced the earlier insert at this time (' + replaced + ' objects)' : '') + ' — the shape on META is the handle; nothing around it touched');
+    },
 
     // ------------------------------------------------------------------ takes (bank/panel_snapshots.json, the `beatings` bucket)
     state() { return { length: this.length, rows: this.rows.map(r => ({ layer: r.layer, offset: r.offset, locked: r.locked, scale: r.scale, b: JSON.parse(JSON.stringify(r.b)) })) }; },

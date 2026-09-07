@@ -4766,7 +4766,7 @@ const Composer = {
         const isGroupShape = !!wc.groupId && wc.layer === META_LAYER;
         const grpMembers = isGroupShape
             ? this.objects.filter(o => o !== wc && o.groupId === wc.groupId)
-                .map(o => ({ o, start: o.startSeconds, end: o.endSeconds, time: o.time }))
+                .map(o => ({ o, start: o.type === 'zone' ? o.startTime : o.startSeconds, end: o.type === 'zone' ? o.endTime : o.endSeconds, time: o.time }))   // zones by their own fields (1f step 6)
             : [];
         // MULTI-RESIZE: if the dragged note is part of a multi-selection, every
         // other selected note takes the SAME delta (uniform, not proportional -
@@ -4820,6 +4820,10 @@ const Composer = {
                     if (m.o.type === 'marker') {
                         m.o.time = Math.max(0, map(m.time));
                         this.renderMarker(m.o);
+                    } else if (m.o.type === 'zone') {   // a beating of a pattern scales with its shape (1f step 6); regenerated on mouseup
+                        m.o.startTime = map(m.start); m.o.endTime = Math.max(m.o.startTime + 0.1, map(m.end));
+                        if (m.o.midiSnippet) m.o.midiSnippet._stale = true;
+                        this.renderZone(m.o);
                     } else {
                         m.o.startSeconds = map(m.start);
                         m.o.endSeconds = this.isFixedLen(m.o)
@@ -4858,6 +4862,7 @@ const Composer = {
             window.removeEventListener('mouseup', onUp);
             this.hideDragDur();
             this.renderWaveCurve(wc);   // reposition the apex dot
+            grpMembers.forEach(m => { if (m.o.type === 'zone') this.trillAfterDrag(m.o); });   // the stretched beatings regenerate (1f step 6)
             this.refreshPanelValues();
             this.markDirty();
         };
@@ -5200,7 +5205,7 @@ const Composer = {
         const isGroupShape = !!wc.groupId && wc.layer === META_LAYER;
         const memberOrig = isGroupShape
             ? this.objects.filter(o => o !== wc && o.groupId === wc.groupId)
-                .map(o => ({ o, start: o.startSeconds, end: o.endSeconds, time: o.time }))
+                .map(o => ({ o, start: o.type === 'zone' ? o.startTime : o.startSeconds, end: o.type === 'zone' ? o.endTime : o.endSeconds, time: o.time }))   // a zone (a beating of a pattern, 1f step 6) by its own fields
             : [];
 
         const onMove = (e) => {
@@ -5241,6 +5246,11 @@ const Composer = {
                     if (m.o.type === 'marker') {
                         m.o.time = Math.max(0, +(m.time + dt).toFixed(3));
                         this.renderMarker(m.o);
+                    } else if (m.o.type === 'zone') {   // a beating of a pattern moves with its shape (1f step 6)
+                        m.o.startTime = +(m.start + dt).toFixed(3);
+                        m.o.endTime = +(m.end + dt).toFixed(3);
+                        if (m.o.midiSnippet) m.o.midiSnippet._stale = true;
+                        this.renderZone(m.o);
                     } else {
                         m.o.startSeconds = +(m.start + dt).toFixed(3);
                         m.o.endSeconds = +(m.end + dt).toFixed(3);
@@ -5279,7 +5289,7 @@ const Composer = {
         const grpOrig = (isGroupShape && (nodeIdx === 0 || nodeIdx === wc.nodes.length - 1)) ? {
             start: wc.startSeconds, end: wc.endSeconds,
             members: this.objects.filter(o => o !== wc && o.groupId === wc.groupId)
-                .map(o => ({ o, start: o.startSeconds, end: o.endSeconds, time: o.time })),
+                .map(o => ({ o, start: o.type === 'zone' ? o.startTime : o.startSeconds, end: o.type === 'zone' ? o.endTime : o.endSeconds, time: o.time })),   // zones by their own fields (1f step 6)
         } : null;
 
         const onMove = (e) => {
@@ -5314,6 +5324,10 @@ const Composer = {
                     if (m.o.type === 'marker') {
                         m.o.time = Math.max(0, map(m.time));
                         this.renderMarker(m.o);
+                    } else if (m.o.type === 'zone') {   // a beating of a pattern scales with its shape (1f step 6); regenerated on mouseup
+                        m.o.startTime = map(m.start); m.o.endTime = Math.max(m.o.startTime + 0.1, map(m.end));
+                        if (m.o.midiSnippet) m.o.midiSnippet._stale = true;
+                        this.renderZone(m.o);
                     } else {
                         m.o.startSeconds = map(m.start);
                         m.o.endSeconds = this.isFixedLen(m.o)
@@ -5337,6 +5351,7 @@ const Composer = {
             window.removeEventListener('mousemove', onMove);
             window.removeEventListener('mouseup', onUp);
             if (!hasMoved) this.undoStack.pop();
+            if (hasMoved && grpOrig) grpOrig.members.forEach(m => { if (m.o.type === 'zone') this.trillAfterDrag(m.o); });   // the stretched beatings regenerate (the curves over the new length, the breaths re-dealt)
             this.showPropertyPanel();
             this.markDirty();
         };

@@ -146,7 +146,9 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
    verified by the decoded MIDI on a copy; HIS EAR PENDING); **step 4 the panel DONE** (§171 — `beating_panel.js`; verified with
    real DOM events on a copy; HIS TEST PENDING); **step 5 the pitch side DONE** (§172 — the strike menu, the keyboard, arming /
    dragging a note onto a pair, the relations dealt from a root; verified with real DOM events on a copy; HIS TEST PENDING);
-   **► step 6 insertion**, then 7; his listening verdicts at 3–7 filed when he checks in. Section 1 stays drafted at 175.7 s
+   **step 6 insertion DONE** (§173 — insert @ playhead: the beatings under one group with a META shape, the shape's drag / stretch /
+   delete carrying them, re-insert replacing at the same time, select + P loading the group; verified on a copy; HIS TEST PENDING);
+   **► step 7 verify and document**; his listening verdicts at 3–7 filed when he checks in. Section 1 stays drafted at 175.7 s
    (v1.23-sec1DraftDone); the piece file is his.
 3. **TRILLS_TOOL phase 5, the weave** on his go; the run dials' calibration ladder (1h item 6) on his go; the notation of trills and
    beatings at 2a; 1f step 8's four held things when their lines come.
@@ -184,29 +186,29 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   chords), `strikeFor(zone)` (a launched beating's strike: the note's id, its group index, its onset), `drawKeyboard` (the drawer's
   picture; the dots, the rings, the dimming by `rowCanPlay`), `keyClick` / `startDotDrag` / `assign` (the armed note → the pair's
   lower note), `deal` (the relations from a root, folded). Verified with real DOM events on a copy. **His test pending.**
-- **Next concrete step — build step 6, insertion, in the plan's words:** read PLAN 1f item 6's to-dos (the goal and the decision of
-  §160: nothing around it touched), then read what it copies: the strikes drawer's Insert (`strike_drawer.js` `insert()`: the group
-  id, the META shape on META_LAYER with `groupId`, the marker, the "re-insert replaces at its own time" rule of STRIKES_TOOL Q v3 /
-  §113), the META shape's edge stretch and how the group's members scale with it (composer.html: the wave-curve edge handlers on a
-  META shape with a `groupId`), `startGroupDrag` (the members carried — seen at step 3: zones move by `_dragDt`) and `deleteSelected`'s
-  group rule (the shape deletes the whole gesture). Then build, each to-do verified on a `zz-ai-*` copy at 175.7 s on :5301:
-  (1) **Insert @ playhead** from the panel (the `insert` button, enabled): every row → a `beating` zone on its launching lane at the
-  playhead time + the row's offset (its partner lane carried), under one new group id with a META shape on the META layer whose
-  contour is `renderPattern`'s `contour` (the crescendo's mean across the pattern); the panel remembers the group it made
-  (`patternGroupId`); (2) the starting point: with a strike note selected when the panel opened new, its pitch went to the first row
-  and its onset is the insert time — nothing stored linking the two; (3) the group's behaviour: the group drag carries every zone
-  (the single-shape path and §144's multi-selection path — the beating zones regenerate after the drag, `trillAfterDrag`); a delete
-  of the shape removes all of it (deleteSelected's group rule — the zones' partner brackets too, `removeBeatingDecor`); an edge
-  stretch of the shape scales every zone's length by the same factor (`BeatingCalc.stretch` semantics on the block: the slides and
-  hand marks scale, the breaths re-deal), each regenerated on mouseup; (4) re-insert from the same panel state: the earlier group
-  removed and the new one placed at its own time; an insert at another time makes a second group; (5) select + P: a selected beating
-  that belongs to a pattern group loads the whole group into the panel (all rows, their offsets from the first), edits live; the
-  panel's Insert then acts as a replace; (6) nothing else touched: no `mutedBy`, no eating, no greying; `tools/range_check.js` clean;
-  (7) verified on the copy: a three-pair pattern inserted lands on six lanes under one group with its shape; the group dragged 2 s
-  moves all of it with the offsets kept; the shape stretched × 1.5 regenerates with the breaths re-dealt; a re-insert replaces and
-  the object count holds; an insert elsewhere makes a second group; a delete removes all and nothing else changes; save and reload
-  keep it; the checker clean; then his test when he checks in. Then BEATING_TOOL §9 stamped, the journal (§173), commit, push; then
-  step 7 (verify and document). Narrate briefly; do not re-plan; the chunk cadence of HOW_WE_WORK per to-do.
+- **Step 6 is built too (§173; BEATING_TOOL §9):** in `beating_panel.js` — `insert()` (the group, the zones via `createZone` with the
+  undo steps popped, the META shape from `renderPattern`'s contour, the replace-at-the-same-time rule, the panel re-bound),
+  `removeGroup`, `openFor` loading a whole group, `openNew`'s strike starting point (`insertAt`), `play` at a bound group's offsets;
+  in `composer.html` the three group paths (`startWCBodyDrag`, `startBoxDrag`, the node-handle stretch) carry zones and regenerate
+  them on a stretch. Verified on a copy. **His test pending.**
+- **Next concrete step — build step 7, verify and document, in the plan's words:** read PLAN 1f item 7's to-dos, then: (1) the
+  end-to-end on a `zz-ai-*` copy at 175.7 s on :5301 — a strike picked from the menu, three pairs assigned from its chord, shapes
+  popped and dragged, one pair unlocked and slid, a row offset, breaths dealt, a duration set, inserted at the playhead, then the
+  score's tick driven over the pattern with fake outputs (the recipe of step 3) and the MIDI decoded for the WHOLE pattern against
+  the panel's rows (each pair's beat rate vs its `out.beat`, the offsets, the just offsets, the slots, nothing stray); the checker
+  clean; the copy and its `-work` deleted, the server stopped first; (2) `docs/BEATING_TOOL.md` — a final pass: §0–§11 read whole,
+  the open questions for him gathered at the end (§11), every stamp right; (3) MORPH_NOTES §1 rewritten to what exists now (the
+  beating tool: the math, the object, the panel, the pitch side, the insertion; what the tuba files still hold) and §4 the digest
+  for the revision (what an all-purpose morph / beating tool needs, from this build); (4) NAMING §2 — the beating object for the IR:
+  its type (`zone` with `midiModel: 'beating'`), the `beating` block's fields, the generated notes (the snippet: per-player, bend
+  and level breakpoints), the curve height as the dynamic (D23), the group and its META shape — so the extractor at 2a knows what it
+  reads; (5) the journal: §4 the decisions with their whys and the rejected alternatives (the name and the atom · the panel over the
+  shuffle · the axis in beats per second · the piano out · the beating out of the strike chain · the breath model · the snippet path
+  over the per-frame poll · one truth in the panel), the D-numbers continuing from the last; §2 rewritten (the checkpoint block for
+  his check-in); PLAN 1f marked built (the header `doing` → `built`, item 7 stamped, item 8's four held things standing); (6) the
+  app's help line (`?` — find it: grep the help text in composer.html) — how a beating is made: B, P, the panel, insert; (7) commit,
+  push; then the checkpoint for his check-in (his hard reload, his listening at 3–7, the first pattern in the piece placed by him —
+  the verdicts to MORPH_NOTES §3 and BEATING_TOOL.md). Narrate briefly; do not re-plan.
 - **Resume reads:** `docs/PLAN.md` 1f whole (the build's words) · `docs/MORPH_NOTES.md` §1–2 · RUNNING_LOG §145 (what the tuba tool is —
   the digest for reusing its parts: the bend arithmetic, the re-key, `buildCarrier`'s breath rule, `toScoreObjects`' note format),
   §147 (the panel picture), §148 (the interval arithmetic: beat = p · f1 · |2^(δ/1200) − 1|), §150 (#1's bend convention), §152 (the
