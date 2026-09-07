@@ -128,4 +128,12 @@
   bass clarinet's Instrument Options → Controller: "Accept All Notes Off (#123) and All Sounds Off (#120)" unchecked; RUNNING_LOG §202).
   This is the sampler-side reason CC123 never stopped a trapped note (§176, §178); the app's cure — every long note released
   explicitly, ■ Panic — stands on its own. Ticking the box on the five Xsample instruments (and saving the Reaper project) would give
-  Panic a second path at the sampler. His rack, his call; not needed for the piece.
+  Panic a second path at the sampler. His rack, his call; not needed for the piece. **2026-09-07 late, his "Is that something you can do script? because there's too many instances":** no — the Kontakt Lua API's `set_instrument_options` has no such entry (RUNNING_LOG §203), so it is a hand setting per instrument in Instrument Options → Controller; "put it on the to do list".
+- **The Xsample instruments' bend range could go to ±2 st in Kontakt, if ever** (composer, 2026-09-07 late, after trying: "It's totally
+  opaque to me … not worth my time. unless it's a blocker"; RUNNING_LOG §200–203). Not a blocker: the morph engine splits by the real
+  excursion at the measured ±0.96–0.99 st (the quartet's key rule), a whole tone in one key. The gain of ±2 st: up to a major third
+  per key, no seam on wide glissandi, no clamp at a note's start. Where: NOT in Instrument Options and NOT in the Lua API (no
+  modulators; `set_instrument_options` has no such entry) — either the Xsample panel's `ind. PB` (untested) or the edit view: wrench
+  → Group Editor → Edit All Groups → Source → Modulation → Pitch Bend intensity 2.00 st, per instrument, then save the Reaper project;
+  after it, the probe is one command (`bash tools/probe_run.sh probes/bend_schedule.json` → `node tools/apply_bend_ranges.js`).
+  His hands only (the AI cannot reach the modulators); "put it on the to do list".

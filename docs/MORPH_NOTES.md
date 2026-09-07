@@ -692,6 +692,23 @@ all-purpose tool: keep the probe (measure, never assume), keep the "set the rack
 control per library once found, and note that Kontakt's Lua API reaches scripts, groups and zones but not the modulators. The
 panel's size follows its fonts — a readability floor is a size floor too. RUNNING_LOG §202.
 
+### 2026-09-07, late — "It's totally opaque to me … not worth my time. unless it's a blocker" — the Kontakt dial dropped; the engine adapts instead
+
+> *"I can't figure it out. It's totally opaque to me. The number keeps changing, and it's difficult to know which instrument the
+> keyboard controls. what was the other option and the pros and cons of it? this is probably not worth my time. unless it's a blocker.
+> And then the... you mentioned the accept all notes off. Is that something you can do script? because there's too many instances.
+> Otherwise, just either way, put it on the to do list, and we can maybe do that later. But even better if you can do yourself."* ·
+> *"No. Just put it on the to do list. No need to do any lookup. I need to move this along, please. So quick, very quick answer on the
+> the pitch bend Can we do it with what we have now? And then are we ready to move forward with the plan? Can you do the probe and
+> run those steps independently? Let's try to move as quickly as possible to implementing this plan. so I can get back to the
+> composing work."* *(2026-09-07, late; typed)*
+
+**AI reading (not the composer's words):** the lesson of §202 in his words — a step inside the sampler's edit view is not the
+composer's to take; the tool adapts to the rack as measured (the quartet's key rule inside the engine) and the rack stays as it is.
+For the all-purpose tool: never make a sampler setting a precondition of a feature when the engine can absorb it; put rack changes on
+a list with their gain named, and let the composer decide when. And: a lookup he did not ask for is a cost — the reply comes first,
+the record after. RUNNING_LOG §203.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

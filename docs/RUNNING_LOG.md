@@ -5886,3 +5886,31 @@ library may re-set it at init, which the probe would show. Either way: save the 
 **Found in his screenshot, told him:** "Accept All Notes Off (#123) and All Sounds Off (#120)" is unchecked on the bass clarinet —
 the sampler-side reason the all-notes-off never stopped a trapped note (§176, §178); ticking it on the five gives ■ Panic a second
 path. Saved in NITS as a rack note, his call. **His ask saved for the build:** the morph panel's box grows with its fonts.
+
+## §203. "I can't figure it out. It's totally opaque to me … this is probably not worth my time. unless it's a blocker … Can we do it with what we have now? … Can you do the probe and run those steps independently? Let's try to move as quickly as possible" — (ii) dropped, (i) taken: the engine splits by the real excursion at the measured ranges; the rack items to NITS; the build begins
+
+Composer, 2026-09-07 late (verbatim in MORPH_NOTES §3): *"I can't figure it out. It's totally opaque to me. The number keeps changing,
+and it's difficult to know which instrument the keyboard controls. what was the other option and the pros and cons of it? this is
+probably not worth my time. unless it's a blocker. And then the... you mentioned the accept all notes off. Is that something you can
+do script? because there's too many instances. Otherwise, just either way, put it on the to do list, and we can maybe do that later.
+But even better if you can do yourself."* — then, interrupting a lookup: *"No. Just put it on the to do list. No need to do any lookup.
+I need to move this along, please. So quick, very quick answer on the the pitch bend Can we do it with what we have now? And then
+are we ready to move forward with the plan? Can you do the probe and run those steps independently? Let's try to move as quickly as
+possible to implementing this plan. so I can get back to the composing work."*
+
+**Decided:** the Kontakt dial is dropped; **option (i) of §200** — the engine picks the key by the real excursion (the quartet's rule:
+the key one semitone into the travel, the bend from the far end), splits only when the travel truly exceeds the sampler's measured
+range, with the quartet's 5 ms overlap at a re-key, and clamps a shortfall of a few cents at the START of a note, never at its end
+(a CONVERGE arriving on a unison arrives exactly). **A correction of §200's arithmetic:** CONVERGE's voices each travel half the
+opening interval — 100 c for a whole tone apart — so with the key at the destination they fit inside ±96 c with the clamp at the
+start; the "1.4 Hz where a unison was written" of §200 assumed a 200 c travel per voice and was wrong. Only a single voice
+travelling a full whole tone or more re-keys, the tuba way. **No probe:** the measured ranges of §168 stand.
+
+**To the to-do list (NITS):** the Kontakt bend range to ±2 st on the five (if ever; the probe is one command after it) — the Kontakt
+Lua API cannot set it (no modulators) and its `set_instrument_options` table has no "accept all notes off" entry either (checked in
+the extracted manual: key switch, key and velocity ranges, transpose, wallpaper, voice stealing, DFD), so both stay hand settings in
+the rack; the all-notes-off note of §202 already there.
+
+**The build begins** (the plan of §201 minus the probe): the engine's palette per voice · the split rule · the fold as one unit (D26)
+· the emitter and the tick per instrument · the six models re-voiced for three pairs · the pair lines with seat pull-downs and insert
+ticks · the box grown with its fonts · node checks · the decoded MIDI on a copy · MORPH_NOTES §1. His listening after.
