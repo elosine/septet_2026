@@ -668,6 +668,17 @@ re-key beyond") but the engine's split threshold was tuned for the tuba's ±2 st
 the sampler's measured range and split by the real need. The measured ranges live in the recipe (MEASURED_BEND) and BEATING_TOOL
 §3, not in anyone's memory. The fold decided as (a): the pair folds as one unit (D26). RUNNING_LOG §200.
 
+### 2026-09-07, late — "ii good … pitch the old way … run the probe, then make the adjustments"
+
+> *"ii good. We'll continue to do pitch the old way. I'll just ask you, and then we can try the new pitches. and then you're able to
+> run the probe independently. Correct? So if you could run the probe, then make the adjustments to the morph panel. Just briefly
+> check-in with me one more time and let me know how much you'll be able to do from now."* *(2026-09-07, late; typed)*
+
+**AI reading (not the composer's words):** the working mode of the tuba piece confirmed for the septet's morphs — the pitches in the
+conversation, the AI as the hands, the composer's ear as the judge — and the rack made to fit the tool (±2 st) rather than the tool
+made to fit the rack. For the all-purpose tool: the sampler's bend range is a rack setting the tool should ASK FOR and then measure,
+not a constant it carries; the probe is the tool's, the dial is the composer's. RUNNING_LOG §201.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

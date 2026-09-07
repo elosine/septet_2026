@@ -5829,3 +5829,26 @@ set to ±2 st on the five and the bend probe re-run (his rack, about ten minutes
 follows them through `bendRangeSt`, its steps 0.34 → 0.68 c) — a whole tone with room, up to a major third per key, no seam and no
 shortfall; recommended (ii) because a CONVERGE closing to a unison must actually arrive: two voices each 4 c shy would beat at
 about 1.4 Hz on D4 where a unison was written. His choice pending; nothing built.
+
+## §201. "ii good. We'll continue to do pitch the old way … you're able to run the probe independently. Correct? … run the probe, then make the adjustments to the morph panel. Just briefly check-in with me one more time and let me know how much you'll be able to do from now" — decided: Kontakt to ±2 st on the five, the probe re-run, then the morph panel adapted; the split between his hands and the AI's stated
+
+Composer, 2026-09-07 late (verbatim in MORPH_NOTES §3): *"ii good. We'll continue to do pitch the old way. I'll just ask you, and then
+we can try the new pitches. and then you're able to run the probe independently. Correct? So if you could run the probe, then make the
+adjustments to the morph panel. Just briefly check-in with me one more time and let me know how much you'll be able to do from now."*
+
+**Decided (his):** (ii) — the five Xsample instruments' bend range to ±2 st in Kontakt and the bend probe re-run; the pitches stay in
+the conversation (he asks, the AI types the set, he listens) — the tuba way, for this piece.
+
+**The split, checked against the kit (BEATING_TOOL §3, §168):** the probe is one command — `bash tools/probe_run.sh
+probes/bend_schedule.json`, then `node tools/apply_bend_ranges.js` — with Reaper and the rack up, the REC track armed, the bridge
+alive and nothing else sending MIDI; it ran that way overnight (§168). **What only he can do:** the Kontakt setting itself — RPN 0 is
+ignored on all six (measured), so no MIDI from here changes it; the AI does not drive Kontakt's window. So: he sets ±2 st on the
+five and leaves the rack armed; the AI runs the probe, applies the numbers (the recipe's `MEASURED_BEND`, `bank/bend_ranges.json`,
+BEATING_TOOL §3 — the beating drawer follows through `bendRangeSt`), logs the run, then builds the morph panel's adaptation on a
+copy in one pass, verifies it (node checks; the decoded MIDI per instrument in the pane; the pull-downs and ticks as real mouse
+sequences), documents it (MORPH_NOTES §1, NAMING if a field changes) and commits. **Then his:** the listening — BLOOM on the three
+default pairs first, then the others; the pitch sets by his word; the swap and the fold by ear.
+
+**Put to him as the check-in:** the one step on his side (the Kontakt dial on five instruments, the rack left armed), the rest
+autonomous; if the rack is not armed the probe aborts (the stale-take guard, §168) and the build goes on with the old numbers until
+it is. Nothing built yet.
