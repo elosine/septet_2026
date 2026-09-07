@@ -4522,3 +4522,14 @@ Nothing built.
 Composer: *"on point, good"* (the to-dos of §161). **Written into `docs/PLAN.md` 1f item 6 at once:** the result when done, the
 decision of §160 quoted, the seven to-dos; the item's summary line no longer names the mute rule. Committed and pushed. Next: step
 7's goal (verify and document), on his word — then step 8 (later), and the whole item shown once.
+
+## §163. "ok, step 7" → "on point, good" — step 7's goal (verify and document) accepted; the to-dos put to him
+
+Composer: *"ok, step 7"* → the goal put to him (format A): the whole tool run end to end on a copy at 175.7 s and its MIDI decoded;
+BEATING_TOOL.md gathered piece by piece with the built stamps (the STRIKES_TOOL / TRILLS_TOOL pattern); MORPH_NOTES §1 and §4;
+NAMING §2 for the IR (D9); the journal §4 decisions; PLAN 1f marked built; the app's help line; his listening on his server after a
+hard reload, the first pattern in the piece placed by him, the verdicts filed. Composer: *"on point, good"* — **the goal stands.**
+The to-dos put to him (format B): the end-to-end on the copy (a strike picked, three pairs, shapes, an unlock and slide, a row
+offset, breaths dealt, a duration, inserted, played among the strikes; the MIDI decoded; the checker clean; the copy deleted after)
+· BEATING_TOOL.md · MORPH_NOTES §1 and §4 · NAMING §2 · the journal §4 and §2, PLAN 1f built · the help line · his reload, listening
+and verdicts, commit, push. Into PLAN 1f on his go. Nothing built.
