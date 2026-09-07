@@ -150,7 +150,11 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
    each a new entry in the lab journal; the piece file is his (every AI run was on a copy). Section 1 stays drafted at 175.7 s
    (v1.23-sec1DraftDone). **Begun 2026-09-07 morning (§175–176):** "where is the panel?" → the panel made a full-page drawer like
    the strikes with the fonts one step up — done; "midi note trapped won't stop playing" → the rack silenced (`probes/panic.ps1`),
-   the cause fixed (every long note released on stop), **■ Panic** in the toolbar — done; the listening itself still to come.
+   the cause fixed (every long note released on stop), **■ Panic** in the toolbar — done; CN-36 (§177): the harmonies on the left
+   in three collapsible banners (the strikes · the tuba's blasts · the two-piano chord shapes, scraped into `bank/harmonies.json` by
+   `tools/harmony_scrape.js`), ▶ chord on the piano, a double-click arms, the pairs' nodes, the harmony in the take — done; **CN-35
+   (a harmony module with the strikes drawer's whole facility over every collection) noted for later in PLAN 1d — to be planned on
+   his word**; the listening itself still to come.
 3. **After his verdicts:** the fixes they ask for (the chunk cadence); 1f item 8's four held things when their lines come (the
    shuffle as a writer, cycles for section 3 — CN-33, the training material, the notation at 2a); TRILLS_TOOL phase 5 (the weave) on
    his go; the run dials' calibration ladder (1h item 6) on his go; the notation of trills and beatings at 2a.

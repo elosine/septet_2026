@@ -313,20 +313,26 @@ whether a bound panel should also take a whole pattern (step 6 groups it); the c
 > *"the menu of strikes … it appears on the keyboard … assign a pitch to a pair … the chord or sonority is between the three pairs …
 > internally, there's Unison, but I also would like to try fourths, fifths"* (§148)
 
-In the panel (§6), above the rows and beside them:
-- **The strike menu** — the bank's played chords (`bank/scattered_strikes.json`, the strikes drawer's source) in sequence order,
-  numbered as the drawer numbers them (`#23 · 34.22 s · 11 n · D#2–A4`); picking one puts its chord on the keyboard. **A beating born
-  on a strike note (B) opens on that strike** — found by the note's id in the bank, else by its strike group's index
-  (`grp-strike-23-…`), else by its onset.
+In the panel (§6), on the left and beside the rows:
+- **The harmonies on the left (CN-36, 2026-09-07 — the strikes drawer's column):** one scroll, **three collapsible banners** — **STRIKES**
+  (the bank's played chords, `bank/scattered_strikes.json`, numbered as the drawer numbers them: `#23 · 34.22 s · 11 n · D#2–A4`),
+  **BLASTS · the tuba piece** (45 distinct pitch sets from the tuba's 138 sonorities and its harmony families' voicings, named by
+  their first S-number and chord · voicing) and **CHORD SHAPES · 2 pianos 2 percussion** (54 interval sets from that piece's keyboard
+  module, with the MIDI they were captured from) — the last two scraped into `bank/harmonies.json` by `tools/harmony_scrape.js`
+  (the first pass of the harmony module's scrape, CN-35 / PLAN 1d). A click puts the chord on the keyboard (its name beside ▶ chord);
+  **▶ chord hears it alone on the piano voice** (1.5 s). The chosen harmony **saves with the take** and comes back with it. **A
+  beating born on a strike note (B) opens on that strike** — found by the note's id in the bank, else by its strike group's index
+  (`grp-strike-23-…`), else by its onset. *(Was, for the overnight build: a `<select>` of the strikes above the rows.)*
 - **The keyboard** — the drawer's drawing beside the rows: vertical keys, the C labels, the ensemble's span (C2–C7; `88` for the
   whole piano, ▲▼ counting what is out of view); the chord's notes as dots in their pitch-class colours with their names (a bigger
   dot for a doubling); **the keys the active pair cannot play dimmed** (step 1's table, at the row's interval: at unison both must
   hold the note, at an interval one the lower and the other the upper — for cello + viola at unison 25 of 61 keys are out); the
   rows' pair notes as rings in the row colours at the right (the lower note filled, the upper hollow).
-- **Assigning** — click a dot or a key: the note is **armed** (the panel says so; ESC or a second click disarms); click a pair's row:
-  the note becomes **the pair's lower note**, the interval places the partner above it, the objects regenerate; or **drag a dot onto a
-  row** (the row outlines under the pointer). A note the pair cannot play is refused with the reason. A click on a row with nothing
-  armed makes it the active pair (the keyboard dims for it).
+- **Assigning** — click or **double-click** a dot or a key: the note is **armed** (the panel says so; ESC or a second click disarms);
+  **every pair's row has a node at its left** (the drawer's "the lines land here" dot), lit in the row's colour while a note is armed:
+  click it, or anywhere on the row, and the note becomes **the pair's lower note**, the interval places the partner above it, the
+  objects regenerate; or **drag a dot onto a row** (the row outlines under the pointer). A note the pair cannot play is refused with
+  the reason. A click on a row with nothing armed makes it the active pair (the keyboard dims for it). No lines to instruments (CN-36).
 - **The relations from a root** — `unison · 1 oct` (every pair on the root: a field on one pitch, the tuba's bloom) · `unison ·
   octaves` (the pitch class a pair per octave) · `thirds` (root · +4 · +7) · `fourths` (+5 · +10) · `fifths` (+7 · +14) · `stack`
   (typed semitones, one per pair); the root typed (`C4` or `60`, ENTER) or, with a relation just chosen, **clicked on the keyboard**;
@@ -463,3 +469,7 @@ channel of every port); `probes/panic.ps1` does the same from outside the app.
   **His listening pending (§11).**
 - **2026-09-07, morning — his first remarks (§175):** "where is the panel?" → the panel a full-page drawer like the strikes (⇕ half /
   full, a bottom tab), the fonts one step up (10 → 12, 12 → 14, 14 → 18), the row drawings as wide as the page.
+- **2026-09-07, morning — the trapped note (§176):** every long note released on stop; ■ Panic; `probes/panic.ps1`.
+- **2026-09-07, morning — the harmonies on the left (CN-36, §177):** three collapsible banners (the strikes · the tuba's blasts · the
+  two-piano chord shapes, the last two scraped into `bank/harmonies.json`), ▶ chord on the piano, a double-click arms, the pairs'
+  nodes take the note, the harmony saved with the take. The harmony MODULE (CN-35) noted for later in PLAN 1d.

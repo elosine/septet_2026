@@ -55,7 +55,7 @@ const nn = m => BC_().noteName(m);
 
 const P = {
     el: null, rows: [], length: 6, bound: null, takeList: {}, _timer: null, _aud: null, _drag: null, status: '',
-    db: null, chord: [], chordId: '', armed: null, activeRow: 0, show88: false, rootMode: false, relation: 'unison1',
+    db: null, banks: null, harmony: null, collapsed: {}, chord: [], chordId: '', armed: null, activeRow: 0, show88: false, rootMode: false, relation: 'unison1',
 
     // ------------------------------------------------------------------ the chassis
     init() {
@@ -88,7 +88,8 @@ const P = {
             // THE PITCH SIDE (step 5, §148 / §158): the strikes menu → the keyboard; a note armed by a click lands on the pair whose row is
             // clicked next (or is dragged onto it) as the pair's LOWER note; the relations deal every pair's pitch from a root
             '<div id="bpPitch" style="flex:0 0 auto;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-bottom:6px;padding:4px 6px;border:1px solid #3a3a44;border-radius:4px">',
-            '<label>strike <select id="bpSrc" style="max-width:190px" title="the played chords from the bank (bank/scattered_strikes.json), numbered as the strikes drawer numbers them"><option value="">the bank&#8230;</option></select></label>',
+            '<button id="bpHear" title="hear the chord alone, on the piano voice (CN-36)">&#9654; chord</button>',
+            '<span id="bpChordName" style="color:#c9a8ff;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>',
             '<span style="color:#888">relation</span>',
             '<span id="bpRel"></span>',
             '<input id="bpStack" type="text" value="0 7 12" style="width:64px" title="a typed stack: semitones above the root, one per pair">',
@@ -97,9 +98,12 @@ const P = {
             '<label title="the whole piano instead of the ensemble&#8217;s span"><input id="bp88" type="checkbox"> 88</label>',
             '<span id="bpArmed" style="color:#c9a8ff"></span>',
             '</div>',
-            '<div id="bpBody" style="flex:1 1 auto;display:flex;gap:8px;overflow-y:auto;min-height:0;margin:0 -4px;padding:0 4px">',
-            '<div id="bpKbWrap" style="flex:0 0 150px"><svg id="bpKb" width="150" style="display:block"></svg></div>',
-            '<div id="bpRows" style="flex:1 1 auto;min-width:0"></div>',
+            // the body: three columns, each scrolling on its own — the harmonies on the left in banners (CN-36, the strikes drawer's list), the
+            // keyboard, the rows
+            '<div id="bpBody" style="flex:1 1 auto;display:flex;gap:8px;overflow:hidden;min-height:0;margin:0 -4px;padding:0 4px">',
+            '<div id="bpList" style="flex:0 0 260px;overflow-y:auto;min-height:0;border-right:1px solid #333;padding:2px 0"></div>',
+            '<div id="bpKbWrap" style="flex:0 0 150px;overflow-y:auto;min-height:0"><svg id="bpKb" width="150" style="display:block"></svg></div>',
+            '<div id="bpRows" style="flex:1 1 auto;min-width:0;overflow-y:auto;min-height:0"></div>',
             '</div>',
         ].join('');
         document.body.appendChild(d);
@@ -123,7 +127,7 @@ const P = {
         d.querySelector('#bpTakeDel').addEventListener('click', () => this.deleteTake());
         d.querySelector('#bpInsert').addEventListener('click', () => this.insert());
         // the pitch side's controls
-        d.querySelector('#bpSrc').addEventListener('change', ev => { this.pickSource(ev.target.value); });
+        d.querySelector('#bpHear').addEventListener('click', () => this.hearChord());
         d.querySelector('#bpRel').innerHTML = RELATIONS.map(([k, l, t]) => '<button class="bpRelBtn" data-rel="' + k + '" title="' + esc(t) + '" style="font-size:12px;padding:1px 5px;margin:1px;cursor:pointer">' + l + '</button>').join('');
         d.querySelectorAll('.bpRelBtn').forEach(b => b.addEventListener('click', () => { this.relation = b.dataset.rel; this.rootMode = true; this.paintRelation(); this.setStatus('relation ' + b.textContent + ' — click a key for the root (or type it) and deal'); }));
         d.querySelector('#bpDeal').addEventListener('click', () => this.deal());
@@ -296,6 +300,8 @@ const P = {
         const btn = (cls, data, label, on, title) => '<button class="' + cls + '" ' + data + ' title="' + esc(title || '') + '" style="font-size:12px;padding:1px 5px;margin:1px;cursor:pointer;' + (on ? sel : '') + '">' + label + '</button>';
         box.innerHTML = [
             '<div style="display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-bottom:4px">',
+            // the pair's NODE (CN-36: "click a node connected to a pair"; the strikes drawer's "the lines land here" dot): lit while a note is armed
+            '<span class="bpNode" title="' + (this.armed != null ? nn(this.armed) + ' lands here' : 'arm a note on the keyboard, then click here') + '" style="display:inline-block;width:12px;height:12px;border-radius:50%;border:2px solid ' + ROW_COLORS[i % ROW_COLORS.length] + ';background:' + (this.armed != null ? ROW_COLORS[i % ROW_COLORS.length] : '#1b1b20') + ';cursor:pointer;flex:none"></span>',
             '<b style="color:#c9a8ff">pair ' + (i + 1) + '</b> ',
             (row.zone ? '<span>' + esc(me) + '</span>' : '<select class="bpLane" title="the launching player">' + [0, 1, 3, 4, 5, 6].map(L => '<option value="' + L + '"' + (L === row.layer ? ' selected' : '') + '>' + esc(T[L].label) + '</option>').join('') + '</select>'),
             ' + <select class="bpPartner" title="the lanes whose player holds the note (step 1&#8217;s table)">' + (cands.length ? '' : '<option value="">no partner can play this</option>')
@@ -563,8 +569,55 @@ const P = {
         if (this.db) return this.db;
         try { const r = await fetch(DB_URL + '?t=' + Date.now(), { cache: 'no-store' }); if (!r.ok) throw new Error('HTTP ' + r.status); this.db = await r.json(); }
         catch (e) { this.setStatus('the bank of strikes could not be read (' + e.message + ') — the keyboard works without it', true); this.db = { strikes: {}, sequences: {} }; }
+        // the earlier pieces' harmonies (tools/harmony_scrape.js → bank/harmonies.json): the tuba's blasts, the two-piano chord shapes
+        try { const r = await fetch('/bank/harmonies.json?t=' + Date.now(), { cache: 'no-store' }); if (r.ok) this.banks = await r.json(); } catch (e) { this.banks = null; }
         this.fillSources();
         return this.db;
+    },
+    // ---- the harmonies on the left (CN-36): one scroll, three collapsible banners — the strikes, the tuba's blasts, the two-piano chord shapes ----
+    BANNERS: [['strikes', 'STRIKES'], ['blasts', 'BLASTS · the tuba piece'], ['chordShapes', 'CHORD SHAPES · 2 pianos 2 percussion']],
+    entriesOf(bank) {
+        if (bank === 'strikes') return this.sourceList().map(s => ({ id: s.id, label: '#' + s.index, name: s.t0.toFixed(2) + ' s', n: s.notes.length, range: nn(s.stats.midi.min) + '–' + nn(s.stats.midi.max), pitches: s.notes.map(q => q.midi) }));
+        const b = this.banks && this.banks.banks && this.banks.banks[bank];
+        return b && b.entries ? b.entries.map(e => ({ id: e.id, label: e.id, name: e.name, n: e.n, range: e.range, pitches: e.pitches, aliases: e.aliases || [] })) : [];
+    },
+    renderList() {
+        const host = this.el && this.el.querySelector('#bpList'); if (!host) return;
+        let h = '';
+        for (const [key, title] of this.BANNERS) {
+            const es = this.entriesOf(key), open = !this.collapsed[key];
+            h += '<div class="bpBanner" data-bank="' + key + '" title="click to ' + (open ? 'collapse' : 'expand') + '" style="position:sticky;top:0;z-index:1;background:#1b1b20;padding:3px 8px;cursor:pointer;color:#c9a8ff;border-bottom:1px solid #333;font-weight:600;white-space:nowrap">' + (open ? '&#9662; ' : '&#9656; ') + esc(title) + ' <span style="color:#777;font-weight:400">' + es.length + '</span></div>';
+            if (open) es.forEach(e => {
+                const on = this.harmony && this.harmony.bank === key && this.harmony.id === e.id;
+                h += '<div class="bpEntry" data-bank="' + key + '" data-id="' + esc(e.id) + '" style="padding:2px 8px;cursor:pointer;display:flex;gap:6px;white-space:nowrap;' + (on ? 'background:rgba(123,63,228,.3)' : '') + '" title="' + esc(e.name) + (e.aliases && e.aliases.length ? ' · also ' + e.aliases.join(' ') : '') + '">'
+                    + '<span style="color:#777;width:56px;overflow:hidden;flex:none">' + esc(e.label) + '</span><span style="flex:1 1 auto;overflow:hidden;text-overflow:ellipsis">' + esc(e.name) + '</span><span style="color:#bbb;flex:none">' + e.n + ' n</span><span style="color:#777;flex:none">' + esc(e.range) + '</span></div>';
+            });
+        }
+        host.innerHTML = h;
+        host.querySelectorAll('.bpBanner').forEach(el => el.addEventListener('click', () => { const k = el.dataset.bank; this.collapsed[k] = !this.collapsed[k]; this.renderList(); }));
+        host.querySelectorAll('.bpEntry').forEach(el => el.addEventListener('click', () => this.pickHarmony(el.dataset.bank, el.dataset.id)));
+        const on = host.querySelector('.bpEntry[style*="rgba(123,63,228"]'); if (on && typeof on.scrollIntoView === 'function') { try { on.scrollIntoView({ block: 'nearest' }); } catch (e) { } }
+    },
+    pickHarmony(bank, id) {
+        if (bank === 'strikes') { this.pickSource(id); return; }
+        const e = this.entriesOf(bank).find(x => x.id === id); if (!e) return;
+        this.harmony = { bank, id }; this.chordId = ''; this.chord = e.pitches.map(m => ({ midi: m })); this.rootMode = false;
+        this.renderList(); this.drawKeyboard();
+        const nm = this.el.querySelector('#bpChordName'); if (nm) nm.textContent = e.label + ' · ' + e.name;
+        this.setStatus(e.label + ' ' + e.name + ' (' + e.n + ' notes, ' + e.range + ') on the keyboard — &#9654; chord hears it on the piano; click or double-click a note, then a pair\'s node'.replace('&#9654;', '▶'));
+    },
+    // hear the chord alone, on the piano voice (CN-36: "use the piano voice for play back of just the harmony")
+    async hearChord() {
+        const C = C_(); if (!C) return;
+        if (!this.chord.length) { this.setStatus('no chord on the keyboard — pick one on the left', true); return; }
+        if (!C._zoneMidiInited) await C.initZoneMidi();
+        const r = C.beatingRouting(2), out = r && C._zoneMidiOutputs[(r.port || '').toLowerCase()];
+        if (!out) { this.setStatus('the piano has no MIDI output — is the rack up?', true); return; }
+        const ch = (r.channel || 1) - 1, now = performance.now() + 5, dur = 1500;
+        out.send([0xB0 | ch, 7, 127], now); if (r.cc0 != null) out.send([0xB0 | ch, 0, r.cc0], now);
+        const keys = [...new Set(this.chord.map(n => n.midi))].sort((a, b) => a - b);
+        keys.forEach(k => { out.send([0x90 | ch, k, 88], now + 5); out.send([0x80 | ch, k, 0], now + 5 + dur); C.noteSounding(out, ch, k, now + 5 + dur); });
+        this.setStatus('the chord on the piano: ' + keys.map(nn).join(' '));
     },
     // the strikes in sequence order, numbered as the drawer numbers them (index · t0 · notes)
     sourceList() {
@@ -574,16 +627,14 @@ const P = {
         if (!out.length) Object.values(db.strikes || {}).forEach(s => out.push(s));
         return out;
     },
-    fillSources() {
-        const sel = this.el && this.el.querySelector('#bpSrc'); if (!sel) return;
-        sel.innerHTML = '<option value="">the bank…</option>' + this.sourceList().map(s => '<option value="' + esc(s.id) + '"' + (s.id === this.chordId ? ' selected' : '') + '>#' + s.index + ' · ' + s.t0.toFixed(2) + ' s · ' + s.notes.length + ' n · ' + nn(s.stats.midi.min) + '–' + nn(s.stats.midi.max) + '</option>').join('');
-    },
+    fillSources() { this.renderList(); },
     pickSource(id) {
         const s = this.db && this.db.strikes && this.db.strikes[id];
         this.chordId = s ? id : ''; this.chord = s ? s.notes.map(n => ({ midi: n.midi, instKey: n.instKey, id: n.objectId })) : [];
-        const sel = this.el.querySelector('#bpSrc'); if (sel) sel.value = this.chordId;
-        this.rootMode = false; this.drawKeyboard();
-        if (s) this.setStatus('strike #' + s.index + ' (' + s.t0.toFixed(2) + ' s, ' + s.notes.length + ' notes) on the keyboard — click a note, then a pair; the dimmed keys are what the active pair cannot play');
+        this.harmony = s ? { bank: 'strikes', id } : null;
+        this.rootMode = false; this.renderList(); this.drawKeyboard();
+        const nm = this.el.querySelector('#bpChordName'); if (nm) nm.textContent = s ? '#' + s.index + ' · strike at ' + s.t0.toFixed(2) + ' s' : '';
+        if (s) this.setStatus('strike #' + s.index + ' (' + s.t0.toFixed(2) + ' s, ' + s.notes.length + ' notes) on the keyboard — ▶ chord hears it on the piano; click or double-click a note, then a pair\'s node; the dimmed keys are what the active pair cannot play');
     },
     // the strike a bound beating was born on: the note's id in the bank, its strike group's index, or its onset
     strikeFor(zone) {
@@ -635,12 +686,14 @@ const P = {
         if (below) s += '<text x="100" y="' + (H - 2) + '" fill="#e88" font-size="11">▼' + below + '</text>';
         if (this.armed != null && this.armed >= R.lo && this.armed <= R.hi) s += '<rect x="28" y="' + (keyY(this.armed) - 0.5) + '" width="94" height="' + (h + 1) + '" fill="none" stroke="#fff" stroke-width="1.2" pointer-events="none"/>';
         svg.innerHTML = s;
-        svg.querySelectorAll('.bpKey').forEach(k => k.addEventListener('click', () => this.keyClick(+k.dataset.m)));
+        svg.querySelectorAll('.bpKey').forEach(k => { k.addEventListener('click', () => this.keyClick(+k.dataset.m)); k.addEventListener('dblclick', ev => { ev.preventDefault(); this.arm(+k.dataset.m); }); });
         svg.querySelectorAll('.bpDot').forEach(d => {
             d.addEventListener('click', ev => { ev.stopPropagation(); this.keyClick(+d.dataset.m); });
+            d.addEventListener('dblclick', ev => { ev.stopPropagation(); ev.preventDefault(); this.arm(+d.dataset.m); });   // CN-36: "double click a note on the keyboard and then click a node connected to a pair"
             d.addEventListener('mousedown', ev => { ev.preventDefault(); this.startDotDrag(+d.dataset.m, ev); });
         });
     },
+    arm(m) { this.armed = m; this.rootMode = false; this.render(); this.setStatus(nn(m) + ' armed — click a pair\'s node (or anywhere on its row) to give it the note as its lower note; ESC disarms'); },
     keyClick(m) {
         if (this.rootMode) { const rb = this.el.querySelector('#bpRoot'); if (rb) rb.value = nn(m); this.rootMode = false; this.deal(m); return; }
         this.armed = this.armed === m ? null : m;
@@ -767,9 +820,10 @@ const P = {
     },
 
     // ------------------------------------------------------------------ takes (bank/panel_snapshots.json, the `beatings` bucket)
-    state() { return { length: this.length, rows: this.rows.map(r => ({ layer: r.layer, offset: r.offset, locked: r.locked, scale: r.scale, b: JSON.parse(JSON.stringify(r.b)) })) }; },
+    state() { return { length: this.length, harmony: this.harmony ? { bank: this.harmony.bank, id: this.harmony.id } : null, rows: this.rows.map(r => ({ layer: r.layer, offset: r.offset, locked: r.locked, scale: r.scale, b: JSON.parse(JSON.stringify(r.b)) })) }; },
     applyState(st) {
         if (!st || !Array.isArray(st.rows)) return;
+        if (st.harmony && st.harmony.bank && st.harmony.id) this.loadDb().then(() => this.pickHarmony(st.harmony.bank, st.harmony.id));   // the harmony chosen saves with the take (CN-36)
         this.length = r3(+st.length || 6);
         if (this.bound) {   // a bound zone takes the FIRST row's block; the length stretches the zone
             const r0 = st.rows[0]; if (!r0) return;
@@ -790,7 +844,7 @@ const P = {
     takeNames() { const t = this.takeList; return Object.keys(t).sort((a, b) => String(t[b].saved || '').localeCompare(String(t[a].saved || ''))); },
     fillTakes() { const sel = this.el && this.el.querySelector('#bpTakeSel'); if (!sel) return; sel.innerHTML = '<option value="">load take…</option>' + this.takeNames().map(n => '<option value="' + esc(n) + '">' + esc(n) + '</option>').join(''); },
     async postTake(body) { const r = await fetch('/api/snapshots', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ panel: TAKES_PANEL }, body)) }).then(x => x.json()); if (!r.success) throw new Error(r.error || '?'); return r; },
-    takeComment() { return this.rows.map(r => (TRK()[r.layer] || {}).short + '+' + (TRK()[r.b.partnerLayer] || {}).short + ' ' + nn(r.b.pitch) + ' ' + r.b.interval).join(' · ') + ' · ' + this.length + ' s'; },
+    takeComment() { return (this.harmony ? this.harmony.bank + ' ' + this.harmony.id + ' · ' : '') + this.rows.map(r => (TRK()[r.layer] || {}).short + '+' + (TRK()[r.b.partnerLayer] || {}).short + ' ' + nn(r.b.pitch) + ' ' + r.b.interval).join(' · ') + ' · ' + this.length + ' s'; },
     async saveTake() {
         const box = this.el.querySelector('#bpTakeName'), d = new Date(), pad = x => String(x).padStart(2, '0');
         const name = (box.value || '').trim() || ('beating ' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + pad(d.getMinutes()));

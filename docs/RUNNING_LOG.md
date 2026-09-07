@@ -5050,3 +5050,59 @@ the eight ports in the check; the status line says so. The script `probes/panic.
 
 **For the tool's memory:** a sustained note in a scheduled-ahead world needs its own release path; "all notes off" is not one on
 this rack. MORPH_NOTES §3 (his words), BEATING_TOOL §5.
+
+## §177. Two of his: a harmony module for later (CN-35 → PLAN 1d re-set); the beating drawer's harmonies in banners on the left, heard on the piano, a note assigned to a pair by hand, saved with the take (CN-36) — built; the first scrape of the earlier pieces
+
+Composer, 2026-09-07 morning, with four screenshots of the strikes drawer (the list, the keyboard with the lines to the players,
+the voicing buttons, the seeded shuffle):
+
+> *"Please make a note to do for later. I want to develop a harmony module that more or less captures and uses all the functionality
+> here in the strikes module … the menu to the left with all the harmonies there, click one, and it appears on the keyboard … the
+> voicings … reshuffle voicings … the seeded shuffle at top … the arrows or lines to the instruments, and then being able to choose
+> individually the articulation for the instrument. And this will include all the strikes, the cord shapes from the 2piano2perc,
+> keyboard module, the blasts from the tuba, and other ones, all the harmonies I've collected so far, including the messiaen,
+> including clusters, tone rows, octaves, stacked 5ths these are in the tuba. We'll have to do a scrape of my pieces. save this for
+> later, we'll build a plan for a harmony module."* → **CN-35; PLAN 1d re-set** as a MODULE (the strikes drawer's facility over every
+> collection), to be planned with the planning method on his word. Not built.
+
+> *"For the beating drawer. I would like the harmonies in this format on the left. and I want forty six strikes in its own banner in
+> the same scroll menu but its own banner that I can collapse. And then I'd like the blasts from the tube a piece in its own banner,
+> and I'd like the chord shapes from the two piano, two percussion piece. in its own banner. And same functionality. I click it. I see
+> the layout on the keyboard. be able to hear just the chord.  use the piano voice for play back of just the harmony there won't be
+> any assignment with the dotted lines to instruments. Instead, I'll be able to assign any note in that harmony to a beating pair.
+> and I'll do that manually using the same facility we have now in strikes. So I'll double click a note on the keyboard and then click
+> a node connected to a pair. And then this selection, just like with the strikes, the harmony selection and the assignment will save
+> with the take."* → **CN-36; MORPH_NOTES §3; built at once.**
+
+**The scrape (the first pass of PLAN 1d's, for the drawer):** `tools/harmony_scrape.js` → `bank/harmonies.json`, read-only on the two
+repos. **The tuba's blasts:** `for_seven_tubas/bank/blast_taxonomy.json` — 138 sonorities are **39 distinct pitch sets** (a sonority =
+chord × voicing × articulation; the same set recurs with cuivre mods), each named by its first S-number and its chord · voicing, the
+others as aliases; the harmony families' own voicings add 6 more sets → **45**; the 12 octave-unisons (S049–S060) among them; 13
+families (VERT01-01 · 06 · 08 · 14 …) carry no pitches in the taxonomy — their sets came through the sonorities; the "more chords"
+list kept as a tag. **The two-piano chord shapes:** `composer_data/*.json` → `databases.chordShapes` in 91 saves (the keyboard
+module's shapes: interval sets with the MIDI they were captured from) — **54 distinct interval sets** by union (the ids `cs_NNN`
+differ per save; re-numbered `cs-001…` by first creation), each with the saves it appears in. **The strikes** stay live from
+`bank/scattered_strikes.json` (46). Still to scrape for the module: the Messiaen modes, clusters, tone rows, octaves, stacked fifths
+(the tuba piece), the quartet's and the trio's harmonies.
+
+**The drawer (`beating_panel.js`):** the strike `<select>` gone; **a scroll list on the left** (the strikes drawer's column, 260 px) in
+**three collapsible banners** — STRIKES 46 · BLASTS · the tuba piece 45 · CHORD SHAPES · 2 pianos 2 percussion 54 — each row the id,
+the name, the notes, the range (a blast's aliases in its tooltip); the chosen one highlighted and kept in view; the body's three
+columns scroll on their own. **A click puts the chord on the keyboard** (the name beside ▶ chord); **▶ chord hears it alone on the
+piano voice** (the piano's port, channel 1, CC7 127, velocity 88, 1.5 s; the notes remembered for the stop — §176). **A double-click
+on a note arms it** (a click still does); **every pair's row has a NODE** at its left (the drawer's "the lines land here" dot), lit
+in the row's colour while a note is armed — click it (or anywhere on the row) and the note is the pair's lower note; the drag from
+step 5 stays. **The take saves the harmony** (`state.harmony = { bank, id }`, the comment names it) and restores it with the pairs'
+notes. A beating born on a strike note still opens on its strike (now highlighted in the list).
+
+**Verified on a copy (`zz-ai-beating`, :5301), with real DOM events and fake outputs:** the three banners with 46 · 45 · 54 (145
+entries); the strikes banner collapsed → 99 entries, none of them strikes, expanded again; the blast S001 clicked → highlighted, its
+9 pitches (F#1 below the span's C2 counted by the ▼ arrow, 8 dots), "S001 · VERT01-28 V4"; ▶ chord → the piano port only, channel
+1, CC7 before the first note-on, 9 note-ons at 88, 9 note-offs 1500 ms later, 9 notes registered for the stop; the chord shape
+cs-001 (M7: D2 C#3) on the keyboard; cs-002 (m2 P5: C4 C#4 G4) → **a dot double-clicked → armed, the second pair's node lit, the node
+clicked → the pair on that note**; a take saved with the harmony ("chordShapes cs-001 · BCl+Va D3 unison · Fl+Vn1 F#5 unison ·
+6 s"), the harmony switched to a blast, the take loaded → the shape back on the keyboard with the pairs' notes, the take deleted. No
+console errors.
+
+**Not done, by his words:** the voicing presets, the seeded shuffle, the lines and the articulation per player — the harmony
+MODULE's (CN-35, PLAN 1d), not the beating drawer's. His listening still to come.

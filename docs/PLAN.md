@@ -351,7 +351,19 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   (`blast_taxonomy.json`, the pulse palette's S-numbers, the cluster bank), the septet's own
   strikes (1c). One `bank/harmony_db.json`: pitch-class set + voicing + provenance (piece, file,
   id, date) per entry; the 1c panel reads it as a second source. *Why:* the composer's
-  harmonic vocabulary as one addressable table.
+  harmonic vocabulary as one addressable table. **Re-set 2026-09-07 (CN-35, composer: *"I want to develop a harmony module that
+  more or less captures and uses all the functionality here in the strikes module … the menu to the left with all the harmonies
+  there, click one, and it appears on the keyboard … the voicings … the seeded shuffle … the lines to the instruments … the
+  articulation for the instrument. And this will include all the strikes, the cord shapes from the 2piano2perc, keyboard module, the
+  blasts from the tuba, and other ones, all the harmonies I've collected so far, including the messiaen, including clusters, tone
+  rows, octaves, stacked 5ths these are in the tuba. We'll have to do a scrape of my pieces. save this for later, we'll build a plan
+  for a harmony module."*):** a MODULE, the strikes drawer's facility over every collection — to be planned with the planning method
+  on his word. **The scrape's first pass exists (2026-09-07, for the beating drawer, CN-36):** `tools/harmony_scrape.js` →
+  `bank/harmonies.json` — the tuba's blasts (`blast_taxonomy.json`: 138 sonorities = 39 distinct pitch sets, plus the 13 harmony
+  families without voicings in the taxonomy — their pitches live in the `int2-harmonies` score, the palette's "all 33 chords"; and
+  the "more chords" list) and the two-piano chord shapes (`databases.chordShapes` in the composer saves — 54 in the final draft, a
+  union over the saves by interval set); still to scrape: the Messiaen modes, clusters, tone rows, octaves, stacked fifths (the tuba
+  piece), the harmonies of the quartet and the bass-clarinet trio.
 
 - **1f — The beatings: a pair of players on one pitch, a gap that beats — the beating panel (section 2, CN-28 · CN-29 · CN-33)** —
   `built 2026-09-07 — steps 1–7 overnight at his word (*"will you be able to run the plan independantly? can you do so, and I'll

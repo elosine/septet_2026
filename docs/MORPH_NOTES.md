@@ -280,6 +280,23 @@ note-offs (`clear()`), and the all-notes-off after it is ignored by the Xsample 
 and released on stop) and a ■ Panic button added; `probes/panic.ps1` for the rack alone. For the all-purpose tool: a sustained note
 must always have its own release path — never rely on CC123. RUNNING_LOG §176.
 
+### 2026-09-07 — the harmonies on the left, in banners; hear the chord on the piano; assign a note to a pair by hand
+
+> *"For the beating drawer. I would like the harmonies in this format on the left. and I want forty six strikes in its own banner in
+> the same scroll menu but its own banner that I can collapse. And then I'd like the blasts from the tube a piece in its own banner,
+> and I'd like the chord shapes from the two piano, two percussion piece. in its own banner. And same functionality. I click it. I see
+> the layout on the keyboard. be able to hear just the chord.  use the piano voice for play back of just the harmony there won't be
+> any assignment with the dotted lines to instruments. Instead, I'll be able to assign any note in that harmony to a beating pair. and
+> I'll do that manually using the same facility we have now in strikes. So I'll double click a note on the keyboard and then click  a
+> node connected to a pair. And then this selection, just like with the strikes, the harmony selection and the assignment will save
+> with the take."* *(2026-09-07, morning; typed — "the tube a piece" = the tuba piece; with screenshots of the strikes drawer; CN-36)*
+
+**AI reading (not the composer's words):** the strikes drawer's left column is the model for every pitch source — a scroll list in
+collapsible banners, one per collection; a click = the chord on the keyboard; ▶ = the chord alone on a neutral voice (the piano);
+the assignment by hand, a note armed then dropped on a pair's node; the choice and the assignment inside the take. For the
+all-purpose tool: the pitch side is a harmony BROWSER over every collection (CN-35's module), the assignment the tool's own. The
+blasts and the chord shapes scraped from the earlier pieces for it (`bank/harmonies.json`). RUNNING_LOG §177.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

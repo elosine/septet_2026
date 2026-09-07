@@ -883,3 +883,42 @@ topic at a time).
 **AI reading (not the composer's words):** an orchestration decision for section 2: the beatings are for the six bending players
 (flute, bass clarinet, the two violins, viola, cello — up to three pairs); the piano keeps its own material in the score. The
 beatings' pitches come from the strikes' played chords, so section 2's sonorities are section 1's chords held and bent.
+
+## CN-35 · 2026-09-07 — a harmony module, for later: the strikes drawer's whole facility over every harmony collected
+
+> *"Please make a note to do for later. I want to develop a harmony module that more or less captures and uses all the functionality
+> here in the strikes module. I think that works well. So the menu to the left with all the harmonies there, click one, and it appears
+> on the keyboard. I can spread out the voicings, the original spread out cluster, cluster low, cluster high, all the buttons at the
+> bottom, the voicings. etcetera. I can reshuffle voicings. I have the seeded shuffle at top, all of this, including the arrows or lines
+> to the instruments, and then being able to choose individually the articulation for the instrument. And this will include all the
+> strikes, the cord shapes from the 2piano2perc, keyboard module, the blasts from the tuba, and other ones, all the harmonies I've
+> collected so far, including the messiaen, including clusters, tone rows, octaves, stacked 5ths these are in the tuba. We'll have to
+> do a scrape of my pieces. save this for later, we'll build a plan for a harmony module."*
+> *(2026-09-07, morning, his check-in after the beating build; typed, with screenshots of the strikes drawer)*
+
+**AI reading (not the composer's words):** PLAN 1d (the harmony database) becomes a MODULE with the strikes drawer's whole facility —
+the list on the left, the keyboard, the voicing presets (original · spread out · cluster · cluster low · cluster high · high + low ·
+reshuffle, the octave box), the seeded shuffle, the lines to the players, the articulation per player — over every harmony he has
+collected: the septet's strikes, the two-piano piece's chord shapes (the keyboard module), the tuba's blasts, the Messiaen modes,
+clusters, tone rows, octaves, stacked fifths (the tuba piece's), "and other ones". The sources need a scrape of the earlier pieces.
+To be planned with the planning method when he says so — not now. The first pass of the scrape (the blasts and the chord shapes)
+is done today for the beating drawer (CN-36); the note stands in PLAN 1d.
+
+## CN-36 · 2026-09-07 — the beating drawer: the harmonies on the left in banners, heard on the piano, any note assigned to a pair by hand
+
+> *"For the beating drawer. I would like the harmonies in this format on the left. and I want forty six strikes in its own banner in
+> the same scroll menu but its own banner that I can collapse. And then I'd like the blasts from the tube a piece in its own banner,
+> and I'd like the chord shapes from the two piano, two percussion piece. in its own banner. And same functionality. I click it. I see
+> the layout on the keyboard. be able to hear just the chord.  use the piano voice for play back of just the harmony there won't be
+> any assignment with the dotted lines to instruments. Instead, I'll be able to assign any note in that harmony to a beating pair. and
+> I'll do that manually using the same facility we have now in strikes. So I'll double click a note on the keyboard and then click  a
+> node connected to a pair. And then this selection, just like with the strikes, the harmony selection and the assignment will save
+> with the take."*
+> *(2026-09-07, morning; typed — "the tube a piece" = the tuba piece)*
+
+**AI reading (not the composer's words):** the beating's pitch side takes the strikes drawer's form — a scroll list on the left with
+three collapsible banners (the 46 strikes; the tuba's blasts; the two-piano chord shapes), a click puts the chord on the keyboard,
+a ▶ hears the chord alone on the piano voice; no lines to instruments — a note is armed on the keyboard (a double click, or a click)
+and given to a pair by clicking the pair's node; the harmony chosen and the pairs' notes save with the take. The two-click assign is
+the drawer's (STRIKES_TOOL F, U7 → U10). The blasts and the chord shapes come from a first scrape of the two earlier pieces
+(`tools/harmony_scrape.js` → `bank/harmonies.json`); the full scrape is the harmony module's (CN-35, PLAN 1d).
