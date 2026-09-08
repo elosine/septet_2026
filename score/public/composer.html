@@ -10585,7 +10585,10 @@ const Composer = {
             const portKey = ((tech && tech.port) || inst.port || '').toLowerCase();
             const output = this._zoneMidiOutputs[portKey];
             if (!output) return;
-            const ch = ((tech && tech.channel) || 1) - 1;
+            // PLAN 1l step 5 (CN-50): a secco crescendo sounds on the slot the back-end rotation gave it, so a cut slot is left alone
+            // while the others sound; no pool = its own channel, exactly as before (Cresc.assignSlots writes properties.cresc.slot)
+            const slot = (wc.properties && wc.properties.cresc && wc.properties.cresc.slot) || null;
+            const ch = (slot != null ? slot : ((tech && tech.channel) || 1)) - 1;
             const st = this._activeCurvePlayback[wc.id];
             const audible = this.isPartAudible(wc.layer);
 
@@ -10621,6 +10624,7 @@ const Composer = {
                 if (past) { delete this._activeCurvePlayback[wc.id]; return; }   // ended on schedule
                 // the note-off of a long note: scheduled once its end enters the lookahead
                 if (!st.offScheduled && wc.endSeconds <= currentTimeSec + LOOKAHEAD_S) {
+                    this.seccoCut(wc, output, ch, portKey, perfAt(wc.endSeconds));   // PLAN 1l step 5: the cliff, cut
                     output.send([0x80 | ch, st.note, 0], Math.max(nowPerf, perfAt(wc.endSeconds)));
                     st.offScheduled = true;
                 }
@@ -10668,6 +10672,7 @@ const Composer = {
             const rec = { note: wc.sonifyNote, onAt, lastCC: ksMode ? null : this.heldCc7(wc, this.evalWaveCurve(wc, 0)),
                 lastSend: nowPerf, offScheduled: false };
             if (wc.endSeconds - wc.startSeconds <= OFF_HORIZON_S) {
+                this.seccoCut(wc, output, ch, portKey, perfAt(wc.endSeconds));   // PLAN 1l step 5
                 output.send([0x80 | ch, wc.sonifyNote, 0], Math.max(onAt + 1, perfAt(wc.endSeconds)));
                 rec.offScheduled = true;
             }
@@ -10747,6 +10752,23 @@ const Composer = {
     // Centre the bend on every channel a morph touched. Called from
     // flushCurvePlayback so stopping the transport can never leave the residue
     // Probe 0 measured at +49.4 cents on the next note.
+    // PLAN 1l step 5 (CN-49 · CN-50; RUNNING_LOG §263–266): a SECCO crescendo is cut — CC7 0 on its own slot a few ms before the
+    // note-off, so the sample stops instead of ringing on. The next event's own pre-arm re-pins CC7 = 127 (D11), which is exactly
+    // why the crescendos rotate through a pool of slots in the back end: re-pinning a cut slot too soon brings the tail back
+    // (his memory of the string quartet, §264). THE GUARD: never cut while another sound of this player is still running on the
+    // same port and channel — a secco crescendo must not silence its neighbour.
+    SECCO_LEAD_MS: 10,
+    seccoCut(wc, output, ch, portKey, atPerf) {
+        if (!wc || !wc.properties || !wc.properties.cresc || wc.properties.cresc.secco === false) return false;
+        const t0 = wc.startSeconds, t1 = wc.endSeconds;
+        const busy = this.objects.some(o => o !== wc && o.type === 'waveCurve' && o.sonifyNote != null && o.layer === wc.layer
+            && o.startSeconds < t1 - 1e-6 && o.endSeconds > t1 + 1e-6
+            && (() => { const tq = this.curveTechniqueFor(o), inst = this.trackInstrument(o.layer);
+                        return ((tq && tq.port) || (inst && inst.port) || '').toLowerCase() === portKey && (((tq && tq.channel) || 1) - 1) === ch; })());
+        if (busy) return false;
+        output.send([0xB0 | ch, 7, 0], Math.max(performance.now(), atPerf - this.SECCO_LEAD_MS));
+        return true;
+    },
     resetMorphBend() {
         const bent = this._morphBentChannels;
         if (!bent) return;

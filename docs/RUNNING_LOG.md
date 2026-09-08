@@ -7257,3 +7257,35 @@ precedent being the ports already made); the extra Kontakt slots tried through t
 as the only candidate and marks loading unexplored; §8 says slots are NOT in ReaScript), and if that fails, five minutes of his GUI
 time. **His standing principle from CN-50 is recorded beside it:** the back end absorbs the sampler's limits so the composing surface
 never thinks about them; the demo must not be shoddy; no long chase after intractable playback problems.
+
+## §267. PLAN 1l step 5 BUILT to the edge of the rack — the secco cut, the tolerance probe as a score file, the slot pool and its rotation; what is left needs Kontakt
+
+2026-09-08, at his *"good"*. Built and verified, in this order because each needs the one before it:
+
+**1 · The cut** (`composer.html seccoCut`, called from both places the tick schedules a note-off): a secco crescendo sends **CC7 0 on
+its own slot 10 ms before the note-off**, so the sample stops instead of ringing. **The guard:** the cut is skipped while another sound
+of that player is still running on the same port and channel, so a secco crescendo can never silence its neighbour. `secco` is a
+property of every crescendo, **true by default** (his CN-49), and can be turned off one at a time.
+
+**Verified in the app** on the probe file, with fake outputs, by the decoded MIDI of Vn1 — exactly the experiment his ear needs:
+`cc0=5 · cc7=88 · ON 78@120 · **cc7=0** · OFF 78 · cc0=5 · **cc7=127** · ON 78@86 · OFF 78`. The crescendo is cut; the next note re-pins
+CC7, which is the moment a tail would return.
+
+**2 · The tolerance probe** (`tools/cresc_secco_test.js` → `scores/cresc-secco-test.json`): five rows — a 4 s secco crescendo, cut at
+its end, then a quiet 1.2 s note on the SAME player and slot after **0.25 · 0.5 · 1 · 2 · 3 s** — every player, the same times, the rows
+10 s apart so none contaminates the next. He solos a part and listens down the rows: the first gap with no returning tail is this kit's
+tolerance. 74.8 s.
+
+**3 · The pool and its rotation** (`Cresc.assignSlots` / `applySlots`, pure; the tick sends on `properties.cresc.slot`): a player's
+crescendos are walked in time order and given the least-recently-cut slot that has rested the tolerance; when none has, the nearest is
+taken and a **warning** names the moment and says to add a slot or lengthen the crescendos — the signal for a fourth, rather than a guess
+now (§266). **The pool is empty by default**, which means no rotation and the ordinary voice's own channel, exactly as today, so nothing
+changes until the slots exist. Checked: three slots rotate 2·3·4·2·3·4 through 1 s crescendos every 1.2 s with no warning; half-second
+crescendos every 0.6 s warn; an empty pool falls back cleanly. **50 checks** in `tools/cresc_check.js`.
+
+**What is left, and it needs the rack, not the app:** the extra Kontakt slots themselves (two more copies of each string's Xsample
+instrument on free channels — the strings use channel 1 alone, so 2 · 3 · 4 are free inside the instance each already has; the bass
+clarinet likewise; **the flute's port is full**, so its pool is the second UVI instance's channels or one new loopMIDI port). The
+attempt through the Kontakt Lua API is next and is an investigation: REAPER_CONTROL §8 says slots are not in ReaScript and §8c marks the
+Lua API's reach over loading UNEXPLORED — it needs Kontakt running with Developer options on, which is his machine's state. If it
+cannot load an instrument into a slot, this is five minutes of his GUI time, and the pool becomes three lines in the recipe.

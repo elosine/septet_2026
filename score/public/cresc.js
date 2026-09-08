@@ -47,6 +47,15 @@ const DEFAULTS = {
     color: '#C2410C',             // the morph orange (curve window A wears it; MORPH_NOTATION "the orange curve")
     opacity: 0.45,                // filled and transparent in the score
     minS: 0.3,                    // shorter than this is not a crescendo
+    // SECCO (CN-49, his "secco on by default"): the cliff's performing technique — the strings damp the string with a finger or bow
+    // pressure at the end, the winds get the word so they hear the shape; in the sound a CC7 cut so nothing rings past the end
+    // (composer.html `seccoCut`). The sampler survives the cut because crescendos rotate through a pool of slots (CN-50, the pool below).
+    secco: true,
+    // the slot pool a crescendo may sound on, per instrument key: the channels of extra Kontakt slots loaded with the same instrument.
+    // EMPTY = no rotation, the ordinary voice's own channel as today. The napkin (§266): three slots hold above ~0.75 s a crescendo at
+    // a 2 s tolerance; the tolerance itself is measured by scores/cresc-secco-test.json.
+    pool: {},
+    toleranceS: 2,                // provisional, from his memory of the quartet; the probe replaces it
 };
 
 const DYN = ['ppp', 'pp', 'p', 'mp', 'mf', 'f', 'ff', 'fff'];
@@ -100,12 +109,58 @@ function make(at, pitch, player, notes, o) {
         performanceNotes: 'cresc ' + shape + (shape === 'line' ? '' : ' ' + seg.ratio + '×') + ' ' + dynName(lo) + '→' + dynName(hi) +
             ' ' + (e.end - at).toFixed(2) + ' s' + (e.how === 'manual' ? ' (typed)' : e.how === 'fallback' ? ' (no next note)' : ''),
         properties: { cresc: { shape, ratio: seg.ratio, slope: seg.slope, threshold: seg.threshold, dynLo: lo, dynHi: hi,
-                               end: e.how, gapTo: e.gapTo, endGapS: O.endGapS != null ? O.endGapS : DEFAULTS.endGapS, peak: 'cliff' } },
+                               end: e.how, gapTo: e.gapTo, endGapS: O.endGapS != null ? O.endGapS : DEFAULTS.endGapS, peak: 'cliff',
+                               secco: O.secco !== false } },
         sonifyNote: pitch, technique: player.tech,
     };
 }
 
 function isCresc(o) { return !!(o && o.type === 'waveCurve' && o.sonifyNote != null && o.properties && o.properties.cresc); }
+
+// THE SLOT POOL AND ITS ROTATION (PLAN 1l step 5; CN-50 — "the rotation happens in the back-end … so we don't have to think about it
+// on the front end"). This rack pins CC7 = 127 before every event on one slot per instrument (REAPER_CONTROL §3, D11), so a secco cut
+// is undone by the next event on that slot — and re-pinning too soon brings the cut tail back. The cure is the string quartet's: the
+// crescendos rotate through a pool of slots (extra Kontakt slots of the same instrument on free channels), so a cut slot is left alone
+// while others sound. `pool[instKey]` is a list of channels; EMPTY means no rotation — the ordinary voice's own channel, as today.
+//
+// Walks a player's crescendos in time order and gives each the least-recently-cut slot that has been free for `toleranceS`. Pure: it
+// returns the assignments and the warnings; the caller writes `properties.cresc.slot` and the tick sends on it.
+function assignSlots(crescs, o) {
+    const O = Object.assign({}, DEFAULTS, o || {});
+    const out = { assigned: [], warnings: [] };
+    const byLane = {};
+    (crescs || []).filter(isCresc).forEach(c => (byLane[c.layer] = byLane[c.layer] || []).push(c));
+    Object.keys(byLane).forEach(laneKey => {
+        const lane = +laneKey;
+        const list = byLane[lane].slice().sort((a, b) => a.startSeconds - b.startSeconds);
+        const instKey = (O.instKeys && O.instKeys[lane]) || null;
+        const pool = (O.pool && instKey && O.pool[instKey]) || [];
+        if (!pool.length) { list.forEach(c => out.assigned.push({ id: c.id, lane, slot: null, why: 'no pool for this player — its own channel, as today' })); return; }
+        const freeAt = {};   // channel → the ms after which re-pinning it is safe
+        pool.forEach(ch => { freeAt[ch] = -Infinity; });
+        list.forEach(c => {
+            if (c.properties.cresc.secco === false) { out.assigned.push({ id: c.id, lane, slot: pool[0], why: 'not secco — no cut, any slot' }); return; }
+            const t = c.startSeconds;
+            let pick = null, best = Infinity;
+            pool.forEach(ch => { if (freeAt[ch] <= t + 1e-9 && freeAt[ch] < best) { best = freeAt[ch]; pick = ch; } });
+            if (pick == null) {
+                // nobody has rested long enough: take the one that will be free soonest and say so — the signal for another slot
+                pick = pool.reduce((b, ch) => (freeAt[ch] < freeAt[b] ? ch : b), pool[0]);
+                out.warnings.push('at ' + t.toFixed(2) + ' s the crescendo pool of ' + pool.length + ' cannot keep the ' + O.toleranceS +
+                    ' s rest (slot ' + pick + ' was cut ' + ((t - (freeAt[pick] - O.toleranceS)) || 0).toFixed(2) + ' s ago) — add a slot, or lengthen the crescendos');
+            }
+            freeAt[pick] = c.endSeconds + O.toleranceS;
+            out.assigned.push({ id: c.id, lane, slot: pick, why: 'rotated' });
+        });
+    });
+    return out;
+}
+// apply what assignSlots decided (the one place that writes it)
+function applySlots(crescs, assigned) {
+    const by = {}; (assigned || []).forEach(a => { by[a.id] = a; });
+    (crescs || []).filter(isCresc).forEach(c => { const a = by[c.id]; if (a && a.slot != null) c.properties.cresc.slot = a.slot; else delete c.properties.cresc.slot; });
+    return crescs;
+}
 function describe(wc) {
     if (!isCresc(wc)) return 'not a crescendo';
     const c = wc.properties.cresc;
@@ -130,5 +185,6 @@ function thresholdOf(wc) {
     return Math.round(((a + b) / 2) * 100) / 100;
 }
 
-return { SHAPES, STANDARD, DEFAULTS, DYN, dynHeight, dynName, nm, shapeList, segmentFor, endFor, make, isCresc, describe, heightAt, thresholdOf };
+return { SHAPES, STANDARD, DEFAULTS, DYN, dynHeight, dynName, nm, shapeList, segmentFor, endFor, make, isCresc, describe, heightAt, thresholdOf,
+         assignSlots, applySlots };
 }));

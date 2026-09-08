@@ -248,7 +248,7 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   orange fill), `score/public/spacing.js` (the one rule with its gesture clause), `tools/cresc_test.js` → `scores/cresc-test.json`
   (the listening test), `tools/cresc_check.js` (43 checks), `docs/CRESCENDO.md`; the strikes drawer's box re-read and the trill's
   fallback moved to 3 s. Before it: 1k (chords mode, §251), 1j (the piano's lines, §233), 1i's first pass (§218). Committed, pushed.
-- **NEXT CONCRETE STEP — BUILD PLAN 1l STEP 5, secco and the round robin (CN-49 · CN-50; RUNNING_LOG §263–266), at his "good".**
+- **NEXT CONCRETE STEP — THE RACK, then his ear (PLAN 1l step 5 is BUILT to the edge of it, RUNNING_LOG §267).**
   The standard is named (surge; §263) and steps 1–4 are built (§262). Step 5: the residue tolerance measured as a score file
   (`scores/cresc-secco-test.json` — a crescendo, CC7 0 at its end, then a re-pin after 0.25 · 0.5 · 1 · 2 · 3 s, per string and the
   flute, he solos); the slot pool in the recipe (the strings and the bass clarinet have free channels inside their existing Kontakt

@@ -61,6 +61,25 @@ const vn1 = { lane: 3, tech: 'senza_vel', label: 'Vn1' };
     ok(Cresc.dynHeight('ppp') === 0 && Cresc.dynHeight('fff') === 10 && Cresc.dynName(0) === 'ppp' && Cresc.dynName(10) === 'fff', 'ppp … fff over the full measured scale (NAMING §2.9)');
 }
 
+// ---- (3b) secco and the slot rotation (PLAN 1l step 5) ----
+{
+    const w = Cresc.make(0, 78, vn1, [], { durS: 4 });
+    ok(w.properties.cresc.secco === true, 'a crescendo is SECCO by default (his CN-49)');
+    ok(Cresc.make(0, 78, vn1, [], { durS: 4, secco: false }).properties.cresc.secco === false, 'and it can be turned off one at a time');
+    const mk = (t, dur, i) => { const c = Cresc.make(t, 78, vn1, [], { durS: dur }); c.id = 'c' + i; return c; };
+    const env = { pool: { violin1: [2, 3, 4] }, instKeys: { 3: 'violin1' }, toleranceS: 2 };
+    const fine = Cresc.assignSlots([0, 1.2, 2.4, 3.6, 4.8, 6].map((t, i) => mk(t, 1, i)), env);
+    ok(fine.assigned.map(a => a.slot).join() === '2,3,4,2,3,4' && fine.warnings.length === 0, 'the pool of three rotates and keeps the 2 s rest at 1 s crescendos every 1.2 s');
+    const tight = Cresc.assignSlots([0, 0.6, 1.2, 1.8, 2.4].map((t, i) => mk(t, 0.5, i)), env);
+    ok(tight.warnings.length > 0 && /add a slot/.test(tight.warnings[0]), 'half-second crescendos every 0.6 s WARN rather than silently break the rest — the signal for a fourth slot');
+    const none = Cresc.assignSlots([mk(0, 4, 0)], { pool: {}, instKeys: { 3: 'violin1' }, toleranceS: 2 });
+    ok(none.assigned[0].slot === null && /no pool/.test(none.assigned[0].why), 'no pool = the ordinary voice\'s own channel, exactly as today');
+    const list = [0, 1.2].map((t, i) => mk(t, 1, i));
+    Cresc.applySlots(list, Cresc.assignSlots(list, env).assigned);
+    ok(list[0].properties.cresc.slot === 2 && list[1].properties.cresc.slot === 3, 'applySlots writes the slot into the provenance, which is what the tick sends on');
+    ok(Cresc.DEFAULTS.secco === true && Cresc.DEFAULTS.toleranceS === 2 && JSON.stringify(Cresc.DEFAULTS.pool) === '{}', 'the defaults: secco on, the tolerance provisional at 2 s, the pool empty until the slots exist');
+}
+
 // ---- (4) the spacing rule on HIS piece ----
 {
     const piece = JSON.parse(fs.readFileSync(path.join(ROOT, 'scores/piece-septet.json'), 'utf8'));

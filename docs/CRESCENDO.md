@@ -109,7 +109,50 @@ each player's END (`soundMs` is how long one dealt sound lasts, so 1o will pass 
 
 ---
 
-## 5 · What is not here yet
+## 5 · Secco — the cut, and the rotation that lets the sampler survive it
+
+His ask (CN-49): *"I would like a secco setting, maybe a checkbox, secco on by default … strings would damp the string with a finger
+or bow pressure at the end of the crescendo to give an abrupt cut; for the sampler a cc7 cut so nothing rings after the end"*. It is
+the cliff's performing technique.
+
+**In the notation (2a):** the word *secco* under the note for everyone — for the strings it names the action, for the winds it tells
+them the shape the strings will make. The string quartet does the same, as text beside "Non-Vib".
+
+**In the sound:** `Composer.seccoCut` sends **CC7 0 on the crescendo's own slot 10 ms before its note-off**, so the sample stops
+rather than decaying. **The guard:** never while another sound of that player is still running on the same port and channel.
+
+**Why a rotation is needed at all.** This rack pins **CC7 = 127 before every event** (REAPER_CONTROL §3, D11) and gives each
+instrument **one slot** — the strings run all 88 articulations through channel 1 by CC0. So the next note on that player re-pins the
+slot the cut was made on, and if that happens too soon the cut note's tail comes back (his memory of the quartet, §264; the quartet
+solved it with three instances). **The tolerance is unmeasured on this kit** — `scores/cresc-secco-test.json` asks his ear for it.
+
+**The pool.** `pool[instKey]` is a list of channels — extra Kontakt slots holding the same instrument. `Cresc.assignSlots` walks a
+player's crescendos in time order and gives each the least-recently-cut slot that has rested the tolerance; `applySlots` writes it
+into `properties.cresc.slot`, and the tick sends on it. **Empty pool = no rotation**, the ordinary voice's own channel, as today.
+
+**How many slots.** With a pool of N a slot returns every N crescendos, 0.17 s apart, so the rotation holds when
+`N × 0.17 + (the N−1 crescendo lengths between) ≥ tolerance`:
+
+| pool | shortest average crescendo that holds, T = 2 s | T = 3 s |
+|---|---|---|
+| 3 slots | 0.75 s | 1.25 s |
+| 4 slots | 0.44 s | 0.78 s |
+
+**Three is the plan**, since his gesture scale starts near 1.5 s. The tool **warns** when the rotation cannot keep the tolerance,
+naming the moment — that warning, not a guess, is the signal to add a fourth.
+
+**What the rack still needs:** two more slots per string (channels 2 · 3 · 4 are free inside the instance each already has) and the
+same for the bass clarinet; **the flute's port is full** (30 techniques over all sixteen channels), so its pool is the second UVI
+instance's channels or one new loopMIDI port. To be tried through the Kontakt Lua API (REAPER_CONTROL §8c, unexplored for loading),
+else five minutes in the Kontakt GUI, after which the pool is three lines in the recipe.
+
+**His standing principle beside it (CN-50):** *"the rotation happens in the back-end … so we don't have to think about it on the
+front end"* — the playback architecture absorbs the sampler's limits; the demo must not be shoddy; no long chase after intractable
+playback problems.
+
+---
+
+## 6 · What is not here yet
 
 - **His verdict on the standard** (step 1's last to-do).
 - **1m — the C key:** the mini panel, its keys, a multi-selection.
