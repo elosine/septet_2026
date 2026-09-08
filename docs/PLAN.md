@@ -964,7 +964,23 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - the rest of the sequence stays in the drawer for another insert; the marked span is remembered until it is changed;
      - check on a copy with real events: both ways of marking; only the marked onsets written; the group's shape carrying them; the
        whole-sequence case unchanged; notes mode too.
-  5. **Saving** (the result and the recipe, whole or part; load as it was, or as settings) — *to be laid out when we discuss it.*
+  5. **Saving** (the result and the recipe, whole or part; load as it was, or as settings) — `todo — agreed 2026-09-08 (RUNNING_LOG
+     §246)`. *Result when done:* a save carries the RESULT (every onset with its players, its pitches and its flags) and the RECIPE (the
+     chord list, the order, the advance, the selection, the player range, the dealer, the seed, the rhythm dials and every manual
+     onset); the whole sequence saves as a unit and a marked part saves on its own; loading offers *as it was* (the exact sequence back,
+     nothing re-dealt) or *the settings* (the dials filled, generated again). The to-dos:
+     - the save: a name and a comment into the drawer's existing takes list, through the snapshots API as today
+       (`bank/panel_snapshots.json`, bucket `strikes`) — no server change; the name rule, the × and ENTER-to-save unchanged;
+     - what it holds: the RESULT (per onset the time, the chord, the notes, the players, lowered or flagged) and the RECIPE (the chord
+       list, the order, the advance, the selection, the player ticks, the count range, the re-attack, the dealer, the seed, the rhythm
+       dials, the manual onsets, the mode);
+     - the PART save: with a span marked, just those onsets with the same recipe, plus the whole it came from and which span;
+     - loading offers two ways: *as it was* (the stored sequence back on the strip, nothing re-dealt, still editable) and *the settings*
+       (the dials filled and Generate run) — the morph panel's manner (§213);
+     - his 153 existing takes still load (settings only, as now): the new save is a superset;
+     - the takes committed at every wrap (HOW_WE_WORK);
+     - check: a save and a load *as it was* round-trip exactly; a part save loads as its own short sequence; an old take still loads;
+       the manual onsets travel with the save.
   6. **Verify and document** (the checks, the walk on a copy, the decoded MIDI, the docs; then his first chord strike in the piece) —
      *to be laid out when we discuss it.*
 

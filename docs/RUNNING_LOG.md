@@ -6777,3 +6777,18 @@ stored sequence back on the strip, nothing re-dealt) or *the settings* (the dial
 takes today), no server change, the name rule and the × and ENTER-to-save unchanged, the old takes still loading because the new save
 is a superset; the takes committed at every wrap (HOW_WE_WORK); checks — a save and a load *as it was* round-tripping exactly, a
 part-save loading as its own short sequence, an old take still loading, the manual onsets travelling with the save.
+
+## §246. PLAN 1k — step 5 (saving) agreed and written; step 6, verify and document, put to him — the last
+
+Composer, 2026-09-08: *"good"* to step 5 as put — the save carrying the result and the recipe, the part save, the two ways of loading,
+the drawer's own takes list and its rules, the old takes still loading, the commit at every wrap, the checks. Written into PLAN 1k,
+committed.
+
+**Step 6 put to him, goal and sub-steps together (the last):** the whole of 1k walked end to end on a `zz-ai-` copy with real mouse and
+key events and the decoded MIDI — a chord list built, generate, the onsets clicked through, Hear, a manual onset, a span marked both
+ways, both inserts, a save and both loads, the drawer's notes mode unchanged beside it; one node script for the pure parts (the engine's
+determinism, the rule, the advance modes, the lowering, the folds); the documents — STRIKES_TOOL a new section for chords mode (the
+tool's own document), NAMING for what a chord-mode strike looks like in the score, PLAN 1k's statuses, PLANNER NOW, the journal §2, the
+titles on every new control, the lab journal as the work happens; then HIS FIRST CHORD STRIKE in the piece (a hard reload, the drawer,
+chords mode, a chord list from the banners, the dials, generate, hear, a span, insert) and his verdicts to STRIKES_TOOL and NITS, the
+fixes he marks "fix now" built at once; the notation of a chord strike left to 2a.
