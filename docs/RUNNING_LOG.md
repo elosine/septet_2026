@@ -6165,3 +6165,13 @@ F2 · 78 notes = the stored 78, unchanged after two polls and an explicit Genera
 cello and 12 on the bass clarinet; place → 78 notes on the cast's lanes with the septet techniques, the META shape on layer 7, the
 marker. A first version of the recall was caught by the test: it left the pitch source on "the model's own set", and the next poll's
 Generate crept the stock set back in (80 notes) — hence the actual's own set as the source.
+
+## §214. "I'm starting section two now at one eighty three … if I don't like it, I like to revert back. So how do I do this?" — the D17 rule read back as a recipe: Name version first, Save only at a keeper, Reload = back to the last Save; the versions' commit put to him
+
+Composer, 2026-09-07 late (verbatim in CN-41). **Told him (from NAMING §1 and §143):** (1) Name version now — `1.25-sec2start` — the
+file written and a frozen copy beside it; (2) work at 183 s; autosave keeps the working copy; Save only when a step is good, since
+Reload returns to the file as last saved; (3) Reload = drop the unsaved edits, back to the 1.25 state; (4) at each keeper Save, then
+Name version again. **Cautions:** past a Save only a named version leads back, swapped into the piece file by the AI (a version
+opened is for looking — Save inside it writes into the frozen copy, §143); his 18 named versions since v1.7 are untracked, though
+NAMING §1 says the score files are committed — their commit at every wrap, with the piece file, put to him as a question (his
+files; the rule of §209 for the takes and the actuals extended if he says yes).

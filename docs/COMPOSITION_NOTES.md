@@ -1001,3 +1001,15 @@ curated table of which partials each string range gives — the low strings 2–
 each, nothing above B4 as a fundamental; the ceiling MIDI 101) — a pass over the ensemble's onsets: the pitches the sampler gives
 naturally, then the rest by another key and the shift, then what no key gives — and a look at other libraries with more harmonics.
 Planned as PLAN 1i (todo), to be built when the morph section is composed; RUNNING_LOG §210.
+
+## CN-41 · 2026-09-07 — section 2 begins at 183 s; tried in the main score, reverted if disliked
+
+> *"Okay. A question about the save files for the main score. I want to now try some things in the main score with everything that's
+> there now. And then if I don't like it, then I'll refer. So, basically, I'm starting section two now at one eighty three. and I'll
+> add some things and try some things. And then if I don't like it, I like to revert back. So how do I do this? Or what's the best way
+> to do this?"* *(2026-09-07, late; typed — "I'll refer" = revert)*
+
+*AI reading (not the composer's words):* section 1 drafted to 175.7 s (v1.23-sec1DraftDone), the first beating placed after it
+(v1.24-firstBeating); section 2 — the morphs and the beatings, CN-28's form — starts at 183 s, tried in the score itself with
+everything built today (the beating drawer as it stands, the morph panel with the cast and the pitch menu, the actuals). The save
+recipe for trying and reverting: RUNNING_LOG §214.
