@@ -1233,19 +1233,85 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        Ordinario copies on `Fluteb` 4 · 5 · 6 are DONE — he loaded them and §275 corrected their gain and bypasses.)*
 
 
-- **1n — The sequence filler: the gaps of a strike sequence filled with crescendos and trills (CN-48 build 1.5)** — `todo — to be
-  planned after 1m` *(composer, 2026-09-08, CN-48: "take a sequence of strikes and fill in the gaps with a crescendo on an available
-  instrument, see section beginning at 135.72 with trills … at least 2 modes for now, 1 will be like the trills 135 each onset has a
-  trill/crescendo start with in in an available instrument, I was choosing the empty instrument with the shortest available space before
-  its next onset, but above a min say something like 2 seconds, but we should refine this choice; mode 2 the crescendo/trill ends with a
-  strike, precisely the end of the cres is at the end of the strike duration; also to figure out pitches, maybe a menu, this/last pitch
-  of the corresponding strike or next pitch of strike; also any of the harmonies from the harmony drawer, distributed across the sequence
-  of trills/cres and same options of the strikes, reshuffle, repeat in order, etc these will include all the ones we identified in the
-  updated morph panel as well")*. *Why:* the texture of section 1 from 135.72 s was made this way by hand with trills; the machine should
-  do it for both trills and crescendos. **What 1l settles for it:** the crescendo object and the spacing rule with its gesture clause —
-  "an available instrument" becomes a question the shared helper answers. **What is left to plan here:** the two modes, the refined rule
-  for choosing the free instrument (his "shortest available space before its next onset, above a minimum"), the pitch menu, and the
-  harmony distribution with the strikes' and the morph panel's own options. *To be laid out when we discuss it.*
+- **1n — The sequence filler: every attack of a strike pattern prolonged by another instrument (CN-48 build 1.5; CN-54 · CN-55)** —
+  `PLANNED 2026-09-08 — phase 1 closed in four topics and the top line confirmed (RUNNING_LOG §285–293); step 1 agreed, steps 2–5 to be
+  agreed one at a time` *(composer, 2026-09-08, CN-48: "take a sequence of strikes and fill in the gaps with a crescendo on an available
+  instrument, see section beginning at 135.72 with trills … at least 2 modes for now"; CN-54: "the unit is the accent and the prolongued
+  thing eg trill, crescendo, longtone; so the accent kicks off the long as if they were one unit, and with cres, I'll also have the accent
+  be the cutoff"; and "two players, the accent prolonged by another instrument … the typical application would be to generate a strikes
+  pattern like an accel but not necessarily and then overlay crescendos on that pattern, so for each attack in an instrument the long will
+  start simultaneously in another instrument")*. *Why:* the texture of section 1 from 135.78 s was made this way by hand with trills; the
+  machine should do it for trills, crescendos and — later — long tones. **What 1l settles for it:** the crescendo object, the 0.17 s end
+  and the one spacing rule with its gesture clause. **What 1m settles for it:** the harmony bar (163 sonorities, the seeded deck, the
+  octave fold) and the crescendo card, which becomes the per-long editor here.
+
+  **His own texture, measured before anything was designed (§285, §287, §289, §291) —** `grp-strike-40-1357`, 46 attacks over 13.0 s,
+  exactly ONE player per attack, accelerating 800 → 130 ms, with 44 trills laid on it: every trill starts at an attack of **another**
+  instrument (44/44, median 3 ms), every trill ends before its own player's next attack (44/44, median gap **171 ms** — which is 1l's
+  `endGapS` 0.17 s, arrived at independently), no instrument takes two in a row (0/43), the trill lengths run 1.33 → 0.15 s as the run
+  accelerates, and **five or six of the seven players are sustaining 73 % of the time**. His stated selection rule (*"the shortest
+  available space"*) does not describe what he did — it would give a median long of 0.13 s with 40 of 46 under 0.4 s — and he flagged it
+  himself (*"we should refine this choice"*).
+
+  **Phase 1, the four topics:**
+  1. **The unit** — an accent and a prolonged thing, **two players**, the long starting simultaneously with the attack in another
+     instrument, **for every attack**; a two-pass workflow, the drawer's pattern first, the overlay second.
+  2. **The anchors, not modes** — `launchedBy` and `cutBy`, each holding **an attack's id**: launched (the room ends it) · cut (the room
+     decides how early it began; it ends at the END of the accent note, overlapping it by the accent's own ~84 ms) · both · neither.
+     Measured as mirror images: 43 longs and 3 aborts either way. **The selection rule, adopted with a seed:** least-recently-long,
+     roomiest breaks ties, a length floor per kind, **abort** the attack when nothing clears it. The same for all three kinds.
+  3. **The pitches are a STRATEGY** (CN-55), from four families — from the pattern (this accent · the one before · the one after · the
+     whole collection dealt) · from a sonority (1m's harmony bar whole) · a chain (a fixed interval from the previous long, his m2 and
+     P5) · vertical (the note the sounding chord is missing) — each with the seeded order menu (in turn · shuffled · random).
+  4. **The kind** — **one kind per pass** by default (*"lungs will generally be homogeneous … I'll usually want to insert one kind or
+     another"*; the section he is composing next is all crescendos); a seeded proportion and a by-room threshold available.
+
+  **And the shape that governs the whole item:** every property of a long — its anchor, its pitch strategy, its kind — is set at **THREE
+  SCOPES from one menu: the whole pass · a selection of longs · a single long.** One idiom, learned once.
+
+  *The top line, confirmed ("good", §292):*
+  1. **The overlay engine** (a strike pattern in, a set of longs out) — `agreed 2026-09-08 (RUNNING_LOG §292–293)`. *Result when done:*
+     given a strike group already in the score and a set of settings, a pure module returns **one long per attack** — the player, the
+     start, the end, the kind and the two anchors — with the attacks it had to abort named and counted; deterministic from a seed; no
+     DOM, no MIDI and no pitch (step 2). The to-dos:
+     - **the input is the score's own group**: the attacks of one `grp-strike-…` as `{ id, t, dur, lane, midi }`, plus everything each
+       lane already sounds (notes, other longs, trill and beating zones) read through `spacing.js`. **The pattern is read, never modified.**
+     - **the room, one function, two directions**: forwards, from the attack to 0.17 s before that player's next sound; backwards, from
+       the END of the accent note to that player's last sound end + 150 ms;
+     - **the anchors are ACCENT IDS, not positions** (§293, his *"how about if I wanted to extend it to a different strike to cut?"*):
+       `launchedBy` / `cutBy` each hold the id of an attack; the default in cut mode is the attack itself — one long per attack,
+       symmetric with launch — but nothing in the engine depends on that, and **re-pointing an anchor re-derives the length, re-tests the
+       floor and the room, and SAYS SO if it does not fit** rather than silently shrinking;
+     - **the cutting accent may be on any instrument except the long's own** — a player cannot strike while sustaining, and the long ends
+       at the END of the accent note; *(noted, not built: cut by the long's OWN player's next attack — swell then hit — which needs the
+       0.17 s gap instead of the overlap, a different shape)*;
+     - **the choice of player**: least-recently-long, roomiest breaks ties, seeded; never the player striking that attack; never a player
+       already inside a long;
+     - **the floor per kind and the ABORT**: crescendo 0.3 s (1l's `minS`), trill 0.5 s, the long tone's seat left; an attack with no
+       candidate clearing the floor gets no long and is counted with its reason;
+     - **the kind**: one kind for the pass (the default), a seeded proportion, or by room with a threshold; the long tone is in the table
+       but nothing generates it yet;
+     - **reaching back before the pattern is the SHAPE of cut mode, not an edge case** (§293): measured on his run, 4 of 43 longs begin
+       0.53–0.60 s before the first attack, stopped by the previous strike group and the 150 ms rest. It needs **a cap backwards** (1l's
+       5 s fallback, reversed) for a player with nothing before it, and a switch **"keep inside the pattern"** that clips a long to the
+       group's first attack and aborts it if that drops it under the floor;
+     - **the seed**: the drawer's own `mulberry32`, so a seed means the same thing in the strikes, the harmony bar and here;
+     - **the output**: per long `{ attackId, lane, t0, t1, kind, launchedBy, cutBy }` and a summary — made, aborted with reasons, the
+       length spread, the per-player count;
+     - **the group**: the pass is written as **its own group** (`grp-fill-…` with a META shape, the drawer's idiom), NOT into the strike
+       group — sharing the strike group's id would let the gesture clause stop a player's own attacks from blocking its long and the room
+       rule would collapse; each long records which strike group it fills;
+     - **the checks in node**: the two directions are mirror images on his run (43 longs, 3 aborts either way); the same seed repeats
+       exactly; no long on a striking player; no two longs overlapping on one player; every long clears its floor; a `both` that cannot
+       fit aborts; a re-pointed anchor that does not fit is refused with its reason.
+  2. **The pitch strategies** (the four families and their seeded orders, reusing 1m's harmony bar and 1k's deck and octave fold) —
+     `todo — to be agreed`.
+  3. **The pass in the strikes drawer** (choosing the strike group, the settings, generate · hear · insert, the longs written as one
+     group) — `todo — to be agreed`.
+  4. **The three scopes** (the whole pass, a selection, a single long: the anchor toggle, the pitch source and the kind on 1m's crescendo
+     card) — `todo — to be agreed`.
+  5. **Verify and document** (the node checks, the walk on a copy, the documents; then his first filled section, all crescendos) —
+     `todo — to be agreed`.
 
 - **1o — Crescendo strikes: the chords and strikes of 1k sounding as crescendos (CN-48 build 2)** — `todo — to be planned after 1n`
   *(composer, 2026-09-08, CN-48: "like the recent strike chords/and-or strikes but instead of single attack, they will be crescendos,
