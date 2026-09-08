@@ -1145,7 +1145,7 @@ const PANEL = {
     pitchSonority() {
         const SEP = root.MorphSeptet, S = this.pitchSources, p = this.pitch;
         if (!SEP || !p || !p.src || p.src === 'model') return null;
-        const rootMidi = SEP.parseNote(p.root);
+        const rootMidi = SEP.parseNote(p.root, 48);   // a bare pitch class sits around C3, the low pair's home
         const [kind, ...rest] = p.src.split(':'); const key = rest.join(':');
         if (kind === 'fam') { if (rootMidi == null) return null; const n = SEP.familyNotes(key, rootMidi); const fam = SEP.STACKS.concat(SEP.MODES).find(x => x.id === key); return n ? { notes: n, from: (fam ? fam.name : key) + ' from ' + SEP.nm(rootMidi) } : null; }
         if (kind === 'model' || kind === 'tuba') { const m = this.models && this.models.models && this.models.models[key]; if (!m) return null; const src = kind === 'tuba' ? (m.tuba && m.tuba.source) : (m.baseParams && m.baseParams.source); return src && src.midi ? { notes: src.midi.slice(), from: (kind === 'tuba' ? 'the tuba\'s ' : 'the model ') + key } : null; }
@@ -1163,12 +1163,25 @@ const PANEL = {
     applyPitch(params) {
         const SEP = root.MorphSeptet, son = this.pitchSonority();
         this._pitchInfo = null;
-        if (!SEP || !son) return params;
+        if (!SEP) return params;
+        // the root reaches SPECTRAL's fundamental whatever the source (his "if I type a new root in the root box it continues to use F");
+        // a bare pitch class takes the octave the fundamental already sits in (F2 → "D#" = D#2)
+        const stockFund = (params && params.model === 'M2' && params.target && params.target.fundamental != null) ? params.target.fundamental : 41;
+        const rootFund = SEP.parseNote(this.pitch.root, stockFund);
+        if (!son) {
+            if (params && params.model === 'M2' && rootFund != null && rootFund !== stockFund) {
+                const out = JSON.parse(JSON.stringify(params)); out.target = Object.assign({}, out.target || {}, { fundamental: rootFund });
+                this._pitchInfo = { rootOnly: true, fundamental: rootFund };
+                return out;
+            }
+            if (params && params.model === 'M2') this._pitchInfo = { rootOnly: true, fundamental: stockFund, stock: true };
+            return params;
+        }
         const env = this.castEnv(), order = this.pairOrder(), p = this.pitch;
         const holds = (band, midi) => { const o = order[band]; if (!o || !env) return true; const a = env.SEP.instOf(env, this.pairs[o.i].a), b = env.SEP.instOf(env, this.pairs[o.i].b); return env.BC.holds(env.recipe, a, midi) && env.BC.holds(env.recipe, b, midi); };
         const res = SEP.takeForPairs(son.notes, this.pairs.length, p.take || 'byRegister', { k: +p.k || 1, seed: +p.seed || 1, perPair: +p.perPair === 2 ? 2 : 1, holds: holds });
-        const out = SEP.deriveParams(params, res.notes, { perPair: +p.perPair === 2 ? 2 : 1, root: SEP.parseNote(p.root), warnings: (this._pitchWarnings = []) });
-        this._pitchInfo = { from: son.from, sonority: res.sorted, taken: res.taken, dropped: res.dropped, notes: res.notes };
+        const out = SEP.deriveParams(params, res.notes, { perPair: +p.perPair === 2 ? 2 : 1, root: rootFund, warnings: (this._pitchWarnings = []) });
+        this._pitchInfo = { from: son.from, sonority: res.sorted, taken: res.taken, dropped: res.dropped, notes: res.notes, fundamental: params && params.model === 'M2' ? rootFund : null };
         return out;
     },
     drawPitch(f, head, note) {
@@ -1221,8 +1234,10 @@ const PANEL = {
         rm.addEventListener('click', () => this.removePitch()); row.appendChild(rm);
         f.appendChild(row);
         const info = this._pitchInfo;
+        const fund = info && info.fundamental != null ? ' · SPECTRAL\'s fundamental <b>' + SEP.nm(info.fundamental) + '</b> (' + info.fundamental + ')' + (info.stock ? ', the model\'s — type a root to move it' : ' from the root box') : '';
         if (!info) note(p.src === 'model' ? 'the model\'s own set (the pairs take it two by two)' : 'the chosen source is not loaded yet, or its root is not a note — the model\'s own set plays', '#9a9');
-        else note('<b>' + info.from + '</b> — ' + nmList(info.sonority) + ' · take <b>' + (SEP.TAKES.find(t => t.id === p.take) || {}).name + '</b> → ' + info.taken.map(SEP.nm).join(' ') + (info.dropped.length ? ' · dropped ' + nmList(info.dropped) : ''), '#9a9');
+        else if (info.rootOnly) note('the model\'s own set (the pairs take it two by two)' + fund, '#9a9');
+        else note('<b>' + info.from + '</b> — ' + nmList(info.sonority) + ' · take <b>' + (SEP.TAKES.find(t => t.id === p.take) || {}).name + '</b> → ' + info.taken.map(SEP.nm).join(' ') + (info.dropped.length ? ' · dropped ' + nmList(info.dropped) : '') + fund, '#9a9');
     },
     async keepPitch() {
         const SEP = root.MorphSeptet, son = this.pitchSonority();

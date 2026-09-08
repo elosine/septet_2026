@@ -789,6 +789,11 @@ only a bag of notes, so that resonances, doublings and accents can be derived fr
 IRCAM harmonics' partials per string) is palette data of the same kind as the bending players' ranges. PLAN 1i; RUNNING_LOG §210.
 
 
+- *(2026-09-07, late — "if I type a new root in the root box it continues to use F", RUNNING_LOG §211)* **A control must reach its target
+  through every path, and read what a musician types:** the root box was wired through one path (a chosen sonority) and read only
+  a note with an octave; he typed a pitch class with the model's own set. Fixed; the lesson for the tool: one box, one meaning,
+  every route; a pitch class alone is a valid note, the octave inferred from context.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

@@ -6092,3 +6092,17 @@ segments (each re-breath's start and cents per voice) and the beating's breath s
 for the morph section — (1) the generator from a morph's render, (2) the sound: the IRCAM table ported and refined, a pass over the
 onsets (natural · by another key and the shift · unreachable), other libraries looked at. Nothing built; his word when the morph
 section is composed.
+
+## §211. "for the spectral model how do I change the root, if I type a new root in the root box it continues to use F" — two gaps found and fixed: the root reached SPECTRAL only through a chosen sonority, and a bare pitch class was not read
+
+Composer, 2026-09-07 late, mid-build, with a screenshot (SPECTRAL, "the model's own set", the root box `D#`, 78 notes playing, three
+ACTUALs): *"and then for the spectral model how do I change the root, if I type a new root in the root box it continues to use F"*.
+
+**The causes (both mine, §208):** (1) `applyPitch` returned the params untouched when the source was "the model's own set", so the
+root — meant to be SPECTRAL's fundamental "whatever the source" (§206) — never reached it; (2) `parseNote` demanded an octave
+(`D#2`), so `D#` read as nothing. **Fixed:** `parseNote(s, ref)` — a bare pitch class takes the octave nearest a reference (the
+fundamental the model already sits in: F2 → `D#` = D♯2; the families' reference C3); `applyPitch` sets SPECTRAL's fundamental from the
+root box with any source, and says so under the row ("SPECTRAL's fundamental D#2 (39) from the root box"; the model's own when the
+box is empty). Checks 58 (three new: D♯ near F2 = 39, near C3 = 51, the SPECTRAL derivation). **On a copy with real events:** SPECTRAL
+with the model's own set, `D#` typed → the fundamental 39, the render re-done (31 notes); `A3` → 57; the box emptied → back to F2;
+BLOOM untouched by the root. Committed; his hard reload brings it.

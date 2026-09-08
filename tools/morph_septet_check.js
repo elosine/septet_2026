@@ -110,6 +110,9 @@ ok(heard.notes.every(n => rB.notes.includes(n)), 'the heard notes are the render
 
 // ---- (6) the pitch source (§205–208): notes, families, the take rules, the pairing, the derivation ----
 ok(SEP.parseNote('F2') === 41 && SEP.parseNote('C#4') === 61 && SEP.parseNote('Db4') === 61 && SEP.parseNote('60') === 60 && SEP.parseNote('x') === null, 'note names parse (F2 = 41, C#4 = Db4 = 61, "60" = 60, "x" = null)');
+ok(SEP.parseNote('D#', 41) === 39 && SEP.parseNote('D#', 48) === 51 && SEP.parseNote('c', 41) === 36 && SEP.parseNote('Bb', 41) === 46, 'a bare pitch class takes the octave nearest the reference (D# near F2 = D#2, near C3 = D#3)');
+const dR = SEP.deriveParams(M.resolveParams(bank.models.SPECTRAL, {}).params, [51, 51, 56, 56, 61, 61], { root: SEP.parseNote('D#', 41) });
+ok(dR.target.fundamental === 39, 'SPECTRAL takes a bare "D#" as D#2 (39) for its fundamental');
 ok(SEP.familyNotes('stack-p5', 48).join() === '48,55,62,69,76,83', 'a stack of fifths from C3: ' + SEP.familyNotes('stack-p5', 48).map(SEP.nm).join(' '));
 const m1 = SEP.familyNotes('mode-1', 48), m2 = SEP.familyNotes('mode-2', 48);
 ok(m1.slice(0, 7).join() === '48,50,52,54,56,58,60' && m1.length === 13, 'Messiaen mode 1 from C3: the whole-tone scale over two octaves (' + m1.length + ' notes)');

@@ -27,19 +27,25 @@ const DEFAULT_PAIRS = [{ a: 6, b: 5 }, { a: 3, b: 4 }, { a: 0, b: 1 }];   // Vc 
 const NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const nm = m => NAMES[((m % 12) + 12) % 12] + (Math.floor(m / 12) - 1);
 const FLATS = { 'DB': 1, 'EB': 3, 'GB': 6, 'AB': 8, 'BB': 10, 'CB': 11, 'FB': 4 };
-// a note name ('F2', 'C#4', 'Db4', 'bb3') or a number → MIDI; null when unreadable
-function parseNote(s) {
+// a note name ('F2', 'C#4', 'Db4', 'bb3') or a number → MIDI; null when unreadable. A bare pitch class ('D#') takes the octave
+// nearest `ref` (his "D#" in the root box, 2026-09-07 late — the octave he did not type is the one the model already sits in)
+function parseNote(s, ref) {
     if (s == null) return null;
     if (typeof s === 'number') return isFinite(s) ? Math.round(s) : null;
     const t = String(s).trim();
     if (!t) return null;
     if (/^-?\d+(\.\d+)?$/.test(t)) return Math.round(+t);
-    const m = t.toUpperCase().match(/^([A-G])([#B]?)(-?\d)$/);
+    const m = t.toUpperCase().match(/^([A-G])([#B]?)(-?\d)?$/);
     if (!m) return null;
     let pc = NAMES.indexOf(m[1]);
     if (m[2] === '#') pc += 1;
     else if (m[2] === 'B') pc -= 1;
-    return (Number(m[3]) + 1) * 12 + ((pc % 12) + 12) % 12;
+    pc = ((pc % 12) + 12) % 12;
+    if (m[3] != null) return (Number(m[3]) + 1) * 12 + pc;
+    const r = (ref != null && isFinite(ref)) ? ref : 48;
+    let best = null;
+    for (let k = 0; k <= 10; k++) { const midi = k * 12 + pc; if (best === null || Math.abs(midi - r) < Math.abs(best - r)) best = midi; }
+    return best;
 }
 
 // the lanes that may hold a morph voice: every track whose recipe bends (the piano's `beating: false` keeps it out)
