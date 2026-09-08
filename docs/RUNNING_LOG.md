@@ -7049,3 +7049,19 @@ player's next note, else 5 s), the dynamic range ppp … fff by default and sett
 (filled, transparent, the morph orange) and the editing the curve-lane way (the line dragged to bend, no diamond, the dots always
 drawn) — the score's own drag, stretch, delete, undo and save working on it because it is a note; the fields into NAMING; node checks
 for the shapes, the end rule and the provenance, and a walk on a copy.
+
+## §259. PLAN 1l — step 2 (the crescendo object) agreed and written; step 3, the spacing rule, put to him
+
+Composer, 2026-09-08: *"good"* to step 2 as put — the pure maker, the shapes by name from the app's own presets, the end rule in one
+place, ppp … fff with a cliff, the orange fill, the curve-lane editing, the fields into NAMING, the checks and the walk. Written into
+PLAN 1l, committed.
+
+**Step 3 put to him, goal and sub-steps together:** ONE rule in the app — a player is free 150 ms after its last sound ENDS — written
+once as a shared helper (given a player, a moment and everything that player already sounds, is it free?), and used by the strikes
+drawer's chord engine (its box re-read from "no player attacks twice within N ms" to "rest ≥ N ms after the end", the number still his,
+150 the default and 200 still typable), by the sequence filler and the crescendo strikes when they come (1n, 1o), and by anything later
+that has to ask; the events it counts are every sounding thing on that lane — a strike, a trill's span, a beating's span, a crescendo,
+an ordinary note — so a player stops looking free merely because its long sound started a while ago; the trill's no-next-note fallback
+moved from 2 s to 3 s at the same time (new trills only; the ones in the piece keep the ends they were given); node checks that the rule
+is a guarantee on a fast run, that a long sound blocks its whole length, and that PLAN 1k's dealt sequences move as little as the
+arithmetic says; a walk on a copy showing the chords drawer reading the new box.

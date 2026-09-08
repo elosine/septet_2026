@@ -1041,7 +1041,23 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        law, nothing overlaps, and the decoded MIDI shows the three shapes actually differ;
      - then HIS EAR: solo, listen, name one standard or two — the verdict into PLAN 1l and the crescendo's document.
   2. **The crescendo object** (the held note with its rising curve, its provenance, the orange fill, the cliff, the 0.17 s end and the
-     5 s fallback) — *to be laid out when we discuss it.*
+     5 s fallback) — `todo — agreed 2026-09-08 (RUNNING_LOG §259)`. *Result when done:* the app knows what a crescendo is, once, and every
+     later build asks the same helper for one — a held note whose curve rises, carrying its family, its ratio, its dynamic range and how
+     its end was set; drawn filled and transparent in the morph orange; edited the curve-lane way (the line dragged to bend); and because
+     it is a note, the score's own drag, stretch, delete, undo and save already work on it. The to-dos:
+     - a pure maker (`score/public/cresc.js`): a pitch, a player, a start, an end and a shape → the note — the curve's two nodes, the
+       segment's model and slope, the ordinary voice as its technique, the dynamic range as the curve's bottom and top, the provenance,
+       the colour;
+     - the shapes by name — surge · linear · bloom, each with its ratio — taken from the app's own presets (`surge` exponential 0.40 ·
+       `bloom` logarithmic −0.29 · `line` power 0), so a name means in this piece what it means in his others;
+     - the end rule in ONE place: to 0.17 s before that player's next note; with no later note, 5 s; a manual duration overrides both and
+       is recorded as such in the provenance;
+     - the dynamic range ppp … fff by default over the measured scale (1g), settable per crescendo; the peak a CLIFF;
+     - the drawing: filled, transparent, the morph orange (`#C2410C`) in the score; lines only in a curve window, as today;
+     - the editing: the line dragged to bend, the dots always drawn, no diamond — nothing else in the score changes;
+     - the fields into `docs/NAMING.md`, so the extractor and the notation at 2a can read a crescendo;
+     - checks: the three shapes differ in the right direction; the end rule picks the right end in all three cases (a next note, no next
+       note, a manual duration); the provenance survives a save and a reload; a walk on a copy where one is made, dragged, bent and undone.
   3. **The spacing rule** (a player free 150 ms after its last sound ends, everywhere; the chords drawer re-read; the trill's fallback
      3 s) — *to be laid out when we discuss it.*
   4. **Verify and document** (the checks, the walk on a copy, the crescendo's own document; then his ear) — *to be laid out when we
