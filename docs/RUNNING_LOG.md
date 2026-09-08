@@ -8000,3 +8000,46 @@ menu: the whole pass · a selection · a single long.**
 4. **The three scopes** — the whole pass, a selection, a single long: the anchor toggle, the pitch source and the kind on 1m's crescendo
    card.
 5. **Verify and document** — the node checks, the walk on a copy, the documents; then his first filled section, which is all crescendos.
+
+## §293. PLAN 1n step 1 — his two edge questions turn the anchor from a POSITION into a REFERENCE
+
+Composer, 2026-09-08, on step 1 as put:
+
+> *"how are we accounting for the swab in edge cases? So the first onset in a group is okay for attack by… but what if I want cut by?
+> Does it then add a crescendo before the first attack? and then I don't think I thought this through enough. the cut can be cut by any
+> attack in any instrument. so are we doing the next strike to cut or how about if I wanted to extend it to a different strike to cut?"*
+
+**He is right on the second, and it is a real hole in step 1 as I put it.** I had quietly assumed the cutting accent is *the attack this
+long belongs to* — an index, not a choice. His question makes the anchor what it should have been from the start: **an accent's ID, a
+reference to a particular attack, not a position in the sequence.** The engine's default picks which accent; he can re-point either
+anchor at any other attack, at the three scopes like everything else in 1n. *"Extend it to a different strike to cut"* is then one edit,
+not a mode.
+
+**Consequences written into step 1:**
+
+- **the anchor is an accent id.** `launchedBy` and `cutBy` each hold the id of an attack in the strike group. The default in cut mode is
+  the attack itself — one long per attack, symmetric with launch mode — but nothing in the engine depends on that.
+- **re-pointing re-checks.** Moving an anchor re-derives the length, re-tests the floor and the player's room, and **says so** if it does
+  not fit, rather than silently shrinking.
+- **the cutting accent may be on ANY instrument except the long's own.** A player cannot strike while sustaining, and his rule has the
+  long ending at the END of the accent note (they overlap by the accent's ~84 ms), which requires two players.
+- **noted for later, not built:** cut by the long's OWN player's next attack — swell, then hit, one instrument. It needs the 0.17 s gap
+  instead of the overlap, so it is a different shape; recorded here so it is not lost.
+
+**His first question answered with the measurement.** In cut mode a long must begin before its cutting accent, so yes, the pass reaches
+back before the pattern — that is the shape of the mode, not an edge case to avoid. Simulated on his run (the pattern starts at 135.78 s,
+the room rule run backwards over the WHOLE score, not just the group):
+
+| | |
+|---|---|
+| longs made / aborted | 43 / 3 |
+| longs that begin **before** the pattern | **4** |
+| by how much | 0.53 – 0.60 s (Pno, Fl, Vn1, Va) |
+| earliest start of the pass | 135.18 s |
+
+They stop where they do because the **previous strike group** ended around 135.03 s and the 150 ms rest follows it — the room rule
+already handles the overhang, with no special case. Two things it does need:
+
+- **a cap backwards** for a player with nothing at all before it, else the long runs back to zero: 1l's 5 s fallback, run backwards.
+- **a switch, *keep inside the pattern***, for when he wants the fill to sit exactly within the strike group's own span: a long that
+  would reach back is clipped to the pattern's first attack, and aborts if that puts it under the floor.
