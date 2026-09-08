@@ -8168,3 +8168,47 @@ attacks) with 0 ms filling 43. He lowers it when the texture is that dense.
 **Written:** `docs/STRIKES_TOOL.md` §Y (the whole tool, the measurements, the defects), `docs/NAMING.md` 18 (the fill group, the anchors
 as attack ids, `pinned`), `docs/CRESCENDO.md` §7's 1n line, PLAN 1n's statuses, PLANNER NOW, the journal §2. 81 checks in
 `score/tools/check_fill.js`, all passing.
+
+## §301. PLAN 1o opened (crescendo strikes) — three of his four asks were already built; the fourth measured, and it governs everything
+
+Composer, 2026-09-08: *"1o plan pls"*. Phase 1 begins by reading his own CN-48 list against what the crescendo suite has since built:
+
+> *"like the recent strike chords/and-or strikes but instead of single attack, they will be crescendos, help me walk thru what needs to
+> be changed for the new articulation, change default instrument, ordinaro or senza vibrato velocity, the spacing/overlap rules need to
+> adjust next articulation for any one instrument will be 150ms after end of crescendo; others?"*
+
+**Three of the four are done, and were done for other reasons:**
+
+| his ask | where it already lives |
+|---|---|
+| *"change default instrument, ordinaro or senza vibrato velocity"* | the recipe's `ordinary` field (PLAN 1g item 4, confirmed with him at 1m): flute `ord` · bass clarinet `senza_vel` · the four strings `senza_vel` · piano `main` |
+| *"next articulation … 150ms after end of crescendo"* | PLAN 1l step 3, and **1k's chord engine already measures its rest from the END** — `soundMs` + `markEnd(lane, t) = t + soundMs` |
+| the crescendo itself | PLAN 1l's object, and 1n now writes crescendos into the score wholesale |
+
+**So the mechanical change to 1k is one line of intent:** `soundMs` stops being 140 ms and becomes the crescendo's length. The engine's
+own comment has anticipated it since 1k was written (*"a crescendo of 1o will pass its own length"*).
+
+**His *"others?"* is the whole of it, and it is the LENGTH.** Measured by driving `StrikeChords.deal` itself — six players (the piano out
+of the dealing, CN-34), 2–4 per onset, 20 onsets, the 150 ms rest from the end:
+
+| the sound's length | the onset gap it needs to hold | at a 250 ms gap it serves |
+|---|---|---|
+| **0.14 s** (an attack, as 1k deals today) | 400 ms | 20 / 20 onsets, 54 notes |
+| **0.70 s** | 900 ms | 14 / 20, 30 notes, 6 flagged |
+| **1.50 s** | 2000 ms | **8 / 20**, 18 notes, 13 flagged |
+| **3.00 s** | more than 2000 ms | 5 / 20, 12 notes, 16 flagged |
+
+The rule of thumb that falls out: **the onset gap must be about the sound's length × 1.3.** Below it the count thins first (the machine
+lowers 2–4 to whatever is free, §237's rule) and then breaks (flagged: even the minimum cannot be met).
+
+**What that means for the piece, stated rather than fixed:** a sequence of crescendo strikes is **five to ten times sparser** than the
+same sequence of attacks, or its chords are much thinner. That is what the material is, not a defect — and it is why the length cannot
+simply be typed and left.
+
+**Also named in phase 1, because it is the difference between 1o and 1n:** in 1n an accent in one player is prolonged by a long in
+ANOTHER; the attacks stay attacks. In 1o there is no accent — **the dealt chord notes themselves are the crescendos**, so a "count" of
+2–4 is how many swells begin together.
+
+**Topic 1 put to him:** where does a crescendo strike's length come from — (a) typed, one for the pass; (b) **derived from the room**, 1n's
+own rule (to 0.17 s before that player's next sound), recommended, because it is what makes the density self-solving and it points 1o at
+`fill.js` rather than a second engine; (c) to the next onset of the sequence, so the swells shingle.
