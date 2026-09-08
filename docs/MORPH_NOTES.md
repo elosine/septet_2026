@@ -794,6 +794,10 @@ IRCAM harmonics' partials per string) is palette data of the same kind as the be
   a note with an octave; he typed a pitch class with the model's own set. Fixed; the lesson for the tool: one box, one meaning,
   every route; a pitch class alone is a valid note, the octave inferred from context.
 
+- *(2026-09-07, late — "the naming can it increment per model? because I lose track of which one", RUNNING_LOG §212)* **A saved thing
+  must name itself:** the default label now carries the number, the length and the pitch source. For the tool: every take, actual or
+  kept set gets a default name that reads back in a list a day later — number · what · from what — before the composer's words.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

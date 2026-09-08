@@ -801,8 +801,13 @@ const PANEL = {
             return;
         }
         const m = this.model();
+        // the default label = the file's own number (ACT-<MODEL>-NN, the next free one) · the length · the pitch source, so the list
+        // reads back (composer, 2026-09-07 late: "the naming can it increment per model? because I lose track of which one")
+        const mine = (this.actuals || []).filter(a => a.model === m.id).map(a => +String(a.entity || '').split('-').pop() || 0);
+        let nn = 1; while (mine.indexOf(nn) >= 0) nn++;
+        const srcShort = this._pitchInfo && this._pitchInfo.from ? ' · ' + String(this._pitchInfo.from).replace(/\s*\(.*\)\s*$/, '').slice(0, 28) : '';
         const label = window.prompt('Label for this actual — one breath, your words:',
-            m.name + ', ' + Math.round(this.result.meta.span) + ' s');
+            m.id + '-' + String(nn).padStart(2, '0') + ' · ' + Math.round(this.result.meta.span) + ' s' + srcShort);
         if (label == null) return;
         try {
             const r = await fetch('/api/actuals', {

@@ -6106,3 +6106,23 @@ root box with any source, and says so under the row ("SPECTRAL's fundamental D#2
 box is empty). Checks 58 (three new: D♯ near F2 = 39, near C3 = 51, the SPECTRAL derivation). **On a copy with real events:** SPECTRAL
 with the model's own set, `D#` typed → the fundamental 39, the render re-done (31 notes); `A3` → 57; the box emptied → back to F2;
 BLOOM untouched by the root. Committed; his hard reload brings it.
+
+## §212. "how about the ending of these morphs? Is that what the release box is for? … And then the naming can it increment per model? because I lose track of which one" — the release answered from the timing rule; the actual's default label now carries its number, its length and its pitch source
+
+Composer, 2026-09-07 late, with two screenshots (the panel's dials — pace 40 s, duration and release blank, segment 8 s, bias 0.2,
+seed 13 — and the Save-as-ACTUAL prompt prefilled "SPACING MIGRATION, 40 s"): *"And then how about the ending of these morphs? Is
+that what the release box is for? So if I wanted to fade out, essentially, I just use the release seconds. And then the naming can it
+increment per model? because I lose track of which one. or we could just use an universal increment regardless of the model."*
+
+**The ending (answered from `carrierTiming` and `stateAt`):** yes — `release (s)` is the run-down: after the body the pitches close
+back to where they began and the LEVEL fades from its body-end value to the floor (0.4 — the sampler's own decay, not silence), the
+players finishing their breath rather than being cut ("let them finish"); the total = duration + release. `duration (s)` is how long
+the body lasts: blank = the one-way gliss of `pace` and nothing more; longer than the pace = the body cycles out and back until it.
+So a fade-out = a release in seconds; a hold-then-fade = a duration, then the release. The shape presets' release block (taper,
+dropout by pairs, a motion to unison) is the tuba's finer tool, untouched here.
+
+**The naming:** the file's id already increments per model (`ACT-<MODEL>-NN`, the server's next free number — ACT-SPECTRAL-01, -02 …);
+what repeated was the LABEL's default, the model's name and the length. Now the prompt prefills `<MODEL>-NN · <length> s · <the pitch
+source>` — e.g. "SPECTRAL-03 · 40 s · cs-015 · M3 P4" — the number guessed from the list (the same as the file's unless a gap was left
+by a deletion), so the ACTUALs list reads back; his words still replace it. Not walked in the pane (a prompt's default string; the
+list's fields as the server sends them).
