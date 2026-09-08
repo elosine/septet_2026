@@ -8050,8 +8050,8 @@ Composer, 2026-09-08: *"good"* to step 1 with the anchor turned into an accent r
 written into PLAN 1n.
 
 **Step 2 is almost entirely reuse, which is the point of having built 1m first.** The sonority family IS 1m's harmony bar
-( / , 163 sets); the order IS 1k's deck (); the octave fold IS 1k's rule
-(). Genuinely new in the whole step: reading a named accent's pitch, the interval chain, and the vertical filter — three
+(`MorphPanel.pitchOptionGroups` / `sonorityOf`, 163 sets); the order IS 1k's deck (`Cresc.deckNext`); the octave fold IS 1k's rule
+(`Cresc.foldInto`). Genuinely new in the whole step: reading a named accent's pitch, the interval chain, and the vertical filter — three
 small pure functions. **A pitch that no octave reaches aborts the long** and is counted with step 1's aborts, so nothing is ever dropped
 in silence.
 
@@ -8061,5 +8061,5 @@ Measured for him — his 44 trills at 135.78 s were every one a semitone, not CN
 **Step 3 put to him:** the pass in the strikes drawer — where it sits (a mode beside notes and chords, 1k's mixin idiom), choosing the
 strike group FROM THE OPEN SCORE rather than the database so a dragged or stretched group fills correctly, the settings at pass scope,
 **Generate** (runs steps 1 and 2 and shows the result without writing), **Hear** (through the real routes, the D11 curve channels),
-**Insert** (as its own  group with a META shape, the drawer's replace-at-the-same-time rule), and the take that reloads
+**Insert** (as its own `grp-fill-…` group with a META shape, the drawer's replace-at-the-same-time rule), and the take that reloads
 *as it was* or *as settings* exactly as 1k's chord takes do.
