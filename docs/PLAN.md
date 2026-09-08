@@ -997,6 +997,42 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - his first chord strike: a hard reload, the drawer, chords mode, a chord list from the banners, the dials, generate, hear, a span,
        insert; his verdicts → STRIKES_TOOL and NITS, the fixes he marks "fix now" built at once;
      - later, at 2a: the notation of a chord strike.
+
+- **1l — The crescendo itself: the standard curve, the object in the score, one spacing rule (CN-48; the foundation under 1m · 1n · 1o)** —
+  `todo — in planning 2026-09-08 (PLANNING_METHOD phase 3 from step 1; RUNNING_LOG §252–257)` *(composer, 2026-09-08, CN-48: "lets do a
+  survey of the crescendo curves I use throughout my pieces and potentially a listening test at different durations to nail down a
+  standard or a couple of standards … we'll have a default dynamic range ppp-fff … next articulation for any one instrument will be
+  150ms after end of crescendo")*. *Why:* the crescendo arrives in three places at once (the C key, the sequence filler, the chords
+  drawer); the curve, the dynamic range and the spacing rule are the same in all three, so they are settled once here and the three
+  cannot drift. **The planning is organized as four items at his word (§252, "a"): 1l first, planned AND built, then 1m (the C key),
+  1n (the sequence filler), 1o (crescendo strikes), each planned when its turn comes.**
+  **Decided in the talk (RUNNING_LOG §252–256):**
+  - **The survey is done** (§253, a read of his own docs): his vocabulary is fixed — **BLOOM** front-loaded · **SURGE** back-loaded ·
+    linear between, a full spec reading *"8 seconds, surge 5×"*, the **THRESHOLD** the half-loudness moment; the tuba piece's standard
+    was **surge 5×** (slope 0.40, threshold 0.68; bloom 5× is −0.29; linear is 0), his standing mix there *surge .7 / sine .3*, "longs
+    always surge". **The app already draws them by name** (`composer.html`'s presets: `surge` exponential 0.40 · `bloom` logarithmic
+    −0.29 · `line` power 0 · `saw`), and 1g's measured law already makes a curve's height the same loudness on every instrument.
+  - **A crescendo IS an ordinary held note whose curve rises** (§254, his (a)), carrying a `cresc` provenance (the family, the ratio, the
+    dynamic range, how its end was set) — no new object type; **edited the newest way (his correction): the three curve-lane overlays,
+    no slope diamond, the LINE dragged to bend**; **drawn in the score filled and transparent in the morph ORANGE** (`#C2410C`, the
+    colour the tuba piece's morph section is drawn in).
+  - **The end** (§255): the peak is a **CLIFF** — up to the top and stop; the crescendo runs to **0.17 s** before that player's next
+    note (the trill's measured number, now both); with no later note the fallback is **5 s** for a crescendo and **3 s** for a trill
+    (it was 2).
+  - **One spacing rule everywhere** (§256): **a player is free 150 ms after its last sound ENDS** — the honest rule once an event
+    occupies time; a strike's short sound puts that near 200 ms after its attack, so PLAN 1k barely moves (its box is re-read).
+  - **The listening test is a SCORE FILE, not a rack probe** (§256, his ask): the whole grid on all seven lanes at the same times, so
+    soloing swaps the instrument without moving; he plays it, solos, loops, bends a curve by hand, and keeps the file.
+  *The top line, confirmed (§257):*
+  1. **The listening test** (a generated score file: three shapes at three durations on every player; he solos and names the standard) —
+     *to be laid out when we discuss it.*
+  2. **The crescendo object** (the held note with its rising curve, its provenance, the orange fill, the cliff, the 0.17 s end and the
+     5 s fallback) — *to be laid out when we discuss it.*
+  3. **The spacing rule** (a player free 150 ms after its last sound ends, everywhere; the chords drawer re-read; the trill's fallback
+     3 s) — *to be laid out when we discuss it.*
+  4. **Verify and document** (the checks, the walk on a copy, the crescendo's own document; then his ear) — *to be laid out when we
+     discuss it.*
+
 ## 2. Notate — `deferred` until the first real page exists
 
 - **2a — Engine adaptation** — the 0g list. Start with the page the opening needs.

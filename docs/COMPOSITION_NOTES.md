@@ -1114,3 +1114,39 @@ pitches, the flags) together with everything that produced it: the chord list, t
 the dealer, the seed, the rhythm dials and the manual onsets. Two grains: the WHOLE (the shuffle and the rhythm as one unit) and a
 PART (a marked span saved on its own, carrying the same provenance and the memory of the whole it came from). This is the morph
 panel's ACTUAL with its recall (§213) brought to the strikes drawer, whose takes today keep the settings alone. RUNNING_LOG §239.
+
+## CN-48 · 2026-09-08 — the CRESCENDOS: a C key like the trills' T, a filler that crescendos through the gaps of a strike sequence, and crescendo strikes in the chords drawer
+
+> *"i would like to work on another build/plan; this is for crescendos, 2.5 builds both for crescendos; 1st I would like a facility like
+> the trills in the main score. now, with tr, I insert a strike in the main score, select one note/brick, hit t and it creates a trill
+> zone based on 1 of 3 independant curves, zone continues until something like .15 s before the next note for that instrument; for the
+> crescendos, similar, strike, select note, press something like c a crescendo appears on that pitch -> .15 before next note, use
+> standard curve, I think we called it surge in the tuba piece, but lets do a survey of the crescendo curves I use throughout my pieces
+> and potentially a listening test at different durations to nail down a standard or a couple of standards; we'll have a default
+> dynamic range ppp-fff and I can reassign individually, also can assign a manual duration, so maybe: c key, little panel, default
+> dynamic range and duration (til next note or if no note a standard duration), and articulation, but I can change any of them there in
+> the mini panel, then go to insert; build 1.5 related to above but I would like to take a sequence of strikes and fill in the gaps with
+> a crescendo on an available instrument , see section beginning at 135.72 with trills, so I would like at least 2 modes for now, 1 will
+> be like the trills 135 each onset has a trill/crescendo start with in in an available instrument, I was choosing the empty instrument
+> with the shortest available space before its next onset, but above a min say something like 2 seconds, but we should refine this
+> choice; mode 2 the crescendo/trill ends with a strike, precisely the end of the cres is at the end of the strike duration; also to
+> figure out pitches, maybe a menu, this/last pitch of the corresponding strike or next pitch of strike; also any of the harmonies from
+> the harmony drawer, distributed across the sequence of trills/cres and same options of the strikes, reshuffle, repeat in order, etc
+> these will include all the ones we identified in the updated morph panel as well
+> 2nd related build like the recent strike chords/and-or strikes but instead of single attack, they will be crescendos, help me walk
+> thru what needs to be changed for the new articulation, change default instrument, ordinaro or senza vibrato velocity, the
+> spacing/overlap rules need to adjust next articulation for any one instrument will be 150ms after end of crescendo; others? ok help me
+> organize the planning, 3 separate plans if necessary, any overlaps bundled into a combined plan pass, then whatever unique pick ups
+> for each individual plan or another process?"*
+> *(2026-09-08, after PLAN 1k was built; typed — "tr" = the trill, "ordinaro" = ordinario)*
+
+*AI reading (not the composer's words):* the crescendo becomes a first-class object of the piece, as the trill and the strike and the
+beating are, and arrives in three places: **(1)** by hand in the score — select a note, press C, a mini panel (the dynamic range, the
+duration, the articulation), insert, the crescendo running to just before that player's next note, on a STANDARD curve to be settled by
+a survey of his own pieces and a listening test at several durations; **(2)** across a sequence — the gaps between strikes filled with
+crescendos (and trills) on whatever instrument is free, two modes (one starting at each onset, as the section from 135.72 does with
+trills; one ENDING exactly at a strike's end), the free-instrument choice refined, the pitches from a menu (the strike's own pitch, its
+next, or a harmony from the drawer distributed across the sequence with the strikes' own options — reshuffle, in order — including the
+morph panel's sonorities); **(3)** in the strikes drawer — the chords and strikes of PLAN 1k sounding as crescendos instead of single
+attacks, which changes the articulation, the ordinary voice, the velocity law and the spacing (the next attack on a player 150 ms after
+the END of its crescendo, not after its attack). He asks first how to organize the planning. RUNNING_LOG §252.

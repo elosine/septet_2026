@@ -242,13 +242,13 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   pure; 35 checks in `tools/strike_chords_check.js`), `score/public/strike_chords_ui.js` (the mixin: the chords list, the players column,
   the keyboard, the strip, the card at an onset, the span, the takes), five dispatch lines in `strike_drawer.js`; `docs/STRIKES_TOOL.md`
   §X. Before it, PLAN 1j (the piano's lines, §229–233) and PLAN 1i's first pass (the piano's harmonics, §218). Committed and pushed.
-- **NEXT CONCRETE STEP — HIS TESTS, three of them waiting** (nothing to build until he speaks): **(1) PLAN 1k, chords mode** — a hard reload
-  (CTRL+SHIFT+R), the STRIKES drawer, the mode switch to *chords*, a chord list from the banks (the blasts fill a 2–4 range better than the
-  small shapes), the count range and the 200 ms rest, Generate, Hear, a span by drag or SHIFT-click, insert; a card at an onset for a hand
-  setting; a take saved and loaded both ways. **(2) PLAN 1j, the piano's lines** at the BLOOM of `scores/piano-harmonics-test.json`
-  (§233). **(3) PLAN 1i's piano harmonics** (§218: the ♪ button, the switch, the level). His verdicts → STRIKES_TOOL / MORPH_NOTES §3 and
-  NITS, each a lab-journal entry; the fixes he marks "fix now" built at once. **Then, at his word:** PLAN 1i item 2 (the CC21 shift); the
-  notation of cue-born notes and of a chord strike at 2a. Never touch `scores/piece-septet.json`.
+- **NEXT CONCRETE STEP — PLAN 1l, phase 3 (RUNNING_LOG §252–257; the planning method): the crescendo foundation. Phase 1 is complete and
+  the top line confirmed; resume at step 1 (the listening test as a score file), goal + sub-steps put to him, then written into PLAN 1l
+  and committed; then 2 (the crescendo object), 3 (the spacing rule), 4 (verify and document); then the build at his word. After 1l:
+  1m the C key, 1n the sequence filler, 1o crescendo strikes, each planned when its turn comes.** **HIS TESTS, three of them waiting**
+  (nothing to build for them until he speaks): PLAN 1k (chords mode in the strikes drawer, §251) · PLAN 1j (the piano's lines at the
+  BLOOM of `scores/piano-harmonics-test.json`, §233) · PLAN 1i's piano harmonics (§218). His verdicts → the tools' documents and NITS.
+  Never touch `scores/piece-septet.json`.
 - **Resume reads:** RUNNING_LOG §248–251 (the chords build) and §234–247 (its plan) · `docs/STRIKES_TOOL.md` §X · `docs/PLAN.md` 1k ·
   CN-44 … CN-47 · the head comments of `score/public/strike_chords.js` and `strike_chords_ui.js`. For the piano's lines: §229–233,
   NAMING §2.12–2.13, PLAN 1j. Not the beating drawer's docs.

@@ -6907,3 +6907,131 @@ ordinary `grp-strike-…` group with its META shape, so NAMING is unchanged and 
 **His first chord strike next (the plan's step 6, last to-do):** a hard reload (CTRL+SHIFT+R), the drawer, the mode switch to *chords*,
 a chord list from the banks, the count range and the rest, Generate, Hear, a span, insert; his verdicts → STRIKES_TOOL and NITS, the
 fixes he marks "fix now" built at once.
+
+## §252. CN-48 opened — the crescendos in three places; his question first: how to organize the planning. Four items proposed, a shared foundation and three builds
+
+Composer, 2026-09-08 (verbatim in CN-48), asking before anything else: *"help me organize the planning, 3 separate plans if necessary,
+any overlaps bundled into a combined plan pass, then whatever unique pick ups for each individual plan or another process?"*
+
+**The data first (one read each):**
+- **The trill's chassis is the model for build 1 and it already exists:** T on a selected note makes a trill zone on one of three curves,
+  running to **0.17 s** (not 0.15 — `composer.html` `LEAD = 0.17`, §139) before that player's next strike note, or 2 s when there is no
+  later note. 69 zones in the piece, every one a trill. His C key is that chassis with a crescendo in it.
+- **The survey he asks for is a READ, not new research:** the tuba piece already carries `docs/CRESCENDO_TAXONOMY.md`,
+  `docs/CRESCENDO_EXPERIMENTS.md`, `docs/CURVE_DATABASE.md` and `docs/DYNAMICS_FRAMEWORK.md`; the septet has 1g's measured loudness law
+  (`bank/velocity_remap.json`) so a curve height already means the same loudness on every instrument, and the beating drawer's
+  crescendo lane already draws ppp … fff over the whole measured scale.
+- **The pitch menus of build 1.5 exist twice over:** the morph panel's pitch source (the sonority pull-down in eight groups with the
+  take rules — by register · lowest · highest · spread · from k · every other · random, seeded) and the strikes drawer's own reshuffle
+  and order options; PLAN 1k added the chord list with its order and advance. Nothing there needs inventing, only fitting.
+- **The spacing rule differs from 1k's:** there the rest is measured from ATTACK to attack (200 ms); a crescendo occupies time, so his
+  new rule is 150 ms after its END. That is one line in the engine and a real change to what "free" means.
+
+**Proposed — four items, one shared foundation and three builds (the AI's recommendation, put to him):**
+1. **1l · The crescendo itself** (shared): the survey of his crescendo curves across the pieces read into one page, a listening test at
+   several durations, one or two standards named; what a crescendo IS in the score (its object, its dynamic range ppp … fff, its end
+   rule, a manual duration); the spacing rule (150 ms after the end). It ends in his ear, so his ear comes first (HOW_WE_WORK).
+2. **1m · The C key** (his build 1): select a note, press C, a mini panel (range · duration · articulation), insert — the trill's chassis.
+3. **1n · The sequence filler** (his build 1.5): the gaps of a strike sequence filled with crescendos AND trills, two modes, the free
+   instrument chosen by a refined rule, the pitches by menu or a harmony distributed with the strikes' options.
+4. **1o · Crescendo strikes** (his build 2): 1k's chords and strikes sounding as crescendos — the articulation, the ordinary voice, the
+   velocity law, the spacing from the end.
+**The order of the planning:** 1l planned and built first (it is small and it settles the curve every other item uses), then 1m, 1n, 1o
+each planned when its turn comes, so what the first build teaches shapes the next. The alternative — all four planned now, then built —
+was set beside it for him.
+
+## §253. CN-48, the organizing decided ("a") and the crescendo SURVEY done from his own pieces; the listening test's width decided ("a"); topic 2, what a crescendo IS in the score, put to him
+
+Composer, 2026-09-08: **"a"** twice — (1) the planning organized as four items, a shared foundation (1l · the crescendo itself) planned
+and built FIRST, then 1m (the C key), 1n (the sequence filler), 1o (crescendo strikes), each planned when its turn comes; (2) the
+listening test the grid of nine — three shapes (surge 5× · linear · bloom 5×) at three durations (1.5 s gesture · 5 s breath · 12 s
+long) on one instrument, then the winner repeated on two more.
+
+**THE SURVEY (a read of his own docs, no new research):**
+- **The vocabulary is his and it is fixed** (`for_seven_tubas/docs/CRESCENDO_TAXONOMY.md`, 2026-08-10): **BLOOM** front-loaded ·
+  **SURGE** back-loaded · linear between; a full spec reads *"8 seconds, surge 5×"*; the **THRESHOLD** is the half-loudness moment
+  ("surge 5×, threshold at two-thirds"). The families' boundary is about 10:1.
+- **The standard he used there:** SURGE **5×** — `CURVE_DATABASE.md`'s ladder gives slope **0.40**, threshold 0.68; BLOOM 5× is slope
+  **−0.29**, threshold 0.33; linear is slope 0. His standing mix in the tuba piece was *surge .7 / sine .3*, "longs always surge"
+  (COMPOSER_LOG 2026-08-12).
+- **The time scales:** gesture < 2 s · breath 2–12 s · phrase 12–60 s · formal > 1 min. **The peak behaviours:** cliff · tail · hold ·
+  handoff · overshoot.
+- **Two findings that make 1l cheap.** (i) The ratio ↔ slope table maps STRAIGHT onto this score's own curve segments (`segments[].slope`
+  on a `waveCurve`), so a standard crescendo is a two-node curve with a slope — no new machinery, and the score's slope diamonds edit
+  it. (ii) The SOUND is already right: 1g item 5 (§120) gives a held note its velocity from the curve's top and streams CC7 from its
+  height through the measured per-instrument law, so a curve's height already means the same loudness on every instrument. Only the
+  SHAPE was open, and the test settles it.
+
+**Topic 2 put to him — what a crescendo IS in the score:** (a) an ordinary held note whose curve rises, plus a `cresc` provenance in its
+properties (the family, the ratio, the dynamic range, how its end was set) so the tools and the notation can find it — no new object
+type, and the score's drag, stretch, delete, undo and save all work on it already (recommended: a crescendo is ONE note with a shape,
+where a trill is a zone because it GENERATES many notes) · (b) its own zone with a `midiModel: 'cresc'`, generated at play time like a
+trill. After it: the end rule (his 0.15 against the trill's measured 0.17) and the manual duration; then the spacing rule (150 ms after
+the END).
+
+## §254. CN-48, topic 2 decided ("a") with his correction: the newest curve mechanism is the three curve-lane overlays — no slope diamond, the LINE is dragged; and a crescendo in the main score is drawn filled and transparent in the morph orange
+
+Composer, 2026-09-08: *"a good, but just to note the curve drawing/display/editing mechanism, the most updated one, lives in the 3
+dedicated curve lane overlays (same type as the meta) and there is no slope diamond, just drag on the curve line for slope, the only
+difference for the main score, is the shape will be filled transpaency and color from tuba morph section, I believe orange."*
+
+**Checked, and he is right** (the AI had named the older mechanism): a curve on a PART lane carries bezier control **diamonds**
+(`composer.html` ~4830) and takes a node on a double-click; a curve in one of the three CURVE WINDOWS (layers 8 · 9 · 10, the same kind
+of floating overlay as META, over Violin 2 · Viola · Cello) has **no diamonds** — its dots are drawn always and the LINE ITSELF is held
+and dragged to bend the segment (`startBendDrag`, cursor `ns-resize`), which is the newest editing mechanism (TRILLS_TOOL §3b, CN-24).
+**The colour he means is already in the app:** curve window A is `#C2410C`, the orange the tuba piece's morph section is drawn in
+(`MORPH_NOTATION.md`: "the orange curve"); in the main score a crescendo is to be **filled, transparent, in that orange** — the curve
+windows draw lines only, the score's crescendo draws as a filled shape.
+
+**So topic 2 is decided as (a) with his rider:** a crescendo is an ordinary held note whose curve rises, carrying a `cresc` provenance
+(the family, the ratio, the dynamic range, how its end was set); no new object type; it is EDITED the curve-window way — the line
+dragged to bend, the dots always drawn — and DRAWN in the score filled and transparent in the morph orange.
+
+## §255. CN-48 topic 3 decided — the peak is a CLIFF; 0.17 s before the next note for both the trill and the crescendo; no next note = 3 s for a trill (was 2), 5 s for a crescendo; topic 4, the spacing rule, put to him
+
+Composer, 2026-09-08: *"a, and 0.17 for both, no next note recommend good 3 for trill 5 for cres"*.
+- **The peak: (a) CLIFF** — the crescendo runs to its top and stops. (His own taxonomy's D3 calls the peak what the listener remembers;
+  the tail and the hold were the alternatives and are still one edit away by hand on any single crescendo.)
+- **The gap: 0.17 s for both.** The measured trill number (§139) stands and the crescendo adopts it; nothing of his existing trills
+  moves. The AI had proposed 0.15 to match his first message; he chose the number already in the app.
+- **No next note on that player:** the fallback becomes **3 s for a trill** (it was 2 s) and **5 s for a crescendo** (his breath scale,
+  CRESCENDO_TAXONOMY D2). The trill's change applies to new trills; the ones in the piece keep the ends they were given.
+
+**Topic 4 put to him — the spacing rule.** What exists: PLAN 1k measures its rest **attack to attack** (his 200 ms there, a guarantee
+checked against the real onsets); the trill eats a note that starts within 60 ms before it; nothing else in the app measures from an
+END. His new rule is *"next articulation for any one instrument will be 150ms after end of crescendo"* — measured from the END, which is
+the honest rule once an event OCCUPIES time. **Put to him:** (a) ONE rule everywhere — a player is free **150 ms after its previous
+event ENDS** (for a strike, whose sound is short, that is about 200 ms after its attack, so 1k's behaviour barely moves; for a
+crescendo, a trill or a beating it is the only rule that makes sense), the box in the chords drawer becoming "rest ≥ 150 ms after the
+end" with the number still his to type — recommended · (b) two rules kept apart — 200 ms attack-to-attack for point attacks, 150 ms
+after the end for anything that occupies time · (c) the end rule for crescendos only, everything else untouched. Named for him: 1k's
+box is the only place the change is visible, and he has not tested 1k yet.
+
+## §256. CN-48 topic 4 decided ("a good") — one spacing rule everywhere: a player is free 150 ms after its last sound ENDS; and his change to step 1: the listening test is a SCORE FILE, not a rack probe
+
+Composer, 2026-09-08: *"a good"* to the single rule — **a player is free 150 ms after its last sound ends**, everywhere in the app (the
+chords drawer's box re-read as "rest ≥ 150 ms after the end", the number still his; a strike's short sound makes that about 200 ms
+after its attack, so 1k barely moves; a crescendo, a trill or a beating stops looking free just because it started a while ago).
+
+Then, on the top line's step 1: *"can you put the probe in the main score as and experimental save file? this way you can add all the
+tests for all the players and I can solo"*.
+
+**Taken, and it is better than the rack probe the AI proposed.** The earlier probes (balance, bend, velocity) were timetables played
+through the bridge because they measured MACHINES; this test asks his EAR, so it belongs in the instrument he listens with. A generated
+score file (`scores/…` by NAMING §1) carries the whole grid — every shape at every duration on every player — and he plays it, solos a
+part, loops a stretch, changes a curve by hand where he wants to hear a variant, and keeps the file as the record of what was heard.
+Nothing new is needed to make it: a crescendo is a held note with a rising curve (topic 2), the loudness law is measured (1g), and the
+score already solos parts.
+
+## §257. CN-48 — the test's layout decided ("a"): the same grid at the same times on all seven lanes; PHASE 1 COMPLETE, the top line confirmed, PLAN 1l opened; phase 3 begins
+
+Composer, 2026-09-08: *"a"* — the grid laid at the SAME times on all seven lanes (nine crescendos a player, about a minute and a half),
+so soloing swaps the instrument without moving the playhead and an unsoloed play gives all seven at once. The pitch question he left to
+the AI: **one comfortable pitch per player**, the middle of its ordinary range (a second register is one edit away in the file and is not
+worth doubling the grid for before he has heard the first).
+
+**Phase 1 complete** — five topics decided (§252–256): the planning organized as four items with 1l first; the survey read and the test's
+width; what a crescendo is in the score, with his correction about the curve-lane editing and the orange; the end (a cliff, 0.17 s, the
+3 s / 5 s fallbacks); one spacing rule (free 150 ms after the last sound ends). **The top line confirmed** — 1 the listening test · 2 the
+crescendo object · 3 the spacing rule · 4 verify and document. **PLAN 1l opened** with the why, his words, the decisions and the four
+steps, committed. **Phase 3 begins**, his format of §224: each step's goal and sub-steps in one turn.
