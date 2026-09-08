@@ -527,6 +527,8 @@
 <script src="/morph_emit.js"></script>
 <script src="/morph_septet.js" defer></script>
 <script src="/piano_harmonics.js" defer></script>   <!-- PLAN 1i: the piano's harmonics at a morph's re-breaths (pure; the button is on the morph panel) -->
+<script src="/piano_cues.js" defer></script>   <!-- PLAN 1j: the piano's articulation points from a morph — the lines (pure; the button is on the morph panel, the bar on the piano lane) -->
+<script src="/cue_picker.js" defer></script>   <!-- PLAN 1j step 3: the picker card — a click on a line: the keyboard with the ensemble, the voice, the dynamic, the duration -->
 <script src="/morph_panel.js" defer></script>
 <!-- PLAN 2x attack-field textures. texture_engine.js is the PURE engine (also
      runs in node under tools/test_texture.js and tools/phase_shift.js);
@@ -2992,6 +2994,7 @@ const Composer = {
             else if (obj.type === 'motive') this.renderMotive(obj);
             else if (obj.type === 'curveDot') this.renderCurveDot(obj);
         }
+        this.renderCueBar();   // PLAN 1j step 4: the bar on the piano lane (the lines' filter)
         this.drawSpanSel();   // a marked span survives the re-render (phase 2)
         // conflict wash is re-applied after every full render (the element cache
         // was just rebuilt, so the marks went with it)
@@ -4394,6 +4397,7 @@ const Composer = {
         const svgNS = 'http://www.w3.org/2000/svg';
         const cg = this.contentGroups[wc.layer];
         if (!cg) return;
+        if (this.isCueLine(wc)) return this.renderCueLine(wc);   // PLAN 1j: a line is an empty note — drawn as a line (RUNNING_LOG §230)
 
         const old = this.elementCache.get(wc.id);
         if (old) old.remove();
@@ -4440,6 +4444,7 @@ const Composer = {
         hp.style.pointerEvents = 'all';
         hp.addEventListener('mousedown', (e) => {
             e.stopPropagation(); e.preventDefault();
+            this._cueDown = { x: e.clientX, y: e.clientY };   // PLAN 1j: a click (no drag) on a note born of a line reopens the picker
             if (CURVE_LAYERS.includes(wc.layer)) {   // the curve windows
                 const now = performance.now(), last = this._lastLineDown;
                 this._lastLineDown = { id: wc.id, t: now, x: e.clientX, y: e.clientY };
@@ -4477,6 +4482,11 @@ const Composer = {
             else this.addNodeAtClick(wc, e.clientX);
         });
 
+        // PLAN 1j step 3: a click (no drag) on a note born of a line reopens the picker card with its values (RUNNING_LOG §232)
+        hp.addEventListener('click', (e) => {
+            if (!this.isCueNote(wc) || !this._cueDown) return;
+            if (Math.abs(e.clientX - this._cueDown.x) < 4 && Math.abs(e.clientY - this._cueDown.y) < 4) { e.stopPropagation(); this.openCuePicker(wc, e); }
+        });
         hl.setAttribute('d', lineD);
         g.appendChild(hl);
         g.appendChild(p);
@@ -4540,8 +4550,140 @@ const Composer = {
         }
     },
 
+    // ========== PLAN 1j — THE PIANO'S ARTICULATION POINTS FROM A MORPH (CN-43; RUNNING_LOG §229–§233) ==========
+    // A LINE IS AN EMPTY NOTE (§220): a waveCurve on the piano lane with no sound note and a `cue` provenance (NAMING §2.13). The score
+    // treats it as any note — silent, invisible to the extractor, selected, dragged in time, deleted, undone, saved — and draws it as
+    // a thin line the lane's height in its source player's colour with a head by kind (● onset · ◆ peak · ○ end, dashed for an end).
+    // The bar on the lane (step 4) shows lines by kind AND player; a click on a line opens the picker (cue_picker.js, step 3); the
+    // generator is piano_cues.js and the button *lines → piano* on the morph panel (step 2).
+    isCueLine(o) { return !!(o && o.type === 'waveCurve' && o.sonifyNote == null && o.properties && o.properties.cue); },
+    isCueNote(o) { return !!(o && o.type === 'waveCurve' && o.sonifyNote != null && o.properties && o.properties.cue); },
+    cueLane() { return TRACKS.findIndex(t => t.instKey === 'piano'); },
+    cueOpts() { return { pianoLane: this.cueLane(), metaLayer: META_LAYER, laneLabels: TRACKS.map(t => t.short), instKeys: TRACKS.map(t => t.instKey) }; },
+    cueFilter() {
+        if (this._cueFilter) return this._cueFilter;
+        const lanes = TRACKS.map((t, i) => i).filter(i => i !== this.cueLane());
+        let f = (typeof PianoCues !== 'undefined') ? PianoCues.defaultFilter(lanes) : { kinds: { onset: true, peak: true, end: true }, players: {} };
+        try { const s = localStorage.getItem('cueFilter'); if (s) { const j = JSON.parse(s); if (j && j.kinds && j.players) f = j; } } catch (e) { }
+        this._cueFilter = f;
+        return f;
+    },
+    saveCueFilter() { try { localStorage.setItem('cueFilter', JSON.stringify(this.cueFilter())); } catch (e) { } },
+    renderCueLine(wc) {
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const cg = this.contentGroups[wc.layer];
+        if (!cg) return;
+        const old = this.elementCache.get(wc.id);
+        if (old) old.remove();
+        const PC = (typeof PianoCues !== 'undefined') ? PianoCues : null;
+        if (PC && !PC.shown(wc, this.cueFilter())) { this.elementCache.delete(wc.id); wc._els = null; return; }   // hidden by the bar: not drawn, no hit target
+        const cue = wc.properties.cue, dims = this.getLaneDims(wc.layer), x = wc.startSeconds * this.pixelsPerSecond;
+        const col = wc.color || '#999', yTop = dims.top + 8, yBot = dims.bottom;
+        const g = document.createElementNS(svgNS, 'g');
+        g.setAttribute('class', 'composerObject'); g.setAttribute('data-id', wc.id);
+        const mk = (tag, attrs) => { const el = document.createElementNS(svgNS, tag); Object.keys(attrs).forEach(k => el.setAttribute(k, attrs[k])); return el; };
+        const hl = mk('line', { x1: x, x2: x, y1: yTop - 6, y2: yBot, stroke: '#FFD700', 'stroke-width': 6, 'stroke-opacity': 0.5 });
+        hl.style.display = 'none'; hl.style.pointerEvents = 'none';
+        const line = mk('line', { x1: x, x2: x, y1: yTop, y2: yBot, stroke: col, 'stroke-width': 1.2, opacity: 0.8 });
+        if (cue.kind === 'end') line.setAttribute('stroke-dasharray', '3,2');
+        line.style.pointerEvents = 'none';
+        let head;
+        if (cue.kind === 'peak') head = mk('polygon', { points: x + ',' + (yTop - 5) + ' ' + (x + 4) + ',' + yTop + ' ' + x + ',' + (yTop + 5) + ' ' + (x - 4) + ',' + yTop, fill: col, stroke: '#333', 'stroke-width': 0.6 });
+        else head = mk('circle', { cx: x, cy: yTop, r: 3.2, fill: cue.kind === 'onset' ? col : '#fff', stroke: cue.kind === 'onset' ? '#333' : col, 'stroke-width': cue.kind === 'onset' ? 0.6 : 1.4 });
+        head.style.pointerEvents = 'none';
+        const hit = mk('rect', { x: x - 4, y: yTop - 7, width: 8, height: yBot - yTop + 7, fill: 'transparent' });
+        hit.setAttribute('class', 'composerObject'); hit.style.pointerEvents = 'all'; hit.style.cursor = 'pointer';
+        const title = document.createElementNS(svgNS, 'title');
+        title.textContent = (PC ? PC.sourceText(cue, this.cueOpts()) : cue.kind) + ' — click: a pitch, a voice, a dynamic, a duration';
+        hit.appendChild(title);
+        hit.addEventListener('mousedown', (e) => {
+            e.stopPropagation(); e.preventDefault();
+            this._cueDown = { x: e.clientX, y: e.clientY };
+            if (e.shiftKey) { this.selectObject(wc, { additive: true }); return; }
+            if (this.selectedObjects.length > 1 && this.selectedObjects.includes(wc)) { this.startGroupDrag(wc, e); return; }
+            this.selectObject(wc);
+            this.startWCBodyDrag(wc, e);
+        });
+        hit.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (this._cueDown && Math.abs(e.clientX - this._cueDown.x) < 4 && Math.abs(e.clientY - this._cueDown.y) < 4) this.openCuePicker(wc, e);
+        });
+        g.appendChild(hl); g.appendChild(line); g.appendChild(head); g.appendChild(hit);
+        this.elementCache.set(wc.id, g);
+        wc._els = { group: g, path: line, hitPath: hit, highlight: hl, nodeHandles: [] };
+        cg.appendChild(g);
+        const idx = this.selectedObjects.findIndex(o => o.id === wc.id);
+        if (idx >= 0) {
+            this.selectedObjects[idx] = wc;
+            if (this.selectedObject && this.selectedObject.id === wc.id) this.selectedObject = wc;
+            hl.style.display = '';
+        }
+    },
+    renderCueLines() {
+        this.objects.forEach(o => { if (this.isCueLine(o)) this.renderCueLine(o); });
+        this.renderCueBar();
+    },
+    // step 4: the bar at the left end of the piano lane — the kind ticks, the player ticks (a line shows when kind AND player are
+    // ticked), clear lines; the setting is the browser's (localStorage), never the file's
+    renderCueBar() {
+        const lane = this.cueLane(), laneEl = this.lanes[lane];
+        if (!laneEl || typeof PianoCues === 'undefined') return;
+        let bar = laneEl.querySelector('#cueBar');
+        const lines = this.objects.filter(o => this.isCueLine(o) && o.layer === lane);
+        if (!lines.length) { if (bar) bar.style.display = 'none'; return; }
+        const PC = PianoCues, F = this.cueFilter();
+        if (!bar) {
+            bar = document.createElement('div'); bar.id = 'cueBar';
+            bar.style.cssText = 'position:absolute;left:6px;top:16px;z-index:3;font-size:10px;color:#444;background:rgba(247,245,239,0.92);border:1px solid #cfcabc;border-radius:3px;padding:1px 5px;display:flex;gap:6px;align-items:center;user-select:none;white-space:nowrap;pointer-events:auto';
+            bar.title = 'the lines of the piano part (PLAN 1j): a line shows when its kind AND its player are ticked; the setting is this browser\'s';
+            ['mousedown', 'click', 'dblclick', 'mouseup'].forEach(ev => bar.addEventListener(ev, e => e.stopPropagation()));
+            laneEl.appendChild(bar);
+        }
+        bar.style.display = 'flex';
+        const nk = {}, nl = {};
+        lines.forEach(l => { const c = l.properties.cue; nk[c.kind] = (nk[c.kind] || 0) + 1; nl[c.srcLane] = (nl[c.srcLane] || 0) + 1; });
+        const cb = (id, on, label, title, dot) => '<label style="display:inline-flex;align-items:center;gap:2px;cursor:pointer" title="' + title + '"><input type="checkbox" data-cue="' + id + '"' + (on ? ' checked' : '') + ' style="margin:0;width:11px;height:11px">' + (dot ? '<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:' + dot + ';border:1px solid #888"></span>' : '') + label + '</label>';
+        let h = '<span style="color:#888">lines</span>';
+        PC.KINDS.forEach(k => { h += cb('kind:' + k, F.kinds[k] !== false, PC.KIND_MARK[k] + ' ' + k + 's', k + 's: ' + (nk[k] || 0)); });
+        h += '<span style="color:#bbb">|</span>';
+        TRACKS.forEach((t, i) => { if (i === lane) return; h += cb('lane:' + i, F.players[i] !== false, t.short, t.label + ': ' + (nl[i] || 0) + ' lines', PC.INST_COL[t.instKey] || '#999'); });
+        h += '<button data-cue="clear" style="font-size:10px;padding:0 5px;margin-left:4px;cursor:pointer" title="remove every line on this lane still without a pitch (the notes made from lines stay) — CTRL+Z brings them back">clear lines</button>';
+        bar.innerHTML = h;
+        bar.querySelectorAll('input[data-cue]').forEach(inp => inp.addEventListener('change', () => {
+            const parts = inp.dataset.cue.split(':');
+            if (parts[0] === 'kind') F.kinds[parts[1]] = inp.checked; else F.players[+parts[1]] = inp.checked;
+            this.saveCueFilter(); this.renderCueLines();
+        }));
+        bar.querySelector('[data-cue="clear"]').addEventListener('click', () => {
+            const n = this.clearCueLines();
+            if (this.saveStatus) this.saveStatus.textContent = n ? n + ' lines cleared — CTRL+Z brings them back' : 'no lines to clear';
+        });
+    },
+    clearCueLines() {
+        const lane = this.cueLane(), gone = this.objects.filter(o => this.isCueLine(o) && o.layer === lane);
+        if (!gone.length) return 0;
+        this.pushUndoState();
+        const set = new Set(gone);
+        if (this.selectedObject && set.has(this.selectedObject)) { this.selectedObject = null; this.selectedObjects = []; this.selectedNodeIdx = -1; this.hidePropertyPanel(); }
+        this.selectedObjects = this.selectedObjects.filter(o => !set.has(o));
+        this.objects = this.objects.filter(o => !set.has(o));
+        gone.forEach(o => { const el = this.elementCache.get(o.id); if (el) el.remove(); this.elementCache.delete(o.id); });
+        if (typeof CuePicker !== 'undefined' && CuePicker.wc && set.has(CuePicker.wc)) CuePicker.close();
+        this.renderCueBar(); this.markDirty(); this.scheduleConflictRefresh();
+        return gone.length;
+    },
+    // the turn into a note (and the edit of a made note): the same object, its provenance kept (piano_cues.js cueToNote)
+    cueToNote(wc, v) {
+        PianoCues.cueToNote(wc, v, this.cueOpts());
+        this.renderWaveCurve(wc);
+        this.renderCueBar();
+        return wc;
+    },
+    openCuePicker(wc, e) { if (typeof CuePicker !== 'undefined') CuePicker.open(wc, e); },
+
     renderNodeHandles(wc) {
         if (!wc._els) return;
+        if (this.isCueLine(wc)) return;   // PLAN 1j: a line has no nodes to handle
         if (CURVE_LAYERS.includes(wc.layer)) return;   // curve windows: the dots are drawn always, the line bends by hand
         const svgNS = 'http://www.w3.org/2000/svg';
         const g = wc._els.group;
@@ -4972,6 +5114,7 @@ const Composer = {
 
     updateWCRendering(wc) {
         if (!wc._els) return;
+        if (this.isCueLine(wc)) return this.renderCueLine(wc);   // PLAN 1j: a line redraws whole
         const { lineD, filledD } = this.generateWCPath(wc);
         const p = wc._els.path;
         if (wc.fillMode === 'line' || !filledD) {
@@ -5298,7 +5441,7 @@ const Composer = {
             // Grains and containers move horizontally ONLY (whole-shape grab =
             // retime, never a lane change) — SHIFT-v is also ignored for them.
             // Group shapes stay on META for the same reason.
-            if (constrainAxis !== 'h' && !this.isGrain(wc) && !wc.isContainer && !isGroupShape) {
+            if (constrainAxis !== 'h' && !this.isGrain(wc) && !wc.isContainer && !isGroupShape && !this.isCueLine(wc)) {   // PLAN 1j: a line stays on the piano lane
                 wc.layer = this.getLaneFromY(e.clientY);
             }
 

@@ -148,6 +148,9 @@ const PANEL = {
             '<option value="0">at the pitch</option><option value="1">an octave above</option></select>',
             '<input id="morphPnoHarmLevel" value="7" title="the notes\' level 0–10 (the curve height, NAMING §2.9); empty = each source note\'s own peak" ',
             'style="width:30px;background:#1a1a22;color:#cca;border:1px solid #333;padding:2px 5px">',
+            // PLAN 1j step 2 (CN-43; RUNNING_LOG §231): the LINES — the morph's articulation points on the piano lane: every note's onset, peak
+            // and end as empty notes, filled in by hand through the picker; the bar on the piano lane shows them by kind and player.
+            '<button id="morphPnoCues" style="white-space:nowrap;margin-left:6px" title="the LINES for the morph under the playhead (or the selected morph shape): every note\'s onset (● the re-breath), peak (◆ the dot) and end (○) as empty notes on the piano lane, in the morph\'s group — click a line for a pitch, a voice, a dynamic, a duration; a re-run replaces the lines still without a pitch and keeps the notes made; CTRL+Z undoes">lines &rarr; piano</button>',
             '</div>',
             // FADE LADDER (day 14): hear the current attack at several lengths,
             // back to back, in ONE play session — pressing Play per length gave
@@ -171,6 +174,7 @@ const PANEL = {
         d.querySelector('#morphIns').addEventListener('click', () => this.insert());
         d.querySelector('#morphSaveAct').addEventListener('click', () => this.saveActual());
         d.querySelector('#morphPnoHarm').addEventListener('click', () => this.pianoHarmonics());
+        d.querySelector('#morphPnoCues').addEventListener('click', () => this.pianoCues());
         d.querySelector('#morphLadder').addEventListener('click', () => this.playLadder());
         this.makeDraggable(d, d.querySelector('#morphDrag'));
         // shrinking the window can strand a panel that was legally placed
@@ -1106,6 +1110,45 @@ const PANEL = {
         this._lastPianoHarmonics = { groupId: g.groupId, gen: gen, count: objs.length, replaced: had };
         this.setStatus('piano harmonics for ' + g.groupId + (g.label ? ' (' + g.label + ')' : '') + ': ' + PH.describe(gen) +
             (had ? ' — replaced ' + had : '') + ' — CTRL+Z undoes');
+    },
+    // PLAN 1j step 2 (CN-43; RUNNING_LOG §231): the LINES of ONE placed morph — the same choice of morph as the piano harmonics (the
+    // selected morph shape's group, else the morph under the playhead, else the score's only one): for every note of every player its
+    // onset, its peak (the score's dot rule) and its end, as empty notes on the piano lane in the morph's group (piano_cues.js); a
+    // re-run replaces the lines still without a pitch and keeps the notes made from lines; the bar on the piano lane shows them by
+    // kind AND player; a click on a line opens the picker. The score's undo covers it (pushUndoState first).
+    pianoCues() {
+        const C = HOST(), PC = root.PianoCues, PH = root.PianoHarmonics;
+        if (!C) return;
+        if (!PC || !PH || !C.cueOpts) { this.setStatus('piano_cues.js is not loaded — hard reload (CTRL+SHIFT+R)', true); return; }
+        const opts = C.cueOpts();
+        const selected = (C.selectedObjects && C.selectedObjects.length) ? C.selectedObjects : (C.selectedObject ? [C.selectedObject] : []);
+        const sel = selected.find(o => o && PH.isMorphGroupId(o.groupId));
+        const groups = PH.morphGroups(C.objects, opts);
+        let g = sel ? groups.find(x => x.groupId === sel.groupId) : null;
+        if (!g) g = PH.findMorphAt(C.objects, playheadAt(C), opts);
+        if (!g && groups.length === 1) g = groups[0];
+        if (!g) {
+            this.setStatus(groups.length ? 'which morph? put the playhead inside one (or select its shape): ' +
+                groups.map(x => x.groupId + ' ' + x.start.toFixed(1) + '–' + x.end.toFixed(1) + ' s').join(' · ') : 'no morph in the score — Insert one first', true);
+            return;
+        }
+        const ms = PC.moments(C.objects, g.groupId, opts);
+        if (!ms.length) { this.setStatus(g.groupId + ': no moments — no morph notes on the players\' lanes', true); return; }
+        if (C.pushUndoState) C.pushUndoState();
+        const had = PC.ownedLines(C.objects, g.groupId).length, kept = PC.ownedNotes(C.objects, g.groupId).length;
+        if (had && C.selectedObject && PC.isCueLine(C.selectedObject)) { C.selectedObject = null; C.selectedObjects = []; C.selectedNodeIdx = -1; }
+        if (root.CuePicker && root.CuePicker.wc && PC.isCueLine(root.CuePicker.wc)) root.CuePicker.close();
+        const keep = PC.strippedLines(C.objects, g.groupId);
+        C.objects.length = 0; keep.forEach(o => C.objects.push(o));   // the same array: the app holds it by reference
+        const objs = PC.toScoreObjects(ms, g.groupId, Object.assign({}, opts, { startId: C.nextId || 1 }));
+        objs.forEach(o => C.objects.push(o));
+        C.nextId = (C.nextId || 1) + objs.length;
+        if (C.renderAll) C.renderAll();
+        if (C.markDirty) C.markDirty();
+        if (C.scheduleConflictRefresh) C.scheduleConflictRefresh();
+        this._lastPianoCues = { groupId: g.groupId, count: objs.length, replaced: had, kept: kept };
+        this.setStatus('lines for ' + g.groupId + (g.label ? ' (' + g.label + ')' : '') + ': ' + PC.describe(ms, opts) + (had ? ' — replaced ' + had : '') +
+            (kept ? ' — ' + kept + ' made notes kept' : '') + ' — the bar on the piano lane shows them by kind and player; click a line — CTRL+Z undoes');
     },
     insert() {
         const C = HOST();
