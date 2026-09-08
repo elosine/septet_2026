@@ -7318,3 +7318,47 @@ through.
 **And the limit stands:** ReaScript cannot load an instrument into a Kontakt slot (REAPER_CONTROL §8 — plugins expose parameters only),
 and Kontakt's own Lua API runs inside Kontakt, not through this bridge. **So the slots are his five minutes at the GUI**, and the app is
 ready for the moment they exist: the pool is a list of channels, empty today, and everything downstream already reads it.
+
+## §270. Understandings coordinated at his word — the round robin is D11, decided 2026-09-03 for exactly this case; his rack has held the four slots since; the app has never used them, and THAT is what the crescendo build is missing
+
+Composer, 2026-09-08, with two Kontakt screenshots: *"lets coordinate our understandings here; the kontakt instruments bcl strings
+already have multis with 4 instances expressly created for cc7 use, on ports 1-4; and i'm not sure what we did for uvi but we would have
+addressed this, maybe look in the journal/notes somewhere so lets make sure we are on the same page then reevaluate what needs to be
+done, what is missing for the new crescendo build"*.
+
+**He is right and the record is his.** The AI had read the Reaper TRACK list (one Kontakt per string) and concluded one slot each; the
+screenshots show **four Contemporary Violin instances on MIDI channels 1 · 2 · 3 · 4 inside that one Kontakt**. Read back from this
+repo's own journal:
+
+- **D11 (2026-09-03, his choice "b")** — *channel banks by EVENT CLASS, from the start, on every Kontakt / Xsample port*: **ch 1 MAIN**
+  (plain notes, dynamics by velocity, articulation by the prelude's CC0; **no continuous controller is ever written here**) and
+  **ch 2 / 3 / 4 CURVE A / B / C**, used **round-robin** by any event carrying a continuous controller (CC7 level, CC1 timbre dynamic,
+  CC4 + pressure width, bend). **His words in D11 are today's problem, verbatim:** *"there's going to be events that happen right after a
+  crescendo much sooner than two seconds … a crescendo in the violin that goes to secco … the next event might come in in a hundred and
+  fifty milliseconds … So probably better to continue using multiple channels."* Three curve channels were chosen as *"cheap insurance"*.
+- **The recipe already carries it** for the four strings: `channels: { main: 1, curve: [2, 3, 4] }`. **The bass clarinet's entry does
+  not**, though his rack has the slots. The flute is `null` — RUNNING_LOG §16 left it to 0c ("curve copies of the few curve-bearing
+  techniques in the four free Fluteb slots; recommendation: a curve copy of `ord` at least"), and 0c is still `todo`. The piano is main
+  only, and a piano cannot swell.
+- **Nothing in the app has ever read `channels`** (grepped: no reference anywhere). So today every event — a plain note, a trill's CC7
+  stream, a morph's bend, a beating, and the crescendo built this evening — goes to `tech.channel`, which for a string is channel 1.
+  **The router is PLAN 0f**, still `todo`.
+
+**What that does to the crescendo build — it gets SIMPLER, and one worry disappears.** Under D11 a plain note never writes a continuous
+controller and never touches a curve channel, so **an ordinary note after a secco crescendo cannot revive it**: the cut lives on a curve
+channel the plain note never visits. The only revival case left is another CURVE event landing on the same curve channel inside the
+tolerance, and the round robin over three is exactly the insurance D11 bought. The tolerance probe is still worth running — it tells us
+whether three is enough at his tightest writing — but the 2 s worry does not apply to the ordinary case at all.
+
+**Changed at once:** `Cresc.assignSlots` now reads **the recipe's `channels.curve`** (D11's own field) instead of a pool invented this
+evening; its `pool` option remains only for tests. Verified: the four strings rotate 2 · 3 · 4 · 2 · 3 · 4 from the recipe alone; the
+bass clarinet falls back to its own channel, because its recipe entry has no `channels` yet.
+
+**So what is missing for the crescendo, in order:**
+1. **`channels` for the bass clarinet** in `sandbox/instruments.js` — one line; his rack already has the slots (his screenshots).
+2. **The router (PLAN 0f / D11's §4 note):** curve-bearing events to a curve channel, round-robin per instrument; plain notes to main
+   with **no CC7 pinned** (today the tick pins CC7 = 127 before every event, which is what D11 forbids on main). This is bigger than the
+   crescendo and it pays for the morph's bends, the beatings and the trills' CC7 as well — every one of them is on channel 1 today.
+3. **The flute's decision (0c):** curve copies of `ord` (at least) in the free Fluteb slots, or the flute goes without curve channels.
+4. **The tolerance**, from the probe file, to confirm three is enough.
+Nothing here was wasted: the cut, the probe, the rotation and the warning all stand; only their pool moved to where it always belonged.

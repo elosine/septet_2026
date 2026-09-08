@@ -51,11 +51,14 @@ const DEFAULTS = {
     // pressure at the end, the winds get the word so they hear the shape; in the sound a CC7 cut so nothing rings past the end
     // (composer.html `seccoCut`). The sampler survives the cut because crescendos rotate through a pool of slots (CN-50, the pool below).
     secco: true,
-    // the slot pool a crescendo may sound on, per instrument key: the channels of extra Kontakt slots loaded with the same instrument.
-    // EMPTY = no rotation, the ordinary voice's own channel as today. The napkin (§266): three slots hold above ~0.75 s a crescendo at
-    // a 2 s tolerance; the tolerance itself is measured by scores/cresc-secco-test.json.
+    // THE POOL IS D11's CURVE CHANNELS — not a new idea (§270). The composer decided this on 2026-09-03, in these words: "there's
+    // going to be events that happen right after a crescendo much sooner than two seconds … a crescendo in the violin that goes to
+    // secco … the next event might come in in a hundred and fifty milliseconds … So probably better to continue using multiple
+    // channels." Every Kontakt port carries ch 1 MAIN (plain notes, never a continuous controller) and ch 2/3/4 CURVE A/B/C, used
+    // round-robin by any event that writes one — and his rack has held those four slots since. `pool` is therefore read from the
+    // recipe's `channels.curve`, and is only ever set here for a test. EMPTY = the ordinary voice's own channel, as the app does today.
     pool: {},
-    toleranceS: 2,                // provisional, from his memory of the quartet; the probe replaces it
+    toleranceS: 2,                // provisional, from his memory of the quartet; scores/cresc-secco-test.json measures it
 };
 
 const DYN = ['ppp', 'pp', 'p', 'mp', 'mf', 'f', 'ff', 'fff'];
@@ -134,7 +137,9 @@ function assignSlots(crescs, o) {
         const lane = +laneKey;
         const list = byLane[lane].slice().sort((a, b) => a.startSeconds - b.startSeconds);
         const instKey = (O.instKeys && O.instKeys[lane]) || null;
-        const pool = (O.pool && instKey && O.pool[instKey]) || [];
+        // D11's curve channels first (the recipe's own `channels.curve`), then an explicit pool for a test
+        const rec = (O.recipe && instKey && O.recipe[instKey]) || null;
+        const pool = (rec && rec.channels && rec.channels.curve) || (O.pool && instKey && O.pool[instKey]) || [];
         if (!pool.length) { list.forEach(c => out.assigned.push({ id: c.id, lane, slot: null, why: 'no pool for this player — its own channel, as today' })); return; }
         const freeAt = {};   // channel → the ms after which re-pinning it is safe
         pool.forEach(ch => { freeAt[ch] = -Infinity; });
