@@ -243,8 +243,7 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   the keyboard, the strip, the card at an onset, the span, the takes), five dispatch lines in `strike_drawer.js`; `docs/STRIKES_TOOL.md`
   §X. Before it, PLAN 1j (the piano's lines, §229–233) and PLAN 1i's first pass (the piano's harmonics, §218). Committed and pushed.
 - **NEXT CONCRETE STEP — PLAN 1l, phase 3 (RUNNING_LOG §252–257; the planning method): the crescendo foundation. Phase 1 is complete and
-  the top line confirmed; resume at step 1 (the listening test as a score file), goal + sub-steps put to him, then written into PLAN 1l
-  and committed; then 2 (the crescendo object), 3 (the spacing rule), 4 (verify and document); then the build at his word. After 1l:
+  the top line confirmed; PLAN 1l is PLANNED WHOLE (§261: 1 the listening test as a score file · 2 the crescendo object · 3 the spacing rule with its gesture clause · 4 verify and document); resume at THE BUILD at his word, step 1 first. After 1l:
   1m the C key, 1n the sequence filler, 1o crescendo strikes, each planned when its turn comes.** **HIS TESTS, three of them waiting**
   (nothing to build for them until he speaks): PLAN 1k (chords mode in the strikes drawer, §251) · PLAN 1j (the piano's lines at the
   BLOOM of `scores/piano-harmonics-test.json`, §233) · PLAN 1i's piano harmonics (§218). His verdicts → the tools' documents and NITS.

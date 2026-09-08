@@ -7088,3 +7088,16 @@ add itself), or keeping two rules — were put beside it and set aside.
 
 *(The method's own lesson, for the record: the answer to "how would my score change?" had to be MEASURED. Asserting "minimal impact"
 would have shipped a rule that outlawed the section he is composing this week.)*
+
+## §261. PLAN 1l planned whole — step 4 agreed after he asked for it plainer; the item shown to him once
+
+Composer, 2026-09-08: *"I'm not sure what this is, simpler please"* on step 4, then *"good"* to the plain form — **check it works, write
+it down, hand him the test file**. (The AI's first telling had listed the checks, the walk, the document, the naming fields, the plan,
+the planner, the journal and the titles as seven bullets of equal weight; the plain form says the three things that happen and leaves
+the rest as the doing. The method's own rule: when he says a turn is too much, shorten without re-explaining.)
+
+**PLAN 1l is planned whole** — four steps in the fixed formats, each agreed in one turn (his format of §224) and written at once:
+1 the listening test as a score file · 2 the crescendo object · 3 the spacing rule with its gesture clause · 4 verify and document.
+The status `PLANNED`, the build at his word, step 1 first. Shown to him once as the method asks, with what sits outside the plan: the
+build's go; his three tests still waiting (1k chords mode, 1j the piano's lines, 1i the piano's harmonics); and the three items that
+follow this one (1m the C key, 1n the sequence filler, 1o crescendo strikes), each planned when its turn comes.

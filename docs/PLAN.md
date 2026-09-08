@@ -999,7 +999,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - later, at 2a: the notation of a chord strike.
 
 - **1l — The crescendo itself: the standard curve, the object in the score, one spacing rule (CN-48; the foundation under 1m · 1n · 1o)** —
-  `todo — in planning 2026-09-08 (PLANNING_METHOD phase 3 from step 1; RUNNING_LOG §252–257)` *(composer, 2026-09-08, CN-48: "lets do a
+  `todo — PLANNED 2026-09-08 (the planning method, phases 1–3; RUNNING_LOG §252–261); the build at his word, step 1 first` *(composer, 2026-09-08, CN-48: "lets do a
   survey of the crescendo curves I use throughout my pieces and potentially a listening test at different durations to nail down a
   standard or a couple of standards … we'll have a default dynamic range ppp-fff … next articulation for any one instrument will be
   150ms after end of crescendo")*. *Why:* the crescendo arrives in three places at once (the C key, the sequence filler, the chords
@@ -1076,9 +1076,19 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - checks: the rule is a guarantee on a fast run; a long sound blocks its whole length; the gesture clause lets every re-breath of
        the BLOOM through; the strikes of the piece are unmoved (median note 63 ms → 213 ms of rest, looser than today's 250); a walk on
        a copy showing the drawer reading the new box.
-  4. **Verify and document** (the checks, the walk on a copy, the crescendo's own document; then his ear) — *to be laid out when we
-     discuss it.*
-
+  4. **Verify and document** (check it works, write it down, hand him the test file) — `todo — agreed 2026-09-08 (RUNNING_LOG §261)`.
+     *Result when done:* 1l is checked in node and walked in the app, the crescendo has its own document, and the test file is in his
+     hands; his verdict on the standard goes into the plan and the document, and 1m can be planned. The to-dos:
+     - the node checks in one script (`tools/cresc_check.js`): the three shapes differ in the right direction; the end rule picks the
+       right end in all three cases; the spacing helper is a guarantee; the gesture clause lets every re-breath of the BLOOM through;
+     - the walk on a `zz-ai-` copy with real events and the decoded MIDI: a crescendo made, heard, dragged, bent by holding the line,
+       undone; the chords drawer reading the new box; the morph at 183 s still legal;
+     - the crescendo's own document (`docs/CRESCENDO.md`): the survey, the standard he names, the object, the end rule, the spacing rule
+       with its gesture clause — the reference 1m · 1n · 1o cite instead of repeating;
+     - the fields into `docs/NAMING.md` so the notation at 2a can read a crescendo; PLAN 1l's statuses, PLANNER NOW, the journal §2, a
+       title on every new control;
+     - **then his ear:** the test file opened, soloed, listened to; the standard named; the verdict written into PLAN 1l and
+       `docs/CRESCENDO.md`; then 1m (the C key) planned.
 ## 2. Notate — `deferred` until the first real page exists
 
 - **2a — Engine adaptation** — the 0g list. Start with the page the opening needs.
