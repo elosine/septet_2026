@@ -7170,3 +7170,57 @@ crescendo never silences its neighbour; **the notation** (2a) — the word *secc
 damping being the action it names. **The one question for him:** does secco belong to a crescendo only, or to any held note he marks
 (the same checkbox on an ordinary long note)? The AI's recommendation: the crescendo now, any held note when 2a asks — the sound path
 is identical and nothing is lost by waiting.
+
+## §264. His correction on the CC7 cut — the quartet round-robins THREE instances because a CC7 raised too soon brings the residue back; this rack has ONE instance per instrument, so the cut is measured before it is designed
+
+Composer, 2026-09-08, after "(a)" to the secco scope: *"but have you seen how the cc7 is handled in reaper, i believe any volume/cc7
+changes happen on their own port, i don't have the details but normal notes like stacatto are on a1 for example or the one instance of
+kontakt and cc7 are on their own instance so either there is a crescendo and then a stacatto for example so they are each in their own
+instance so no effect, and there is a crescendo/cc7change followed by another in this case there is a round robin of 3 instances so no
+volume change follows another, i think there is a 2 sec tollerance because if you raise cc7 immediately any residule sound comes back
+in"*.
+
+**He is naming the failure my design would have walked into.** The plan of §263 was: CC7 0 at the end, and the NEXT note's own pre-arm
+restores CC7. If the tolerance is real, that restore REVIVES the cut crescendo's tail — the cut would work and then undo itself at the
+next note.
+
+**The rack read (this piece's, `reaper/septet_rack.rpp`):** ONE track and one instance per instrument, each on its own port —
+Flute SI2 · Fluteb SI2 · Bass Clarinet XS · Piano Kontakt + Piano PP2 · Vn1 XS · Vn2 XS · Va XS · Vc XS (plus the strikes tracks and
+REC). Articulations are chosen by CC0 and channel INSIDE one instance. **So the septet has no round robin**: a crescendo and the next
+note on the same player share an instance, which is exactly the case the quartet solved with three instances.
+
+**Decided: measure before designing.** The tolerance is a property of these samples (Xsample senza vibrato, SI2 flute, the piano's
+libraries), not of the quartet's. A probe as a SCORE FILE — the same way he asked for the listening test (§256) — settles it: a
+crescendo, a CC7 cut at its end, then CC7 raised again after 0.25 · 0.5 · 1 · 2 · 3 s, one row per gap, on each string and the flute;
+he solos and hears at which gap the tail comes back. Then either the spacing rule pays for secco (a secco crescendo makes its player
+unavailable for the measured tolerance instead of 150 ms) or the rack grows instances (his hands, the quartet's way) — the choice is
+his and it is not made until the number is known.
+
+## §265. Read back to him: what THIS piece documents about CC7 (its role, and that the app pins it to 127 before every event) and what it does not (the residue tolerance in seconds) — so secco is measured here before it is built
+
+Composer, 2026-09-08: *"this is well documented for this piece, we ran probes etc before setting up the reaper rack"*. Read, and he is
+half right in a way that matters.
+
+**What this repo documents** (`docs/REAPER_CONTROL.md` §3, RUNNING_LOG §48, D11):
+- **CC7 is the Kontakt slot's / the UVI part's volume**, and **the composer app PINS CC7 = 127 before every event** — the tuba stack's
+  per-event ownership, kept in this piece. A fader set by hand is reset at the first note.
+- That is why the trims live on the **Reaper track faders** here, not on CC7: CC7 is not a place anything can be left standing.
+- **The rack** (`reaper/septet_rack.rpp`): ONE instance per instrument, each on its own port — Flute SI2 · Fluteb SI2 · Bass Clarinet XS
+  · Piano Kontakt + Piano PP2 · Vn1 XS · Vn2 XS · Va XS · Vc XS. The Xsample articulations are chosen by **CC0 inside one slot**, so a
+  crescendo and the staccato that follows it on the same string **share the CC7 path** — unlike the quartet, where (his words) the
+  volume changes had their own instance and a round robin of three.
+- **The probes that were run** are the dB transfer of CC7 (`probes/cc7_map.json`, 33 steps, the tuba kit), the balance and held-note
+  runs, the bend probe, the sample lengths and ranges. None of them measured a **residue tolerance**.
+
+**So the position is:** his instinct about the failure is exactly right and it is STRUCTURAL here — the app re-pins CC7 = 127 at every
+pre-arm, so a secco cut is undone by the very next note on that slot; and the septet has no round robin to hide behind. What is NOT on
+record is the number: how long after CC7 = 0 this kit can be re-pinned without the cut note's tail returning. His memory says about 2 s
+from the quartet's samplers; these are Xsample, SI2, 8Dio and IRCAM.
+
+**Proposed (his go): measure it as a score file, the way he asked for the listening test** — `scores/cresc-secco-test.json`: on each
+string and the flute, a crescendo, CC7 0 at its end, then a short note that re-pins CC7 after 0.25 · 0.5 · 1 · 2 · 3 s, one row per gap,
+the rows far enough apart not to contaminate each other; he solos and hears at which gap the tail comes back. Then the choice, and it is
+his: **(a)** the spacing rule pays for secco (a secco crescendo makes its player unavailable for the measured tolerance instead of
+150 ms) · **(b)** the rack grows instances for the crescendo voice and the app routes to them, the quartet's way (his hands, more CPU,
+new ports) · **(c)** secco is notation-only here and the sampler simply rings (what the tuba piece's notation does today). Nothing is
+built until the number is known.
