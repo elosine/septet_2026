@@ -29,7 +29,8 @@ const vn1 = { lane: 3, tech: 'senza_vel', label: 'Vn1' };
     ok(Cresc.heightAt(s, 0.5) < Cresc.heightAt(l, 0.5) && Cresc.heightAt(l, 0.5) < Cresc.heightAt(b, 0.5), 'at half time the bloom is loudest and the surge quietest — the families point the right ways');
     ok(Cresc.heightAt(s, 0) === 0 && Cresc.heightAt(s, 1) === 10 && Cresc.heightAt(b, 1) === 10, 'every shape starts at ppp and ends at fff — a CLIFF at the top');
     ok(Cresc.segmentFor('surge', 11).slope === 0.60 && Cresc.segmentFor('surge', 3).ratio === 2 && Cresc.segmentFor('bloom', 25).slope === -0.46, 'the ratio ladder picks the nearest rung (his CURVE_DATABASE)');
-    ok(Cresc.STANDARD.shape === 'surge' && Cresc.STANDARD.ratio === 5 && Cresc.STANDARD.provisional === true, 'the standard is surge 5×, marked PROVISIONAL until his listening test names one');
+    ok(Cresc.STANDARD.shape === 'surge' && Cresc.STANDARD.ratio === 5 && Cresc.STANDARD.provisional === false && Cresc.STANDARD.named === '2026-09-08',
+        'the standard is surge 5×, NAMED by him after the listening test (line and bloom stay as options; bloom revisited at first use)');
 }
 
 // ---- (2) the end rule ----
