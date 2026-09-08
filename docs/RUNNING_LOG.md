@@ -7849,3 +7849,47 @@ are different players.
 
 **Still owed by him:** a yes or no on §286's selection recommendation (least-recently-long, roomiest breaks ties, floor 0.3 s per kind,
 abort when nothing clears).
+
+## §289. PLAN 1n — topic 2 CLOSED (anchors, all three kinds, the selection seeded); topic 3 opened: the pitches, and the 5-note chord always in the air
+
+Composer, 2026-09-08: *"1 yes with seed option, 2 yes and trills and eventually long tone has same"*.
+
+**Both settled.**
+
+1. **The selection rule is adopted** — least-recently-long, roomiest breaks ties, a length floor per kind, abort the attack when nothing
+   clears it — **with a SEED**, so a pass repeats exactly and a re-deal is a new number, as the strikes drawer and the harmony bar
+   already work.
+2. **Anchors, not modes** — and **the same for all three kinds**: a trill is launched or cut by an accent exactly as a crescendo is,
+   and the long tone will be when it arrives. *"eventually long tone"* — the long tone is a later addition, so 1n's build is trills and
+   crescendos with the third kind's seat left in the data.
+
+**Topic 3 opened: the pitches.** His CN-48 asked for *"this/last pitch of the corresponding strike or next pitch of strike; also any of
+the harmonies from the harmony drawer, distributed across the sequence of trills/cres and same options of the strikes, reshuffle, repeat
+in order, etc these will include all the ones we identified in the updated morph panel as well"*.
+
+**Half of it is already built.** The second family — a harmony from the drawer, every sonority the morph panel knows, dealt in turn or
+shuffled or random from a seed — is **PLAN 1m's harmony bar**, finished and verified on 2026-09-08 (§284): `MorphPanel.pitchOptionGroups`
+/ `sonorityOf` over 163 sonorities, `Cresc.deckNext` for the order, `Cresc.foldInto` for the octave fold. 1n reuses it whole rather than
+building a second pitch menu. The first family — the pitch of the corresponding strike, or the one before or after it — is new but small:
+read a named accent's `sonifyNote` and fold it into the long's player's range with the same call.
+
+**The measurement that makes the real question concrete.** Simulating the launched pass on his run and sampling every 20 ms, the longs
+overlap heavily:
+
+| longs sounding at once | share of the time |
+|---|---|
+| 1 | 6 % |
+| 2 | 5 % |
+| 3 | 5 % |
+| 4 | 10 % |
+| **5** | **49 %** |
+| **6** | **24 %** |
+
+**Five or six of the seven players are sustaining for 73 % of the passage.** So the longs are not a line of separate events — they are a
+**standing five-note chord that changes one note at a time**, under the accents.
+
+**Which raises the one question only he can answer**, put to him as topic 3: when the pitches come from a harmony, is the sonority dealt
+**SEQUENTIALLY** — pitch *n* to long *n*, lapping round, which is what 1m's deck does today and what a 17-note set over 43 longs would do
+2½ times — or **VERTICALLY**, so that the five or six longs sounding together at any instant spell the sonority, the deck choosing the
+note the chord is currently missing? The first is a melody of entries; the second is a harmony that breathes. They sound quite different,
+and the deck is small either way.
