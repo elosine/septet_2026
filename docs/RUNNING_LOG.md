@@ -7417,3 +7417,26 @@ state. Marked `doing 2026-09-08`: the channel map and the NOTE router are built 
 decision, which is his — a curve copy of `ord` in one of the thirteen free `Fluteb` slots, or the tuba law and the ring; (b) the trills
 and beatings, still on MAIN because their zones carry precomputed snippets with explicit channels; (c) the prelude's other controllers
 (CC1, CC4 + channel pressure) and `tech.ks` for the flute's KS presets.
+
+## §274. The flute's curve bank decided and wired — three Ordinario copies on `Fluteb` 4 · 5 · 6; all seven players now protected
+
+Composer, 2026-09-08: *"for [the flute] lets use the kontakt standard and use the appropriate number of addl instances, again the
+principle for playback/demo is best result for least/most efficient use of work"*.
+
+**Taken as: the Kontakt standard of three curve channels, applied to the one flute technique that swells.** On UVI a channel IS a
+technique, so a curve channel must be a curve COPY; `ord` is the only technique a crescendo, a morph note or a drawn swell uses, and
+`Fluteb` has thirteen free slots. **Three copies of Flute Ordinario on `Fluteb` channels 4 · 5 · 6** give the flute what the strings
+have, for the least work that gets the result — his principle, and CN-50's.
+
+**Wired:** the recipe's `channels` may now name a PORT per curve entry and the techniques a bank serves —
+`flute: { channels: { curve: [{ port: 'Fluteb', ch: 4 }, { ch: 5 }, { ch: 6 }], curveTechniques: ['ord'] } }` — and the router grew
+`curveRoute` and `routeForNote` so a curve channel can live on another port. The rotation is now decided per note (its technique decides
+which bank it may use), so a flute `flz` swell keeps its own channel while `ord` rotates.
+
+**Proved by the decoded MIDI** on the probe file: the flute's crescendos route to `Fluteb` 4 · 6 · 4 · 6 · 5; the first crescendo is cut
+on **Fluteb ch 4** (`cc7=71 · ON · cc7=0 · OFF`) and the note after it re-pins on **Fluteb ch 5**. The cut cannot be revived. With this,
+**all seven players are protected**: six by the Kontakt slots his rack has held since 2026-09-03, the flute by three UVI copies.
+
+**His five minutes at the rack, now the whole of it:** load **Flute Ordinario three times into the `Fluteb` UVI instance, as parts on
+MIDI channels 4, 5 and 6**, same output as the existing parts. Until they exist the flute's crescendos will address silent channels —
+so this one is a prerequisite, not a nicety, and it is the only rack work left for the crescendo suite.

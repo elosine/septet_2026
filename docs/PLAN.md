@@ -93,9 +93,11 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
     held the four Kontakt slots since 2026-09-03); `composer.html` gained `curveChannelsOf` · `isCurveEvent` · `curveChannelMap` ·
     `channelFor`, so a curve-bearing note (a crescendo, a morph note, a drawn swell) rotates over the curve channels while a captured
     or keyswitched note stays on MAIN, a secco-cut channel is left to rest, and `resetCC7All` sweeps the curve channels too. Proved by
-    the decoded MIDI: violin 1 cuts its crescendo on ch 2 and re-pins the next note on ch 3. **What remains in 0c.7:** (a) **the flute's
-    decision, his** — a curve copy of `ord` (and which others) in the thirteen free `Fluteb` slots, or the tuba law and the ring, since on
-    UVI a channel IS a technique and no slot can be "the same instrument again"; (b) the TRILLS and BEATINGS, whose zones carry
+    the decoded MIDI: violin 1 cuts its crescendo on ch 2 and re-pins the next note on ch 3. **The FLUTE is decided too** (2026-09-08, §274): three Ordinario
+    copies on `Fluteb` channels 4 · 5 · 6 — on UVI a channel IS a technique, so a curve channel must be a curve COPY, and `ord` is the only
+    flute technique that swells; the recipe's curve entries may name their own port, and the router follows. **His one piece of rack work,
+    a prerequisite: load Flute Ordinario three times into the `Fluteb` UVI instance on MIDI channels 4, 5, 6.** **What remains in 0c.7:**
+    (a) the TRILLS and BEATINGS, whose zones carry
     precomputed snippets with explicit channels and so are still on MAIN; (c) the prelude's other controllers (CC1; CC4 + channel
     pressure) and `tech.ks` for the flute's KS presets. *The original text:* every Kontakt instrument gets
     `channels: { main: 1, curve: [2, 3, 4] }`; `sonify_core`'s route picks `main` for

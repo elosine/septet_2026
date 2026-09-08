@@ -33,7 +33,14 @@ const INSTRUMENTS = {
   // → MIDI 59–96 (manual p. 51); per-preset ranges are read from the UVI GUI at 0c, never
   // ear-scanned. Multiphonics Menu: one multiphonic per key, display C3–F5 = MIDI 60–89 (manual
   // "FLUTE Multiphonics"). Piccolo / bass flute are NOT here yet — undecided (D6; CN-2, CN-4).
-  flute: { balanceDb: -21, ordinary: "ord", playerBendSt: 1, bendRangeSt: 1.99,   // `ordinary` (PLAN 1g item 4, 2026-09-06): the instrument's ordinary voice — a new trill's default, the voice the sweep measured
+  // D11 / 0c.7 for the FLUTE (composer, 2026-09-08: "for [the flute] lets use the kontakt standard and use the appropriate number of
+  // addl instances … the principle for playback/demo is best result for least/most efficient use of work"). On UVI a channel IS a
+  // technique, so a curve channel cannot be "the same instrument again" as a Kontakt slot can: it must be a curve COPY of a technique.
+  // Three copies of ORDINARIO on the `Fluteb` port (which uses 1–3 today and has thirteen slots free) give the flute the Kontakt
+  // standard of three curve channels for the one technique that swells. Every other flute technique has no copy and stays on its own
+  // channel, as before. `curveTechniques` says which keys have copies; a curve entry may name its own port.
+  flute: { channels: { curve: [{ port: "Fluteb", ch: 4 }, { port: "Fluteb", ch: 5 }, { port: "Fluteb", ch: 6 }], curveTechniques: ["ord"] },
+    balanceDb: -21, ordinary: "ord", playerBendSt: 1, bendRangeSt: 1.99,   // `ordinary` (PLAN 1g item 4, 2026-09-06): the instrument's ordinary voice — a new trill's default, the voice the sweep measured
     // THE BEATING PALETTE (PLAN 1f step 1, 2026-09-07): `playerBendSt` = how far the real player may bend, his rule "usually within semitone at the most" (1 for
     // all six; the winds by embouchure, to be narrowed by his ear when heard); `bendRangeSt` = the sampler's range in semitones per full pitch bend — PROVISIONAL
     // until the bend probe (`node tools/balance_schedule.js --bend` → the rack → probes/analyze_bend.py → tools/apply_bend_ranges.js) writes MEASURED_BEND below:

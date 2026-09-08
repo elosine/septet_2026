@@ -10582,12 +10582,13 @@ const Composer = {
             const inst = this.trackInstrument(wc.layer);
             if (!inst) return;
             const tech = this.curveTechniqueFor(wc);
-            const portKey = ((tech && tech.port) || inst.port || '').toLowerCase();
+            // D11 (0c.7): a curve-bearing event sounds on one of this player's CURVE channels, round robin — and that channel may be
+            // on another PORT (the flute's ordinario copies live on `Fluteb`). A plain or keyswitched note stays on MAIN.
+            const route = this.routeForNote(wc, tech, inst);
+            const portKey = route.port;
             const output = this._zoneMidiOutputs[portKey];
             if (!output) return;
-            // D11 (PLAN 0f): a curve-bearing event sounds on one of this player's CURVE channels, round robin; a plain or
-            // keyswitched note stays on MAIN. Without a curve bank (the flute, the piano) this is the technique's own channel.
-            const ch = this.channelFor(wc, tech);
+            const ch = route.ch;
             const st = this._activeCurvePlayback[wc.id];
             const audible = this.isPartAudible(wc.layer);
 
@@ -10776,9 +10777,20 @@ const Composer = {
     // that streams one (a crescendo's CC7, a morph note's bend, a drawn swell). His rack has held those four slots since; nothing in
     // the app read them until now, so every event has been sharing channel 1 — which is what made a secco cut revivable.
     // The assignment is computed once per playthrough from the score, in time order, so it is stable and inspectable.
-    curveChannelsOf(lane) {
+    // a player's curve channels. An entry is a NUMBER (a channel on the instrument's own port — the Kontakt slots) or
+    // { port, ch } (a copy living on another port — the flute's ordinario copies on `Fluteb`, 0c.7).
+    curveChannelsOf(lane, techKey) {
         const inst = this.trackInstrument(lane);
-        return (inst && inst.channels && Array.isArray(inst.channels.curve)) ? inst.channels.curve : [];
+        const c = inst && inst.channels;
+        if (!c || !Array.isArray(c.curve)) return [];
+        // when the instrument names which techniques have copies, only those may rotate (the flute: `ord` alone)
+        if (Array.isArray(c.curveTechniques) && techKey != null && c.curveTechniques.indexOf(techKey) < 0) return [];
+        return c.curve;
+    },
+    curveRoute(lane, entry) {
+        const inst = this.trackInstrument(lane) || {};
+        if (entry && typeof entry === 'object') return { port: (entry.port || inst.port || '').toLowerCase(), ch: entry.ch };
+        return { port: (inst.port || '').toLowerCase(), ch: entry };
     },
     // does this note stream a continuous controller? a captured ('plain') or keyswitched ('ks') note holds a static level: MAIN.
     isCurveEvent(wc) {
@@ -10793,28 +10805,32 @@ const Composer = {
         this.objects.forEach(o => { if (this.isCurveEvent(o)) (byLane[o.layer] = byLane[o.layer] || []).push(o); });
         const restS = (typeof Cresc !== 'undefined' ? Cresc.DEFAULTS.toleranceS : 2);
         Object.keys(byLane).forEach(k => {
-            const lane = +k, pool = this.curveChannelsOf(lane);
-            if (!pool.length) return;   // no curve bank (the flute, the piano): its technique's own channel, as before
+            const lane = +k;
             const list = byLane[lane].sort((a, b) => a.startSeconds - b.startSeconds);
-            const freeAt = {}; pool.forEach(c => { freeAt[c] = -Infinity; });
+            const freeAt = new Map();   // keyed by the entry itself, so a bank shared by several techniques rotates as one
             list.forEach(wc => {
+                // the bank this note may use: the instrument's, gated by `curveTechniques` where it names them (the flute: `ord`)
+                const pool = this.curveChannelsOf(lane, wc.technique);
+                if (!pool.length) return;   // no bank for this technique: its own channel, as before
                 const cut = !!(wc.properties && wc.properties.cresc && wc.properties.cresc.secco !== false);
                 let pick = null, best = Infinity;
-                pool.forEach(c => { if (freeAt[c] <= wc.startSeconds + 1e-9 && freeAt[c] < best) { best = freeAt[c]; pick = c; } });
-                if (pick == null) pick = pool.reduce((b, c) => (freeAt[c] < freeAt[b] ? c : b), pool[0]);
+                pool.forEach(c => { const f = freeAt.has(c) ? freeAt.get(c) : -Infinity; if (f <= wc.startSeconds + 1e-9 && f < best) { best = f; pick = c; } });
+                if (pick == null) pick = pool.reduce((b, c) => ((freeAt.get(c) || -Infinity) < (freeAt.get(b) || -Infinity) ? c : b), pool[0]);
                 // a cut slot must rest (the tail comes back if CC7 is raised too soon); an ordinary swell only needs its own span
-                freeAt[pick] = wc.endSeconds + (cut ? restS : 0.05);
+                freeAt.set(pick, wc.endSeconds + (cut ? restS : 0.05));
                 map[wc.id] = pick;
             });
         });
         this._curveCh = map;
         return map;
     },
-    // the channel an event sounds on: its curve channel when it has one, else the technique's own (D11's MAIN)
-    channelFor(wc, tech) {
+    // the PORT and CHANNEL an event sounds on: its curve route when it has one, else the technique's own (D11's MAIN)
+    routeForNote(wc, tech, inst) {
         const assigned = this.curveChannelMap()[wc.id];
-        return (assigned != null ? assigned : ((tech && tech.channel) || 1)) - 1;
+        if (assigned != null) { const r = this.curveRoute(wc.layer, assigned); return { port: r.port, ch: r.ch - 1 }; }
+        return { port: ((tech && tech.port) || (inst && inst.port) || '').toLowerCase(), ch: ((tech && tech.channel) || 1) - 1 };
     },
+    channelFor(wc, tech) { return this.routeForNote(wc, tech, this.trackInstrument(wc.layer)).ch; },
 
     resetMorphBend() {
         const bent = this._morphBentChannels;

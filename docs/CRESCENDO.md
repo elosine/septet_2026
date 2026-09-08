@@ -155,14 +155,18 @@ tail cannot come back; the flute does both on channel 12, because it has no bank
 | player | curve bank | the secco cut |
 |---|---|---|
 | Vn1 · Vn2 · Va · Vc · BCl | ch 2 · 3 · 4 | safe by architecture — the next event is on another channel |
-| Flute | **none yet** | shares a channel; the tolerance decides whether the tail returns |
+| Flute | `Fluteb` ch 4 · 5 · 6 (three Ordinario copies) | safe by architecture, once those copies are loaded |
 | Piano | none | a piano cannot swell; main only |
 
-**The flute is the one decision left (0c.7, deferred on 2026-09-03).** On UVI a channel IS a technique — 26 of them over 16
-channels on `Flute`, 4 more on `Fluteb` — so a curve channel cannot be "the same instrument again" as a Kontakt slot can. It must be
-a curve COPY of a technique, and `Fluteb` has 13 free slots for exactly this. A crescendo only needs `ord`, so **one free slot would
-do it**. The alternative, recorded in §16, is to leave the flute on the tuba piece's timing law and accept the ring.
+**The flute is decided (2026-09-08, his "use the kontakt standard and the appropriate number of addl instances").** On UVI a channel
+IS a technique — 26 of them over 16 channels on `Flute`, 4 more on `Fluteb` — so a curve channel must be a curve COPY, not the same
+instrument again. `ord` is the only flute technique a crescendo, a morph note or a drawn swell uses, and `Fluteb` has thirteen free
+slots, so **three copies of Flute Ordinario on `Fluteb` channels 4 · 5 · 6** give the flute the Kontakt standard for the least work.
+The recipe carries it (`curve` entries may name their own port; `curveTechniques` says which keys the bank serves), and the router
+follows: the flute's crescendos route to `Fluteb` 4 · 6 · 4 · 6 · 5, cutting on one channel and re-pinning on another.
 
+**HIS ONE PIECE OF RACK WORK, and it is a prerequisite:** load **Flute Ordinario three times into the `Fluteb` UVI instance, as parts
+on MIDI channels 4, 5 and 6**, same output as the existing parts. Until they exist the flute's crescendos address silent channels.
 **Still on MAIN and still to do:** trills and beatings carry precomputed snippets with explicit channels, so they have not moved yet
 — the next piece of PLAN 0f.
 **His standing principle beside it (CN-50):** *"the rotation happens in the back-end … so we don't have to think about it on the
