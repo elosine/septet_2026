@@ -7035,3 +7035,17 @@ width; what a crescendo is in the score, with his correction about the curve-lan
 3 s / 5 s fallbacks); one spacing rule (free 150 ms after the last sound ends). **The top line confirmed** — 1 the listening test · 2 the
 crescendo object · 3 the spacing rule · 4 verify and document. **PLAN 1l opened** with the why, his words, the decisions and the four
 steps, committed. **Phase 3 begins**, his format of §224: each step's goal and sub-steps in one turn.
+
+## §258. PLAN 1l phase 3 — step 1 (the listening test as a score file) agreed and written; step 2, the crescendo object, put to him
+
+Composer, 2026-09-08: *"good"* to step 1 as put — the generator script, the grid of nine per player on the same times across all seven
+lanes, the ordinary voice at ppp … fff with a cliff, the orange fill, a marker per column, the middle pitch of each range, the checks
+before his ear, then his verdict. Written into PLAN 1l, committed.
+
+**Step 2 put to him, goal and sub-steps together:** what a crescendo IS once and for all — a held note whose curve rises, its
+`properties.cresc` carrying the family, the ratio, the dynamic range and how its end was set; a helper that MAKES one (a pitch, a
+player, a start, an end, a shape → the note with its curve, its technique, its colour); the end rule in one place (0.17 s before that
+player's next note, else 5 s), the dynamic range ppp … fff by default and settable per crescendo, the cliff; the drawing in the score
+(filled, transparent, the morph orange) and the editing the curve-lane way (the line dragged to bend, no diamond, the dots always
+drawn) — the score's own drag, stretch, delete, undo and save working on it because it is a note; the fields into NAMING; node checks
+for the shapes, the end rule and the provenance, and a walk on a copy.

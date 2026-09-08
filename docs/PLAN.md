@@ -1025,7 +1025,21 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
     soloing swaps the instrument without moving; he plays it, solos, loops, bends a curve by hand, and keeps the file.
   *The top line, confirmed (§257):*
   1. **The listening test** (a generated score file: three shapes at three durations on every player; he solos and names the standard) —
-     *to be laid out when we discuss it.*
+     `todo — agreed 2026-09-08 (RUNNING_LOG §258)`. *Result when done:* a score file holds the whole grid — three shapes (surge 5× ·
+     linear · bloom 5×) at three durations (1.5 s · 5 s · 12 s) on all seven players at the same times, one comfortable pitch each, every
+     crescendo named by a marker; he opens it, solos a part, loops a stretch, bends a curve by hand for a variant, and names the standard,
+     which becomes the default every later build uses. The to-dos:
+     - a generator script (`tools/cresc_test.js`) writing the file from a small table — the shapes with their curve models and slopes, the
+       durations, the pitch per player — re-runnable, so a second grid is one command;
+     - the layout: nine crescendos per player in a fixed order, the SAME times on all seven lanes (soloing swaps the instrument without
+       moving the playhead), a rest between columns longer than the longest crescendo so nothing bleeds; about 90 s;
+     - each crescendo: the player's ordinary voice, ppp … fff over the full measured scale (1g), a CLIFF at the top, drawn filled and
+       transparent in the morph orange (`#C2410C`);
+     - a marker at each column naming the shape and the duration, so he always knows what he is hearing;
+     - the pitch: the middle of each player's ordinary range, written in the file so he can move it;
+     - checks before he hears it: the file opens, every crescendo sounds on its own lane, the velocity and CC7 come from the measured
+       law, nothing overlaps, and the decoded MIDI shows the three shapes actually differ;
+     - then HIS EAR: solo, listen, name one standard or two — the verdict into PLAN 1l and the crescendo's document.
   2. **The crescendo object** (the held note with its rising curve, its provenance, the orange fill, the cliff, the 0.17 s end and the
      5 s fallback) — *to be laid out when we discuss it.*
   3. **The spacing rule** (a player free 150 ms after its last sound ends, everywhere; the chords drawer re-read; the trill's fallback
