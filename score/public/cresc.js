@@ -190,6 +190,62 @@ function thresholdOf(wc) {
     return Math.round(((a + b) / 2) * 100) / 100;
 }
 
+
+// ===================== THE HARMONY DECK (PLAN 1m step 3; RUNNING_LOG §282; CN-53) =====================
+// A standing sonority dealt ONE PITCH AT A TIME, so pressing C with nothing selected walks a harmony. Three orders, all SEEDED so a
+// sequence repeats exactly: in turn · shuffled to completion then reshuffled · random. Pure and stateless — the caller keeps the little
+// state { order, seed, drawn, lap } (the bar's, in the browser, never in the file) and this says what the next pitch is and what is
+// left. 1k's deck in spirit and in seed arithmetic, one pitch wide.
+const ORDERS = [['turn', 'in turn'], ['shuffled', 'shuffled, then reshuffled'], ['random', 'random']];
+function deckRnd(a) {
+    return function () {
+        a |= 0; a = (a + 0x6D2B79F5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+}
+// the order this lap deals in: 'turn' keeps the sonority's own order; 'shuffled' reshuffles from the seed AND the lap, so lap 2 is a
+// different order from lap 1 and both come back the same next time
+function lapOrder(notes, order, seed, lap) {
+    const a = (notes || []).slice();
+    if (order !== 'shuffled') return a;
+    const rnd = deckRnd(((+seed || 1) * 7727 + (+lap || 0) * 613) | 0);
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+}
+// the next pitch. Returns { pitch, state, left, lap, reshuffled } — `left` is null for 'random' (it never runs out).
+function deckNext(notes, st) {
+    const list = (notes || []).slice();
+    if (!list.length) return null;
+    const o = (st && st.order) || 'turn', seed = Math.max(1, +(st && st.seed) || 1);
+    let drawn = Math.max(0, +(st && st.drawn) || 0), lap = Math.max(0, +(st && st.lap) || 0);
+    if (o === 'random') {
+        const pitch = list[Math.floor(deckRnd(((seed * 7727 + drawn * 613) | 0))() * list.length)];
+        return { pitch, state: { order: o, seed, drawn: drawn + 1, lap }, left: null, lap, reshuffled: false };
+    }
+    let reshuffled = false;
+    if (drawn >= list.length) { drawn = 0; lap += 1; reshuffled = true; }   // exhausted: a new lap (reshuffled, when shuffled)
+    const pitch = lapOrder(list, o, seed, lap)[drawn];
+    return { pitch, state: { order: o, seed, drawn: drawn + 1, lap }, left: list.length - drawn - 1, lap, reshuffled };
+}
+// what is left in this lap, for the bar's count
+function deckLeft(notes, st) {
+    const n = (notes || []).length;
+    if (!n) return 0;
+    if (st && st.order === 'random') return null;
+    const drawn = Math.max(0, +(st && st.drawn) || 0);
+    return drawn >= n ? n : n - drawn;
+}
+// FOLD a sonority's pitch into a player's sounding range — 1k's own rule (strike_drawer.js foldInto), octave by octave; null when it
+// does not reach in any octave. `fold` is how many octaves it moved, so the bar can say so.
+function foldInto(pitch, lo, hi) {
+    let p = pitch, n = 0;
+    while (p < lo && n < 8) { p += 12; n++; }
+    while (p > hi && n > -8) { p -= 12; n--; }
+    return (p >= lo && p <= hi) ? { pitch: p, fold: n } : null;
+}
+
 return { SHAPES, STANDARD, DEFAULTS, DYN, dynHeight, dynName, nm, shapeList, segmentFor, endFor, make, isCresc, describe, heightAt, thresholdOf,
-         assignSlots, applySlots };
+         assignSlots, applySlots, ORDERS, lapOrder, deckNext, deckLeft, foldInto };
 }));

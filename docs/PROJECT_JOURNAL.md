@@ -119,6 +119,26 @@ own server (:5300); the AI built at his word, one chunk at a time:
   listening test, 63 crescendos he solos), `spacing.js` (one rule: free 150 ms after the last sound ENDS, between gestures), 43
   checks, `docs/CRESCENDO.md`. The survey was a READ of his own tuba docs; the piece was MEASURED before the rule was written, which
   is what caught the gesture clause. **His listening is the one thing left.**
+- **Session 4, still 2026-09-08 (RUNNING_LOG §263–284):** the crescendo suite carried on without him at his word. **PLAN 1l finished**
+  — the STANDARD named by his listening test (surge is the default; line and bloom stay as options; bloom revisited at first use),
+  **SECCO** (CN-49: on by default, the notation word, the strings' damp, a CC7 cut ten ms before the note-off) and **THE ROUND ROBIN**
+  (CN-50: *"the rotation happens in the back-end"*) — which turned out not to be a new idea but **D11's curve channels**, decided by him
+  on 2026-09-03 and never read by the app: ch 1 MAIN for plain notes, ch 2/3/4 CURVE A/B/C for anything writing a continuous controller.
+  Wired for all seven players (§270–274), so a secco cut and the next event never share a slot. **PLAN 1m PLANNED by the method in
+  eight turns (§276–283) and BUILT the same day (§284) at his *"yes, build 1m as much as you can independently"*:** the **C key** (a
+  crescendo on a selected note at once, the source note greyed by a live `mutedBy` and restored by deleting it, one crescendo per
+  selected note under one undo), the **CARD** (`cresc_card.js` — the dynamic range, the duration typed or by the rule, the articulation
+  on the player's ordinary voice, the secco tick, all written onto the LIVE crescendo; ♪ alone and ► in context; ENTER keeps, ESC
+  removes, a click reopens, the settings remembered), and the **HARMONY BAR** (his own morph pitch menu reused rather than rebuilt, 1k's
+  seeded deck, the octave fold, the count and the lap, *restart* and *change…*; the browser's, not the file's). The walk found the
+  build's one real defect — the end rule looks only FORWARD, so C could lay a crescendo on a player still sounding — and the fix is
+  1l's own spacing rule applied over every event class with the gesture clause; measured on his piece, C makes a crescendo on 526 of
+  593 notes and refuses the rest with a reason. 27 node checks; `docs/CRESCENDO.md` §6.
+  **► WAITING ON HIM, and it is the whole of what is left here: HIS EAR.** Four things stand built and untried — his first crescendos
+  in the piece (1m), chords mode (1k), the piano's lines (1j), the piano's harmonics (1i) — plus the `cresc-secco-test` file. **The
+  rack needs nothing:** he loaded the three Flute Ordinario copies on `Fluteb` 4 · 5 · 6 and §275 corrected them through the UVI text
+  path (+6 dB, the EQ and Maximizer bypassed), so all seven players are protected by architecture. After his verdicts: **1n (the
+  sequence filler) planned by the method, then 1o.**
 - **PLAN 1f step 1 built and its probe run, 2026-09-07 about 00:00–01:00 (§167–168), at his word *"run the plan independantly … I'll
   check in after the build"*:** the palette — the recipe's `playerBendSt` (his semitone) · `bendRangeSt` · `beating: false` (the
   piano); `score/public/beating_calc.js` (the players, the ordinary voices' measured ranges, the bend limits, the pairing rule, the

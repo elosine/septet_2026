@@ -7578,3 +7578,80 @@ Composer, 2026-09-08: *"good"* to step 4. **PLAN 1m is planned whole** — 1 the
 harmony bar · 4 verify and document — each in the fixed formats, each agreed in a single turn (his format of §224) and written at once;
 the status `PLANNED`, the build at his word, step 1 first. Eight turns from the item's opening to the plan, the shortest of the four
 because 1l had already settled the sound: 1m decides only the gesture, the little panel and the harmony deck.
+
+## §284. PLAN 1m BUILT — the C key, the card and the harmony bar; and the rule that a crescendo may not be laid on a busy player
+
+Composer, 2026-09-08: *"yes, build 1m as much as you can independently"*. Steps 1–3 built and step 4's checks and documents done; the
+one to-do left is his, his first crescendos in the piece.
+
+**What was built.**
+
+- **Step 1 — the C key** (`score/public/composer.html`). `createCrescendo` beside `createTrill`, the **C** key beside **T** with the same
+  guard. From a selected note: its lane, its pitch, its start; the end by 1l's rule. `mutedByLive(o)` is the new reading of the trill's
+  own stamp — *is the object that muted this one still in the score?* — so **the grey original comes back by itself** when either author
+  is deleted, and the tick and the renderer both consult it. Several notes: one crescendo each, sorted, under ONE `pushUndoState`. A
+  marked span sets the duration. A note the rule cannot fit is counted, not crowded.
+- **Step 2 — the card** (`score/public/cresc_card.js`, new; modelled on `cue_picker.js`). The four controls write onto the LIVE
+  crescendo — dynamic range as two dynamics, duration typed with *by the rule* to restore it, articulation opening on the player's
+  ordinary voice, the secco tick. ♪ plays it alone through the real route; ▶ scrolls to a second before and stops itself a second after.
+  ENTER keeps, ESC removes a crescendo just born and merely closes one reopened by a click, CTRL+Z undoes. The range and the tick are
+  remembered in `Composer._crescCard`; the duration is not, because the rule is per note.
+- **Step 3 — the harmony bar** (in `composer.html`, with `Cresc.deckNext`/`lapOrder`/`deckLeft`/`foldInto` added to `cresc.js`). The
+  sonority is **his own pitch menu, reused rather than rebuilt**: `MorphPanel.pitchSonority` was split into `sonorityOf(src, root)` and
+  the menu's groups extracted as `pitchOptionGroups()`, so the bar and the morph panel read one list (163 sonorities on this piece).
+  The order is 1k's deck, seeded. The bar rides the ACTIVE lane and lives in `localStorage` (`septet.crescBar.v1`) — the browser's, not
+  the file's, as the lines bar is.
+
+**The defect the walk found, and the rule it forced.** `endFor` only looks FORWARD. Pressing C at a playhead that sits *inside* a note
+already sounding therefore made a crescendo on top of it, and — worse — a second C at the same instant ran a crescendo straight through
+the first, because `laneNotesFor` had been written to ignore other crescendos. Both are the same mistake: **the end rule is not the
+whole of the spacing question.** Rewritten:
+
+- `crescSoundsOn(layer, exceptId)` — everything this player STILL SOUNDS: plain notes not already greyed and not eaten by a trill,
+  other crescendos, trill zones, beating zones. What is silent does not crowd.
+- `crescRoomAt(layer, at, exceptId, group)` — 1l step 3's own rule through `spacing.js`: free 150 ms after the last sound ENDS, with the
+  **gesture clause**, so a morph's or a strike's own re-breaths never block a crescendo made inside one.
+
+**Measured on his piece before trusting it** (`piano-harmonics-test.json`, every note inside a gesture):
+
+| | notes |
+|---|---|
+| sounding notes | 593 |
+| C would make a crescendo | 526 |
+| refused — the next sound is too close | 52 |
+| refused — the player is still sounding | 15 |
+
+89 % pass, and the 15 are genuine overlaps outside their own gesture. The two numbers are coherent by design: a crescendo ends 0.17 s
+before the next sound, which clears the 150 ms rest by 20 ms, so a run of consecutive crescendos never blocks itself.
+
+**Three smaller things the walk fixed.** A refused press was **burning a pitch from the deck** — the deck now advances only when a
+crescendo is actually placed. The bar's own reason for refusing was being **overwritten** by the caller's generic line — kept in
+`_crescWhy` and preferred. And the card **jumped to a corner** when the crescendo was scrolled off screen — it now falls back to a
+default position unless the crescendo is actually in view.
+
+**Verified in the running app**, on a `zz-ai-` copy of his piece, with real key and mouse events and the MIDI decoded through a fake
+`_zoneMidiOutputs`:
+
+- C on a bass-clarinet note at 5.05 s → a crescendo D#4, surge 5×, ppp → fff, ending 6.345 s = exactly 0.17 s before the next note at
+  6.515 s; the source greyed; the card open with the right values.
+- The **♪** of that crescendo: **port `basscl`, channel 2 — CURVE A**, note-on velocity 107, CC7 rising 86 → 127 under the measured
+  loudness law, then **CC7 = 0 at 1285 ms, ten milliseconds before the note-off** — the secco cut, on a rotating slot (D11).
+- Four notes selected on the cello, one of them 0.425 s from its neighbour: *"3 crescendos · 1 had no room"*, three greyed, one not; one
+  CTRL+Z took the whole press back and un-greyed all four.
+- The bar on the viola with Messiaen mode 2 from F2 (17 notes): five presses walked F2 F#2 G#2 A2 B2, each folded into the viola and
+  marked *folded +1 8ve*; the count ran 17 → 12; forced to the last note it dealt it, then began **lap 2** from the top.
+- ESC on a fresh crescendo removed it and restored the note; ESC on one reopened by a click only closed the card; deleting a crescendo
+  the ordinary way cleared the stamp and repainted the note at full opacity.
+- The paint: the crescendo filled `#C2410C` at 0.45, the greyed source `#C9A05A` at 0.15 — the same faint the trills use.
+
+**The pure parts checked in node** — `score/tools/check_cresc_deck.js`, 27 checks, all passing: the three deck orders and their seeds,
+the lap boundary (a lap holds every note once; lap 2 differs from lap 1; the same seed repeats both), random never exhausting, the fold
+by octave and its `null` when no octave reaches, the end rule's three answers, and the object the C key makes.
+
+**One thing for his ear, recorded rather than changed.** A crescendo's note-on velocity comes from the curve's **top** — the app's law
+for every held note, trills included — so a ppp start attacks at its loudest velocity and CC7 shapes it down. *(The flute's three
+Ordinario copies on `Fluteb` 4 · 5 · 6 are DONE: he loaded them and §275 corrected their gain to +6 dB and bypassed the EQ and the
+Maximizer, so the rack needs nothing for the crescendos.)*
+
+**Written:** `docs/CRESCENDO.md` §6 (the key, the card, the bar, the measurements) and §7; `docs/NAMING.md` 16 (`mutedBy`'s two authors,
+read live) and 17 (`fromHarmony`, and the bar living in the browser); PLAN 1m steps 1–3 `done`, step 4 waiting on his ear; PLANNER NOW.

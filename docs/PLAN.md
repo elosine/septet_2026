@@ -1138,7 +1138,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - check: the pool never re-pins a cut slot inside the tolerance; the guard never silences a neighbour; the warning fires exactly
        when the arithmetic says it should; a walk on a copy with the decoded MIDI showing the cut and the rotation.
 
-- **1m — The C key: a crescendo on a selected note, the trill's chassis (CN-48 build 1; CN-49 · CN-53)** — `todo — PLANNED 2026-09-08 (the planning method, phases 1–3; RUNNING_LOG §276–283); the build at his word, step 1 first` *(composer, 2026-09-08, CN-48: "strike, select note, press
+- **1m — The C key: a crescendo on a selected note, the trill's chassis (CN-48 build 1; CN-49 · CN-53)** — `steps 1–3 BUILT and verified 2026-09-08 (RUNNING_LOG §284); step 4 done but for HIS EAR — his first crescendos in the piece` *(composer, 2026-09-08, CN-48: "strike, select note, press
   something like c a crescendo appears on that pitch -> .15 before next note, use standard curve … c key, little panel, default dynamic
   range and duration (til next note or if no note a standard duration), and articulation, but I can change any of them there in the mini
   panel")*. *Why:* the crescendo has to be placeable by hand, one note at a time, the way T places a trill. **1l settles the sound** (the
@@ -1161,10 +1161,13 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   - *Answered on the way (§278):* a trill with nothing selected takes **the nearest earlier note on that player within 8 s** and trills a
     whole step above it — which is where the pitches he liked came from. C does not copy this; the harmony deck is his choice instead.
   *The top line, confirmed ("ok good", §279):*
-  1. **The C key and the crescendo it makes** (the gesture, the greyed source, one per selected note, the entry rules) — `todo — agreed
-     2026-09-08 (RUNNING_LOG §280)`. *Result when done:* pressing **C** on a selected note makes a crescendo on that pitch at once, with
+  1. **The C key and the crescendo it makes** (the gesture, the greyed source, one per selected note, the entry rules) — `done — built
+     and verified 2026-09-08 (RUNNING_LOG §284)`. *Result when done:* pressing **C** on a selected note makes a crescendo on that pitch at once, with
      everything 1l settled; the note itself goes grey and silent but is not destroyed, and comes back if the crescendo is deleted;
      several notes selected give one crescendo each; with nothing selected C asks the harmony bar (step 3) for a pitch. The to-dos:
+     *(BUILT 2026-09-08 — `score/public/composer.html`: `createCrescendo`, `mutedByLive`, `crescSoundsOn`, `laneNotesFor`, `crescRoomAt`,
+     the C key beside T, the tick and the renderer honouring a live `mutedBy`. Measured on his piece: of 593 sounding notes C makes a
+     crescendo on 526, refuses 52 for a next note too close and 15 for a player still sounding — §284.)*
      - the key: **C** on the score, ignored while a box has focus, exactly as **T** is;
      - from a selected note: its lane, its pitch, its start; the end from 1l's rule (0.17 s before that player's next note, else 5 s);
      - **the source note greyed**: stamped `mutedBy` as a trill stamps the notes under it, drawn faint, silent while the crescendo lives,
@@ -1176,8 +1179,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        over it;
      - check on a copy with real key events: the crescendo on the right pitch and lane; the source greyed and restored by deleting it;
        several at once; one undo for the whole press; and the decoded MIDI showing it on a CURVE channel (D11).
-  2. **The card** (the dynamic range, the duration, the articulation, the secco tick, editing the live crescendo) — `todo — agreed
-     2026-09-08 (RUNNING_LOG §281)`. *Result when done:* a small card opens on the new crescendo holding his four controls; every change
+  2. **The card** (the dynamic range, the duration, the articulation, the secco tick, editing the live crescendo) — `done — built and
+     verified 2026-09-08 (`score/public/cresc_card.js`; RUNNING_LOG §284)`. *Result when done:* a small card opens on the new crescendo holding his four controls; every change
      is made to the REAL crescendo, so he hears it as he turns it; ENTER keeps it, ESC removes it; it remembers its last settings so the
      next C starts where the last ended; and clicking an existing crescendo reopens the same card, which is how one is edited later. The
      to-dos:
@@ -1194,8 +1197,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - **clicking an existing crescendo reopens it** with its own values: the card is the editor as well as the maker;
      - check with real events and the decoded MIDI: each control changes the sound; the memory carries to the next C; reopening shows
        what was set.
-  3. **The harmony bar** (the standing pitch source: a sonority, an order, what is left in the deck, change and restart) — `todo — agreed
-     2026-09-08 (RUNNING_LOG §282)`. *Result when done:* a small standing strip holds a sonority he chose and deals its pitches one at a
+  3. **The harmony bar** (the standing pitch source: a sonority, an order, what is left in the deck, change and restart) — `done — built
+     and verified 2026-09-08 (RUNNING_LOG §284)`. *Result when done:* a small standing strip holds a sonority he chose and deals its pitches one at a
      time; pressing C with nothing selected takes the next pitch and places a crescendo at the playhead on the active lane; he can keep
      going, change the harmony, or restart the same one, and the bar shows what is left. The to-dos:
      - the strip where the piano lane's lines bar sits, visible only while a sonority is chosen;
@@ -1209,17 +1212,24 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - the bar is the **browser's, not the file's** — like the lines bar — and says so;
      - check: the deck exhausts and reshuffles; the same seed repeats the same order; a folded pitch is marked as folded; the bar
        disappears when no sonority is chosen.
-  4. **Verify and document** (check it works, write it down, then his first crescendos in the piece) — `todo — agreed 2026-09-08
-     (RUNNING_LOG §283)`. *Result when done:* 1m is checked in node and walked in the app, the documents say what exists, and he places
+  4. **Verify and document** (check it works, write it down, then his first crescendos in the piece) — `checks and documents DONE
+     2026-09-08; WAITING ON HIS EAR for the last to-do (RUNNING_LOG §284)`. *Result when done:* 1m is checked in node and walked in the app, the documents say what exists, and he places
      his first crescendos in the piece. The to-dos:
-     - the walk on a `zz-ai-` copy with real key events and the decoded MIDI: **C** on a note · on several · on nothing; the greying and
-       its restoration; the card's four controls and its memory; the bar's deck exhausting and reshuffling; the crescendo sounding on a
-       CURVE channel (D11); undo through all of it;
-     - the node checks for the pure parts (the deck's order and seed, the fold into range, the end rule through the gesture);
-     - the documents: `docs/CRESCENDO.md` gains the C key's section, `docs/NAMING.md` the greyed note's stamp (`mutedBy` from a
-       crescendo), PLAN 1m's statuses, PLANNER NOW, the journal §2, a title on every new control;
-     - **then his first crescendos in the piece**; his verdicts → `docs/CRESCENDO.md` and NITS, the fixes he marks "fix now" built at
-       once; then **1n (the sequence filler) is planned**.
+     - ~~the walk on a `zz-ai-` copy with real key events and the decoded MIDI~~ **DONE 2026-09-08** on a copy of
+       `piano-harmonics-test.json`: C on a note · on four at once (3 made, 1 refused, one undo) · on nothing through the bar; the
+       greying and its restoration by ESC, by delete and by CTRL+Z; the card's four controls, its memory and its reopening on a click;
+       the deck exhausting into lap 2; the ♪ of a bass-clarinet crescendo decoded on **channel 2 — CURVE A**, CC7 86 → 127 then the
+       secco cut CC7 = 0 ten ms before the note-off;
+     - ~~the node checks for the pure parts~~ **DONE** — `score/tools/check_cresc_deck.js`, 27 checks, all passing (the deck's three
+       orders and their seeds, the lap boundary, the fold into range, the end rule, the object the C key makes);
+     - ~~the documents~~ **DONE** — `docs/CRESCENDO.md` §6 (the key, the card, the bar) and §7, `docs/NAMING.md` 16 (`mutedBy`'s two
+       authors, read live) and 17 (`fromHarmony`, and the bar living in the browser), PLAN 1m's statuses, PLANNER NOW, the journal §2,
+       a title on every new control;
+     - **► WAITING ON HIM: his first crescendos in the piece**; his verdicts → `docs/CRESCENDO.md` and NITS, the fixes he marks "fix
+       now" built at once; then **1n (the sequence filler) is planned**.
+     - *One thing his ear should settle while he is there (§284):* a crescendo's note-on velocity comes from the curve's TOP (the
+       app's law for every held note), so a ppp start attacks at its loudest velocity and CC7 shapes it down. *(The flute's three
+       Ordinario copies on `Fluteb` 4 · 5 · 6 are DONE — he loaded them and §275 corrected their gain and bypasses.)*
 
 
 - **1n — The sequence filler: the gaps of a strike sequence filled with crescendos and trills (CN-48 build 1.5)** — `todo — to be

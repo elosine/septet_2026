@@ -165,8 +165,10 @@ slots, so **three copies of Flute Ordinario on `Fluteb` channels 4 · 5 · 6** g
 The recipe carries it (`curve` entries may name their own port; `curveTechniques` says which keys the bank serves), and the router
 follows: the flute's crescendos route to `Fluteb` 4 · 6 · 4 · 6 · 5, cutting on one channel and re-pinning on another.
 
-**HIS ONE PIECE OF RACK WORK, and it is a prerequisite:** load **Flute Ordinario three times into the `Fluteb` UVI instance, as parts
-on MIDI channels 4, 5 and 6**, same output as the existing parts. Until they exist the flute's crescendos address silent channels.
+**DONE, 2026-09-08 (§275):** he loaded **Flute Ordinario three times into the `Fluteb` UVI instance on MIDI channels 4, 5 and 6**, and
+the copies were then corrected through the UVI text path — their gain raised 0 → **+6 dB** to match every other flute part, and the
+DigitalEq and Maximizer bypassed with the Grain Hall convolver left on, his own convention on the three older parts. **All seven
+players are now protected by architecture, in the rack as well as in the app.**
 **Still on MAIN and still to do:** trills and beatings carry precomputed snippets with explicit channels, so they have not moved yet
 — the next piece of PLAN 0f.
 **His standing principle beside it (CN-50):** *"the rotation happens in the back-end … so we don't have to think about it on the
@@ -175,11 +177,90 @@ playback problems.
 
 ---
 
-## 6 · What is not here yet
+## 6 · The C key, the card and the harmony bar (PLAN 1m — built 2026-09-08)
 
-- **His verdict on the standard** (step 1's last to-do).
-- **1m — the C key:** the mini panel, its keys, a multi-selection.
+His picture (CN-48): *"c key, little panel, default dynamic range and duration (til next note or if no note a standard duration), and
+articulation, but I can change any of them there in the mini panel"*; and (§278) *"so maybe I'm working with something from the harmony
+drawer … I choose the harmony, and then it just goes down the line, one at a time, as I press C"*.
+
+### The key
+
+**C on a selected note** makes a crescendo on that pitch AT ONCE, with everything section 4 settled: the standard curve (surge 5×),
+ppp → fff, the cliff, secco on, and the end 0.17 s before that player's next sound. The card opens on it, so every change is heard —
+his (a) at §276. **The source note is greyed, never destroyed**: it is stamped `mutedBy` exactly as a trill stamps the notes it eats,
+and it comes back the moment the crescendo is deleted (§277 — *"the same grey original which can come back with delete of cres as
+trills"*). Several notes selected give **one crescendo each under ONE undo**; a note the rule cannot fit is skipped and counted, never
+crowded.
+
+**Two refusals, both spoken:**
+
+| the case | what it says |
+|---|---|
+| the next sound is closer than 0.47 s | *no room for a crescendo there — the next note on that player is too close* |
+| the player is still sounding at that instant | *Va is still sounding at 12.70 s — free at 12.94 s (the 150 ms rest after its last sound ends)* |
+
+The second refusal is section 4's rule doing its work: the end rule only looks FORWARD, so without it a C at a playhead inside a held
+note would lay a crescendo on top of a player already busy (§284). **What counts as "still sounding" is every event class** — another
+crescendo, a trill zone, a beating zone, and any plain note not already greyed — read through `spacing.js`, with the gesture clause, so
+a morph's own re-breaths never block it.
+
+**Measured against his piece** (`piano-harmonics-test.json`, 593 sounding notes, every one inside a gesture):
+
+| | notes |
+|---|---|
+| C would make a crescendo | 526 |
+| refused — the next sound is too close | 52 |
+| refused — the player is still sounding | 15 |
+
+### The card
+
+Four controls, each opening on 1l's default, each written onto the LIVE crescendo so a turn of any of them is audible at once:
+
+- **the dynamic range** — two dynamics, ppp … fff;
+- **the duration** — what the end rule gave it, typed to anything else, with *by the rule* to put it back (the readout says which);
+- **the articulation** — that player's own techniques, opening on its **ordinary voice** (Ordinario on the flute; Senza Vibrato
+  Velocity on the strings and the bass clarinet — confirmed with him 2026-09-08);
+- **secco** — the tick, on by default (CN-49).
+
+**♪** hears it alone; **▶ in context** plays a second either side of it and stops itself. **ENTER** keeps, **ESC** removes a crescendo
+just born (and closes one merely reopened), **CTRL+Z** undoes. The card **remembers the range and the tick** between crescendos, so a
+passage keeps one character without re-setting it; the duration does not carry, because the rule is per note. **A click on any existing
+crescendo reopens the card on it** — the card is the editor as well as the maker.
+
+Verified in the running app (a `zz-ai-` copy of his piece, real key and mouse events, the MIDI decoded): the ♪ of a bass-clarinet
+crescendo sends on **channel 2 — CURVE A**, a CC7 ramp 86 → 127 under the measured loudness law, then the secco cut CC7 = 0 ten
+milliseconds before the note-off. The crescendo draws filled in the morph orange `#C2410C` at 0.45; the greyed source draws in
+`#C9A05A` at 0.15, the same faint the trills use.
+
+### The harmony bar
+
+A strip on the **active lane**. Pressing **C with nothing selected** takes the next pitch of a standing sonority, **folds it by octave
+into that player's range** (1k's own rule), and puts a crescendo at the playhead.
+
+- **the sonority** comes from the morph panel's OWN pitch menu — his kept sets, the starters, the models' sets, the stacks and
+  Messiaen modes from a typed root, the strikes, the tuba piece's blasts, the 2-pianos chord shapes (163 sonorities on this piece).
+  It is reused, not rebuilt: `MorphPanel.pitchOptionGroups()` and `MorphPanel.sonorityOf()` now serve both menus (CN-53).
+- **the order** is 1k's deck: in turn · shuffled to completion then reshuffled · random — all seeded, so a sequence repeats exactly.
+- **what is left** shows as a count, with the lap number once it has been round once.
+- **change…** and **restart** are the two buttons; continuing is pressing C again.
+- A refused press does **not** burn a pitch — the deck moves only when a crescendo is actually placed.
+- Every crescendo born this way records its provenance in `properties.cresc.fromHarmony` (the source, the raw pitch, the fold, the
+  order, the seed, the lap), and its performance note says the fold: *F2 folded +1 8ve*.
+
+**The bar is the BROWSER'S, not the file's** — like the piano's lines bar. It lives in `localStorage` under `septet.crescBar.v1` and
+says so in its own tooltip.
+
+---
+
+## 7 · What is not here yet
+
+- **His verdict on the standard** (step 1's last to-do) and on the C key itself.
 - **1n — the sequence filler:** two modes, the free-instrument rule, the pitch menu, the harmony distribution.
 - **1o — crescendo strikes:** the articulation, the ordinary voice, the velocity law for a long sound, what a "count" means when the
   sounds overlap.
 - **The notation of a crescendo** (2a).
+- **The velocity of a crescendo's attack:** the app takes the note-on velocity from the curve's TOP, so a crescendo attacks at its
+  loudest velocity and CC7 shapes it down. That is how every held note in this app has always played, trills included — but it is
+  worth his ear on a ppp start.
+- **Trills and beatings are still on MAIN:** they carry precomputed snippets with explicit channels, so they have not moved onto the
+  curve banks yet. That is the rest of PLAN 0c.7, not a crescendo question.

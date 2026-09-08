@@ -182,6 +182,21 @@ or not at all.**
     last sound ENDS**, and **the rest applies between gestures, never inside one** — two notes sharing a `groupId` (a morph's
     `grp-morph-NN`, a beating's zone, a strike's group) are one continuous sound. `score/public/spacing.js` is the one place it
     lives; anything that places sound asks it rather than counting for itself.
+
+16. **`mutedBy` on a note now has two authors (PLAN 1m, 2026-09-08; RUNNING_LOG §277, §284).** It was the trill's stamp: a note whose
+    start falls under a trill is greyed, silent and kept. A **crescendo made from a note by the C key stamps its own id there** for
+    exactly the same reason — the note is the crescendo's origin, so it must not sound twice, and it must come back untouched when
+    the crescendo is deleted. The stamp is therefore **read live, never trusted blind**: `Composer.mutedByLive(o)` asks whether the
+    object named by `o.mutedBy` is still in the score, so deleting either author un-greys the note by itself. Downstream (the tick,
+    the renderer, the end rule, the IR) a note with a LIVE `mutedBy` is silent and drawn faint at 0.15.
+
+17. **A crescendo dealt by the harmony bar (PLAN 1m step 3)** carries one more block of provenance:
+    `properties.cresc.fromHarmony = { src, from, raw, fold, order, seed, lap }` — the pitch menu value it came from, that source's
+    own name, the sonority's pitch **before** the octave fold, how many octaves it moved, and the deck's order, seed and lap. The
+    performance note repeats the fold in words (*F2 folded +1 8ve*). **The bar's own state is NOT in the file** — the chosen
+    sonority, order and seed live in `localStorage` under `septet.crescBar.v1`, the piano lines bar's convention: a working setting
+    of this browser, not a fact about the piece.
+
 ## 3. Not S1's business (where the piece-specific work goes)
 
 - **Technique → notation class** is registry data + classifier rules

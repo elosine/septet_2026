@@ -1300,9 +1300,12 @@ const PANEL = {
         if (this.result && SEP) this.generate();   // a source chosen before the lists arrived takes effect now
     },
     // the chosen source → { notes (the sonority), from } — null = the model's own set
-    pitchSonority() {
-        const SEP = root.MorphSeptet, S = this.pitchSources, p = this.pitch;
-        if (!SEP || !p || !p.src || p.src === 'model') return null;
+    pitchSonority() { return this.sonorityOf(this.pitch && this.pitch.src, this.pitch && this.pitch.root); },
+    // PLAN 1m step 3: the same reading of a source, for ANY caller — the crescendo bar takes its sonority from this menu rather
+    // than rebuild one (CN-53, his "the same pitch menu"). `src` is a menu value ('kept:…', 'fam:…', 'harm:blasts:…', …).
+    sonorityOf(src, rootStr) {
+        const SEP = root.MorphSeptet, S = this.pitchSources, p = { src: src, root: rootStr != null ? rootStr : (this.pitch && this.pitch.root) };
+        if (!SEP || !p.src || p.src === 'model') return null;
         const rootMidi = SEP.parseNote(p.root, 48);   // a bare pitch class sits around C3, the low pair's home
         const [kind, ...rest] = p.src.split(':'); const key = rest.join(':');
         if (kind === 'fam') { if (rootMidi == null) return null; const n = SEP.familyNotes(key, rootMidi); const fam = SEP.STACKS.concat(SEP.MODES).find(x => x.id === key); return n ? { notes: n, from: (fam ? fam.name : key) + ' from ' + SEP.nm(rootMidi) } : null; }
@@ -1342,6 +1345,26 @@ const PANEL = {
         const out = SEP.deriveParams(params, res.notes, { perPair: +p.perPair === 2 ? 2 : 1, root: rootFund, warnings: (this._pitchWarnings = []) });
         this._pitchInfo = { from: son.from, sonority: res.sorted, taken: res.taken, dropped: res.dropped, notes: res.notes, fundamental: params && params.model === 'M2' ? rootFund : null };
         return out;
+    },
+    // PLAN 1m step 3: the menu's groups as data, so the crescendo bar shows exactly his own list (§282)
+    pitchOptionGroups() {
+        const SEP = root.MorphSeptet; if (!SEP) return [];
+        const S = this.pitchSources || { harm: { strikes: [], blasts: [], chordShapes: [] }, starters: [], kept: {} };
+        const nmList = arr => arr.slice(0, 8).map(SEP.nm).join(' ') + (arr.length > 8 ? ' …' : '');
+        const mk = this.models && this.models.models ? Object.keys(this.models.models) : [];
+        const G = [];
+        const g = (label, items) => { if (items && items.length) G.push({ label, items }); };
+        g('recalled from an ACTUAL', Object.keys(this.recalledSets || {}).map(e => ({ value: 'actual:' + e, text: e + ' · ' + nmList(this.recalledSets[e].notes) })));
+        g('kept (yours)', Object.keys(S.kept).sort().map(n => ({ value: 'kept:' + n, text: n + ' · ' + nmList((S.kept[n].state && S.kept[n].state.notes) || []) })));
+        g('starters', S.starters.map((st, i) => ({ value: 'starter:' + i, text: st.name + ' · ' + nmList(st.notes) })));
+        g("the models' sets", mk.map(id => ({ value: 'model:' + id, text: id + ' · ' + nmList(((this.models.models[id].baseParams || {}).source || {}).midi || []) }))
+            .concat(mk.filter(id => this.models.models[id].tuba && this.models.models[id].tuba.source).map(id => ({ value: 'tuba:' + id, text: 'tuba ' + id + ' · ' + nmList(this.models.models[id].tuba.source.midi || []) }))));
+        g('stacks from the root', SEP.STACKS.map(x => ({ value: 'fam:' + x.id, text: x.name })));
+        g("Messiaen's modes from the root", SEP.MODES.map(x => ({ value: 'fam:' + x.id, text: x.name })));
+        g('strikes', S.harm.strikes.map(e => ({ value: 'harm:strikes:' + e.id, text: e.label + ' · ' + e.name + ' · ' + nmList(e.pitches) })));
+        g('blasts · the tuba piece', S.harm.blasts.map(e => ({ value: 'harm:blasts:' + e.id, text: e.id + ' · ' + e.name + ' · ' + nmList(e.pitches) })));
+        g('chord shapes · 2 pianos 2 percussion', S.harm.chordShapes.map(e => ({ value: 'harm:chordShapes:' + e.id, text: e.id + ' · ' + e.name + ' · ' + nmList(e.pitches) })));
+        return G;
     },
     drawPitch(f, head, note) {
         const SEP = root.MorphSeptet; if (!SEP) return;

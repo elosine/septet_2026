@@ -470,6 +470,8 @@
     <span style="color:#ccc">|</span>
     <button id="trillBtn" title="Add Trill (T): over the selected curve, from the selected note (its pitch, 4 s — the note becomes the attack), or 4 s from the playhead on the active lane. Then click an interval to hear it and take it.">Add Trill</button>
     <span style="color:#ccc">|</span>
+    <button id="crescBtn" title="Crescendo (C): on the selected note(s) — the standard surge, ending 0.17 s before that player&#39;s next sound (5 s when there is none), ppp → fff, secco, at the player&#39;s ordinary voice; the note itself goes grey and comes back if the crescendo is deleted. With nothing selected it takes the next pitch of the harmony bar on the active lane. A card opens on it — the range, the duration, the articulation, the secco tick; ENTER keeps, ESC removes, a click on any crescendo reopens it.">Crescendo</button>
+    <span style="color:#ccc">|</span>
     <button id="beatingBtn" title="Beating (B on a strike note makes one there): the panel — a pattern of up to three pairs, the mirrored rate curves with handles, the crescendo and breath lanes, SPACE plays it; P on a selected beating opens it bound to that one">Beating</button>
     <span style="color:#ccc">|</span>
     <button id="panicBtn" title="Panic: silence everything — an explicit note-off on every key of every channel of every port, the bends centred, CC7 back to 127 (a trapped note)" style="color:#b00;font-weight:bold">&#9632; Panic</button>
@@ -554,6 +556,7 @@
 <script src="/multitempo_panel.js" defer></script>
 <script src="/cresc.js"></script>   <!-- PLAN 1l: the crescendo — the shapes, the end rule, the object (pure) -->
 <script src="/spacing.js"></script>   <!-- PLAN 1l: the one spacing rule — a player is free 150 ms after its last sound ENDS, between gestures (pure) -->
+<script src="/cresc_card.js"></script>   <!-- PLAN 1m step 2: the crescendo card — the four controls on the live crescendo, hear alone / in context, ENTER keeps / ESC removes -->
 <script src="/strike_chords.js"></script>   <!-- PLAN 1k: the strikes drawer's chord engine (pure) -->
 <script src="/strike_drawer.js" defer></script>   <!-- PLAN 1c.2: the STRIKES drawer (docs/STRIKES_TOOL.md) -->
 <script src="/strike_chords_ui.js" defer></script>   <!-- PLAN 1k: chords mode in the strikes drawer (a mixin on it) -->
@@ -1485,6 +1488,7 @@ const Composer = {
         document.getElementById('markerBtn').addEventListener('click', () => this.createMarker());
         document.getElementById('zoneBtn').addEventListener('click', () => this.createZone());
         document.getElementById('trillBtn').addEventListener('click', () => this.createTrill());
+        document.getElementById('crescBtn').addEventListener('click', () => this.createCrescendo());   // PLAN 1m
         document.getElementById('beatingBtn').addEventListener('click', () => { if (typeof BeatingPanel !== 'undefined') BeatingPanel.toggle(); });   // PLAN 1f step 4
         document.getElementById('panicBtn').addEventListener('click', () => this.panicAll());   // §176: the trapped note
         document.getElementById('lwBtn').addEventListener('click', () => this.createLineWedge());
@@ -1843,6 +1847,7 @@ const Composer = {
         this.lanes.forEach((lane, i) => {
             lane.classList.toggle('active', i === idx);
         });
+        if (this.renderCrescBar) this.renderCrescBar();   // PLAN 1m step 3: the harmony bar rides the active lane
     },
 
     // ========== ZOOM ==========
@@ -2181,6 +2186,13 @@ const Composer = {
             if (e.key === '?' && !e.ctrlKey && !(e.target && e.target.matches && e.target.matches('input, textarea, select'))) {
                 e.preventDefault();
                 this.saveStatus.textContent = 'keys: T = a trill on the selected note · B = a BEATING on the selected strike note (its pitch the centre, the nearest lane that can pair the partner, a 6 s bloom 0 → 3 beats/s; the strike untouched) · P = the panel of the selected trill or beating — the beating panel: the pair\'s mirrored rate curves with handles on rails, the crescendo and breath lanes, the harmonies and the keyboard for the pitches (double-click a note, click a pair\'s node; the pair folds the note as one unit to the nearest octave both reach, the arrows say so, a row offers the ways out when no octave serves; the voicing bar moves the sonority), SPACE plays, insert @ playhead puts a pattern of up to three pairs in the score under one META shape (drag = move, box = stretch, DELETE = all of it) · the Beating button = a new pattern · ■ Panic = silence everything (a trapped note) · G surge · O ord · A column · C cuivre · SPACE play · ESC clear · ? this line';
+                return;
+            }
+
+            // C = add a CRESCENDO (PLAN 1m, composer 2026-09-08) — the trill's chassis, one note at a time
+            if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.altKey && !e.metaKey && !e.target.matches('input, textarea, select')) {
+                e.preventDefault();
+                this.createCrescendo();
                 return;
             }
 
@@ -2999,6 +3011,7 @@ const Composer = {
             else if (obj.type === 'curveDot') this.renderCurveDot(obj);
         }
         this.renderCueBar();   // PLAN 1j step 4: the bar on the piano lane (the lines' filter)
+        this.renderCrescBar();   // PLAN 1m step 3: the harmony bar on the active lane (the pitch C deals from)
         this.drawSpanSel();   // a marked span survives the re-render (phase 2)
         // conflict wash is re-applied after every full render (the element cache
         // was just rebuilt, so the marks went with it)
@@ -4418,7 +4431,8 @@ const Composer = {
         hl.style.display = 'none';
         hl.style.pointerEvents = 'none';
 
-        const eaten = wc.sonifyNote != null && typeof this.trillCovers === 'function' && this.trillCovers(wc.layer, wc.startSeconds);   // under a trill: silent, faint
+        const eaten = wc.sonifyNote != null && ((typeof this.trillCovers === 'function' && this.trillCovers(wc.layer, wc.startSeconds))
+            || (typeof this.mutedByLive === 'function' && this.mutedByLive(wc)));   // under a trill, or greyed by a crescendo made from it (PLAN 1m): silent, faint
         const { lineD, filledD } = this.generateWCPath(wc);
         const p = document.createElementNS(svgNS, 'path');
         if (wc.fillMode === 'line' || !filledD) {
@@ -4487,7 +4501,14 @@ const Composer = {
         });
 
         // PLAN 1j step 3: a click (no drag) on a note born of a line reopens the picker card with its values (RUNNING_LOG §232)
+        // PLAN 1m step 2: a click on a CRESCENDO reopens the crescendo card with its own values — the card is the editor as well as the maker (§276)
         hp.addEventListener('click', (e) => {
+            if (this._cueDown && Math.abs(e.clientX - this._cueDown.x) < 4 && Math.abs(e.clientY - this._cueDown.y) < 4
+                && typeof Cresc !== 'undefined' && Cresc.isCresc(wc)) {
+                e.stopPropagation();
+                if (typeof CrescCard !== 'undefined') CrescCard.open(wc, e, { existing: true });
+                return;
+            }
             if (!this.isCueNote(wc) || !this._cueDown) return;
             if (Math.abs(e.clientX - this._cueDown.x) < 4 && Math.abs(e.clientY - this._cueDown.y) < 4) { e.stopPropagation(); this.openCuePicker(wc, e); }
         });
@@ -5646,6 +5667,11 @@ const Composer = {
             for (const obj of targets) {
                 if (!obj) continue;
                 if (obj.type === 'zone' && obj.midiModel === 'trill') { this.clearMutedBy(obj.id); this._trillLaneToRerender = obj.layer; }
+                if (typeof Cresc !== 'undefined' && Cresc.isCresc(obj)) {                       // PLAN 1m: the grey original comes back (§277)
+                    this.clearMutedBy(obj.id); this._trillLaneToRerender = obj.layer;
+                    if (typeof CrescCard !== 'undefined' && CrescCard.wc === obj) CrescCard.close();
+                    this.curveDirty();
+                }
                 if (obj.type === 'zone' && obj.midiModel === 'beating') this.removeBeatingDecor(obj);   // the partner lane's bracket goes with it
                 const idx = this.objects.indexOf(obj);
                 if (idx >= 0) {
@@ -9659,6 +9685,235 @@ const Composer = {
     },
 
     // the eating rule (TRILLS_TOOL §6): a plain note that starts under a sounding trill on its own lane is silent
+    // ================= PLAN 1m step 3 · THE HARMONY BAR (CN-53; RUNNING_LOG §282) =================
+    // A standing strip on the ACTIVE lane that holds one sonority and deals its pitches ONE AT A TIME. Pressing C with nothing
+    // selected takes the next pitch, folds it by octave into that player's sounding range (1k's own rule), and places a crescendo at
+    // the playhead. His picture (§278): "so maybe I'm working with something from the harmony drawer … I choose the harmony, and then
+    // it just goes down the line, one at a time, as I press C". The sonority comes from the MORPH PANEL'S OWN pitch menu — the harmony
+    // banks, his kept sets, the models' sets, the stacks and Messiaen modes from a typed root — reused, not rebuilt (MorphPanel
+    // .pitchOptionGroups / .sonorityOf). The order is 1k's deck: in turn · shuffled to completion then reshuffled · random, seeded so
+    // a sequence repeats. THE BAR IS THE BROWSER'S, NOT THE FILE'S — like the lines bar; it says so in its own tooltip.
+    CRESC_BAR_KEY: 'septet.crescBar.v1',
+    crescBar() {
+        if (this._crescBar) return this._crescBar;
+        const d = { src: '', root: 'F2', order: 'turn', seed: 1, drawn: 0, lap: 0 };
+        try { const s = JSON.parse(localStorage.getItem(this.CRESC_BAR_KEY) || 'null'); if (s && typeof s === 'object') Object.assign(d, s); } catch (e) { }
+        this._crescBar = d;
+        return d;
+    },
+    saveCrescBar() { try { localStorage.setItem(this.CRESC_BAR_KEY, JSON.stringify(this.crescBar())); } catch (e) { } },
+    // the chosen sonority, through the morph panel's own reading of a source
+    crescBarSonority() {
+        const B = this.crescBar();
+        if (!B.src || typeof MorphPanel === 'undefined' || !MorphPanel.sonorityOf) return null;
+        try { return MorphPanel.sonorityOf(B.src, B.root); } catch (e) { return null; }
+    },
+    // fold a sonority pitch into a lane's ordinary voice — 1k's own rule (strike_drawer.js foldInto, now Cresc.foldInto)
+    crescFold(pitch, layer) {
+        const inst = this.trackInstrument(layer); if (!inst) return null;
+        const tech = this.ordinaryTech(layer);
+        const lo = (tech && tech.rangeLow != null) ? tech.rangeLow : inst.rangeLow;
+        const hi = (tech && tech.rangeHigh != null) ? tech.rangeHigh : inst.rangeHigh;
+        return Cresc.foldInto(pitch, lo, hi);
+    },
+    // C with nothing selected: the next pitch of the bar's harmony, at the playhead, on the active lane
+    crescFromHarmonyBar() {
+        const B = this.crescBar(), son = this.crescBarSonority();
+        if (!son || !son.notes || !son.notes.length) return null;
+        let layer = this.activeLane;
+        if (layer == null || layer >= META_LAYER) layer = 0;
+        const at = Math.max(0, this.getTimeAtPlayhead());
+        // draw until one folds into this player: a set can hold a pitch this instrument cannot reach in any octave
+        let st = { order: B.order, seed: B.seed, drawn: B.drawn, lap: B.lap }, tried = 0, got = null;
+        while (tried++ < son.notes.length + 1) {
+            const d = Cresc.deckNext(son.notes, st); if (!d) break;
+            st = d.state;
+            const f = this.crescFold(d.pitch, layer);
+            if (f) { got = { raw: d.pitch, midi: f.pitch, fold: f.fold, left: d.left, lap: d.lap, reshuffled: d.reshuffled }; break; }
+        }
+        // the deck is NOT advanced yet: a refused press must not burn a pitch (§284)
+        if (!got) { this._crescWhy = 'no pitch of this harmony reaches ' + ((TRACKS[layer] || {}).label || 'this player') + ' in any octave'; return null; }
+        const room = this.crescRoomAt(layer, at, null, null);
+        if (!room.free) {
+            this._crescWhy = ((TRACKS[layer] || {}).short || 'this player') + ' is still sounding at ' + at.toFixed(2)
+                + ' s — free at ' + room.freeAt.toFixed(2) + ' s (the 150 ms rest after its last sound ends)';
+            return null;
+        }
+        const tech = this.ordinaryTech(layer) || {};
+        const wc = Cresc.make(at, got.midi, { lane: layer, tech: tech.key, label: (TRACKS[layer] || {}).short },
+            this.laneNotesFor(layer, null), this.crescOpts());
+        if (!wc) { this._crescWhy = 'no room for a crescendo at ' + at.toFixed(2) + ' s — the next note on ' + ((TRACKS[layer] || {}).short || 'this player') + ' is too close'; return null; }
+        Object.assign(B, { drawn: st.drawn, lap: st.lap }); this.saveCrescBar();   // placed: NOW the deck moves on
+        wc.id = 'wc-' + (this.nextId++);
+        wc.properties.cresc.fromHarmony = { src: B.src, from: son.from, raw: got.raw, fold: got.fold, order: B.order, seed: B.seed, lap: got.lap };
+        if (got.fold) wc.performanceNotes += ' · ' + Cresc.nm(got.raw) + ' folded ' + (got.fold > 0 ? '+' : '') + got.fold + ' 8ve';
+        this.objects.push(wc);
+        this.renderCrescBar();
+        return wc;
+    },
+    crescBarRestart() { const B = this.crescBar(); B.drawn = 0; B.lap = 0; this.saveCrescBar(); this.renderCrescBar(); },
+    renderCrescBar() {
+        let layer = this.activeLane; if (layer == null || layer >= META_LAYER) layer = 0;
+        // the strip lives on the ACTIVE lane: it moves with it, so C always shows the player it will write on
+        (this.lanes || []).forEach((el, i) => { if (el && i !== layer) { const old = el.querySelector('#crescBar'); if (old) old.remove(); } });
+        const laneEl = this.lanes && this.lanes[layer]; if (!laneEl || typeof Cresc === 'undefined') return;
+        const B = this.crescBar(), son = this.crescBarSonority();
+        let bar = laneEl.querySelector('#crescBar');
+        if (!bar) {
+            bar = document.createElement('div'); bar.id = 'crescBar';
+            bar.style.cssText = 'position:absolute;right:6px;top:16px;z-index:3;font-size:10px;color:#7a3a12;background:rgba(255,244,236,0.94);border:1px solid #C2410C;border-radius:3px;padding:1px 5px;display:flex;gap:6px;align-items:center;user-select:none;white-space:nowrap;pointer-events:auto';
+            bar.title = "the crescendo harmony (PLAN 1m): C with nothing selected takes the next pitch of this sonority, folds it into this player's range and puts a crescendo at the playhead. This setting is this BROWSER'S, not the piece file's.";
+            ['mousedown', 'click', 'dblclick', 'mouseup', 'wheel'].forEach(ev => bar.addEventListener(ev, e => e.stopPropagation()));
+            laneEl.appendChild(bar);
+        }
+        if (!B.src) {   // no sonority chosen: only the way in
+            bar.innerHTML = '<button data-cb="choose" style="font-size:10px;padding:0 5px;cursor:pointer" title="choose a sonority for C to deal from">harmony for C…</button>';
+            bar.querySelector('[data-cb="choose"]').addEventListener('click', () => this.crescBarChoose());
+            return;
+        }
+        const left = son ? Cresc.deckLeft(son.notes, B) : 0;
+        const names = son ? son.notes.slice(0, 12).map(Cresc.nm).join(' ') + (son.notes.length > 12 ? ' …' : '') : '';
+        bar.innerHTML = '<span style="color:#C2410C">C &#9656;</span>'
+            + '<b title="' + names + '">' + (son ? son.from : 'that sonority is not loaded') + '</b>'
+            + (son ? '<span style="color:#a86">' + son.notes.length + ' notes · ' + (left == null ? 'random' : left + ' left') + (B.lap ? ' · lap ' + (B.lap + 1) : '') + '</span>' : '')
+            + '<select data-cb="order" style="font-size:10px" title="the order C deals in — seeded, so the same seed repeats the same sequence">'
+            + Cresc.ORDERS.map(o => '<option value="' + o[0] + '"' + (B.order === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select>'
+            + '<label style="color:#a86" title="the seed: the same number repeats the same shuffle">seed <input data-cb="seed" type="number" min="1" value="' + (B.seed || 1) + '" style="width:38px;font-size:10px"></label>'
+            + '<button data-cb="restart" style="font-size:10px;padding:0 4px;cursor:pointer" title="start this harmony again from its first pitch">restart</button>'
+            + '<button data-cb="choose" style="font-size:10px;padding:0 4px;cursor:pointer" title="choose another sonority">change…</button>'
+            + '<button data-cb="off" style="font-size:10px;padding:0 4px;cursor:pointer" title="put the bar away — C then needs a selected note">&#10005;</button>';
+        bar.querySelector('[data-cb="order"]').addEventListener('change', e => { B.order = e.target.value; B.drawn = 0; B.lap = 0; this.saveCrescBar(); this.renderCrescBar(); });
+        bar.querySelector('[data-cb="seed"]').addEventListener('change', e => { B.seed = Math.max(1, +e.target.value || 1); B.drawn = 0; B.lap = 0; this.saveCrescBar(); this.renderCrescBar(); });
+        bar.querySelector('[data-cb="restart"]').addEventListener('click', () => this.crescBarRestart());
+        bar.querySelector('[data-cb="choose"]').addEventListener('click', () => this.crescBarChoose());
+        bar.querySelector('[data-cb="off"]').addEventListener('click', () => { B.src = ''; B.drawn = 0; B.lap = 0; this.saveCrescBar(); this.renderCrescBar(); });
+    },
+    // the chooser: HIS menu, from the morph panel, with the root box the stacks and modes need
+    async crescBarChoose() {
+        const B = this.crescBar();
+        if (typeof MorphPanel === 'undefined' || !MorphPanel.pitchOptionGroups) { this.saveStatus.textContent = 'the morph panel is not loaded — open it once so its harmonies are read'; return; }
+        if (!MorphPanel.pitchSources && MorphPanel.loadPitchSources) { this.saveStatus.textContent = 'reading the harmonies…'; try { await MorphPanel.loadPitchSources(); } catch (e) { } }
+        const groups = MorphPanel.pitchOptionGroups();
+        const old = document.getElementById('crescBarPick'); if (old) old.remove();
+        const box = document.createElement('div');
+        box.id = 'crescBarPick';
+        box.style.cssText = 'position:fixed;z-index:9700;left:50%;top:80px;transform:translateX(-50%);width:540px;background:#26262e;color:#ddd;border:1px solid #C2410C;border-radius:6px;padding:8px;font:12px/1.6 system-ui,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.55)';
+        box.innerHTML = '<div style="color:#e8a06a;margin-bottom:5px"><b>the harmony C deals from</b> — the morph panel&#39;s own list</div>'
+            + '<select id="cbSrc" size="12" style="width:100%;background:#1b1b20;color:#ddd;border:1px solid #444;font-size:12px"></select>'
+            + '<div style="display:flex;gap:6px;align-items:center;margin-top:6px">'
+            + '<label style="color:#9a9">root <input id="cbRoot" value="' + (B.root || 'F2') + '" style="width:52px;background:#1b1b20;color:#ddd;border:1px solid #444"></label>'
+            + '<span style="color:#777">(the stacks and the modes are built from it)</span>'
+            + '<button id="cbOk" style="margin-left:auto;background:#C2410C;color:#fff;border:1px solid #e07040;border-radius:3px;padding:2px 9px;cursor:pointer">take it</button>'
+            + '<button id="cbCancel" style="background:#2a2a30;color:#ddd;border:1px solid #555;border-radius:3px;padding:2px 9px;cursor:pointer">cancel</button></div>';
+        document.body.appendChild(box);
+        ['mousedown', 'click', 'dblclick', 'mouseup', 'keydown'].forEach(t => box.addEventListener(t, e => e.stopPropagation()));
+        const sel = box.querySelector('#cbSrc');
+        groups.forEach(g => { const og = document.createElement('optgroup'); og.label = g.label; g.items.forEach(it => { const o = document.createElement('option'); o.value = it.value; o.textContent = it.text; if (it.value === B.src) o.selected = true; og.appendChild(o); }); sel.appendChild(og); });
+        if (!groups.length) sel.innerHTML = '<option value="">no harmonies read yet — open the morph panel once</option>';
+        const take = () => { B.src = sel.value || ''; B.root = box.querySelector('#cbRoot').value || 'F2'; B.drawn = 0; B.lap = 0; this.saveCrescBar(); box.remove(); this.renderCrescBar(); };
+        box.querySelector('#cbOk').addEventListener('click', take);
+        sel.addEventListener('dblclick', take);
+        box.querySelector('#cbCancel').addEventListener('click', () => box.remove());
+        box.addEventListener('keydown', e => { if (e.key === 'Escape') box.remove(); if (e.key === 'Enter') take(); });
+        sel.focus();
+    },
+
+    // ================= PLAN 1m · THE C KEY (CN-48 · CN-49 · CN-53; RUNNING_LOG §276–283) =================
+    // C on a selected note makes a crescendo on that pitch AT ONCE, with everything 1l settled — the standard curve, ppp … fff, the
+    // cliff, secco, the end 0.17 s before that player's next note (else 5 s) — and opens a small card ON it, so every change is heard
+    // (§276, his "a"). The source note is GREYED, never destroyed: it is stamped `mutedBy` exactly as a trill stamps the notes under
+    // it, and it comes back when the crescendo is deleted (§277, his "the same grey original which can come back with delete of cres as
+    // trills"). Several notes selected give one crescendo each under ONE undo (§278). With nothing selected the pitch comes from the
+    // harmony bar (step 3).
+    mutedByLive(o) {
+        if (!o || !o.mutedBy) return false;
+        return this.objects.some(x => x.id === o.mutedBy);   // the stamp dies with the object that made it: deleting a crescendo un-greys its note
+    },
+    crescOpts() {
+        const s = this._crescCard || {};
+        const o = {};
+        if (s.dynLo != null) o.dynLo = s.dynLo;
+        if (s.dynHi != null) o.dynHi = s.dynHi;
+        if (s.secco != null) o.secco = s.secco;
+        if (s.durS != null) o.durS = s.durS;
+        return o;
+    },
+    // EVERYTHING THIS PLAYER STILL SOUNDS on a lane, for the end rule (1l's endFor reads startSeconds). Not just plain notes:
+    // another crescendo sounds, and so do a trill and a beating — a crescendo must stop before any of them, or it plays straight
+    // through. What does NOT count is what is silent: a note greyed by a crescendo or a trill, and the note this crescendo is
+    // being made from (it is greyed a moment later). 1l's spacing module already classes every event, so it does the reading.
+    crescSoundsOn(layer, exceptId) {
+        return this.objects.filter(o => {
+            if (!o || o.layer !== layer || o.id === exceptId) return false;
+            if (o.type === 'zone') return o.midiModel === 'trill' || o.midiModel === 'beating';
+            if (o.type !== 'waveCurve' || o.sonifyNote == null) return false;
+            if (this.mutedByLive(o)) return false;                                        // greyed by a crescendo or a trill: silent
+            if (typeof this.trillCovers === 'function' && this.trillCovers(layer, o.startSeconds)) return false;
+            return true;
+        });
+    },
+    laneNotesFor(layer, exceptId) {
+        const sounds = this.crescSoundsOn(layer, exceptId);
+        if (typeof Spacing === 'undefined') return sounds;
+        return Spacing.eventsOf(sounds, layer).map(e => ({ startSeconds: e.t0, kind: e.kind }));
+    },
+    // IS THIS PLAYER FREE HERE? 1l step 3's one rule (spacing.js): free 150 ms after its last sound ENDS, and never inside one
+    // gesture. The end rule only looks forward, so without this a crescendo could be laid ON TOP of a note already sounding —
+    // which is what happens when C is pressed at a playhead that sits inside something (§284).
+    crescRoomAt(layer, at, exceptId, group) {
+        if (typeof Spacing === 'undefined') return { free: true };
+        const ev = Spacing.eventsOf(this.crescSoundsOn(layer, exceptId), layer);
+        return Spacing.free(at, ev, { restMs: Spacing.DEFAULT_REST_MS, group: group || null, dur: 0 });
+    },
+    createCrescendo() {
+        if (typeof Cresc === 'undefined') { this.saveStatus.textContent = 'the crescendo module is not loaded — hard reload (CTRL+SHIFT+R)'; return null; }
+        const sel = (this.selectedObjects && this.selectedObjects.length) ? this.selectedObjects.slice()
+                  : (this.selectedObject ? [this.selectedObject] : []);
+        const notes = sel.filter(o => o && o.type === 'waveCurve' && o.sonifyNote != null && o.layer < META_LAYER && !(o.properties && o.properties.cresc));
+        const span = this.spanSel;   // a marked span sets the duration (T's own precedence)
+        const made = [], noRoom = [];
+        this.pushUndoState();        // ONE undo step for the whole press
+        if (notes.length) {
+            notes.sort((a, b) => a.startSeconds - b.startSeconds).forEach(n => {
+                const tech = this.ordinaryTech(n.layer) || this.curveTechniqueFor(n) || {};
+                const opts = Object.assign({}, this.crescOpts(), (span && span.layer === n.layer) ? { durS: span.end - span.start } : {});
+                const room = this.crescRoomAt(n.layer, n.startSeconds, n.id, n.groupId);
+                if (!room.free) { noRoom.push(n); return; }                              // this player is still sounding here (§284)
+                const wc = Cresc.make(n.startSeconds, n.sonifyNote, { lane: n.layer, tech: tech.key, label: (TRACKS[n.layer] || {}).short },
+                    this.laneNotesFor(n.layer, n.id).filter(o => o.id !== n.id), opts);
+                if (!wc) { noRoom.push(n); return; }
+                wc.id = 'wc-' + (this.nextId++);
+                n.mutedBy = wc.id;                       // the grey original (§277)
+                this.objects.push(wc);
+                made.push(wc);
+            });
+        } else {
+            this._crescWhy = null;
+            const fromBar = this.crescFromHarmonyBar ? this.crescFromHarmonyBar() : null;   // step 3
+            if (fromBar) made.push(fromBar);
+            else {
+                this.undo();
+                this.saveStatus.textContent = this._crescWhy || 'select a note and press C — or choose a harmony in the bar to take a pitch from';
+                return null;
+            }
+        }
+        if (span) this.clearSpanSel();
+        if (!made.length) {
+            this.undo();
+            this.saveStatus.textContent = noRoom.length ? 'no room for a crescendo there — the next note on that player is too close' : 'nothing to make a crescendo from';
+            return null;
+        }
+        made.forEach(wc => this.renderWaveCurve(wc));
+        notes.forEach(n => this.renderWaveCurve(n));     // they are grey now
+        this.curveDirty(); this.markDirty(); this.scheduleConflictRefresh();
+        this.selectObject(made[made.length - 1]);
+        this.saveStatus.textContent = made.length === 1
+            ? 'crescendo on ' + (TRACKS[made[0].layer] || {}).short + ' ' + Cresc.describe(made[0]) + (noRoom.length ? ' · ' + noRoom.length + ' had no room' : '')
+            : made.length + ' crescendos' + (noRoom.length ? ' · ' + noRoom.length + ' had no room' : '') + ' — CTRL+Z undoes the whole press';
+        if (typeof CrescCard !== 'undefined') CrescCard.open(made[made.length - 1]);
+        return made[made.length - 1];
+    },
+
     trillCovers(layer, t) {
         return this.objects.some(o => o.type === 'zone' && o.midiModel === 'trill' && o.layer === layer && !o.midiMute
             && (!o.trill || o.trill.eat !== false) && t >= o.startTime - TRILL_EAT_PRE_S && t < o.endTime);
@@ -10657,6 +10912,7 @@ const Composer = {
             // ---- not yet scheduled: is it due? ----
             if (!audible || wc.endSeconds <= currentTimeSec) return;             // muted, or already over
             if (this.trillCovers(wc.layer, wc.startSeconds)) return;              // under a trill: eaten (TRILLS_TOOL §6)
+            if (this.mutedByLive(wc)) return;                                    // PLAN 1m: greyed by a crescendo made from it (§277)
             const startsAhead = wc.startSeconds > currentTimeSec && wc.startSeconds <= currentTimeSec + LOOKAHEAD_S;
             const inside = currentTimeSec >= wc.startSeconds;                    // play started inside it, a
             if (!startsAhead && !inside) return;                                 // scrub landed in it, or a
