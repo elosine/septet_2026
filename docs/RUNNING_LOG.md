@@ -7543,3 +7543,19 @@ two dynamics ppp … fff, the DURATION with its default and a typed override, th
 tick on by default), each editing the LIVE object so every change is heard at once; a ♪ to hear it alone and ▶ to hear it in context;
 ENTER keeps, ESC removes, CTRL+Z undoes; it remembers its last settings so the next C starts where the last one ended; it reopens on a
 click of an existing crescendo, so the card is also how one is edited later; and the checks with real events and the decoded MIDI.
+
+## §281. PLAN 1m — step 2 (the card) agreed with the ordinary voice confirmed instrument by instrument; step 3, the harmony bar, put to him
+
+Composer, 2026-09-08: *"confirm that articulation ordinary voice includes ordinario uvi and senza vibrato velocity, kontakt otherwise 2
+good"*. **Confirmed from the recipe, and he had it right:** the flute's ordinary voice is **Ordinario** (its own UVI part, ch 12); the
+bass clarinet's is **Senza Vibrato Velocity #13** (CC0 12); each string's is **Senza Vibrato Velocity #6** (CC0 5); the piano's is the
+Steinway. It is the same `ordinary` field PLAN 1g item 4 set on 2026-09-06, so a crescendo, a new trill and the balance sweep all take
+one voice per player. Step 2 written into PLAN 1m with that named in it.
+
+**Step 3 put to him, goal and sub-steps together:** the standing harmony bar (CN-53) — a small strip, the piano lane's lines bar its
+model, holding the SONORITY (the morph panel's own pull-down: the harmony banks, his kept sets, the models' sets, stacks and Messiaen
+modes from a typed root, the notes spelled), the ORDER (in turn · shuffled to completion then reshuffled · random, seeded — 1k's deck),
+what is LEFT in the deck, and the two buttons *change harmony* and *restart this harmony*; a C with nothing selected takes the next pitch
+from it, folds it by octave into the active player's range (1k's rule), and places the crescendo at the playhead on the active lane; the
+bar is the browser's, not the file's, and it says so; the checks — the deck exhausts and reshuffles, the seed repeats, a folded pitch is
+marked, and the bar disappears when no sonority is chosen.

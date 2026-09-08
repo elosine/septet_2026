@@ -1177,8 +1177,24 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        over it;
      - check on a copy with real key events: the crescendo on the right pitch and lane; the source greyed and restored by deleting it;
        several at once; one undo for the whole press; and the decoded MIDI showing it on a CURVE channel (D11).
-  2. **The card** (his four controls — the dynamic range, the duration, the articulation, the secco tick — editing the live crescendo;
-     ENTER · ESC; it remembers its last settings) — *to be laid out when we discuss it.*
+  2. **The card** (the dynamic range, the duration, the articulation, the secco tick, editing the live crescendo) — `todo — agreed
+     2026-09-08 (RUNNING_LOG §281)`. *Result when done:* a small card opens on the new crescendo holding his four controls; every change
+     is made to the REAL crescendo, so he hears it as he turns it; ENTER keeps it, ESC removes it; it remembers its last settings so the
+     next C starts where the last ended; and clicking an existing crescendo reopens the same card, which is how one is edited later. The
+     to-dos:
+     - the card at the crescendo, draggable, in 1j's picker manner;
+     - **the dynamic range**: two dynamics, a bottom and a top, ppp … fff (NAMING §2.9), defaulting to the full span;
+     - **the duration**: what the rule gave it (to the next note, or the fallback), typed or dragged to another; changing it moves the end;
+     - **the articulation**: that player's techniques, defaulting to its ORDINARY VOICE — confirmed with him 2026-09-08: **Ordinario (UVI)
+       for the flute, Senza Vibrato Velocity for the strings (#6, CC0 5) and the bass clarinet (#13, CC0 12)**, the Steinway for the piano
+       — the same `ordinary` field 1g item 4 set, so a crescendo, a new trill and the balance sweep all use one voice per player;
+     - **the secco tick**, on by default (CN-49);
+     - **♪** hears it alone, **▶** hears it in context (a second before to a second after);
+     - **ENTER** keeps · **ESC** removes · **CTRL+Z** undoes — 1j's picker's keys;
+     - **it remembers** its last settings between crescendos, so a passage keeps one character without re-setting it;
+     - **clicking an existing crescendo reopens it** with its own values: the card is the editor as well as the maker;
+     - check with real events and the decoded MIDI: each control changes the sound; the memory carries to the next C; reopening shows
+       what was set.
   3. **The harmony bar** (the standing pitch source: a sonority, an order, what is left in the deck, change and restart) — *to be laid
      out when we discuss it.*
   4. **Verify and document** (the checks, the walk on a copy, the docs; then his first crescendos in the piece) — *to be laid out when we
