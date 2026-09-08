@@ -95,8 +95,9 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
     or keyswitched note stays on MAIN, a secco-cut channel is left to rest, and `resetCC7All` sweeps the curve channels too. Proved by
     the decoded MIDI: violin 1 cuts its crescendo on ch 2 and re-pins the next note on ch 3. **The FLUTE is decided too** (2026-09-08, §274): three Ordinario
     copies on `Fluteb` channels 4 · 5 · 6 — on UVI a channel IS a technique, so a curve channel must be a curve COPY, and `ord` is the only
-    flute technique that swells; the recipe's curve entries may name their own port, and the router follows. **His one piece of rack work,
-    a prerequisite: load Flute Ordinario three times into the `Fluteb` UVI instance on MIDI channels 4, 5, 6.** **What remains in 0c.7:**
+    flute technique that swells; the recipe's curve entries may name their own port, and the router follows. **DONE in the rack (§275):**
+    he loaded the three Flute Ordinario copies on `Fluteb` 4 · 5 · 6, and the UVI text path corrected them — gain 0 → +6 dB to match
+    every other flute part, the DigitalEq and Maximizer bypassed, the Grain Hall convolver left on. **All seven players protected.** **What remains in 0c.7:**
     (a) the TRILLS and BEATINGS, whose zones carry
     precomputed snippets with explicit channels and so are still on MAIN; (c) the prelude's other controllers (CC1; CC4 + channel
     pressure) and `tech.ks` for the flute's KS presets. *The original text:* every Kontakt instrument gets

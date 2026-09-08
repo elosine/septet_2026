@@ -7655,3 +7655,56 @@ Maximizer, so the rack needs nothing for the crescendos.)*
 
 **Written:** `docs/CRESCENDO.md` §6 (the key, the card, the bar, the measurements) and §7; `docs/NAMING.md` 16 (`mutedBy`'s two authors,
 read live) and 17 (`fromHarmony`, and the bar living in the browser); PLAN 1m steps 1–3 `done`, step 4 waiting on his ear; PLANNER NOW.
+
+## §285. PLAN 1n opened — his own trill texture at 135.78 s MEASURED before anything is put to him
+
+Composer, 2026-09-08: *"whats left 1n and what else then good to start 1n plan"*. What is left after 1n: **1o** (crescendo strikes),
+and three tails — 1k step 7 (the piano's remainder in a chord strike, CN-52), 1i item 2 (the harmonics' CC21 shift), 0c.7 (a) (trills
+and beatings still on MAIN) — plus five things standing built and untried, waiting on his ear. Written back to him; 0c.7's stale line
+calling the flute copies a prerequisite corrected in the same pass (they are done, §275).
+
+**Phase 1 begins with the data, because 1n is about a texture he already made by hand.** The section he named — *"see section beginning
+at 135.72 with trills"* — is `grp-strike-40-1357` in `scores/piano-harmonics-test.json`: **46 onsets over 13.0 s** on all seven lanes,
+accelerating from an 800 ms gap to 130 ms (median 229 ms), with **44 trills** laid over it. Measured, every trill against the run:
+
+| what was measured | the result |
+|---|---|
+| trills starting exactly at an onset of **another** instrument | **44 / 44** (within 14 ms; median 3 ms) |
+| trills starting at an onset of their **own** instrument | **0 / 44** |
+| trills ending before their own instrument's next onset | **44 / 44** — never an overrun |
+| that end gap | min **110 ms** · median **171 ms** · max 699 ms |
+| the same instrument twice in a row | **0 / 43** |
+| trill length | 1.33 s at the head of the run → **0.15 s** at its tail |
+
+**The end gap is 1l's own number.** The median 171 ms is `endGapS` = 0.17 s, which PLAN 1l settled from the trills independently
+(§255). His hand and the rule agree; nothing has to be reconciled.
+
+**His stated selection rule does NOT describe what he did.** CN-48 says *"I was choosing the empty instrument with the shortest
+available space before its next onset, but above a min say something like 2 seconds"*. Ranking, at each onset, every instrument not
+striking it by the space it has before its own next onset:
+
+| his choice ranked | count |
+|---|---|
+| the **shortest** space | **0 / 40** |
+| the second shortest | 4 / 40 |
+| third | 9 · fourth | 10 · fifth | 12 · sixth | 5 |
+
+He consistently took the **third to fifth** roomiest, never the tightest — and he flagged this himself: *"but we should refine this
+choice"*.
+
+**What the notes show instead is a HAND-OVER.** Asking which onset the trilling instrument itself strikes:
+
+| the trill's instrument strikes onset | count |
+|---|---|
+| **k − 1 (the onset just before)** | **26 / 44** |
+| k − 2 · k − 3 | 4 · 1 |
+| k + 2 · k + 3 · k + 4 | 4 · 8 · 5 |
+
+So the usual gesture is: **a player strikes, and on the very next onset it begins a trill**, running until 0.17 s before its own next
+strike. It cannot be k or k + 1 by construction (it would be busy). The room it gets, counted in onsets, is min 2, **median 5**, max
+10 — which is why the trills shorten as the run accelerates: five onsets of room is less and less time. **The length is derived, never
+chosen.**
+
+**Put to him as topic 1:** is the hand-over what the machine should do — the player who just struck takes the next onset's long
+sound — or was k − 1 an accident of working left to right by hand, with the real intention the "roomiest free instrument" his ranking
+actually shows? Only he can say which of the two he was hearing.
