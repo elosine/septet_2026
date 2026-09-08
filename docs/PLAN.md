@@ -1089,6 +1089,41 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        title on every new control;
      - **then his ear:** the test file opened, soloed, listened to; the standard named; the verdict written into PLAN 1l and
        `docs/CRESCENDO.md`; then 1m (the C key) planned.
+
+- **1m — The C key: a crescendo on a selected note, the trill's chassis (CN-48 build 1)** — `todo — to be planned when its turn comes,
+  after 1l is built (the order is his, §252: 1l → 1m → 1n → 1o)` *(composer, 2026-09-08, CN-48: "strike, select note, press something
+  like c a crescendo appears on that pitch -> .15 before next note, use standard curve … we'll have a default dynamic range ppp-fff and I
+  can reassign individually, also can assign a manual duration, so maybe: c key, little panel, default dynamic range and duration (til
+  next note or if no note a standard duration), and articulation, but I can change any of them there in the mini panel, then go to
+  insert")*. *Why:* the crescendo has to be placeable by hand, one note at a time, the way T places a trill. **What 1l settles for it:**
+  the standard curve he names, the object, the 0.17 s end and the 5 s fallback, the spacing rule. **What is left to plan here:** the
+  mini panel's shape and its keys, what the C key does with a multi-selection, and whether the panel remembers its last settings.
+  *To be laid out when we discuss it.*
+
+- **1n — The sequence filler: the gaps of a strike sequence filled with crescendos and trills (CN-48 build 1.5)** — `todo — to be
+  planned after 1m` *(composer, 2026-09-08, CN-48: "take a sequence of strikes and fill in the gaps with a crescendo on an available
+  instrument, see section beginning at 135.72 with trills … at least 2 modes for now, 1 will be like the trills 135 each onset has a
+  trill/crescendo start with in in an available instrument, I was choosing the empty instrument with the shortest available space before
+  its next onset, but above a min say something like 2 seconds, but we should refine this choice; mode 2 the crescendo/trill ends with a
+  strike, precisely the end of the cres is at the end of the strike duration; also to figure out pitches, maybe a menu, this/last pitch
+  of the corresponding strike or next pitch of strike; also any of the harmonies from the harmony drawer, distributed across the sequence
+  of trills/cres and same options of the strikes, reshuffle, repeat in order, etc these will include all the ones we identified in the
+  updated morph panel as well")*. *Why:* the texture of section 1 from 135.72 s was made this way by hand with trills; the machine should
+  do it for both trills and crescendos. **What 1l settles for it:** the crescendo object and the spacing rule with its gesture clause —
+  "an available instrument" becomes a question the shared helper answers. **What is left to plan here:** the two modes, the refined rule
+  for choosing the free instrument (his "shortest available space before its next onset, above a minimum"), the pitch menu, and the
+  harmony distribution with the strikes' and the morph panel's own options. *To be laid out when we discuss it.*
+
+- **1o — Crescendo strikes: the chords and strikes of 1k sounding as crescendos (CN-48 build 2)** — `todo — to be planned after 1n`
+  *(composer, 2026-09-08, CN-48: "like the recent strike chords/and-or strikes but instead of single attack, they will be crescendos,
+  help me walk thru what needs to be changed for the new articulation, change default instrument, ordinaro or senza vibrato velocity,
+  the spacing/overlap rules need to adjust next articulation for any one instrument will be 150ms after end of crescendo; others?")*.
+  *Why:* the chords of PLAN 1k are attacks; the same rhythms and the same dealing with crescendos instead give the section its other
+  face. **What 1l settles for it:** the curve, the dynamic range and the spacing rule (his 150 ms after the end is 1l step 3, already
+  decided and shared). **What is left to plan here:** the articulation and the ordinary voice per player, the velocity law for a
+  crescendo (1g's held-note law rather than the attack's), what a "count" means when the sounds overlap, and how the drawer shows a
+  sequence of long sounds rather than points. *To be laid out when we discuss it.*
+
 ## 2. Notate — `deferred` until the first real page exists
 
 - **2a — Engine adaptation** — the 0g list. Start with the page the opening needs.
