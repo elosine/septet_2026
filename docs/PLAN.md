@@ -832,7 +832,24 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        time); a key click sets and sounds (the decoded MIDI on the piano port at the voice's channel); apply gives the note its fields;
        ESC leaves the line untouched; a made note reopens with its values; node checks for the pure parts (the ensemble at t, the
        dynamic → height, the presets).
-  4. **The bar on the piano lane** (the kind checkboxes, the player ticks, clear lines) — *to be laid out when we discuss it.*
+  4. **The bar on the piano lane** (the kind checkboxes, the player checkboxes, clear lines) — `todo — agreed 2026-09-08 (RUNNING_LOG
+     §227)`. *Result when done:* a small strip sits at the left end of the piano lane whenever the lane holds lines: three kind ticks
+     (onsets · peaks · ends), six player ticks (Fl · BCl · Vn1 · Vn2 · Va · Vc, in score order and colour) and *clear lines*; **a line
+     is shown when its kind is ticked AND its player is ticked** (his example: peaks and Fl alone → only the flute's peaks); a hidden
+     line is neither drawn nor clickable; notes made from lines are always shown; the setting is the browser's, survives a reload
+     and never enters the file; clear lines removes the lane's lines still without a pitch and keeps the made notes, undo restores.
+     The to-dos:
+     - the strip: at the left end of the piano lane, fixed while the score scrolls, shown when the lane has at least one line and
+       hidden otherwise; hovering a tick shows its count ("peaks 54");
+     - the kind ticks onsets · peaks · ends and the player ticks Fl · BCl · Vn1 · Vn2 · Va · Vc, all on at birth; the rule kind AND player;
+     - the filter: a hidden line is neither drawn nor given a hit target (no click, no marquee); a change re-renders the piano lane
+       only; a hidden line still moves with the morph's shape (it is still an object);
+     - the setting: the browser's (localStorage), kept across reloads; never in the file;
+     - clear lines: removes every line on the lane still without a pitch, keeps the made notes, says how many went; `pushUndoState`
+       first;
+     - check with real events on a copy: each tick on and off and the drawn count following (peaks + Fl alone → the flute's peaks
+       only); a hidden line takes no click; clear removes only the pitchless lines; a reload keeps the ticks; a node check for the
+       filter itself.
   5. **Verify and document** (the checks, the walk on a copy with real events, the decoded MIDI, the docs; then his first lines in the
      piece) — *to be laid out when we discuss it.*
 

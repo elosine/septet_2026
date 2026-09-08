@@ -884,3 +884,11 @@ lines exist for all three kinds and are SHOWN by kind — checkboxes onsets · p
 morph's shape — a view filter, held for topic 3; (3) the picker's keyboard shows the ENSEMBLE at the line's moment: each player's
 sounding pitch (the key plus the bend at that instant) in the player's colour with its name — the piano chooses against what is
 sounding. For the all-purpose tool: any pitch picker should show the context (what sounds at t) on its keyboard.
+
+### 2026-09-08 — CN-43, step 4: the instrument checkboxes, the kind and the player combined
+
+> *"can we add instrument checkboxes? so if I check only peaks and fl I'll only see flute peaks"* *(2026-09-08; RUNNING_LOG §227)*
+
+*AI reading (not the composer's words):* the player ticks were in step 4's picture; his example fixes the RULE — a line is shown when
+its kind is ticked AND its player is ticked — written into the step. For the all-purpose tool: a derived event grid is filtered by
+kind × source, and the filter is a view, never the data.

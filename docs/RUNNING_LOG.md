@@ -6428,3 +6428,13 @@ him:** a small strip at the left end of the piano lane, shown while the lane hol
 player ticks in score order and colour, *clear lines*; an unticked kind or player hides its lines (not drawn, no hit target), made
 notes always shown, the setting the browser's (localStorage) never the file's; clear lines removes the lane's lines still without a
 pitch and keeps the made notes, undo restores; the checks with real events (each tick, the counts, clear, a reload keeping the ticks).
+
+## §227. CN-43, phase 3 — step 4 agreed with his one addition made explicit ("can we add instrument checkboxes? so if I check only peaks and fl I'll only see flute peaks"): the rule kind AND player; written into PLAN 1j; step 5 put to him
+
+Composer, 2026-09-08 (verbatim in MORPH_NOTES §3). The player ticks were in step 4's picture; his example fixes the rule — a line is
+shown when its kind is ticked AND its player is ticked — now in the step's result and to-dos. Written, committed. **Step 5 put to
+him, goal and sub-steps together:** the whole of 1j walked end to end on a copy with real events and the decoded MIDI; one node
+check script; the documents (NAMING §2.13 the line's fields, MORPH_NOTES §1, the buttons' titles, PLAN 1j's statuses, the journal,
+PLANNER); then his first lines in the piece (a hard reload, his test score, [Morph], lines → piano at 183 s, the ticks, a line
+clicked, a pitch · a voice · a dynamic · a duration, apply, heard), his verdicts to MORPH_NOTES §3 and NITS; the notation of a
+cue-born note at 2a. After step 5: the whole item shown once, "is that it?", and what sits outside the plan.
