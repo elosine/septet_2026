@@ -885,7 +885,26 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   either *as it was* or *as settings* (CN-47, §239–240). The notation at 2a.
   *The top line, confirmed ("good", §240):*
   1. **The chord engine** (the chord list with its order and advance, the selection, the player range, the dealer by register under the
-     200 ms rule with the lowering) — *to be laid out when we discuss it.*
+     200 ms rule with the lowering) — `todo — agreed 2026-09-08 (RUNNING_LOG §241)`. *Result when done:* a pure module that turns the
+     settings into a dealt sequence — given the onsets the rhythm engine already makes, the chord list with its order and advance, the
+     selection mode, the player range, the players taking part, the 200 ms rest and a seed, it returns for every onset the chord in
+     play, the notes chosen, the players who take them folded into their ranges, and any flag; the same seed always gives the same
+     sequence. Nothing on screen, nothing sounding yet. The to-dos:
+     - the chord list resolved: entries from the harmony banks (blasts · chord shapes · the strikes bank) or typed pitches, each a
+       named set of MIDI notes;
+     - the order: in turn, or shuffled to completion and reshuffled, seeded (the drawer's own way with pitches);
+     - the advance: exhaust the chord (every note sounded once) · stay on it n times, n drawn from a range · a fresh chord every onset;
+     - the selection per onset: the drawer's voicing vocabulary over what the chord has left — as played · shuffle · high cluster · low
+       cluster · spread — taking as many notes as that onset's count;
+     - the count per onset: drawn from the range, seeded; lowered when too few players are free; flagged when even the minimum cannot
+       be met (§237);
+     - the dealer: at each onset the players whose last attack is at least the re-attack time back; the notes to them BY REGISTER, each
+       folded by octave into that player's measured range (the drawer's `realize` / `foldInto`), the folds counted; round robin and free
+       as the tie-breakers;
+     - the result: per onset the time, the chord, the notes, the players, whether it was lowered or flagged; a summary (counts, flags,
+       folds) and the settings echoed back for the save of step 5;
+     - check in node: determinism from the seed; the 200 ms rule never broken; exhaust covers every note exactly once; each advance
+       mode; the lowering; the range folds; a run too fast to satisfy, so the flag path is exercised.
   2. **Chords mode in the drawer** (the mode switch, the players column, the chords block, the keyboard, the rhythm strip with a dot per
      player; generate and hear) — *to be laid out when we discuss it.*
   3. **The manual onset** (the card at the onset: its count, its chord or typed notes, back to automatic; the collision flagged) —

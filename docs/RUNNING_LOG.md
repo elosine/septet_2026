@@ -6689,3 +6689,20 @@ card at the onset; the span and the partial insert; the save carrying the result
 six lines — 1 the chord engine · 2 chords mode in the drawer · 3 the manual onset · 4 the span and the partial insert · 5 saving ·
 6 verify and document. **PLAN 1k opened** with the why, his words, the decisions and the six steps, committed — a cleared chat loses
 nothing. **Phase 3 begins**, his format of §224: each step's goal and sub-steps in one turn.
+
+## §241. PLAN 1k phase 3 — step 1 (the chord engine) agreed and written with its sub-steps; step 2, chords mode in the drawer, put to him
+
+Composer, 2026-09-08: *"good"* to step 1 as put — the pure module from the settings to a dealt sequence (the chord list resolved from
+the banks or typed; the order in turn or shuffled to completion, seeded; the advance exhaust · n times · a fresh chord every onset;
+the selection the drawer's voicing vocabulary over what the chord has left; the count drawn from the range, lowered when too few are
+free, flagged at the minimum; the dealer by register under the re-attack rule with the octave folds counted; the result per onset with
+its flags and the settings echoed for the save; node checks including a run too fast to satisfy). Written into PLAN 1k, committed.
+
+**Step 2 put to him, goal and sub-steps together:** the mode switch *notes* / *chords* at the top of the drawer (notes untouched); the
+orchestration column become THE PLAYERS (a tick each, the count range, the re-attack box at 200, the dealer menu, the seed with the
+drawer's chips); the CHORDS block (the list built from the harmony banners or typed, each row named with its notes, removable and
+reorderable; the order, the advance with its range, the selection); the keyboard showing the chord in play with the current onset's
+part ringed and the players' ranges as columns; the rhythm strip keeping every dial, shape, jitter and the run, now drawing a dot per
+player at each onset in the player's colour, a lowered onset marked and a flagged one ✗, the hover naming the chord and the players;
+Generate and Hear through the drawer's own audition path (MorphEmit's routing, 1g's remap, panic the one stop); the readout in the
+drawer's line (the counts, the flags, the folds).
