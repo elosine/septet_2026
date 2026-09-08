@@ -673,6 +673,7 @@ const server = http.createServer((req, res) => {
                         seed: body.seed, label: body.label, tags: body.tags,
                         shape: body.shape, shapePreset: body.shapePreset,
                         params: body.params,
+                        pairs: body.pairs, pitch: body.pitch,   // the septet's cast and pitch source, recalled with the actual (§213)
                     });
                     if (built.error) return R.status(400).json({ success: false, error: built.error });
                     MB.writeActual(built);

@@ -147,5 +147,16 @@ ok(cD.pairs.every(p => !p.silent) && cD.params.target.midi.join() === '48,48,62,
 const starters = JSON.parse(fs.readFileSync(path.join(ROOT, 'bank/morph_pitches.json'), 'utf8')).sets;
 ok(starters.length === 5 && starters.every(s => Array.isArray(s.notes) && s.notes.length >= 3 && s.take), 'five starters in bank/morph_pitches.json (CN-38): ' + starters.map(s => s.name.split(' ·')[0]).join(' '));
 
+// ---- (7) the actual's save path renders with the palette (§213) ----
+const MB = require(path.join(ROOT, 'tools/model_bank.js'));
+const built = MB.buildActual('BLOOM', { params: c0.params, pairs: SEP.DEFAULT_PAIRS.map(p => ({ a: p.a, b: p.b, on: true })), pitch: { src: 'model', root: 'F2', take: 'byRegister' }, label: 'check' });
+ok(built && !built.error, 'buildActual renders a septet cast' + (built && built.error ? ' — ' + built.error : ''));
+ok(built && built.actual && built.actual.notes.every(n => n.technique === c0.palette[n.voice].technique), 'the stored notes are at each player\'s ordinary voice (not the tuba\'s ord)');
+ok(built && built.actual && built.actual.objects.filter(o => o.morphBend).every(o => o.technique === c0.palette.find(p => p.lane === o.layer).technique), 'the stored objects carry the septet techniques on their lanes');
+ok(built && built.actual && built.actual.provenance.pairs && built.actual.provenance.pitch && built.actual.provenance.palette && built.actual.provenance.palette.length === 6 && built.actual.provenance.engineConstants.perVoice, 'the provenance keeps the cast, the pitch state, the palette and per-voice constants');
+const ropts = MB.renderOptsFor(c0.params);
+ok(ropts.palette && ropts.maxVoices === 6 && ropts.palette[4].technique === 'ord' && ropts.palette[4].label === 'Fl', 'renderOptsFor builds the palette from the cast\'s lanes (the flute at ord)');
+ok(MB.renderOptsFor({ source: { midi: [41, 41] } }).palette === undefined, 'no cast → the tuba\'s render options, unchanged');
+
 console.log(fails ? ('\n' + fails + ' FAILED') : '\nALL PASS');
 process.exit(fails ? 1 : 0);

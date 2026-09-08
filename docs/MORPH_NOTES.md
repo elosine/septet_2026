@@ -798,6 +798,18 @@ IRCAM harmonics' partials per string) is palette data of the same kind as the be
   must name itself:** the default label now carries the number, the length and the pitch source. For the tool: every take, actual or
   kept set gets a default name that reads back in a list a day later — number · what · from what — before the composer's words.
 
+### 2026-09-07, late — "is there a way to recall an actual to modify it?"
+
+> *"is there a way to recall an actual to modify it?"* *(2026-09-07, late; typed)*
+
+**AI reading (not the composer's words):** the tuba's ACTUAL was a frozen render by design (placed verbatim); the septet asks it to be
+a STARTING POINT as well — recalled into the model with its dials, seed, cast and pitches, edited, saved as a new one. Building it
+uncovered that the server's save path rendered without the septet palette (the panel and the server had two renders); the fix makes
+the actual's provenance carry everything the panel knew (the cast, the pitch source, the palette) and the server render with it. For
+the all-purpose tool: ONE render path shared by the panel and the store, the provenance complete enough to recall, and "recall" a
+first-class verb beside hear and place. RUNNING_LOG §213.
+
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

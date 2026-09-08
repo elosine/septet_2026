@@ -6126,3 +6126,42 @@ what repeated was the LABEL's default, the model's name and the length. Now the 
 source>` — e.g. "SPECTRAL-03 · 40 s · cs-015 · M3 P4" — the number guessed from the list (the same as the file's unless a gap was left
 by a deletion), so the ACTUALs list reads back; his words still replace it. Not walked in the pane (a prompt's default string; the
 list's fields as the server sends them).
+
+## §213. "is there a way to recall an actual to modify it?" — no, so built: recall → MODELS; and on the way a defect found and fixed: the server rendered every ACTUAL WITHOUT the septet palette (the tuba's techniques and constants) — the save path fixed, his seven actuals rebuilt from their provenance, the validator taught the cast's lanes
+
+Composer, 2026-09-07 late: *"is there a way to recall an actual to modify it?"* (verbatim in MORPH_NOTES §3).
+
+**The answer as it stood:** no — an ACTUAL is a frozen render (the tuba's rule: placed verbatim, never re-rendered); it keeps its
+provenance (the model, the recipe settings, the seed, the resolved params, the shape preset), so a recall is derivable.
+
+**Found on the way (a defect of §204, mine):** `Save as ACTUAL` renders on the SERVER (`tools/model_bank.js buildActual`, "the render is
+reproducible from what we store") — with the tuba's `RENDER_OPTS` and no palette. So every actual he saved tonight carried the tuba's
+techniques (`ord`, even `mute_ord` where a pitch fell outside the tuba's range), the tuba's breath table and bend reach; placed in the
+score, the strings and the bass clarinet would have played on channel 1 with no switch. None was placed yet (placements 0 on all
+seven). **Fixed:** `renderOptsFor(params)` in model_bank — a cast (`params.lanes`) → the palette per voice from `morph_septet.js`
+(the recipe by vm, TRACKS from composer.html, beating_calc), the same the panel hands the engine; used by the save, its integrity
+re-render and the validator; the provenance now keeps `palette` (each voice's player, voice and reach), `pairs` (the cast) and
+`pitch` (the pitch source's state) — the server route passes them, the panel sends them. **`--rebuild`:** every stored actual
+re-rendered from its `resolvedParams` with its cast's palette — entity, label, provenance and placements kept; objects, notes, span,
+parts, register and the palette summary rewritten; deterministic — run on his seven: ACT-BLOOM-01 · SPACING-01/02/03 · SPECTRAL-01/02/03,
+each `ord` (SPACING-01 `ord,mute_ord`) → `senza_vel,ord` (the strings and the bass clarinet at senza vibrato, the flute at ord).
+**The validator** derived "objects from notes" on lanes 0 … n−1 and so failed a cast; now on the cast's lanes; and three
+references in the model store to actuals whose files are gone (ACT-BALANCE-01, ACT-BLOOM-02, ACT-CONVERGE-01 — deleted by hand, or
+saved and removed) dropped → `--validate` VALID (with warnings). The model store rev 17.
+
+**Built — the recall:** a third button on every ACTUALs card, **recall → MODELS**: the actual's model, its recipe settings, its seed,
+its shape preset, its CAST (the stored pairs; for the seven of tonight, saved before the cast was stored, the pairs read from its
+lanes in pitch order) and its PITCHES — the actual's own set becomes the pitch source ("recalled from an ACTUAL" in the pull-down:
+the distinct notes of its source, or a CONVERGE's unisons; doubled = one per pair, six distinct = two per pair; SPECTRAL's root =
+its stored fundamental), exact by construction, so the poll and a nudged dial keep them; the dials as nudged that day render once
+from the stored params (`_recallParams`), then the fields are live; the status says what came back; Save as ACTUAL then files a new
+number. The placed actual's META shape now on the septet's META layer (7; the tuba's 10 was there too).
+
+**Verified:** 64 checks (+6: buildActual renders with the palette, the stored notes and objects at each player's voice, the provenance
+keeps the cast, the pitch and the palette, renderOptsFor with and without a cast). On a copy with real events: the seven cards with
+the recall button; recall ACT-SPECTRAL-01 by a real click → MODELS · SPECTRAL · seed 17 · span 40, duration 100 as nudged · the cast
+Vc+BCl · Vn1+Va · Fl+Vn2 read from its lanes · the pitch source "ACT-SPECTRAL-01 as stored — A♯2 F3 A3 C4 D4 F4" · the fundamental
+F2 · 78 notes = the stored 78, unchanged after two polls and an explicit Generate; hear → the notes at senza_vel / ord, CC0 5 on the
+cello and 12 on the bass clarinet; place → 78 notes on the cast's lanes with the septet techniques, the META shape on layer 7, the
+marker. A first version of the recall was caught by the test: it left the pitch source on "the model's own set", and the next poll's
+Generate crept the stock set back in (80 notes) — hence the actual's own set as the source.

@@ -398,9 +398,10 @@ const PANEL = {
             this.modelsRev, this.activePreset,
             this.mode === 'models' ? this.settingsFor(this.activeModel) : 0,
             this.mode === 'models' ? this.seedOverride[this.activeModel] : 0]);
-        const merged = (this._fieldStamp === stamp)
-            ? this.readFields(p)
-            : JSON.parse(JSON.stringify(p));
+        // a RECALLED actual renders once from its stored params (the dials as nudged that day), then the fields are live again (§213)
+        const merged = this._recallParams ? this._recallParams
+            : (this._fieldStamp === stamp) ? this.readFields(p) : JSON.parse(JSON.stringify(p));
+        this._recallParams = null;
         this._fieldStamp = stamp;
         // exactly what was rendered, so Save as ACTUAL can store what was HEARD — the septet's CAST included: the pairs' players,
         // the pitches folded per pair, the lanes and the palette (morph_septet.js; RUNNING_LOG §203)
@@ -521,7 +522,7 @@ const PANEL = {
                     ((a.tags || []).length ? '<br>tags: ' + a.tags.join(', ') : '') +
                     '<br>' + a.placements + ' placement(s)</div>';
                 const row2 = document.createElement('div');
-                row2.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:4px';
+                row2.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:4px';
                 const bh = document.createElement('button');
                 bh.textContent = 'hear'; bh.style.fontSize = '10px';
                 bh.addEventListener('click', () => this.hearActual(a.entity));
@@ -536,7 +537,13 @@ const PANEL = {
                 bi.textContent = 'place @ cursor'; bi.style.fontSize = '10px';
                 bi.title = 'place this ACTUAL at the playhead — logs the placement back to it';
                 bi.addEventListener('click', () => this.insertActual(a.entity));
-                row2.appendChild(bh); row2.appendChild(bi);
+                // RECALL (composer, 2026-09-07 late: "is there a way to recall an actual to modify it?"): the model, its dials, the seed, the
+                // shape preset, the cast and the pitch source back into MODELS as they were — edit, then Save as ACTUAL files a new number
+                const brc = document.createElement('button');
+                brc.textContent = 'recall → MODELS'; brc.style.fontSize = '10px'; brc.className = 'morphRecall'; brc.dataset.entity = a.entity;
+                brc.title = 'load this ACTUAL\'s model, dials, seed, cast and pitches into MODELS to modify it (Save as ACTUAL then files a new one)';
+                brc.addEventListener('click', () => this.recallActual(a.entity));
+                row2.appendChild(bh); row2.appendChild(bi); row2.appendChild(brc);
                 card.appendChild(row2);
                 f.appendChild(card);
             });
@@ -819,6 +826,7 @@ const PANEL = {
                     label: label,
                     tags: (m.tags || []).slice(),
                     params: this._lastParams,
+                    pairs: this.pairs, pitch: this.pitch,   // the cast and the pitch source, recalled with the actual (§213)
                     shape: this.activePreset ? undefined : (this.current() || {}).shape,
                     shapePreset: this.activePreset || undefined,
                 }),
@@ -843,6 +851,45 @@ const PANEL = {
             this.activeActual = a;
             await this.play();
         } catch (e) { this.setStatus('could not hear ' + entity + ': ' + e.message, true); }
+    },
+
+    async recallActual(entity) {
+        try {
+            const a = await fetch('/api/actuals/' + entity, { cache: 'no-store' }).then(x => x.json());
+            const P = a.provenance || {};
+            if (!P.model || !this.models || !this.models.models[P.model]) { this.setStatus('cannot recall ' + entity + ': its model is not in the store', true); return; }
+            this.mode = 'models'; this.activeModel = P.model;
+            this.recipeSettings[P.model] = Object.assign({}, P.recipeSettings || {});
+            if (P.seed != null) this.seedOverride[P.model] = P.seed;
+            this.activePreset = P.shapePreset || '';
+            const rp = P.resolvedParams ? JSON.parse(JSON.stringify(P.resolvedParams)) : null;
+            let note = '';
+            if (Array.isArray(P.pairs) && P.pairs.length) this.pairs = P.pairs.map(p => ({ a: +p.a, b: +p.b, on: p.on !== false }));
+            else if (rp && Array.isArray(rp.lanes) && rp.lanes.length >= 2) {   // an actual saved before the cast was stored: the pairs from its lanes in pitch order
+                const L = rp.lanes, pr = []; for (let k = 0; k + 1 < L.length; k += 2) pr.push({ a: L[k], b: L[k + 1], on: true });
+                this.pairs = pr; note += ' · the cast read from its lanes';
+            }
+            this.savePairs();
+            // THE ACTUAL'S OWN PITCHES become the pitch source — exact by construction, so every later Generate (a poll, a nudged dial)
+            // keeps them; the model's stock set would otherwise creep back in. CONVERGE's set is its unisons (the targets); a doubled
+            // set is one note per pair, six distinct notes two per pair; SPECTRAL's root is its stored fundamental.
+            if (rp && rp.source && Array.isArray(rp.source.midi) && rp.source.midi.length) {
+                const SEP = root.MorphSeptet;
+                const isM3 = rp.model === 'M3' && rp.target && Array.isArray(rp.target.midi) && rp.target.midi.length;
+                const list = isM3 ? rp.target.midi : rp.source.midi;
+                const distinct = [...new Set(list)].sort((x, y) => x - y);
+                const doubled = distinct.length < list.length;
+                this.recalledSets = this.recalledSets || {};
+                this.recalledSets[entity] = { notes: distinct, from: entity + ' as stored' + (a.label ? ' (' + a.label + ')' : '') };
+                const fund = rp.model === 'M2' && rp.target && rp.target.fundamental != null ? rp.target.fundamental : null;
+                this.pitch = Object.assign(this.loadPitch(), { src: 'actual:' + entity, take: 'lowest', k: 1, seed: 1, perPair: doubled ? 1 : 2, root: fund != null ? SEP.nm(fund) : this.pitch.root });
+            } else { this.pitch.src = 'model'; note += ' · its pitches could not be read, the model\'s own set plays'; }
+            this.savePitch();
+            this._recallParams = rp;               // the dials as nudged that day, rendered once as stored
+            this._fieldStamp = null;
+            this.generate();
+            this.setStatus('recalled ' + entity + ' into MODELS: ' + P.model + ', its dials, seed ' + (P.seed != null ? P.seed : '?') + ', the cast and the pitches' + note + ' — edit, then Save as ACTUAL files a new one');
+        } catch (e) { this.setStatus('could not recall ' + entity + ': ' + e.message, true); }
     },
 
     async insertActual(entity) {
@@ -871,7 +918,7 @@ const PANEL = {
                 color: '#7E57C2', groupId: gid, performanceNotes: '', properties: {} });
             placed.forEach(o => C.objects.push(o));
             const nds = [{ pos: 0, y: 5, smooth: 0.35 }, { pos: 1, y: 5, smooth: 0.35 }];
-            C.objects.push({ id: 'wc-' + (nid++), type: 'waveCurve', layer: 10, groupId: gid,
+            C.objects.push({ id: 'wc-' + (nid++), type: 'waveCurve', layer: (typeof META_LAYER !== 'undefined') ? META_LAYER : 10, groupId: gid,   // the septet's META is 7
                 startSeconds: +at.toFixed(3), endSeconds: +(at + a.spanSec).toFixed(3),
                 nodes: nds, segments: [{ model: 'bezier', slope: 0 }],
                 color: '#7E57C2', fillMode: 'bottom', opacity: 0.45,
@@ -1153,6 +1200,7 @@ const PANEL = {
         const rootMidi = SEP.parseNote(p.root, 48);   // a bare pitch class sits around C3, the low pair's home
         const [kind, ...rest] = p.src.split(':'); const key = rest.join(':');
         if (kind === 'fam') { if (rootMidi == null) return null; const n = SEP.familyNotes(key, rootMidi); const fam = SEP.STACKS.concat(SEP.MODES).find(x => x.id === key); return n ? { notes: n, from: (fam ? fam.name : key) + ' from ' + SEP.nm(rootMidi) } : null; }
+        if (kind === 'actual') { const r = this.recalledSets && this.recalledSets[key]; return r ? { notes: r.notes.slice(), from: r.from } : null; }
         if (kind === 'model' || kind === 'tuba') { const m = this.models && this.models.models && this.models.models[key]; if (!m) return null; const src = kind === 'tuba' ? (m.tuba && m.tuba.source) : (m.baseParams && m.baseParams.source); return src && src.midi ? { notes: src.midi.slice(), from: (kind === 'tuba' ? 'the tuba\'s ' : 'the model ') + key } : null; }
         if (!S) return null;
         if (kind === 'kept') { const t = S.kept[key]; const st = t && t.state; if (!st || !st.notes) return null; return { notes: st.notes.slice(), from: 'kept · ' + key + (st.from ? ' (' + st.from + ')' : '') }; }
@@ -1200,6 +1248,7 @@ const PANEL = {
         sel.style.cssText = 'max-width:330px;background:#1b1b20;color:#ddd;border:1px solid #444;padding:1px 2px;font-size:13px';
         const og = (label, items) => { if (!items.length) return; const g = document.createElement('optgroup'); g.label = label; items.forEach(it => { const o = document.createElement('option'); o.value = it.value; o.textContent = it.text; if (it.value === p.src) o.selected = true; g.appendChild(o); }); sel.appendChild(g); };
         og('the model', [{ value: 'model', text: 'the model\'s own set' }]);
+        og('recalled from an ACTUAL', Object.keys(this.recalledSets || {}).map(e => ({ value: 'actual:' + e, text: e + ' · ' + nmList(this.recalledSets[e].notes) })));
         og('kept (yours)', Object.keys(S.kept).sort().map(n => ({ value: 'kept:' + n, text: n + ' · ' + nmList((S.kept[n].state && S.kept[n].state.notes) || []) })));
         og('starters', S.starters.map((st, i) => ({ value: 'starter:' + i, text: st.name + ' · ' + nmList(st.notes) })));
         const mk = this.models && this.models.models ? Object.keys(this.models.models) : [];

@@ -132,6 +132,11 @@ or not at all.**
     **The pitch source (RUNNING_LOG §208):** a kept sonority lives in `bank/panel_snapshots.json` under the `morphPitches` bucket —
     `{ state: { notes (MIDI), from, take, k, seed, perPair }, comment }` — and the starters in `bank/morph_pitches.json` (`sets[]`, the
     same fields plus `name`); the panel's own state (the source chosen, the root, the take) is the browser's, never the score's.
+    **An ACTUAL (§213):** `bank/actuals/ACT-<MODEL>-NN.json` — `{ entity, label, tags, spanSec, parts, register, objects (the placed
+    form, t = 0), notes (the render), provenance: { model, recipeSettings, resolvedParams (the cast included: source, lanes, voices),
+    seed, shapePreset?, palette (per voice: lane, label, technique, reachCents, lo, hi), pairs (the cast), pitch (the pitch source's
+    state), engineConstants, captured, rebuilt? }, placements }` — rendered on the server with the cast's palette
+    (`tools/model_bank.js renderOptsFor`); `node tools/model_bank.js --rebuild` re-renders every actual from its provenance.
 
 ## 3. Not S1's business (where the piece-specific work goes)
 

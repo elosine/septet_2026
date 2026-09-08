@@ -44,6 +44,32 @@ function loadActuals() {
 const sampleLengths = readJSON(SAMPLE_LENGTHS);
 const RENDER_OPTS = { maxVoices: 10, sampleLengths: sampleLengths };
 
+// THE SEPTET'S PALETTE ON THE SERVER (2026-09-07, RUNNING_LOG §213). An actual rendered here must be what the panel heard: a cast
+// (params.lanes, morph_septet.js) → the palette per voice — the player's ordinary voice, its measured range, its bend reach, its
+// breath or bow — the same one the panel hands the engine. Without a cast (the tuba's own actuals) the constants above stand.
+const vm = require('vm');
+let SEPTET = null;
+function septetEnv() {
+    if (SEPTET !== null) return SEPTET || null;
+    try {
+        const SEP = require('../score/public/morph_septet.js'), BC = require('../score/public/beating_calc.js');
+        const recipe = vm.runInNewContext(fs.readFileSync(path.join(ROOT, 'sandbox', 'instruments.js'), 'utf8') + '\n;INSTRUMENTS;', {});
+        const html = fs.readFileSync(path.join(ROOT, 'score', 'public', 'composer.html'), 'utf8');
+        const tracks = vm.runInNewContext(html.match(/const TRACKS = (\[[\s\S]*?\]);/)[1], {});
+        SEPTET = { recipe: recipe, tracks: tracks, BC: BC, M: M, SEP: SEP };
+    } catch (e) { SEPTET = false; }
+    return SEPTET || null;
+}
+function renderOptsFor(params) {
+    const env = septetEnv();
+    const lanes = params && Array.isArray(params.lanes) && params.lanes.length ? params.lanes : null;
+    if (!env || !lanes) return RENDER_OPTS;
+    return { maxVoices: lanes.length, sampleLengths: sampleLengths, palette: lanes.map(l => env.SEP.paletteFor(env, l)) };
+}
+function paletteSummary(opts) {
+    return opts && opts.palette ? opts.palette.map(p => p ? { lane: p.lane, label: p.label, technique: p.technique, reachCents: p.reachCents, lo: p.lo, hi: p.hi } : null) : undefined;
+}
+
 // ---------------------------------------------------------------- reporting
 const problems = [];
 const warnings = [];
@@ -203,7 +229,8 @@ function validateActual(file, a, models) {
     // insert places `objects`; if they can drift, the composer hears one thing
     // and puts another into the score (2y §9 failure 5).
     let objsFromNotes = null;
-    try { objsFromNotes = M.toScoreObjects({ notes: a.notes, meta: a._meta || {} }, 0, {}); }
+    // the objects sit on the CAST's lanes (params.lanes, the septet — §213); without them the derivation would put voice v on lane v
+    try { objsFromNotes = M.toScoreObjects({ notes: a.notes, meta: a._meta || { lanes: (p.resolvedParams && p.resolvedParams.lanes) || null } }, 0, {}); }
     catch (e) { err(where, 'toScoreObjects(notes) threw: ' + e.message); }
     if (objsFromNotes) {
         const strip = o => ({ layer: o.layer, startSeconds: o.startSeconds, endSeconds: o.endSeconds,
@@ -230,7 +257,7 @@ function validateActual(file, a, models) {
     // born. If the engine later drifts this REPORTS it; the stored objects
     // still stand, and nobody discovers the drift mid-composition.
     try {
-        const re = M.render(p.resolvedParams, RENDER_OPTS);
+        const re = M.render(p.resolvedParams, renderOptsFor(p.resolvedParams));
         if (!deepEq(re.notes, a.notes)) {
             warn(where, 'RE-DERIVATION DRIFT — render(resolvedParams, seed ' + p.seed +
                  ') no longer reproduces the stored notes (' + re.notes.length + ' vs ' +
@@ -354,7 +381,8 @@ function buildActual(modelId, opts) {
     if (o.seed != null) resolved.seed = o.seed;
     if (o.shape) resolved.shape = JSON.parse(JSON.stringify(o.shape));
 
-    const render = M.render(resolved, RENDER_OPTS);
+    const ROPTS = renderOptsFor(resolved);   // the septet's palette when the params carry a cast (§213)
+    const render = M.render(resolved, ROPTS);
     if (!render.notes.length) return { error: 'renders zero notes' };
 
     // objects are t=0-based; place_gesture and the panel both offset them.
@@ -366,7 +394,7 @@ function buildActual(modelId, opts) {
     // INTEGRITY, checked at birth and not merely promised: what will be heard
     // (notes) and what will be placed (objects) come from the same render, and
     // the render is reproducible from what we are about to store.
-    const reNotes = M.render(resolved, RENDER_OPTS).notes;
+    const reNotes = M.render(resolved, ROPTS).notes;
     if (!deepEq(reNotes, render.notes)) {
         return { error: 'render is not deterministic for these params — refusing to store' };
     }
@@ -398,7 +426,12 @@ function buildActual(modelId, opts) {
             recipeSettings: settings,
             resolvedParams: resolved,
             seed: resolved.seed,
-            engineConstants: { bendRangeSt: M.MEASURED.BEND_RANGE_ST, prearmS: M.MEASURED.BEND_PREARM_S },
+            engineConstants: ROPTS.palette
+                ? { perVoice: true, prearmS: M.MEASURED.BEND_PREARM_S, clampCents: M.CLAMP_CENTS, rekeyOverlapS: M.REKEY_OVERLAP_S }
+                : { bendRangeSt: M.MEASURED.BEND_RANGE_ST, prearmS: M.MEASURED.BEND_PREARM_S },
+            palette: paletteSummary(ROPTS),        // the septet: each voice's player, voice and reach (§213)
+            pairs: o.pairs || undefined,           // the cast as the panel had it — recalled by "recall → MODELS"
+            pitch: o.pitch || undefined,           // the pitch source's state (§208) — recalled with it
             captured: o.captured || new Date().toISOString().slice(0, 10),
         },
         placements: [],
@@ -406,6 +439,42 @@ function buildActual(modelId, opts) {
     if (o.shapePreset) actual.provenance.shapePreset = o.shapePreset;
 
     return { actual: actual, model: model, store: store, render: render, warnings: res.warnings };
+}
+
+// --rebuild: every stored actual re-rendered from its provenance with the palette of its cast (2026-09-07, §213 — the actuals saved
+// before the server knew the palette carried the tuba's techniques and constants). Entity, label, tags, provenance and placements
+// stay; objects, notes, span, parts, register and the palette summary are rewritten. Deterministic, so a second run changes nothing.
+function rebuildActuals(only) {
+    const out = [];
+    loadActuals().forEach(a => {
+        const d = a.data; if (!d || !d.provenance || !d.provenance.resolvedParams) return;
+        if (only && d.entity !== only) return;
+        const params = d.provenance.resolvedParams;
+        const ropts = renderOptsFor(params);
+        const render = M.render(params, ropts);
+        if (!render.notes.length) { out.push({ entity: d.entity, error: 'renders zero notes' }); return; }
+        const before = [...new Set(d.objects.filter(x => x.morphBend).map(x => x.technique))];
+        const objects = M.toScoreObjects(render, 0, { groupId: 'grp-actual', startId: 1, label: d.label, color: '#7E57C2' });
+        const noteObjs = objects.filter(x => x.morphBend);
+        const t0 = Math.min.apply(null, noteObjs.map(x => x.startSeconds)), t1 = Math.max.apply(null, noteObjs.map(x => x.endSeconds));
+        const pitches = noteObjs.map(x => x.sonifyNote);
+        d.objects = objects; d.notes = render.notes; d.spanSec = +(t1 - t0).toFixed(3);
+        d.parts = [...new Set(noteObjs.map(x => x.layer))].length;
+        d.register = Math.min.apply(null, pitches) + '–' + Math.max.apply(null, pitches);
+        d.provenance.palette = paletteSummary(ropts);
+        d.provenance.engineConstants = ropts.palette
+            ? { perVoice: true, prearmS: M.MEASURED.BEND_PREARM_S, clampCents: M.CLAMP_CENTS, rekeyOverlapS: M.REKEY_OVERLAP_S }
+            : d.provenance.engineConstants;
+        d.provenance.rebuilt = new Date().toISOString().slice(0, 10);
+        fs.writeFileSync(path.join(ACTUALS_DIR, a.file), JSON.stringify(d, null, 2) + '\n');
+        out.push({ entity: d.entity, before: before, after: [...new Set(noteObjs.map(x => x.technique))], notes: render.notes.length, palette: !!ropts.palette });
+    });
+    return out;
+}
+function cmdRebuild() {
+    const r = rebuildActuals(valOf('rebuild') && valOf('rebuild').indexOf('--') !== 0 ? valOf('rebuild') : null);
+    r.forEach(x => console.log('  ' + x.entity + (x.error ? ': ' + x.error : ': ' + x.before.join(',') + ' → ' + x.after.join(',') + ' · ' + x.notes + ' notes · palette ' + x.palette)));
+    if (!r.length) console.log('  no actuals to rebuild');
 }
 
 function writeActual(built) {
@@ -482,6 +551,7 @@ function cmdShow(id) {
 if (require.main === module) {
     if (has('validate')) cmdValidate();
     else if (has('actualize')) cmdActualize();
+    else if (has('rebuild')) cmdRebuild();
     else if (has('show')) cmdShow(valOf('show'));
     else if (has('list') || !args.length) cmdList();
     else {
@@ -493,6 +563,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+    rebuildActuals: rebuildActuals, renderOptsFor: renderOptsFor, septetEnv: septetEnv,
     buildActual: buildActual, writeActual: writeActual,
     MODELS_PATH: MODELS_PATH, ACTUALS_DIR: ACTUALS_DIR, PRESETS_PATH: PRESETS_PATH,
 };
