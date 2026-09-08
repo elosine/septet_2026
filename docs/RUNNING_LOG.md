@@ -6540,3 +6540,152 @@ and pushed** — the code (steps 1–4) and the documents (step 5) as two commit
 **His test next (the plan's step 5, last to-do):** a hard reload (CTRL+SHIFT+R), his test score, [Morph], the playhead inside the
 BLOOM at 183 s, *lines → piano*, the bar's ticks, a line clicked, a key (it sounds), a voice, a dynamic, a duration, ENTER, Play; his
 verdicts → MORPH_NOTES §3 and NITS; the fixes he marks "fix now". Then his listening of the piano harmonics (§218), still pending.
+
+## §234. CN-44 opened — the strikes drawer augmented: a rhythm whose onsets carry CHORDS, players per onset, the re-attack rule at 200 ms; the drawer read for what already serves; topic 1 put to him
+
+Composer, 2026-09-08 (verbatim in CN-44): *"use the rhythms that are generated usually for one strike individual notes … but I'd like
+to make those onsets carry a cord or part of a cord … assign players to that particular onset for those particular pitches … draw
+from the large cord set … re-adapt the same gooey elements … the round robin or the randomize each cycle … I want four players on this
+one or two players on that one … no player has another impulse. let's lower it to 200 milliseconds … let's think through the
+requirements"* → the planning method, phase 1.
+
+**The data first (one read each, nothing built):**
+- **The drawer's model today** (STRIKES_TOOL L): three lists — PITCHES · ONSETS · PLAYERS — paired freely; ONE note per onset, ONE
+  player per note. 46 strikes in `bank/scattered_strikes.json`, 2–35 notes each (mean 12.5), the notes recorded from his piano playing.
+- **The run and its dealer** (U13, PLAN 1h item 5; §135–138): the accelerating run makes the onsets, then deals them — **round robin**
+  (a lap = every player once; cycle 1 his order, later laps shuffled) or **free** (any player the rule allows, seeded random, never the
+  one who just played, a lean toward the longest wait); **re-deal pitches after cycle 1** (his "randomize each cycle"); the pitch pool
+  = the cards or the whole strike; every drawn pitch folded into the receiving player's measured range.
+- **The 200 ms rule already exists as a box**: `re-attack ≥ ___ ms` — "no player attacks twice within this time", checked against the
+  real onset times, a guarantee not a tendency; when nobody is free the run falls back to the rotation and flags it. His 200 ms is a
+  number he can already type; what is new is that a chord takes SEVERAL players at one onset, so the rule now binds a group.
+- **The large chord set**: `bank/harmonies.json` — blasts 45 (3–10 notes, mean 6.2) · chordShapes 54 (2–13, mean 3.8) · the strikes
+  bank live from the database; 99 stored chords, already on the left of the beating drawer in three banners (CN-36).
+- **The arithmetic worth naming:** seven players, a 200 ms rest each → at most 35 attacks a second for the whole ensemble; an onset of
+  four players needs the next four-player onset ≥ 200 ms away unless other players are free. Chords of four at 8 onsets a second do
+  not fit; the tool must say so where the run's ✗ warning says it today.
+
+**Topic 1 put to him — what one onset carries** (three readings): (a) one chord for the whole strike, each onset a PART of it, the
+parts dealt over successive onsets so the chord is covered · (b) a chord per onset, chosen from the bank each time · (c) both — a
+chord for the strike as the default, any onset overridable with its own chord or typed pitches (recommended: (a) is (c) with nothing
+overridden). Held aside for after: where the player count per onset is set; the dealer's rule with groups; the GUI (a mode in the
+drawer, not a second drawer); insertion and the notation.
+
+## §235. CN-44 topic 1 answered by widening it (CN-45) — menus the machine solves: a RANGE of players per onset, a MENU of chords with an order and a dwell; a third ask, inserting part of the sequence; topic 2 put to him
+
+Composer, 2026-09-08 (verbatim in CN-45): nothing assigned by hand — *"me to put in the menu … two to four players each strike, and
+then the machine can solve how many players to put on each onset and how to scramble that"*; the chords the same way — a menu of
+chords, *"alternate them and randomly shuffle them"*, *"exhaust one cord then move to the next"*, *"cycle through each cord two to four
+times before moving on"*; and *"the ability to insert part of the final sequence into the main score"*.
+
+**The model as the AI reads it back:** two rule menus and a solver, in the drawer's own habit (a range, a seed, a reshuffle). (1) PLAYERS
+PER ONSET: a range min–max, the machine choosing each onset's count and scrambling who plays, under the re-attack rule. (2) THE CHORDS:
+a list assembled from the stored set (blasts · chord shapes · the strikes bank · typed pitches), with an ORDER (in turn · shuffled,
+seeded) and a DWELL (exhaust one chord before the next · stay on each chord n times, n itself a range like two to four). (3) A PARTIAL
+INSERT: a span of the finished sequence placed in the score, not the whole.
+
+**Noticed and held for a later topic (the AI's, not his):** the two menus can contradict the 200 ms rule — a wide chord and close
+onsets can leave nobody free. Three answers are possible (the machine lowers that onset's count within the range · it keeps the count
+and flags the onset as the run's ✗ does · it moves the onset). To be decided when the dealer is the topic, not now.
+
+**Topic 2 put to him — how a chord is consumed by the onsets**, since "exhaust" and the player range meet there: (a) in order — the
+chord's notes dealt in their stored order, each onset taking as many as its count, the chord exhausted when the last note has
+sounded, then the next chord (a 6-note chord at 2–4 players = two or three onsets) · (b) at random without replacement — each onset
+draws its notes from what the chord has left, exhausted when all have sounded (the same span, a different colour each time; a seed and
+a reshuffle) · (c) at random with replacement — each onset draws freely, the chord never exhausted, the dwell counted in onsets
+instead. Recommended (b), with (a) available as an "in order" switch: it is the drawer's own way with pitches (shuffle to completion,
+then reshuffle, seeded) and it makes "exhaust" a fact, not a tendency.
+
+## §236. CN-44 topic 2 answered — "all three": the two axes named (the SELECTION = the voicing menu, the ADVANCE = exhaust · n times · next chord each onset), a manual onset with the collision still checked; topic 3, the dealer and the 200 ms rule, put to him
+
+Composer, 2026-09-08 (verbatim in CN-46): all three consumption modes; the selection *"not too different than we have for the single
+cord shuffle … as played and then a shuffle and then those other options like high cluster low cluster"*; and *"your third option
+which is for each onset. it chooses a random selection of that cord and then moves on to the next cord for the next onset"*; plus
+*"a manual option so I can assign the number of players and the cord or cord parts to any one onset. and then have the collision
+checked"*.
+
+**Settled, and the vocabulary with it — two axes, two menus (the AI's reading, put back to him):**
+- **The SELECTION** — which notes of the chord an onset takes: the drawer's existing voicing menu, borrowed whole (as played · shuffle
+  · high cluster · low cluster · spread …), the count being the onset's player count; nothing new invented (HOW_WE_WORK's rule B).
+- **The ADVANCE** — when the tool moves to the next chord: exhaust it (every note sounded once, §235's (b)) · stay on it n times, n a
+  range like two to four · a fresh chord every onset (his last sentence, a dwell of one).
+- **MANUAL** — any single onset given its player count and its chord or its exact notes by hand; the machine solves the rest around it
+  and the collision check still runs over it, flagged, never silently changed (the drawer's rule for hand choices, STRIKES_TOOL F).
+
+**Topic 3 put to him — the dealer, and what the 200 ms rule does when it cannot be met.** The default the AI proposes for the mapping
+(no question, the drawer's own habit): the onset's chosen notes go to the free players BY REGISTER — the lowest note to the lowest
+free player and up — each folded by octave into that player's measured range as `realize()` does today, the folds counted; who is
+free comes from the re-attack rule; the drawer's two dealers stay as the tie-breakers (round robin: a lap over the players before
+anyone repeats · free: the longest-waiting first, seeded). **The one question, only his:** when an onset's wanted count cannot be met
+because too few players are free — (a) the machine lowers that onset's count within his range and only flags when even the minimum
+cannot be met (recommended: his range is a permission, the rule a guarantee) · (b) it keeps the count and flags the onset as the run's
+✗ does, leaving him to widen the gap · (c) it moves the onset later until enough players are free (the rhythm changes — against the
+drawer's habit that the rhythm is his). A manual onset is never lowered: it is flagged.
+
+## §237. CN-44 topic 3 decided — "a": too few players free → the machine lowers that onset's count inside his range, flagging only when the minimum cannot be met; topic 4, the look inside the drawer, put to him
+
+Composer, 2026-09-08: *"a"* — his range is a permission, the 200 ms rule a guarantee; the machine lowers an onset's count within
+min–max when too few players are free and flags only when even the minimum cannot be met; a manual onset is never lowered, only
+flagged. With it the dealer's default stands as put (§236): the onset's chosen notes to the free players BY REGISTER, each folded by
+octave into that player's measured range, the folds counted; the drawer's round robin / free as the tie-breakers; the seed his.
+
+**Topic 4 put to him — the look, inside the strikes drawer (his "a mirror of how it already is … re-adapt the same gooey elements"):**
+a MODE switch at the top — *notes* (the drawer as it is, untouched) · *chords* (the new). In chords mode the columns keep their
+places and change their contents: the KEYBOARD shows the chord in play, its notes lit, the current onset's part ringed, the players'
+ranges as columns (the beating drawer's); the ORCHESTRATION column becomes THE PLAYERS — a tick per player, the count range (2–4),
+the re-attack box (200 ms), the dealer, the seed; a new block THE CHORDS — the list he assembles (from the harmony banners and by
+typing), the ORDER (in turn · shuffled, seeded), the ADVANCE (exhaust · n times, a range · a fresh chord every onset) and the
+SELECTION (the voicing menu: as played · shuffle · high cluster · low cluster · spread); the RHYTHM strip keeps its dials, its shapes,
+its jitter and the run, and now draws several dots per onset, one per player in the player's colour, a lowered onset marked, a
+flagged one ✗; the bottom keeps hear · takes · insert. **The one question, only his — the manual onset:** (a) a click on the onset in
+the rhythm strip opens a small card there (the count, the chord or the typed notes, a ✕ back to automatic), the way the cue picker
+opens on a line (recommended: the score's idiom, and the onset is where he is looking) · (b) a table under the strip, a row per
+onset, edited in place · (c) both.
+
+## §238. CN-44 topic 4 decided — "a": a manual onset is a card at the onset in the rhythm strip; topic 5, the partial insert, put to him
+
+Composer, 2026-09-08: *"a"* — a click on an onset in the rhythm strip opens a small card there (its count, its chord or its typed
+notes, a way back to automatic), the cue picker's idiom; the rest of §237's picture unchanged (the mode switch *notes* / *chords*, the
+keyboard showing the chord in play, the orchestration column become the players with the count range and the re-attack box, the new
+CHORDS block with the order · the advance · the selection, the rhythm strip drawing a dot per player and marking a lowered or flagged
+onset).
+
+**Topic 5 put to him — inserting PART of the finished sequence (his third ask, CN-45).** What the drawer has today (STRIKES_TOOL Q):
+*Insert @ playhead* · *Insert @ original time* · *Replace in place*, each taking the WHOLE strike. The picture: a span chosen on the
+rhythm strip marks the onsets inside it (the strip already shows every onset; the score has its own span-selection idiom); the two
+insert buttons then act on the marked span only — at the playhead (the first marked onset landing there, the rest keeping their
+distances) or at the original time; what goes in is one group with its marker and META shape, as every gesture; the rest of the
+sequence stays in the drawer for another insert later, and the takes keep the whole; unmarked onsets are never written; nothing marked
+= the whole sequence, so the buttons read as they do today. **It serves the drawer's existing notes mode too** — the same span, the same
+buttons — which the AI proposes rather than restricting it to chords. **The one question, only his — how the part is marked:** (a) a
+drag across the rhythm strip (the score's span idiom, one gesture) · (b) a click on the first onset and a shift-click on the last ·
+(c) both. Recommended (a), with (c) cheap if he wants it.
+
+## §239. CN-44 topic 5 decided — "c" (a span marked by a drag AND by click / shift-click); topic 6 opened by him: SAVING — the whole as a unit, a part on its own, each carrying every choice that made it; the model put to him
+
+Composer, 2026-09-08 (verbatim in CN-47): *"c"* for the marking, then *"let's talk about how things are saved … save the overall
+shuffle and rhythm as a unit. but also if I select parts of it I can save those and the save would include my choices such as which
+cords and if I chose random shuffle etc. all the data that was used to create that sequence"*.
+
+**The data first:** the drawer's takes today (STRIKES_TOOL O) are the SETTINGS alone — `bank/panel_snapshots.json`, bucket `strikes`,
+153 named takes of `{ saved, comment, state: { strikeId, cfg, voices } }`, re-derived on load; nothing of the result is stored. The
+morph panel already has the other half: an ACTUAL is a frozen render with its provenance, and `recall → MODELS` puts its settings back
+on the dials (§213) — the pattern to bring here.
+
+**The model put to him:** a save carries BOTH halves — the RESULT (every onset with its time, its players, its pitches, the count
+lowered or flagged, what was heard) and the RECIPE (the chord list, the order, the advance, the selection, the player range, the
+dealer, the seed, the rhythm dials and every manual onset). Two grains: the WHOLE (the shuffle and the rhythm as one unit) and a PART
+(the marked span saved on its own, the same recipe, plus the whole it came from and which span). They live in the drawer's existing
+takes bucket, named by his rule, committed at every wrap with the takes and the actuals (HOW_WE_WORK); today's 153 takes still load —
+the new save is a superset. **The one question, only his — what LOADING a save does:** (a) both offered, as the morph panel does — *as
+it was* (the exact sequence back, nothing re-dealt) or *the settings* (the dials filled, re-generated) — recommended · (b) exactly as
+it was, only · (c) the settings only, as the drawer does today. After it: PHASE 2, the top line.
+
+## §240. CN-44 topic 6 decided ("a": a load offers *as it was* or *the settings*) — PHASE 1 COMPLETE, the top line confirmed ("good"), PLAN 1k opened with it; phase 3 begins
+
+Composer, 2026-09-08: *"a"* — a save loads either way, the morph panel's manner. **Phase 1 complete** — six topics decided (§234–239):
+the menus the machine solves; the two axes and the manual onset; the dealer and the lowering rule; the mode inside the drawer and the
+card at the onset; the span and the partial insert; the save carrying the result and the recipe. **Phase 2 confirmed:** *"good"* to the
+six lines — 1 the chord engine · 2 chords mode in the drawer · 3 the manual onset · 4 the span and the partial insert · 5 saving ·
+6 verify and document. **PLAN 1k opened** with the why, his words, the decisions and the six steps, committed — a cleared chat loses
+nothing. **Phase 3 begins**, his format of §224: each step's goal and sub-steps in one turn.

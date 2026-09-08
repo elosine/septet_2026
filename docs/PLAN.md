@@ -865,6 +865,37 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        pitch · a voice · a dynamic · a duration, apply, heard; his verdicts → MORPH_NOTES §3 and NITS, fixes at his word;
      - later, at 2a: the notation of a note born from a line (its source in the provenance).
 
+- **1k — The strikes drawer's chords: a rhythm whose onsets carry chords or parts of one, the players dealt per onset under a 200 ms rest (CN-44 · CN-45 · CN-46 · CN-47)** —
+  `todo — in planning 2026-09-08 (PLANNING_METHOD phase 3 from step 1; RUNNING_LOG §234–240)` *(composer, 2026-09-08, CN-44: "use the
+  rhythms that are generated usually for one strike individual notes … but I'd like to make those onsets carry a cord or part of a cord
+  … assign players to that particular onset … draw from the large cord set … the round robin or the randomize each cycle … I want four
+  players on this one or two players on that one … no player has another impulse. let's lower it to 200 milliseconds")*. *Why:* the
+  drawer's rhythm engine, its dealers and its transforms already exist for single notes; the chords of section 2 and 3 (CN-28, CN-33)
+  want the same rhythms sounding as chords, dealt over the seven players by rule, not by hand. **Decided in the talk (RUNNING_LOG
+  §234–239):** nothing is assigned by hand — he sets MENUS and the machine solves (CN-45); two axes — the SELECTION (which notes of a
+  chord an onset takes: the drawer's own voicing menu, as played · shuffle · high cluster · low cluster · spread) and the ADVANCE (when
+  the next chord comes: exhaust it · stay n times, n a range · a fresh chord every onset), the chord list ordered in turn or shuffled
+  (seeded); the PLAYERS PER ONSET a range (two to four), the machine choosing each onset's count and who plays; the DEALER gives the
+  onset's notes to the free players by register, folded by octave into each player's measured range, the drawer's round robin / free as
+  the tie-breakers; the re-attack rule (his 200 ms) is a guarantee — when too few players are free the machine LOWERS that onset's
+  count inside his range and flags only when even the minimum cannot be met (§237); any onset may be set BY HAND (its count, its chord
+  or its exact notes) and is then flagged, never lowered (CN-46); a mode switch *notes* / *chords* inside the drawer, the columns
+  re-used, a manual onset edited in a card at the onset in the rhythm strip (§238); a span marked by a drag AND by click / shift-click
+  makes the insert buttons write that PART, in both modes (§239); a SAVE carries the RESULT and the RECIPE, whole or part, and loads
+  either *as it was* or *as settings* (CN-47, §239–240). The notation at 2a.
+  *The top line, confirmed ("good", §240):*
+  1. **The chord engine** (the chord list with its order and advance, the selection, the player range, the dealer by register under the
+     200 ms rule with the lowering) — *to be laid out when we discuss it.*
+  2. **Chords mode in the drawer** (the mode switch, the players column, the chords block, the keyboard, the rhythm strip with a dot per
+     player; generate and hear) — *to be laid out when we discuss it.*
+  3. **The manual onset** (the card at the onset: its count, its chord or typed notes, back to automatic; the collision flagged) —
+     *to be laid out when we discuss it.*
+  4. **The span and the partial insert** (marked by drag and by click / shift-click, the insert buttons acting on it, in both modes) —
+     *to be laid out when we discuss it.*
+  5. **Saving** (the result and the recipe, whole or part; load as it was, or as settings) — *to be laid out when we discuss it.*
+  6. **Verify and document** (the checks, the walk on a copy, the decoded MIDI, the docs; then his first chord strike in the piece) —
+     *to be laid out when we discuss it.*
+
 ## 2. Notate — `deferred` until the first real page exists
 
 - **2a — Engine adaptation** — the 0g list. Start with the page the opening needs.

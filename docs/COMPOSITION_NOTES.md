@@ -1047,3 +1047,70 @@ dot) and its end (the breath's end) — drawn on the piano lane as empty vertica
 it a pitch (a vertical keyboard), an articulation (the piano's four voices: normal · muted · harmonic · plucked), a dynamic (ppp …
 fff, the score's own scale) and a duration (typed, or dialled). The piano as a punctuation of the ensemble's breathing, placed by ear
 point by point. The design discussed first, at his word (the planning method); RUNNING_LOG §219.
+
+## CN-44 · 2026-09-08 — the strikes drawer augmented: a strike's rhythm carrying CHORDS (or parts of a chord), players assigned per onset, dealt so no player strikes twice within 200 ms
+
+> *"I would like to build another plan. So this will be probably a augment of the strike straw. drawer. And what I'd like is to use the
+> rhythms that are generated usually for one strike individual. notes for one strike, but I'd like to make those onsets carry a cord or
+> part of a cord and then I'd like to be able to assign players to that particular onset for those particular pictures. hitches pitches
+> and then I can draw from the large cord set that I have. so it might look something like this kind of like a mirror of how it already
+> is. but maybe we can re-adapt the same gooey elements so I would dial in the rhythm the whole the same things like the round. robin or
+> the randomize each cycle all those features and then I'd be able to assign a cord from the drawer or individual pitches to each
+> strike and then I'd have something similar to what is going on with the round. robin core individual pictures but I can say I want
+> four players on this one or two players on that one and then the algorithm would shuffle so that no player has another impulse.
+> let's lower it to 200 milliseconds in a row so let's think through the requirements"*
+> *(2026-09-08, after PLAN 1j's build; typed — "strike straw" = strikes drawer, "cord" = chord, "pictures / hitches" = pitches, "gooey" =
+> GUI, "core" = chord; "let's lower it to 200 milliseconds" = the rest a player needs before its next impulse)*
+
+*AI reading (not the composer's words):* a second use of the strikes drawer's rhythm engine — a strike's onsets (one player's notes
+today, dealt round robin or randomised each cycle) become CHORD onsets: each onset carries a chord or a part of one, taken from the
+harmony list (the strikes' chords, the tuba's blasts, the two-piano chord shapes) or typed as pitches, with a player count per onset
+("four players on this one, two on that one"); the dealer spreads the pitches over the players with the drawer's existing modes
+(round robin, randomised each cycle) under one rule: no player strikes again within 200 ms. The same GUI elements re-adapted (the
+rhythm dials, the run, the seeds), "a mirror of how it already is". The requirements discussed first (the planning method);
+RUNNING_LOG §234.
+
+## CN-45 · 2026-09-08 — CN-44 continued: not a hand assignment but MENUS the machine solves — a range of players per onset, a menu of chords with an order and a dwell; and inserting PART of the finished sequence
+
+> *"what I would like is me to put in the menu. So, for example, I can say two to four players each strike, and then the machine can
+> solve how many players to put on each onset and how to scramble that And then same with the courts. I can give him menu of cords, and
+> then they can alternate them and randomly shuffle them. Or I can give -- a -- few cords -- - -- say things like exhaust one cord
+> ---thwn move- to the next cord. -- or then assign a few cords and then random shuffle those chords and then say cycle through each
+> cord two to four times before moving on to the next one. things like that and then I'd also like to add the ability to insert part of
+> the final sequence into the main score"*
+> *(2026-09-08, answering topic 1 of the requirements talk; typed — "courts / cords" = chords, "thwn" = then)*
+
+*AI reading (not the composer's words):* topic 1 answered by widening it — the onsets are not assigned by hand at all; he sets RULES in
+menus and the machine solves the rest, the drawer's habit throughout (a dial, a seed, a reshuffle). Two menus: **the players per onset**
+— a range ("two to four"), the machine choosing the count for each onset and scrambling who plays; **the chords** — a list he assembles
+from the stored set, with an ORDER (in turn · shuffled) and a DWELL (exhaust one chord before the next · stay on each chord two to four
+times before moving on), the numbers themselves ranges. And a third ask, new: **insert PART of the finished sequence into the main
+score** — a chosen span of the result placed, not all of it. RUNNING_LOG §235.
+
+## CN-46 · 2026-09-08 — CN-44/45 continued: a manual option per onset with the collision still checked; the selection menu the voicing presets' (as played · shuffle · high cluster · low cluster) plus a random part per onset moving on to the next chord
+
+> *"I'd like to also have a manual option so I can assign the number of players and the cord or cord parts to any one onset. and then
+> have the the collision checked. for the selection, I'd like to have all three not too different than we have for the single cord
+> shuffle we have as played and then a shuffle and then those other options like high cluster low cluster but then also your third
+> option which is for each onset. it chooses a random selection of that cord and then moves on to the next cord for the next onset"*
+> *(2026-09-08, answering topic 2; typed — "cord" = chord, "the single cord shuffle" = the drawer's voicing presets)*
+
+*AI reading (not the composer's words):* topic 2 answered "all three", and with it the vocabulary settled: the way a chord's notes are
+CHOSEN for an onset is the drawer's own voicing menu (as played · shuffle · high cluster · low cluster · spread …), not a new
+invention; and the way the tool MOVES ON is separate (exhaust the chord · stay n times · a fresh chord every onset — his last
+sentence). Two axes, two menus. Plus a MANUAL option: any single onset given its player count and its chord or its exact notes by
+hand, the collision check still run over it (a hand choice is never silently changed — the drawer's rule with hand-assigned notes,
+STRIKES_TOOL F). RUNNING_LOG §236.
+
+## CN-47 · 2026-09-08 — CN-44 continued: saving the whole shuffle and rhythm as a unit, saving selected PARTS too, each save carrying every choice that made it
+
+> *"c then also let's talk about how things are saved. so I would like to save the overall shuffle and rhythm as a unit. but also if I
+> select parts of it I can save those and the save would include my choices such as which cords and if I chose random shuffle etc. all
+> the data that was used to create that sequence"*
+> *(2026-09-08, answering topic 5 with (c) — a span marked by a drag AND by click / shift-click — and opening the saving)*
+
+*AI reading (not the composer's words):* a save is the sequence AND its recipe — the dealt result (every onset with its players and
+pitches, the flags) together with everything that produced it: the chord list, the order, the advance, the selection, the player range,
+the dealer, the seed, the rhythm dials and the manual onsets. Two grains: the WHOLE (the shuffle and the rhythm as one unit) and a
+PART (a marked span saved on its own, carrying the same provenance and the memory of the whole it came from). This is the morph
+panel's ACTUAL with its recall (§213) brought to the strikes drawer, whose takes today keep the settings alone. RUNNING_LOG §239.
