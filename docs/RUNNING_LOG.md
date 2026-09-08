@@ -6744,3 +6744,20 @@ neighbours within 200 ms; the collision check still runs over it and FLAGS it (�
 moving it (§237); a ✕ hands the onset back to the machine and it is re-dealt with the rest; the hand onsets travel in the recipe (the
 save of step 5); checks — a hand onset survives a re-generate and a re-seed, its neighbours respect its players, a colliding one is
 flagged and unchanged, the ✕ restores.
+
+## §244. PLAN 1k — step 3 (the manual onset) agreed and written; step 4, the span and the partial insert, put to him
+
+Composer, 2026-09-08: *"good"* to step 3 as put — the card at the onset (the cue picker's idiom), its count and chord and notes and
+players, his double-click keeping its meaning, the hand onset pinned through a re-generate and a re-seed with the machine dealing
+around it, the collision flagged and never lowered, the ✕ back to automatic, the hand onsets travelling in the recipe, the checks.
+Written into PLAN 1k, committed.
+
+**Step 4 put to him, goal and sub-steps together:** marking a span in the rhythm strip by a drag AND by a click on the first onset with
+a shift-click on the last (§239, his "c"), the marked columns lit with a count in the readout ("6 of 23 onsets · 2.4 s"), a click on
+empty space clearing it; the drawer's existing insert buttons then writing only the marked onsets — *Insert @ playhead* (the first
+marked onset landing there, the rest keeping their distances) and *Insert @ original time*, each as one group with its marker and META
+shape, the notes on the players' lanes with their techniques and their loudness through 1g's remap; nothing marked = the whole
+sequence, so the buttons read exactly as today; the same in NOTES mode (the drawer's single-note strikes gain the partial insert too);
+the rest of the sequence staying in the drawer for another insert, the marked span remembered until changed; checks on a copy with real
+events — both ways of marking, only the marked onsets written, the group's shape carrying them, the whole-sequence case unchanged,
+notes mode too.

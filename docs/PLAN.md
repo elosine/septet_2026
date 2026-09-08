@@ -930,7 +930,24 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        repainting the keyboard, the decoded MIDI of Hear (the right players, the right pitches, no two attacks closer than 200 ms on one
        player).
   3. **The manual onset** (the card at the onset: its count, its chord or typed notes, back to automatic; the collision flagged) —
-     *to be laid out when we discuss it.*
+     `todo — agreed 2026-09-08 (RUNNING_LOG §244)`. *Result when done:* any onset can be set by hand — its count, its chord or its exact
+     notes, and which player takes which note — in a card that opens at the onset in the rhythm strip; the machine solves the rest of the
+     sequence around it and never overrides it; the 200 ms check still runs over it and flags it; a ✕ hands it back to the machine. The
+     to-dos:
+     - the card: opened by a click on the onset's column in the strip (the cue picker's idiom, PLAN 1j), draggable, ENTER applies, ESC
+       closes; the onset named by its time and its chord;
+     - what it holds: the count, the chord (from the list or typed pitches), the notes taken (chosen, or left to the machine within that
+       chord), and the player for each note;
+     - his double-click on a keyboard key moving a note to another player marks THAT onset by hand — the gesture keeps its meaning
+       (§242);
+     - a hand onset is PINNED: a re-generate and a new seed keep it; the machine deals the rest around it and its players are
+       unavailable to the neighbours within the re-attack time;
+     - the collision check still runs over it and FLAGS it (✗ in the strip, named in the readout), never lowering it and never moving it
+       (§237);
+     - a ✕ hands the onset back to the machine and it is re-dealt with the rest;
+     - the hand onsets travel in the recipe (the save of step 5);
+     - check: a hand onset survives a re-generate and a re-seed; its neighbours respect its players; a colliding one is flagged and
+       unchanged; the ✕ restores.
   4. **The span and the partial insert** (marked by drag and by click / shift-click, the insert buttons acting on it, in both modes) —
      *to be laid out when we discuss it.*
   5. **Saving** (the result and the recipe, whole or part; load as it was, or as settings) — *to be laid out when we discuss it.*
