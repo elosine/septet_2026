@@ -6438,3 +6438,11 @@ check script; the documents (NAMING §2.13 the line's fields, MORPH_NOTES §1, t
 PLANNER); then his first lines in the piece (a hard reload, his test score, [Morph], lines → piano at 183 s, the ticks, a line
 clicked, a pitch · a voice · a dynamic · a duration, apply, heard), his verdicts to MORPH_NOTES §3 and NITS; the notation of a
 cue-born note at 2a. After step 5: the whole item shown once, "is that it?", and what sits outside the plan.
+
+## §228. CN-43, phase 3 complete — step 5 agreed ("good") and written; PLAN 1j planned whole; the item shown to him once ("is that it?")
+
+Composer, 2026-09-08: *"good"* — step 5 as put (§227). **PLAN 1j is planned whole** — five steps in the fixed formats, each agreed in
+one turn (goal and sub-steps together from step 2, his format of §224) and written at once; the status `PLANNED`, the build at his
+word, step 1 first. Shown to him once as the method asks, with what sits outside the plan: the build's go (each step a chunk —
+proposal → go → build on a copy → verify → docs → commit → push), his listening of the piano harmonics (§218) still pending, the two
+NITS of §218. Twelve turns from CN-43 to the plan.

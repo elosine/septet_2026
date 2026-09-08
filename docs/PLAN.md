@@ -758,7 +758,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   and other libraries with more harmonics looked at. Planned at his word when the morph section is composed (the planning method).
 
 - **1j — The piano's articulation points from the morph: empty lines at the re-breaths, the peaks and the breath ends, each clicked into a note (CN-43)** —
-  `todo — in planning 2026-09-08 (PLANNING_METHOD phase 3 from step 1; RUNNING_LOG §219–223)` *(composer, 2026-09-08, CN-43: "I'd
+  `todo — PLANNED 2026-09-08 (the planning method, phases 1–3; RUNNING_LOG §219–228); the build at his word, step 1 first` *(composer, 2026-09-08, CN-43: "I'd
   like generated from the morph. just articulation points. These can maybe appear as lines in the piano part, but initially with
   nothing attached … from any of the morph onsets, the rebreath, the peak point, those dots, and the end of a breath … click on any of
   those lines. and assigned a pitch and an articulation … normal piano, muted piano, or harmonic. or Plucked. and then duration and
@@ -851,7 +851,19 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        only); a hidden line takes no click; clear removes only the pitchless lines; a reload keeps the ticks; a node check for the
        filter itself.
   5. **Verify and document** (the checks, the walk on a copy with real events, the decoded MIDI, the docs; then his first lines in the
-     piece) — *to be laid out when we discuss it.*
+     piece) — `todo — agreed 2026-09-08 (RUNNING_LOG §228)`. *Result when done:* the whole of 1j walked end to end on a copy with real
+     mouse and key events and the decoded MIDI, one node script checking every pure part, the documents saying what exists; then his
+     first lines in the piece and his verdicts in the notes. The to-dos:
+     - the walk on a copy: lines → piano on the BLOOM, the ticks, a line clicked, a key, the sound decoded on the piano port at the
+       voice's channel, apply, a re-run keeping the note, the morph's shape dragged with the lines and the notes following, save and
+       reload, undo through all of it, the CLI on a file;
+     - the node checks in one script (`tools/piano_cues_check.js`): the generator's counts and pitches, the filter, the ensemble at an
+       instant, the dynamic → height, the presets;
+     - the documents: the line's fields in NAMING §2.13, a bullet in MORPH_NOTES §1, the buttons' titles, PLAN 1j's statuses, the
+       journal §2 and PLANNER NOW; the lab journal as the work happens;
+     - his first lines: a hard reload, his test score, [Morph], the playhead in the BLOOM, lines → piano, the ticks, a line clicked, a
+       pitch · a voice · a dynamic · a duration, apply, heard; his verdicts → MORPH_NOTES §3 and NITS, fixes at his word;
+     - later, at 2a: the notation of a note born from a line (its source in the provenance).
 
 ## 2. Notate — `deferred` until the first real page exists
 
