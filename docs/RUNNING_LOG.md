@@ -7708,3 +7708,61 @@ chosen.**
 **Put to him as topic 1:** is the hand-over what the machine should do — the player who just struck takes the next onset's long
 sound — or was k − 1 an accident of working left to right by hand, with the real intention the "roomiest free instrument" his ranking
 actually shows? Only he can say which of the two he was hearing.
+
+## §286. PLAN 1n — HE RENAMES THE UNIT: an accent plus a prolonged thing, one gesture; and the three candidate selection rules simulated on his own run
+
+Composer, 2026-09-08, answering topic 1 — and the answer reframes the item:
+
+> *"the unit is the accent and the prolongued thing eg trill, crescendo, longtone; so the accent kicks off the long as if they were one
+> unit, and with cres, I'll also have the accent be the cutoff so crescendo cutoff by accent as one unit; I tried and I think it sounds
+> better when the crescendo ends at the end of the accented note, though these are short; the one that plays the long was just a
+> pragmatic choice done by eye, more of an issue when there are fewer gaps, and there should be an abort strategy if there never is
+> enough room otherwise no strong preference, maybe rotate to the player who played a long the longest before or to avoid a lot of short
+> longs in a row or a mixture of longer and shorter longs, recommendation?"*
+
+**Three things settled by him.**
+
+1. **The unit is not "an onset, and a long somewhere else".** It is **an ACCENT + a PROLONGED THING as one gesture** — the accent kicks
+   the long off. The prolonged thing is a **trill · a crescendo · a long tone** (a long tone is new here; CN-48 named only trills and
+   crescendos).
+2. **A crescendo is cut off by an accent, and that accent is part of the same unit** — *"crescendo cutoff by accent as one unit"*. He
+   tried it: **the crescendo ends at the END of the accented note**, not before its start. So inside 1n a cut crescendo does NOT use
+   1l's 0.17 s gap; the gap rule stays for a free-standing crescendo (1m). CN-48's mode 2 (*"precisely the end of the cres is at the end
+   of the strike duration"*) is confirmed and made exact.
+3. **Which player takes the long carries no intention** — *"a pragmatic choice done by eye"*. So the d = −1 hand-over found in §285 is
+   an artefact of working left to right, not a rule to copy. What he does want: **an abort strategy when there is never enough room**,
+   and a rule that avoids **a lot of short longs in a row** while giving **a mixture of longer and shorter**.
+
+**The three candidate rules simulated on his own run** (`grp-strike-40-1357`: 46 onsets, 13.0 s, exactly ONE player per onset, the
+whole ensemble passing a single line around), each at four length floors, the length always derived from the chosen player's room:
+
+| rule | floor | longs | aborts | median length | under 0.4 s | per player |
+|---|---|---|---|---|---|---|
+| least-recently-long (roomiest breaks ties) | 0.0 | 46 | 0 | 1.25 s | 5 | 7/6/8/7/6/6/6 |
+| least-recently-long | **0.3** | **43** | **3** | **1.32 s** | 2 | 6/6/7/6/6/6/6 |
+| least-recently-long | 0.5 | 38 | 8 | 1.52 s | 0 | 6/5/5/6/4/6/6 |
+| least-recently-long | 0.8 | 31 | 15 | 1.96 s | 0 | 5/3/4/5/4/5/5 |
+| always the roomiest | 0.3 | 43 | 3 | 1.32 s | 2 | 6/6/7/6/6/6/6 |
+| **his stated rule** (tightest that clears) | 0.0 | 46 | 0 | **0.13 s** | **40** | 7/8/8/7/5/5/6 |
+| his stated rule | 0.3 | 46 | 0 | 0.52 s | 8 | 7/7/7/6/6/6/7 |
+
+**Three findings.**
+
+- **His stated rule is the one to drop.** *"The empty instrument with the shortest available space"* gives a median long of **0.13 s**
+  and **40 of 46 under 0.4 s** — precisely the *"lot of short longs in a row"* he says he wants to avoid. His hand never did it either
+  (§285: he took the third-to-fifth roomiest, never the tightest).
+- **Least-recently-long and always-the-roomiest are indistinguishable here** — identical numbers at every floor. In a run that passes a
+  single line evenly round seven players, the least-recently-long player IS the roomiest. So the rotation costs nothing on this texture
+  and protects him on an uneven one, where the two part company. Take the rotation.
+- **The floor is the only real dial, and 0.3 s reproduces his own density**: 43 longs and 3 aborts against the 44 longs he made by
+  hand. A floor in SECONDS survives the acceleration; his CN-48 guess of *"a min say something like 2 seconds"* cannot — his own longs
+  run down to 0.15 s at the tail of this run.
+
+**Recommended, and put to him:** least-recently-long with the roomiest breaking ties; **one length floor per kind** (crescendo 0.3 s =
+1l's `minS`; trill 0.5 s, because a trill needs a few oscillations to read as one; long tone 0.3 s); **abort the onset** when nothing
+clears the floor, and report how many were aborted. The mixture of longer and shorter comes free (0.38 s to 5.68 s at floor 0.3) —
+a seeded jitter that sometimes takes the second or third least-recently-long is offered as one dial if he wants it deliberate.
+
+**The one question left on this topic:** the accent and the long — **the same player, or two?** Every one of his 44 trills starts on a
+player that is NOT striking that onset (§285), which reads as an attack in one instrument prolonged by another — one gesture in the ear,
+two players. His words *"as if they were one unit"* fit that. To be confirmed before the top line is drawn.

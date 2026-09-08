@@ -1251,3 +1251,18 @@ once, and then every C without a selection takes the next pitch from it — the 
 shuffled to completion then reshuffled · random, seeded), and the state being his to continue, switch or restart. It makes the C key
 two gestures in one: **on a note** it takes that note's pitch (topic 2), **on nothing** it takes the harmony's next pitch. The second is
 how a passage gets written quickly; the first is how a passage gets answered.
+
+## CN-54 — the unit of the filled sequence: an accent and a prolonged thing (2026-09-08)
+
+> "the unit is the accent and the prolongued thing eg trill, crescendo, longtone; so the accent kicks off the long as if they were one
+> unit, and with cres, I'll also have the accent be the cutoff so crescendo cutoff by accent as one unit; I tried and I think it sounds
+> better when the crescendo ends at the end of the accented note, though these are short; the one that plays the long was just a
+> pragmatic choice done by eye, more of an issue when there are fewer gaps, and there should be an abort strategy if there never is
+> enough room otherwise no strong preference, maybe rotate to the player who played a long the longest before or to avoid a lot of short
+> longs in a row or a mixture of longer and shorter longs, recommendation?"
+
+**The AI reads it as** (marked as the AI's, not his): the gesture of PLAN 1n is not "an onset gets a long somewhere" but **accent +
+prolongation as one thing**, with a third part for crescendos — a second accent that cuts it off, the crescendo ending at the END of that
+accented note. The prolonged thing has three kinds: trill · crescendo · **long tone** (new here; CN-48 named only the first two). Which
+player takes the long carries no musical intention, so it is the machine's to choose — with an abort when nothing fits. See RUNNING_LOG
+§285–286 for the measurement of his own texture at 135.78 s and the three rules simulated on it.
