@@ -141,20 +141,30 @@ into `properties.cresc.slot`, and the tick sends on it. **Empty pool = no rotati
 **Three is the plan**, since his gesture scale starts near 1.5 s. The tool **warns** when the rotation cannot keep the tolerance,
 naming the moment — that warning, not a guess, is the signal to add a fourth.
 
-**What the rack still needs — his five minutes** (checked live through the bridge, §269: Reaper 7.72 with the rack open, one Kontakt
-instance per string and nothing else loaded in them; ReaScript cannot load an instrument into a slot, and Kontakt's own Lua API runs
-inside Kontakt, so this is GUI work):
+**This is D11, not a new idea (§270–271).** He decided it on 2026-09-03 in these words: *"there's going to be events that happen
+right after a crescendo much sooner than two seconds … a crescendo in the violin that goes to secco … the next event might come in
+in a hundred and fifty milliseconds … So probably better to continue using multiple channels."* Every Kontakt port carries **ch 1
+MAIN** (plain notes; no moving controller) and **ch 2 / 3 / 4 CURVE A/B/C**, round robin. His rack has held those four slots since;
+the app had never read them, which is the only reason a cut was revivable.
 
-| instance | load | on channels | why |
-|---|---|---|---|
-| Vn1 XS · Vn2 XS · Va XS · Vc XS | the same Xsample instrument, twice more | **2 and 3** (1 stays the main slot) | the strings run all 88 articulations through channel 1 by CC0, so 2–16 are free |
-| Bass Clarinet XS | the same, twice more | **2 and 3** | 1 and 5 are taken |
-| Flute (UVI) | — | — | its two ports use all sixteen channels; its pool waits for one new loopMIDI port, or it goes without |
+**Wired 2026-09-08 (PLAN 0f / 0c.7, §271):** the recipe's `channels: { main, curve }` (the four strings had it; the bass clarinet
+was added), `Composer.curveChannelsOf` · `isCurveEvent` · `curveChannelMap` · `channelFor`, and `resetCC7All` sweeping the curve
+channels too. **Proved by the decoded MIDI:** violin 1 cuts its crescendo on channel 2 and re-pins the next note on channel 3 — the
+tail cannot come back; the flute does both on channel 12, because it has no bank.
 
-Each new slot wants the same output as slot 1 (so the balance holds) and its own MIDI channel. When they exist, the pool is one edit:
-`Cresc.DEFAULTS.pool = { violin1: [1, 2, 3], violin2: [1, 2, 3], viola: [1, 2, 3], cello: [1, 2, 3], bass_clarinet: [1, 2, 3] }`,
-and everything downstream already reads it.
+| player | curve bank | the secco cut |
+|---|---|---|
+| Vn1 · Vn2 · Va · Vc · BCl | ch 2 · 3 · 4 | safe by architecture — the next event is on another channel |
+| Flute | **none yet** | shares a channel; the tolerance decides whether the tail returns |
+| Piano | none | a piano cannot swell; main only |
 
+**The flute is the one decision left (0c.7, deferred on 2026-09-03).** On UVI a channel IS a technique — 26 of them over 16
+channels on `Flute`, 4 more on `Fluteb` — so a curve channel cannot be "the same instrument again" as a Kontakt slot can. It must be
+a curve COPY of a technique, and `Fluteb` has 13 free slots for exactly this. A crescendo only needs `ord`, so **one free slot would
+do it**. The alternative, recorded in §16, is to leave the flute on the tuba piece's timing law and accept the ring.
+
+**Still on MAIN and still to do:** trills and beatings carry precomputed snippets with explicit channels, so they have not moved yet
+— the next piece of PLAN 0f.
 **His standing principle beside it (CN-50):** *"the rotation happens in the back-end … so we don't have to think about it on the
 front end"* — the playback architecture absorbs the sampler's limits; the demo must not be shoddy; no long chase after intractable
 playback problems.

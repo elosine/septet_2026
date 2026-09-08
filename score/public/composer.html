@@ -10585,10 +10585,9 @@ const Composer = {
             const portKey = ((tech && tech.port) || inst.port || '').toLowerCase();
             const output = this._zoneMidiOutputs[portKey];
             if (!output) return;
-            // PLAN 1l step 5 (CN-50): a secco crescendo sounds on the slot the back-end rotation gave it, so a cut slot is left alone
-            // while the others sound; no pool = its own channel, exactly as before (Cresc.assignSlots writes properties.cresc.slot)
-            const slot = (wc.properties && wc.properties.cresc && wc.properties.cresc.slot) || null;
-            const ch = (slot != null ? slot : ((tech && tech.channel) || 1)) - 1;
+            // D11 (PLAN 0f): a curve-bearing event sounds on one of this player's CURVE channels, round robin; a plain or
+            // keyswitched note stays on MAIN. Without a curve bank (the flute, the piano) this is the technique's own channel.
+            const ch = this.channelFor(wc, tech);
             const st = this._activeCurvePlayback[wc.id];
             const audible = this.isPartAudible(wc.layer);
 
@@ -10769,6 +10768,54 @@ const Composer = {
         output.send([0xB0 | ch, 7, 0], Math.max(performance.now(), atPerf - this.SECCO_LEAD_MS));
         return true;
     },
+    // ================= D11 · THE CURVE CHANNELS (PLAN 0f / 0c.7; RUNNING_LOG §270–271) =================
+    // His decision of 2026-09-03, in his own words: "there's going to be events that happen right after a crescendo much sooner than
+    // two seconds … a crescendo in the violin that goes to secco … the next event might come in in a hundred and fifty milliseconds …
+    // So probably better to continue using multiple channels." Every Kontakt port carries ch 1 MAIN — plain notes, dynamics by
+    // velocity, articulation by the prelude's CC0, and no MOVING controller — and ch 2/3/4 CURVE A/B/C, used ROUND ROBIN by any event
+    // that streams one (a crescendo's CC7, a morph note's bend, a drawn swell). His rack has held those four slots since; nothing in
+    // the app read them until now, so every event has been sharing channel 1 — which is what made a secco cut revivable.
+    // The assignment is computed once per playthrough from the score, in time order, so it is stable and inspectable.
+    curveChannelsOf(lane) {
+        const inst = this.trackInstrument(lane);
+        return (inst && inst.channels && Array.isArray(inst.channels.curve)) ? inst.channels.curve : [];
+    },
+    // does this note stream a continuous controller? a captured ('plain') or keyswitched ('ks') note holds a static level: MAIN.
+    isCurveEvent(wc) {
+        if (!wc || wc.type !== 'waveCurve' || wc.sonifyNote == null) return false;
+        if (wc.sonifyMode === 'plain' || (wc.sonifyMode === 'ks' && wc.ksNote != null)) return false;
+        return true;   // a drawn note follows its curve (1g item 5); a morph note also bends; a crescendo also gets cut
+    },
+    curveDirty() { this._curveCh = null; },
+    curveChannelMap() {
+        if (this._curveCh) return this._curveCh;
+        const map = {}, byLane = {};
+        this.objects.forEach(o => { if (this.isCurveEvent(o)) (byLane[o.layer] = byLane[o.layer] || []).push(o); });
+        const restS = (typeof Cresc !== 'undefined' ? Cresc.DEFAULTS.toleranceS : 2);
+        Object.keys(byLane).forEach(k => {
+            const lane = +k, pool = this.curveChannelsOf(lane);
+            if (!pool.length) return;   // no curve bank (the flute, the piano): its technique's own channel, as before
+            const list = byLane[lane].sort((a, b) => a.startSeconds - b.startSeconds);
+            const freeAt = {}; pool.forEach(c => { freeAt[c] = -Infinity; });
+            list.forEach(wc => {
+                const cut = !!(wc.properties && wc.properties.cresc && wc.properties.cresc.secco !== false);
+                let pick = null, best = Infinity;
+                pool.forEach(c => { if (freeAt[c] <= wc.startSeconds + 1e-9 && freeAt[c] < best) { best = freeAt[c]; pick = c; } });
+                if (pick == null) pick = pool.reduce((b, c) => (freeAt[c] < freeAt[b] ? c : b), pool[0]);
+                // a cut slot must rest (the tail comes back if CC7 is raised too soon); an ordinary swell only needs its own span
+                freeAt[pick] = wc.endSeconds + (cut ? restS : 0.05);
+                map[wc.id] = pick;
+            });
+        });
+        this._curveCh = map;
+        return map;
+    },
+    // the channel an event sounds on: its curve channel when it has one, else the technique's own (D11's MAIN)
+    channelFor(wc, tech) {
+        const assigned = this.curveChannelMap()[wc.id];
+        return (assigned != null ? assigned : ((tech && tech.channel) || 1)) - 1;
+    },
+
     resetMorphBend() {
         const bent = this._morphBentChannels;
         if (!bent) return;
@@ -10818,7 +10865,9 @@ const Composer = {
         TRACKS.forEach(t => {
             const inst = typeof INSTRUMENTS !== 'undefined' && INSTRUMENTS[t.instKey];
             if (!inst) return;
-            (inst.techniques || []).forEach(tech => {
+            // D11's curve channels are swept too — a secco cut leaves one at CC7 0, and nothing else would raise it (RUNNING_LOG §271)
+            const extra = ((inst.channels && inst.channels.curve) || []).map(c => ({ port: inst.port, channel: c, cc0: null }));
+            (inst.techniques || []).concat(extra).forEach(tech => {
                 const portName = (tech.port || inst.port || '').toLowerCase();
                 const out = this._zoneMidiOutputs[portName];
                 const ch = (tech.channel || 1) - 1;

@@ -118,6 +118,7 @@ const INSTRUMENTS = {
   // Started from piece #3 sandbox/instruments.js `bass_clarinet_xs` (13 starter presets); the FULL menu
   // the deep map is #3/docs/XSAMPLE_BASSCL_map.md. Floor rule: never send below MIDI 34.
   bass_clarinet: { balanceDb: -9, ordinary: "senza_vel", playerBendSt: 1, bendRangeSt: 2,
+    channels: { main: 1, curve: [2, 3, 4] },   // D11: ch 1 MAIN · 2–4 CURVE A/B/C — the four Kontakt slots his rack holds (his screenshots, 2026-09-08)
     label: "Bass Clarinet",
     port: "BassCl",
     rangeLow: 34,   // floor rule: never send below MIDI 34 (keyswitch/function zone)

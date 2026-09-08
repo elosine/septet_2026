@@ -7362,3 +7362,41 @@ bass clarinet falls back to its own channel, because its recipe entry has no `ch
 3. **The flute's decision (0c):** curve copies of `ord` (at least) in the free Fluteb slots, or the flute goes without curve channels.
 4. **The tolerance**, from the probe file, to confirm three is enough.
 Nothing here was wasted: the cut, the probe, the rotation and the warning all stand; only their pool moved to where it always belonged.
+
+## §271. D11's CURVE CHANNELS WIRED (PLAN 0f / 0c.7) — five days after the rack was built for them; the secco cut is now safe by architecture, and the UVI question answered from the record
+
+2026-09-08, at his *"then proceed with 1, 2, 3, 4"*.
+
+**What the UVI question turned out to be** (his *"what did we decide to do for uvi instruments and cc7 9/3? did we defer it?"*): D11's
+own text covers *"every Kontakt / Xsample port (bass clarinet, vn 1, vn 2, va, vc)"* — **the flute was deferred in the same
+conversation** (§16): *"Flute (SI2 in UVI): channel = technique, 16 + 12 parts — no spare channel per technique, so banks cost slots.
+Either the tuba law as it stands, or curve copies of the few curve-bearing techniques (`ord`, `aeolian`, `flz` …) in the four free
+Fluteb slots. Decide at 0c once the composer's UVI order is transcribed; recommendation: a curve copy of `ord` at least."* The order was
+transcribed (§60: 16 parts on `Flute`, 3 on `Fluteb`, **13 slots free** "for 0c.7's curve copies"), but **0c.7 never ran** — so the
+decision is still open, and it is his.
+
+**Why the flute is different in kind:** on UVI a channel IS a technique (26 techniques over 16 channels on `Flute`, 4 more on
+`Fluteb`), so a curve channel cannot be "the same instrument again" as it is in a Kontakt slot — a curve copy must be made per
+technique. The crescendo only needs `ord`, so one free Fluteb slot would do it.
+
+**Built (items 1 and 2 of the list he approved):**
+1. **The bass clarinet's `channels`** — `{ main: 1, curve: [2, 3, 4] }`, matching the four slots his rack has held. *(A patch of mine
+   corrupted that line on the way in — it rewrote `balanceDb: -9` as `-1.5` and dropped `playerBendSt` and `bendRangeSt`. Caught by
+   reading the entry back before committing; repaired; the diff is now the one added line. The lesson is the old one: a replacement
+   string must carry the ORIGINAL text verbatim, and a patch that rewrites a line it did not need to touch is a patch with a bug.)*
+2. **The router** (`composer.html`): `curveChannelsOf(lane)` reads the recipe; `isCurveEvent(wc)` says whether a note streams a
+   controller (a captured or keyswitched note does not — it stays on MAIN); `curveChannelMap()` walks each player's curve events in time
+   order and rotates the pool, leaving a **secco-cut channel to rest** for the tolerance and an ordinary swell only its own span;
+   `channelFor(wc, tech)` is what the tick now asks. `resetCC7All` sweeps the curve channels too, or a cut one would stay silent.
+
+**Verified by the decoded MIDI on the probe file** — both halves of the story in one playthrough:
+- **Violin 1** (D11 bank): the crescendo on **channel 2** (`cc0=5 · cc7=88 · ON · cc7=0 · OFF`), the note after it on **channel 3**
+  (`cc0=5 · cc7=127 · ON`). **Different channels: the cut cannot be revived at all.** The stop sweep then visits ch 1 · 2 · 3 · 4.
+- **The flute** (no bank): both on **channel 12** — `cc7=0` then `cc7=127` on the same channel. That is the revival case, and it is
+  exactly what his ear must judge in the probe.
+- The rotation across the five rows: `2 · 4 · 2 · 4 · 3` on every string and the bass clarinet; `own` on the flute and the piano.
+
+**So the secco problem is now solved by architecture for six of the seven players**, five days after the rack was built for it. What is
+left: **the flute's decision (0c.7)** — a curve copy of `ord` in a free Fluteb slot, or the flute goes without and its crescendos keep
+the old hazard; and **the trills and beatings still route themselves** (their zones carry precomputed snippets with explicit channels),
+so they are still on MAIN — the next piece of 0f.

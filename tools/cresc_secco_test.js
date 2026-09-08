@@ -68,10 +68,13 @@ const score = {
     version: 1, layoutVersion,
     tracks: tracks.map(x => ({ id: x.id, label: x.label, short: x.short, instKey: x.instKey })),
     assets: [],
-    metadata: { title: name, note: 'PLAN 1l step 5 — the SECCO TOLERANCE. Each row: a ' + crescS + ' s secco crescendo cut with CC7 0 at its end, ' +
-        'then a quiet note on the same player and slot after ' + gaps.join(' / ') + ' s. That note re-pins CC7 = 127, which is when a cut tail ' +
-        'would come back. Solo a part (S in its lane, ALT-click = exclusive) and listen down the rows: the first gap at which you hear NO ' +
-        'returning tail is this kit\'s tolerance. It decides how many slots a crescendo pool needs (three hold above ~0.75 s a crescendo at 2 s).',
+    metadata: { title: name, note: 'PLAN 1l step 5 — the SECCO TOLERANCE, and D11 shown working. Each row: a ' + crescS + ' s secco crescendo ' +
+        'cut with CC7 0 at its end, then a quiet note on the same player after ' + gaps.join(' / ') + ' s. ' +
+        'READ IT IN TWO HALVES. (1) THE FLUTE has no curve bank, so both sounds share one channel and the re-pin can revive the cut: solo the ' +
+        'flute and listen down the rows — the first gap with NO returning tail is this kit\'s tolerance. (2) THE STRINGS AND THE BASS CLARINET ' +
+        'have D11\'s curve channels (2/3/4), so the router puts the crescendo and the note on DIFFERENT channels and the tail cannot come back ' +
+        'at all: solo a string and you should hear a clean cut at every gap. If you do, D11 is doing its job and the tolerance only matters ' +
+        'when crescendos crowd each other onto the same curve channel — which the tool warns about.',
         generatedAt: new Date().toISOString(), generator: 'tools/cresc_secco_test.js' },
     objects,
     markers: [], databases: {}, nextId: id + 1,
