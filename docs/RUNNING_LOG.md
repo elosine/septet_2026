@@ -6802,3 +6802,38 @@ of §224: the goal and the sub-steps together) and written at once; the status `
 him once as the method asks, with what sits outside the plan: the build's go (each step a chunk — proposal → go → build on a copy →
 verify → docs → commit → push), his test of PLAN 1j (the lines, the bar, the picker; §233) and his listening of 1i's piano harmonics
 (§218), both still pending, and the two NITS of §218. Fourteen turns from CN-44 to the plan.
+
+## §248. PLAN 1k — the build begins at his word: "good to go for the build get through as much as you can check in when done or you need me"
+
+Composer, 2026-09-08. The AI builds steps 1–6 in order alone, each on a `zz-ai-` copy, verified with real events and the decoded MIDI,
+documented and committed at its wrap; his test after the build (the way of PLAN 1f §167 and 1j §229). The piece file is never written.
+Entries §249 on record each step.
+
+## §249. PLAN 1k step 1 BUILT — the chord engine (`score/public/strike_chords.js`, pure) and its 35 checks; the chord's TAIL named on the way
+
+2026-09-08. `deal(onsets, chords, players, opts, realize, manual)` → an event per onset: the chord in play, the notes taken, the players
+who take them (each folded into its range by the caller's `realize`), and the flags. Inside it: `chordSource` (the list in turn or
+shuffled to completion, seeded; the advance — exhaust the chord · stay n times, n drawn from his range · a fresh chord every onset);
+`select` (the drawer's voicing vocabulary over what the chord has left — played · shuffle · high · low · spread); the count drawn from
+his range per onset, LOWERED when too few players are free and FLAGGED only when even the minimum cannot be met (his (a), §237);
+`pickPlayers` (the free players by the re-attack rule; the dealer decides which when more are free than needed — robin = the longest
+idle, free = a seeded draw weighted by the wait, as the run's dealer of §138); `assign` (the notes to the chosen players BY REGISTER,
+lowest to lowest); `tightest` (the smallest gap between two attacks of one player — the rule as a fact); `describe`. The seed is the
+drawer's own `mulberry32`, so a seed means the same thing in both. A manual onset is pinned: its chord, its count and its players kept,
+the rule checked over it and FLAGGED, never lowered, and a re-seed leaves it alone.
+
+**Found and named on the way (not a defect — the faithful reading of his rule):** with *exhaust*, the LAST onset of each chord takes
+whatever is left, which is usually fewer notes than the count drawn. It is not a failure of the range; it is the chord's TAIL. The
+engine marks it `short`, the readout says "n short (the chord ran out)", and the range is honoured everywhere else. The alternative —
+topping the onset up from the next chord — was rejected: it would blur the chord boundary he asked to hear ("exhaust one cord then
+move to the next cord", CN-45). Small chords make many tails: the 54 chord shapes average 3.8 notes, so a 2–4 range on them is mostly
+tails; the 45 blasts (3–10 notes, mean 6.2) fill the range properly. Worth his ear at step 6.
+
+**35 checks** (`node tools/strike_chords_check.js`): the selection modes; the seeded shuffle identical to the drawer's; determinism from
+the seed and a different seed differing; every onset dealt; **the 200 ms rule never broken** (the tightest gap measured, 320 ms on the
+even run); the counts inside the range but for the tails; no player twice in one onset; the notes and the players rising together (by
+register); every note inside its player's range, folded by whole octaves, the folds counted; the three advance modes (exhaust covering
+every note once, a fresh chord each onset, exactly three onsets per chord at n = 3); both orders (in turn wrapping; shuffled to
+completion); a fast run lowering counts while the rest holds; a run too fast for the minimum flagging with the warning naming the cure;
+the manual onset kept through a re-seed, flagged when it breaks the rest, and gone when the hand setting is removed; empty inputs
+answered, not thrown.

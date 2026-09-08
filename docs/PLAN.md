@@ -885,7 +885,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   either *as it was* or *as settings* (CN-47, §239–240). The notation at 2a.
   *The top line, confirmed ("good", §240):*
   1. **The chord engine** (the chord list with its order and advance, the selection, the player range, the dealer by register under the
-     200 ms rule with the lowering) — `todo — agreed 2026-09-08 (RUNNING_LOG §241)`. *Result when done:* a pure module that turns the
+     200 ms rule with the lowering) — `built 2026-09-08 (RUNNING_LOG §249): score/public/strike_chords.js + 35 checks (tools/strike_chords_check.js); the chord TAIL named`. *Result when done:* a pure module that turns the
      settings into a dealt sequence — given the onsets the rhythm engine already makes, the chord list with its order and advance, the
      selection mode, the player range, the players taking part, the 200 ms rest and a seed, it returns for every onset the chord in
      play, the notes chosen, the players who take them folded into their ranges, and any flag; the same seed always gives the same
