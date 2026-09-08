@@ -1215,3 +1215,25 @@ Piece #6's material so far: CN-31 (the pointillistic multitempo section, the bou
 section), the 2026-09-04 notes (the pairs, the delicate continuous texture, the animated conductions), and now this. Nothing to build in
 the septet unless the septet asks for it; the transitions family (7) is the one part that might earn its place here first, since the
 morph and the harmony menu already sit next to each other. RUNNING_LOG §268.
+
+## CN-52 · 2026-09-08 — to do: the PIANO in the chord strikes — it picks up the partials the ensemble could not take, or plays several notes of the sonority itself
+
+> *"and can you take a note to todo revisit the chord strikes and incorporate alowing piano to play a whole chord or multiple partials
+> in a chord, for example, if that strike is allowing 3 instruments to avoid collisions, the piano can have the option of picking up
+> other partials not dealt in that strike, also, in any strike the piano can play multiple notes from the underlying sonority, and then
+> figure out an easy way to generate either single notes or chords for the piano per strike"*
+> *(2026-09-08, after PLAN 1k was built)*
+
+*AI reading (not the composer's words):* the piano is the one player that can take a whole chord at once, and PLAN 1k currently leaves
+it out of the deal entirely (its default cast is the six, as the morphs and beatings are — CN-34). He wants it back in, in a role only
+it can play: **the ensemble's leftovers**. Three things, and the third is the one to design:
+1. **The remainder.** When an onset's count is held down — by his range, by the 200 ms rest, by the lowering rule — some notes of the
+   chord go unplayed. **The piano may take those**, so the chord is complete even when the strings cannot be.
+2. **Free of the count.** In any strike the piano may play several notes of the underlying sonority whether or not the ensemble was
+   short, because a pianist's hand is not a bow: the collision rules that shape the others do not bind it the same way.
+3. **"An easy way to generate either single notes or chords for the piano per strike"** — the interface question, and the real work: a
+   per-strike choice (none · one note · a chord · the remainder), the way the drawer's other menus offer a rule rather than a hand
+   assignment.
+Its natural home is PLAN 1k as a later step, since it is the chord engine's own deal that decides what is left over. The septet's piano
+already has its harmonics and its lines from the morphs (1i, 1j); this is its third role, and the first that is about the ensemble's
+gaps rather than its own colour.

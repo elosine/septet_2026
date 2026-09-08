@@ -616,8 +616,9 @@ back with nothing re-dealt, or the dials filled and dealt again. The 153 earlier
 `score/public/strike_chords_ui.js` (chords mode as a mixin on the drawer) · five dispatch lines in `strike_drawer.js`. **Nothing new in
 the score's file format:** an insert writes ordinary strike notes in an ordinary `grp-strike-…` group with its META shape.
 
-**Not yet:** the notation of a chord strike (2a); a chord list saved on its own (a take carries one today); the piano in the deal (it
-sits out, as it does in the morphs and the beatings — CN-34); his listening.
+**Not yet:** the notation of a chord strike (2a); a chord list saved on its own (a take carries one today); **the PIANO in the deal —
+now a to-do with a shape (CN-52, PLAN 1k step 7): it sits out today, and the plan is to give it the ensemble's REMAINDER (the notes an
+onset could not take) or several notes of the sonority freely, chosen by a per-strike rule rather than by hand**; his listening.
 
 ## Open questions for the composer (only what blocks the next piece)
 

@@ -997,6 +997,17 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - his first chord strike: a hard reload, the drawer, chords mode, a chord list from the banners, the dials, generate, hear, a span,
        insert; his verdicts → STRIKES_TOOL and NITS, the fixes he marks "fix now" built at once;
      - later, at 2a: the notation of a chord strike.
+  7. **Later — the PIANO in the chord strikes** (it picks up what the ensemble could not take, or plays several notes of the sonority
+     itself) — `todo — noted 2026-09-08 (CN-52), to be planned when its turn comes` *(composer: "allowing piano to play a whole chord
+     or multiple partials in a chord … if that strike is allowing 3 instruments to avoid collisions, the piano can have the option of
+     picking up other partials not dealt in that strike, also, in any strike the piano can play multiple notes from the underlying
+     sonority, and then figure out an easy way to generate either single notes or chords for the piano per strike")*. *Why:* the piano
+     is the one player that can take a whole chord at once, and 1k leaves it out of the deal (its cast is the six, as the morphs and
+     beatings are — CN-34); this gives it the role only it can play, the ensemble's remainder. **The three parts:** the REMAINDER (the
+     notes an onset could not deal — held down by his range, by the rest, by the lowering rule — offered to the piano so the chord is
+     complete even when the strings cannot be); FREE OF THE COUNT (several notes of the sonority whether or not the ensemble was
+     short, since a hand is not a bow); and the interface, which is the real work — a per-strike rule (none · one note · a chord · the
+     remainder) in the drawer's own manner, a menu rather than a hand assignment. *To be laid out when we discuss it.*
 
 - **1l — The crescendo itself: the standard curve, the object in the score, one spacing rule (CN-48; the foundation under 1m · 1n · 1o)** —
   `steps 1–4 BUILT 2026-09-08 (RUNNING_LOG §262; docs/CRESCENDO.md), the standard NAMED by him (surge, §263); step 5 — SECCO and the round robin — agreed the same night (CN-49 · CN-50; §263–266) and to build` *(composer, 2026-09-08, CN-48: "lets do a

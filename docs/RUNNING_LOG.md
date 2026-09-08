@@ -7400,3 +7400,12 @@ technique. The crescendo only needs `ord`, so one free Fluteb slot would do it.
 left: **the flute's decision (0c.7)** — a curve copy of `ord` in a free Fluteb slot, or the flute goes without and its crescendos keep
 the old hazard; and **the trills and beatings still route themselves** (their zones carry precomputed snippets with explicit channels),
 so they are still on MAIN — the next piece of 0f.
+
+## §272. CN-52 taken as a to-do — the piano in the chord strikes: the ensemble's remainder
+
+Composer, 2026-09-08: *"can you take a note to todo revisit the chord strikes and incorporate alowing piano to play a whole chord or
+multiple partials in a chord …"* — verbatim in CN-52. Recorded as **PLAN 1k step 7** (`todo`, to be planned when its turn comes) and as
+a line in `STRIKES_TOOL.md` §X's "Not yet". Its shape as the AI reads it: the REMAINDER (the notes an onset could not deal, offered to
+the piano so the chord is complete even when the strings cannot be), FREE OF THE COUNT (several notes of the sonority whether or not the
+ensemble was short — a hand is not a bow), and the interface, which is the real work: a per-strike rule (none · one note · a chord · the
+remainder) in the drawer's own manner. Nothing built; nothing else moved.
