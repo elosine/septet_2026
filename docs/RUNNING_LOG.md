@@ -7502,3 +7502,24 @@ spirit, and the fastest way to fill a passage. (iii) NOTHING selected — the AI
 because a crescendo needs a pitch and guessing one from the playhead would be a surprise (T can fall back because it hunts an anchor note
 within 8 s for its pitch; C would be inventing). A marked span, when there is one, sets the DURATION and the selected note still gives the
 pitch. **The question:** several notes at once — yes, or one at a time?
+
+## §278. PLAN 1m topic 3 decided — several notes give a crescendo each; with nothing selected the pitch comes from a chosen harmony, dealt from a STANDING BAR (CN-53); phase 1 complete
+
+Composer, 2026-09-08: *"a good"* to the standing bar. So topic 3 closes with three answers: **several notes selected → one crescendo on
+each**, every one with its own pitch, its own end and its own greyed source; **nothing selected → the pitch comes from a chosen sonority**
+(CN-53), the lane being the active lane and the start the playhead, as T falls back today; **the source lives in a small standing bar**
+like the piano lane's lines bar — the sonority, the order, how many pitches are left in the deck, and the two buttons *change harmony*
+and *restart this harmony*; continuing is simply pressing C again.
+
+**Reused, not invented** (named in the analysis): the morph panel's PITCH SOURCE (the harmony banks, his kept sets, stacks and Messiaen
+modes from a root, the notes spelled) and 1k's CHORD SOURCE (in turn · shuffled to completion then reshuffled, seeded). The unit here is
+one pitch rather than a chord part, and a pitch outside the player's range folds by octave into it as 1k already folds.
+
+**Also answered on the way, from the code:** where a trill's pitch comes from when he presses T with nothing selected — `trillAnchorNote`
+takes **the nearest earlier note on that same player, within 8 s**, and the trill's second note is a whole step above it
+(`trillDefaults`, `interval: 2`); with no note at all it falls to the middle of the instrument's range. That is why the pitches he liked
+sounded right: the trill picked the line up where that player had left it. C does NOT copy this — a harmony deck is his choice instead.
+
+**PHASE 1 COMPLETE for 1m.** Three topics decided (§276–278). The small remainders are proposals inside the steps, not topics: the card
+holds his four controls (the dynamic range, the duration, the articulation, the secco tick), remembers its last settings, and ENTER /
+ESC / CTRL+Z behave as they do in 1j's picker.

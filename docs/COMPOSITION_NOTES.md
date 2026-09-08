@@ -1237,3 +1237,17 @@ it can play: **the ensemble's leftovers**. Three things, and the third is the on
 Its natural home is PLAN 1k as a later step, since it is the chord engine's own deal that decides what is left over. The septet's piano
 already has its harmonics and its lines from the morphs (1i, 1j); this is its third role, and the first that is about the ensemble's
 gaps rather than its own colour.
+
+## CN-53 · 2026-09-08 — C with no note selected: the pitch comes from a chosen HARMONY, dealt like the strikes' round robin, and the set can be continued, changed or restarted
+
+> *"a good, lets talk through no note selected; so maybe I'm working with something from the harmony drawer, and this can be the slotted
+> choice, so every one I start without a pitch selected takes a pitch from the selected harmony and the similar choices to the strikes
+> round robbin, finishes pitch set and re shuffles or chooses random etc, and whith each new one, i can continue or select a different
+> harmony or restart with same harmony analysis/recommendations?"*
+> *(2026-09-08, planning PLAN 1m, topic 3)*
+
+*AI reading (not the composer's words):* the empty-handed C stops being an error and becomes a **way of writing**: he chooses a sonority
+once, and then every C without a selection takes the next pitch from it — the deck's rules being the ones he already has (in order ·
+shuffled to completion then reshuffled · random, seeded), and the state being his to continue, switch or restart. It makes the C key
+two gestures in one: **on a note** it takes that note's pitch (topic 2), **on nothing** it takes the harmony's next pitch. The second is
+how a passage gets written quickly; the first is how a passage gets answered.
