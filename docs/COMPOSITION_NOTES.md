@@ -1184,3 +1184,34 @@ sampler's limits so the composing surface never has to**. A crescendo is asked f
 sampler's rule (a cut needs its slot left alone for a while) is paid for by rotating slots, the way a section of players would simply
 be several people. Two boundaries he sets: the demo must not be shoddy, and no long chase after intractable playback problems — good
 enough to behave like human performers. RUNNING_LOG §266.
+
+## CN-51 · 2026-09-08 — LAKE GEORGE (piece #6): a pattern tool fed by multitempo and phase, orchestrated and thinned by algorithm; harmony changed on a clock, with transitions like video transitions; a counterpoint of timbres
+
+> *"composition note for lake george, create tool like strikes rhythm portion, but using multi-tempo and phase-shift tool/panel as
+> feeder, then when pattern is chosen can orchestrate it various ways, can change articulations per note, can do things like weight one
+> or a group of instruments, like 50% of the time is the horn, importantly, have various algos to remove notes, create different degrees
+> of sparceness, need to debelop a good model for this; and like chord strikes, add whole or portions, also way to harmonize pattern
+> change harmonies every n seconds, or generate time containers to change harmonies, also series of harmony transitions like video
+> transitions metaphoricly speaking a variety, crossfade, wipe, ... find models that have distinction sonicly and then codify, can use in
+> other things; for the composition part of this note, try to develop a counterpoint of timbres, like sciariano,"*
+> *(2026-09-08; typed — "sciariano" = Salvatore Sciarrino, "debelop" = develop)*
+
+*AI reading (not the composer's words):* a tool for piece #6, described by what it is NOT — the strikes drawer's rhythm column, but fed
+from a different source and thinned rather than filled. Its parts as he names them:
+1. **The feeder is the multitempo / phase-shift panel**, not a recorded strike: a pattern is generated there and chosen.
+2. **The orchestration is open** afterwards — several ways over one pattern, the articulation settable per note.
+3. **Weighting**, which is new: *"50% of the time is the horn"* — an instrument or a group given a share of the pattern rather than a
+   turn in a rotation.
+4. **Thinning is the heart** — *"importantly, have various algos to remove notes, create different degrees of sparceness, need to
+   develop a good model for this"*: not one rule but a family, and the model itself is the work.
+5. **Whole or part**, as PLAN 1k's chord strikes now do (a span marked, that span inserted).
+6. **Harmony on a clock**: the pattern harmonized, the harmony changing every n seconds, or by TIME CONTAINERS that hold a harmony for
+   a span.
+7. **Harmony transitions as a codified family** — his metaphor is video transitions: crossfade, wipe, and others; *"find models that
+   have distinction sonicly and then codify, can use in other things"* — so the family is general, not only for this tool.
+8. **The composition itself: a counterpoint of TIMBRES, after Sciarrino** — the line carried by colour rather than pitch.
+
+Piece #6's material so far: CN-31 (the pointillistic multitempo section, the bouncing balls), CN-42 (the rondo whose refrain is a morph
+section), the 2026-09-04 notes (the pairs, the delicate continuous texture, the animated conductions), and now this. Nothing to build in
+the septet unless the septet asks for it; the transitions family (7) is the one part that might earn its place here first, since the
+morph and the harmony menu already sit next to each other. RUNNING_LOG §268.

@@ -58,3 +58,10 @@ own defer loop (like `peakwatch`) is the pattern for anything that must follow t
 - No job may loop for long — one job, one tick; anything longer starts its own defer loop and
   writes its own result file.
 - Read back after every write. A meter watch is the proof for routing; a JSON read-back for state.
+
+## A job must be written, then RENAMED into the inbox (2026-09-08, RUNNING_LOG §269)
+
+The bridge polls the inbox about thirty times a second, so a job written straight into it is read half-finished: `load()` compiles
+a fragment, the chunk returns nothing, and the outbox says `ok: true` with no `result` — a silent, puzzling success. Write the job
+to a temp name in the bridge folder and `rename` it into `inbox/` (rename is atomic). Two jobs were lost to this before the third
+came back whole.

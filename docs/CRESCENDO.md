@@ -141,10 +141,19 @@ into `properties.cresc.slot`, and the tick sends on it. **Empty pool = no rotati
 **Three is the plan**, since his gesture scale starts near 1.5 s. The tool **warns** when the rotation cannot keep the tolerance,
 naming the moment — that warning, not a guess, is the signal to add a fourth.
 
-**What the rack still needs:** two more slots per string (channels 2 · 3 · 4 are free inside the instance each already has) and the
-same for the bass clarinet; **the flute's port is full** (30 techniques over all sixteen channels), so its pool is the second UVI
-instance's channels or one new loopMIDI port. To be tried through the Kontakt Lua API (REAPER_CONTROL §8c, unexplored for loading),
-else five minutes in the Kontakt GUI, after which the pool is three lines in the recipe.
+**What the rack still needs — his five minutes** (checked live through the bridge, §269: Reaper 7.72 with the rack open, one Kontakt
+instance per string and nothing else loaded in them; ReaScript cannot load an instrument into a slot, and Kontakt's own Lua API runs
+inside Kontakt, so this is GUI work):
+
+| instance | load | on channels | why |
+|---|---|---|---|
+| Vn1 XS · Vn2 XS · Va XS · Vc XS | the same Xsample instrument, twice more | **2 and 3** (1 stays the main slot) | the strings run all 88 articulations through channel 1 by CC0, so 2–16 are free |
+| Bass Clarinet XS | the same, twice more | **2 and 3** | 1 and 5 are taken |
+| Flute (UVI) | — | — | its two ports use all sixteen channels; its pool waits for one new loopMIDI port, or it goes without |
+
+Each new slot wants the same output as slot 1 (so the balance holds) and its own MIDI channel. When they exist, the pool is one edit:
+`Cresc.DEFAULTS.pool = { violin1: [1, 2, 3], violin2: [1, 2, 3], viola: [1, 2, 3], cello: [1, 2, 3], bass_clarinet: [1, 2, 3] }`,
+and everything downstream already reads it.
 
 **His standing principle beside it (CN-50):** *"the rotation happens in the back-end … so we don't have to think about it on the
 front end"* — the playback architecture absorbs the sampler's limits; the demo must not be shoddy; no long chase after intractable

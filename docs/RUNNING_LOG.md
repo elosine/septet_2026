@@ -7289,3 +7289,32 @@ clarinet likewise; **the flute's port is full**, so its pool is the second UVI i
 attempt through the Kontakt Lua API is next and is an investigation: REAPER_CONTROL §8 says slots are not in ReaScript and §8c marks the
 Lua API's reach over loading UNEXPLORED — it needs Kontakt running with Developer options on, which is his machine's state. If it
 cannot load an instrument into a slot, this is five minutes of his GUI time, and the pool becomes three lines in the recipe.
+
+## §268. CN-51 recorded — Lake George: a pattern tool fed by multitempo and phase, thinned by algorithm, harmonized on a clock, with transitions codified; a counterpoint of timbres after Sciarrino
+
+Composer, 2026-09-08, mid-build: the note verbatim in CN-51. Eight parts as he names them — the multitempo / phase panel as the FEEDER
+rather than a recorded strike; the orchestration open afterwards with the articulation per note; **weighting** ("50% of the time is the
+horn"), which is new — a share rather than a turn; **thinning as the heart** ("various algos to remove notes, create different degrees of
+sparceness, need to develop a good model for this"); whole or part, as 1k's chord strikes now do; the harmony changed every n seconds or
+by TIME CONTAINERS; **harmony transitions as a codified family** on the video metaphor (crossfade, wipe, …), *"find models that have
+distinction sonicly and then codify, can use in other things"*; and the composition itself a **counterpoint of TIMBRES after
+Sciarrino**.
+
+Nothing to build in the septet unless the septet asks. The one part that might earn its place here first is the transitions family, since
+the morph panel and the harmony menu already sit beside each other. Piece #6's material now: CN-31 · CN-42 · the 2026-09-04 notes · this.
+
+## §269. The Reaper bridge answered — and a lesson: a job written straight into the polled inbox is read half-finished
+
+While closing PLAN 1l step 5 the bridge was used for the first time this session. **Two jobs returned `ok: true` with NO `result`** —
+the bridge polls the inbox ~30 times a second and had read the file before the write finished, so `load()` compiled a fragment that
+returned nothing. **Writing to a temp name in the bridge folder and RENAMING it into the inbox works** (rename is atomic), and the third
+job came back whole. *(For every future job: write, then rename. Worth a line in `reaper/bridge/README.md`.)*
+
+**What it answered** (Reaper 7.72, `septet_rack.rpp` open, 13 tracks): one plugin instance per instrument, exactly as the file said —
+Flute SI2 and Fluteb SI2 on UVI Workstation, the bass clarinet on two Kontakt tracks, Piano Kontakt + Piano PP2, and **one Kontakt each
+for Vn1 · Vn2 · Va · Vc**. So the crescendo pool needs extra SLOTS inside those instances; there is nothing already loaded to rotate
+through.
+
+**And the limit stands:** ReaScript cannot load an instrument into a Kontakt slot (REAPER_CONTROL §8 — plugins expose parameters only),
+and Kontakt's own Lua API runs inside Kontakt, not through this bridge. **So the slots are his five minutes at the GUI**, and the app is
+ready for the moment they exist: the pool is a list of channels, empty today, and everything downstream already reads it.
