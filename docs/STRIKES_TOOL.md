@@ -620,6 +620,122 @@ the score's file format:** an insert writes ordinary strike notes in an ordinary
 now a to-do with a shape (CN-52, PLAN 1k step 7): it sits out today, and the plan is to give it the ensemble's REMAINDER (the notes an
 onset could not take) or several notes of the sonority freely, chosen by a per-strike rule rather than by hand**; his listening.
 
+## Y · Fill mode — `built 2026-09-08 (PLAN 1n steps 1–4; RUNNING_LOG §285–300; CN-48 · CN-54 · CN-55)`
+
+His picture (CN-54): *"the unit is the accent and the prolongued thing eg trill, crescendo, longtone; so the accent kicks off the long as
+if they were one unit"* — and *"two players, the accent prolonged by another instrument … the typical application would be to generate a
+strikes pattern like an accel but not necessarily and then overlay crescendos on that pattern, so for each attack in an instrument the
+long will start simultaneously in another instrument."*
+
+So fill mode is a **SECOND PASS over a pattern that already exists**, never a generator of rhythm. Notes mode and chords mode build the
+pattern; fill mode lays a long — a crescendo or a trill — on **every attack of it**, each in another instrument.
+
+### It was measured before it was designed
+
+His own texture at 135.78 s (`grp-strike-40-1357` in `scores/piano-harmonics-test.json`: 46 attacks over 13.0 s, one player per attack,
+accelerating 800 → 130 ms, 44 trills over it) was read first (RUNNING_LOG §285, §287, §289, §291):
+
+| | |
+|---|---|
+| trills starting at an attack of **another** instrument | 44 / 44 (median 3 ms) |
+| trills ending before their own player's next attack | 44 / 44, median gap **171 ms** — 1l's own 0.17 s, arrived at independently |
+| the same instrument twice running | 0 / 43 |
+| trill length | 1.33 s at the head of the run → 0.15 s at its tail — **derived from the room, never chosen** |
+| players sustaining at once | **5 or 6 of the 7, for 73 % of the passage** |
+
+And his stated selection rule was measured and **dropped**: *"the empty instrument with the shortest available space"* gives a median
+long of 0.13 s with 40 of 46 under 0.4 s — the very *"lot of short longs in a row"* he wanted to avoid, and not what his hand did (he
+took the third-to-fifth roomiest, never the tightest).
+
+### The rule
+
+- **Which player**: least-recently-long, the roomiest breaking the tie, seeded. Never the player striking that attack; never one already
+  inside a long; never the player whose attack cuts it. On his run the rotation and "always the roomiest" are indistinguishable, and the
+  rotation is what protects an uneven pattern.
+- **The room, one function, two directions**: forwards to 0.17 s before that player's next sound; backwards from the END of the accent
+  note to that player's last sound end + the re-entry gap. Measured as mirror images: 43 longs and 3 aborts either way.
+- **The floor per kind and the abort**: a crescendo needs 0.3 s (1l's `minS`), a trill 0.5 s. An attack with no candidate clearing the
+  floor **gets no long and is counted with its reason** — never squeezed in.
+- **The re-entry gap** is its own number (`rest`, 150 ms by default) and is a piece-specific loosening of the spacing rule: a long begins
+  where its own player has just been playing, which is a re-articulation and not a new attack out of silence. **His hand went to 49 ms**,
+  and 16 of his 44 trills were under 150 ms; at the rule the pass fills 39 of his 46 attacks, at 0 ms it fills 43. Lower it when the
+  texture is this dense.
+
+### The anchors, not modes
+
+Each long holds two references — `launchedBy` and `cutBy` — and each is **the ID OF AN ATTACK**, never a position in the sequence:
+
+| launched | cut | what it is |
+|---|---|---|
+| ✓ | — | the accent kicks it off, the room ends it |
+| — | ✓ | the crescendo swells into the strike and stops **at the end of that accent note**, overlapping it by the accent's own ~84 ms (free: two players) |
+| ✓ | ✓ | it spans accent to accent, and **aborts rather than shrink** below the floor |
+
+Because the anchor is a reference, either end can be **re-pointed at any other attack** (his *"how about if I wanted to extend it to a
+different strike to cut?"*) — and a move that does not fit is refused with its reason rather than silently shrunk.
+
+**Reaching back before the pattern is the shape of cut mode, not an edge case.** On his run 4 of 43 cut longs begin 0.53–0.60 s before
+the first attack, stopped by the previous strike group and its rest. *inside* clips them to the pattern's own span.
+
+### The pitch is a strategy (CN-55)
+
+Seven, over one seeded order menu — in turn · shuffled to completion then reshuffled · random:
+
+| family | the pitch |
+|---|---|
+| the accent's own · the one before · the one after | read straight from the named attack |
+| the pattern's pitches, dealt | the group's distinct pitches as a deck |
+| a harmony, dealt | **1m's harmony bar whole** — 163 sonorities, no second menu built |
+| a chain | a fixed interval from the previous long (his m2 and P5), up · down · alternating, **wrapped by octaves inside a band centred on its start** — which is what makes it a spiral rather than a runaway: a fifth chain over 39 longs would otherwise walk 273 semitones |
+| vertical | the note the **currently sounding** longs are missing from a chosen sonority — with 5 or 6 in the air it usually has a real choice |
+
+Every pitch is folded into the player's ordinary-voice range by 1k's own rule; one no octave reaches **aborts** that long and is counted.
+A strategy gives a trill's LOWER note only — the interval stays the trill tool's setting (his own 44 trills were every one a semitone).
+
+### The screen
+
+A third mode button beside **notes** and **chords**. Two settings rows — the pattern (the strike groups **in the open score**, so a group
+he has dragged fills where it actually sits), the anchor, the kind, the pitch strategy, the rest, the floors, *inside*, the seeds — then
+a preview: one row per player, the attacks as ticks, the longs as bars, the readout, and the aborts named. The foot is
+**Generate · Hear · Insert**; notes mode's own controls are put away while fill mode is on.
+
+- **Generate** deals without writing (a new seed each press).
+- **Hear** plays the pattern with its fill through the real routes; the crescendos get a CC7 ramp and their secco cut. Trills sound as
+  held notes here — the real ones are heard once inserted.
+- **Insert** writes the longs at the pattern's own time as **their own group** (`grp-fill-…` + a META shape), replacing an earlier fill
+  of that pattern and **keeping any long he has edited by hand**. The group is separate from the strike group on purpose: sharing it
+  would let the gesture clause stop a player's own attacks from blocking its long, and the room rule would collapse.
+
+### The three scopes
+
+Every property is set at **the whole pass · a selection · a single long**, from one menu:
+
+- the pass: the drawer's settings;
+- a selection: **F** flips the selected longs between launched and cut under one undo;
+- a single long: **1m's crescendo card** grows a *fill* row — who launched it, who cuts it, **flip**, and **re-point…** (then click the
+  attack you want).
+
+A hand-edited long is **pinned**, reusing 1k's own idiom (*pinned and flagged, never lowered*): a re-Generate leaves it alone, still sees
+it as occupying its player, and says how many it kept.
+
+### What it is made of
+
+`score/public/fill.js` (the engine, pure) · `score/public/fill_pitch.js` (the strategies, pure) · `score/public/fill_ui.js` (the mode, a
+mixin on the drawer) · one dispatch line in `strike_drawer.js` · a row on `cresc_card.js` · `flipSelectedFills`, `finishRepoint`,
+`crescRoomEvents` and the **F** key in `composer.html`. 81 checks in `score/tools/check_fill.js`.
+
+### Found on the walk, and fixed
+
+- A **chain ran off the keyboard** — a fifth chain over 39 longs walks 273 semitones — so it is wrapped into a band centred on its start.
+- **`roomForward` / `roomBackward` / `windowFree` assumed merged options**: called directly by the card's flip and by a re-point they got
+  a bare `{}`, every number became `NaN`, and every room came back `null`. They merge the defaults themselves now.
+- A **re-Generate saw its own last pass** as busy players and produced almost nothing; the deal now ignores the fill group it is about to
+  replace — **except its pinned longs**, which must still occupy their player or the new pass overlaps them.
+- The performance note said *(typed)* because the length is passed in; it now says what actually ended it.
+
+*(The pane used for the walk coalesces `setTimeout` into 1-second buckets, so Hear's firing could not be timed there — the SCHEDULE was
+verified instead, and it is the same mechanism the drawer's own Hear has always used.)*
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the

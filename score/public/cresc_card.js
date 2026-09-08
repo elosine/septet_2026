@@ -75,6 +75,13 @@ const CARD = {
             '<div><div style="color:#888">articulation</div><select id="ccTech" style="' + INP + ';width:100%"></select></div>',
             '<label style="display:flex;gap:5px;align-items:center" title="secco: the strings damp the string at the end for an abrupt cut; in the sound a CC7 cut so nothing rings past it (CN-49)">',
             '<input id="ccSecco" type="checkbox"> secco <span style="color:#777">(the cut)</span></label>',
+            // PLAN 1n step 4: the fill row, shown only for a long that belongs to a fill pass — its anchors and where they point
+            '<div id="ccFill" style="display:none;border-top:1px solid #3a3a44;padding-top:5px">',
+            '<div style="color:#888">this long is part of a fill</div>',
+            '<div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">',
+            '<button id="ccFlip" style="' + BTN + '" title="the toggle: launched ⇄ cut. The anchor moves to the other end and the length is re-derived; nothing else in the pass is touched.">flip</button>',
+            '<button id="ccPoint" style="' + BTN + '" title="then click an attack of the pattern in the score to move this anchor to it — refused, with the reason, if it does not fit">re-point…</button>',
+            '<span id="ccFillWho" style="color:#9a9;flex:1;overflow:hidden;text-overflow:ellipsis"></span></div></div>',
             '<div style="display:flex;gap:4px;align-items:center">',
             '<button id="ccHear" style="' + BTN + '" title="hear it alone">&#9834;</button>',
             '<button id="ccCtx" style="' + BTN + '" title="hear it with what is around it">&#9654; in context</button>',
@@ -97,6 +104,7 @@ const CARD = {
         q('#ccTech').innerHTML = techs.map(t => '<option value="' + esc(t.key) + '">' + esc(t.label || t.key) + '</option>').join('');
         q('#ccTech').value = wc.technique;
         q('#ccSecco').checked = cr.secco !== false;
+        this.paintFill();
         q('#ccDur').value = (wc.endSeconds - wc.startSeconds).toFixed(2);
         this.paint();
         q('#ccX').addEventListener('click', () => this.close());
@@ -105,6 +113,8 @@ const CARD = {
         q('#ccHear').addEventListener('click', () => this.hear());
         q('#ccCtx').addEventListener('click', () => this.context());
         q('#ccRule').addEventListener('click', () => this.byTheRule());
+        q('#ccFlip').addEventListener('click', () => this.flip());
+        q('#ccPoint').addEventListener('click', () => this.pointing());
         q('#ccLo').addEventListener('change', () => this.apply());
         q('#ccHi').addEventListener('change', () => this.apply());
         q('#ccTech').addEventListener('change', () => this.apply());
@@ -156,6 +166,51 @@ const CARD = {
         this.el.querySelector('#ccHow').textContent = cr.end === 'toNextNote' ? 'to the next note' : cr.end === 'fallback' ? 'no next note' : 'typed';
     },
     status(m, bad) { const s = this.el && this.el.querySelector('#ccStatus'); if (s) { s.style.color = bad ? '#e88' : '#9a9'; s.textContent = m || ''; } },
+
+    // ---------------------------------------------------------------- PLAN 1n step 4 · the fill row
+    fillOf(wc) { return wc && wc.properties && wc.properties.cresc && wc.properties.cresc.fill; },
+    paintFill() {
+        const box = this.el && this.el.querySelector('#ccFill'); if (!box) return;
+        const f = this.fillOf(this.wc);
+        box.style.display = f ? 'block' : 'none';
+        if (!f) return;
+        const C = HOST(), at = id => C.objects.find(o => o.id === id);
+        const nmOf = id => { const a = at(id); return a ? ((TRK()[a.layer] || {}).short || '?') + ' ' + (+a.startSeconds).toFixed(2) + ' s' : '(gone)'; };
+        this.el.querySelector('#ccFillWho').textContent =
+            (f.launchedBy ? 'launched by ' + nmOf(f.launchedBy) : '') + (f.launchedBy && f.cutBy ? ' · ' : '') + (f.cutBy ? 'cut by ' + nmOf(f.cutBy) : '')
+            + (f.pitch ? ' · ' + f.pitch.source : '');
+    },
+    // the toggle he asked for (CN-54): launched ⇄ cut, this long only, nothing regenerated
+    flip() {
+        const C = HOST(), wc = this.wc, f = this.fillOf(wc); if (!C || !f) return;
+        const FL = root.Fill; if (!FL) { this.status('the filler module is not loaded', true); return; }
+        const which = f.cutBy ? 'launchedBy' : 'cutBy';
+        const anchorId = f.cutBy || f.launchedBy;
+        const a = C.objects.find(o => o.id === anchorId);
+        if (!a) { this.status('the accent this long is anchored to is gone', true); return; }
+        const long = { lane: wc.layer, t0: wc.startSeconds, t1: wc.endSeconds, len: wc.endSeconds - wc.startSeconds, kind: 'cresc' };
+        const attack = { id: a.id, t: +a.startSeconds, dur: (+a.endSeconds - +a.startSeconds), lane: a.layer, midi: a.sonifyNote };
+        // the same accent, the other end: launched becomes cut and the room decides the new near end (and the reverse)
+        const events = C.crescRoomEvents ? C.crescRoomEvents(wc.layer, wc.id) : [];
+        const span = which === 'cutBy'
+            ? FL.roomBackward(wc.layer, Math.round((attack.t + attack.dur) * 1000) / 1000, events, {})
+            : FL.roomForward(wc.layer, attack.t, events, {});
+        if (!span || span.t1 - span.t0 < FL.FLOORS.cresc) { this.status('no room to flip it — that player is busy on the other side', true); return; }
+        C.pushUndoState();
+        wc.startSeconds = span.t0; wc.endSeconds = span.t1;
+        wc.properties.cresc.fill = Object.assign({}, f, { launchedBy: which === 'cutBy' ? null : a.id, cutBy: which === 'cutBy' ? a.id : null });
+        wc.properties.cresc.end = which === 'cutBy' ? 'cutByAccent' : (span.boundedBy === 'fallback' ? 'fallback' : 'toNextNote');
+        wc.pinned = true;                                    // hand-edited: a re-Generate leaves it (1k's own idiom)
+        this.el.querySelector('#ccDur').value = (wc.endSeconds - wc.startSeconds).toFixed(2);
+        this.apply(); this.paintFill();
+        this.status('flipped — now ' + (which === 'cutBy' ? 'cut by' : 'launched by') + ' that accent, ' + (span.t1 - span.t0).toFixed(2) + ' s; pinned');
+    },
+    // re-point: the next click on an attack in the score moves this long's anchor to it
+    pointing() {
+        const C = HOST(), wc = this.wc, f = this.fillOf(wc); if (!C || !f) return;
+        C._crescRepoint = { id: wc.id, which: f.cutBy ? 'cutBy' : 'launchedBy' };
+        this.status('click an attack of the pattern — ESC cancels');
+    },
 
     async hear() {
         const C = HOST(), wc = this.wc; if (!C || !wc) return;

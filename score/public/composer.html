@@ -558,8 +558,11 @@
 <script src="/spacing.js"></script>   <!-- PLAN 1l: the one spacing rule — a player is free 150 ms after its last sound ENDS, between gestures (pure) -->
 <script src="/cresc_card.js"></script>   <!-- PLAN 1m step 2: the crescendo card — the four controls on the live crescendo, hear alone / in context, ENTER keeps / ESC removes -->
 <script src="/strike_chords.js"></script>   <!-- PLAN 1k: the strikes drawer's chord engine (pure) -->
+<script src="/fill.js"></script>   <!-- PLAN 1n step 1: the sequence filler — a strike pattern in, one long per attack out (pure) -->
+<script src="/fill_pitch.js"></script>   <!-- PLAN 1n step 2: the pitch strategies — the pattern, a sonority, a chain, the vertical filter (pure) -->
 <script src="/strike_drawer.js" defer></script>   <!-- PLAN 1c.2: the STRIKES drawer (docs/STRIKES_TOOL.md) -->
 <script src="/strike_chords_ui.js" defer></script>   <!-- PLAN 1k: chords mode in the strikes drawer (a mixin on it) -->
+<script src="/fill_ui.js" defer></script>   <!-- PLAN 1n step 3: fill mode in the strikes drawer (a mixin, after chords mode) -->
 <script src="/beating_panel.js" defer></script>   <!-- PLAN 1f step 4: the BEATING panel (docs/BEATING_TOOL.md §6) -->
 <script>
 // ============================================
@@ -2188,6 +2191,14 @@ const Composer = {
                 this.saveStatus.textContent = 'keys: T = a trill on the selected note · B = a BEATING on the selected strike note (its pitch the centre, the nearest lane that can pair the partner, a 6 s bloom 0 → 3 beats/s; the strike untouched) · P = the panel of the selected trill or beating — the beating panel: the pair\'s mirrored rate curves with handles on rails, the crescendo and breath lanes, the harmonies and the keyboard for the pitches (double-click a note, click a pair\'s node; the pair folds the note as one unit to the nearest octave both reach, the arrows say so, a row offers the ways out when no octave serves; the voicing bar moves the sonority), SPACE plays, insert @ playhead puts a pattern of up to three pairs in the score under one META shape (drag = move, box = stretch, DELETE = all of it) · the Beating button = a new pattern · ■ Panic = silence everything (a trapped note) · G surge · O ord · A column · C cuivre · SPACE play · ESC clear · ? this line';
                 return;
             }
+
+            // F = FLIP a selected long between launched and cut (PLAN 1n step 4, CN-54)
+            if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.altKey && !e.metaKey && !e.target.matches('input, textarea, select')) {
+                e.preventDefault();
+                this.flipSelectedFills();
+                return;
+            }
+            if (e.key === 'Escape' && this._crescRepoint) { this._crescRepoint = null; this.saveStatus.textContent = 're-point cancelled'; }
 
             // C = add a CRESCENDO (PLAN 1m, composer 2026-09-08) — the trill's chassis, one note at a time
             if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.altKey && !e.metaKey && !e.target.matches('input, textarea, select')) {
@@ -4503,6 +4514,13 @@ const Composer = {
         // PLAN 1j step 3: a click (no drag) on a note born of a line reopens the picker card with its values (RUNNING_LOG §232)
         // PLAN 1m step 2: a click on a CRESCENDO reopens the crescendo card with its own values — the card is the editor as well as the maker (§276)
         hp.addEventListener('click', (e) => {
+            // PLAN 1n step 4: a re-point armed from the card — the next click on an ATTACK moves that long's anchor to it
+            if (this._crescRepoint && this._cueDown && Math.abs(e.clientX - this._cueDown.x) < 4 && Math.abs(e.clientY - this._cueDown.y) < 4
+                && wc.sonifyNote != null && !(wc.properties && wc.properties.cresc)) {
+                e.stopPropagation();
+                this.finishRepoint(wc);
+                return;
+            }
             if (this._cueDown && Math.abs(e.clientX - this._cueDown.x) < 4 && Math.abs(e.clientY - this._cueDown.y) < 4
                 && typeof Cresc !== 'undefined' && Cresc.isCresc(wc)) {
                 e.stopPropagation();
@@ -9751,6 +9769,27 @@ const Composer = {
         this.renderCrescBar();
         return wc;
     },
+    // PLAN 1n step 4 (§293, his "how about if I wanted to extend it to a different strike to cut?"): the anchor moves to the clicked
+    // attack, the length is re-derived, and a move that does not fit is REFUSED WITH ITS REASON rather than silently shrunk.
+    finishRepoint(attackObj) {
+        const R = this._crescRepoint; this._crescRepoint = null;
+        if (!R || typeof Fill === 'undefined') return;
+        const wc = this.objects.find(o => o.id === R.id);
+        if (!wc) { this.saveStatus.textContent = 'that long is gone'; return; }
+        const long = { lane: wc.layer, t0: wc.startSeconds, t1: wc.endSeconds, len: wc.endSeconds - wc.startSeconds, kind: 'cresc' };
+        const attack = { id: attackObj.id, t: +attackObj.startSeconds, dur: (+attackObj.endSeconds - +attackObj.startSeconds), lane: attackObj.layer, midi: attackObj.sonifyNote };
+        const ev = this.crescRoomEvents(wc.layer, wc.id);
+        const r = Fill.repoint(long, R.which, attack, ev, {});
+        if (!r.ok) { this.saveStatus.textContent = 'not re-pointed — ' + r.why; return; }
+        this.pushUndoState();
+        wc.startSeconds = r.long.t0; wc.endSeconds = r.long.t1;
+        wc.properties.cresc.fill = Object.assign({}, wc.properties.cresc.fill, { [R.which]: attack.id });
+        wc.properties.cresc.end = R.which === 'cutBy' ? 'cutByAccent' : 'toNextNote';
+        wc.pinned = true;
+        this.renderWaveCurve(wc); this.curveDirty(); this.markDirty(); this.scheduleConflictRefresh();
+        if (typeof CrescCard !== 'undefined' && CrescCard.wc === wc) { CrescCard.paint(); CrescCard.paintFill(); CrescCard.el.querySelector('#ccDur').value = (r.long.len).toFixed(2); }
+        this.saveStatus.textContent = 're-pointed — ' + (R.which === 'cutBy' ? 'cut by' : 'launched by') + ' ' + ((TRACKS[attack.lane] || {}).short || '') + ' ' + attack.t.toFixed(2) + ' s · ' + r.long.len.toFixed(2) + ' s · pinned';
+    },
     crescBarRestart() { const B = this.crescBar(); B.drawn = 0; B.lap = 0; this.saveCrescBar(); this.renderCrescBar(); },
     renderCrescBar() {
         let layer = this.activeLane; if (layer == null || layer >= META_LAYER) layer = 0;
@@ -9860,6 +9899,42 @@ const Composer = {
     // IS THIS PLAYER FREE HERE? 1l step 3's one rule (spacing.js): free 150 ms after its last sound ENDS, and never inside one
     // gesture. The end rule only looks forward, so without this a crescendo could be laid ON TOP of a note already sounding —
     // which is what happens when C is pressed at a playhead that sits inside something (§284).
+    // PLAN 1n step 4: what a long's room is judged against — everything this player still sounds except the long itself
+    crescRoomEvents(layer, exceptId) {
+        if (typeof Spacing === 'undefined') return [];
+        return Spacing.eventsOf(this.crescSoundsOn(layer, exceptId), layer);
+    },
+    // PLAN 1n step 4 · THE SELECTION SCOPE: flip every selected long's anchor under ONE undo (CN-54, his "a toggle where I can select
+    // certain ones and then have them revert to the other version"). The single-long end of the same control is on 1m's card.
+    flipSelectedFills() {
+        if (typeof Fill === 'undefined') { this.saveStatus.textContent = 'the filler module is not loaded'; return 0; }
+        const sel = (this.selectedObjects && this.selectedObjects.length) ? this.selectedObjects.slice() : (this.selectedObject ? [this.selectedObject] : []);
+        const fills = sel.filter(o => o && o.properties && o.properties.cresc && o.properties.cresc.fill);
+        if (!fills.length) { this.saveStatus.textContent = 'select one or more longs of a fill — F flips them between launched and cut'; return 0; }
+        this.pushUndoState();
+        let done = 0, refused = 0;
+        fills.forEach(wc => {
+            const f = wc.properties.cresc.fill;
+            const which = f.cutBy ? 'launchedBy' : 'cutBy';
+            const a = this.objects.find(o => o.id === (f.cutBy || f.launchedBy));
+            if (!a) { refused++; return; }
+            const ev = this.crescRoomEvents(wc.layer, wc.id);
+            const span = which === 'cutBy'
+                ? Fill.roomBackward(wc.layer, Math.round((+a.startSeconds + (+a.endSeconds - +a.startSeconds)) * 1000) / 1000, ev, {})
+                : Fill.roomForward(wc.layer, +a.startSeconds, ev, {});
+            if (!span || span.t1 - span.t0 < Fill.FLOORS.cresc) { refused++; return; }
+            wc.startSeconds = span.t0; wc.endSeconds = span.t1;
+            wc.properties.cresc.fill = Object.assign({}, f, { launchedBy: which === 'cutBy' ? null : a.id, cutBy: which === 'cutBy' ? a.id : null });
+            wc.properties.cresc.end = which === 'cutBy' ? 'cutByAccent' : (span.boundedBy === 'fallback' ? 'fallback' : 'toNextNote');
+            wc.pinned = true;                                // hand-edited: a re-Generate leaves it (1k's idiom)
+            this.renderWaveCurve(wc);
+            done++;
+        });
+        if (!done) { this.undo(); this.saveStatus.textContent = 'none of them could be flipped — the player is busy on the other side'; return 0; }
+        this.curveDirty(); this.markDirty(); this.scheduleConflictRefresh();
+        this.saveStatus.textContent = done + ' long' + (done > 1 ? 's' : '') + ' flipped' + (refused ? ' · ' + refused + ' had no room' : '') + ' — pinned, so a re-Generate leaves them';
+        return done;
+    },
     crescRoomAt(layer, at, exceptId, group) {
         if (typeof Spacing === 'undefined') return { free: true };
         const ev = Spacing.eventsOf(this.crescSoundsOn(layer, exceptId), layer);

@@ -8106,3 +8106,65 @@ through all of it); the documents — **`docs/STRIKES_TOOL.md` gains 1n as its o
 1k's chords mode is, with `docs/CRESCENDO.md` cross-referencing it, plus NAMING for the `grp-fill-…` group and the long's provenance
 fields, PLAN 1n's statuses, PLANNER NOW, the journal §2 and a title on every new control; and then **his first filled section, which is
 all crescendos**, his verdicts to the documents and NITS, and then **1o planned**.
+
+## §300. PLAN 1n steps 1–4 BUILT and walked; the four defects the walk found
+
+Composer, 2026-09-08: *"good, build 1n as much as you can independently"*. Steps 1–4 built, step 5's checks and documents done; what is
+left is his ear.
+
+**What was built.**
+
+- **Step 1 — `score/public/fill.js`** (pure). `attacksOf` reads one strike group FROM THE SCORE; `roomForward` / `roomBackward` are one
+  rule in two directions; `windowFree` serves 'both' and a re-point; `deal` gives one long per attack — least-recently-long with the
+  roomiest breaking ties, seeded, never the striking player, never one already sounding, a floor per kind, and an **abort with a reason**
+  when nothing clears it; `repoint` moves an anchor and refuses rather than shrink; `summarize` is the readout.
+- **Step 2 — `score/public/fill_pitch.js`** (pure). Seven families over 1k's seeded deck, folded by 1k's rule, each long carrying
+  `{ family, source, raw, fold, order, seed, lap }`. The sonority family IS 1m's harmony bar; nothing was rebuilt.
+- **Step 3 — `score/public/fill_ui.js`**, a mixin on the drawer exactly as chords mode is: a third mode button, two settings rows, a
+  per-player preview of the pattern with its longs, and **Generate · Hear · Insert**. Insert writes `grp-fill-…` with its own META shape.
+- **Step 4 — the three scopes.** `flipSelectedFills` and the **F** key (a selection, one undo), `finishRepoint` and `crescRoomEvents`
+  (composer.html), and a **fill row on 1m's crescendo card** — who launched it, who cuts it, *flip*, *re-point…*.
+
+**THE FOUR DEFECTS THE WALK FOUND**, all fixed, and the second is the one worth remembering:
+
+1. **A chain ran off the keyboard.** Adding an interval over and over walks without bound — a fifth chain over 39 longs covers 273
+   semitones — and `Cresc.foldInto` gives up beyond eight octaves, so 20 of 39 longs were aborted as out of range. The chain's running
+   pitch is now **wrapped by octaves into a band CENTRED on its start**: the interval survives in pitch class, the register comes from
+   the fold, and the result is the spiral the idea always was. Centred, not above, so a downward or alternating chain has room below it.
+2. **The room functions assumed their options were already merged.** `deal` merges `DEFAULTS`, but the card's flip and the re-point call
+   `roomForward` / `roomBackward` / `windowFree` directly with a bare `{}` — so `O.restMs`, `O.fallbackS` and `O.endGapS` were
+   `undefined`, every arithmetic result was `NaN`, and **every room came back null**: the card's flip refused everything with "that
+   player is busy on the other side", which was a lie. Each function merges the defaults itself now. *The lesson: a pure function that is
+   reachable from more than one caller must not depend on its caller having merged its options.*
+3. **A re-Generate saw its own last pass.** The deal read every event in the score including the fill it was about to replace, so the
+   second Generate found almost no free player (5 longs became 1). It now ignores the fill group it is about to replace — **except its
+   PINNED longs**, which must still occupy their player, or a hand-flipped long and a fresh one overlap on the same instrument (measured:
+   they did, by 50 ms, until the exception was added).
+4. **The performance note said "(typed)"** on every filled crescendo, because the length is handed to `Cresc.make`. It now says what
+   actually ended it: *to the next sound* · *cut by an accent* · *no next sound* · *clipped to the pattern*.
+
+**Verified in the running app**, on a `zz-ai-` copy of his piece, with real key and mouse events:
+
+- fill mode appears beside notes and chords; the notes-mode foot is put away while it is on (32 of 35 foot groups);
+- on `grp-strike-45-1664` (12 attacks): **8 longs, 4 aborted** (2 no free player, 2 under the floor), inserted as
+  `grp-fill-45-1664-1664` with one META shape, in the morph orange, secco on, each carrying its provenance and its fold;
+- **cut** on the same pattern: 12 longs, none aborted, **every one ending exactly at the end of its accent note**, and beginning ~3 s
+  earlier — reaching back before the pattern, as the mode's shape requires;
+- **by room**: 2 trills + 3 crescendos, the short ones trills and the long ones crescendos, split at 2.5 s;
+- a **trill** inserted as a real trill zone with its pitch, its interval and a 5-note snippet, in the fill group with its provenance;
+- **F** flipped two selected longs from launched to cut (166.50→167.09 became 163.62→166.55), both pinned, and one CTRL+Z put them back;
+- the card's **flip** and **re-point** refused two moves and named why, both honest: the flip had 0.11 s of room after that player's own
+  note at 166.55 and the 150 ms rest, and the re-point would have run 100 ms past the 0.17 s gap before that player's next attack;
+- a re-Generate kept the pinned long, reported *"1 hand-edited kept"*, and left **no two longs overlapping on any player**.
+
+**And the honest limit of the walk:** the embedded pane coalesces `setTimeout` into 1-second buckets, so Hear's firing could not be timed
+there. The SCHEDULE was verified instead — the attacks at 260, 387, 515 … 1660 ms and the longs at their own starts, with the CC7 ramp
+steps between — and it is the same `setTimeout` mechanism the drawer's own Hear has used since 1k.
+
+**Also measured and recorded, not decided:** his own hand let a player begin a trill **49 ms** after its last note ended, and 16 of his
+44 did so under 150 ms. The re-entry gap is therefore its own setting, defaulting to the rule's 150 ms (which fills 39 of his 46
+attacks) with 0 ms filling 43. He lowers it when the texture is that dense.
+
+**Written:** `docs/STRIKES_TOOL.md` §Y (the whole tool, the measurements, the defects), `docs/NAMING.md` 18 (the fill group, the anchors
+as attack ids, `pinned`), `docs/CRESCENDO.md` §7's 1n line, PLAN 1n's statuses, PLANNER NOW, the journal §2. 81 checks in
+`score/tools/check_fill.js`, all passing.

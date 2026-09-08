@@ -82,7 +82,8 @@ function laneEvents(events, lane) {
 }
 
 // FORWARDS: the long starts at `at` and runs to endGapS before that player's next sound, or the fallback.
-function roomForward(lane, at, events, O) {
+function roomForward(lane, at, events, o) {
+    const O = Object.assign({}, DEFAULTS, o || {});   // callable on its own: the card's flip and the re-point pass bare options
     const ev = laneEvents(events, lane);
     if (ev.some(e => e.t0 <= at + EPS && e.t1 > at + EPS)) return null;                     // sounding right now
     const rest = (O.startRestMs != null ? +O.startRestMs : O.restMs) / 1000;
@@ -96,7 +97,8 @@ function roomForward(lane, at, events, O) {
 
 // BACKWARDS: the long ENDS at `endAt` (the end of the accent note) and reaches back to that player's last sound end + the rest, or the
 // fallback. Reaching back before the pattern is the SHAPE of cut mode, not an edge case (§293) — `keepInside` is what clips it.
-function roomBackward(lane, endAt, events, O) {
+function roomBackward(lane, endAt, events, o) {
+    const O = Object.assign({}, DEFAULTS, o || {});
     const ev = laneEvents(events, lane);
     if (ev.some(e => e.t0 < endAt - EPS && e.t1 > endAt + EPS)) return null;                // sounding through the end
     let prev = -Infinity;
@@ -108,7 +110,8 @@ function roomBackward(lane, endAt, events, O) {
 }
 
 // a named window, for 'both' and for a hand re-pointed anchor (step 4)
-function windowFree(lane, t0, t1, events, O) {
+function windowFree(lane, t0, t1, events, o) {
+    const O = Object.assign({}, DEFAULTS, o || {});
     if (!(t1 > t0 + EPS)) return false;
     const ev = laneEvents(events, lane);
     if (ev.some(e => e.t0 < t1 - EPS && e.t1 > t0 + EPS)) return false;                     // overlaps something

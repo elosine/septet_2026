@@ -255,7 +255,10 @@ says so in its own tooltip.
 ## 7 · What is not here yet
 
 - **His verdict on the standard** (step 1's last to-do) and on the C key itself.
-- **1n — the sequence filler:** two modes, the free-instrument rule, the pitch menu, the harmony distribution.
+- ~~1n — the sequence filler~~ **BUILT 2026-09-08** (`docs/STRIKES_TOOL.md` §Y): fill mode in the strikes drawer lays a long on
+  every attack of a pattern, each in another instrument — the anchors as attack ids, the seeded rotation, seven pitch strategies,
+  the three scopes. A crescendo written by it is one of these objects with a `fill` block; a cut one ends at the END of the accent
+  note rather than 0.17 s before it, which is the one place 1n departs from §4's rule.
 - **1o — crescendo strikes:** the articulation, the ordinary voice, the velocity law for a long sound, what a "count" means when the
   sounds overlap.
 - **The notation of a crescendo** (2a).

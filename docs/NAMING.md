@@ -197,6 +197,18 @@ or not at all.**
     sonority, order and seed live in `localStorage` under `septet.crescBar.v1`, the piano lines bar's convention: a working setting
     of this browser, not a fact about the piece.
 
+
+18. **A FILL (PLAN 1n, 2026-09-08; RUNNING_LOG §285–300; CN-54 · CN-55; `docs/STRIKES_TOOL.md` §Y)** is a pass of LONGS laid over a
+    strike pattern — one per attack, each in ANOTHER instrument — written as **its own group `grp-fill-<strike index>-<t×10>`** with a
+    META shape, never into the strike group (sharing it would let the gesture clause stop a player's own attacks from blocking its long,
+    and the room rule would collapse). A long is an ordinary object of its kind: a crescendo is 1l's `waveCurve` (entry 14), a trill is
+    the trill tool's zone — no new type. Its provenance is `properties.cresc.fill` on a crescendo and `zone.fill` on a trill:
+    `{ attackId, launchedBy, cutBy, from, pitch, kind }`, where **`launchedBy` and `cutBy` each hold the ID OF AN ATTACK** (never a
+    position), so either end can be re-pointed at any other attack; `from` is the strike group filled; and `pitch` is
+    `{ family, source, raw, fold, order, seed, lap }`, the shape 1m's `fromHarmony` already uses.
+    **`pinned: true`** on a long means he has edited it by hand: a re-Generate leaves it alone and still counts it as occupying its
+    player — 1k's own idiom (*pinned and flagged, never lowered*), reused rather than reinvented.
+
 ## 3. Not S1's business (where the piece-specific work goes)
 
 - **Technique → notation class** is registry data + classifier rules

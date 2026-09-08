@@ -139,6 +139,19 @@ own server (:5300); the AI built at his word, one chunk at a time:
   rack needs nothing:** he loaded the three Flute Ordinario copies on `Fluteb` 4 · 5 · 6 and §275 corrected them through the UVI text
   path (+6 dB, the EQ and Maximizer bypassed), so all seven players are protected by architecture. After his verdicts: **1n (the
   sequence filler) planned by the method, then 1o.**
+- **Session 4, late 2026-09-08 (RUNNING_LOG §285–300):** **PLAN 1n — THE SEQUENCE FILLER — planned whole by the method and BUILT the
+  same day.** The unit is his (CN-54): *"the accent and the prolongued thing … the accent kicks off the long as if they were one unit"*,
+  **two players**, a long on EVERY attack, overlaid as a second pass on a strike pattern the drawer already made. Four topics and five
+  steps, each agreed in one turn. **His own trill texture at 135.78 s was measured before anything was designed** — 44 trills over 46
+  attacks, every one starting at another instrument's attack, every one ending 171 ms before its own player's next (which is 1l's 0.17 s,
+  found independently), five or six players sustaining 73 % of the time — and that measurement is what caught that his STATED rule
+  (*"the empty instrument with the shortest available space"*) would give a median long of 0.13 s, the very *"lot of short longs in a
+  row"* he wanted to avoid, and that his own hand never did it. Built: `fill.js`, `fill_pitch.js`, `fill_ui.js` (a third drawer mode),
+  the three scopes on 1m's card and the **F** key; 81 checks; four defects found and fixed on the walk. `docs/STRIKES_TOOL.md` §Y.
+  **► WAITING ON HIM, and it is again the whole of what is left: HIS EAR.** His first filled section (all crescendos, 1n) and his first
+  crescendos (1m); then chords mode (1k), the piano's lines (1j), the piano's harmonics (1i), and the `cresc-secco-test` file. After his
+  verdicts: **1o (crescendo strikes) planned — the last of the crescendo suite** — and the three tails: 1k step 7 (the piano's remainder
+  in a chord strike), 1i item 2 (the harmonics' CC21 shift), 0c.7 (a) (trills and beatings still routed on MAIN).
 - **PLAN 1f step 1 built and its probe run, 2026-09-07 about 00:00–01:00 (§167–168), at his word *"run the plan independantly … I'll
   check in after the build"*:** the palette — the recipe's `playerBendSt` (his semitone) · `bendRangeSt` · `beating: false` (the
   piano); `score/public/beating_calc.js` (the players, the ordinary voices' measured ranges, the bend limits, the pairing rule, the

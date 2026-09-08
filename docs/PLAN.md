@@ -1234,8 +1234,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 
 
 - **1n — The sequence filler: every attack of a strike pattern prolonged by another instrument (CN-48 build 1.5; CN-54 · CN-55)** —
-  `PLANNED 2026-09-08 — phase 1 closed in four topics and the top line confirmed (RUNNING_LOG §285–293); step 1 agreed, steps 2–5 to be
-  agreed one at a time` *(composer, 2026-09-08, CN-48: "take a sequence of strikes and fill in the gaps with a crescendo on an available
+  `STEPS 1–4 BUILT and walked 2026-09-08 (RUNNING_LOG §300); step 5's checks and documents done — WAITING ON HIS EAR for his first
+  filled section, all crescendos (RUNNING_LOG §285–300)` *(composer, 2026-09-08, CN-48: "take a sequence of strikes and fill in the gaps with a crescendo on an available
   instrument, see section beginning at 135.72 with trills … at least 2 modes for now"; CN-54: "the unit is the accent and the prolongued
   thing eg trill, crescendo, longtone; so the accent kicks off the long as if they were one unit, and with cres, I'll also have the accent
   be the cutoff"; and "two players, the accent prolonged by another instrument … the typical application would be to generate a strikes
@@ -1270,7 +1270,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   SCOPES from one menu: the whole pass · a selection of longs · a single long.** One idiom, learned once.
 
   *The top line, confirmed ("good", §292):*
-  1. **The overlay engine** (a strike pattern in, a set of longs out) — `agreed 2026-09-08 (RUNNING_LOG §292–293)`. *Result when done:*
+  1. **The overlay engine** (a strike pattern in, a set of longs out) — `done — `score/public/fill.js`, built and checked 2026-09-08
+     (RUNNING_LOG §300)`. *Result when done:*
      given a strike group already in the score and a set of settings, a pure module returns **one long per attack** — the player, the
      start, the end, the kind and the two anchors — with the attacks it had to abort named and counted; deterministic from a seed; no
      DOM, no MIDI and no pitch (step 2). The to-dos:
@@ -1305,7 +1306,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        exactly; no long on a striking player; no two longs overlapping on one player; every long clears its floor; a `both` that cannot
        fit aborts; a re-pointed anchor that does not fit is refused with its reason.
   2. **The pitch strategies** (the four families and their seeded orders, reusing 1m's harmony bar and 1k's deck and octave fold) —
-     `agreed 2026-09-08 (RUNNING_LOG §294)`. *Result when done:* a pure module that, given the longs step 1 produced and a chosen
+     `done — `score/public/fill_pitch.js`, SEVEN families built and checked 2026-09-08 (RUNNING_LOG §300)`. *Result when done:* a pure module that, given the longs step 1 produced and a chosen
      strategy, returns each long's pitch — folded into that player's range, with its provenance recorded — four families over one seeded
      order menu, almost all of it reused rather than built. The to-dos:
      - **from the pattern**: three references (the long's own accent · the attack before it · the attack after it), each reading a named
@@ -1329,7 +1330,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - **the checks in node**: each family deals what it should; the same seed repeats a pass exactly; a chain folds and stays in range;
        the vertical filter never repeats a note already sounding; a pitch no octave reaches aborts with its reason.
   3. **The pass in the strikes drawer** (choosing the strike group, the settings, generate · hear · insert, the longs written as one
-     group) — `agreed 2026-09-08 (RUNNING_LOG §295)`. *Result when done:* the drawer gains a **fill** pass — pick a strike group already
+     group) — `done — `score/public/fill_ui.js`, built and walked 2026-09-08 (RUNNING_LOG §300)`. *Result when done:* the drawer gains a **fill** pass — pick a strike group already
      in the score, set the kind, the anchor, the pitch strategy, the orders and the seeds, then **Generate · Hear · Insert**; the longs
      are written as their own group with a META shape, and the summary says what was made and what was aborted. The to-dos:
      - **where it sits**: a mode of the strikes drawer beside notes and chords, built as 1k's chords mode was (a mixin on the drawer), so
@@ -1350,7 +1351,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - **the check**: generate → hear → insert on a copy with real events; the inserted longs match what Generate showed; a re-insert
        replaces at the same time and keeps a copy elsewhere; the aborts are visible rather than silent.
   4. **The three scopes** (the whole pass, a selection, a single long: the anchor toggle, the pitch source and the kind on 1m's crescendo
-     card) — `agreed 2026-09-08 (RUNNING_LOG §296)`. *Result when done:* any property of a long — its anchor, its pitch strategy, its
+     card) — `done — the F key and `flipSelectedFills`, `finishRepoint`, and the fill row on the crescendo card (RUNNING_LOG §300)`. *Result when done:* any property of a long — its anchor, its pitch strategy, its
      kind — can be changed for the whole pass, for a selection, or for one long, from the same menu; a change re-derives that long and
      says so if it will not fit. The to-dos:
      - **a single long**: 1m's crescendo card gains a 1n row — the anchor (launched · cut · both, **and which accent**), the pitch
@@ -1369,7 +1370,20 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        a touched long is pinned the same way and Generate leaves it alone and says how many it kept;
      - **the check**: each scope in turn; a change that will not fit is refused with its reason; undo through all of it.
   5. **Verify and document** (the node checks, the walk on a copy, the documents; then his first filled section, all crescendos) —
-     `todo — to be agreed`.
+     `checks and documents DONE 2026-09-08 (81 checks in `score/tools/check_fill.js`; `docs/STRIKES_TOOL.md` §Y; NAMING 18); ► WAITING ON
+     HIS EAR for the last to-do (RUNNING_LOG §300)`. *Result when done:* 1n is checked in node and walked in the app, the documents say what
+     exists, and he fills his first section — all crescendos. The to-dos:
+     - **the node checks for the pure parts**: the two directions are mirror images on his own run (43 longs, 3 aborts either way); the
+       same seed repeats a pass exactly; and the invariants — never the striking player, no two longs overlapping on one player, every
+       long clearing its floor, every abort counted with a reason;
+     - **the walk on a `zz-ai-` copy** with real events and the decoded MIDI: choose the group, Generate, Hear, Insert; the inserted longs
+       match what Generate showed; the crescendos on the D11 curve channels; each of the three scopes; the flip; a re-point refused with
+       its reason; a re-Generate keeping the pinned longs; undo through all of it;
+     - **the documents**: `docs/STRIKES_TOOL.md` gains 1n as its own section (it is a mode of that drawer exactly as chords mode is), with
+       `docs/CRESCENDO.md` cross-referencing it; NAMING for the `grp-fill-…` group and the long-s provenance fields; PLAN 1n-s statuses;
+       PLANNER NOW; the journal §2; a title on every new control;
+     - **then his first filled section**, all crescendos; his verdicts → the documents and NITS, the fixes he marks "fix now" built at
+       once; then **1o (crescendo strikes) is planned**.
 
 - **1o — Crescendo strikes: the chords and strikes of 1k sounding as crescendos (CN-48 build 2)** — `todo — to be planned after 1n`
   *(composer, 2026-09-08, CN-48: "like the recent strike chords/and-or strikes but instead of single attack, they will be crescendos,
