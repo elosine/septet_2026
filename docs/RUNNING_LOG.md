@@ -8043,3 +8043,23 @@ already handles the overhang, with no special case. Two things it does need:
 - **a cap backwards** for a player with nothing at all before it, else the long runs back to zero: 1l's 5 s fallback, run backwards.
 - **a switch, *keep inside the pattern***, for when he wants the fill to sit exactly within the strike group's own span: a long that
   would reach back is clipped to the pattern's first attack, and aborts if that puts it under the floor.
+
+## §294. PLAN 1n — step 1 written into the plan; step 2 (the pitch strategies) agreed; step 3 put to him
+
+Composer, 2026-09-08: *"good"* to step 1 with the anchor turned into an accent reference (§293), and *"good"* to step 2 as put. Both are
+written into PLAN 1n.
+
+**Step 2 is almost entirely reuse, which is the point of having built 1m first.** The sonority family IS 1m's harmony bar
+( / , 163 sets); the order IS 1k's deck (); the octave fold IS 1k's rule
+(). Genuinely new in the whole step: reading a named accent's pitch, the interval chain, and the vertical filter — three
+small pure functions. **A pitch that no octave reaches aborts the long** and is counted with step 1's aborts, so nothing is ever dropped
+in silence.
+
+**One thing recorded rather than decided:** a strategy gives a trill's LOWER note only; its interval stays the trill tool's own setting.
+Measured for him — his 44 trills at 135.78 s were every one a semitone, not CN-22's default whole step.
+
+**Step 3 put to him:** the pass in the strikes drawer — where it sits (a mode beside notes and chords, 1k's mixin idiom), choosing the
+strike group FROM THE OPEN SCORE rather than the database so a dragged or stretched group fills correctly, the settings at pass scope,
+**Generate** (runs steps 1 and 2 and shows the result without writing), **Hear** (through the real routes, the D11 curve channels),
+**Insert** (as its own  group with a META shape, the drawer's replace-at-the-same-time rule), and the take that reloads
+*as it was* or *as settings* exactly as 1k's chord takes do.

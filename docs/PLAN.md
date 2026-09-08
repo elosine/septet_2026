@@ -1305,7 +1305,29 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        exactly; no long on a striking player; no two longs overlapping on one player; every long clears its floor; a `both` that cannot
        fit aborts; a re-pointed anchor that does not fit is refused with its reason.
   2. **The pitch strategies** (the four families and their seeded orders, reusing 1m's harmony bar and 1k's deck and octave fold) —
-     `todo — to be agreed`.
+     `agreed 2026-09-08 (RUNNING_LOG §294)`. *Result when done:* a pure module that, given the longs step 1 produced and a chosen
+     strategy, returns each long's pitch — folded into that player's range, with its provenance recorded — four families over one seeded
+     order menu, almost all of it reused rather than built. The to-dos:
+     - **from the pattern**: three references (the long's own accent · the attack before it · the attack after it), each reading a named
+       attack's `sonifyNote`; plus **the pattern's whole collection dealt** — the group's distinct pitches gathered into a deck;
+     - **from a sonority**: 1m's harmony bar WHOLE — `MorphPanel.pitchOptionGroups()` for the menu and `sonorityOf()` for the notes, over
+       the 163 sets. **No second pitch menu is built.**
+     - **a chain** (his *"each a minor second offset from the previous [or] a fifth offset"*): each pitch a fixed interval from the
+       PREVIOUS long's — the interval, the direction (up · down · alternating) and a starting pitch, the first accent's by default. It
+       walks: a minor-second chain over 43 longs covers three and a half octaves, so the fold is what makes it read as a slow spiral
+       rather than a rise;
+     - **vertical**: from a chosen sonority, the note the CURRENTLY SOUNDING longs are missing — the longs in start order and a running
+       set of what is in the air; with five or six sounding at once (§289) it will usually have a real choice;
+     - **the order**, for any family that deals from a collection: in turn · shuffled to completion then reshuffled · random, seeded —
+       `Cresc.deckNext`, already built and checked at 1m;
+     - **the fold**: `Cresc.foldInto` into that player's ordinary voice range (1k's rule); a pitch no octave reaches makes the long
+       **abort**, counted with step 1's aborts rather than dropped silently;
+     - **the trill's second note**: the strategy gives the trill's LOWER pitch only; the interval stays the trill tool's own setting
+       (CN-22's upper whole step by default) — worth knowing that his 44 trills at 135.78 s were every one a semitone;
+     - **the provenance**: each long records `{ family, source, raw, fold, order, seed, lap }`, the shape 1m's `fromHarmony` already uses,
+       so a pitch can be traced back and the pass re-run identically;
+     - **the checks in node**: each family deals what it should; the same seed repeats a pass exactly; a chain folds and stays in range;
+       the vertical filter never repeats a note already sounding; a pitch no octave reaches aborts with its reason.
   3. **The pass in the strikes drawer** (choosing the strike group, the settings, generate · hear · insert, the longs written as one
      group) — `todo — to be agreed`.
   4. **The three scopes** (the whole pass, a selection, a single long: the anchor toggle, the pitch source and the kind on 1m's crescendo
