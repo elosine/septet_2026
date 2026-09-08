@@ -1195,8 +1195,21 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - **clicking an existing crescendo reopens it** with its own values: the card is the editor as well as the maker;
      - check with real events and the decoded MIDI: each control changes the sound; the memory carries to the next C; reopening shows
        what was set.
-  3. **The harmony bar** (the standing pitch source: a sonority, an order, what is left in the deck, change and restart) — *to be laid
-     out when we discuss it.*
+  3. **The harmony bar** (the standing pitch source: a sonority, an order, what is left in the deck, change and restart) — `todo — agreed
+     2026-09-08 (RUNNING_LOG §282)`. *Result when done:* a small standing strip holds a sonority he chose and deals its pitches one at a
+     time; pressing C with nothing selected takes the next pitch and places a crescendo at the playhead on the active lane; he can keep
+     going, change the harmony, or restart the same one, and the bar shows what is left. The to-dos:
+     - the strip where the piano lane's lines bar sits, visible only while a sonority is chosen;
+     - **the sonority** from the morph panel's own pull-down (the harmony banks · his kept sets · the models' sets · stacks and Messiaen
+       modes from a typed root), the notes spelled — reused, not rebuilt (CN-53, §278);
+     - **the order**: in turn · shuffled to completion then reshuffled · random — seeded, so a sequence repeats (1k's deck);
+     - **what is left** in the deck as a count, so he can see the set running out;
+     - **two buttons**: *change harmony* · *restart this harmony*; continuing is pressing C again;
+     - a **C with nothing selected** takes the next pitch, **folds it by octave into that player's range** (1k's rule), and places the
+       crescendo at the playhead on the active lane;
+     - the bar is the **browser's, not the file's** — like the lines bar — and says so;
+     - check: the deck exhausts and reshuffles; the same seed repeats the same order; a folded pitch is marked as folded; the bar
+       disappears when no sonority is chosen.
   4. **Verify and document** (the checks, the walk on a copy, the docs; then his first crescendos in the piece) — *to be laid out when we
      discuss it.*
 

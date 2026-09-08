@@ -7559,3 +7559,15 @@ what is LEFT in the deck, and the two buttons *change harmony* and *restart this
 from it, folds it by octave into the active player's range (1k's rule), and places the crescendo at the playhead on the active lane; the
 bar is the browser's, not the file's, and it says so; the checks — the deck exhausts and reshuffles, the seed repeats, a folded pitch is
 marked, and the bar disappears when no sonority is chosen.
+
+## §282. PLAN 1m — step 3 (the harmony bar) agreed and written; step 4, the last, put to him
+
+Composer, 2026-09-08: *"good"* to step 3 as put — the strip where the lines bar sits, the sonority from the morph panel's own pull-down,
+the order seeded (in turn · shuffled to completion · random), the count of what is left, the two buttons, the fold into the player's
+range, and the bar being the browser's rather than the file's. Written into PLAN 1m, committed.
+
+**Step 4 put to him (the last):** check it works, write it down, then his first crescendos in the piece — the walk on a `zz-ai-` copy with
+real key events and the decoded MIDI (C on a note, on several, on nothing; the greying and its restoration; the card's four controls and
+its memory; the bar's deck; the curve channel; undo through all of it), the node checks for the pure parts, `docs/CRESCENDO.md` gaining
+the C key's section and NAMING the greyed note's stamp, PLAN 1m's statuses, PLANNER NOW and the journal — and then **his first crescendos
+in the piece**, whose verdicts go to CRESCENDO.md and NITS, after which 1n (the sequence filler) is planned.
