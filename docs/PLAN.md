@@ -866,7 +866,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - later, at 2a: the notation of a note born from a line (its source in the provenance).
 
 - **1k — The strikes drawer's chords: a rhythm whose onsets carry chords or parts of one, the players dealt per onset under a 200 ms rest (CN-44 · CN-45 · CN-46 · CN-47)** —
-  `todo — PLANNED 2026-09-08 (the planning method, phases 1–3; RUNNING_LOG §234–247); the build at his word, step 1 first` *(composer, 2026-09-08, CN-44: "use the
+  `BUILT 2026-09-08 — steps 1–6 the same day at his "good to go for the build" (RUNNING_LOG §248–251); his test pending` *(composer, 2026-09-08, CN-44: "use the
   rhythms that are generated usually for one strike individual notes … but I'd like to make those onsets carry a cord or part of a cord
   … assign players to that particular onset … draw from the large cord set … the round robin or the randomize each cycle … I want four
   players on this one or two players on that one … no player has another impulse. let's lower it to 200 milliseconds")*. *Why:* the
@@ -906,7 +906,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - check in node: determinism from the seed; the 200 ms rule never broken; exhaust covers every note exactly once; each advance
        mode; the lowering; the range folds; a run too fast to satisfy, so the flag path is exercised.
   2. **Chords mode in the drawer** (the mode switch, the players column, the chords block, the keyboard, the rhythm strip with a dot per
-     player; generate and hear) — `todo — agreed 2026-09-08 (RUNNING_LOG §241–243)`. *Result when done:* the strikes drawer has a mode
+     player; generate and hear) — `built 2026-09-08 (RUNNING_LOG §250)`. *Result when done:* the strikes drawer has a mode
      switch; in chords mode the columns show the chord in play, the players with their count range and the 200 ms box, the chords block
      with its order, advance and selection, and the rhythm strip drawing a dot per player at each onset; Generate makes the sequence and
      Hear plays it through the ensemble; the drawer's notes mode is untouched. **The screen is his own screen with a cursor (§242):** the
@@ -930,7 +930,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        repainting the keyboard, the decoded MIDI of Hear (the right players, the right pitches, no two attacks closer than 200 ms on one
        player).
   3. **The manual onset** (the card at the onset: its count, its chord or typed notes, back to automatic; the collision flagged) —
-     `todo — agreed 2026-09-08 (RUNNING_LOG §244)`. *Result when done:* any onset can be set by hand — its count, its chord or its exact
+     `built 2026-09-08 (RUNNING_LOG §250)`. *Result when done:* any onset can be set by hand — its count, its chord or its exact
      notes, and which player takes which note — in a card that opens at the onset in the rhythm strip; the machine solves the rest of the
      sequence around it and never overrides it; the 200 ms check still runs over it and flags it; a ✕ hands it back to the machine. The
      to-dos:
@@ -949,7 +949,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - check: a hand onset survives a re-generate and a re-seed; its neighbours respect its players; a colliding one is flagged and
        unchanged; the ✕ restores.
   4. **The span and the partial insert** (marked by drag and by click / shift-click, the insert buttons acting on it, in both modes) —
-     `todo — agreed 2026-09-08 (RUNNING_LOG §245)`. *Result when done:* a span of the sequence can be marked in the rhythm strip, by
+     `built 2026-09-08 (RUNNING_LOG §250)`. *Result when done:* a span of the sequence can be marked in the rhythm strip, by
      dragging across it or by clicking the first onset and shift-clicking the last; the drawer's insert buttons then write only the
      marked onsets, at the playhead or at their original time, as one group with its marker and shape; nothing marked means the whole
      sequence, so the buttons read exactly as today; it works in notes mode too. The to-dos:
@@ -964,8 +964,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - the rest of the sequence stays in the drawer for another insert; the marked span is remembered until it is changed;
      - check on a copy with real events: both ways of marking; only the marked onsets written; the group's shape carrying them; the
        whole-sequence case unchanged; notes mode too.
-  5. **Saving** (the result and the recipe, whole or part; load as it was, or as settings) — `todo — agreed 2026-09-08 (RUNNING_LOG
-     §246)`. *Result when done:* a save carries the RESULT (every onset with its players, its pitches and its flags) and the RECIPE (the
+  5. **Saving** (the result and the recipe, whole or part; load as it was, or as settings) — `built 2026-09-08 (RUNNING_LOG
+     §250)`. *Result when done:* a save carries the RESULT (every onset with its players, its pitches and its flags) and the RECIPE (the
      chord list, the order, the advance, the selection, the player range, the dealer, the seed, the rhythm dials and every manual
      onset); the whole sequence saves as a unit and a marked part saves on its own; loading offers *as it was* (the exact sequence back,
      nothing re-dealt) or *the settings* (the dials filled, generated again). The to-dos:
@@ -982,7 +982,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - check: a save and a load *as it was* round-trip exactly; a part save loads as its own short sequence; an old take still loads;
        the manual onsets travel with the save.
   6. **Verify and document** (the checks, the walk on a copy, the decoded MIDI, the docs; then his first chord strike in the piece) —
-     `todo — agreed 2026-09-08 (RUNNING_LOG §247)`. *Result when done:* the whole of 1k walked end to end on a copy with real mouse and
+     `built 2026-09-08 (RUNNING_LOG §251) — his first chord strike pending`. *Result when done:* the whole of 1k walked end to end on a copy with real mouse and
      key events and the decoded MIDI, one node script checking every pure part, the documents saying what exists; then his first chord
      strike in the piece and his verdicts in the notes. The to-dos:
      - the walk on a `zz-ai-` copy: a chord list built from the banners, generate, the onsets clicked through with the keyboard

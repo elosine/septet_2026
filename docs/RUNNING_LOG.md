@@ -6837,3 +6837,73 @@ every note once, a fresh chord each onset, exactly three onsets per chord at n =
 completion); a fast run lowering counts while the rest holds; a run too fast for the minimum flagging with the warning naming the cure;
 the manual onset kept through a re-seed, flagged when it breaks the rest, and gone when the hand setting is removed; empty inputs
 answered, not thrown.
+
+## §250. PLAN 1k steps 2–5 BUILT — chords mode in the drawer, the card at the onset, the span and the partial insert, the take that carries the result and the recipe
+
+2026-09-08, the AI alone at his word (§248). **`score/public/strike_chords_ui.js` — a MIXIN on the drawer, not a second drawer**
+(`Object.assign(StrikeDrawer, …)`), so notes mode is the code it always was; five dispatch lines in `strike_drawer.js` reach it
+(`render` → `renderChords`, `notesFor` → `chordNotes`, the build hook, an `isChords()` stub for when the mixin is absent, and the
+insert's status line), and `composer.html` loads `strike_chords.js` + `strike_chords_ui.js`.
+
+**Step 2 — chords mode.** A `mode` switch in the drawer's header (*notes* / *chords*, remembered in `cfg`); the state lives in `cfg.ch`
+so the drawer's own `save()`, `state()` and takes carry it. **The screen is his own screen with a cursor (§242):** the CHORDS list where
+the strikes list sits (the list built from the harmony banks — blasts · shapes · the strikes db — or typed as MIDI numbers, each row
+removable and movable; then the order, the advance with its range, the selection); the PLAYERS where the orchestration rows are (a tick
+and an articulation pull-down per player, the count range, the rest in ms, the dealer, the seed, and the readout); the KEYBOARD showing
+the chord in play lit, the selected onset's notes ringed and its sounding notes as dots in the players' colours; the RHYTHM STRIP
+keeping every dial, shape, jitter and the run, drawing a COLUMN of dots per onset (one per player, at its sounding pitch), the selected
+column lit, a lowered onset marked ↓, a short one ·, a flagged one ✗, the hover naming the chord and the players; the dotted lines from
+key to player row for the selected onset; **Generate** (a new seed) and the drawer's own Hear / insert / takes underneath. The onsets
+are the drawer's own rhythm (`pattern()`, or the run's onsets from the calculator).
+
+**Step 3 — the manual onset.** A click on an onset opens a card at it (the cue picker's idiom of PLAN 1j): its player count, its chord
+(the machine's, or one from the list), its notes (typed, or left to the machine), a tick per player, ♪ to hear it, *set by hand*,
+*✕ automatic*, ENTER / ESC. A hand onset is pinned in `cfg.ch.manual` — kept through a re-generate and a new seed, the rest dealt around
+it, flagged when it breaks the rest and never lowered.
+
+**Step 4 — the span and the partial insert.** A drag across the strip marks a span (the onset nearest the pointer's x, so a gap between
+the hit rects cannot stop the drag), and a click plus SHIFT-click marks one too (his "c"); the marked columns are washed and the foot
+says "8 of 26 onsets marked"; *whole* clears it. `notesFor` returns the marked onsets only, so **Hear and both insert buttons act on the
+part** with no change to their own code; nothing marked = the whole sequence.
+
+**Step 5 — saving.** `state()` and `applyState()` are wrapped: a chords take carries `chResult` (the dealt events, the summary, and for
+a part which span of which whole) beside the recipe in `cfg.ch`. The **as it was** tick in the foot decides the load: ticked, the stored
+sequence becomes the drawer's (`cfg.ch.frozen`) and nothing is re-dealt; unticked, the dials are filled and the deal is fresh. Any dial
+touched lets a frozen take go (`chordDirty`). His 153 takes still load — the new save is a superset.
+
+## §251. PLAN 1k step 6 — the walk on a copy with real events and the decoded MIDI; three defects found on the walk and fixed; his first chord strike next
+
+**The walk (`zz-ai-chords`, a copy of his test score, the Browser pane on :5301, deleted after; the strike #34 of his database, its
+rhythm stretched with the drawer's own span × 6):** the mode switch both ways — **notes mode unchanged** beside it (3 sequence rows, 88
+keys, the orchestration selects, 26 dots, 26 notes from `notesFor`), chords mode alive (the CHORDS list, 7 player ticks, 88 keys, 26
+hit columns, 50 notes); two chords added from the blasts bank by real clicks (9 and 6 notes); the deal — 26 onsets · 50 notes · 2 chords
+· 2–4 players · rest 200 ms · 4 lowered · 2 short · ✗ 7 · 15 folded, **the tightest gap 204 ms** (the rule holds; the flags are the tight
+head of his rhythm, where even two players cannot be free — the warning names the cure); the keyboard repainting per onset (4 dots, 4
+dotted lines); a real click on onset 9 opening the card, four players ticked and a chord chosen → **BCl F2 · Vn1 C4 · Vn2 C#4 · Fl D4,
+by register, flagged and kept as set**, and a re-seed leaving it untouched; a real drag from onset 5 to 12 marking 8 of 26, and
+SHIFT-click marking 17–21; **the decoded MIDI** through the drawer's own Hear (fake outputs on `MorphEmit.routeFor`): the 5 notes of the
+marked span, on the players' own channels with the strike techniques (the flute's tongue ram on channel 13), the velocities through 1g's
+remap, 5 note-offs; **the insert** of the marked span at the playhead → 14 notes on the six lanes in one group with its META shape at
+320 s, one undo state, the drawer's own "1 earlier copy kept elsewhere" rule intact; **the takes** — a whole take (26 events) and a part
+take (8 events, "the part 5–12 of 26"), the settings wrecked, then *as it was* restoring the stored sequence exactly (frozen, nothing
+re-dealt) and *the settings* filling the dials for a fresh deal; the test takes removed from his file afterwards (his 153 stand).
+
+**Three defects found on the walk, fixed:**
+1. **The mixin loaded after the drawer built itself**, so the mode switch was never injected — the drawer's `build()` runs at parse
+   time, before a deferred mixin. Fixed both ways: a hook in `build()` for when the mixin is first, and a self-injection at the end of
+   the mixin for when the drawer is.
+2. **An empty "notes" box parsed as pitch 0** (`''.split(…)` → `['']` → `[0]`), so a hand onset asking for four players got one note
+   at C-1. Fixed in the card and in the typed-chord box (`.filter(x => x !== '')`).
+3. **The span drag never marked anything** — it read the onset under the pointer with `document.elementFromPoint`, which the hidden
+   pane defeats and which a gap between the hit rects defeats anyway. Rewritten to take the onset NEAREST the pointer's x from the
+   strip's own geometry, so the drag is continuous.
+   *(Also on the way: a patch had split a comment in `strike_drawer.js` and broken its parse — caught by `node --check`, repaired; and
+   a stray NUL byte from an earlier write made the mixin unreadable as text — found by `file`, stripped.)*
+
+**The documents:** `docs/STRIKES_TOOL.md` section X (chords mode, the tool's own document), PLAN 1k's statuses, PLANNER NOW, the journal
+§2, a title on every new control. **Nothing new in the score's file format:** a chord-mode insert writes ordinary strike notes in an
+ordinary `grp-strike-…` group with its META shape, so NAMING is unchanged and the extractor and the notation see what they always saw.
+
+**His first chord strike next (the plan's step 6, last to-do):** a hard reload (CTRL+SHIFT+R), the drawer, the mode switch to *chords*,
+a chord list from the banks, the count range and the rest, Generate, Hear, a span, insert; his verdicts → STRIKES_TOOL and NITS, the
+fixes he marks "fix now" built at once.

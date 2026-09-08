@@ -198,6 +198,7 @@ const D = {
         document.body.appendChild(d);
         this.el = d; this.body = d.querySelector('#skBody');
         this.applyHeight();
+        if (this.injectChordUI) this.injectChordUI();   // PLAN 1k: the mode switch and the chords foot (strike_chords_ui.js)
         // wiring
         const q = s => d.querySelector(s);
         q('#skClose').addEventListener('click', () => this.toggle(false));
@@ -701,6 +702,7 @@ const D = {
     keyY(midi) { const R = this.range(); return (R.hi - midi) * this.rh(); },
     render() {
         if (!this.strike) return;
+        if (this.isChords && this.isChords()) return this.renderChords();   // PLAN 1k: chords mode (strike_chords_ui.js) — notes mode below is untouched
         this.applyOrder();
         this.renderKeyboard(); this.renderOrch(); this.renderPicker(); this.renderRhythm(); this.renderSeeds();
         requestAnimationFrame(() => this.renderLines());
@@ -1013,6 +1015,7 @@ const D = {
     },
     notesFor(mode) {
         const T = TRK(); const pianoLane = T.findIndex(t => t.instKey === 'piano');
+        if (this.isChords && this.isChords()) return this.chordNotes({ piano: mode === 'piano', span: true });   // PLAN 1k: the dealt chords, the marked span only
         if (this.cfg.shape === 'accel' && mode !== 'piano') {   // U13: the run — one note per player of each card, at the run's onsets
             const A = this.accelSeq(); const anySolo = this.voices.some(v => v.solo); const out = [];
             A.events.forEach(ev => { const v = ev.unit.v; if (anySolo && !v.solo) return; const vel0 = clamp(Math.round((this.cfg.flatten ? 127 : v.vel) * this.cfg.dynX), 1, 127); const durMs = Math.max(30, v.durMs * this.cfg.durX);
@@ -1079,8 +1082,8 @@ const D = {
     // ------------------------------------------------------------------ insert / replace (Q)
     insert(replace) {
         const C = C_(); if (!C || !this.strike) return;
-        const notes = this.notesFor('orch');
-        if (!notes.length) { this.setStatus('nothing to insert — shuffle or assign first', true); return; }
+        const notes = this.notesFor('orch');   // PLAN 1k: in chords mode these are the dealt chords of the MARKED span (nothing marked = the whole)
+        if (!notes.length) { this.setStatus(this.isChords() ? 'nothing to insert — build a chord list and Generate' : 'nothing to insert — shuffle or assign first', true); return; }
         let t = +C.getTimeAtPlayhead().toFixed(3);
         let replaceMsg = '', afterMsg = '';
         if (replace === 'after') {
@@ -1218,6 +1221,8 @@ const D = {
     save() { try { localStorage.setItem(STORE, JSON.stringify(this.cfg)); } catch (e) {} },
     restore() { try { const s = JSON.parse(localStorage.getItem(STORE) || 'null'); if (s) Object.assign(this.cfg, s); } catch (e) {} },
     setStatus(msg, bad) { const s = this.el.querySelector('#skStatus'); s.textContent = msg; s.title = msg; s.style.color = bad ? '#e88' : '#9a9'; },   // the header line truncates — hover for the whole message (composer, 2026-09-04: "where to find status")
+    // PLAN 1k: chords mode is a mixin (strike_chords_ui.js); this stub keeps the drawer whole when the mixin is not loaded
+    isChords() { return false; },
 };
 
 root.StrikeDrawer = D;

@@ -563,6 +563,61 @@ call, as the chart decides (§86).
 > ignored, the length by ms (every gap exactly the length ÷ the count) or by notes — with the same dealing and pool as a run. The
 > calibration of words to numbers waits for his go.
 
+## X · Chords mode — `built 2026-09-08 (PLAN 1k; RUNNING_LOG §234–251; CN-44 · CN-45 · CN-46 · CN-47)`
+
+> *"use the rhythms that are generated usually for one strike individual notes … but I'd like to make those onsets carry a cord or part
+> of a cord … I want four players on this one or two players on that one and then the algorithm would shuffle so that no player has
+> another impulse. let's lower it to 200 milliseconds"* (CN-44) · *"me to put in the menu … the machine can solve how many players to
+> put on each onset and how to scramble that"* (CN-45)
+
+**The idea.** The drawer's rhythm is the rhythm — the strike's onsets with its dials, shapes, jitter and the run, untouched. What changes
+is what sits on an onset: a chord, or part of one, dealt over the players by rule. Nothing is assigned by hand; he sets menus and the
+machine solves.
+
+**The screen (§242) — his own screen with a cursor.** The keyboard and its dotted lines are unchanged in kind and show ONE ONSET, the
+selected one; the rhythm strip is the selector, a column of dots per onset; notes mode is this screen with a sequence of one. The
+articulation pull-downs keep their meaning: a player's voice for the whole sequence.
+
+| where | notes mode | chords mode |
+|---|---|---|
+| the left column | the strikes of the source save | **the CHORDS list** — built from the banks (blasts · shapes · the strikes db) or typed; the order, the advance, the selection |
+| the keyboard | the whole strike's notes | the chord in play, the selected onset's notes ringed, its sounding notes as dots |
+| the orchestration | a row per player with its note | **the PLAYERS** — a tick and a voice per player, the count range, the rest in ms, the dealer, the seed, the readout |
+| the rhythm strip | a dot per onset | **a COLUMN of dots per onset**, one per player; the selected column lit; ↓ lowered · ✗ flagged · · short |
+| the foot | as always | + **Generate** · *whole* · *as it was* |
+
+**The two axes (CN-46).** The SELECTION is which notes of the chord an onset takes — the drawer's own voicing vocabulary: as played ·
+shuffle · high cluster · low cluster · spread. The ADVANCE is when the next chord comes — exhaust it (every note sounded once) · stay on
+it n times (n drawn from a range) · a fresh chord every onset. The chord list runs in turn or shuffled to completion, seeded.
+
+**The players.** A range per onset ("two to four"); the machine draws a count, and when too few players are free it LOWERS the count
+inside the range, flagging only when even the minimum cannot be met (his (a), §237). The re-attack rule (his 200 ms) is a guarantee,
+checked against the real onset times. The onset's notes go to the free players BY REGISTER — the lowest note to the lowest-sitting
+player and up — each folded by octave into that player's measured range (`realize`), the folds counted. Round robin and free are the
+tie-breakers when more players are free than needed.
+
+**The chord's TAIL (§249).** With *exhaust*, the last onset of a chord takes whatever is left, which is usually fewer notes than the
+count drawn. That is not a failure of the range: it is the chord's tail, marked `short` and counted in the readout. Small chords make
+many tails — the 54 chord shapes average 3.8 notes, the 45 blasts 6.2 — so a 2–4 range reads better on the blasts.
+
+**A manual onset (step 3).** A click on an onset opens a card there: its count, its chord, its notes, its players, ♪ to hear it. A hand
+onset is pinned — kept through a re-generate and a new seed, the rest dealt around it — and flagged, never lowered. ✕ hands it back.
+
+**The span and the partial insert (step 4).** A drag across the strip marks a span, and so does a click plus SHIFT-click; the foot says
+how many of how many; *whole* clears it. Hear and both insert buttons then act on the marked onsets only; nothing marked = the whole
+sequence, so they read exactly as they always did. **It serves notes mode too.**
+
+**Saving (step 5).** A take carries the RESULT (every onset with its players, pitches and flags) and the RECIPE (the chord list, the
+order, the advance, the selection, the player range, the rest, the dealer, the seed, the rhythm dials, the manual onsets). With a span
+marked it saves that part on its own, remembering which span of which whole. The *as it was* tick decides the load: the stored sequence
+back with nothing re-dealt, or the dials filled and dealt again. The 153 earlier takes still load.
+
+**Where it lives.** `score/public/strike_chords.js` (the engine, pure, 35 checks in `tools/strike_chords_check.js`) ·
+`score/public/strike_chords_ui.js` (chords mode as a mixin on the drawer) · five dispatch lines in `strike_drawer.js`. **Nothing new in
+the score's file format:** an insert writes ordinary strike notes in an ordinary `grp-strike-…` group with its META shape.
+
+**Not yet:** the notation of a chord strike (2a); a chord list saved on its own (a take carries one today); the piano in the deal (it
+sits out, as it does in the morphs and the beatings — CN-34); his listening.
 
 ## Open questions for the composer (only what blocks the next piece)
 
