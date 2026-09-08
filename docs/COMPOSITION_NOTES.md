@@ -974,3 +974,30 @@ keep them: RUNNING_LOG §205.
 of the morphs (CN-34, CN-37), gets its own material; what is asked for is the DEVICE: how the animated score animates a solo run of
 scattered strikes for one player (the tuba's strike devices are ensemble ones), and the playing technique it implies. To come up
 with when the notation and the animation are reached (PLAN §2); parked there.
+
+## CN-40 · 2026-09-07 — the piano in the morph section: HARMONICS at the ensemble's re-breaths, the nearest strong one, a little detuned
+
+> *"Composition note. for the piano part, for the morph section, use harmonics. So detect the onsets where the read breaths happen for
+> the morph and what pitches they are, and then figure out the harmonic to play. if it's accessible or the nearest harmonic. It doesn't
+> have to be the spot on pitch even better if it's a little detuned from what's being played in the ensemble. I'll book it the closest
+> one that has the strongest harmonic. So I guess I would be the active or the fifth. And if that note isn't available, then move down
+> the harmonic chain. develop a way to generate these? In two ways. So just to auto generate the midi, but also we have to figure out,
+> just like with the piano percussion piece, how to fake fake harmonics using the earcom prepared piano sampler. does they just use, I
+> believe, the fifth or the octave? Only one harmonic is available per key. But we did a version of this for that piece, and we could
+> probably refine it here. maybe do a pass where we generate all the pitches from the onsets of the ensemble. We take off the ones that
+> are playable by the... naturally by the sample library and then figure out how to achieve the other ones. either by using a different
+> key Also, we can look into a different sample library that might have access to more harmonics."*
+> *(2026-09-07, late; typed — "read breaths" = re-breaths, "the active" = the octave, "earcom" = IRCAM)*
+
+*AI reading (not the composer's words):* the piano, out of the morphs as a bending voice (CN-34, CN-37), enters them as a RESONANCE:
+at every re-breath (a re-bow) of the ensemble's morph, a piano harmonic on the pitch the re-entering player takes — not exact; a
+little off it is welcome (a beating of its own against the ensemble) — the strongest harmonic first (the octave, then the fifth), then
+down the chain (the third, the seventh …) when a stronger one has no string. Two deliverables: (1) the MIDI generated from the
+morph's render — its re-breath onsets and pitches are already in the render (`renderPair` / the morph's notes carry every segment's
+start and cents) — a pass that writes the piano's harmonic notes into the score; (2) the SOUND: the IRCAM Prepared Piano 2's
+"Harmonics" preparation, faked as the two-piano piece did it (`composition_for_two_pianos_and_two_percussion/docs/HARMONICS_PIANO_PLAN.md`:
+a fundamental string + a partial → the key played and a CC21 pitch shift, 19.048 c per step around 64, sent 85 ms before the note; a
+curated table of which partials each string range gives — the low strings 2–28, the middle 2–16, the transition strings a short list
+each, nothing above B4 as a fundamental; the ceiling MIDI 101) — a pass over the ensemble's onsets: the pitches the sampler gives
+naturally, then the rest by another key and the shift, then what no key gives — and a look at other libraries with more harmonics.
+Planned as PLAN 1i (todo), to be built when the morph section is composed; RUNNING_LOG §210.

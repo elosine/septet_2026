@@ -745,6 +745,18 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   in the port), texture/pulse/multitempo panels (present), density-build recipes
   (`CURVE_DATABASE.md` MAXDENSE-1 / BUILD-1 — data in #4, consult when the mass is built).
 
+- **1i — The piano's harmonics for the morph section: at the ensemble's re-breaths, the nearest strong harmonic, a little detuned** —
+  `todo` *(composer, 2026-09-07 late, CN-40: "for the piano part, for the morph section, use harmonics … detect the onsets where the
+  re-breaths happen for the morph and what pitches they are, and then figure out the harmonic to play … the octave or the fifth. And if
+  that note isn't available, then move down the harmonic chain. develop a way to generate these? In two ways")*. *Result when done:*
+  (1) a generator that reads a morph's render (the re-breath onsets and pitches per voice) and writes the piano's harmonic notes into
+  the score — the strongest available harmonic of that pitch first (the octave, the fifth, then down the chain), the nearest when none
+  is exact, a small detune welcome; (2) the sound — the IRCAM Prepared Piano 2 "Harmonics" preparation as the two-piano piece faked
+  it (`HARMONICS_PIANO_PLAN.md` there: fundamental + partial → the key and a CC21 shift; the curated partial table), ported and refined:
+  a pass over the ensemble's onsets — what the sampler plays naturally, what another key with the shift gives, what no key gives —
+  and other libraries with more harmonics looked at. Planned at his word when the morph section is composed (the planning method).
+
+
 ## 2. Notate — `deferred` until the first real page exists
 
 - **2a — Engine adaptation** — the 0g list. Start with the page the opening needs.

@@ -6071,3 +6071,24 @@ Built 2026-09-07 late at his "good to go" (§205–207), on `zz-ai-morph` (a cop
   in his takes file (an empty `morphPitches` key; his file, unstaged).
 - **The default:** by register. **Not in it:** spread pairs (1-4 · 2-5 · 3-6) — the engine pairs by sorted pitch, so only adjacent pairs
   exist for now (the module keeps the code; a note for the revision).
+
+## §209. "and the actuals, they are saved into something that is comitted?" → "yes pls" — the ACTUALs' home found (bank/actuals, untracked), his first one committed with his takes file; the rule from here: both committed at every wrap
+
+Composer, 2026-09-07 late: *"and the actuals, they are saved into something that is comitted?"* — then, to the offer to commit them
+now and at every wrap: *"yes pls"*.
+
+**Found:** \`Save as ACTUAL\` writes one JSON per actual into \`bank/actuals/\` (\`tools/model_bank.js\`, \`ACTUALS_DIR\
+
+## §210. A composition note: the piano's harmonics at the morph's re-breaths — recorded (CN-40), the two-piano piece's method found, PLAN 1i opened
+
+Composer, 2026-09-07 late: the note verbatim in CN-40 and MORPH_NOTES §3 — the piano plays HARMONICS in the morph section, one at
+every re-breath of the ensemble, on that player's pitch or the nearest strong harmonic (the octave, the fifth, then down the chain), a
+little detuned welcome; two ways to develop: the MIDI generated from the onsets, and the sampler's harmonics faked as in the two-piano
+piece. **Found (not built):** `composition_for_two_pianos_and_two_percussion/docs/HARMONICS_PIANO_PLAN.md` — the IRCAM Prepared
+Piano 2 "Harmonics" preparation: fundamental + partial → `playMidi` + CC21 (19.048 c per step, centre 64, 85 ms lead; CC21 is per
+channel, so a second channel for a second voice), the curated partial table per string range (low 2–28 · mid 2–16 · transitions with
+short lists · none above B4), the ceiling 101 — phases 1–2 built there 2026-04-08. The septet's own data for it exists: the morph render's
+segments (each re-breath's start and cents per voice) and the beating's breath spans. **Opened PLAN 1i (todo):** the piano's harmonics
+for the morph section — (1) the generator from a morph's render, (2) the sound: the IRCAM table ported and refined, a pass over the
+onsets (natural · by another key and the shift · unreachable), other libraries looked at. Nothing built; his word when the morph
+section is composed.

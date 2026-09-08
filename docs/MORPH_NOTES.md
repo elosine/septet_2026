@@ -768,6 +768,27 @@ family · root · voicing · selection — and "by register" (each pair takes th
 players. RUNNING_LOG §207.
 
 
+### 2026-09-07, late — a composition note: the piano's harmonics at the morph's re-breaths (CN-40)
+
+> *"Composition note. for the piano part, for the morph section, use harmonics. So detect the onsets where the read breaths happen for
+> the morph and what pitches they are, and then figure out the harmonic to play. if it's accessible or the nearest harmonic. It doesn't
+> have to be the spot on pitch even better if it's a little detuned from what's being played in the ensemble. I'll book it the closest
+> one that has the strongest harmonic. So I guess I would be the active or the fifth. And if that note isn't available, then move down
+> the harmonic chain. develop a way to generate these? In two ways. So just to auto generate the midi, but also we have to figure out,
+> just like with the piano percussion piece, how to fake fake harmonics using the earcom prepared piano sampler. does they just use, I
+> believe, the fifth or the octave? Only one harmonic is available per key. But we did a version of this for that piece, and we could
+> probably refine it here. maybe do a pass where we generate all the pitches from the onsets of the ensemble. We take off the ones that
+> are playable by the... naturally by the sample library and then figure out how to achieve the other ones. either by using a different
+> key Also, we can look into a different sample library that might have access to more harmonics."*
+> *(2026-09-07, late; typed — "read breaths" = re-breaths, "the active" = the octave, "earcom" = IRCAM)*
+
+**AI reading (not the composer's words):** the morph tool's first downstream consumer: a pass that reads a morph's RENDER (every
+re-breath's onset and pitch per voice) and writes another instrument's part from it — the piano's harmonics, the nearest strong one,
+a little detuned. For the all-purpose tool: a morph's render should be a queryable object (onsets, pitches, breaths per voice), not
+only a bag of notes, so that resonances, doublings and accents can be derived from it; and a sampler's "what it can play" table (the
+IRCAM harmonics' partials per string) is palette data of the same kind as the bending players' ranges. PLAN 1i; RUNNING_LOG §210.
+
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·
