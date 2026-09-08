@@ -6706,3 +6706,25 @@ part ringed and the players' ranges as columns; the rhythm strip keeping every d
 player at each onset in the player's colour, a lowered onset marked and a flagged one ✗, the hover naming the chord and the players;
 Generate and Hear through the drawer's own audition path (MorphEmit's routing, 1g's remap, panic the one stop); the readout in the
 drawer's line (the counts, the flags, the folds).
+
+## §242. PLAN 1k step 2 — his question: "what does this new sequence or chord per onset look like?" — answered: the same screen, one onset at a time, the rhythm strip the selector
+
+Composer, 2026-09-08, describing what he has today: *"I have the core drawer. I select it. It comes up on the keyboard, and then dotted
+lines point to the players. And I can do things like double click the keyboard key and move that key to a different player, etcetera.
+And then each player has a pull down for the articulation. what does this new sequence or chord per onset look like?"*
+
+**Answered (with a sketch of the two drawers side by side):** the difficulty named first — one screen cannot show a whole sequence the
+way today's screen shows one chord, because a chords-mode strike is many onsets, each with its own chord and its own players. So the
+picture keeps his layout and adds a CURSOR:
+- **The keyboard with its dotted lines is unchanged in kind, but it shows ONE ONSET** — the selected one: the chord in play lit, the
+  notes this onset takes ringed, a dotted line from each to the player that takes it. Click another onset in the rhythm strip and the
+  same picture repaints for it. Today's screen = this screen with a sequence of one.
+- **The rhythm strip becomes the selector** (as the strikes list on the left selects a strike today): a COLUMN of dots per onset, one
+  dot per player in the player's colour, so the whole sequence is read at a glance — where it is thick, where it is thin, where a count
+  was lowered or flagged; the selected column is lit and is what the keyboard shows.
+- **The player rows keep their articulation pull-downs**, unchanged: a player's voice for the whole sequence, not per onset.
+- **His double-click gesture keeps its meaning and becomes the manual onset of step 3:** moving a key to another player, or changing
+  how many players this onset has, marks THAT onset by hand; the machine solves the rest around it, the collision check still runs and
+  flags it, and a ✕ hands it back to the machine.
+- **What is genuinely new on the screen:** the chords list with its order, advance and selection where the strikes list sits; the
+  count range and the 200 ms rest under the players; the stacked dots in the strip.
