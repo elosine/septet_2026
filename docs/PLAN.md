@@ -757,6 +757,28 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   a pass over the ensemble's onsets — what the sampler plays naturally, what another key with the shift gives, what no key gives —
   and other libraries with more harmonics looked at. Planned at his word when the morph section is composed (the planning method).
 
+- **1j — The piano's articulation points from the morph: empty lines at the re-breaths, the peaks and the breath ends, each clicked into a note (CN-43)** —
+  `todo — in planning 2026-09-08 (PLANNING_METHOD phase 3 from step 1; RUNNING_LOG §219–223)` *(composer, 2026-09-08, CN-43: "I'd
+  like generated from the morph. just articulation points. These can maybe appear as lines in the piano part, but initially with
+  nothing attached … from any of the morph onsets, the rebreath, the peak point, those dots, and the end of a breath … click on any of
+  those lines. and assigned a pitch and an articulation … normal piano, muted piano, or harmonic. or Plucked. and then duration and
+  dynamic … that vertical keyboard … PPP to FFF … choose a duration or dial in a duration")*. *Why:* the piano's part in the morph
+  section placed by his ear, point by point, on the grid the morph gives — the second derived layer of a morph after 1i's generated
+  harmonics. **Decided in the talk (RUNNING_LOG §220–222):** a line is an empty note (the score's own shape without a sound note;
+  nothing new in the file); the picker is a card at the line — the vertical keyboard with the ensemble's sounding pitches at that
+  instant, the four piano voices, ppp … fff, the duration as presets and a box, ▶ in context, a key click sets and sounds; *lines →
+  piano* on the morph panel generates all three kinds for every player of the morph under the playhead; the kind checkboxes, the
+  player ticks and *clear lines* on a bar at the left end of the piano lane, a view filter of the browser's. The notation at 2a.
+  *The top line, confirmed ("ok good", §223):*
+  1. **The line** (an empty piano note drawn as a thin line, its kind and its player's colour; the score treats it as any note) —
+     *to be laid out when we discuss it.*
+  2. **lines → piano** (the generator on the morph panel: all three kinds, every player, the morph under the playhead; a re-run keeps
+     the notes made) — *to be laid out when we discuss it.*
+  3. **The picker card** (the keyboard with the ensemble at that instant, the voice, the dynamic, the duration; a key click sets and
+     sounds; ▶ in context; apply) — *to be laid out when we discuss it.*
+  4. **The bar on the piano lane** (the kind checkboxes, the player ticks, clear lines) — *to be laid out when we discuss it.*
+  5. **Verify and document** (the checks, the walk on a copy with real events, the decoded MIDI, the docs; then his first lines in the
+     piece) — *to be laid out when we discuss it.*
 
 ## 2. Notate — `deferred` until the first real page exists
 
