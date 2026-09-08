@@ -6761,3 +6761,19 @@ sequence, so the buttons read exactly as today; the same in NOTES mode (the draw
 the rest of the sequence staying in the drawer for another insert, the marked span remembered until changed; checks on a copy with real
 events — both ways of marking, only the marked onsets written, the group's shape carrying them, the whole-sequence case unchanged,
 notes mode too.
+
+## §245. PLAN 1k — step 4 (the span and the partial insert) agreed and written; step 5, saving, put to him
+
+Composer, 2026-09-08: *"good"* to step 4 as put — the span marked by a drag or by click / shift-click, the readout's count, the two
+insert buttons acting on the marked onsets only, one group with its marker and shape, nothing marked = the whole, the same in notes
+mode, the rest kept for another insert, the checks. Written into PLAN 1k, committed.
+
+**Step 5 put to him, goal and sub-steps together:** a save carrying the RESULT (per onset its time, its chord, its notes, its players,
+whether it was lowered or flagged) and the RECIPE (the chord list, the order, the advance, the selection, the player ticks, the count
+range, the re-attack, the dealer, the seed, the rhythm dials, the manual onsets, the mode); the WHOLE saved as a unit and, with a span
+marked, the PART saved on its own with the same recipe plus the whole it came from and which span; loading offering *as it was* (the
+stored sequence back on the strip, nothing re-dealt) or *the settings* (the dials filled, Generate run) — the morph panel's manner
+(§213); all of it in the drawer's existing takes list through the snapshots API (`bank/panel_snapshots.json`, bucket `strikes`, 153
+takes today), no server change, the name rule and the × and ENTER-to-save unchanged, the old takes still loading because the new save
+is a superset; the takes committed at every wrap (HOW_WE_WORK); checks — a save and a load *as it was* round-tripping exactly, a
+part-save loading as its own short sequence, an old take still loading, the manual onsets travelling with the save.

@@ -949,7 +949,21 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - check: a hand onset survives a re-generate and a re-seed; its neighbours respect its players; a colliding one is flagged and
        unchanged; the ✕ restores.
   4. **The span and the partial insert** (marked by drag and by click / shift-click, the insert buttons acting on it, in both modes) —
-     *to be laid out when we discuss it.*
+     `todo — agreed 2026-09-08 (RUNNING_LOG §245)`. *Result when done:* a span of the sequence can be marked in the rhythm strip, by
+     dragging across it or by clicking the first onset and shift-clicking the last; the drawer's insert buttons then write only the
+     marked onsets, at the playhead or at their original time, as one group with its marker and shape; nothing marked means the whole
+     sequence, so the buttons read exactly as today; it works in notes mode too. The to-dos:
+     - marking: a drag across the strip, or a click on the first onset column and a shift-click on the last (his "c", §239); the marked
+       columns lit and the readout saying how much ("6 of 23 onsets · 2.4 s"); a click on empty space clears it;
+     - the insert buttons act on the marked span only: *Insert @ playhead* (the first marked onset landing there, the rest keeping their
+       distances) and *Insert @ original time* (each keeping its own); *Replace in place* unchanged in meaning;
+     - what goes in: one group with its marker and META shape as every gesture, the notes on the players' lanes with their techniques
+       and their loudness through 1g's remap;
+     - nothing marked = the whole sequence, so the buttons behave exactly as today;
+     - the same in NOTES mode — the drawer's existing single-note strikes gain the partial insert too;
+     - the rest of the sequence stays in the drawer for another insert; the marked span is remembered until it is changed;
+     - check on a copy with real events: both ways of marking; only the marked onsets written; the group's shape carrying them; the
+       whole-sequence case unchanged; notes mode too.
   5. **Saving** (the result and the recipe, whole or part; load as it was, or as settings) — *to be laid out when we discuss it.*
   6. **Verify and document** (the checks, the walk on a copy, the decoded MIDI, the docs; then his first chord strike in the piece) —
      *to be laid out when we discuss it.*
