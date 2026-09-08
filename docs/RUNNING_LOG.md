@@ -7101,3 +7101,43 @@ the rest as the doing. The method's own rule: when he says a turn is too much, s
 The status `PLANNED`, the build at his word, step 1 first. Shown to him once as the method asks, with what sits outside the plan: the
 build's go; his three tests still waiting (1k chords mode, 1j the piano's lines, 1i the piano's harmonics); and the three items that
 follow this one (1m the C key, 1n the sequence filler, 1o crescendo strikes), each planned when its turn comes.
+
+## §262. PLAN 1l BUILT (steps 1–4 but his ear) — the crescendo object, the listening-test score file, the one spacing rule; three findings on the way
+
+2026-09-08, the AI alone at his *"go 1l as much as possible independantly until you need me pls"*.
+
+**Step 2 first, because step 1 needs it** (the test file is made OF the object): `score/public/cresc.js` (pure) — the three families with
+his own ratio ladder (`segmentFor`: surge exponential 0.40 at 5×, bloom logarithmic −0.29, line power 0), `endFor` (0.17 s before that
+player's next note · the 5 s fallback · a typed duration · **no room** when the next note is closer than 0.3 s), `make` (the held note
+with its curve, the ordinary voice, ppp … fff, the cliff, the morph orange `#C2410C`, the `properties.cresc` provenance), `heightAt` and
+`thresholdOf` (the shape measured off the drawn curve, so the checks test the sound and not the intention), `describe`. `STANDARD` is
+surge 5×, **marked provisional** until he names one.
+
+**Step 1:** `tools/cresc_test.js` → **`scores/cresc-test.json`** — 9 columns (3 shapes × 3 durations 1.5 · 5 · 12 s) × 7 players = **63
+crescendos over 73.5 s**, the same times on all seven lanes so soloing swaps the instrument (his "a"), a marker naming each column, each
+player at the middle of its ordinary range on its ordinary voice. `--durations --shapes --ratio --gap` regenerate a different grid.
+
+**Step 3:** `score/public/spacing.js` (pure) — `free(t, events, { restMs, group, dur })` with **the gesture clause**; the strikes
+drawer's chord engine re-read (it now records each player's END, `soundMs` being how long one dealt sound lasts, and its box says
+**"rest after the end ≥ ___ ms"**, default 150); the trill's no-next-note fallback 2 s → **3 s**.
+
+**Verified — 43 node checks** (`tools/cresc_check.js`) and a walk in the app: the file opens (63 crescendos on 7 lanes, 9 markers, all
+drawn in the orange, nothing bleeding); **the three shapes reach the ear differently** — through the score's own law on Vn1 F#5 over 5 s,
+CC7 goes 88 · 93 · 100 · 109 · 127 (surge), 88 · 98 · 107 · 114 · 127 (line), 88 · 103 · 111 · 121 · 127 (bloom), the note-on velocity
+120 from the curve's top; the drawer's box reads the new sentence; `trillDefaultEnd` says "3 s — no later strike note on this player".
+Every other suite still passes (the chords 35, the cues 32, the harmonics 38, the morph 64).
+
+**Three findings on the way:**
+1. **The rule needed the gesture clause, and the piece proved it** (§260) — 33 pairs would newly block, 18 of them the morph's own
+   re-breaths. Named before the code was written, so the clause was in the first version.
+2. **The other 15** newly-blocked pairs are existing **trill → strike** transitions already 110–148 ms apart, tighter than the new rest.
+   They are left exactly as he wrote them: the rule governs new generation and never rewrites the score. Recorded in CRESCENDO.md §4.
+3. **"No room" is an answer.** The first `endFor` clamped a crowded crescendo to a 0.3 s minimum — which drew it straight over the note
+   that crowded it. Now the maker returns nothing and the caller says there is no room. Caught by a check whose arithmetic I had got
+   wrong, which is the only reason I looked.
+
+**The piano's column is a caveat, not a bug:** a piano cannot swell; its crescendo is a CC7 fade on a decaying note. It is in the file
+because he asked for all seven players, and CRESCENDO.md says so beside it.
+
+**Pending him:** the listening test itself — open `cresc-test`, solo, name the standard; his answer replaces `STANDARD.provisional` in
+`cresc.js` and the line in CRESCENDO.md §2, and then 1m (the C key) is planned.

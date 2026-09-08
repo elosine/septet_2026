@@ -38,7 +38,10 @@ const DEFAULTS = {
     timesMin: 2, timesMax: 4, // "cycle through each cord two to four times before moving on"
     selection: 'shuffle',     // which notes of the chord an onset takes
     countMin: 2, countMax: 4, // "two to four players each strike"
-    reattackMs: 200,          // "no player has another impulse … 200 milliseconds"
+    // PLAN 1l step 3 (§256, §260): the rest is measured from the END of the player's last sound, not from its attack — the one rule
+    // in the app. `soundMs` is how long one dealt sound lasts (a strike is short; a crescendo of 1o will pass its own length).
+    reattackMs: 150,          // "next articulation for any one instrument will be 150ms after end"
+    soundMs: 140,             // the length of one dealt sound (the drawer's own strike length)
     dealer: 'free',           // which free players are picked when more are free than needed
     seed: 1,
 };
@@ -124,8 +127,10 @@ function deal(onsets, chords, players, o, realize, manual) {
 
     const rnd = mulberry32((+O.seed || 1) * 7727 + 29);
     const src = chordSource(chords, O, rnd);
-    const last = new Map();                         // lane → the ms of its last attack
+    const last = new Map();                         // lane → the ms at which its last sound ENDED (PLAN 1l step 3)
     const wait = (p, t) => (last.has(p.lane) ? t - last.get(p.lane) : Infinity);
+    const soundMs = Math.max(0, +O.soundMs || 0);
+    const markEnd = (lane, t) => last.set(lane, t + soundMs);
     const byLane = {}; players.forEach(p => { byLane[p.lane] = p; });
     const man = manual || {};
 
@@ -147,7 +152,7 @@ function deal(onsets, chords, players, o, realize, manual) {
             ev.wanted = pitches.length; ev.count = Math.min(pitches.length, chosen.length);
             ev.flagged = chosen.some(p => wait(p, t) < O.reattackMs) || chosen.length < pitches.length;
             assign(ev, pitches.slice(0, ev.count), chosen.slice(0, ev.count), realize);
-            ev.notes.forEach(n => last.set(n.lane, t));
+            ev.notes.forEach(n => markEnd(n.lane, t));
             out.events.push(ev);
             if (!m.chordId) src.took(ev.notes.map(n => n.pitch));
             return;
@@ -166,7 +171,7 @@ function deal(onsets, chords, players, o, realize, manual) {
         const notes = select(avail, count, O.selection, rnd);
         const chosen = pickPlayers(free, notes.length, t, O, rnd, wait);
         assign(ev, notes, chosen, realize);
-        ev.notes.forEach(n => last.set(n.lane, t));
+        ev.notes.forEach(n => markEnd(n.lane, t));
         out.events.push(ev);
         src.took(notes);
     });
@@ -230,12 +235,14 @@ function summarize(events, O, info) {
     return s;
 }
 
-// the rule as a fact, for the checks and the readout: the smallest gap between two attacks of one player
-function tightest(events) {
+// the rule as a fact, for the checks and the readout: the smallest REST of one player — from the end of its last sound to the next
+// attack (PLAN 1l step 3; `soundMs` is how long one dealt sound lasts)
+function tightest(events, soundMs) {
+    const s = soundMs != null ? +soundMs : DEFAULTS.soundMs;
     const last = {}; let min = Infinity, where = null;
     events.forEach(e => e.notes.forEach(n => {
         if (last[n.lane] != null) { const g = e.t - last[n.lane]; if (g < min) { min = g; where = { lane: n.lane, t: e.t, gap: g }; } }
-        last[n.lane] = e.t;
+        last[n.lane] = e.t + s;
     }));
     return { ms: min === Infinity ? null : min, where: where };
 }

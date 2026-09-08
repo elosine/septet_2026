@@ -113,6 +113,12 @@ own server (:5300); the AI built at his word, one chunk at a time:
   carrying the result and the recipe) and BUILT the same evening at his *"good to go for the build"* (§248–251): `strike_chords.js`
   (pure, 35 checks), `strike_chords_ui.js` (chords mode as a mixin on the drawer), five dispatch lines in `strike_drawer.js`; walked on
   a copy with real events and the decoded MIDI, three defects fixed on the walk; STRIKES_TOOL §X. **His test pending.**
+- **Session 4, the night of 2026-09-08 (RUNNING_LOG §252–262):** CN-48 — the CRESCENDOS — organized as four items at his word (1l the
+  foundation, then 1m the C key, 1n the sequence filler, 1o crescendo strikes, all four in PLAN.md, the last three as stubs so the
+  order survives a clear); **PLAN 1l planned and BUILT the same night**: `cresc.js` (the object), `scores/cresc-test.json` (the
+  listening test, 63 crescendos he solos), `spacing.js` (one rule: free 150 ms after the last sound ENDS, between gestures), 43
+  checks, `docs/CRESCENDO.md`. The survey was a READ of his own tuba docs; the piece was MEASURED before the rule was written, which
+  is what caught the gesture clause. **His listening is the one thing left.**
 - **PLAN 1f step 1 built and its probe run, 2026-09-07 about 00:00–01:00 (§167–168), at his word *"run the plan independantly … I'll
   check in after the build"*:** the palette — the recipe's `playerBendSt` (his semitone) · `bendRangeSt` · `beating: false` (the
   piano); `score/public/beating_calc.js` (the players, the ordinary voices' measured ranges, the bend limits, the pairing rule, the
@@ -238,19 +244,18 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   words in `docs/MORPH_NOTES.md` §3, a rebuild session later); every remark about the morph tool is SAVED to NITS and MORPH_NOTES
   §3 and built only at his word (HOW_WE_WORK), "fix now" and a broken agreed behaviour the exceptions. His server must be restarted
   after any change to `score/server.js` or `tools/model_bank.js`; a page change needs a hard reload (CTRL+SHIFT+R).
-- **Latest deliverable:** PLAN 1k built whole (§248–251): chords mode in the strikes drawer — `score/public/strike_chords.js` (the engine,
-  pure; 35 checks in `tools/strike_chords_check.js`), `score/public/strike_chords_ui.js` (the mixin: the chords list, the players column,
-  the keyboard, the strip, the card at an onset, the span, the takes), five dispatch lines in `strike_drawer.js`; `docs/STRIKES_TOOL.md`
-  §X. Before it, PLAN 1j (the piano's lines, §229–233) and PLAN 1i's first pass (the piano's harmonics, §218). Committed and pushed.
-- **NEXT CONCRETE STEP — PLAN 1l, phase 3 (RUNNING_LOG §252–257; the planning method): the crescendo foundation. Phase 1 is complete and
-  the top line confirmed; PLAN 1l is PLANNED WHOLE (§261: 1 the listening test as a score file · 2 the crescendo object · 3 the spacing rule with its gesture clause · 4 verify and document); resume at THE BUILD at his word, step 1 first. **When 1l is built and he has named the standard, the next item is 1m (the C key), then 1n (the sequence filler), then 1o (crescendo strikes) — his order, each opened as a stub in PLAN.md with his words and what 1l settles for it, so the sequence needs no memory: read the plan.** After 1l:
-  1m the C key, 1n the sequence filler, 1o crescendo strikes, each planned when its turn comes.** **HIS TESTS, three of them waiting**
-  (nothing to build for them until he speaks): PLAN 1k (chords mode in the strikes drawer, §251) · PLAN 1j (the piano's lines at the
-  BLOOM of `scores/piano-harmonics-test.json`, §233) · PLAN 1i's piano harmonics (§218). His verdicts → the tools' documents and NITS.
-  Never touch `scores/piece-septet.json`.
-- **Resume reads:** RUNNING_LOG §248–251 (the chords build) and §234–247 (its plan) · `docs/STRIKES_TOOL.md` §X · `docs/PLAN.md` 1k ·
-  CN-44 … CN-47 · the head comments of `score/public/strike_chords.js` and `strike_chords_ui.js`. For the piano's lines: §229–233,
-  NAMING §2.12–2.13, PLAN 1j. Not the beating drawer's docs.
+- **Latest deliverable:** PLAN 1l built (§262): `score/public/cresc.js` (the crescendo object — his three families, the end rule, the
+  orange fill), `score/public/spacing.js` (the one rule with its gesture clause), `tools/cresc_test.js` → `scores/cresc-test.json`
+  (the listening test), `tools/cresc_check.js` (43 checks), `docs/CRESCENDO.md`; the strikes drawer's box re-read and the trill's
+  fallback moved to 3 s. Before it: 1k (chords mode, §251), 1j (the piano's lines, §233), 1i's first pass (§218). Committed, pushed.
+- **NEXT CONCRETE STEP — HIS LISTENING of the crescendo test** (nothing to build until he answers): open `scores/cresc-test.json` in
+  the app, press **S** in a lane to solo (ALT-click = exclusive), play the nine columns — surge · line · bloom at 1.5 s, 5 s, 12 s —
+  and name one standard or two. His answer replaces `STANDARD` in `score/public/cresc.js` (it is marked provisional: surge 5×) and
+  the pending line in `docs/CRESCENDO.md` §2; **then 1m (the C key) is planned**, then 1n, then 1o — the stubs in PLAN.md carry his
+  words and what 1l settles for each. **Three more tests wait on him:** 1k chords mode (§251), 1j the piano's lines (§233), 1i the
+  piano's harmonics (§218). Never touch `scores/piece-septet.json`.
+- **Resume reads:** `docs/CRESCENDO.md` (the whole of 1l in one page) · RUNNING_LOG §252–262 · `docs/PLAN.md` 1l and the stubs 1m ·
+  1n · 1o · CN-48 · NAMING §2.14–2.15. For the three tests waiting: §251 (chords mode), §233 (the lines), §218 (the harmonics).
 - **How the AI works the app (verified ways):** the Browser pane on :5301 (`preview_start score-5301`), a `zz-ai-*` copy of the score
   (`cp`, then `Composer.openScore('zz-ai-…')`), deleted after with its `-work` (stop the server first); fake outputs in
   `_zoneMidiOutputs` keyed by port lower-case (Flute · BassCl · Piano · Vn1 · Vn2 · Va · Vc) with `_zoneMidiInited = true` capture the
@@ -259,10 +264,10 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   castOf · applyPitch · recallActual · pianoHarmonics · pianoCues`, `_cast · _lastParams · pitch · pairs`); the picker is `CuePicker` (`open(wc, e) · close · apply · st`), opened by a real mousedown · mouseup · click on a line's hit rect, a key by a mousedown on a `.cpKey`, ENTER / ESC as keydown on `document`; the bar's ticks by a real `change`; files patched by exact-string node scripts through the
   scratchpad's `eol.js` (CRLF-safe, VERBATIM replacement — a `$'` or `$&` in a replacement once garbled composer.html, §216);
   `node tools/morph_septet_check.js` (64 checks), `node tools/model_bank.js --validate` / `--rebuild`; commits by explicit paths, pushed.
-- **Pending the composer:** his test of PLAN 1k (chords mode; §251) · his test of PLAN 1j (the piano's lines; §233) · his listening of the
-  piano harmonics (1i's first pass; §218) · his listening of the morph panel · the beating drawer's list (NITS) for the rebuild session ·
-  the Kontakt bend range and the all-notes-off (NITS, his hands, if ever) · the two NITS of §218 · PLAN 1i item 2 at his word · the stutter
-  A/B (§182) · the trills' phase 5 and the run dials' calibration on his go · CN-39 (the piano's solo scattered strikes).
+- **Pending the composer:** the crescendo listening test (§262, the one thing 1l waits on) · his test of PLAN 1k (chords mode) · his
+  test of PLAN 1j (the piano's lines) · his listening of 1i's piano harmonics · his listening of the morph panel · the beating
+  drawer's list (NITS) for the rebuild session · the Kontakt bend range and the all-notes-off (NITS, his hands) · the two NITS of
+  §218 · PLAN 1i item 2 at his word · the stutter A/B (§182) · the trills' phase 5 and the run dials' calibration on his go.
 - **The deliberately-uncommitted list (`git status --short` at this wrap):** `scores/trillBuildTst.json` — his trill test score,
   untracked since 2026-09-05, never part of the piece; left as it was (say the word and it is committed). Everything else of his —
   the test score, the piece file, the named versions, the takes, the actuals (ACT-BLOOM-03 / -04 saved after the checkpoint), the

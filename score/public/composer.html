@@ -552,6 +552,8 @@
      Loads AFTER pulse_seq_panel so its MT button anchors to Pulse. -->
 <script src="/multitempo.js"></script>
 <script src="/multitempo_panel.js" defer></script>
+<script src="/cresc.js"></script>   <!-- PLAN 1l: the crescendo — the shapes, the end rule, the object (pure) -->
+<script src="/spacing.js"></script>   <!-- PLAN 1l: the one spacing rule — a player is free 150 ms after its last sound ENDS, between gestures (pure) -->
 <script src="/strike_chords.js"></script>   <!-- PLAN 1k: the strikes drawer's chord engine (pure) -->
 <script src="/strike_drawer.js" defer></script>   <!-- PLAN 1c.2: the STRIKES drawer (docs/STRIKES_TOOL.md) -->
 <script src="/strike_chords_ui.js" defer></script>   <!-- PLAN 1k: chords mode in the strikes drawer (a mixin on it) -->
@@ -9511,8 +9513,11 @@ const Composer = {
         // composer 2026-09-06: "make it end point one seven seconds before the next articulation begins" (RUNNING_LOG §139) — the lead
         // below; a floor of 0.2 s keeps a trill from vanishing when the next note is very near
         const LEAD = 0.17;
-        const end = Math.round((nx ? Math.max(start + 0.2, nx.startSeconds - LEAD) : start + 2) * 1000) / 1000;
-        return { end, why: nx ? LEAD + ' s before the next strike note' : '2 s — no later strike note on this player' };
+        // PLAN 1l (composer, 2026-09-08, §255): with no later note on this player the fallback is 3 s (it was 2) — a crescendo's is
+        // 5 s (Cresc.DEFAULTS.fallbackS). New trills only: the 69 in the piece keep the ends they were given.
+        const NO_NEXT = (typeof Cresc !== 'undefined' && Cresc.DEFAULTS.trillFallbackS) || 3;
+        const end = Math.round((nx ? Math.max(start + 0.2, nx.startSeconds - LEAD) : start + NO_NEXT) * 1000) / 1000;
+        return { end, why: nx ? LEAD + ' s before the next strike note' : NO_NEXT + ' s — no later strike note on this player' };
     },
 
     // after a drag or a stretch (phase 4): the snippet, the label's count and the mutedBy stamps follow the new span at once

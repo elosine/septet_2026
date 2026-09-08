@@ -168,6 +168,20 @@ or not at all.**
     answers. Made by `PianoCues.cueToNote` (the picker card; `Composer.cueToNote`); *lines → piano* run again replaces the lines still
     without a pitch, never a note, and gives no fresh line for a moment whose note is made.
 
+14. **A crescendo (PLAN 1l, 2026-09-08; RUNNING_LOG §252–262; CN-48; `docs/CRESCENDO.md`)** is an ordinary held note whose curve
+    rises — a `waveCurve` with a `sonifyNote`, two nodes (the dynamic range, ppp … fff on the 0–10 scale of §2.9) and ONE segment
+    whose `model` and `slope` carry the shape (surge `exponential` 0.40 at 5× · bloom `logarithmic` −0.29 · line `power` 0, his own
+    ladder) — at the player's ordinary voice, drawn `fillMode: "bottom"` in the morph orange `#C2410C` at 0.45 opacity. Its
+    provenance is `properties.cresc = { shape, ratio, slope, threshold, dynLo, dynHi, end ("toNextNote" | "fallback" | "manual"),
+    gapTo, endGapS, peak ("cliff") }`. **No new object type:** the tick plays it as any held note (1g item 5 — the velocity from the
+    curve's top, CC7 following the height), the extractor reads it, and drag, stretch, delete, undo and save need no case. It is
+    EDITED the curve-lane way (the line dragged to bend, no slope diamond). Made by `score/public/cresc.js`; the notation at 2a reads
+    the family and the range from the provenance.
+
+15. **The spacing rule (PLAN 1l step 3; §256, §260)** is not a field but a law the tools obey: **a player is free 150 ms after its
+    last sound ENDS**, and **the rest applies between gestures, never inside one** — two notes sharing a `groupId` (a morph's
+    `grp-morph-NN`, a beating's zone, a strike's group) are one continuous sound. `score/public/spacing.js` is the one place it
+    lives; anything that places sound asks it rather than counting for itself.
 ## 3. Not S1's business (where the piece-specific work goes)
 
 - **Technique → notation class** is registry data + classifier rules

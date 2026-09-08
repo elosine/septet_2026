@@ -57,7 +57,7 @@ ok(JSON.stringify(SC.deal(onsets, chords, players, Object.assign({}, base, { see
 ok(A.events.length === 24 && A.summary.notes > 40, 'every onset dealt (' + A.events.length + ' onsets, ' + A.summary.notes + ' notes)');
 {
     const t = SC.tightest(A.events);
-    ok(t.ms == null || t.ms >= 200, 'no player attacks twice within 200 ms (the tightest is ' + (t.ms == null ? 'n/a' : t.ms + ' ms') + ')');
+    ok(t.ms == null || t.ms >= 200, 'no player plays again until 200 ms after its last sound ENDS — PLAN 1l\'s rule (the tightest rest is ' + (t.ms == null ? 'n/a' : t.ms + ' ms') + ')');
 }
 ok(A.events.every(e => e.count <= 4 && (e.count >= 2 || e.short)) && A.summary.flagged === 0, 'every count inside his range 2–4 except a chord\'s own tail, and nothing flagged at this speed');
 ok(A.events.filter(e => e.short).every(e => e.count > 0 && e.count < e.wanted), 'a chord\'s TAIL is the only onset below the wanted count — what the chord had left, marked short (' + A.summary.short + ' of 24; "exhaust" makes one at the end of each chord)');
@@ -99,7 +99,7 @@ ok(/24 onsets · \d+ notes · \d+ chords · 2–4 players, rest 200 ms/.test(SC.
     const fast = SC.deal(evenOnsets(20, 90), chords, players, Object.assign({}, base, { countMin: 2, countMax: 4 }), realize, null);
     const t = SC.tightest(fast.events);
     ok(fast.summary.lowered > 0, 'a fast run lowers counts inside the range (' + fast.summary.lowered + ' lowered)');
-    ok(t.ms == null || t.ms >= 200, 'and still never breaks the 200 ms rest');
+    ok(t.ms == null || t.ms >= 200, 'and still never breaks the 200 ms rest AFTER THE END');
     ok(fast.events.every(e => e.flagged || e.short || (e.count >= 2 && e.count <= 4)), 'an unflagged onset always holds at least his minimum, unless the chord itself ran out');
     const tooFast = SC.deal(evenOnsets(24, 40), chords, players, Object.assign({}, base, { countMin: 3, countMax: 4 }), realize, null);
     ok(tooFast.summary.flagged > 0 && tooFast.warnings.length === 1, 'too fast for the minimum: the onsets are flagged and the warning names the cure');

@@ -32,7 +32,7 @@ const BTN = 'background:#2a2a30;color:#ddd;border:1px solid #555;border-radius:3
 
 const CH_DEFAULTS = {
     list: [], order: 'turn', advance: 'exhaust', timesMin: 2, timesMax: 4, selection: 'shuffle',
-    countMin: 2, countMax: 4, reattackMs: 200, dealer: 'free', seed: 1,
+    countMin: 2, countMax: 4, reattackMs: 150, dealer: 'free', seed: 1,   // PLAN 1l §256: 150 ms after the END is the app's one rule
     players: null,            // null = every player but the piano; else a list of lanes
     manual: {}, span: null, sel: 0,
 };
@@ -276,7 +276,7 @@ Object.assign(D, {
         s += '</div>';
         s += '<div style="padding:3px 6px;border-top:1px solid #333;display:flex;flex-direction:column;gap:3px">' +
             '<label title="how many players an onset takes — the machine draws inside this range and lowers it only when too few are free">players / onset <input id="skChC0" type="number" min="1" max="7" style="' + INP + ';width:34px"> – <input id="skChC1" type="number" min="1" max="7" style="' + INP + ';width:34px"></label>' +
-            '<label title="no player attacks again within this time — a guarantee, checked against the real onsets">rest &ge; <input id="skChMin" type="number" min="0" step="10" style="' + INP + ';width:52px"> ms</label>' +
+            '<label title="PLAN 1l: a player is free this long after its last sound ENDS (not after its attack) — a guarantee, checked against the real onsets; the rest never applies inside one gesture">rest after the end &ge; <input id="skChMin" type="number" min="0" step="10" style="' + INP + ';width:52px"> ms</label>' +
             '<label title="which free players are picked when more are free than needed: round robin = the longest idle first; free = a seeded draw leaning toward whoever has waited longest">deal <select id="skChDeal" style="' + INP + ';width:96px">' +
             S.DEALERS.map(([k, l]) => '<option value="' + k + '"' + (k === c.dealer ? ' selected' : '') + '>' + esc(l) + '</option>').join('') + '</select></label>' +
             '<label title="the same seed always gives the same sequence">seed <input id="skChSeed" type="number" min="1" style="' + INP + ';width:56px"></label>' +
