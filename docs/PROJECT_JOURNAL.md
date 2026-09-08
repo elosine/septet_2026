@@ -101,6 +101,12 @@ own server (:5300); the AI built at his word, one chunk at a time:
   (pure) + the CLI + 38 checks; verified on a copy with real events and the decoded MIDI (channel 3, the three opening harmonics);
   the ambiguity in CN-40 ("detuned from what's being played" → at the pitch) built as the switch, the default at the pitch (§217);
   two NITS (the harmonics loudness law, the placed morph's level scale). **His listening pending; the second pass (CC21) at his word.**
+- **Session 4, the afternoon of 2026-09-08 (RUNNING_LOG §219–233):** CN-43 — *"just articulation points … lines in the piano part … click a line,
+  keyboard pops up"* — PLANNED by the method in twelve turns (§219–228: a line is an empty note; the picker card with the ensemble on
+  the keyboard and a key click that sets and sounds; the bar on the piano lane with kind AND player ticks; the five steps) and BUILT the
+  same day at his *"implement the full plan"* (§229–233): `piano_cues.js` (pure), `cue_picker.js`, the hooks in composer.html, the
+  button on the morph panel, the CLI, 32 checks; walked on a copy with real events and the decoded MIDI, two defects fixed on the
+  walk (the *next* preset's gap, the re-run's duplicate line). **His test pending — of 1j, and of 1i's first pass (§218).**
 - **PLAN 1f step 1 built and its probe run, 2026-09-07 about 00:00–01:00 (§167–168), at his word *"run the plan independantly … I'll
   check in after the build"*:** the palette — the recipe's `playerBendSt` (his semitone) · `bendRangeSt` · `beating: false` (the
   piano); `score/public/beating_calc.js` (the players, the ordinary voices' measured ranges, the bend limits, the pairing rule, the
@@ -226,37 +232,33 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   words in `docs/MORPH_NOTES.md` §3, a rebuild session later); every remark about the morph tool is SAVED to NITS and MORPH_NOTES
   §3 and built only at his word (HOW_WE_WORK), "fix now" and a broken agreed behaviour the exceptions. His server must be restarted
   after any change to `score/server.js` or `tools/model_bank.js`; a page change needs a hard reload (CTRL+SHIFT+R).
-- **Latest deliverable:** PLAN 1i's first pass (§218): `score/public/piano_harmonics.js` (pure: the re-breaths of a placed morph, the
-  harmonic per pitch un-shifted — the key whose sampled octave harmonic sounds the player's pitch, or an octave above — the merge,
-  the score objects with provenance), the **♪ piano harmonics** row on the morph panel (`morph_panel.js`: the button, the select, the
-  level box, `pianoHarmonics()`), `tools/piano_harmonics.js` (the CLI) and `tools/piano_harmonics_check.js` (38 checks); NAMING §2.12;
-  MORPH_NOTES §1. Before it: the morph panel as MORPH_NOTES §1 describes, RESTORE (D27, §216). Committed and pushed at this wrap.
-- **NEXT CONCRETE STEP — CN-43's DESIGN DISCUSSION (RUNNING_LOG §219; the planning method), phase 1 in progress: topic 1 DECIDED (a line is an empty note, §220); topic 2 DECIDED (§221: the card at the line as §220 describes it, a key click sets and sounds); topic 3 DECIDED (§222: the bar at the left end of the piano lane); PHASE 1 COMPLETE; PHASE 2 CONFIRMED (§223, "ok good") — PLAN 1j opened with the five steps; PHASE 3 in progress: step 1 (the line) AGREED and written with its sub-steps (§224); his format from here — each step's goal and sub-steps in one turn (§224); step 2 (lines → piano) AGREED and written (§225); step 3 (the picker card) AGREED and written (§226); step 4 (the bar) AGREED with the rule kind AND player (§227) and written; step 5 AGREED and written (§228) — PLAN 1j PLANNED WHOLE, shown to him once ("is that it?"); resume there: his "yes" (or a correction), then THE BUILD at his word, step 1 (the line) first as a chunk on a copy; then phase 2's top line; nothing built before). After it, HIS LISTENING of the piano harmonics** (nothing to build until he speaks): a hard reload, his
-  `scores/piano-harmonics-test.json`, [Morph], the playhead inside the BEATING BLOOM at 183 s, **♪ piano harmonics**, Play; the switch
-  (*at the pitch* — the default, from his "detuned from what's being played"; *an octave above*) and the level (7; empty = the
-  source's peak) by ear; CTRL+Z undoes, a re-run replaces. His verdicts → MORPH_NOTES §3 and NITS, each a lab-journal entry; the
-  fixes he marks "fix now" built at once. **Then, at his word, PLAN 1i item 2 by the planning method:** the CC21 partial shift
-  (the two-piano piece's `computeHarmonicsMidi` rules — key = the string, CC21 = 64 + the shift in 19.048 c steps, 85 ms before
-  the note, reset after; CC21 is per channel; the curated partial table; the ceiling 101), the chain down (the 3rd partial of the
-  string a twelfth below, …), an exact chosen detune, a look at other libraries. Never touch `scores/piece-septet.json`.
-- **Resume reads:** RUNNING_LOG §217–218 · `docs/NAMING.md` §2.12 (the piano harmonic's fields) · MORPH_NOTES §1 (the last bullet) and
-  §3 (2026-09-08) · `docs/PLAN.md` 1i · CN-40 · the head comment of `score/public/piano_harmonics.js` (the model in one paragraph) ·
-  for item 2: the two-piano piece's `docs/HARMONICS_PIANO_PLAN.md` and `docs/instruments/ircam-prepared-piano-2.md` (the partial
-  table, the CC21 rule). Not the beating drawer's docs.
+- **Latest deliverable:** PLAN 1j built whole (§229–233): the lines (`score/public/piano_cues.js`, pure; the renderer, the bar and the
+  hooks in `composer.html`; *lines → piano* in `morph_panel.js`), the picker card (`score/public/cue_picker.js`), the CLI
+  `tools/piano_cues.js`, `tools/piano_cues_check.js` (32 checks); NAMING §2.13; MORPH_NOTES §1. Before it, PLAN 1i's first pass
+  (§218: ♪ piano harmonics, `piano_harmonics.js`, 38 checks). Committed and pushed at this wrap.
+- **NEXT CONCRETE STEP — HIS TEST of PLAN 1j** (nothing to build until he speaks): a hard reload (CTRL+SHIFT+R), his
+  `scores/piano-harmonics-test.json`, [Morph], the playhead inside the BEATING BLOOM at 183 s, **lines → piano**, the bar's ticks on the
+  piano lane (kind AND player), a line clicked → the card: a key (it sounds), a voice, a dynamic, a duration, ENTER; Play; CTRL+Z
+  undoes, a re-run keeps the made notes, *clear lines* removes the unused. His verdicts → MORPH_NOTES §3 and NITS, each a lab-journal
+  entry; the fixes he marks "fix now" built at once. **Also pending his ear:** the piano harmonics of 1i's first pass (§218: ♪ piano
+  harmonics, the switch, the level). **Then, at his word:** PLAN 1i item 2 (the CC21 shift) by the planning method; the notation of
+  cue-born notes at 2a. Never touch `scores/piece-septet.json`.
+- **Resume reads:** RUNNING_LOG §229–233 (the build) and §219–228 (the plan's reasoning) · `docs/PLAN.md` 1j · `docs/NAMING.md` §2.12–2.13 ·
+  MORPH_NOTES §1 (the last two bullets) and §3 (2026-09-08) · CN-43 · the head comments of `score/public/piano_cues.js` and
+  `cue_picker.js` (the model in a paragraph each). Not the beating drawer's docs.
 - **How the AI works the app (verified ways):** the Browser pane on :5301 (`preview_start score-5301`), a `zz-ai-*` copy of the score
   (`cp`, then `Composer.openScore('zz-ai-…')`), deleted after with its `-work` (stop the server first); fake outputs in
   `_zoneMidiOutputs` keyed by port lower-case (Flute · BassCl · Piano · Vn1 · Vn2 · Va · Vc) with `_zoneMidiInited = true` capture the
   MIDI; the pane is usually hidden — timers throttle, rAF never fires, `resize_window` 1400 × 900 for layout (reset after); a gesture
   as real events (`MouseEvent` click, a select's `change`); `MorphPanel` is a global (`toggle · generate · play · insert · heard ·
-  castOf · applyPitch · recallActual`, `_cast · _lastParams · pitch · pairs`); files patched by exact-string node scripts through the
+  castOf · applyPitch · recallActual · pianoHarmonics · pianoCues`, `_cast · _lastParams · pitch · pairs`); the picker is `CuePicker` (`open(wc, e) · close · apply · st`), opened by a real mousedown · mouseup · click on a line's hit rect, a key by a mousedown on a `.cpKey`, ENTER / ESC as keydown on `document`; the bar's ticks by a real `change`; files patched by exact-string node scripts through the
   scratchpad's `eol.js` (CRLF-safe, VERBATIM replacement — a `$'` or `$&` in a replacement once garbled composer.html, §216);
   `node tools/morph_septet_check.js` (64 checks), `node tools/model_bank.js --validate` / `--rebuild`; commits by explicit paths, pushed.
-- **Pending the composer:** his listening of the piano harmonics (the switch, the level; §218) · his listening of the morph panel (the
-  seams and clamps in the rack, the loudness across the six, the breath lengths) · the beating drawer's list (NITS) for the rebuild
-  session · the Kontakt bend range and the all-notes-off (NITS, his hands, if ever) · the two NITS of §218 (the harmonics loudness
-  law — a sweep of the preparation; the placed morph's level scale — is the score as loud as the audition?) · PLAN 1i item 2 at his
-  word · the stutter A/B (§182) · the trills' phase 5 and the run dials' calibration on his go · CN-39 (the piano's solo scattered
-  strikes, PLAN parking lot).
+- **Pending the composer:** his test of PLAN 1j (the lines, the bar, the picker; §233) · his listening of the piano harmonics (the switch,
+  the level; §218) · his listening of the morph panel (the seams and clamps in the rack, the loudness across the six, the breath
+  lengths) · the beating drawer's list (NITS) for the rebuild session · the Kontakt bend range and the all-notes-off (NITS, his hands,
+  if ever) · the two NITS of §218 · PLAN 1i item 2 at his word · the stutter A/B (§182) · the trills' phase 5 and the run dials'
+  calibration on his go · CN-39 (the piano's solo scattered strikes, PLAN parking lot).
 - **The deliberately-uncommitted list (`git status --short` at this wrap):** `scores/trillBuildTst.json` — his trill test score,
   untracked since 2026-09-05, never part of the piece; left as it was (say the word and it is committed). Everything else of his —
   the test score, the piece file, the named versions, the takes, the actuals (ACT-BLOOM-03 / -04 saved after the checkpoint), the

@@ -148,3 +148,7 @@
   through the remap) while the panel's audition goes through the emitter's own law. Not heard as a defect by him so far; to check by
   ear (Play in the panel vs Play in the score at 183 s) before the morph section is balanced. If real: scale ×10 at insert (and at
   `--rebuild` for the actuals' objects), or make the held-note law read the morph's scale.
+
+- **The lines' bar covers the first pixels of the piano lane** (AI, 2026-09-08; RUNNING_LOG §232). The strip sits at the lane's left end
+  over the content, so a line scrolled under it cannot be clicked there; scroll it a little right. A place in the lane's label column
+  (widened) would free the content; for the revision of the tool.

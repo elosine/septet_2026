@@ -758,7 +758,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   and other libraries with more harmonics looked at. Planned at his word when the morph section is composed (the planning method).
 
 - **1j — The piano's articulation points from the morph: empty lines at the re-breaths, the peaks and the breath ends, each clicked into a note (CN-43)** —
-  `todo — PLANNED 2026-09-08 (the planning method, phases 1–3; RUNNING_LOG §219–228); the build at his word, step 1 first` *(composer, 2026-09-08, CN-43: "I'd
+  `BUILT 2026-09-08 — steps 1–5 the same day at his "implement the full plan" (RUNNING_LOG §229–233); his test pending` *(composer, 2026-09-08, CN-43: "I'd
   like generated from the morph. just articulation points. These can maybe appear as lines in the piano part, but initially with
   nothing attached … from any of the morph onsets, the rebreath, the peak point, those dots, and the end of a breath … click on any of
   those lines. and assigned a pitch and an articulation … normal piano, muted piano, or harmonic. or Plucked. and then duration and
@@ -771,7 +771,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   player ticks and *clear lines* on a bar at the left end of the piano lane, a view filter of the browser's. The notation at 2a.
   *The top line, confirmed ("ok good", §223):*
   1. **The line** (an empty piano note drawn as a thin line, its kind and its player's colour; the score treats it as any note) —
-     `todo — agreed 2026-09-08 (RUNNING_LOG §223–224)`. *Result when done:* the piano lane can hold a note that has no pitch yet: born
+     `built 2026-09-08 (RUNNING_LOG §230)`. *Result when done:* the piano lane can hold a note that has no pitch yet: born
      at a moment, it carries its kind (onset · peak · end) and its source (the player, its note, its pitch at that instant); drawn as
      a thin faint line the lane's height in the source player's colour with a small head by kind; silent, ignored by the extractor
      and every note filter; a click selects it; it drags, deletes, saves and undoes like any note; given a pitch it becomes an
@@ -790,7 +790,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - check: a node script places a handful of lines (all three kinds, several players) into a copy; the page draws them and plays
        through them silently; node checks for the fields, the drawing rule and the filters.
   2. **lines → piano** (the generator on the morph panel: all three kinds, every player, the morph under the playhead; a re-run keeps
-     the notes made) — `todo — agreed 2026-09-08 (RUNNING_LOG §225)`. *Result when done:* one button on the morph panel's row writes
+     the notes made) — `built 2026-09-08 (RUNNING_LOG §230)`. *Result when done:* one button on the morph panel's row writes
      the lines for the morph under the playhead — for every note of every player its onset, its peak where the score's dot rule finds
      one, and its end, as empty notes on the piano lane in the morph's group; a re-run replaces the lines never used and leaves the
      notes made from lines; the CLI does the same on a file. The to-dos:
@@ -807,7 +807,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - check: node checks on the BLOOM expect 89 onsets · 54 peaks · 89 ends with their pitches; on the page with real events: the click
        writes them, undo removes them, a re-run replaces them, a note made from a line survives the re-run.
   3. **The picker card** (the keyboard with the ensemble at that instant, the voice, the dynamic, the duration; a key click sets and
-     sounds; ▶ in context; apply) — `todo — agreed 2026-09-08 (RUNNING_LOG §226)`. *Result when done:* a click on a line, or on a note
+     sounds; ▶ in context; apply) — `built 2026-09-08 (RUNNING_LOG §231)`. *Result when done:* a click on a line, or on a note
      made from one, opens a card beside it: the source named; a vertical keyboard over the piano's range with the chosen voice's reach
      lit; on it the ensemble's sounding pitches at that instant, each in its player's colour with its name, a mid-glide one with its
      cents, the line's own source ringed, and the piano's notes already made at that moment; four voice buttons, eight dynamic buttons,
@@ -832,8 +832,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        time); a key click sets and sounds (the decoded MIDI on the piano port at the voice's channel); apply gives the note its fields;
        ESC leaves the line untouched; a made note reopens with its values; node checks for the pure parts (the ensemble at t, the
        dynamic → height, the presets).
-  4. **The bar on the piano lane** (the kind checkboxes, the player checkboxes, clear lines) — `todo — agreed 2026-09-08 (RUNNING_LOG
-     §227)`. *Result when done:* a small strip sits at the left end of the piano lane whenever the lane holds lines: three kind ticks
+  4. **The bar on the piano lane** (the kind checkboxes, the player checkboxes, clear lines) — `built 2026-09-08 (RUNNING_LOG
+     §232)`. *Result when done:* a small strip sits at the left end of the piano lane whenever the lane holds lines: three kind ticks
      (onsets · peaks · ends), six player ticks (Fl · BCl · Vn1 · Vn2 · Va · Vc, in score order and colour) and *clear lines*; **a line
      is shown when its kind is ticked AND its player is ticked** (his example: peaks and Fl alone → only the flute's peaks); a hidden
      line is neither drawn nor clickable; notes made from lines are always shown; the setting is the browser's, survives a reload
@@ -851,7 +851,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        only); a hidden line takes no click; clear removes only the pitchless lines; a reload keeps the ticks; a node check for the
        filter itself.
   5. **Verify and document** (the checks, the walk on a copy with real events, the decoded MIDI, the docs; then his first lines in the
-     piece) — `todo — agreed 2026-09-08 (RUNNING_LOG §228)`. *Result when done:* the whole of 1j walked end to end on a copy with real
+     piece) — `built 2026-09-08 (RUNNING_LOG §233) — his first lines pending`. *Result when done:* the whole of 1j walked end to end on a copy with real
      mouse and key events and the decoded MIDI, one node script checking every pure part, the documents saying what exists; then his
      first lines in the piece and his verdicts in the notes. The to-dos:
      - the walk on a copy: lines → piano on the BLOOM, the ticks, a line clicked, a key, the sound decoded on the piano port at the

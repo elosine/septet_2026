@@ -155,6 +155,19 @@ or not at all.**
     and the sounding pitch from the provenance (the notation of a piano harmonic: the string, the node, the sound). The second pass
     (PLAN 1i item 2) adds the CC21 partial shift: `pass: 'shifted'`, `partial` > 2, the CC21 value and its lead.
 
+13. **A cue line, and a note born of one (PLAN 1j, 2026-09-08; RUNNING_LOG §229–233; CN-43)** is a `waveCurve` on the piano lane in the
+    morph's group (`grp-morph-NN`) carrying `properties.cue = { kind ('onset' | 'peak' | 'end'), of (the morph's group), srcId · srcLane
+    · srcMidi · srcCents · srcPitch (the source note, its player, its key and the bend at that instant, the pitch as a float), level
+    (the source's level there, 0–10), t (the moment) }`. **A line** has `sonifyNote: null`, a nominal span of 0.05 s, a flat two-node
+    curve at the stored height 5 (mf, the picker's start), the source player's colour and `performanceNotes` "cue ● …"; it is silent
+    and invisible to the extractor and every note filter (a shape without a sound note, the tuba lineage's rule), drawn as a thin line
+    the lane's height with a head by kind (● onset · ◆ peak · ○ end, the line dashed for an end), hidden by the piano lane's bar when
+    its kind or its player is unticked — a view state of the browser's, never the file's. **A note born of a line** is the same object
+    with `sonifyNote`, `technique` (main · muted · harmonics · plucked), the flat curve at the dynamic's height (ppp … fff = 0 … 10 in
+    eight equal steps, §2.9) and `endSeconds` = the start + the duration, `cue` kept — the notation at 2a may say whose moment it
+    answers. Made by `PianoCues.cueToNote` (the picker card; `Composer.cueToNote`); *lines → piano* run again replaces the lines still
+    without a pitch, never a note, and gives no fresh line for a moment whose note is made.
+
 ## 3. Not S1's business (where the piece-specific work goes)
 
 - **Technique → notation class** is registry data + classifier rules

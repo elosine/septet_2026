@@ -79,6 +79,19 @@ freely.
   could carry such rules and re-derive them when it changes. **Not yet:** the CC21 partial shift (the chain, an exact detune), the
   piano's `harmonics` loudness in the velocity remap (1g measured `main`; a harmonic at level 7 goes out at velocity ≈ 109).
 
+- **The lines — the piano's articulation points from a morph (2026-09-08; PLAN 1j built; RUNNING_LOG §229–233; CN-43):** *lines → piano*
+  on the morph panel writes, for every note of every player of the morph under the playhead, its onset (the re-breath), its peak (the
+  score's dot rule) and its end as EMPTY NOTES on the piano lane — a line is an empty note: no sound note, a `cue` provenance (NAMING
+  §2.13) — drawn as thin lines in the player's colour with a head by kind; the bar at the left end of the piano lane shows them by
+  kind AND player (the browser's setting) and clears the unused; a click on a line opens THE PICKER CARD — the vertical keyboard with
+  the ensemble's sounding pitches at that instant (a mid-glide one with its cents, the source ringed, the piano's own notes), the four
+  voices, ppp … fff, the duration presets and box, ▶ in context, a key click that sets and sounds — ENTER makes the note (the same
+  object, the provenance kept), a made note reopens with its values, a re-run keeps the made notes. `score/public/piano_cues.js`
+  (pure) · `cue_picker.js` · the hooks in `composer.html` · the CLI `tools/piano_cues.js` · 32 checks. **For the all-purpose tool:** a
+  morph exposes its event grid (onsets · peaks · ends, per voice) to any lane as lines; a pitch picker shows the context — what
+  sounds at t — on its keyboard; a filter is a view, never the data. **Not yet:** the notation of a cue-born note (2a); moments from
+  trills and beatings (only a morph's notes give them); the piano's `harmonics` and `muted` voices in the velocity remap (NITS §218).
+
 ## 2 · For this piece — "morph events" (CN-28 · CN-29)
 
 His picture: **single morph events** — e.g. unison → maximum beating, "like in convergence", over a set time — then **longer

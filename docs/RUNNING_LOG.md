@@ -6446,3 +6446,97 @@ one turn (goal and sub-steps together from step 2, his format of §224) and writ
 word, step 1 first. Shown to him once as the method asks, with what sits outside the plan: the build's go (each step a chunk —
 proposal → go → build on a copy → verify → docs → commit → push), his listening of the piano harmonics (§218) still pending, the two
 NITS of §218. Twelve turns from CN-43 to the plan.
+
+## §229. PLAN 1j — "yes, can you pls implement the full plan, I'll try when build is done": the build begins, the AI alone, each step a chunk on a copy
+
+Composer, 2026-09-08: the item confirmed whole and the build ordered — the AI builds steps 1–5 in order without him, each on a
+`zz-ai-` copy of his test score, verified with real events and the decoded MIDI, documented and committed at its wrap; his test is
+after the build (the way of PLAN 1f, §167). The piece file and his test score are never written. Entries §230 on record each step.
+
+## §230. PLAN 1j steps 1 and 2 BUILT — the line (an empty note drawn as a line) and *lines → piano* (the generator, the button, the CLI, 32 checks)
+
+2026-09-08, the AI alone at his word (§229). **Step 1, the line:** `Composer.isCueLine` / `isCueNote` (a waveCurve on the piano lane
+with a `cue` provenance and no sound note / with one); `renderWaveCurve` and `updateWCRendering` hand a line to `renderCueLine` — a
+thin line the lane's height in the source player's colour (the drawers' palette, `INST_COL`), a head by kind (● onset filled,
+◆ peak a diamond, ○ end hollow with the line dashed), a hit rect 8 px wide with the source in its title, the score's selection
+highlight, a mousedown that selects and starts the note's own time drag (`startWCBodyDrag`, the lane locked for a line), a click
+without a drag that opens the picker; `renderNodeHandles` draws nothing on it; the tick, the extractor and every note filter ignore
+it as they ignore any shape without a sound note (checked, not assumed: `sonifyNote != null` everywhere); the apex rule never sees
+it (the early return precedes it); delete, undo, save and reload are the score's; it joins the morph's group. The fields in NAMING
+§2.13. **Step 2, lines → piano:** `score/public/piano_cues.js` (pure) — `moments` (per note of every player of the morph: the onset,
+the peak where the score's apex rule finds one — the same rule, re-implemented and checked against it — and the end; each with the
+player, the pitch at that instant (the key plus the bend there) and the level there; a seamless re-key told by a gap ≤ 12 ms gives
+neither an end nor an onset; a moment whose note is already made gets no fresh line), `toScoreObjects` (empty notes with
+`properties.cue`, a nominal 0.05 s span, the stored height mf, the player's colour), `ownedLines` / `ownedNotes` / `strippedLines`,
+`describe`, `defaultFilter` / `shown` (kind AND player), `ensembleAt`, `nextAfter`, `cueToNote`, the dynamics ↔ height
+(`dynHeight` / `dynName`, NAMING §2.9); the button **lines → piano** beside ♪ piano harmonics (`morph_panel.js pianoCues()`: the same
+choice of morph — the selected shape's, the playhead's, the only one; `pushUndoState` first; the status by kind and player);
+`tools/piano_cues.js` (the CLI: the table per moment, `--write` / `--strip`, the piece file refused without `--force`, compact JSON
+kept); `tools/piano_cues_check.js` — 32 checks (the pure parts, the BLOOM's 89 · 54 · 89 with their pitches and levels, the re-key
+rule on a synthetic pair, the objects, the strip and the re-run, the filter, the ensemble at an instant, the next line, the turn
+into a note). Verified on the page (§233).
+
+## §231. PLAN 1j step 3 BUILT — the picker card: the vertical keyboard with the ensemble at that instant, the four voices, ppp … fff, the duration, a key click that sets and sounds, ▶ in context, ENTER / ESC
+
+`score/public/cue_picker.js` (`CuePicker.open(wc, e)` / `close` / `apply`; `Composer.openCuePicker`): a small floating card at the
+click (draggable by its header; ENTER applies and ESC closes through a capturing document listener, so the focus does not matter),
+the source at the top ("line ◆ Vc G#2 · peak · 186.29 s"; "piano note …" for a made one). The keyboard: an SVG in a scrolling box,
+88 keys stacked by pitch A0 … C8 (7 px a key, the drawers' geometry), a C per octave, the keys beyond the chosen voice's reach at a
+quarter opacity (the harmonics only to F5: 31 keys dimmed), the chosen key ringed gold; ON IT the ensemble at that instant
+(`PianoCues.ensembleAt` just after an onset, just before an end): a circle per sounding player in its colour at its pitch there — a
+mid-glide one sits between the keys and shows its cents — with its short name, the line's own source ringed white, the piano's
+notes already made at that moment in the piano's colour; the box scrolls to the source. The voice: four buttons normal · muted ·
+harmonic · plucked (the recipe's main · muted · harmonics · plucked). The dynamic: eight buttons ppp … fff (the height, NAMING §2.9).
+The duration: the presets ¼ · ½ · 1 · 2 · 4 s, *next* (to the next line or note on the piano lane, at least 50 ms away — a first
+version gave 0.00 s when another player's line lay 2 ms after, fixed by the gap), and a number box (typed, or the wheel over it,
+0.05 s a notch); the default 1 s. **A key click sets the pitch and sounds it** (his "a", §221) on the piano alone: the voice's port and
+channel from the recipe, the dynamic through the score's held-note law (`VelocityRemap.heldNote` / `cc7ForHeight` on the piano's
+remap — mf → velocity 109, p → 107; the Steinway's law, NITS §218), the note off after the duration (2.5 s at most); the voice and the
+dynamic buttons sound the chosen key again. **▶ in context:** the transport from a second before the line to two after, then back to
+the line. **Apply** (ENTER or the button): `Composer.cueToNote` — the same object becomes a piano note (the pitch, the technique, the
+flat curve at the height, the end at the start plus the duration, the provenance kept), selected, the status line saying what was
+made; undo restores the line. A click without a drag on a made note reopens the card with its values (the lit buttons).
+
+## §232. PLAN 1j step 4 BUILT — the bar at the left end of the piano lane: the kind ticks, the player ticks (kind AND player), clear lines; the setting the browser's
+
+`Composer.renderCueBar` (called by `renderAll` and after every change of the lines): a small strip inside the piano lane's div at its
+left end, under the lane's label, shown while the lane holds a line and hidden otherwise; **lines** ● onsets · ◆ peaks · ○ ends,
+a divider, then Fl · BCl · Vn1 · Vn2 · Va · Vc each with a dot in the player's colour, each tick's title its count ("peaks: 54",
+"Cello: 39 lines"); **clear lines**. The rule (his example, §227): a line is shown when its kind is ticked AND its player is ticked —
+`PianoCues.shown`; a hidden line is neither drawn nor given a hit target (`renderCueLine` returns before drawing; no click, no
+marquee), and it still moves with the morph's shape (it is still an object). A change re-renders the lines only (`renderCueLines`),
+not the score. The setting lives in `localStorage` (`cueFilter`), read at first use and kept across reloads; the file never carries
+it. Clear lines removes every line on the lane still without a pitch (never a note), `pushUndoState` first, the picker closed if it
+held one, the status says how many went. The bar swallows its own mouse events so the lane's scroll-drag does not start under it.
+
+## §233. PLAN 1j step 5 — the whole of 1j walked on a copy with real events and the decoded MIDI; two defects found on the walk and fixed; the documents; committed and pushed; his test next
+
+**The walk (`zz-ai-cues`, a copy of his test score, the Browser pane on :5301, deleted after with its working copy):** [Morph] · the
+playhead at 200 s · a real click on *lines → piano* → 232 lines on the piano lane in `grp-morph-01` (89 · 54 · 89), all drawn, the 54
+diamond heads, `nextId` 1534 → 1766, one undo state, the bar shown with its nine ticks and *clear lines*, the status by kind and
+player · the ticks by real `change` events: onsets and ends off and every player but Fl off → 9 drawn (the flute's peaks only),
+the 223 hidden with no elements, the setting saved; all back → 232 · a real click on a cello peak line (mousedown · mouseup ·
+click) → the line selected and the card open: "line ◆ Vc G#2 · peak · 186.29 s", 88 keys, 7 circles (the six players and the
+source's ring), the legend "Fl C#4+1 · BCl G#2 · Vn1 G3 · Vn2 C#4 · Va G3 · Vc G#2", 4 voices, 8 dynamics, 6 duration buttons and
+the box · **fake outputs on the eight ports**, a real mousedown on the key G#2 → "heard G#2 · normal · mf (velocity 109)", the Piano
+port channel 1: CC7 102, note-on 44 @ 109 · the *harmonic* button → channel 3, 31 keys dimmed · *p* → velocity 107; *2 s* · ENTER →
+the line became a note: G#2, harmonics, the curve at 2.9 (p), 2.00 s, the group and the provenance kept, drawn as a curve, selected,
+231 lines left, one undo state · a real click on the made note → the card reopened "piano note ◆ …" with harmonics · p · 2 s lit;
+ESC → closed, nothing changed · *clear lines* → 0 lines, the note kept, the bar hidden; CTRL+Z → 231 back, the bar shown · the
+morph's shape dragged as a real mouse sequence (2.004 s, then back): all 321 members — 231 lines, the note, the 89 morph notes —
+moved by the exact dt, the lines redrawn at their new x, still on the piano lane · *next* → the duration to the next line; ▶ in
+context → playing from 185.3 s, the card's close stopped it · the made note through the score's own tick (the playback driven by
+hand): channel 3, 44 @ 107 · **a reload of the page** → the working copy restored the 231 lines and the note, the unticked kind
+remembered (142 drawn, the box unchecked), the note drawn as a curve · the re-run → 231 fresh lines, the note kept, no line for its
+moment, "replaced 231 — 1 made notes kept" · a line → key D3 → ENTER → a note; CTRL+Z → a line again, drawn as a line. No script
+errors in the console. The CLI's table on the copy; its write / strip round trip covered by the checks. **Two defects found on the
+walk, fixed:** the *next* preset took a line 2 ms away as "the next" (0.00 s) → a 50 ms gap and a 0.1 s floor; a re-run gave a fresh
+line for a moment whose note was already made (a duplicate under the note) → the skip-made rule in `moments` (32 checks).
+
+**The documents:** NAMING §2.13 (the line's and the made note's fields), MORPH_NOTES §1 (the bullet, with what the all-purpose tool
+takes from it), PLAN 1j (built, each step), PLANNER NOW, the journal §2, the titles on the button, the bar and the card. **Committed
+and pushed** — the code (steps 1–4) and the documents (step 5) as two commits.
+
+**His test next (the plan's step 5, last to-do):** a hard reload (CTRL+SHIFT+R), his test score, [Morph], the playhead inside the
+BLOOM at 183 s, *lines → piano*, the bar's ticks, a line clicked, a key (it sounds), a voice, a dynamic, a duration, ENTER, Play; his
+verdicts → MORPH_NOTES §3 and NITS; the fixes he marks "fix now". Then his listening of the piano harmonics (§218), still pending.
