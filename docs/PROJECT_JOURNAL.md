@@ -239,7 +239,7 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   `harmonics` technique (the sampler's own harmonic per key, un-shifted — playable at once) with the CC21 partial shift and the
   detune as the second pass; (3) on his yes, build in one pass on a copy: a pure generator `tools/piano_harmonics.js` (an actual's notes → the
   piano's harmonic notes: the pitch, the partial chosen, the detune, the onset) with node checks, and a button on the ACTUALs card
-  ("piano harmonics → score") that writes them at the placement; then his listening. Never touch `scores/piece-septet.json`.
+  ("piano harmonics → score") that writes them at the placement; then his listening. Never touch `scores/piece-septet.json`. **He has already prepared the ground:** `scores/piano-harmonics-test.json` (saved 2026-09-08 02:28, committed at the checkpoint) is the piece with a BEATING BLOOM morph PLACED at 183.0 s (the marker "MORPH M1 — BEATING BLOOM"; the morph notes on the six lanes to about 223 s; 674 objects) — open it on a `zz-ai-` copy and take THAT morph as "the one"; the piano is lane 2, its technique for this is `harmonics` (channel 3, range 21–77); the piano lane there holds only the strikes (`main`).
 - **Resume reads:** RUNNING_LOG §210 and §213 · `docs/COMPOSITION_NOTES.md` CN-40 (and CN-41, CN-42) · `docs/PLAN.md` 1i · NAMING
   §2.11 (the actual's fields) · MORPH_NOTES §1 (the last two bullets) · HOW_WE_WORK (the rules of 2026-09-07, at the end of
   Working Style) · the two-piano piece's `docs/HARMONICS_PIANO_PLAN.md` (the first 70 lines) · `sandbox/instruments.js` lines 174–200
