@@ -1013,3 +1013,18 @@ Planned as PLAN 1i (todo), to be built when the morph section is composed; RUNNI
 (v1.24-firstBeating); section 2 — the morphs and the beatings, CN-28's form — starts at 183 s, tried in the score itself with
 everything built today (the beating drawer as it stands, the morph panel with the cast and the pitch menu, the actuals). The save
 recipe for trying and reverting: RUNNING_LOG §214.
+
+## CN-42 · 2026-09-07 — Lake George (the next piece): a RONDO with the morph as the returning section — bespoke · morph · another bespoke · morph …
+
+> *"What if I want to try several things? So try some things, revert, or try some things, say that as a version, and then revert back
+> to the beginning of section two, try some other things, say that, but then be able to go back to the first try or the second try or
+> the third try or back to nothing. Then Composition note for Lake George piece. Ronda style form. with the morph or a morph section be
+> the one returning. So I'll have a bespoke section beginning, then a morph, and then another one, a different bespoke, and then a
+> morph."* *(2026-09-07, late; typed — "Ronda" = rondo, "say that" = save that)*
+
+*AI reading (not the composer's words):* the form of piece #6 named: a rondo whose refrain is a MORPH section and whose episodes are
+bespoke, each different — bespoke A · morph · bespoke B · morph · … — so the morph tool (revised into "an easier to use all purpose
+tool" after this piece or the next, CN-29) carries the refrains of Lake George; the earlier Lake George notes (CN-31: the pointillistic
+multitempo section, the bouncing balls; the 2026-09-04 notes: the pairs, the delicate continuous texture, the animated conductions)
+are the episodes' material. Carried to the AI's memory of the next piece as well. The branching-tries question of the same message:
+RUNNING_LOG §215.

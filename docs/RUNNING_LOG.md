@@ -6175,3 +6175,16 @@ Name version again. **Cautions:** past a Save only a named version leads back, s
 opened is for looking — Save inside it writes into the frozen copy, §143); his 18 named versions since v1.7 are untracked, though
 NAMING §1 says the score files are committed — their commit at every wrap, with the piece file, put to him as a question (his
 files; the rule of §209 for the takes and the actuals extended if he says yes).
+
+## §215. "What if I want to try several things? … be able to go back to the first try or the second try or the third try or back to nothing" — branching tries: what D17's rule gives (a frozen version per try) and what it lacks (a way back that is not the last Save); Restore proposed
+
+Composer, 2026-09-07 late (verbatim in CN-42 with the Lake George note). **Told him:** each try is a named version (`1.26-tryA`,
+`1.27-tryB` …), frozen, never overwritten — that half the app has. What it lacks is the way BACK to a chosen point: Reload returns
+only to the file as last saved, and Name version saves the file, so after "save that as a version" the file IS the try; going back to
+the section's start (`1.25-sec2start`) or to try A means making that frozen version the piece file again — today the AI's file
+operation on request (§143: a version opened is for looking; Save inside it writes into the frozen copy; the app never promotes a
+version to the main name). **Proposed:** a **Restore** in the Piece menu — pick a named version → the current file is frozen first as
+a safety version (`v<next>-before-restore`), the version's contents become the piece file, the working copy is dropped, the app
+reopens on it; the tuba piece had a Restore, D17 dropped it with the numbering chain; branching brings the need back, without the
+chain. To build at his word (a server route copying one file over another after the safety copy, and one menu entry; verified on a
+copy). Until then: name every try, and say which one to bring back.
