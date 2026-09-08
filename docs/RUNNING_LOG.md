@@ -8084,3 +8084,25 @@ selection with nothing else regenerated.
 **One question inside step 4, answered by reuse rather than invention:** what happens to a long he has edited by hand when the pass is
 generated again? **1k already answers it** — a manual onset there is *pinned and flagged, never lowered*. So a hand-touched long is
 PINNED the same way: Generate leaves it alone and says how many it kept. The idiom exists; 1n does not need a second one.
+
+## §296. PLAN 1n — step 4 (the three scopes) agreed and written; step 5, the last, put to him
+
+Composer, 2026-09-08: *"good"* to step 4 as put. Written into PLAN 1n.
+
+**The step is where phase 1's shape becomes a control.** Every property of a long is reached at the whole pass, a selection, or a single
+long, from one menu — and the single-long end of it is **1m's crescendo card**, already built and already the editor of a live crescendo.
+Nothing new is invented for the per-long edit; a row is added to a card that exists.
+
+**Two things settled inside it by reuse rather than by decision.** A hand-edited long is **PINNED** exactly as 1k pins a manual onset
+(*pinned and flagged, never lowered*), so a re-Generate leaves it and reports how many it kept — the repo already had the idiom. And
+re-pointing an anchor **refuses with a reason** rather than shrinking, which is 1l's *"no room is an answer"* applied to an edit rather
+than to a creation.
+
+**Step 5 put to him, the last:** verify and document — the node checks for the pure parts (the mirror test on his own run, the seed
+repeatability, and the invariants: never the striking player, no two longs overlapping on one player, every long clearing its floor,
+every abort counted); the walk on a `zz-ai-` copy with real events and the decoded MIDI (choose the group, generate, hear, insert; the
+crescendos on the D11 curve channels; the three scopes; the flip; a refused re-point; a re-generate keeping the pinned longs; undo
+through all of it); the documents — **`docs/STRIKES_TOOL.md` gains 1n as its own section**, since 1n is a mode of that drawer exactly as
+1k's chords mode is, with `docs/CRESCENDO.md` cross-referencing it, plus NAMING for the `grp-fill-…` group and the long's provenance
+fields, PLAN 1n's statuses, PLANNER NOW, the journal §2 and a title on every new control; and then **his first filled section, which is
+all crescendos**, his verdicts to the documents and NITS, and then **1o planned**.

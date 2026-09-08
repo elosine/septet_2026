@@ -1350,7 +1350,24 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - **the check**: generate → hear → insert on a copy with real events; the inserted longs match what Generate showed; a re-insert
        replaces at the same time and keeps a copy elsewhere; the aborts are visible rather than silent.
   4. **The three scopes** (the whole pass, a selection, a single long: the anchor toggle, the pitch source and the kind on 1m's crescendo
-     card) — `todo — to be agreed`.
+     card) — `agreed 2026-09-08 (RUNNING_LOG §296)`. *Result when done:* any property of a long — its anchor, its pitch strategy, its
+     kind — can be changed for the whole pass, for a selection, or for one long, from the same menu; a change re-derives that long and
+     says so if it will not fit. The to-dos:
+     - **a single long**: 1m's crescendo card gains a 1n row — the anchor (launched · cut · both, **and which accent**), the pitch
+       strategy, the kind — shown only for a long that belongs to a fill group;
+     - **a selection**: several longs picked in the score, the same menu applied, ONE undo for the change;
+     - **the whole pass**: the drawer's settings, plus a **re-apply** that changes one property without re-dealing everything — a new
+       seed is a re-deal, a new kind is not;
+     - **re-pointing an anchor by hand** (§293, his *"extend it to a different strike to cut"*): click the attack that should cut (or
+       launch) it, the end (or start) moves there, and the room and the floor are re-checked and **refused with a reason** rather than
+       silently shrunk;
+     - **changing one long's kind**: a crescendo becomes a trill and back — the object changes between a `waveCurve` and a trill zone
+       while the anchors and the pitch survive;
+     - **the flip** (CN-54, his *"a toggle where I can select certain ones and then have them revert to the other version"*): launched
+       ⇄ cut on a selection, nothing else regenerated;
+     - **a hand-edited long is PINNED**, reusing 1k rather than inventing: a manual onset there is *pinned and flagged, never lowered*, so
+       a touched long is pinned the same way and Generate leaves it alone and says how many it kept;
+     - **the check**: each scope in turn; a change that will not fit is refused with its reason; undo through all of it.
   5. **Verify and document** (the node checks, the walk on a copy, the documents; then his first filled section, all crescendos) —
      `todo — to be agreed`.
 
