@@ -6402,3 +6402,18 @@ checked, not assumed, the trill and strike logic and the apex rule kept off it; 
 save, reload, the morph's group; the turn into a note when a pitch is set, the provenance kept; the check — a handful of lines
 placed by a script into a copy, drawn and silent, node checks). Committed. **Next: step 2, lines → piano — its goal and sub-steps
 together.**
+
+## §225. CN-43, phase 3 — step 2 (lines → piano) agreed ("good") and written into PLAN 1j; step 3, the picker card, put to him with its sub-steps
+
+Composer, 2026-09-08: *"good"* — step 2 as put (§224's message): the pure generator `piano_cues.js` (the moments onset · peak · end per
+note with the player, the pitch at that instant and the level; a re-key told by the 5 ms overlap gives no line), the empty notes with
+`properties.cue` and a nominal 0.05 s span, the button beside ♪ piano harmonics with the status by kind and player, the re-run rule
+(unused lines regenerated, made notes kept), the CLI, the checks (89 · 54 · 89 on the BLOOM; the page walk). Written, committed.
+**Step 3 put to him, goal and sub-steps together:** the card at the line (the node editor's manner), the source at its top; the
+drawers' vertical keyboard for the piano with the chosen voice's reach lit and the piano's own sounding notes; the ensemble at that
+instant — each player's sounding note and its pitch there, a mark in the player's colour with its name, the cents beside a mid-glide
+one, the source ringed; the four voice buttons (the recipe's main · muted · harmonics · plucked); the eight dynamic buttons (the
+score's scale → the height); the duration presets ¼ · ½ · 1 · 2 · 4 s · to the next line and a box (default 1 s); a key click sets
+and sounds through the piano's port on the voice's channel at the dynamic through the remap; ▶ in context = the transport from t − 1
+to t + 2 s; apply turns the line into a note (pitch · technique · height · length, the provenance kept), ESC leaves it, a made note
+reopens with its values; the checks with real events and the decoded MIDI, node checks for the pure parts.

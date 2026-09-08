@@ -790,7 +790,22 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - check: a node script places a handful of lines (all three kinds, several players) into a copy; the page draws them and plays
        through them silently; node checks for the fields, the drawing rule and the filters.
   2. **lines → piano** (the generator on the morph panel: all three kinds, every player, the morph under the playhead; a re-run keeps
-     the notes made) — *to be laid out when we discuss it.*
+     the notes made) — `todo — agreed 2026-09-08 (RUNNING_LOG §225)`. *Result when done:* one button on the morph panel's row writes
+     the lines for the morph under the playhead — for every note of every player its onset, its peak where the score's dot rule finds
+     one, and its end, as empty notes on the piano lane in the morph's group; a re-run replaces the lines never used and leaves the
+     notes made from lines; the CLI does the same on a file. The to-dos:
+     - a pure generator (`score/public/piano_cues.js`, the page and node): the morph's notes → the moments onset · peak · end, each with
+       its player, the pitch at that instant (the key plus the bend there) and the level there; two moments a hair apart stay two
+       lines; a seamless re-key is told from a breath by its 5 ms overlap and gives no line (none in the BLOOM; the rule stated);
+     - the score objects: empty notes on the piano lane with `properties.cue`, a nominal span of 0.05 s, drawn at their start;
+     - the button *lines → piano* beside ♪ piano harmonics: the morph under the playhead, else the selected shape, else the only one;
+       `pushUndoState` first; the status line says how many of each kind, for which players;
+     - the re-run rule: the morph's lines still without a pitch are removed and regenerated; the notes made from lines stay (their
+       provenance says so);
+     - the CLI `tools/piano_cues.js`: a table per moment (t · kind · player · pitch), `--write` / `--strip` on a file, the piece file
+       refused without `--force`;
+     - check: node checks on the BLOOM expect 89 onsets · 54 peaks · 89 ends with their pitches; on the page with real events: the click
+       writes them, undo removes them, a re-run replaces them, a note made from a line survives the re-run.
   3. **The picker card** (the keyboard with the ensemble at that instant, the voice, the dynamic, the duration; a key click sets and
      sounds; ▶ in context; apply) — *to be laid out when we discuss it.*
   4. **The bar on the piano lane** (the kind checkboxes, the player ticks, clear lines) — *to be laid out when we discuss it.*
