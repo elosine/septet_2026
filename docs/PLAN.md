@@ -1329,7 +1329,26 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - **the checks in node**: each family deals what it should; the same seed repeats a pass exactly; a chain folds and stays in range;
        the vertical filter never repeats a note already sounding; a pitch no octave reaches aborts with its reason.
   3. **The pass in the strikes drawer** (choosing the strike group, the settings, generate · hear · insert, the longs written as one
-     group) — `todo — to be agreed`.
+     group) — `agreed 2026-09-08 (RUNNING_LOG §295)`. *Result when done:* the drawer gains a **fill** pass — pick a strike group already
+     in the score, set the kind, the anchor, the pitch strategy, the orders and the seeds, then **Generate · Hear · Insert**; the longs
+     are written as their own group with a META shape, and the summary says what was made and what was aborted. The to-dos:
+     - **where it sits**: a mode of the strikes drawer beside notes and chords, built as 1k's chords mode was (a mixin on the drawer), so
+       the drawer's screen, cursor, span and takes carry over rather than being rebuilt;
+     - **choosing the pattern**: the strike groups present in the **OPEN SCORE**, listed by group and time — read from the score, not from
+       the strikes database, so a group he has already dragged or stretched fills where it actually sits;
+     - **the settings, all at pass scope**: the kind · the anchor (launched · cut · both) · the floors · the pitch strategy with its order
+       and seed · the selection seed · *keep inside the pattern*;
+     - **Generate**: runs steps 1 and 2 and shows the result WITHOUT writing — how many longs, how many aborted and why, the length
+       spread, the per-player count, and the longs drawn on the drawer's own screen against the pattern;
+     - **Hear**: the pattern with its fill through the real routes, so the crescendos come out on the D11 curve channels and he judges it
+       before it enters the score;
+     - **Insert**: the longs at the pattern's own time as one `grp-fill-…` group plus a META shape, replacing an earlier fill of that same
+       strike group at that same time and keeping copies elsewhere — the drawer's existing replace rule, not a new one;
+     - **the take**: the settings and the result saved and reloaded *as it was* or *as settings*, exactly as 1k's chord takes work;
+     - **nothing new in the score**: the crescendos are 1l objects and the trills are the trill tool's zones, so drag, stretch, delete,
+       undo, save and the extractor already handle them;
+     - **the check**: generate → hear → insert on a copy with real events; the inserted longs match what Generate showed; a re-insert
+       replaces at the same time and keeps a copy elsewhere; the aborts are visible rather than silent.
   4. **The three scopes** (the whole pass, a selection, a single long: the anchor toggle, the pitch source and the kind on 1m's crescendo
      card) — `todo — to be agreed`.
   5. **Verify and document** (the node checks, the walk on a copy, the documents; then his first filled section, all crescendos) —

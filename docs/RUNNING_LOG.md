@@ -8063,3 +8063,24 @@ strike group FROM THE OPEN SCORE rather than the database so a dragged or stretc
 **Generate** (runs steps 1 and 2 and shows the result without writing), **Hear** (through the real routes, the D11 curve channels),
 **Insert** (as its own `grp-fill-…` group with a META shape, the drawer's replace-at-the-same-time rule), and the take that reloads
 *as it was* or *as settings* exactly as 1k's chord takes do.
+
+## §295. PLAN 1n — step 3 (the pass in the strikes drawer) agreed and written; step 4 put to him
+
+Composer, 2026-09-08: *"good"* to step 3 as put. Written into PLAN 1n.
+
+**The step is deliberately parasitic on 1k.** It is a MODE of the strikes drawer built the way chords mode was — a mixin on the drawer —
+so the screen, the cursor, the span, the takes, the replace-at-the-same-time rule and the insert idiom are all inherited rather than
+rebuilt. The one thing chosen rather than inherited: **the pattern is read from the OPEN SCORE, not from `bank/scattered_strikes.json`**,
+because a strike group he has already dragged or stretched must fill where it actually sits, not where the database remembers it.
+
+**Step 4 put to him: the three scopes**, the shape phase 1 named (§288, §290, CN-55) — every property of a long set from one menu at the
+whole pass, a selection, or a single long. Its own to-dos: the 1n row on **1m's crescendo card** for a single long (the anchor and which
+accent, the pitch strategy, the kind); the same menu applied to a **selection** under one undo; the pass's own settings, with a re-apply
+that changes one property without re-dealing everything; **re-pointing an anchor by clicking the attack** he wants, the room and floor
+re-checked and refused with a reason; **changing one long's kind** (a crescendo becomes a trill and back — the object changes between a
+`waveCurve` and a trill zone while the anchors and the pitch survive); and the **flip** he asked for in CN-54, launched ↔ cut on a
+selection with nothing else regenerated.
+
+**One question inside step 4, answered by reuse rather than invention:** what happens to a long he has edited by hand when the pass is
+generated again? **1k already answers it** — a manual onset there is *pinned and flagged, never lowered*. So a hand-touched long is
+PINNED the same way: Generate leaves it alone and says how many it kept. The idiom exists; 1n does not need a second one.
