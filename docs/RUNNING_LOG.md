@@ -7964,3 +7964,39 @@ by the length. A three-second trill is a great deal of trill; a three-second cre
 **Also read back to him rather than asked, for correction:** 1n's home is the **strikes drawer**, because he described the workflow as two
 passes — *"generate a strikes pattern like an accel but not necessarily and then overlay crescendos on that pattern"* — and the drawer is
 what makes the patterns (PLAN 1k). So 1n is a second pass ON a strike group, not a new generator with its own rhythm.
+
+## §292. PLAN 1n — phase 1 CLOSED in four topics; the top line put to him
+
+Composer, 2026-09-08: *"Yes. Correct on one n. strikes drawer. and lungs will generally be homogeneous. The section I'm planning will be
+all crescendos. So I should have the option of mix and some of the strategies you recommend. but I'll usually want to insert one kind or
+another."*
+
+**Topic 4 settled, and the default is the plain one:** a pass inserts **ONE KIND**. The proportion mix and the by-room rule stay as
+options he can reach, but they are not what he will usually do — and the section he is composing next is **all crescendos**. **1n lives in
+the STRIKES DRAWER**, confirmed: a second pass over a strike group, never a generator of rhythm.
+
+**Phase 1 complete. What the four topics settled:**
+
+1. **The unit** (§287) — an accent and a prolonged thing, **two players**, the long starting simultaneously with the attack in another
+   instrument; **for every attack in the pattern**; a two-pass workflow, the drawer's pattern first, the overlay second.
+2. **The anchors** (§288) — not modes but two fields, `launchedBy` and `cutBy`: launched (the room ends it) · cut (the room decides how
+   early it began; it ends at the END of the accent note, overlapping it by ~84 ms) · both · neither. Measured as mirror images: 43 longs
+   and 3 aborts either way. **The selection rule adopted with a seed:** least-recently-long, roomiest breaks ties, a length floor per kind,
+   abort the attack when nothing clears it. All three kinds share the anchors.
+3. **The pitches** (§290, CN-55) — a **strategy**, not a rule: from the pattern (this accent · the one before · the one after · the whole
+   collection dealt) · from a sonority (1m's harmony bar whole) · a chain (a fixed interval from the previous long) · vertical (the note
+   the sounding chord is missing). Each with the seeded order menu.
+4. **The kind** (§291, this entry) — **one kind per pass by default**; the seeded proportion and the by-room threshold available.
+
+**And the shape that governs the whole item:** every property of a long — anchor, pitch strategy, kind — is set at **THREE SCOPES from one
+menu: the whole pass · a selection · a single long.**
+
+**THE TOP LINE, put to him (phase 2):**
+
+1. **The overlay engine** — a strike pattern in, a set of longs out: the selection rule with its seed, the anchors, the length derived
+   forwards or backwards, the floor per kind, the abort, and the kind rule. Pure.
+2. **The pitch strategies** — the four families and their seeded orders, reusing 1m's harmony bar and 1k's deck and octave fold. Pure.
+3. **The pass in the strikes drawer** — choosing the strike group, the settings, generate · hear · insert, the longs written as one group.
+4. **The three scopes** — the whole pass, a selection, a single long: the anchor toggle, the pitch source and the kind on 1m's crescendo
+   card.
+5. **Verify and document** — the node checks, the walk on a copy, the documents; then his first filled section, which is all crescendos.
