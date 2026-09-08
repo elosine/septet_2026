@@ -898,6 +898,33 @@ const server = http.createServer((req, res) => {
         try { return R.json({ success: true, data: JSON.parse(fs.readFileSync(fp, 'utf8')) }); }
         catch (e) { return R.status(500).json({ success: false, error: e.message }); }
     }
+    // RESTORE (composer, 2026-09-07 late: "be able to go back to the first try or the second try or the third try or back to nothing";
+    // RUNNING_LOG §215–216; D27): a named version becomes the base file again. The base file as it is now is frozen FIRST under the
+    // safety label the client sends (the next number + "-before-restore"), so nothing is lost; the version's contents are written to
+    // the base file with fresh stamps; the working copy is removed so the app opens the restored file. A frozen version is never
+    // overwritten, so the safety copy refuses an existing name.
+    if (req.method === 'POST' && url === '/api/composer/restore') {
+        return readBody(req, (err, body) => {
+            if (err) return R.status(400).json({ success: false, error: 'Bad JSON' });
+            const base = safe(body.base || ''), version = safe(body.version || ''), safety = safe(body.safety || '');
+            if (!base || !version || !safety) return R.status(400).json({ success: false, error: 'base, version and safety names required' });
+            if (/-work$/.test(base)) return R.status(400).json({ success: false, error: 'the base is the file, not its working copy' });
+            const bf = path.join(SCORES_DIR, base + '.json'), vf = path.join(SCORES_DIR, version + '.json'), sf = path.join(SCORES_DIR, safety + '.json'), wf = path.join(SCORES_DIR, base + '-work.json');
+            if (!fs.existsSync(vf)) return R.status(404).json({ success: false, error: 'no version named ' + version });
+            if (version === base) return R.status(400).json({ success: false, error: 'that is the file itself'});
+            if (fs.existsSync(sf)) return R.status(409).json({ success: false, error: safety + ' already exists — a frozen version is never overwritten' });
+            try {
+                let frozen = null;
+                if (fs.existsSync(bf)) { fs.copyFileSync(bf, sf); frozen = safety; }
+                const data = JSON.parse(fs.readFileSync(vf, 'utf8'));
+                data.metadata = Object.assign({}, data.metadata || {}, { modified: new Date().toISOString(), restoredFrom: version, restoredAt: new Date().toISOString() });
+                fs.writeFileSync(bf, JSON.stringify(data));
+                if (fs.existsSync(wf)) fs.unlinkSync(wf);
+                console.log('Restored ' + base + ' from ' + version + (frozen ? ' (the previous file frozen as ' + frozen + ')' : ''));
+                R.json({ success: true, base: base, restored: version, frozen: frozen });
+            } catch (e) { R.status(500).json({ success: false, error: e.message }); }
+        });
+    }
     // discard a working copy after it has been promoted
     if (req.method === 'POST' && url === '/api/composer/discard') {
         return readBody(req, (err, body) => {

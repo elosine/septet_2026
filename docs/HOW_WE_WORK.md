@@ -92,7 +92,8 @@ one thing right"; RUNNING_LOG §188)**
   request in NITS, his words in MORPH_NOTES §3 — and built only when he says so; what he marks "fix now" is fixed now.
 - **The takes and the ACTUALs are committed at every wrap (composer, 2026-09-07 late — "yes pls"; RUNNING_LOG §209):** `bank/panel_snapshots.json`
   and `bank/actuals/*.json` are the AI's to stage and commit at each wrap and whenever he asks — they are data with provenance, as the
-  tuba piece kept them. The SCORE files (`scores/piece-septet.json`, the named versions) stay his to name; never staged unasked.
+  tuba piece kept them. **The SCORE files too, from 2026-09-07 late (§216):** the piece file and the named versions are committed at every wrap
+  by NAMING §1's rule (no audio inside; 26 versions = 7 MB); the working copies never. Only what he NAMES is his: the versions' labels, the takes' names.
 
 ---
 

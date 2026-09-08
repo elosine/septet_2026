@@ -574,6 +574,13 @@ sources; verified here only when they bite.)*
   swaps again. The beating drawer's rule (§180, D25) extended to the morph panel's pairs. *Why:* the beating is the material; an
   octave pair beats at twice the rate for the same cents and sounds thinner. *Rejected:* (b) only the player who cannot reach folds,
   the pair an octave apart — the register kept at the sound's expense.
+- **D27** *(2026-09-07 late, composer: "What if I want to try several things? … be able to go back to the first try or the second try or
+  the third try or back to nothing" → "build restore good"; RUNNING_LOG §215–216)* — **Restore returns.** A named version can be made the
+  piece file again; the file as it stands is frozen first under the next label with `-before-restore`; the unsaved edits are dropped;
+  the app reopens on the restored file. D17's one rule stands (working copy · Save · Name version · Reload); Restore is the way back to a
+  chosen point that Reload (the last Save) cannot reach. *Why:* branching tries at the start of section 2 — every try a frozen version,
+  any of them or the start recoverable. *Rejected:* the tuba's numbering chain that D17 removed (Restore comes back without it); the
+  AI swapping files by hand at each branch (works, slow).
 
 ---
 

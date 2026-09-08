@@ -6188,3 +6188,29 @@ a safety version (`v<next>-before-restore`), the version's contents become the p
 reopens on it; the tuba piece had a Restore, D17 dropped it with the numbering chain; branching brings the need back, without the
 chain. To build at his word (a server route copying one file over another after the safety copy, and one menu entry; verified on a
 copy). Until then: name every try, and say which one to bring back.
+
+## §216. "build restore good and are the versions very big, my string quartet got bloated from save files but I suspect it was because of audio embeded" — RESTORE built and verified; the sizes measured (no audio inside); his 26 named versions and the piece file committed
+
+Composer, 2026-09-07 late: *"build restore good  and are the versions very big, my string quartet got bloated from save files but I
+suspect it was because of audio embeded"*.
+
+**The sizes:** the 26 named versions (v1.7 … v1.28) 7.1 MB together, the piece file 470 KB, the actuals 3.3 MB, the repo's `.git`
+80 MB; a save holds `version · layoutVersion · tracks · assets (2 bytes) · metadata · objects · markers · databases · nextId ·
+viewport` — no audio, no base64 (the beatings' and trills' notes are generated at play, the snippets are MIDI events). So the score
+files are committed by NAMING §1's rule (D17): the versions and the piece file at 0a2f391; from here the score files join the takes
+and the actuals at every wrap (HOW_WE_WORK). His ACT-CONVERGE-01 committed on the way.
+
+**RESTORE (D27) — built:** `POST /api/composer/restore { base, version, safety }` in `score/server.js`: the base file as it is now
+copied to `<base>-v<next>-before-restore` first (refused if that name exists — a frozen version is never overwritten), the version's
+contents written to the base file with fresh stamps (`metadata.restoredFrom / restoredAt`), the working copy removed; in
+`composer.html` a **Restore…** button beside Reload → a small box under the toolbar listing the base's named versions newest first,
+the safety name shown, a confirmation, then the working copy dropped, the restore, the base reopened, the status line saying what
+came back and what was frozen; the `?` hints carry it. Reload stays "back to the last Save"; Restore is "back to that one".
+
+**Verified on copies (`zz-ai-rst`, `-v1.1` = the piece, `-v1.2-other` = v1.9's 327 objects; deleted after) with real events:** the button
+and the hint present; an unsaved marker added; Restore… → the box lists v1.2-other, v1.1 (newest first), the safety name
+`zz-ai-rst-v1.3-before-restore`; the version chosen, the confirmation's text right; after: the session on a fresh working copy with
+327 objects, the unsaved marker gone, the status "restored zz-ai-rst from zz-ai-rst-v1.2-other · the previous file frozen as
+zz-ai-rst-v1.3-before-restore"; on disk the base 167 K (= the version), the safety copy 470 K (= the previous file); the next
+suggested label 1.4. The inline scripts syntax-checked (a first application of the patch had been garbled by a `$'` in a regex
+that the string-replace read as a pattern — the patch helper now inserts verbatim; the file was reverted from git and re-patched).

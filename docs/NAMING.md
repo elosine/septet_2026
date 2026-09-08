@@ -27,6 +27,10 @@
   if it went wrong (drops the unsaved edits; asks once). The `?` button shows this line in the app.
   Piece #4's "Save as next" / "Variant" / "Restore" are gone; the Save snapshots in `scores/versions/`
   (cap 20, gitignored) remain as a silent net the AI can dig into on request.
+- **Restore (D27, composer 2026-09-07 late — "be able to go back to the first try or the second try or the third try or back to nothing";
+  RUNNING_LOG §215–216):** `Restore…` beside Reload makes a NAMED VERSION the file again — the file as it is now is frozen first as
+  `<name>-v<next>-before-restore`, the unsaved edits are dropped, the app reopens on the restored file. Reload = back to the last Save;
+  Restore = back to that one. The branching practice: Name version at the section's start, at each try, at each keeper.
 - Everything in `scores/` **is committed** except `*-work.json` and `versions/` — autosave
   has eaten a score in every previous piece and git is the only net under it. At session end
   `node tools/unsaved_check.js` lists working copies that hold edits their file does not; the AI

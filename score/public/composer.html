@@ -343,6 +343,7 @@
     <button id="saveBtn" title="Save (CTRL+S): write the file. Until then your edits live only in the working copy.">Save</button>
     <button id="versionBtn" title="Name version: save the file AND freeze a copy under a label you choose (1.5 &#8594; name-v1.5). A frozen copy is never overwritten.">Name version</button>
     <button id="reloadBtn" title="Reload: drop the unsaved edits and go back to the file as last saved.">Reload</button>
+    <button id="restoreBtn" title="Restore: make a named version the file again. The file as it is now is frozen first (…-before-restore), the unsaved edits are dropped.">Restore…</button>
     <button id="hintBtn" title="show / hide the save rules" style="padding:2px 6px">?</button>
     <span style="opacity:.35">&#9474;</span>
     <span style="color:#888; font-size:11px">open:</span>
@@ -360,7 +361,7 @@
      toggled by the ? button, remembered per browser; the lane container moves down while it shows -->
 <div id="saveHints" style="display:none; position:fixed; top:32px; left:0; right:0; z-index:99; background:#fff8e6; border-bottom:1px solid #e0c274; color:#5a4a1a; font-size:11px; padding:3px 12px; line-height:1.5">
   <b>Saving:</b> open a score &#8594; you are in its <b>working copy</b> (autosave lives there; the file changes only on Save) &#183;
-  <b>Save / CTRL+S</b> when it's good &#183; <b>Name version</b> when a chunk is done (freezes a copy, e.g. <i>-v1.5</i>) &#183;
+  <b>Save / CTRL+S</b> when it's good &#183; <b>Name version</b> when a chunk is done (freezes a copy, e.g. <i>-v1.5</i>) &#183; <b>Restore&#8230;</b> makes a named version the file again (the file as it is now frozen first) &#183;
   <b>Reload</b> if it went wrong (drops the unsaved edits) &#183; a name starting <i>piece-</i> lives in the Piece menu, everything else in Experiments.
 </div>
 
@@ -2317,6 +2318,8 @@ const Composer = {
         if (verB) verB.addEventListener('click', () => this.saveVersion());
         const relB = document.getElementById('reloadBtn');
         if (relB) relB.addEventListener('click', () => this.reloadScore());
+        const rstB = document.getElementById('restoreBtn');
+        if (rstB) rstB.addEventListener('click', () => this.restoreVersion());
         const hintB = document.getElementById('hintBtn');
         if (hintB) hintB.addEventListener('click', () => this.toggleHints());
         this.toggleHints(localStorage.getItem('composerSaveHints') !== 'off');
@@ -3160,6 +3163,53 @@ const Composer = {
         await this.discardWork(base + '-work');
         await this.openScore(base);
         this.saveStatus.textContent = 'reloaded ' + base + ' as last saved — the unsaved edits are gone';
+    },
+
+    // RESTORE (composer, 2026-09-07 late — "try some things, save that as a version, revert back to the beginning of section two, try
+    // some other things … be able to go back to the first try or the second try or the third try or back to nothing"; RUNNING_LOG
+    // §215–216; D27). Reload returns only to the file as last saved; Restore makes a NAMED VERSION the file again — the file as it is
+    // now frozen first as <base>-v<next>-before-restore, the unsaved edits dropped, the app reopened on the restored file. The tuba
+    // piece's Restore, back without its numbering chain.
+    async restoreVersion() {
+        const cur = this.pieceBase(this.sessionNameInput.value.trim() || this.sessionName || '');
+        const base = this.versionBase(cur);
+        if (!base) return;
+        const all = (this._allScores || []).map(s => s.name);
+        const re = new RegExp('^' + base.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + '-v[0-9][0-9A-Za-z._-]*$');
+        const versions = all.filter(n => re.test(n)).sort((a, b) => {
+            const na = /-v(\d+)\.(\d+)/.exec(a), nb = /-v(\d+)\.(\d+)/.exec(b);
+            if (na && nb && (+na[1] !== +nb[1] || +na[2] !== +nb[2])) return (+nb[1] - +na[1]) || (+nb[2] - +na[2]);
+            return b.localeCompare(a);
+        });
+        if (!versions.length) { this.saveStatus.textContent = base + ' has no named versions yet — Name version freezes one'; return; }
+        const safety = base + '-v' + this.nextVersionLabel(base, all) + '-before-restore';
+        // the picker: a small box under the toolbar, the versions newest first
+        const old = document.getElementById('restoreBox'); if (old) old.remove();
+        const box = document.createElement('div'); box.id = 'restoreBox';
+        box.style.cssText = 'position:fixed;top:36px;left:12px;z-index:10000;background:#1e1e24;color:#ddd;border:1px solid #6a5acd;border-radius:6px;padding:10px 12px;font:13px/1.5 system-ui,sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.5)';
+        box.innerHTML = '<div style="color:#b9a8ff;font-weight:600;margin-bottom:6px">Restore ' + base + ' from a named version</div>' +
+            '<div style="margin-bottom:6px"><select id="restoreSel" style="max-width:420px;background:#1b1b20;color:#ddd;border:1px solid #444;padding:2px 4px;font-size:13px"></select></div>' +
+            '<div style="color:#9a9;margin-bottom:8px">the file as it is now is frozen first as <b>' + safety + '</b>; the unsaved edits are dropped</div>' +
+            '<button id="restoreGo">Restore</button> <button id="restoreCancel">Cancel</button>';
+        document.body.appendChild(box);
+        const sel = box.querySelector('#restoreSel');
+        versions.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v.slice(base.length + 1); sel.appendChild(o); });
+        box.querySelector('#restoreCancel').addEventListener('click', () => box.remove());
+        box.querySelector('#restoreGo').addEventListener('click', async () => {
+            const version = sel.value; if (!version) return;
+            if (!confirm('Restore ' + base + ' from ' + version + '?\n\nThe file as it is now is frozen first as ' + safety + '. The unsaved edits are dropped.')) return;
+            box.remove();
+            clearTimeout(this.autoSaveTimer);
+            await this.discardWork(base + '-work');
+            let r;
+            try { r = await fetch('/api/composer/restore', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ base: base, version: version, safety: safety }) }).then(x => x.json()); }
+            catch (e) { r = { success: false, error: e.message }; }
+            if (!r || !r.success) { this.saveStatus.textContent = 'restore failed: ' + ((r && r.error) || '?'); return; }
+            this.sessionNameInput.value = base;
+            await this.openScore(base);
+            this.saveStatus.textContent = 'restored ' + base + ' from ' + version + (r.frozen ? ' · the previous file frozen as ' + r.frozen : '') + ' · ' + this.fmtTime(new Date());
+            this.refreshSessionList();
+        });
     },
 
     // the next label: one past the highest vN.N among the base's versions — a name with a suffix (v1.10-preAccelNear105,
