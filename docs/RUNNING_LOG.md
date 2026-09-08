@@ -7530,3 +7530,16 @@ Composer, 2026-09-08: *"ok good"* to the four lines — 1 the C key and the cres
 and document. **PLAN 1m opened** with the why, his words, the decisions of §276–278 and the four steps, replacing the stub; committed, so
 a cleared chat loses nothing. Two small things folded into the steps rather than made topics: the card remembers its last settings, and
 its keys behave as 1j's picker does. **Phase 3 begins**, his format of §224: each step's goal and sub-steps in one turn.
+
+## §280. PLAN 1m — step 1 (the C key and the crescendo it makes) agreed and written; step 2, the card, put to him
+
+Composer, 2026-09-08: *"good"* to step 1 as put — the key ignored while typing as T is; the lane, pitch and start from the selected note
+and the end from 1l's rule; the source note greyed by `mutedBy` and restored on deletion; several notes giving one crescendo each under a
+single undo; a marked span setting the duration; nothing selected deferring to the harmony bar; "no room" answered rather than drawn
+over; and the checks with real key events including the decoded MIDI on a curve channel. Written into PLAN 1m, committed.
+
+**Step 2 put to him, goal and sub-steps together:** the card that opens on the new crescendo — his four controls (the DYNAMIC RANGE as
+two dynamics ppp … fff, the DURATION with its default and a typed override, the ARTICULATION from that player's techniques, the SECCO
+tick on by default), each editing the LIVE object so every change is heard at once; a ♪ to hear it alone and ▶ to hear it in context;
+ENTER keeps, ESC removes, CTRL+Z undoes; it remembers its last settings so the next C starts where the last one ended; it reopens on a
+click of an existing crescendo, so the card is also how one is edited later; and the checks with real events and the decoded MIDI.

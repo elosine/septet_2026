@@ -1162,8 +1162,21 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   - *Answered on the way (§278):* a trill with nothing selected takes **the nearest earlier note on that player within 8 s** and trills a
     whole step above it — which is where the pitches he liked came from. C does not copy this; the harmony deck is his choice instead.
   *The top line, confirmed ("ok good", §279):*
-  1. **The C key and the crescendo it makes** (the gesture, the greyed source, one per selected note, the entry rules) — *to be laid out
-     when we discuss it.*
+  1. **The C key and the crescendo it makes** (the gesture, the greyed source, one per selected note, the entry rules) — `todo — agreed
+     2026-09-08 (RUNNING_LOG §280)`. *Result when done:* pressing **C** on a selected note makes a crescendo on that pitch at once, with
+     everything 1l settled; the note itself goes grey and silent but is not destroyed, and comes back if the crescendo is deleted;
+     several notes selected give one crescendo each; with nothing selected C asks the harmony bar (step 3) for a pitch. The to-dos:
+     - the key: **C** on the score, ignored while a box has focus, exactly as **T** is;
+     - from a selected note: its lane, its pitch, its start; the end from 1l's rule (0.17 s before that player's next note, else 5 s);
+     - **the source note greyed**: stamped `mutedBy` as a trill stamps the notes under it, drawn faint, silent while the crescendo lives,
+       and **restored when the crescendo is deleted** (his words, §277);
+     - several notes selected: **one crescendo each**, every one with its own pitch, end and greyed source; ONE undo step for the press;
+     - a marked span, when there is one, sets the duration instead of the rule (T's own precedence);
+     - nothing selected: the active lane and the playhead, the pitch from the harmony bar — until step 3 exists, C says so and does nothing;
+     - **"no room" is an answer**: when the next note is closer than a crescendo can be (1l's `endFor`), C says so rather than drawing one
+       over it;
+     - check on a copy with real key events: the crescendo on the right pitch and lane; the source greyed and restored by deleting it;
+       several at once; one undo for the whole press; and the decoded MIDI showing it on a CURVE channel (D11).
   2. **The card** (his four controls — the dynamic range, the duration, the articulation, the secco tick — editing the live crescendo;
      ENTER · ESC; it remembers its last settings) — *to be laid out when we discuss it.*
   3. **The harmony bar** (the standing pitch source: a sonority, an order, what is left in the deck, change and restart) — *to be laid
