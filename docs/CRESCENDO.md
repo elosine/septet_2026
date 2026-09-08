@@ -61,7 +61,10 @@ the file is his to mark up. `--durations`, `--shapes`, `--ratio` and `--gap` reg
 **Caveat named at the build:** the piano cannot really swell. Its column is a CC7 fade on a decaying note. It is in the file because he
 asked for all the players; judge it as what it is.
 
-**His verdict:** *pending — the standard in `score/public/cresc.js` is `surge 5×`, marked provisional until he names one.*
+**His verdict (2026-09-08, §263):** *"the surge is the default, we can keep the others as options, the bloom needs to be revisited but
+defer til first use"*. So **surge 5× is the standard** — what every build makes unless told otherwise; **line and bloom stay in the
+menus**; **bloom's ladder is revisited when a piece first asks for one** (its 5× reads front-loaded here, and whether that is the bloom
+he wants is a question for the music, not for a grid).
 
 ---
 

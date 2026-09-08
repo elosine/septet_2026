@@ -1150,3 +1150,21 @@ next, or a harmony from the drawer distributed across the sequence with the stri
 morph panel's sonorities); **(3)** in the strikes drawer — the chords and strikes of PLAN 1k sounding as crescendos instead of single
 attacks, which changes the articulation, the ordinary voice, the velocity law and the spacing (the next attack on a player 150 ms after
 the END of its crescendo, not after its attack). He asks first how to organize the planning. RUNNING_LOG §252.
+
+## CN-49 · 2026-09-08 — the standard named (surge), and SECCO: an abrupt cut at the end of a crescendo, in the notation and in the sound
+
+> *"the surge is the default, we can keep the others as options, the bloom needs to be revisited but defer til first use; i thought of
+> one more thing, I would like a secco setting, maybe a checkbox, secco on by default, for performers/notation this is a text
+> instruction, mostly for strings, though I would include the instruction for the winds to give them a sense of the shape, but strings
+> would damp the string with a finger or bow pressure at the end of the crescendo to give an abrupt cut; for the sampler a cc7 cut so
+> nothing rings after the end of the crescendo, i think we did it in the string quartet, and if i remember all notes off doesn't work so
+> nevermind that fork, we'll use cc7 just has to be on the right port and see string quartet for specs on how to cut"*
+> *(2026-09-08, after the crescendo listening test was handed to him)*
+
+*AI reading (not the composer's words):* the crescendo's CLIFF (§255) gets its performing technique. **SECCO** is a property of a
+crescendo, on by default: in the notation a text instruction — for the strings an action (damp the string with a finger or bow
+pressure at the end), for the winds the same word so they hear the shape the strings will make; in the sound a **CC7 cut** at the end
+so nothing rings past it. He remembers rightly that All Notes Off is no use here (the Xsample instruments do not accept it — NITS,
+RUNNING_LOG §202), so the cut is CC7 on the player's own port and channel. **Checked in the quartet (#1):** `secco` there is a
+NOTATION flag — a text mark beside "Non-Vib" on a long tone, a checkbox in its crescendo tool, removed from the LilyPond when
+unchecked (`server.js` ~1050–1520); the MIDI cut is not written down there, so this piece specifies it. RUNNING_LOG §263.

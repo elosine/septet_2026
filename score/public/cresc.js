@@ -33,8 +33,11 @@ const SHAPES = {
     line:  { label: 'linear', model: 'power',       ratios: { 1: 0 },                                  thresholds: { 1: 0.5 } },
     bloom: { label: 'bloom', model: 'logarithmic', ratios: { 2: -0.18, 5: -0.29, 11: -0.37, 25: -0.46 }, thresholds: { 2: 0.42, 5: 0.33, 11: 0.28, 25: 0.24 } },
 };
-// the standard, until his listening test names another (step 1 → step 4 writes his answer here and in docs/CRESCENDO.md)
-const STANDARD = { shape: 'surge', ratio: 5, provisional: true, why: 'the tuba piece\'s standard (CURVE_DATABASE.md); his listening test settles it' };
+// THE STANDARD, named by him after the listening test (2026-09-08, §263): "the surge is the default, we can keep the others as
+// options, the bloom needs to be revisited but defer til first use". So: surge 5× is what every build makes unless told otherwise;
+// line and bloom stay in the menus; bloom's own ladder is revisited when a piece first asks for one.
+const STANDARD = { shape: 'surge', ratio: 5, provisional: false, named: '2026-09-08',
+                   why: 'his listening test (scores/cresc-test.json): the surge is the default; line and bloom stay as options; bloom to be revisited at first use' };
 
 const DEFAULTS = {
     dynLo: 0, dynHi: 10,          // ppp … fff on the score's curve scale (NAMING §2.9), the full measured span

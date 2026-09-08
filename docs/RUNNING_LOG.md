@@ -7141,3 +7141,32 @@ because he asked for all seven players, and CRESCENDO.md says so beside it.
 
 **Pending him:** the listening test itself — open `cresc-test`, solo, name the standard; his answer replaces `STANDARD.provisional` in
 `cresc.js` and the line in CRESCENDO.md §2, and then 1m (the C key) is planned.
+
+## §263. The standard NAMED — surge is the default, line and bloom stay as options, bloom revisited at first use; and CN-49: SECCO, put to him as a design
+
+Composer, 2026-09-08 (verbatim in CN-49): *"the surge is the default, we can keep the others as options, the bloom needs to be revisited
+but defer til first use"*.
+
+**Written in at once:** `score/public/cresc.js`'s `STANDARD` is no longer provisional — surge 5×, `named: '2026-09-08'`, the why his;
+`docs/CRESCENDO.md` §2 carries his words. PLAN 1l step 1's last to-do is done. **Bloom's revisit is deferred, not dropped** (its 5×
+reads front-loaded; whether that is the bloom he wants is a question for the music, and it will be asked when a piece first needs one).
+
+**Then his new ask, SECCO** (CN-49): a checkbox, ON by default; in the notation a text instruction — the strings damp the string with a
+finger or bow pressure at the end for an abrupt cut, the winds get the same word so they hear the shape the strings will make; in the
+sound a CC7 cut so nothing rings past the end. He remembers rightly that All Notes Off is no use (§202: the Xsample instruments do not
+accept it).
+
+**Checked in the string quartet (#1), as he asked:** `secco` there is a NOTATION flag only — a text mark beside "Non-Vib" on a long
+tone, a checkbox in its crescendo tool, stripped from the LilyPond when unchecked (`server.js` ~1050, 1130, 1462–1520;
+`AI_CRESCENDO_PROMPT_GUIDE.md` "two dynamics, Non-Vib text, secco text"). **The MIDI cut is not written down there**, so this piece
+specifies it rather than porting it.
+
+**Put to him — the design (one chunk, his go, then built):** `properties.cresc.secco` true by default on every crescendo the maker
+makes; a checkbox wherever a crescendo is made (1m's mini panel, and the test file regenerated with it); **the sound** — at the
+crescendo's end the tick sends **CC7 0 on that player's port and channel about 10 ms before the note-off**, so the sample stops rather
+than decays, and the next note's own pre-arm restores CC7 as it always does (nothing else to undo); **the guard** — the cut is skipped
+when another sound of that player is still running on the same port and channel (a trill's tail, an overlapping note), so a secco
+crescendo never silences its neighbour; **the notation** (2a) — the word *secco* under the note for every instrument, the strings'
+damping being the action it names. **The one question for him:** does secco belong to a crescendo only, or to any held note he marks
+(the same checkbox on an ordinary long note)? The AI's recommendation: the crescendo now, any held note when 2a asks — the sound path
+is identical and nothing is lost by waiting.
