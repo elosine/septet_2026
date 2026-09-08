@@ -7766,3 +7766,32 @@ a seeded jitter that sometimes takes the second or third least-recently-long is 
 **The one question left on this topic:** the accent and the long — **the same player, or two?** Every one of his 44 trills starts on a
 player that is NOT striking that onset (§285), which reads as an attack in one instrument prolonged by another — one gesture in the ear,
 two players. His words *"as if they were one unit"* fit that. To be confirmed before the top line is drawn.
+
+## §287. PLAN 1n — topic 1 CLOSED: two players, simultaneous, overlaid on a strikes pattern; and what cutting the long at an accent would cost
+
+Composer, 2026-09-08:
+
+> *"two players, the accent prolonged by another instrument; and the typical application would be to generate a strikes pattern like an
+> accel but not necessarily and then overlay crescendos on that pattern, so for each attack in an instrument the long will start
+> simultaneously in another instrument."*
+
+**Topic 1 is closed, and it is stronger than the measurement suggested.** Not *"some onsets get a long"* but **for EVERY attack in the
+pattern a long starts simultaneously in another instrument**. His 44 trills over 46 onsets (§285) were that rule minus the ones he could
+not fit. The workflow is a **two-pass** one: the strikes drawer makes the pattern (an accel, or anything), then 1n **overlays** the longs
+on it. So 1n is not a generator of rhythm — it is a PASS over a pattern that already exists, which settles where it lives.
+
+**The accent notes measured:** 50–105 ms, **median 84 ms** — his *"though these are short"* is exact.
+
+**What cutting the long at an accent would cost** (his mode 2), simulated on the same run at floor 0.3 s with least-recently-long, taking
+the LAST accent whose note ends at or before the long's natural end:
+
+| | |
+|---|---|
+| longs that find a cutting accent | **36 / 43** |
+| the long gets shorter by | min 9 ms · **median 109 ms** · max 4504 ms |
+| longs with no accent available to cut them | 7 — all at the tail of the run, where the long would otherwise run past everything on the 5 s fallback |
+
+**So the cut is nearly free.** The accents are dense enough that snapping a long back to the nearest one costs about a tenth of a second;
+the 4.5 s outlier is a fallback long being brought back inside the pattern, which is the point. Put to him as topic 2 with three
+lettered options and this recommendation: **snap back to the last accent that fits** as the default, **cut at the Nth accent** as a dial,
+**cut by hand** from the long's own card (1m's card, already built).
