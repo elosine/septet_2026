@@ -746,7 +746,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   (`CURVE_DATABASE.md` MAXDENSE-1 / BUILD-1 — data in #4, consult when the mass is built).
 
 - **1i — The piano's harmonics for the morph section: at the ensemble's re-breaths, the nearest strong harmonic, a little detuned** —
-  `todo` *(composer, 2026-09-07 late, CN-40: "for the piano part, for the morph section, use harmonics … detect the onsets where the
+  `in progress` — **(1) built as a first pass 2026-09-08, un-shifted, at his "good go please" (RUNNING_LOG §217–218): the ♪ piano harmonics
+  button on the morph panel, the switch at the pitch · an octave above, the level box; his listening pending; (2) not begun** *(composer, 2026-09-07 late, CN-40: "for the piano part, for the morph section, use harmonics … detect the onsets where the
   re-breaths happen for the morph and what pitches they are, and then figure out the harmonic to play … the octave or the fifth. And if
   that note isn't available, then move down the harmonic chain. develop a way to generate these? In two ways")*. *Result when done:*
   (1) a generator that reads a morph's render (the re-breath onsets and pitches per voice) and writes the piano's harmonic notes into

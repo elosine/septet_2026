@@ -137,3 +137,14 @@
   → Group Editor → Edit All Groups → Source → Modulation → Pitch Bend intensity 2.00 st, per instrument, then save the Reaper project;
   after it, the probe is one command (`bash tools/probe_run.sh probes/bend_schedule.json` → `node tools/apply_bend_ranges.js`).
   His hands only (the AI cannot reach the modulators); "put it on the to do list".
+- **The piano's `harmonics` technique has no loudness law of its own** (AI, 2026-09-08; RUNNING_LOG §218). PLAN 1g measured the piano on
+  `main` (the Steinway), so a harmonic at the ensemble's placed level goes out at velocity 20–40 — inaudible against six strings; the
+  piano-harmonics row has a level box with 7 as its default (velocity 109) in the meantime. The cure: a velocity / CC7 sweep of the
+  IRCAM harmonics preparation on channel 3 through the bridge (`tools/velocity_remap.js`'s method) into `bank/velocity_remap.json`,
+  keyed by technique. His rack; when the piano's part is being balanced.
+- **The placed morph notes' level scale — is the score as loud as the panel's audition?** (AI, 2026-09-08; RUNNING_LOG §218). The
+  engine writes each morph note's level curve as its 0–1 level values on the score's 0–10 scale (`morph.js toScoreObjects`, y ≤ 0.8 on
+  the BLOOM at 183 s); the score's held-note law then plays them near the bottom of the ensemble's scale (velocity 64–80, CC7 108–123
+  through the remap) while the panel's audition goes through the emitter's own law. Not heard as a defect by him so far; to check by
+  ear (Play in the panel vs Play in the score at 183 s) before the morph section is balanced. If real: scale ×10 at insert (and at
+  `--rebuild` for the actuals' objects), or make the held-note law read the morph's scale.

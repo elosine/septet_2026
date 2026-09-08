@@ -6214,3 +6214,82 @@ and the hint present; an unsaved marker added; Restore… → the box lists v1.2
 zz-ai-rst-v1.3-before-restore"; on disk the base 167 K (= the version), the safety copy 470 K (= the previous file); the next
 suggested label 1.4. The inline scripts syntax-checked (a first application of the patch had been garbled by a `$'` in a regex
 that the string-replace read as a pattern — the patch helper now inserts verbatim; the file was reverted from git and re-patched).
+
+## §217. "good go please" — PLAN 1i begun on the BEATING BLOOM at 183 s: the model confirmed, the first pass un-shifted; one ambiguity found after his go, built as a switch
+
+Composer, 2026-09-08 (after the clear; the postclear playback and the planning method's phase 1 in one message): *"good go please"* — to the
+model read back in one line (*at every re-breath of that morph the piano sounds one harmonic of the re-entering player's pitch — the
+octave first, then the twelfth, then down the chain — the nearest key when none is exact, a little detuned welcome; one piano note per
+re-breath*) and to option (a): plain notes on the piano lane at the `harmonics` technique, un-shifted, heard today; the CC21 partial
+shift and a chosen detune the second pass. **The morph:** his `scores/piano-harmonics-test.json` — the marker "MORPH M1 — BEATING
+BLOOM" at 182.996 s, group `grp-morph-01`, 89 morph notes on the six players' lanes (Fl 16 · BCl 14 · Vn1 15 · Vn2 15 · Va 14 · Vc 15),
+every note one re-breath (`startSeconds`, `sonifyNote`, `morphBend`), the piano lane holding only the strikes, the META shape on
+layer 7. (The group has 89 notes where the BLOOM actuals hold 79–81: it is a Generate → Insert, not a placed actual; the score is
+the ground either way, D9.)
+
+**Confirmed in the two-piano piece's instrument map** (`docs/instruments/ircam-prepared-piano-2.md`, one grep): the sampled harmonic is
+the 2nd partial — key K sounds K + 12 un-shifted; CC21 transposes it up to +12 st (127); the top sounding pitch F7 (101); this repo's
+`harmonics` technique: channel 3, keys 21–77.
+
+**An ambiguity noticed after his go, resolved as a switch (the tool offers, never applies):** his note (CN-40) says *"a little detuned
+from what's being played in the ensemble … the closest one that has the strongest harmonic"* — read closely, the piano's harmonic
+sounds AT the player's pitch (the octave harmonic of the string an octave below it), and "down the chain" names which lower string
+carries it (the 3rd partial of the string a twelfth below, …); the read-back said "the octave first", which reads either way (the
+octave harmonic, or the sound an octave above). The two are one parameter of the same generator, so the panel offers **sounds: at the
+pitch · an octave above**, the default **at the pitch** — three reasons: his words' proximity ("detuned from what's being played"); the
+beating, this section's subject, strongest at the near-unison; the coverage — un-shifted, "at the pitch" reaches every note up to
+F6 (89) with a key in 21–77, while "an octave above" has no string for anything above F5 (77) and would fold down onto the same
+keys. Above the reach a note folds an octave down (the pitch class kept) and says so on the note. The un-shifted pass rounds the
+player's pitch at the re-breath (the key plus the bend's first point) to the nearest key — a detune up to ±50 c, recorded per note;
+the shift pass will narrow it to ±9.5 c (CC21's 19.048 c steps).
+
+**The tree since the checkpoint:** his saves — ACT-BLOOM-03 and -04, the model store, the test score — are committed at this wrap by
+the rules of §209 / §216. The build goes on a copy (`zz-ai-pnoharm`); the module in `score/public/piano_harmonics.js` (pure, loads on
+the page and in node like `morph_septet.js`), the checks and a CLI in `tools/`; the button on the morph panel, acting on the morph
+group at the playhead.
+
+## §218. PLAN 1i's first pass BUILT: ♪ piano harmonics on the morph panel — one note per re-breath of the morph under the playhead, at the pitch or an octave above, a level box; 38 checks; verified on a copy with real events and the decoded MIDI
+
+2026-09-08, at his *"good go please"* (§217). **What exists:**
+- `score/public/piano_harmonics.js` (pure; the page and node): `reBreaths` — every sounding note of the morph's group on a player's
+  lane (never the piano's lane, the META shape or the piano harmonics themselves), its start the re-breath, its pitch the key plus
+  `morphBend[0]`; `harmonicFor` — the target sound (the pitch, or an octave above), the key = round(target) − 12 (the sampled octave
+  harmonic), folded by octaves into the technique's keys 21–77 with the pitch class kept, the detune = the sound minus the target;
+  `generate` — a note per re-breath, the coincident same-key ones merged within 30 ms (the longer end, the higher level), the level 7
+  or each source's own peak, the length the source's (a cap on request); `toScoreObjects` — plain notes on the piano lane at
+  `harmonics`, a flat curve, the morph's `groupId`, the provenance under `properties.pianoHarmonics` (NAMING §2.12); `ownedBy` /
+  `stripped` (a re-run replaces); `morphGroups` / `findMorphAt` (the morph under the playhead).
+- `morph_panel.js`: the row under Insert / Save as ACTUAL — **♪ piano harmonics** · a select *at the pitch / an octave above* · the level
+  box (empty = each source's peak); `pianoHarmonics()` takes the selected morph shape's group, else the morph under the playhead, else
+  the score's only one; `pushUndoState` first (the one place this panel touches the undo stack — the notes land on a lane he edits by
+  hand); the status line says the counts, the keys, the detune, what was replaced. `composer.html`: the script tag.
+- `tools/piano_harmonics.js` (the CLI: the table per note, `--write` / `--strip` / `--octave` / `--level` / `--max-dur`, the piece file
+  refused without `--force`, the compact JSON kept); `tools/piano_harmonics_check.js` — 38 checks.
+
+**The numbers on his BLOOM at 183 s:** 89 re-breaths → 85 notes, 4 merged at the opening chord (the pairs' doubled pitches re-breathe
+together); the keys G#1–C#3, sounding G#2 · G3 · C#4 — the three pairs' pitches (BCl + Vc on G#2, Vn1 + Va on G3, Fl + Vn2 on
+C#4); the detune ≤ 25 c, mean 10 c (the players are mid-glide at most re-breaths); nothing folded (the BLOOM sits at 43.8–61.2).
+
+**Verified on a copy (`zz-ai-pnoharm`, deleted after) with real events:** the button's click with the playhead at 280.9 s (inside the
+morph) → 85 notes on lane 2 at `harmonics` in `grp-morph-01`, rendered (85 elements), the status line right; CTRL+Z as a real
+keydown → the 85 gone, the objects back to 730 and `nextId` to 1534 (each undo steps one run back through the history); the
+select's real `change` → an octave above → 85 replaced, every key +12, the provenance's `octave` 1; the level box emptied → the
+sources' peaks (0.8 … 9.2); `abc` → refused with the message, nothing changed; the defaults back. **The decoded MIDI** (fake outputs
+on the eight ports, the playback driven by hand from 182.5 to 186 s — rAF never fires in the hidden pane): the piano's three opening
+harmonics on the Piano port, channel 3 — keys 49 · 32 · 43 (C#3 · G#1 · G2) at velocity 109 (level 7 through the remap), CC7 109
+then 107 — while the six players sounded on their own ports (senza vibrato cc0 5, the bass clarinet cc0 12, the flute on its ord
+channel) with their bends. **The group drag as a real mouse sequence** on the META shape (mousedown · two moves · mouseup; 56 px =
+2.004 s, then 2.0 s back): the shape, the marker, the 89 morph notes and the 85 piano notes all moved by the exact dt — the notes
+travel with the morph. The CLI's `--write` / replace / `--strip` round trip on a scratch copy; the piece-file guard.
+
+**Found on the way, not built (NITS):** (a) the piano's `harmonics` loudness law is the Steinway's — 1g measured `main` only — so at
+the ensemble's placed level the remap gives velocity 20–40 (inaudible); hence the level box with 7 as the default (velocity 109); a
+sweep of the harmonics preparation would give it its own law. (b) The placed morph notes' curve heights are the engine's 0–1 levels
+on the score's 0–10 scale (y ≤ 0.8 on the BLOOM): the score plays them at velocity 64–80 and CC7 108–123 through the remap — whether
+that is the loudness he hears in the panel's audition is his ear's question. (c) The `?` help line lists keys, not panel buttons; the
+button carries its own title. Also noted: the single-shape drag moves a group's members by the exact dt, the multi-selection drag
+snaps them to 0.05 s (§144) — two rules for one gesture.
+
+**Next:** his listening — a hard reload (CTRL+SHIFT+R), his test score, [Morph], the playhead inside the BLOOM at 183 s, ♪ piano
+harmonics, Play; the switch and the level by ear; then the second pass (the CC21 partial shift: the chain, an exact detune; the
+two-piano piece's rules and lead) at his word, by the planning method.

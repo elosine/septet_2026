@@ -68,6 +68,17 @@ freely.
   the root box is also SPECTRAL's fundamental; CONVERGE opens each note a whole tone and closes onto it. No keyboard: the note names
   are text. `bank/morph_pitches.json` holds the starters.
 
+- **The piano's harmonics at a morph's re-breaths (2026-09-08; PLAN 1i first pass; RUNNING_LOG §217–218; CN-40):** a button on the
+  panel, **♪ piano harmonics**, with a switch (sounds *at the pitch* · *an octave above*) and a level box — reads the placed morph
+  under the playhead (or the selected morph shape's, or the score's only one) and writes one piano note per re-breath on the piano
+  lane at the `harmonics` technique: the nearest key whose sampled octave harmonic sounds the player's pitch at that re-breath (the
+  rounding is the detune he asked for, within ±25 c on the BLOOM), the coincident same-key re-breaths merged, a key beyond F5 folded
+  an octave; the notes join the morph's group (they travel with its shape), carry their provenance (NAMING §2.12), are replaced by
+  a re-run and undone by CTRL+Z. `score/public/piano_harmonics.js` (pure), `tools/piano_harmonics.js` (the CLI: the table, --write,
+  --strip), `tools/piano_harmonics_check.js` (38 checks). **The first derived voice of a morph** — for the all-purpose tool, a morph
+  could carry such rules and re-derive them when it changes. **Not yet:** the CC21 partial shift (the chain, an exact detune), the
+  piano's `harmonics` loudness in the velocity remap (1g measured `main`; a harmonic at level 7 goes out at velocity ≈ 109).
+
 ## 2 · For this piece — "morph events" (CN-28 · CN-29)
 
 His picture: **single morph events** — e.g. unison → maximum beating, "like in convergence", over a set time — then **longer
@@ -834,3 +845,14 @@ first-class verb beside hear and place. RUNNING_LOG §213.
 - *(2026-09-07, his first remarks)* **The panel is a drawer from the bottom, full page, like the strikes — not a floating box**; the
   composer looks for a tool where the strikes are. And a readability floor: no font under 10 px in a panel, the base 13, the
   buttons 12 (his mapping 10 → 12, 12 → 14, 14 → 18).
+
+### 2026-09-08 — "good go please": PLAN 1i begun — the piano's harmonics at the morph's re-breaths, the first pass un-shifted
+
+> *"good go please"* *(2026-09-08, after the clear — to the model read back in one line and to the un-shifted first pass; RUNNING_LOG §217)*
+
+*AI reading (not the composer's words):* the piano's part in the morph section is DERIVED from what is placed: a button on the morph
+panel reads the morph group at the playhead and writes the piano's harmonic notes into the score, one per re-breath (the player's
+pitch at the re-breath → the nearest key whose octave harmonic sounds it, or an octave above by a switch), the notes joining the
+morph's group so they travel with its shape, each carrying its provenance (the source lane and pitch, the string, the partial, the
+detune, the fold); a re-run replaces them. For the all-purpose tool: a morph could carry derived "resonance" voices as a rule,
+re-derived whenever the morph changes — the piano's harmonics are the first such rule.

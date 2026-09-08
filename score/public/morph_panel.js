@@ -137,6 +137,18 @@ const PANEL = {
             '<button id="morphSaveAct" title="freeze this render as an ACTUAL with its provenance">',
             'Save as ACTUAL</button>',
             '</div>',
+            // PLAN 1i (CN-40; RUNNING_LOG §217–218): the piano's harmonics at the re-breaths of ONE placed morph — the morph under the
+            // playhead (or the selected morph shape's), one note per re-breath on the piano lane at the harmonics technique, the notes
+            // joined to the morph's group; the switch says where the harmonic sounds; a re-run replaces them; CTRL+Z undoes.
+            '<div style="flex:0 0 auto;margin-top:6px;display:flex;gap:6px;align-items:center" ',
+            'title="the piano\'s harmonics at the re-breaths of the morph under the playhead (or the selected morph shape): one note per re-breath on the piano lane at the harmonics technique, joined to the morph\'s group — a re-run replaces them, CTRL+Z undoes">',
+            '<button id="morphPnoHarm" style="white-space:nowrap">&#9834; piano harmonics</button>',
+            '<select id="morphPnoHarmOct" title="where the harmonic sounds: at the player\'s pitch (the octave harmonic of the string an octave below it) or an octave above (the player\'s own key)" ',
+            'style="background:#1a1a22;color:#cca;border:1px solid #333;padding:2px 3px">',
+            '<option value="0">at the pitch</option><option value="1">an octave above</option></select>',
+            '<input id="morphPnoHarmLevel" value="7" title="the notes\' level 0–10 (the curve height, NAMING §2.9); empty = each source note\'s own peak" ',
+            'style="width:30px;background:#1a1a22;color:#cca;border:1px solid #333;padding:2px 5px">',
+            '</div>',
             // FADE LADDER (day 14): hear the current attack at several lengths,
             // back to back, in ONE play session — pressing Play per length gave
             // every audition a fresh press-edge, which is where the blip lives.
@@ -158,6 +170,7 @@ const PANEL = {
         d.querySelector('#morphStop').addEventListener('click', () => E.panic());
         d.querySelector('#morphIns').addEventListener('click', () => this.insert());
         d.querySelector('#morphSaveAct').addEventListener('click', () => this.saveActual());
+        d.querySelector('#morphPnoHarm').addEventListener('click', () => this.pianoHarmonics());
         d.querySelector('#morphLadder').addEventListener('click', () => this.playLadder());
         this.makeDraggable(d, d.querySelector('#morphDrag'));
         // shrinking the window can strand a panel that was legally placed
@@ -1044,6 +1057,56 @@ const PANEL = {
         });
     },
 
+    // PLAN 1i (CN-40; RUNNING_LOG §217–218): the piano's harmonics at the re-breaths of ONE placed morph — the selected morph shape's
+    // group, else the morph under the playhead, else the score's only morph. The generator is piano_harmonics.js (pure); the notes
+    // join the morph's group (they travel with its shape) and carry their provenance; a re-run replaces that morph's earlier ones.
+    // The score's undo covers it (pushUndoState first) — the one place this panel touches the undo stack, because these notes land
+    // on a lane the composer edits by hand.
+    pianoHarmonics() {
+        const C = HOST(), PH = root.PianoHarmonics;
+        if (!C) return;
+        if (!PH) { this.setStatus('piano_harmonics.js is not loaded — hard reload (CTRL+SHIFT+R)', true); return; }
+        const metaLayer = (typeof META_LAYER !== 'undefined') ? META_LAYER : 7;
+        const tracks = (typeof TRACKS !== 'undefined') ? TRACKS : [];
+        const lane = tracks.findIndex(t => t.instKey === 'piano');
+        if (lane < 0) { this.setStatus('no piano lane in TRACKS', true); return; }
+        const tech = (C.trackTechniques(lane) || []).find(t => t.key === 'harmonics');
+        if (!tech) { this.setStatus('the piano has no harmonics technique in the recipe', true); return; }
+        const octEl = this.el.querySelector('#morphPnoHarmOct'), lvEl = this.el.querySelector('#morphPnoHarmLevel');
+        const lvRaw = ((lvEl && lvEl.value) || '').trim();
+        if (lvRaw !== '' && !isFinite(+lvRaw)) { this.setStatus('the level is a number 0–10, or empty for each source note\'s own peak', true); return; }
+        const opts = { keyLo: tech.rangeLow != null ? tech.rangeLow : 21, keyHi: tech.rangeHigh != null ? tech.rangeHigh : 77,
+                       pianoLane: lane, metaLayer: metaLayer, laneLabels: tracks.map(t => t.short),
+                       octave: (+((octEl && octEl.value) || 0)) | 0, level: lvRaw === '' ? null : Math.max(0, Math.min(10, +lvRaw)) };
+        // the morph: the selected shape's group · the one under the playhead · the only one
+        const selected = (C.selectedObjects && C.selectedObjects.length) ? C.selectedObjects : (C.selectedObject ? [C.selectedObject] : []);
+        const sel = selected.find(o => o && PH.isMorphGroupId(o.groupId));
+        const groups = PH.morphGroups(C.objects, opts);
+        let g = sel ? groups.find(x => x.groupId === sel.groupId) : null;
+        if (!g) g = PH.findMorphAt(C.objects, playheadAt(C), opts);
+        if (!g && groups.length === 1) g = groups[0];
+        if (!g) {
+            this.setStatus(groups.length ? 'which morph? put the playhead inside one (or select its shape): ' +
+                groups.map(x => x.groupId + ' ' + x.start.toFixed(1) + '–' + x.end.toFixed(1) + ' s').join(' · ') : 'no morph in the score — Insert one first', true);
+            return;
+        }
+        const gen = PH.generate(C.objects, g.groupId, opts);
+        if (!gen.notes.length) { this.setStatus(g.groupId + ': no re-breaths to play — ' + PH.describe(gen), true); return; }
+        if (C.pushUndoState) C.pushUndoState();
+        const had = PH.ownedBy(C.objects, g.groupId).length;
+        if (had && C.selectedObject && PH.isPianoHarmonic(C.selectedObject)) { C.selectedObject = null; C.selectedObjects = []; C.selectedNodeIdx = -1; }
+        const keep = PH.stripped(C.objects, g.groupId);
+        C.objects.length = 0; keep.forEach(o => C.objects.push(o));   // the same array: the app holds it by reference
+        const objs = PH.toScoreObjects(gen, Object.assign({}, opts, { startId: C.nextId || 1 }));
+        objs.forEach(o => C.objects.push(o));
+        C.nextId = (C.nextId || 1) + objs.length;
+        if (C.renderAll) C.renderAll();
+        if (C.markDirty) C.markDirty();
+        if (C.scheduleConflictRefresh) C.scheduleConflictRefresh();
+        this._lastPianoHarmonics = { groupId: g.groupId, gen: gen, count: objs.length, replaced: had };
+        this.setStatus('piano harmonics for ' + g.groupId + (g.label ? ' (' + g.label + ')' : '') + ': ' + PH.describe(gen) +
+            (had ? ' — replaced ' + had : '') + ' — CTRL+Z undoes');
+    },
     insert() {
         const C = HOST();
         if (!C || !this.result) return;
