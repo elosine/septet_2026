@@ -6728,3 +6728,19 @@ picture keeps his layout and adds a CURSOR:
   flags it, and a ✕ hands it back to the machine.
 - **What is genuinely new on the screen:** the chords list with its order, advance and selection where the strikes list sits; the
   count range and the 200 ms rest under the players; the stacked dots in the strip.
+
+## §243. PLAN 1k — step 2 (chords mode in the drawer) agreed and written with its sub-steps and the screen of §242; step 3, the manual onset, put to him
+
+Composer, 2026-09-08: *"good"* to step 2 as put and to the screen described in §242 (the keyboard showing one onset, the rhythm strip
+the selector, the articulation pull-downs unchanged, his double-click becoming the manual onset). Written into PLAN 1k with the
+screen paragraph, committed.
+
+**Step 3 put to him, goal and sub-steps together:** the card at the onset (a click on the onset's column in the strip opens it, the
+cue picker's idiom — draggable, ENTER applies, ESC closes, the onset named by its time and its chord); what it holds — the count, the
+chord (from the list or typed pitches), the notes taken (chosen, or left to the machine within that chord), and the player per note;
+his double-click on a keyboard key moving a note to another player marks THAT onset by hand, the gesture keeping its meaning; a hand
+onset is PINNED — a re-generate and a new seed keep it, the machine deals the rest around it and its players are unavailable to the
+neighbours within 200 ms; the collision check still runs over it and FLAGS it (✗ in the strip, named in the readout), never lowering or
+moving it (§237); a ✕ hands the onset back to the machine and it is re-dealt with the rest; the hand onsets travel in the recipe (the
+save of step 5); checks — a hand onset survives a re-generate and a re-seed, its neighbours respect its players, a colliding one is
+flagged and unchanged, the ✕ restores.

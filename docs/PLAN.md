@@ -906,7 +906,29 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - check in node: determinism from the seed; the 200 ms rule never broken; exhaust covers every note exactly once; each advance
        mode; the lowering; the range folds; a run too fast to satisfy, so the flag path is exercised.
   2. **Chords mode in the drawer** (the mode switch, the players column, the chords block, the keyboard, the rhythm strip with a dot per
-     player; generate and hear) — *to be laid out when we discuss it.*
+     player; generate and hear) — `todo — agreed 2026-09-08 (RUNNING_LOG §241–243)`. *Result when done:* the strikes drawer has a mode
+     switch; in chords mode the columns show the chord in play, the players with their count range and the 200 ms box, the chords block
+     with its order, advance and selection, and the rhythm strip drawing a dot per player at each onset; Generate makes the sequence and
+     Hear plays it through the ensemble; the drawer's notes mode is untouched. **The screen is his own screen with a cursor (§242):** the
+     keyboard and its dotted lines are unchanged in kind and show ONE ONSET — the selected one; the rhythm strip is the selector (a
+     column of dots per onset, the selected column lit); today's screen is this screen with a sequence of one; the articulation
+     pull-downs keep their meaning (a player's voice for the whole sequence). The to-dos:
+     - the mode switch at the top, *notes* (as today, untouched) / *chords*, remembered with the drawer's state;
+     - the players column, where the orchestration rows are: a tick per player, the count range, the re-attack box (200 ms), the dealer
+       menu, the seed with the drawer's seed chips;
+     - the CHORDS block where the strikes list sits: the list built from the harmony banners or typed, each row named with its notes,
+       removable and reorderable; the order; the advance with its range; the selection;
+     - the keyboard: the chord in play lit, the selected onset's notes ringed, a dotted line from each to the player taking it, the
+       players' ranges as columns, the unreachable keys dimmed;
+     - the rhythm strip: every dial, shape, jitter and the run kept; a COLUMN of dots per onset, one per player in the player's colour;
+       the selected column lit (it is what the keyboard shows); a lowered onset marked, a flagged one ✗; the hover naming the chord and
+       the players;
+     - Generate (the engine of step 1) and Hear through the drawer's own audition path (MorphEmit's routing, 1g's remap, panic the one
+       stop);
+     - the readout in the drawer's status line: the counts, the flags, the folds;
+     - check on a copy with real events: the mode switch both ways with notes mode unchanged, a generate, a click through the onsets
+       repainting the keyboard, the decoded MIDI of Hear (the right players, the right pitches, no two attacks closer than 200 ms on one
+       player).
   3. **The manual onset** (the card at the onset: its count, its chord or typed notes, back to automatic; the collision flagged) —
      *to be laid out when we discuss it.*
   4. **The span and the partial insert** (marked by drag and by click / shift-click, the insert buttons acting on it, in both modes) —
