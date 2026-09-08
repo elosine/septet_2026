@@ -866,7 +866,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - later, at 2a: the notation of a note born from a line (its source in the provenance).
 
 - **1k — The strikes drawer's chords: a rhythm whose onsets carry chords or parts of one, the players dealt per onset under a 200 ms rest (CN-44 · CN-45 · CN-46 · CN-47)** —
-  `todo — in planning 2026-09-08 (PLANNING_METHOD phase 3 from step 1; RUNNING_LOG §234–240)` *(composer, 2026-09-08, CN-44: "use the
+  `todo — PLANNED 2026-09-08 (the planning method, phases 1–3; RUNNING_LOG §234–247); the build at his word, step 1 first` *(composer, 2026-09-08, CN-44: "use the
   rhythms that are generated usually for one strike individual notes … but I'd like to make those onsets carry a cord or part of a cord
   … assign players to that particular onset … draw from the large cord set … the round robin or the randomize each cycle … I want four
   players on this one or two players on that one … no player has another impulse. let's lower it to 200 milliseconds")*. *Why:* the
@@ -982,8 +982,21 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - check: a save and a load *as it was* round-trip exactly; a part save loads as its own short sequence; an old take still loads;
        the manual onsets travel with the save.
   6. **Verify and document** (the checks, the walk on a copy, the decoded MIDI, the docs; then his first chord strike in the piece) —
-     *to be laid out when we discuss it.*
-
+     `todo — agreed 2026-09-08 (RUNNING_LOG §247)`. *Result when done:* the whole of 1k walked end to end on a copy with real mouse and
+     key events and the decoded MIDI, one node script checking every pure part, the documents saying what exists; then his first chord
+     strike in the piece and his verdicts in the notes. The to-dos:
+     - the walk on a `zz-ai-` copy: a chord list built from the banners, generate, the onsets clicked through with the keyboard
+       repainting, Hear with the decoded MIDI (the right players, the right pitches, no two attacks closer than the re-attack time on one
+       player), a manual onset, a span marked both ways, both inserts, a save and both kinds of load, undo through it, and the drawer's
+       notes mode unchanged beside it;
+     - the node checks in one script (`tools/strike_chords_check.js`): the engine's determinism from the seed, the 200 ms rule never
+       broken, each advance mode, the lowering, the range folds;
+     - the documents: a new section in `docs/STRIKES_TOOL.md` for chords mode (the tool's own document), `docs/NAMING.md` for what a
+       chord strike looks like in the score, PLAN 1k's statuses, PLANNER NOW, the journal §2, a title on every new control; the lab
+       journal as the work happens;
+     - his first chord strike: a hard reload, the drawer, chords mode, a chord list from the banners, the dials, generate, hear, a span,
+       insert; his verdicts → STRIKES_TOOL and NITS, the fixes he marks "fix now" built at once;
+     - later, at 2a: the notation of a chord strike.
 ## 2. Notate — `deferred` until the first real page exists
 
 - **2a — Engine adaptation** — the 0g list. Start with the page the opening needs.

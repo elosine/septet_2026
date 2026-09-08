@@ -6792,3 +6792,13 @@ tool's own document), NAMING for what a chord-mode strike looks like in the scor
 titles on every new control, the lab journal as the work happens; then HIS FIRST CHORD STRIKE in the piece (a hard reload, the drawer,
 chords mode, a chord list from the banners, the dials, generate, hear, a span, insert) and his verdicts to STRIKES_TOOL and NITS, the
 fixes he marks "fix now" built at once; the notation of a chord strike left to 2a.
+
+## §247. PLAN 1k planned whole — step 6 agreed and written; the item shown to him once ("is that it?")
+
+Composer, 2026-09-08: *"good"* to step 6 as put (the walk on a copy with real events and the decoded MIDI, the one node check script,
+the documents — STRIKES_TOOL's own section, NAMING, the plan, the planner, the journal, the titles — his first chord strike and his
+verdicts, the notation left to 2a). **PLAN 1k is planned whole** — six steps in the fixed formats, each agreed in one turn (his format
+of §224: the goal and the sub-steps together) and written at once; the status `PLANNED`, the build at his word, step 1 first. Shown to
+him once as the method asks, with what sits outside the plan: the build's go (each step a chunk — proposal → go → build on a copy →
+verify → docs → commit → push), his test of PLAN 1j (the lines, the bar, the picker; §233) and his listening of 1i's piano harmonics
+(§218), both still pending, and the two NITS of §218. Fourteen turns from CN-44 to the plan.
