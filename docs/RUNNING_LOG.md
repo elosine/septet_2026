@@ -7485,3 +7485,20 @@ and the new end; nothing is doubled, and the strike he clicked is spent (recomme
 on that pitch"*, and one player makes one sound at a time). (b) The note STAYS and the crescendo starts at its end — the attack, then the
 swell out of it; two objects, and on a string an impossible bow change unless the attack is arco. (c) The note stays and the crescendo
 starts with it, overlapping — now physically possible in the machine (they are on different channels since §271) but not for a player.
+
+## §277. PLAN 1m topic 2 decided — "a", and with the trills' own courtesy: the source note is greyed, not destroyed, and comes back when the crescendo is deleted
+
+Composer, 2026-09-08: *"yes a and the same grey original which can come back with delete of cres as trills"*.
+
+So the selected note **becomes** the crescendo in the sense that only the crescendo sounds — but the note itself is **kept, stamped and
+drawn faint**, exactly as a trill treats the notes under it (`mutedBy`: muted at play time, never deleted, drawn faint, stamped for the
+downstream tools; the trill's M button gives them back as an A/B). Deleting the crescendo restores the note. Nothing is destroyed by a
+keystroke, which is the app's rule everywhere else.
+
+**Topic 3 put to him — the other ways in.** T's own entry rule is: a marked span wins · else the selected note · else the playhead on the
+active lane. For C, three cases and only the first is decided. (i) ONE note selected — decided (§276–277). (ii) SEVERAL notes selected —
+**one crescendo on each**, every one taking its own pitch and its own end from the rule, each greying its source; the drawer's batch
+spirit, and the fastest way to fill a passage. (iii) NOTHING selected — the AI proposes that C says "select a note" and does nothing,
+because a crescendo needs a pitch and guessing one from the playhead would be a surprise (T can fall back because it hunts an anchor note
+within 8 s for its pitch; C would be inventing). A marked span, when there is one, sets the DURATION and the selected note still gives the
+pitch. **The question:** several notes at once — yes, or one at a time?
