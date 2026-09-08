@@ -7065,3 +7065,26 @@ an ordinary note — so a player stops looking free merely because its long soun
 moved from 2 s to 3 s at the same time (new trills only; the ones in the piece keep the ends they were given); node checks that the rule
 is a guarantee on a fast run, that a long sound blocks its whole length, and that PLAN 1k's dealt sequences move as little as the
 arithmetic says; a walk on a copy showing the chords drawer reading the new box.
+
+## §260. PLAN 1l step 3 — his question answered with the piece measured, and the measurement CAUGHT A DEFECT in the rule as stated: a morph's re-breath is not a new articulation. The gesture clause decided ("a")
+
+Composer, 2026-09-08: *"how will the trills change moving forward? and how about the strikes with just short onsets? i think you said
+minimal impact, iow if I redid the strikes/trills currently in my score using these rules how would they change?"*
+
+**Measured on `scores/piece-septet.json` rather than asserted** (549 sounding notes on the seven lanes, 542 consecutive pairs):
+- **The strikes do not move.** 515 of the 549 notes are ≤ 200 ms (94%); the median note is **63 ms**. A 63 ms strike plus 150 ms of rest
+  is 213 ms — LOOSER than the 250 ms attack-to-attack the run uses today. Nothing short anywhere in the piece is newly blocked, and
+  nothing that failed the old rule passes the new one (5 pairs fail both; they are hand-placed).
+- **The trills do not move either.** All **69** trills have a later note on their own player, so the no-next-note fallback never fires;
+  moving it 2 s → 3 s changes nothing already written. (Their own end rule, 0.17 s before the next note, is untouched.)
+- **THE DEFECT the numbers caught:** 18 pairs WOULD be newly blocked, and every one of them is a **morph re-breath** — a violin holding
+  6 to 10 seconds and re-bowing 50 ms later, in the BLOOM at 183 s. The rule as the AI stated it would forbid the morph's own
+  breathing. A re-breath is not a new articulation; it is the same sound continuing.
+
+**Decided (his "a") — THE GESTURE CLAUSE:** the rest applies BETWEEN GESTURES, never inside one. Notes that share a group (a morph's
+`grp-morph-NN`, a beating's zone, a strike's group) are one continuous sound and never block each other; everything else obeys the
+150 ms after the end. The alternatives — naming the morph and the beating as exceptions (every future gesture would have to remember to
+add itself), or keeping two rules — were put beside it and set aside.
+
+*(The method's own lesson, for the record: the answer to "how would my score change?" had to be MEASURED. Asserting "minimal impact"
+would have shipped a rule that outlawed the section he is composing this week.)*

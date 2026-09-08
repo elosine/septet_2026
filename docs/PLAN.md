@@ -1058,8 +1058,24 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - the fields into `docs/NAMING.md`, so the extractor and the notation at 2a can read a crescendo;
      - checks: the three shapes differ in the right direction; the end rule picks the right end in all three cases (a next note, no next
        note, a manual duration); the provenance survives a save and a reload; a walk on a copy where one is made, dragged, bent and undone.
-  3. **The spacing rule** (a player free 150 ms after its last sound ends, everywhere; the chords drawer re-read; the trill's fallback
-     3 s) — *to be laid out when we discuss it.*
+  3. **The spacing rule** (a player free 150 ms after its last sound ends, everywhere; the gesture clause; the chords drawer re-read;
+     the trill's fallback 3 s) — `todo — agreed 2026-09-08 (RUNNING_LOG §260)`. *Result when done:* one sentence governs the whole app —
+     **a player is free 150 ms after its last sound ends, and the rest applies between gestures, never inside one** — written once as a
+     shared helper and asked by every tool, so no tool carries its own version; a long sound blocks its whole length instead of only its
+     start, and a morph's re-breath or a beating's segments never block themselves. The to-dos:
+     - one helper (`score/public/spacing.js`, pure): a player, a moment, and what that player already sounds → free or not, and when it
+       will be; **the gesture clause** — notes sharing a group (a morph's `grp-morph-NN`, a beating's zone, a strike's group) are one
+       continuous sound and never block each other (§260, measured: without it the rule outlaws 18 re-breaths in the BLOOM at 183 s);
+     - what counts as a sound: a strike, a trill's span, a beating's span, a crescendo, an ordinary note — anything on that lane that
+       occupies time;
+     - the chords drawer re-read: its box from "no player attacks twice within N ms" to "rest ≥ N ms after the end", the default 150 and
+       200 still typable; PLAN 1k's engine asks the helper instead of its own arithmetic;
+     - the trill's no-next-note fallback 2 s → 3 s (new trills only; the 69 in the piece keep the ends they were given — none of them
+       uses the fallback, §260);
+     - ready for what comes: 1n's filler and 1o's crescendo strikes ask the same helper;
+     - checks: the rule is a guarantee on a fast run; a long sound blocks its whole length; the gesture clause lets every re-breath of
+       the BLOOM through; the strikes of the piece are unmoved (median note 63 ms → 213 ms of rest, looser than today's 250); a walk on
+       a copy showing the drawer reading the new box.
   4. **Verify and document** (the checks, the walk on a copy, the crescendo's own document; then his ear) — *to be laid out when we
      discuss it.*
 
