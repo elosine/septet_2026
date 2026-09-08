@@ -7440,3 +7440,29 @@ on **Fluteb ch 4** (`cc7=71 · ON · cc7=0 · OFF`) and the note after it re-pin
 **His five minutes at the rack, now the whole of it:** load **Flute Ordinario three times into the `Fluteb` UVI instance, as parts on
 MIDI channels 4, 5 and 6**, same output as the existing parts. Until they exist the flute's crescendos will address silent channels —
 so this one is a prerequisite, not a nicety, and it is the only rack work left for the crescendo suite.
+
+## §275. His three flute copies checked and corrected through the UVI text path — the first live rack edit this piece has made
+
+Composer, 2026-09-08: *"just as a proof of concept, are you able to see the new instances in the flute and see if I did it right and are
+you able to bypass the fx, leave the ir/reverb pls if not let me know, i vaguely recall something about xml uvi addressable"*.
+
+**He recalls rightly** — RUNNING_LOG §49 / REAPER_CONTROL §3b: a UVI instance's state is a zlib stream of XML inside the VST chunk, and
+`tools/uvi_state.js` (PLAN 0k.3) reads and writes it through the bridge. So this was a read, a diff and a write, with no GUI.
+
+**What he did, read from the live instance:** `Fluteb SI2` now holds six parts — Staccato · Trills KS · Whistle Tones on channels 1–3
+as before, and **three Flute Ordinario copies on channels 4 · 5 · 6**, unmuted, main output. **The channels are exactly right.**
+
+**Two differences from his own convention, both fixed in one write:**
+1. **The gain.** His three older parts (and every part of the `Flute SI2` instance) sit at **+6 dB**; the three copies came in at **0 dB**.
+   A flute crescendo would have been 6 dB under every other flute sound and under the balance 1g measured. Raised to +6 dB (`Gain=1.9952623`).
+2. **The insert effects.** Each program carries `Convolver InsertFX0` (the *Grain Hall* IR — his reverb), `DigitalEq InsertFX1` and
+   `Maximizer InsertFX2`. On his older parts the EQ and the Maximizer are bypassed and the convolver is left on; on the three copies all
+   three were active. **The EQ and the Maximizer are now bypassed on the copies, the convolver untouched** — his ask exactly, and now
+   uniform across all six parts.
+
+**Verified:** the edited XML re-encoded and pushed (`encode … --push`), the instance read back byte-identical to what was sent, and a
+fresh `info` from the live plugin shows all six parts at +6 dB. The original XML is kept beside the edited one in the scratchpad.
+
+**What this proves for the piece:** the UVI half of the rack is addressable from here — parts, channels, gains, preset paths, outputs and
+every effect's bypass — so a setup slip is a diff and a write rather than nineteen clicks. Kontakt's half remains GUI (its chunk is the
+NKI binary), which is why the strings' four slots were his hands and the flute's three copies could be corrected by mine.
