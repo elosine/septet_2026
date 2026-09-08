@@ -7893,3 +7893,39 @@ overlap heavily:
 2½ times — or **VERTICALLY**, so that the five or six longs sounding together at any instant spell the sonority, the deck choosing the
 note the chord is currently missing? The first is a melody of entries; the second is a harmony that breathes. They sound quite different,
 and the deck is small either way.
+
+## §290. PLAN 1n — topic 3: the pitch is a STRATEGY set at three scopes, and 1n's whole control shape is now one pattern
+
+Composer, 2026-09-08:
+
+> *"best different strategies and efficient access. So it could be [pitches] from the same strike harmony in order or shuffled or each a
+> minor second offset from the previous [or] a fifth offset, etcetera, etcetera. or from a totally different pitch set. I just want to be
+> able to choose from a variety of options and a variety of shuffles. And then either they [im]pose it on all the crescendos or sections
+> of them. and then also be able to change individually, but in the same way. So select one and then say, this one should pull its pitch
+> from this pitch set."*
+
+**He answered neither (a) nor (b) but the question behind them: the pitch is a STRATEGY, and what matters is the range of strategies and
+how fast he can reach one.** Sequential and vertical are two entries in a menu, not a fork in the design.
+
+**The control shape he described is the one topic 2 already produced**, and that is worth naming, because it now governs the whole item:
+**every property of a long is set at THREE SCOPES from ONE menu** — the whole pass · a selection of longs · a single long. The anchor
+toggle (§288) is that; the pitch strategy is that; the kind will be that. One mechanism, learned once.
+
+**The vocabulary proposed to him — four families, each taking the same order menu:**
+
+| family | the pitch of each long |
+|---|---|
+| **from the pattern** | the corresponding accent's own pitch · the accent before it · the accent after it · the pattern's whole collection, dealt |
+| **from a sonority** | any of the 163 sets 1m's harmony bar already reaches (his kept sets, starters, the models' sets, stacks and Messiaen modes from a root, strikes, blasts, chord shapes) |
+| **a chain** | each pitch a fixed interval from the previous long's — his *"a minor second offset from the previous or a fifth offset"* — the interval, the direction (up · down · alternating), and a starting pitch (the first accent's by default) |
+| **vertical** | the note the currently sounding longs are missing from a chosen sonority, so the standing five-note chord (§289: 5 or 6 longs sound for 73 % of the passage) always spells it |
+
+**The order**, for any family that deals from a collection: **in turn · shuffled to completion then reshuffled · random**, seeded — 1k's
+deck, already built and already in 1n through the selection rule.
+
+**One consequence of the chain flagged to him:** a minor-second chain over 43 longs walks 43 semitones — three and a half octaves — so
+the octave fold (`Cresc.foldInto`, 1k's rule) is doing heavy work and the chain will read as a slow spiral rather than a rise. That may
+be exactly what he wants; it is worth knowing before he hears it.
+
+**Reuse, not new building.** The sonority family is 1m's harmony bar whole. The order is 1k's deck. The fold is 1k's rule. Genuinely new
+in this topic: reading a named accent's pitch, the chain, and the vertical filter — three small pure functions.

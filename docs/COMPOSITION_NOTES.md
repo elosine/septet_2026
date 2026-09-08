@@ -1266,3 +1266,18 @@ prolongation as one thing**, with a third part for crescendos — a second accen
 accented note. The prolonged thing has three kinds: trill · crescendo · **long tone** (new here; CN-48 named only the first two). Which
 player takes the long carries no musical intention, so it is the machine's to choose — with an abort when nothing fits. See RUNNING_LOG
 §285–286 for the measurement of his own texture at 135.78 s and the three rules simulated on it.
+
+## CN-55 — the pitch of a filled long is a strategy, reachable at three scopes (2026-09-08)
+
+> "best different strategies and efficient access. So it could be [pitches] from the same strike harmony in order or shuffled or each a
+> minor second offset from the previous [or] a fifth offset, etcetera, etcetera. or from a totally different pitch set. I just want to be
+> able to choose from a variety of options and a variety of shuffles. And then either they [im]pose it on all the crescendos or sections
+> of them. and then also be able to change individually, but in the same way. So select one and then say, this one should pull its pitch
+> from this pitch set."
+
+**The AI reads it as** (marked as the AI's): the question is not which pitch rule but how many are within reach and how fast. So every
+property of a long — its pitch strategy, its anchor, its kind — is set at **three scopes from one menu: the whole pass · a selection · a
+single long.** That is the same shape topic 2 produced for the anchors (CN-54, RUNNING_LOG §288), so 1n has one control idiom rather than
+three. The strategies proposed: from the pattern (this accent · the one before · the one after · the whole collection dealt) · from a
+sonority (1m's harmony bar whole) · a chain (a fixed interval from the previous long) · vertical (the note the sounding chord is missing).
+See RUNNING_LOG §289–290.
