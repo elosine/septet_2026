@@ -7466,3 +7466,22 @@ fresh `info` from the live plugin shows all six parts at +6 dB. The original XML
 **What this proves for the piece:** the UVI half of the rack is addressable from here — parts, channels, gains, preset paths, outputs and
 every effect's bypass — so a setup slip is a diff and a write rather than nineteen clicks. Kontakt's half remains GUI (its chunk is the
 NKI binary), which is why the strings' four slots were his hands and the flute's three copies could be corrected by mine.
+
+## §276. PLAN 1m opened (the C key) — phase 1, topic 1 decided: "a", C makes the crescendo at once and the card edits the live object
+
+Composer, 2026-09-08: *"topic 1 = a"*. So the gesture is the trill's, not a form to fill in: **C creates the crescendo immediately**
+with 1l's defaults (surge 5×, ppp … fff, to 0.17 s before that player's next note, secco on) and a small card opens ON it; every change
+is made to the real object, so it can be heard at once; ENTER keeps it, ESC removes it, CTRL+Z undoes it. His own phrase in CN-48 was
+*"then go to insert"*, which read as the other option; put beside T's manner and 1j's picker card, he chose the live one.
+
+**What 1l already settled, so 1m does not re-decide it:** the shape, the object, the end rule and the fallbacks, ppp … fff, the cliff,
+secco, and the channel it sounds on. **What the panel holds, his words (CN-48):** *"default dynamic range and duration (til next note or
+if no note a standard duration), and articulation, but I can change any of them there in the mini panel"* — three controls, each
+defaulted, each editable; and the secco tick of CN-49 belongs beside them.
+
+**Topic 2 put to him — what happens to the note he selected.** T keeps its note: the trill covers it and eats what starts under it. A
+crescendo is one note, so the question is real. (a) **The selected note BECOMES the crescendo** — same pitch, same start, the new shape
+and the new end; nothing is doubled, and the strike he clicked is spent (recommended: it is the plainest reading of *"a crescendo appears
+on that pitch"*, and one player makes one sound at a time). (b) The note STAYS and the crescendo starts at its end — the attack, then the
+swell out of it; two objects, and on a string an impossible bow change unless the attack is arco. (c) The note stays and the crescendo
+starts with it, overlapping — now physically possible in the machine (they are on different channels since §271) but not for a player.
