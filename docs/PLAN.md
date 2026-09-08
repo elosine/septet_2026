@@ -88,7 +88,16 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
     Bartók, slap, key click, staccato, …), measured as piece #4 measured the tubas; the
     app's `techLength` and the extractor read the same table. Until then the extractor uses
     the drawn length and warns (0i, run D: six warnings on ten notes).
-  - **0c.7 — The channel map and the router (D11):** every Kontakt instrument gets
+  - **0c.7 — The channel map and the router (D11)** — `doing 2026-09-08 (RUNNING_LOG §270–271)`: **the map and the note router are
+    BUILT** — the recipe carries `channels: { main: 1, curve: [2, 3, 4] }` on the four strings and now the bass clarinet (his rack has
+    held the four Kontakt slots since 2026-09-03); `composer.html` gained `curveChannelsOf` · `isCurveEvent` · `curveChannelMap` ·
+    `channelFor`, so a curve-bearing note (a crescendo, a morph note, a drawn swell) rotates over the curve channels while a captured
+    or keyswitched note stays on MAIN, a secco-cut channel is left to rest, and `resetCC7All` sweeps the curve channels too. Proved by
+    the decoded MIDI: violin 1 cuts its crescendo on ch 2 and re-pins the next note on ch 3. **What remains in 0c.7:** (a) **the flute's
+    decision, his** — a curve copy of `ord` (and which others) in the thirteen free `Fluteb` slots, or the tuba law and the ring, since on
+    UVI a channel IS a technique and no slot can be "the same instrument again"; (b) the TRILLS and BEATINGS, whose zones carry
+    precomputed snippets with explicit channels and so are still on MAIN; (c) the prelude's other controllers (CC1; CC4 + channel
+    pressure) and `tech.ks` for the flute's KS presets. *The original text:* every Kontakt instrument gets
     `channels: { main: 1, curve: [2, 3, 4] }`; `sonify_core`'s route picks `main` for
     `sonifyMode 'plain'` / `'ks'` and the next curve channel, round-robin per instrument, for
     curve mode; the prelude on a curve channel writes CC0 + the start value of every

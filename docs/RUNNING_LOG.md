@@ -7409,3 +7409,11 @@ a line in `STRIKES_TOOL.md` §X's "Not yet". Its shape as the AI reads it: the R
 the piano so the chord is complete even when the strings cannot be), FREE OF THE COUNT (several notes of the sonority whether or not the
 ensemble was short — a hand is not a bow), and the interface, which is the real work: a per-strike rule (none · one note · a chord · the
 remainder) in the drawer's own manner. Nothing built; nothing else moved.
+
+## §273. 0c.7's status written into the plan — the map and the note router built, three things left (the flute's decision, the trills and beatings, the prelude's other controllers)
+
+Composer, 2026-09-08: *"yes write 0c.7 into the plan"*. It was already there (written 2026-09-03 with D11), and what it lacked was its
+state. Marked `doing 2026-09-08`: the channel map and the NOTE router are built and proved (§270–271); what remains is (a) the flute's
+decision, which is his — a curve copy of `ord` in one of the thirteen free `Fluteb` slots, or the tuba law and the ring; (b) the trills
+and beatings, still on MAIN because their zones carry precomputed snippets with explicit channels; (c) the prelude's other controllers
+(CC1, CC4 + channel pressure) and `tech.ks` for the flute's KS presets.
