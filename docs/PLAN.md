@@ -999,7 +999,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - later, at 2a: the notation of a chord strike.
 
 - **1l — The crescendo itself: the standard curve, the object in the score, one spacing rule (CN-48; the foundation under 1m · 1n · 1o)** —
-  `BUILT 2026-09-08 — steps 1–4 at his "go 1l as much as possible independantly" (RUNNING_LOG §262); docs/CRESCENDO.md; HIS LISTENING is the one thing left` *(composer, 2026-09-08, CN-48: "lets do a
+  `steps 1–4 BUILT 2026-09-08 (RUNNING_LOG §262; docs/CRESCENDO.md), the standard NAMED by him (surge, §263); step 5 — SECCO and the round robin — agreed the same night (CN-49 · CN-50; §263–266) and to build` *(composer, 2026-09-08, CN-48: "lets do a
   survey of the crescendo curves I use throughout my pieces and potentially a listening test at different durations to nail down a
   standard or a couple of standards … we'll have a default dynamic range ppp-fff … next articulation for any one instrument will be
   150ms after end of crescendo")*. *Why:* the crescendo arrives in three places at once (the C key, the sequence filler, the chords
@@ -1089,6 +1089,32 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        title on every new control;
      - **then his ear:** the test file opened, soloed, listened to; the standard named; the verdict written into PLAN 1l and
        `docs/CRESCENDO.md`; then 1m (the C key) planned.
+  5. **Secco and the round robin** (the cut that makes the crescendo's cliff, and the back-end rotation that lets the sampler survive it) —
+     `todo — agreed 2026-09-08 (CN-49 · CN-50; RUNNING_LOG §263–266)`. *Result when done:* a crescendo is **secco by default** — in the
+     notation a text instruction (the strings damp the string with a finger or bow pressure at the end; the winds get the word so they
+     hear the shape), in the sound a CC7 cut so nothing rings past the end — and the sampler survives it because crescendos rotate
+     through a small pool of slots in the back end, which the composing surface never sees. The to-dos:
+     - **measure the tolerance** as a score file (his way, §256): `scores/cresc-secco-test.json` — on each string and the flute, a
+       crescendo, CC7 0 at its end, then a short note re-pinning CC7 after 0.25 · 0.5 · 1 · 2 · 3 s, one row per gap, the rows far apart;
+       he solos and hears where the tail comes back. His memory says about 2 s from the quartet's samplers; these are Xsample, SI2, 8Dio
+       and IRCAM, and this piece never measured it (§265);
+     - **the slot pool** in the recipe: per player, the channels a crescendo may sound on (the strings and the bass clarinet have free
+       channels inside the instance they already have; **the flute's port is full** — its exception is the second UVI instance's channels
+       or one new loopMIDI port, the precedent being the ports already made);
+     - **the extra Kontakt slots**: tried through the Kontakt Lua API first (REAPER_CONTROL §8c names it as the only candidate and marks
+       loading unexplored; §8 says slots are not in ReaScript), and failing that, five minutes of his GUI time — duplicate the slot
+       twice, set its channel and its output;
+     - **the rotation, in the back end**: a crescendo asks for a slot and the pool answers (round robin, the least-recently-cut first);
+       the front end never mentions it; a take, an insert and the score carry the crescendo, not the slot;
+     - **the cut**: CC7 0 on that slot about 10 ms before the note-off, with the guard that it is skipped while another sound of that
+       player is still running on the same slot; the next event's own pre-arm re-pins CC7 as it always does (D11);
+     - **the warning, not a guess**: the tool knows every crescendo's time, so it says when the rotation cannot keep the tolerance —
+       that is the signal to add a fourth slot (the napkin, §266: three suffice above ~0.75 s a crescendo at T = 2 s, ~1.25 s at T = 3 s;
+       a fourth buys the sub-second case);
+     - **secco as a property** (`properties.cresc.secco`, true by default) with a checkbox wherever a crescendo is made, and its notation
+       text at 2a; scope: crescendos now, any held note when 2a asks (his "a", §263);
+     - check: the pool never re-pins a cut slot inside the tolerance; the guard never silences a neighbour; the warning fires exactly
+       when the arithmetic says it should; a walk on a copy with the decoded MIDI showing the cut and the rotation.
 
 - **1m — The C key: a crescendo on a selected note, the trill's chassis (CN-48 build 1)** — `todo — to be planned when its turn comes,
   after 1l is built (the order is his, §252: 1l → 1m → 1n → 1o)` *(composer, 2026-09-08, CN-48: "strike, select note, press something

@@ -7224,3 +7224,36 @@ his: **(a)** the spacing rule pays for secco (a secco crescendo makes its player
 150 ms) · **(b)** the rack grows instances for the crescendo voice and the app routes to them, the quartet's way (his hands, more CPU,
 new ports) · **(c)** secco is notation-only here and the sampler simply rings (what the tuba piece's notation does today). Nothing is
 built until the number is known.
+
+## §266. CN-50 — the secco cut answered by a ROUND ROBIN in the back end; the napkin done on the rack as it is; PLAN 1l gains step 5
+
+Composer, 2026-09-08 (verbatim in CN-50), then *"good"* to the shape below.
+
+**The rack as it is** (`reaper/septet_rack.rpp` + the recipe): each STRING is one Kontakt instance using **channel 1 only** — its 88
+articulations are chosen by CC0 inside that one slot — so channels 2–16 are free on its port; the BASS CLARINET uses 1 and 5; the PIANO
+1, 2, 3, 5; the **FLUTE uses all sixteen** across its two UVI ports (30 techniques), so it alone has no free channel. **A round robin
+therefore needs no new ports for the strings and the bass clarinet** — only extra SLOTS in the instance they already have, each loaded
+with the same instrument on a free channel. CC7 is per channel, so a cut on one slot cannot reach another.
+
+**The napkin.** After a cut, that slot must not be re-pinned for the tolerance T. With a pool of N slots a slot returns every N
+crescendos, and consecutive crescendos are 0.17 s apart (the end rule), so the rotation holds when
+`N × 0.17 + (the N−1 crescendo lengths between) ≥ T`.
+
+| pool | shortest average crescendo that still holds, T = 2 s | T = 3 s |
+|---|---|---|
+| 3 slots | 0.75 s | 1.25 s |
+| 4 slots | 0.44 s | 0.78 s |
+
+His own scales (CRESCENDO_TAXONOMY D2) put a gesture under 2 s and a breath at 2–12 s; the listening test's shortest is 1.5 s. **Three
+is enough** unless he writes runs of crescendos averaging under about a second on one player; a fourth buys only the sub-second case.
+**Decided: build for a pool of N, set to 3, and let the tool WARN when the rotation cannot satisfy T** — the warning is the signal to add
+the fourth, rather than a guess made now.
+
+**PLAN 1l gains step 5 — SECCO AND THE ROUND ROBIN** (the plan's own steps 1–4 are built, §262): the tolerance measured as a score file
+(the way he asked for the listening test); the slot pool per player in the recipe; the back-end rotation (a crescendo asks for a slot,
+the pool answers, the front end never sees it); the CC7 cut at the end with its guard; secco as a property, on by default, and its
+notation text at 2a; the flute's exception (its port is full — the second UVI instance's channels or one new loopMIDI port, the
+precedent being the ports already made); the extra Kontakt slots tried through the Kontakt Lua API first (REAPER_CONTROL §8c lists it
+as the only candidate and marks loading unexplored; §8 says slots are NOT in ReaScript), and if that fails, five minutes of his GUI
+time. **His standing principle from CN-50 is recorded beside it:** the back end absorbs the sampler's limits so the composing surface
+never thinks about them; the demo must not be shoddy; no long chase after intractable playback problems.

@@ -248,12 +248,15 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   orange fill), `score/public/spacing.js` (the one rule with its gesture clause), `tools/cresc_test.js` → `scores/cresc-test.json`
   (the listening test), `tools/cresc_check.js` (43 checks), `docs/CRESCENDO.md`; the strikes drawer's box re-read and the trill's
   fallback moved to 3 s. Before it: 1k (chords mode, §251), 1j (the piano's lines, §233), 1i's first pass (§218). Committed, pushed.
-- **NEXT CONCRETE STEP — HIS LISTENING of the crescendo test** (nothing to build until he answers): open `scores/cresc-test.json` in
-  the app, press **S** in a lane to solo (ALT-click = exclusive), play the nine columns — surge · line · bloom at 1.5 s, 5 s, 12 s —
-  and name one standard or two. His answer replaces `STANDARD` in `score/public/cresc.js` (it is marked provisional: surge 5×) and
-  the pending line in `docs/CRESCENDO.md` §2; **then 1m (the C key) is planned**, then 1n, then 1o — the stubs in PLAN.md carry his
-  words and what 1l settles for each. **Three more tests wait on him:** 1k chords mode (§251), 1j the piano's lines (§233), 1i the
-  piano's harmonics (§218). Never touch `scores/piece-septet.json`.
+- **NEXT CONCRETE STEP — BUILD PLAN 1l STEP 5, secco and the round robin (CN-49 · CN-50; RUNNING_LOG §263–266), at his "good".**
+  The standard is named (surge; §263) and steps 1–4 are built (§262). Step 5: the residue tolerance measured as a score file
+  (`scores/cresc-secco-test.json` — a crescendo, CC7 0 at its end, then a re-pin after 0.25 · 0.5 · 1 · 2 · 3 s, per string and the
+  flute, he solos); the slot pool in the recipe (the strings and the bass clarinet have free channels inside their existing Kontakt
+  instance — the FLUTE's port is full, its exception is the second UVI instance or one new loopMIDI port); the extra slots tried
+  through the Kontakt Lua API first, else five minutes of his GUI time; the back-end rotation (a crescendo asks for a slot, the
+  front end never sees it); the CC7 cut with its guard; the warning when the rotation cannot keep the tolerance. **Then 1m (the C
+  key) is planned, then 1n, then 1o.** **Three tests still wait on him:** 1k chords mode (§251), 1j the piano's lines (§233), 1i the
+  piano's harmonics (§218) — and the crescendo listening test itself, whose verdict he has now given.
 - **Resume reads:** `docs/CRESCENDO.md` (the whole of 1l in one page) · RUNNING_LOG §252–262 · `docs/PLAN.md` 1l and the stubs 1m ·
   1n · 1o · CN-48 · NAMING §2.14–2.15. For the three tests waiting: §251 (chords mode), §233 (the lines), §218 (the harmonics).
 - **How the AI works the app (verified ways):** the Browser pane on :5301 (`preview_start score-5301`), a `zz-ai-*` copy of the score

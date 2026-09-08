@@ -1168,3 +1168,19 @@ so nothing rings past it. He remembers rightly that All Notes Off is no use here
 RUNNING_LOG §202), so the cut is CC7 on the player's own port and channel. **Checked in the quartet (#1):** `secco` there is a
 NOTATION flag — a text mark beside "Non-Vib" on a long tone, a checkbox in its crescendo tool, removed from the LilyPond when
 unchecked (`server.js` ~1050–1520); the MIDI cut is not written down there, so this piece specifies it. RUNNING_LOG §263.
+
+## CN-50 · 2026-09-08 — the secco cut solved in the BACK END: a round robin of instances, the rotation invisible to the front end
+
+> *"alternatively, I think there are already 3 instances available for a round robin do a quick back of napkin calc and see if at the
+> margins we ever need a 4th, if so, then put into the plan adding a 4th instance, I believe ai can do this independantly, see bridge and
+> kontakt developer options and other xml etc, I might need to put in the loopmidi ports and the precedent is there already. the idea is
+> the rotation happens in the back-end, the playback isn't the #1 priority, but I don't want to produce a shoddy demo, so I don't need to
+> spend too much time solving intractable problems for playback but in general it should behave like human performers, so have the back
+> end architecture so we don't have to think about it on the front end"*
+> *(2026-09-08, on the secco cut and the CC7 residue)*
+
+*AI reading (not the composer's words):* the standing principle, wider than this feature — **the playback architecture absorbs the
+sampler's limits so the composing surface never has to**. A crescendo is asked for; where it sounds is the back end's problem. The
+sampler's rule (a cut needs its slot left alone for a while) is paid for by rotating slots, the way a section of players would simply
+be several people. Two boundaries he sets: the demo must not be shoddy, and no long chase after intractable playback problems — good
+enough to behave like human performers. RUNNING_LOG §266.
