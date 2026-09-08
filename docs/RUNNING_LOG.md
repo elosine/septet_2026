@@ -7929,3 +7929,38 @@ be exactly what he wants; it is worth knowing before he hears it.
 
 **Reuse, not new building.** The sonority family is 1m's harmony bar whole. The order is 1k's deck. The fold is 1k's rule. Genuinely new
 in this topic: reading a named accent's pitch, the chain, and the vertical filter — three small pure functions.
+
+## §291. PLAN 1n — topic 3 closed; topic 4 (which kind goes where) opened on a measurement: the rule offers longer longs than he ever wrote
+
+Composer, 2026-09-08: *"good"* to the pitch vocabulary as proposed — four families (from the pattern · from a sonority · a chain · vertical),
+the same seeded order menu, set at the three scopes. **Topic 3 closed.**
+
+**Topic 4, the kind, opened with the length distribution**, because the length is derived and the three kinds do not want the same lengths.
+The 43 longs the adopted rule produces on his run, bucketed, against the 44 trills he actually wrote there:
+
+| length | the rule's longs | |
+|---|---|---|
+| 0.0 – 0.5 s | 5 | |
+| 0.5 – 1.0 s | 10 | |
+| 1.0 – 1.5 s | 9 | |
+| 1.5 – 2.0 s | 4 | |
+| 2.0 – 3.0 s | 5 | |
+| **over 3 s** | **10** | |
+
+**His own trills: min 0.15 s · median 0.95 s · max 2.60 s — not one over 3 s.** The rule offers ten, because least-recently-long takes the
+roomiest while his hand took the third-to-fifth roomiest (§285). That is not a defect in the rule; it is the **kind** asking to be chosen
+by the length. A three-second trill is a great deal of trill; a three-second crescendo is ideal, and a long tone wants longer still.
+
+**Put to him, three ways to set the kind, all at the usual three scopes:**
+
+- **(a) one kind for the whole pass** — what he did at 135.78 (all trills). Simplest, and the mix comes only from hand-picking afterwards.
+- **(b) a seeded proportion** — 60 / 40 and so on, scattered through the pass; the same shape as the anchor mix agreed in §288.
+- **(c) BY ROOM — recommended** — the derived length chooses: under a threshold a trill, over it a crescendo, and later the long tone above
+  a second threshold. It reproduces his own instinct without his having to state it: his trills stop at 2.6 s, so a first threshold near
+  there hands the ten long ones to crescendos and leaves the 28 shorter ones as trills.
+
+(b) and (c) are not exclusive — (c) can set the kind and (b) jitter a proportion of them, which is one extra number if he wants it.
+
+**Also read back to him rather than asked, for correction:** 1n's home is the **strikes drawer**, because he described the workflow as two
+passes — *"generate a strikes pattern like an accel but not necessarily and then overlay crescendos on that pattern"* — and the drawer is
+what makes the patterns (PLAN 1k). So 1n is a second pass ON a strike group, not a new generator with its own rhythm.
