@@ -1138,8 +1138,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - check: the pool never re-pins a cut slot inside the tolerance; the guard never silences a neighbour; the warning fires exactly
        when the arithmetic says it should; a walk on a copy with the decoded MIDI showing the cut and the rotation.
 
-- **1m — The C key: a crescendo on a selected note, the trill's chassis (CN-48 build 1; CN-49 · CN-53)** — `todo — in planning
-  2026-09-08 (PLANNING_METHOD phase 3 from step 1; RUNNING_LOG §276–279)` *(composer, 2026-09-08, CN-48: "strike, select note, press
+- **1m — The C key: a crescendo on a selected note, the trill's chassis (CN-48 build 1; CN-49 · CN-53)** — `todo — PLANNED 2026-09-08 (the planning method, phases 1–3; RUNNING_LOG §276–283); the build at his word, step 1 first` *(composer, 2026-09-08, CN-48: "strike, select note, press
   something like c a crescendo appears on that pitch -> .15 before next note, use standard curve … c key, little panel, default dynamic
   range and duration (til next note or if no note a standard duration), and articulation, but I can change any of them there in the mini
   panel")*. *Why:* the crescendo has to be placeable by hand, one note at a time, the way T places a trill. **1l settles the sound** (the
@@ -1210,8 +1209,18 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - the bar is the **browser's, not the file's** — like the lines bar — and says so;
      - check: the deck exhausts and reshuffles; the same seed repeats the same order; a folded pitch is marked as folded; the bar
        disappears when no sonority is chosen.
-  4. **Verify and document** (the checks, the walk on a copy, the docs; then his first crescendos in the piece) — *to be laid out when we
-     discuss it.*
+  4. **Verify and document** (check it works, write it down, then his first crescendos in the piece) — `todo — agreed 2026-09-08
+     (RUNNING_LOG §283)`. *Result when done:* 1m is checked in node and walked in the app, the documents say what exists, and he places
+     his first crescendos in the piece. The to-dos:
+     - the walk on a `zz-ai-` copy with real key events and the decoded MIDI: **C** on a note · on several · on nothing; the greying and
+       its restoration; the card's four controls and its memory; the bar's deck exhausting and reshuffling; the crescendo sounding on a
+       CURVE channel (D11); undo through all of it;
+     - the node checks for the pure parts (the deck's order and seed, the fold into range, the end rule through the gesture);
+     - the documents: `docs/CRESCENDO.md` gains the C key's section, `docs/NAMING.md` the greyed note's stamp (`mutedBy` from a
+       crescendo), PLAN 1m's statuses, PLANNER NOW, the journal §2, a title on every new control;
+     - **then his first crescendos in the piece**; his verdicts → `docs/CRESCENDO.md` and NITS, the fixes he marks "fix now" built at
+       once; then **1n (the sequence filler) is planned**.
+
 
 - **1n — The sequence filler: the gaps of a strike sequence filled with crescendos and trills (CN-48 build 1.5)** — `todo — to be
   planned after 1m` *(composer, 2026-09-08, CN-48: "take a sequence of strikes and fill in the gaps with a crescendo on an available

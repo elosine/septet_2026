@@ -7571,3 +7571,10 @@ real key events and the decoded MIDI (C on a note, on several, on nothing; the g
 its memory; the bar's deck; the curve channel; undo through all of it), the node checks for the pure parts, `docs/CRESCENDO.md` gaining
 the C key's section and NAMING the greyed note's stamp, PLAN 1m's statuses, PLANNER NOW and the journal — and then **his first crescendos
 in the piece**, whose verdicts go to CRESCENDO.md and NITS, after which 1n (the sequence filler) is planned.
+
+## §283. PLAN 1m planned whole — four steps, each agreed in one turn; the item shown to him once
+
+Composer, 2026-09-08: *"good"* to step 4. **PLAN 1m is planned whole** — 1 the C key and the crescendo it makes · 2 the card · 3 the
+harmony bar · 4 verify and document — each in the fixed formats, each agreed in a single turn (his format of §224) and written at once;
+the status `PLANNED`, the build at his word, step 1 first. Eight turns from the item's opening to the plan, the shortest of the four
+because 1l had already settled the sound: 1m decides only the gesture, the little panel and the harmony deck.
