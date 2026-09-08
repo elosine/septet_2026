@@ -807,7 +807,31 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - check: node checks on the BLOOM expect 89 onsets · 54 peaks · 89 ends with their pitches; on the page with real events: the click
        writes them, undo removes them, a re-run replaces them, a note made from a line survives the re-run.
   3. **The picker card** (the keyboard with the ensemble at that instant, the voice, the dynamic, the duration; a key click sets and
-     sounds; ▶ in context; apply) — *to be laid out when we discuss it.*
+     sounds; ▶ in context; apply) — `todo — agreed 2026-09-08 (RUNNING_LOG §226)`. *Result when done:* a click on a line, or on a note
+     made from one, opens a card beside it: the source named; a vertical keyboard over the piano's range with the chosen voice's reach
+     lit; on it the ensemble's sounding pitches at that instant, each in its player's colour with its name, a mid-glide one with its
+     cents, the line's own source ringed, and the piano's notes already made at that moment; four voice buttons, eight dynamic buttons,
+     the duration presets and a box; a key click sets the pitch and sounds it on the piano alone at the chosen voice and dynamic; ▶ in
+     context plays the score from a second before the line to two after; ENTER applies, ESC closes; apply makes the line a note — the
+     pitch, the voice as its technique, the dynamic as its height, the duration as its length, the provenance kept; a made note reopens
+     the same card with its values. The to-dos:
+     - the card: a small floating box at the line, draggable, ENTER applies, ESC closes; opened by a click on a line or on a note made
+       from one; the source at the top ("Vc G#2 · apex · 208.94 s");
+     - the keyboard: the drawers' vertical keyboard drawn for the piano (A0–C8, a C per octave), the chosen voice's reach lit (harmonics
+       only to F5), a key click sets the pitch; the piano's own notes sounding at that instant in the piano's colour;
+     - the ensemble at that instant: per player the note sounding at the line's time and its pitch there (the key plus the bend at that
+       moment) as a mark in the player's colour with its name, the cents beside a mid-glide one; the line's source ringed;
+     - the voice: four buttons normal · muted · harmonic · plucked (the recipe's main · muted · harmonics · plucked); the lit range follows;
+     - the dynamic: eight buttons ppp … fff (the score's scale, NAMING §2.9 → the note's height), the current one lit;
+     - the duration: the presets ¼ · ½ · 1 · 2 · 4 s · to the next line, and a box to type or drag; the default 1 s;
+     - the sound: a key click plays the note at once through the piano's port on the voice's channel, the dynamic through the remap;
+       ▶ in context runs the transport from a second before to two after, then stops;
+     - apply: the line becomes a note — the pitch, the technique, a flat curve at the height, the end at start + duration, the
+       provenance kept; the card closes; undo restores the line;
+     - check with real events on a copy: a click opens the card with the right ensemble marks (against the notes' pitches at that
+       time); a key click sets and sounds (the decoded MIDI on the piano port at the voice's channel); apply gives the note its fields;
+       ESC leaves the line untouched; a made note reopens with its values; node checks for the pure parts (the ensemble at t, the
+       dynamic → height, the presets).
   4. **The bar on the piano lane** (the kind checkboxes, the player ticks, clear lines) — *to be laid out when we discuss it.*
   5. **Verify and document** (the checks, the walk on a copy with real events, the decoded MIDI, the docs; then his first lines in the
      piece) — *to be laid out when we discuss it.*

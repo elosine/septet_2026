@@ -6417,3 +6417,14 @@ score's scale → the height); the duration presets ¼ · ½ · 1 · 2 · 4 s ·
 and sounds through the piano's port on the voice's channel at the dynamic through the remap; ▶ in context = the transport from t − 1
 to t + 2 s; apply turns the line into a note (pitch · technique · height · length, the provenance kept), ESC leaves it, a made note
 reopens with its values; the checks with real events and the decoded MIDI, node checks for the pure parts.
+
+## §226. CN-43, phase 3 — step 3 (the picker card) agreed ("good") and written into PLAN 1j; step 4, the bar on the piano lane, put to him with its sub-steps
+
+Composer, 2026-09-08: *"good"* — step 3 as put (§225): the card at the line, the drawers' vertical keyboard for the piano with the
+voice's reach lit, the ensemble at that instant in the players' colours (the cents beside a mid-glide one, the source ringed), the
+piano's own notes, the four voices, the eight dynamics, the duration presets and box (default 1 s), a key click that sets and sounds,
+▶ in context (t − 1 … t + 2 s), apply / ESC, a made note reopening with its values, the checks. Written, committed. **Step 4 put to
+him:** a small strip at the left end of the piano lane, shown while the lane holds lines — the kind ticks onsets · peaks · ends, the
+player ticks in score order and colour, *clear lines*; an unticked kind or player hides its lines (not drawn, no hit target), made
+notes always shown, the setting the browser's (localStorage) never the file's; clear lines removes the lane's lines still without a
+pitch and keeps the made notes, undo restores; the checks with real events (each tick, the counts, clear, a reload keeping the ticks).
