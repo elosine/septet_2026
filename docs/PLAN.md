@@ -771,7 +771,24 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   player ticks and *clear lines* on a bar at the left end of the piano lane, a view filter of the browser's. The notation at 2a.
   *The top line, confirmed ("ok good", §223):*
   1. **The line** (an empty piano note drawn as a thin line, its kind and its player's colour; the score treats it as any note) —
-     *to be laid out when we discuss it.*
+     `todo — agreed 2026-09-08 (RUNNING_LOG §223–224)`. *Result when done:* the piano lane can hold a note that has no pitch yet: born
+     at a moment, it carries its kind (onset · peak · end) and its source (the player, its note, its pitch at that instant); drawn as
+     a thin faint line the lane's height in the source player's colour with a small head by kind; silent, ignored by the extractor
+     and every note filter; a click selects it; it drags, deletes, saves and undoes like any note; given a pitch it becomes an
+     ordinary piano note that keeps its provenance. The to-dos:
+     - define the object: a plain note on the piano lane with no sound note and a short span (its moment), its provenance under
+       `properties.cue` — the kind, the morph's group, the source note's id, its player, its pitch at that instant; the fields into
+       NAMING §2.13;
+     - draw it: a piano-lane note with no pitch and a `cue` is drawn as a thin faint line the lane's height in the player's colour
+       (the drawers' palette) with a head by kind (● onset · ◆ peak · ○ end) instead of a curve; the hover names the source;
+     - keep it inert: the tick skips it and the extractor and the note filters ignore it (they do already — checked, not assumed);
+       the trill and strike logic never eats or counts it; the apex-dot rule draws nothing on it;
+     - let it live in the score: a click selects it; it drags, deletes, undoes, saves and reloads; it joins the morph's group so the
+       morph's shape carries it;
+     - the turn into a note: when a pitch is set the same object becomes a normal piano note (the curve drawn, the head gone), its
+       provenance kept — the property panel's "Sound note" box does this today; the picker (step 3) does it properly;
+     - check: a node script places a handful of lines (all three kinds, several players) into a copy; the page draws them and plays
+       through them silently; node checks for the fields, the drawing rule and the filters.
   2. **lines → piano** (the generator on the morph panel: all three kinds, every player, the morph under the playhead; a re-run keeps
      the notes made) — *to be laid out when we discuss it.*
   3. **The picker card** (the keyboard with the ensemble at that instant, the voice, the dynamic, the duration; a key click sets and

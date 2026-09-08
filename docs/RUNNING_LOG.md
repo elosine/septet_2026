@@ -6391,3 +6391,14 @@ with no pitch yet — born at a moment with its kind (onset · peak · end) and 
 instant) in its provenance; drawn as a thin faint line the lane's height in the source player's colour with a small head by kind;
 silent, ignored by the extractor and every note filter; selected by a click, dragged, deleted, saved and undone like any note; when
 it is given a pitch it becomes an ordinary piano note that keeps its provenance. Discussed, then its sub-steps, then into the plan.
+
+## §224. CN-43, phase 3 — step 1 agreed ("good") and written into PLAN 1j with its sub-steps; his format from here: each step's goal and sub-steps together
+
+Composer, 2026-09-08: *"good, and you can give me each step and substeps at the same time"* — the goal of step 1 (the line, §223)
+stands; from step 2 on, a step's goal (format A) and its sub-steps (format B) come in one turn, still one step per turn. **Step 1
+written into PLAN 1j** (the to-dos: the object and its provenance under `properties.cue` → NAMING §2.13; the drawing rule — a thin
+faint line the lane's height in the player's colour with a head by kind; kept inert — the tick, the extractor and the filters
+checked, not assumed, the trill and strike logic and the apex rule kept off it; alive in the score — select, drag, delete, undo,
+save, reload, the morph's group; the turn into a note when a pitch is set, the provenance kept; the check — a handful of lines
+placed by a script into a copy, drawn and silent, node checks). Committed. **Next: step 2, lines → piano — its goal and sub-steps
+together.**
