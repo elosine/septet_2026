@@ -1,6 +1,6 @@
 {
   "_comment": "MODEL store (PLAN 2y). A model = a point in parameter space, plus the directions worth travelling from it and how far. Seeded from bank/morph_recipes.json, which stays FROZEN as the day-10 audit record and is never regenerated over. The AI edits this file in conversation (recipes, verdicts, tags) and bumps `rev`; the panel polls it the same way it polls morph_params.json. Validate with: node tools/model_bank.js --validate",
-  "rev": 10,
+  "rev": 13,
   "seededFrom": "bank/morph_recipes.json (captured 2026-08-16)",
   "models": {
     "BALANCE": {
@@ -1117,7 +1117,10 @@
           "boundsFrom": "day-10 panel practice (dyn.amount was nudged 0.3-0.42 across the blessed set)"
         }
       ],
-      "actuals": [],
+      "actuals": [
+        "ACT-SPECTRAL-01",
+        "ACT-SPECTRAL-02"
+      ],
       "seededFrom": "bank/morph_recipes.json slot F",
       "tuba": {
         "source": {
