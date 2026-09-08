@@ -6293,3 +6293,101 @@ snaps them to 0.05 s (§144) — two rules for one gesture.
 **Next:** his listening — a hard reload (CTRL+SHIFT+R), his test score, [Morph], the playhead inside the BLOOM at 183 s, ♪ piano
 harmonics, Play; the switch and the level by ear; then the second pass (the CC21 partial shift: the chain, an exact detune; the
 two-piano piece's rules and lead) at his word, by the planning method.
+
+## §219. CN-43 opened — "just articulation points … lines in the piano part, initially with nothing attached … click a line, keyboard pops up": the design discussion asked for; the app read for what it can borrow; the model of the line put to him
+
+Composer, 2026-09-08 (after the apex dots were explained): the idea verbatim in CN-43 and MORPH_NOTES §3 — the piano's part in the
+morph section composed BY HAND on a grid the morph gives: not generated notes (PLAN 1i's first pass, §218) but generated MOMENTS —
+per morph note its onset (the re-breath), its apex (the dot, §4484's rule) and its end — as empty lines on the piano lane; a click on
+a line → a pitch on a vertical keyboard, an articulation (normal · muted · harmonic · plucked), a dynamic (ppp … fff), a duration
+(typed or dialled). *"Let's discuss how this should look first before building it"* → the planning method, phase 1.
+
+**The app read for what the picture can borrow (one grep each):**
+- A shape without a pitch is a first-class state of the score: a `waveCurve` with `sonifyNote` null is drawn, silent (the tick skips
+  it), ignored by every note filter and the extractor — the "sonify" idiom of the tuba lineage (draw the shape, then give it a note).
+- A note's pitch by hand today = the property panel's "Sound note (MIDI, blank=off)" number box; its technique a select of the lane's
+  techniques; its dynamic the curve height (NAMING §2.9; ppp … fff = eight equal steps, `dynName` / `parseLevel` in beating_panel.js);
+  its length the end dragged in the score or typed. The O key converts selected notes to ORD (a keyboard idiom for the voice).
+- The vertical keyboard he means is the drawers' (the strikes drawer's `renderKeyboard`, the beating drawer's `drawKeyboard`: an SVG
+  with the keys stacked by pitch, a C label per octave, the players' ranges as coloured columns, a key click arms a note). The
+  two-piano piece's horizontal `#pianoKeyboard` (750 × 280, chord shapes, a function select) is dead here — its CSS ported, no element.
+- The piano's voices in the recipe: `main` (the Steinway) · `plucked` (channel 2) · `harmonics` (channel 3, keys 21–77) · `muted`
+  (channel 5) — the four he named.
+- The numbers: the BLOOM at 183 s has 89 notes → 267 moments over 110 s (2.4 a second, in clusters where the six players' breaths
+  fall close); the lines want ticks per kind and per player, a faint birth, and a way to clear the ones never used.
+
+**Put to him (topic 1 of the discussion, the model in one line):** *a line is an empty note* — a note on the piano lane at that
+moment with no pitch yet, drawn as a thin vertical line with a small head while empty (its kind and its source visible), filled in
+by the click (the pitch, the voice, the dynamic as its height, the duration as its length) and from then an ordinary piano note that
+drags, stretches, deletes and undoes like any other; nothing new in the file. The alternative: a separate line object that stays
+beside the note — more objects, a new type for the extractor. (a) recommended. Held aside for after: the picker's look, which lines
+are generated (kinds, players, density, clearing), the notation at 2a.
+
+## §220. CN-43, topic 1 decided — "yes, a is good": a line is an empty note; two more asks (the kind checkboxes; the ensemble's notes on the keyboard); topic 2, the picker's look, put to him
+
+Composer, 2026-09-08 (verbatim in MORPH_NOTES §3): (a) decided — a line is an empty note. Two asks with it: checkboxes *"somewhere
+maybe in the piano zone or the meta shape"* to SHOW the lines by kind (the peaks, the onsets, the offsets — one box each, any
+combination) — a view filter over lines that all exist, held for topic 3; and, on the keyboard when a line is clicked, *"what notes
+are being played at that moment in the ensemble"* — into topic 2.
+
+**Topic 2 put to him — the picker's look (the score's idiom borrowed, HOW_WE_WORK rule B):** a click on a line selects it and opens
+a small card beside it (the node editor's manner: ENTER applies, ESC closes), not a full-page drawer. On the card, left to right: the
+source ("Vc G#2 · apex · 208.94 s"); **the vertical keyboard** (the drawers' keyboard: keys stacked by pitch, C per octave) over the
+piano's range with the chosen voice's reach lit and the rest dimmed, and ON IT the ensemble at that instant — each player's sounding
+pitch (the key plus its bend at that moment, a mid-glide one with its cents) as a mark in the player's colour with its short name,
+the line's own source ringed, the piano's own notes already made at that moment in the piano's colour; **the voice** as four buttons
+(normal · muted · harmonic · plucked — the recipe's techniques); **the dynamic** as eight buttons ppp … fff (the score's scale, the
+note's height); **the duration** as presets (¼ · ½ · 1 · 2 · 4 s · to the next line) and a box to type or drag, and afterwards the
+note's end handle in the score; **a ▶ in context** that plays the score from a second before the line to two after; a key click sets
+the pitch and sounds it on the piano alone at the chosen voice and dynamic (put to him as the one question — sound on every click,
+or set only and hear by ▶). Apply → the line becomes an ordinary piano note carrying its provenance (`properties.cue`: the kind,
+the source note, its lane and pitch at that moment); a click on a made note reopens the same card.
+
+## §221. CN-43, topic 2 decided — "a": a key click sets the pitch and sounds it; the morph's boundaries measured before topic 3 (every boundary a breath; the peaks by the apex rule); topic 3 put to him
+
+Composer, 2026-09-08: *"a"* — the picker as §220 describes it, a key click sounding the note on the piano alone at the chosen voice and
+dynamic; nothing in the picture changed.
+
+**The data first (the BLOOM at 183 s, `scores/piano-harmonics-test.json`, one node script):** every note boundary is a breath — the
+winds' gaps 0.43–0.57 s, the strings' bow changes 0.049–0.057 s; no overlaps, no seamless re-keys (the engine never split a run
+here — the pitches move within ±25 c), so an onset IS a re-breath in this morph (and PLAN 1i's first pass read it rightly; a morph
+with re-keys would need the re-key told from the breath — the 5 ms overlap is the tell; noted for the generator). The peaks by the
+score's apex rule (§4484: the loudest interior node, at least as loud as both ends): 54 of the 89 notes carry a dot — the rest are
+still rising at their end, or start at the top. Eight onsets fall within 0.1 s of another (the pairs breathing together). The lines
+the BLOOM would give: onsets 89 · peaks 54 · ends 89 = 232 over 110 s. The level curves are 13–14 nodes, a rise to a plateau.
+
+**Topic 3 put to him — which lines, and the lane kept readable:** one button on the morph panel's row (*lines → piano*) generates
+all three kinds for every player of the morph under the playhead; a re-run replaces the unused lines and leaves the notes made. A
+line: thin, faint, the lane's height, the source player's colour, a small head by kind (● onset · ◆ peak · ○ end), the source on
+hover. **His checkboxes** onsets · peaks · ends as a view filter (a hidden kind is neither drawn nor clickable; made notes always
+shown; the setting the browser's, not the file's) — WHERE is the one question: (a) a small bar at the left end of the piano lane
+(recommended: always in view while the lane has lines) · (b) the META shape's property panel (the shape must be selected first) ·
+(c) the morph panel (not always open). Offered with it: a row of player ticks on the same bar, and *clear lines* (the unused lines
+of the morph removed, the notes kept, CTRL+Z undoes). Coincident lines a hair apart: the click takes the nearest, the card names
+the player. After topic 3: phase 2, the top line.
+
+## §222. CN-43, topic 3 decided — "a": the kind checkboxes on a bar at the left end of the piano lane; phase 1 complete; phase 2, the top line, put to him
+
+Composer, 2026-09-08: *"a"* — the bar on the piano lane (his "piano zone"): the checkboxes onsets · peaks · ends, the player ticks,
+*clear lines*; nothing struck from the picture of §221. **Phase 1 complete** — the three topics decided: (1) a line is an empty note
+(§220); (2) the picker card at the line, the vertical keyboard with the ensemble at that instant, the four voices, ppp … fff, the
+duration presets and box, ▶ in context, a key click sets and sounds (§221); (3) *lines → piano* on the morph panel for all kinds and
+players of the morph under the playhead, the lines faint in the player's colour with a head by kind, the view filter on the lane's
+bar (§222). The notation held for 2a.
+
+**Phase 2 put to him — the top line (the ID 1j proposed, after 1i):** 1 the line (an empty piano note drawn as a thin line, its kind
+and colour; the score treats it as any note) · 2 lines → piano (the generator on the morph panel; a re-run keeps the notes made) ·
+3 the picker card (the keyboard with the ensemble at that instant, the voice, the dynamic, the duration, a key click sets and
+sounds, ▶ in context, apply) · 4 the bar on the piano lane (the kind checkboxes, the player ticks, clear lines) · 5 verify and
+document (the checks, the walk on a copy with real events, the decoded MIDI, the docs), then his first lines in the piece. The
+picker before the bar: his ear early (HOW_WE_WORK).
+
+## §223. CN-43, phase 2 confirmed — "ok good": the top line stands; PLAN 1j opened with it; phase 3 begins — step 1's goal put to him
+
+Composer, 2026-09-08: *"ok good"* to the five lines of §222, in that order. **PLAN 1j opened** (after 1i; the why, his words, the
+decisions of §220–222, the five steps each "to be laid out when we discuss it") and committed — a cleared chat loses nothing.
+**Phase 3, step 1 — the goal put to him (format A):** *1. The line.* Result when done: an object on the piano lane that is a note
+with no pitch yet — born at a moment with its kind (onset · peak · end) and its source (the player, its note, its pitch at that
+instant) in its provenance; drawn as a thin faint line the lane's height in the source player's colour with a small head by kind;
+silent, ignored by the extractor and every note filter; selected by a click, dragged, deleted, saved and undone like any note; when
+it is given a pitch it becomes an ordinary piano note that keeps its provenance. Discussed, then its sub-steps, then into the plan.

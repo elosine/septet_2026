@@ -1028,3 +1028,22 @@ tool" after this piece or the next, CN-29) carries the refrains of Lake George; 
 multitempo section, the bouncing balls; the 2026-09-04 notes: the pairs, the delicate continuous texture, the animated conductions)
 are the episodes' material. Carried to the AI's memory of the next piece as well. The branching-tries question of the same message:
 RUNNING_LOG §215.
+
+## CN-43 · 2026-09-08 — the piano in the morph section, a different way: ARTICULATION POINTS generated from the morph — empty lines at the re-breaths, the apex dots and the breath ends; click a line → a pitch, an articulation, a dynamic, a duration
+
+> *"Okay. Then I'd like to try something different with the piano. I'd like generated from the morph. just articulation points. These
+> can maybe appear as lines in the piano part, but initially with nothing attached. And the line should come from any of the morph
+> onsets, the rebreath, the peak point, those dots, and the end of a breath. And then I'd like to Be able to click on any of those
+> lines. and assigned a pitch and an articulation. So either normal piano, mute... muted piano, or harmonic. or plot. Plucked. and
+> then duration and dynamic. And I don't know if it's possible to have that vertical keyboard, and I can just pick a note for it. So
+> relatively simple. Click a line. Keyboard pops up. I can choose a note. and I can add a dynamic via the normal dynamics PPP to FFF.
+> and i could choose a duration or dial in a duration. Let's discuss how this should look first before building it."*
+> *(2026-09-08, after the first pass of PLAN 1i and the apex dots explained; typed — "plot" = plucked, "those dots" = the score's apex
+> dots, the loudest interior node of an envelope)*
+
+*AI reading (not the composer's words):* the piano's part in the morph section composed BY HAND on a grid the morph gives: not
+generated notes (PLAN 1i's first pass) but generated MOMENTS — three kinds per morph note, its onset (the re-breath), its apex (the
+dot) and its end (the breath's end) — drawn on the piano lane as empty vertical lines, nothing sounding until he clicks one and gives
+it a pitch (a vertical keyboard), an articulation (the piano's four voices: normal · muted · harmonic · plucked), a dynamic (ppp …
+fff, the score's own scale) and a duration (typed, or dialled). The piano as a punctuation of the ensemble's breathing, placed by ear
+point by point. The design discussed first, at his word (the planning method); RUNNING_LOG §219.

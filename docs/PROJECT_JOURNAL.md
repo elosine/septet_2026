@@ -231,7 +231,7 @@ windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
   the score objects with provenance), the **♪ piano harmonics** row on the morph panel (`morph_panel.js`: the button, the select, the
   level box, `pianoHarmonics()`), `tools/piano_harmonics.js` (the CLI) and `tools/piano_harmonics_check.js` (38 checks); NAMING §2.12;
   MORPH_NOTES §1. Before it: the morph panel as MORPH_NOTES §1 describes, RESTORE (D27, §216). Committed and pushed at this wrap.
-- **NEXT CONCRETE STEP — HIS LISTENING of the piano harmonics** (nothing to build until he speaks): a hard reload, his
+- **NEXT CONCRETE STEP — CN-43's DESIGN DISCUSSION (RUNNING_LOG §219; the planning method), phase 1 in progress: topic 1 DECIDED (a line is an empty note, §220); topic 2 DECIDED (§221: the card at the line as §220 describes it, a key click sets and sounds); topic 3 DECIDED (§222: the bar at the left end of the piano lane); PHASE 1 COMPLETE; PHASE 2 CONFIRMED (§223, "ok good") — PLAN 1j opened with the five steps; PHASE 3 in progress: step 1 (the line) — its goal put to him (§223); resume there: his corrections, then the sub-steps, then written into PLAN 1j step 1 at once, committed; then step 2; then phase 2's top line; nothing built before). After it, HIS LISTENING of the piano harmonics** (nothing to build until he speaks): a hard reload, his
   `scores/piano-harmonics-test.json`, [Morph], the playhead inside the BEATING BLOOM at 183 s, **♪ piano harmonics**, Play; the switch
   (*at the pitch* — the default, from his "detuned from what's being played"; *an octave above*) and the level (7; empty = the
   source's peak) by ear; CTRL+Z undoes, a re-run replaces. His verdicts → MORPH_NOTES §3 and NITS, each a lab-journal entry; the

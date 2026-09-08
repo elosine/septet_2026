@@ -856,3 +856,31 @@ pitch at the re-breath → the nearest key whose octave harmonic sounds it, or a
 morph's group so they travel with its shape, each carrying its provenance (the source lane and pitch, the string, the partial, the
 detune, the fold); a re-run replaces them. For the all-purpose tool: a morph could carry derived "resonance" voices as a rule,
 re-derived whenever the morph changes — the piano's harmonics are the first such rule.
+
+### 2026-09-08 — CN-43: articulation points generated from the morph, the piano part composed by hand on them (a design discussion asked for)
+
+> *"I'd like generated from the morph. just articulation points. These can maybe appear as lines in the piano part, but initially with
+> nothing attached. And the line should come from any of the morph onsets, the rebreath, the peak point, those dots, and the end of a
+> breath. And then I'd like to Be able to click on any of those lines. and assigned a pitch and an articulation … normal piano, muted
+> piano, or harmonic. or Plucked. and then duration and dynamic … that vertical keyboard … the normal dynamics PPP to FFF … choose a
+> duration or dial in a duration … Let's discuss how this should look first before building it."* *(2026-09-08; verbatim in CN-43)*
+
+*AI reading (not the composer's words):* a second derived layer of a morph — after the piano harmonics (its notes generated), now its
+MOMENTS generated (onset · apex · end per note) as empty lines on another lane, filled in by hand. For the all-purpose tool: a morph
+exposes its event grid (onsets, apexes, ends, per voice) to any lane as cue lines; a cue line is a note-to-be — the score's own
+"shape without a pitch" (`sonifyNote` null) — completed by a picker (pitch · voice · dynamic · length). Discussed before building
+(HOW_WE_WORK: a model agreed in one line first); RUNNING_LOG §219.
+
+### 2026-09-08 — CN-43, topic 1 decided: a line is an empty note; the kind checkboxes; the ensemble's notes on the keyboard
+
+> *"Okay. And I should have, like, a check then somewhere maybe in the piano zone or the meta shape. In any case, there should be
+> something like checkboxes somehow where I can choose to show the lines for the peaks, the onsets, or the offsets. So in other words, I
+> can check just the peaks box and only see the lines for the peaks or the onsets and only see the lines for the onsets. And then, yes,
+> a is good. And then another thought is when I click a line and the keyboard shows up, I would also like to see on the keyboard what
+> notes are being played at that moment in the ensemble."* *(2026-09-08; RUNNING_LOG §220)*
+
+*AI reading (not the composer's words):* (1) **decided: a line is an empty note** (the score's own shape without a sound note); (2) the
+lines exist for all three kinds and are SHOWN by kind — checkboxes onsets · peaks · offsets (ends) somewhere on the piano lane or the
+morph's shape — a view filter, held for topic 3; (3) the picker's keyboard shows the ENSEMBLE at the line's moment: each player's
+sounding pitch (the key plus the bend at that instant) in the player's colour with its name — the piano chooses against what is
+sounding. For the all-purpose tool: any pitch picker should show the context (what sounds at t) on its keyboard.
