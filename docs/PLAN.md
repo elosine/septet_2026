@@ -1138,15 +1138,38 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - check: the pool never re-pins a cut slot inside the tolerance; the guard never silences a neighbour; the warning fires exactly
        when the arithmetic says it should; a walk on a copy with the decoded MIDI showing the cut and the rotation.
 
-- **1m — The C key: a crescendo on a selected note, the trill's chassis (CN-48 build 1)** — `todo — to be planned when its turn comes,
-  after 1l is built (the order is his, §252: 1l → 1m → 1n → 1o)` *(composer, 2026-09-08, CN-48: "strike, select note, press something
-  like c a crescendo appears on that pitch -> .15 before next note, use standard curve … we'll have a default dynamic range ppp-fff and I
-  can reassign individually, also can assign a manual duration, so maybe: c key, little panel, default dynamic range and duration (til
-  next note or if no note a standard duration), and articulation, but I can change any of them there in the mini panel, then go to
-  insert")*. *Why:* the crescendo has to be placeable by hand, one note at a time, the way T places a trill. **What 1l settles for it:**
-  the standard curve he names, the object, the 0.17 s end and the 5 s fallback, the spacing rule. **What is left to plan here:** the
-  mini panel's shape and its keys, what the C key does with a multi-selection, and whether the panel remembers its last settings.
-  *To be laid out when we discuss it.*
+- **1m — The C key: a crescendo on a selected note, the trill's chassis (CN-48 build 1; CN-49 · CN-53)** — `todo — in planning
+  2026-09-08 (PLANNING_METHOD phase 3 from step 1; RUNNING_LOG §276–279)` *(composer, 2026-09-08, CN-48: "strike, select note, press
+  something like c a crescendo appears on that pitch -> .15 before next note, use standard curve … c key, little panel, default dynamic
+  range and duration (til next note or if no note a standard duration), and articulation, but I can change any of them there in the mini
+  panel")*. *Why:* the crescendo has to be placeable by hand, one note at a time, the way T places a trill. **1l settles the sound** (the
+  standard surge 5×, the object, the 0.17 s end and the 5 s fallback, ppp … fff, the cliff, secco, and the curve channel it sounds on);
+  1m is the GESTURE and the little panel, nothing else.
+  **Decided in the talk (RUNNING_LOG §276–278):**
+  - **C makes the crescendo AT ONCE** with 1l's defaults and opens a small card ON it; every change is made to the live object so it can
+    be heard immediately; ENTER keeps it, ESC removes it, CTRL+Z undoes it. (His CN-48 phrase was *"then go to insert"*; put beside T's
+    manner and 1j's picker card he chose the live one — §276.)
+  - **The source note is GREYED, not destroyed** — his *"the same grey original which can come back with delete of cres as trills"*: the
+    note is stamped `mutedBy` exactly as a trill stamps the notes under it, drawn faint, silent while the crescendo lives, and **restored
+    when the crescendo is deleted** (§277).
+  - **Several notes selected → one crescendo on each**, every one with its own pitch, its own end and its own greyed source (§278).
+  - **Nothing selected → the pitch comes from a chosen HARMONY** (CN-53): the lane is the active lane and the start the playhead (T's own
+    fallback), and the pitch is the next one from a sonority he picked — dealt in turn, or shuffled to completion and reshuffled, seeded.
+    **It lives in a small STANDING BAR** (the piano lane's lines bar is the model): the sonority, the order, how many pitches are left,
+    and two buttons — *change harmony* and *restart this harmony*; continuing is pressing C again. **Reused, not invented:** the morph
+    panel's pitch source (the harmony banks, his kept sets, stacks and Messiaen modes from a root) and 1k's deck; a pitch outside the
+    player's range folds by octave into it as 1k already folds.
+  - *Answered on the way (§278):* a trill with nothing selected takes **the nearest earlier note on that player within 8 s** and trills a
+    whole step above it — which is where the pitches he liked came from. C does not copy this; the harmony deck is his choice instead.
+  *The top line, confirmed ("ok good", §279):*
+  1. **The C key and the crescendo it makes** (the gesture, the greyed source, one per selected note, the entry rules) — *to be laid out
+     when we discuss it.*
+  2. **The card** (his four controls — the dynamic range, the duration, the articulation, the secco tick — editing the live crescendo;
+     ENTER · ESC; it remembers its last settings) — *to be laid out when we discuss it.*
+  3. **The harmony bar** (the standing pitch source: a sonority, an order, what is left in the deck, change and restart) — *to be laid
+     out when we discuss it.*
+  4. **Verify and document** (the checks, the walk on a copy, the docs; then his first crescendos in the piece) — *to be laid out when we
+     discuss it.*
 
 - **1n — The sequence filler: the gaps of a strike sequence filled with crescendos and trills (CN-48 build 1.5)** — `todo — to be
   planned after 1m` *(composer, 2026-09-08, CN-48: "take a sequence of strikes and fill in the gaps with a crescendo on an available

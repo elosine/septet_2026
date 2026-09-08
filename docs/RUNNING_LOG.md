@@ -7523,3 +7523,10 @@ sounded right: the trill picked the line up where that player had left it. C doe
 **PHASE 1 COMPLETE for 1m.** Three topics decided (§276–278). The small remainders are proposals inside the steps, not topics: the card
 holds his four controls (the dynamic range, the duration, the articulation, the secco tick), remembers its last settings, and ENTER /
 ESC / CTRL+Z behave as they do in 1j's picker.
+
+## §279. PLAN 1m's top line confirmed and the item opened — phase 3 begins
+
+Composer, 2026-09-08: *"ok good"* to the four lines — 1 the C key and the crescendo it makes · 2 the card · 3 the harmony bar · 4 verify
+and document. **PLAN 1m opened** with the why, his words, the decisions of §276–278 and the four steps, replacing the stub; committed, so
+a cleared chat loses nothing. Two small things folded into the steps rather than made topics: the card remembers its last settings, and
+its keys behave as 1j's picker does. **Phase 3 begins**, his format of §224: each step's goal and sub-steps in one turn.
