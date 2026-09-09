@@ -908,8 +908,8 @@ Voice 0-s five breath peaks (t = 0 · 8 · 16 · 24 · 34 s, span 40 s):
 
 **A straight ceiling does nothing** — a lid rising linearly to full sits above the swell at every moment. Only the HELD-BACK, LONG ceiling
 grades the breaths. The reason is worth keeping: **a multiplier scales the swell, so a loud breath stays proportionally loud; a ceiling
-flattens it, removing the peak.** And the curve dial has no held-back option — measured,  is FRONT-loaded (0.35 at u = 0.1) and runs
-the wrong way for a fade.
+flattens it, removing the peak.** And the curve dial has no held-back option — measured, `expo` is FRONT-loaded (0.35 at u = 0.1) and
+runs the wrong way for a fade.
 
 **Underneath all of it:** the morph-s own dynamics already DOUBLE from breath 1 to breath 2 (4.6 → 9.0) with no shape at all. A multiplier
 on the first seconds therefore scales down the breath that was already quietest and leaves the loud one alone — it makes the contrast
