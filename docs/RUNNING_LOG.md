@@ -8363,3 +8363,52 @@ without any second control.
 2. **The end**, since a roll rarely lands exactly. (a) **recommended** — stop short and report the shortfall, because the container values
    are the point; (b) let the last one overshoot; (c) stretch everything to land exactly on the duration, which keeps the proportions but
    loses the typed numbers.
+
+## §306. PLAN 1o — the container units and end settled; the PRESET SETS designed, and SPREAD is what makes them audible
+
+Composer, 2026-09-08: *"c and a"* — the numbers are **units, defaulting to 1 second**, so one number rescales a whole shape; and a roll
+**stops short and says by how much**, because the typed numbers are the point.
+
+And a new ask, in his words:
+
+> *"I'd like some ways of making the … selection process relatively smooth and efficient. So one possibility is there's some descriptive
+> recommendations are presets. So, like, asymmetric or jagged or… I'm not really sure, actually. another might just be something from math
+> or science or something or nature, othagus or pathagus. or Fibonacci or things like this. So I can always take the time to craft a number
+> set. but also have some access to some quick number sets that might provide certain… typically provide certain results that you could
+> characterize. and or using number sets or things like that that have some echo in architecture, nature, or proportions, that sort of
+> thing."*
+
+**The AI's finding, and it is what makes the presets honest rather than decorative: the audible difference between one number set and
+another is almost entirely its SPREAD** — the ratio of its largest number to its smallest. Ten candidate sets rolled to fill 60 s
+(unweighted, three seeds each), with the swell lengths that follow at 1.5× the gap:
+
+| set | numbers | mean | spread | containers (3 seeds) | swells |
+|---|---|---|---|---|---|
+| even | 4 | 4.0 | **1.0×** | 15 / 15 / 15 | 6.0 s |
+| gently uneven | 3 4 5 | 4.0 | 1.7× | 14 / 14 / 16 | 4.5–7.5 s |
+| **Pythagorean 6:8:9:12** (the string ratios — 4:3, 3:2, 2:1) | 6 8 9 12 | 8.8 | 2.0× | 6 / 6 / 7 | 9–18 s |
+| long and short | 2 7 | 4.5 | 3.5× | 10 / 10 / 16 | 3–10.5 s |
+| harmonic series (halving) | 3 4 6 12 | 6.3 | 4.0× | 9 / 8 / 12 | 4.5–18 s |
+| primes | 2 3 5 7 11 13 | 6.8 | 6.5× | 5 / 7 / 10 | 3–19.5 s |
+| **Fibonacci** | 1 2 3 5 8 13 | 5.3 | 13.0× | 8 / 9 / 16 | 1.5–19.5 s |
+| jagged | 1 2 8 13 | 6.0 | 13.0× | 8 / 8 / 15 | 1.5–19.5 s |
+| triangular | 1 3 6 10 15 | 7.0 | 15.0× | 6 / 6 / 12 | 1.5–22.5 s |
+| powers of two | 1 2 4 8 16 | 6.2 | 16.0× | 8 / 6 / 16 | 1.5–24 s |
+
+**Two things the table shows.** The spread governs how much the SEED changes the result — an even set gives 15 containers whatever the
+seed, while powers of two gives anywhere from 6 to 16. And because §304's duration rule is a multiple of the local gap, **the spread is
+also the range of swell lengths**: a 2× set gives swells all of a kind, a 16× set gives 1.5 s flickers beside 24 s holds.
+
+One roll of each, to show the character rather than describe it:
+
+```
+Pythagorean    12  8 12  9  6  9
+Fibonacci      13  3  8  5  2  5 13  2  8
+powers of two  16  4 16  8  2  8
+jagged         13  2 13  8  1  8 13  2
+```
+
+**Put to him:** the preset menu is sorted BY SPREAD, not alphabetically or by source, so the list itself reads as a scale from *even* to
+*extreme*; each entry carries its source name, its numbers, and its spread; and **picking one simply fills the boxes**, so it is a
+starting point he edits rather than a mode he enters. His own weighted example (*2 5 7 15 with 15 at 20 %*) stays available as a preset of
+its own kind — a mostly-quick set with one rare long hold.
