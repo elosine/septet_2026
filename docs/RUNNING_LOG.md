@@ -8264,10 +8264,10 @@ does not have: **TIME CONTAINERS** — a set of numbers he types, weighted, roll
 own module"* eventually, because *"this is a type of technique I do a lot of"*, but not now. The dealing is 1k's unchanged: a count range
 per entry, the round robin, collisions avoided, a manual override available.
 
-**THE MEASUREMENT that answers his duration question.** Driving  over 40 onsets, six players, 2–4 voices per entry, and
+**THE MEASUREMENT that answers his duration question.** Driving `StrikeChords.deal` over 40 onsets, six players, 2–4 voices per entry, and
 sampling how many voices actually sound at any instant:
 
-| gap | length | voices sounding (measured) | formula  | flagged |
+| gap | length | voices sounding (measured) | formula `count × length ÷ gap` | flagged |
 |---|---|---|---|---|
 | 500 ms | 0.5 s | 2.50 | 3 | 0 |
 | 500 ms | 1.0 s | 3.95 | 6 | 2 |
