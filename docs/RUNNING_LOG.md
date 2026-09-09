@@ -8593,3 +8593,62 @@ every swell on the 0.30 s floor and fails most entries. That is §303's arithmet
 `docs/NAMING.md` 19 (the swell group and its provenance) and 20 (time containers as a rhythm, and why the module stands alone),
 `docs/CRESCENDO.md`'s 1o line, PLAN 1o's statuses, PLANNER NOW, the journal §2. 150 checks now across the three crescendo check scripts,
 all passing.
+
+## §311. The morph's FADE-IN analysed at his report — it is real, but it is scaled against the wrong thing, and a 3 s fade does literally nothing
+
+Composer, 2026-09-09, on the morph panel's `fade-in-3s` preset:
+
+> *"what I hear is it start quite soft for a second or two, and then the next entries jump in rather loud. So there's no real fade in
+> there. I'm not sure if that's a bug. And the fade in doesn't seem to correspond with the amount I put where you set. So regardless of
+> how much I dial in there, the initial entry is quiet, but soon thereafter, it's like a loud attack. So maybe the fade doesn't apply to
+> the second attack."* — then, testing: *"1st entry, flute in quiet, then all the others loud after"* and *"together quiet, then the
+> second entries are loud."*
+
+**He asked for analysis before any change. Measured by rendering BLOOM in node with his own settings (`len 8 · together · linear · from
+0 · peak 1`) and reading the level breakpoints the engine actually emits.**
+
+**THE MECHANISM.** `shapeGain(shape, t, span)` multiplies the dynamics layer, and its `t` is **ABSOLUTE GESTURE TIME**. Inside the attack
+window the gain climbs `from` → `peak` over `len`; **past `len` it is exactly 1 and every note is untouched.** The gain is sampled along
+each note as level breakpoints, so a note that straddles the window's end ramps and then flattens.
+
+**VOICE 0's five notes, with the fade and without — they diverge only in note 1:**
+
+| note | starts | with the 8 s fade | with no shape at all |
+|---|---|---|---|
+| 1 | 0.00 s | 0 → **4.3** | 0.8 → **4.6** |
+| 2 | 8.05 s | 2.6 → 9.0 | 2.6 → 9.0 |
+| 3 | 16.28 s | 6.6 → 9.2 | 6.6 → 9.2 |
+| 4 | 24.23 s | 0.8 → 6.0 | 0.8 → 6.0 |
+
+**From note 2 on the two renders are IDENTICAL.** The whole fade amounts to taking note 1's peak from 4.6 to 4.3 — six per cent, and it
+happens in the first two seconds, which is exactly what he described.
+
+**WHY DIALLING DOES NOT HELP.** The peak of voice 0's successive notes as the attack length grows (span 40 s, breaths 6–10 s):
+
+| attack len | note 1 | note 2 | note 3 | note 4 | note 5 |
+|---|---|---|---|---|---|
+| none | 4.6 | 9.0 | 9.2 | 6.0 | 0.8 |
+| **3 s** | **4.6** | **9.0** | **9.2** | **6.0** | **0.8** |
+| 8 s | 4.3 | 9.0 | 9.2 | 6.0 | 0.8 |
+| 15 s | 2.3 | 9.0 | 9.2 | 6.0 | 0.8 |
+| 20 s | 1.7 | 7.0 | 8.8 | 6.0 | 0.8 |
+| 30 s | 1.1 | 4.7 | 5.9 | 4.9 | 0.8 |
+
+**A 3 s fade on this morph is bit-identical to no fade at all** — the preset's own default does nothing here. Nothing changes until the
+length exceeds the FIRST BREATH (7.4 s for this voice), and the second breath is not touched until the length passes ~16 s.
+
+**THE DIAGNOSIS, in one line: the fade-in is scaled in seconds against a gesture whose breaths are 6–10 s long, so any fade shorter than
+one breath shapes the first note only, and the second breath enters at full level on a fresh note-on — which the sampler articulates, so
+it is heard as an attack.** It is not a coding error; `shapeGain` does exactly what it says. It is a scaling error between two numbers
+that were chosen independently — the preset's 3 s (written for the tuba piece, and marked UNHEARD in `bank/shape_presets.json`) and this
+model's `carrier.segLen` of 8 s.
+
+**A second finding, which is why it reads as a JUMP rather than a plateau:** the fade fights the dynamics layer and loses. Voice 0's note
+1 ends at 4.3 while note 2 rises to 9.0 — the swell is climbing anyway, so the moment the window closes the level does not merely reach
+the body, it overtakes where the fade left off. With `entry: ramp` it is worse still: the entries are spread across the SAME window the
+gain is measured in, so the last voice to enter starts at gain 1.00 — the ramp and the fade cancel by construction.
+
+**Nothing changed. Four options put to him** (§312 will record his choice): (a) scale the attack as a FRACTION OF THE SPAN rather than in
+seconds; (b) measure the gain from each voice's OWN entry so `ramp` and the fade stop cancelling; (c) make the fade a ceiling that rises
+— it caps the dynamics layer instead of multiplying it, so a swell cannot overtake it; (d) leave the engine alone and fix the PRESET's
+number, which is the smallest change and may be all he wants.
