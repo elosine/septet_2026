@@ -916,6 +916,20 @@ on the first seconds therefore scales down the breath that was already quietest 
 worse. **The recommendation: (a) the length as a fraction of the span, about 60 % · (c) a ceiling not a multiplier · plus a held-back curve
 in the dial. (d) alone is measurably not enough.** Not built.
 
+### 2026-09-09 — the fade-in FIXED, all three pieces, at his *"build all 3"* (RUNNING_LOG §313)
+
+**In the panel now:** SHAPE · attack gains **`len % of span`** and **`how`** (multiply · ceiling), and the curve menu gains **`held`**. A new
+preset **`fade-in-slow`** (60 % · ceiling · held) is the one to reach for; **`fade-in-3s` is untouched** because his saved ACTUALs point at
+it. The seconds box shows what a fraction resolved to, so the dial never reads 2 while the fade is running 24 s.
+
+**Measured after the build** — voice 0's five breaths: the old 3 s preset gives 4.6 / 9.0 / 9.2 / 6.0 / 0.8, identical to no shape; the new
+preset gives **0.9 / 4.2 / 8.0** / 6.0 / 0.8. **The old fade reached one breath, the new one reaches three.**
+
+**And the build corrected the story again:** with identical settings both modes grade (multiply 0.4 / 3.8 / 6.5 · ceiling 0.9 / 4.2 / 8.0),
+so the two REAL fixes are the length and the curve; the ceiling is a refinement whose value is that it **flattens the loud and leaves the
+quiet alone**, where a multiplier scales down the breath that was already quietest. Two checks written to the old story failed on their
+first run and were corrected to the numbers.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

@@ -8691,3 +8691,47 @@ what he hears.
 rather than 40 % · **(c)** a ceiling rather than a multiplier · **and a third piece §311 did not know it needed** — a held-back curve
 added to the dial, since `expo` runs the wrong way for this job. **(d)** — changing the preset's number alone — is now measurably not
 enough: the multiplier at 16 s still leaves a 2.1 → 8.8 cliff.
+
+## §313. The fade-in's three pieces BUILT — and the build corrected the recommendation a second time
+
+Composer, 2026-09-09: *"ok good build all 3 pls"*.
+
+**Built, and nothing already in the bank moves — every new field defaults to the old behaviour:**
+
+| piece | what it is | where |
+|---|---|---|
+| **1 · the fraction** | `shape.attack.lenPct` (0…1) — the length as a share of the SPAN, resolved in `normaliseShape` where the span is already known, so everything downstream keeps using `attack.len` untouched. `len` still works and still wins when `lenPct` is absent; `lenPct` wins when both are given. | `morph.js` |
+| **2 · the ceiling** | `shape.attack.mode` = `multiply` (the original, still the default) or `ceiling`. Applied ONLY inside the attack window — the release must keep multiplying or it would not fade, and the body is at gain 1 where the two are identical. A ceiling asked to overshoot (`peak` > 1) says so and refuses. | `morph.js` |
+| **3 · the held-back curve** | `held` joins `linear · expo · sudden` in `SHAPE_CURVES`: `u²`, which is 0.01 a tenth of the way along where `expo` is 0.35. | `morph.js` |
+| the panel | `len % of span` and `how` (multiply · ceiling) as dials in SHAPE · attack; the curve menu picks up `held` on its own. **The seconds box now shows what a fraction RESOLVED to** — a box reading 2 beside a fade actually running 24 s is worse than no box. | `morph_panel.js` |
+| the preset | **`fade-in-slow`** — 60 % · ceiling · held. `fade-in-3s` and its two siblings are UNTOUCHED, because his saved ACTUALs point at them. | `bank/shape_presets.json` |
+
+**Voice 0's five breath peaks, measured after the build:**
+
+| | 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|
+| no shape at all | 4.6 | 9.0 | 9.2 | 6.0 | 0.8 |
+| the old fade · 3 s (the preset) | 4.6 | 9.0 | 9.2 | 6.0 | 0.8 |
+| the old fade · 8 s | 4.3 | 9.0 | 9.2 | 6.0 | 0.8 |
+| **the new one · 60 % ceiling held** | **0.9** | **4.2** | **8.0** | 6.0 | 0.8 |
+
+**The old fade reached ONE breath. The new one reaches THREE.** That is the whole of the difference, and it is what the check asserts.
+
+**THE BUILD CORRECTED THE RECOMMENDATION A SECOND TIME**, and the correction is worth keeping because it is the opposite of what §312
+said. Running the two modes with IDENTICAL settings (60 %, held):
+
+| | breath 1 | 2 | 3 |
+|---|---|---|---|
+| multiply | 0.4 | 3.8 | 6.5 |
+| ceiling | 0.9 | 4.2 | 8.0 |
+
+**Both grade.** §312 said the ceiling was the thing that made it work; the measurement says the ceiling is a REFINEMENT and the two real
+fixes are the LENGTH and the CURVE. What the ceiling actually gives is that it **flattens the loud and leaves the quiet alone** — the
+multiplier scales everything, including the breath that was already the quietest, and nearly silences it (0.4 against 0.9). Two of my
+assertions had been written to the old story and FAILED on first run; they were corrected to what the numbers say rather than the numbers
+being explained away.
+
+**28 checks in `tools/fade_check.js`**, including a section that proves nothing in the bank moved: a no-shape render is untouched,
+`fade-in-3s` still says exactly what it said, and rendering it still gives the bare numbers — **which IS the bug he reported, now kept as
+a regression test rather than a surprise.** `tools/morph_septet_check.js` still ALL PASS. Walked in the panel: the preset menu, the two
+new dials, `held` in the curve list, and a fraction typed by hand (0.8 → the seconds box follows to 32).

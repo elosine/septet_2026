@@ -554,12 +554,18 @@ function buildCarrier(vi, nVoices, carrier, seedRng, ctxForBreath, sched) {
 const ENTRY_MODES     = ['together', 'ramp', 'striated'];
 const EXIT_MODES      = ['together', 'staggered'];
 const ORDER_MODES     = ['low-first', 'high-first', 'seeded'];
-const SHAPE_CURVES    = ['linear', 'expo', 'sudden'];
+const SHAPE_CURVES    = ['linear', 'expo', 'sudden', 'held'];
 const ATTACK_MOTIONS  = ['converge', 'gliss-in', 'none'];
+// HOW THE ATTACK GAIN MEETS THE DYNAMICS LAYER (2026-09-09, RUNNING_LOG §312).
+//   multiply — the original: level = dyn × g. It SCALES the layer, so a loud breath stays proportionally loud. Right for an attack.
+//   ceiling  — level = min(dyn, g × 10). It CAPS the layer, flattening the peaks off, so what comes through grows as the lid rises.
+//              Right for a FADE, and the difference is not cosmetic: measured on BLOOM, the multiplier left breaths at 4.2 / 9.0 / 9.2
+//              while the ceiling gave 0.9 / 4.2 / 8.0 — the first is a cliff, the second is a fade.
+const ATTACK_MODES    = ['multiply', 'ceiling'];
 const RELEASE_MOTIONS = ['disperse', 'to-unison', 'gliss-out', 'none'];
 
 const SHAPE_KEYS    = ['attack', 'decay', 'release'];
-const ATTACK_KEYS   = ['len', 'entry', 'order', 'curve', 'from', 'peak',
+const ATTACK_KEYS   = ['len', 'lenPct', 'mode', 'entry', 'order', 'curve', 'from', 'peak',
                        'technique', 'transient', 'noise', 'motion'];
 const DECAY_KEYS    = ['len', 'curve'];
 const RELEASE_KEYS  = ['len', 'exit', 'order', 'curve', 'to',
@@ -587,6 +593,11 @@ function curveEase(curve, u) {
     const x = clamp(u, 0, 1);
     if (curve === 'linear') return x;
     if (curve === 'sudden') return x < 0.9 ? 0 : (x - 0.9) / 0.1;
+    // HELD BACK, and it exists because nothing else in this list does it (measured 2026-09-09, RUNNING_LOG §312). `expo` is FRONT-loaded
+    // — 0.35 of the way up a tenth of the way along — which is right for an attack that must arrive, and exactly backwards for a fade
+    // that must stay out of the way. `held` is 0.01 there, so a rising CEILING built on it sits under the music long enough to flatten
+    // its early peaks, which is what makes successive breaths grade instead of jumping.
+    if (curve === 'held') return x * x;
     return Math.pow(x, EXPO_EXP);       // expo — the default
 }
 
@@ -745,7 +756,7 @@ function normaliseShape(raw, span) {
     if (raw.attack) {
         const a = raw.attack;
         reportUnknown(a, ATTACK_KEYS, 'shape.attack', warn);
-        if (a.len == null) warn.push('SHAPE: attack.len is required when an attack block is present — using 2');
+        if (a.len == null && a.lenPct == null) warn.push('SHAPE: attack needs a len (s) or a lenPct (0…1) — using 2 s');
         let peak = pickNum(a.peak, 1, 0, 10, 'shape.attack.peak', warn);
         if (peak < 1) {
             warn.push('SHAPE: attack.peak ' + peak + ' < 1 clamped to 1 — "from" is the low-start dial');
@@ -778,8 +789,16 @@ function normaliseShape(raw, span) {
                 len: a.noise.len == null ? null : pickNum(a.noise.len, 1, 0.05, 60, 'shape.attack.noise.len', warn),
             };
         }
+        // THE LENGTH AS A FRACTION OF THE SPAN (2026-09-09). Seconds are the wrong unit for a fade, because the number that matters
+        // is the BREATH length, which the composer cannot see: on BLOOM the breaths are 6–10 s, so his 3 s fade was measurably
+        // bit-identical to no fade at all. A fraction means the same thing on every model. `len` still works and still wins when
+        // `lenPct` is absent, so nothing already in the bank moves.
+        const pct = a.lenPct == null ? null : pickNum(a.lenPct, 0.5, 0, 1, 'shape.attack.lenPct', warn);
         attack = {
-            len:   pickNum(a.len, 2, 0, 3600, 'shape.attack.len', warn),
+            lenPct: pct,
+            mode:  pickEnum(a.mode, ATTACK_MODES, 'multiply', 'shape.attack.mode', warn),
+            len:   pct != null ? round3(pct * span)
+                               : pickNum(a.len, 2, 0, 3600, 'shape.attack.len', warn),
             entry: pickEnum(a.entry, ENTRY_MODES, 'together', 'shape.attack.entry', warn),
             order: pickEnum(a.order, ORDER_MODES, 'low-first', 'shape.attack.order', warn),
             curve: pickEnum(a.curve, SHAPE_CURVES, 'expo', 'shape.attack.curve', warn),
@@ -804,6 +823,10 @@ function normaliseShape(raw, span) {
     // peak > 1 with no decay would leave the gesture parked above the body for
     // the whole span, which is never what "hit it and settle" means. Supply the
     // decay AND say so — a default that hides is a bug with a nice manner.
+    if (attack && attack.mode === 'ceiling' && attack.peak > 1) {
+        warn.push('SHAPE: attack.mode "ceiling" with peak ' + attack.peak + ' > 1 — a ceiling cannot overshoot; peak ignored');
+        attack.peak = 1;
+    }
     if (attack && attack.peak > 1 && !decay) {
         decay = { len: Math.min(4, span * 0.15), curve: 'expo' };
         warn.push('SHAPE: attack.peak ' + attack.peak + ' > 1 with no decay block — ' +
@@ -949,7 +972,8 @@ const PARAM_PATHS = {
     'dyn.turns': 'number', 'dyn.spread': 'number',
 
     // the 2z gesture shape — recipes patch these like any other dial
-    'shape.attack.len': 'number', 'shape.attack.entry': 'string',
+    'shape.attack.len': 'number', 'shape.attack.lenPct': 'number', 'shape.attack.mode': 'string',
+    'shape.attack.entry': 'string',
     'shape.attack.order': 'string', 'shape.attack.curve': 'string',
     'shape.attack.from': 'number', 'shape.attack.peak': 'number',
     'shape.attack.technique': 'string',
@@ -1474,10 +1498,15 @@ function render(params, opts) {
         const inAttack = !!(P.shape && P.shape.attack && P.shape.attack.len > 0 &&
                             t < P.shape.attack.len);
         const levelFloor = inAttack ? 0 : 0.4;
+        // MULTIPLY OR CAP. `multiply` is the original and stays the default, so every render in the bank is unchanged. `ceiling`
+        // applies ONLY inside the attack window: the release must keep multiplying or it would not fade at all, and the body is at
+        // gain 1 where the two are identical anyway.
+        const dl = dynLevel(P.dyn, vi, nVoices, pDyn) * relFade;
+        const capping = inAttack && SH_A && SH_A.mode === 'ceiling';
         const base = {
             cents: startCents[vi],
             technique: (P.target && P.target.baseTechnique) || (palOf(vi) ? palOf(vi).technique : 'ord'),
-            level: clamp(dynLevel(P.dyn, vi, nVoices, pDyn) * g * relFade, levelFloor, 10),
+            level: clamp(capping ? Math.min(dl, g * 10) : dl * g, levelFloor, 10),
         };
         const moved = modelFn(ctx, vi, p) || {};
         // EDGE TECHNIQUE. The override lives HERE, in stateAt, so the breath
@@ -2010,6 +2039,7 @@ return {
     BREATH_TABLE: BREATH_TABLE, SWITCH_PREP: SWITCH_PREP, STRIATIONS: STRIATIONS,
     DYN_SHAPES: DYN_SHAPES, dynLevel: dynLevel,
     ENTRY_MODES: ENTRY_MODES, EXIT_MODES: EXIT_MODES, ORDER_MODES: ORDER_MODES,
+    ATTACK_MODES: ATTACK_MODES,
     SHAPE_CURVES: SHAPE_CURVES, ATTACK_MOTIONS: ATTACK_MOTIONS,
     RELEASE_MOTIONS: RELEASE_MOTIONS,
     curveEase: curveEase, normaliseShape: normaliseShape, shapeGain: shapeGain,

@@ -153,7 +153,8 @@
   over the content, so a line scrolled under it cannot be clicked there; scroll it a little right. A place in the lane's label column
   (widened) would free the content; for the revision of the tool.
 
-- **THE MORPH'S FADE-IN DOES NOT FADE** (composer, 2026-09-09; measured, RUNNING_LOG §311; `docs/MORPH_NOTES.md` §3). `shapeGain` is a
+- ~~**THE MORPH'S FADE-IN DOES NOT FADE**~~ **FIXED 2026-09-09 (RUNNING_LOG §313)** — three pieces built: the length as a fraction of
+  the span, a ceiling mode, and a held-back curve; the preset `fade-in-slow` is the one to use. *The original entry, kept:* (composer, 2026-09-09; measured, RUNNING_LOG §311; `docs/MORPH_NOTES.md` §3). `shapeGain` is a
   multiplier on ABSOLUTE gesture time and is exactly 1 past `attack.len`, so a fade shorter than one breath (6–10 s on BLOOM) shapes the
   first note only and the second breath enters at full level on a fresh note-on. **Measured: a 3 s fade — the preset's own default — is
   bit-identical to no fade at all; an 8 s fade moves one note's peak from 4.6 to 4.3 and changes nothing else.** `entry: ramp` cancels it

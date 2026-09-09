@@ -741,7 +741,17 @@ const PANEL = {
             head('SHAPE · attack');
             if (!sh.attack) note('no attack block');
             else {
-                row('len (s)', 'shape.attack.len', num(sh.attack.len, 2), 0.25);
+                // THE FADE'S THREE PIECES (2026-09-09, RUNNING_LOG §311–312). Seconds are the wrong unit for a fade — the number
+                // that matters is the BREATH length, which he cannot see — so `len %` is a fraction of the span and, when set,
+                // it wins. `how` is multiply (an attack: it scales the layer) or ceiling (a fade: it caps it, flattening the
+                // peaks off, which is the only way successive breaths grade instead of jumping).
+                // when a fraction is set it WINS, so the seconds box shows what it resolved to rather than a stale default —
+                // a box reading 2 beside a fade that is actually running 24 s is worse than no box at all
+                const aSpan = (p.carrier && p.carrier.span) || 0;
+                row('len (s)', 'shape.attack.len',
+                    sh.attack.lenPct != null ? Math.round(sh.attack.lenPct * aSpan * 100) / 100 : num(sh.attack.len, 2), 0.25);
+                row('len % of span', 'shape.attack.lenPct', num(sh.attack.lenPct, ''), 0.05);
+                sel('how', 'shape.attack.mode', num(sh.attack.mode, 'multiply'), M.ATTACK_MODES);
                 sel('entry', 'shape.attack.entry', num(sh.attack.entry, 'together'), M.ENTRY_MODES);
                 sel('order', 'shape.attack.order', num(sh.attack.order, 'low-first'), M.ORDER_MODES);
                 sel('curve', 'shape.attack.curve', num(sh.attack.curve, 'expo'), M.SHAPE_CURVES);
