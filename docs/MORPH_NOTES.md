@@ -930,6 +930,28 @@ so the two REAL fixes are the length and the curve; the ceiling is a refinement 
 quiet alone**, where a multiplier scales down the breath that was already quietest. Two checks written to the old story failed on their
 first run and were corrected to the numbers.
 
+### 2026-09-09 — THE ACTUAL BUG: the emitter strikes every note for its PEAK (RUNNING_LOG §314)
+
+His words: *"I would like to cut to what the actual problem is and avoid much more of this back and forth troubleshooting … are those at
+different velocities? Or is the CC7 not being reset correctly? It's probably best to use the volume logic already inherent in the morph."*
+**He was right on every count.**
+
+**The engine's level curve was correct all along** — instrumented, it runs 0 → 0.32 → 1.12 → 2.43 → 4.60 → 6.84 → 10 and lands exactly on
+the natural level, which is what he asked for. **The bug is in `morph_emit.js`:** the velocity for each note comes from that note's PEAK
+level, and is only softened when the note opens below 0.4. So voice 0's five breaths were struck at **1 · 103 · 103 · 103 · 71 whatever the
+fade said** — the fade shaped CC7 *within* each note and could never touch the attack that began it. CC7 was never the problem; it is
+calibrated relative to each note's velocity, so the two compensate and the compensation is what lurches.
+
+**Fixed:** inside the attack window the reference height is the level the note OPENS at, not its peak, with CC7 on the same reference.
+Voice 0 now enters at **1 · 63 · 103 · 103 · 71**; no-shape renders are untouched.
+
+**And the preset went back to his logic** — `fade-in-slow` is now **60 % · multiply · linear**, the morph's own volume scaled from silence to
+its natural level. Both of the AI's §313 refinements were dropped: `ceiling` has a kink where `multiply` meets smoothly, and the `held`
+curve hangs low then rushes — which was audibly his *"quiet for 300 ms then ramps up quickly"*.
+
+**One number he should have before judging by ear:** the morph's own entries jump **3.3× then 2.5×** with no fade at all. That growth is the
+gesture; a fade scales it and cannot remove it. A longer `lenPct` is the dial if he wants the entries flatter still.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

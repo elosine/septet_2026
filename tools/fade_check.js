@@ -120,8 +120,13 @@ H('5 · NOTHING IN THE BANK MOVED — the guarantee that let this be built at al
        JSON.stringify({ attack: { len: 3, entry: 'together', curve: 'linear', from: 0 } }),
        JSON.stringify(presets.presets['fade-in-3s'].shape));
     ok('hit-and-settle is untouched too', presets.presets['hit-and-settle'].shape.attack.peak === 1.5);
+    // the preset ended up as HIS logic, not my two refinements: the morph's own level scaled from silence, meeting the
+    // natural level at the end of the window. A fraction is what it must carry; the mode and curve are the plain ones.
     ok('and the new preset is there, measured rather than guessed', !!presets.presets['fade-in-slow'] &&
-       presets.presets['fade-in-slow'].shape.attack.mode === 'ceiling');
+       presets.presets['fade-in-slow'].shape.attack.lenPct > 0 &&
+       presets.presets['fade-in-slow'].shape.attack.mode === 'multiply' &&
+       presets.presets['fade-in-slow'].shape.attack.curve === 'linear',
+       JSON.stringify(presets.presets['fade-in-slow'].shape.attack));
     // the old presets must render exactly as they did — no new field can have changed them
     const legacy = peaks(presets.presets['fade-in-3s'].shape.attack);
     ok('rendering fade-in-3s gives the bare numbers, as it always did (that IS the bug he reported)',

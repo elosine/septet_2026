@@ -8735,3 +8735,89 @@ being explained away.
 `fade-in-3s` still says exactly what it said, and rendering it still gives the bare numbers — **which IS the bug he reported, now kept as
 a regression test rather than a surprise.** `tools/morph_septet_check.js` still ALL PASS. Walked in the panel: the preset menu, the two
 new dials, `held` in the curve list, and a fraction typed by hand (0.8 → the seconds box follows to 32).
+
+## §314. THE ACTUAL FADE BUG, found at his insistence: the emitter strikes every note for its PEAK, so no fade could ever be heard between breaths
+
+Composer, 2026-09-09, after two rounds of my tuning had not fixed it:
+
+> *"still big jump in volume at second breath … I would like to cut to what the actual problem is and avoid much more of this back and
+> forth troubleshooting. It is very time consuming and seems unproductive. … either your logic was correct but the implementation is
+> buggy — that should be easy enough to solve — but make sure we understand what the actual bug is. Otherwise, the logic is incorrect and
+> let's figure out what the true logic needs to be. … The natural beating already has its own fade. How's that achieved? Is that using
+> CC7? And then the second attack and subsequent breaths or entries — are those at different velocities? Or is the CC7 not being reset
+> correctly? It's probably best to use the volume logic already inherent in the morph. It just needs to be overridden for the beginning
+> instead of trying to impose another layer on top of that."*
+
+**He was right on every count, and the criticism was fair: I had been measuring the wrong layer.** Two rounds of analysis (§311–313) read
+the engine's LEVEL BREAKPOINTS, which were correct all along. The bug is one layer further down, in the emitter, and no fade setting could
+ever have reached it.
+
+**Step 1 — is the level curve wrong?** No. Instrumented `stateAt` directly (a patched copy in the scratchpad, `__PROBE`) and read the gain
+and the output at every sample inside the window:
+
+```
+t=0  0.00 · t=4.3  0.32 · t=8.05  1.12 · t=11.8  2.43 · t=16.3  4.60 · t=19.9  6.84 · t=24  10.00
+```
+
+Smooth, continuous, and landing exactly on the morph's natural level at the end of the window — **which is precisely what he asked for.**
+So the logic and the implementation were both right at that layer.
+
+**Step 2 — what reaches the sampler?** The layer I had not looked at. Voice 0's five breath entries, velocity per note:
+
+| | b1 | b2 | b3 | b4 | b5 |
+|---|---|---|---|---|---|
+| the new preset | **1** | **103** | 103 | 103 | 71 |
+| multiply + linear | **1** | **103** | 103 | 103 | 71 |
+| no fade at all | 103 | 103 | 103 | 103 | 71 |
+
+**Identical velocities whatever the fade said.** His question *"are those at different velocities?"* was the diagnosis.
+
+**Step 3 — why.** `morph_emit.js`:
+
+```js
+const hMax = Math.max(...n.level.map(l => l[1])) / 10;      // the note's PEAK
+dyn = VR.heldNote(bank, key, midi, LO + (HI-LO) * hMax);    // the velocity for that peak
+const velFor = (n, dyn) => { const l0 = n.level[0][1];
+    if (l0 >= 0.4) return dyn.vel;                          // a CLIFF at exactly 0.4
+    return Math.max(1, Math.round(dyn.vel * (l0 / 0.4))); };
+```
+
+The velocity comes from each note's **maximum**, and is only softened when the note OPENS below 0.4. Breath 1 opens at 0.00 → velocity
+**1**; breath 2 opens at 0.40 → velocity **103**. **The held-note law is right for the body** — a swell is "for" its top, and CC7 shapes it
+down — **and exactly wrong inside a fade**, where each breath is a fresh note-on that must ENTER where the fade says.
+
+**And his third question answered: CC7 is not at fault.** It is re-sent per note and is calibrated *relative to that note's velocity*
+(`cc7ForHeight(..., dyn.vel, ...)`), which is why it reads 115 for the velocity-1 note and 73 for the velocity-103 one. The two knobs
+compensate; the compensation is what lurches.
+
+**THE FIX, and it is his logic and not a fourth layer.** Inside the attack window the reference height is **the level the note OPENS at**,
+not its peak; CC7 takes the same reference so the pair stays consistent. Outside the window the held-note law is untouched. Measured after
+the fix, voice 0: **1 · 63 · 103 · 103 · 71** where it was 1 · 103 · 103 · 103 · 71, and **the no-shape render is unchanged**
+(103 · 103 · 103 · 103 · 71), which is the guarantee that let it be changed at all.
+
+**And the preset went back to HIS logic**, dropping both of my refinements: `fade-in-slow` is now **60 % · multiply · linear** — the morph's
+own volume scaled from silence to exactly its natural level at the end of the window. `multiply` because it lands on the natural level with
+no kink (a `ceiling` has one); `linear` because level here is the 0–10 drawn height across a 40 dB CC7 span, so level-space IS roughly
+dB-space and a linear ramp is a smooth exponential amplitude fade. **`held` — the curve I added in §313 — hangs low and then rushes, which
+is exactly his *"starts a little quiet for about 300 ms then ramps up quickly"*.** It stays in the vocabulary as an option; it is not the
+fade.
+
+**THE LAST NUMBER, and he should have it before judging by ear.** The level each breath OPENS at, voice 0:
+
+| | b1 | b2 | b3 | b4 | b5 | the jumps b1→b2→b3 |
+|---|---|---|---|---|---|---|
+| **the morph itself, no fade** | 0.8 | 2.6 | 6.6 | 3.5 | 0.4 | **3.3× 2.5×** |
+| multiply · linear · 60 % | 0 | 0.4 | 3.7 | 3.5 | 0.4 | 9.3× 0.9× |
+| multiply · held · 80 % | 0 | 0.4 | 0.4 | 1.0 | 0.4 | 1.0× 2.5× |
+
+**The morph jumps 3.3× and 2.5× between entries with NO fade at all.** That growth is the gesture, not a defect, and a fade can only scale
+it — multiplying a rising ramp by a rising signal necessarily grows faster than either. If he wants the entries themselves flatter, the
+dial is a longer `lenPct` (and `held` genuinely helps there: 1.0× then 2.5×, gentler than the morph's own).
+
+**A caveat recorded rather than hidden:** the velocity fix changes any render that HAS an attack block, for the notes that start inside the
+window. His saved ACTUALs use `fade-in-3s` (a 3 s window), so one note per voice moves in those — towards what the fade always said it
+wanted. No-shape renders, which are almost everything, are untouched.
+
+**The method lesson, and it is his:** *"make sure we understand what the actual bug is."* Two rounds were spent tuning a layer that was
+already correct, because I measured the engine's output instead of the MIDI. The moment the velocities were printed the bug was obvious.
+30 checks in `tools/fade_check.js`; `tools/morph_septet_check.js` ALL PASS.

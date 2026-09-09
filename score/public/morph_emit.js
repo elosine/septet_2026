@@ -238,11 +238,27 @@ const EMIT = {
         // without a remap (or an unknown instrument) the tuba's path below stands
         const Cr = HOST(), bank = Cr && Cr._velRemap, VR = root.VelocityRemap || null;
         const LO = (typeof HELD_LO !== 'undefined') ? HELD_LO : 65, HI = (typeof HELD_HI !== 'undefined') ? HELD_HI : 127;
+        // A NOTE INSIDE A FADE IS STRUCK FOR WHERE IT STARTS, NOT WHERE IT ENDS (2026-09-09, RUNNING_LOG §314).
+        //
+        // The held-note law takes the velocity from the TOP of a note's level curve and lets CC7 shape it down — right for the body,
+        // where the curve is a swell and the top is what the note is "for". Inside a FADE it is exactly wrong: each breath is a fresh
+        // note-on, and a note that will eventually reach level 4 was being STRUCK for level 4 however quiet the fade wanted its entry.
+        // Measured on BLOOM, voice 0's five breaths came out at velocity 1 · 103 · 103 · 103 · 71 whatever the fade said — the fade
+        // shaped the CC7 within each note and could not touch the attack that began it. That is the jump the composer heard at the
+        // second breath, and no fade setting could have fixed it: it is downstream of the whole shape.
+        //
+        // So inside the attack window the reference is the level the note OPENS at. CC7 is calibrated against the same reference
+        // (`ccOf` takes this `dyn`), so the two stay consistent and the note still ends where its curve says.
+        const attackEnd = (result.meta && result.meta.shape && result.meta.shape.attackLen) || 0;
         const dynOf = (n, route) => {
             if (!bank || !VR || !route.instKey) return null;
             const hMax = Math.max.apply(null, n.level.map(l => l[1])) / 10;
-            return VR.heldNote(bank, route.instKey, n.midi, LO + (HI - LO) * Math.max(0, Math.min(1, hMax)));
+            const hOpen = (n.level[0] && n.level[0][1] != null ? n.level[0][1] : 0) / 10;
+            const h = (attackEnd > 0 && n.tStart < attackEnd) ? hOpen : hMax;
+            return VR.heldNote(bank, route.instKey, n.midi, LO + (HI - LO) * Math.max(0, Math.min(1, h)));
         };
+        // and below the engine's 0.4 floor the remap has nothing left to give, so the velocity is scaled by hand — the old rule, kept,
+        // because a fade that opens at level 0 must open at silence and MIDI velocity 0 means note-off (the floor is 1)
         const velFor = (n, dyn) => {
             const base = dyn ? dyn.vel : velBase;
             const l0 = (n.level && n.level[0] && n.level[0][1] != null) ? n.level[0][1] : 10;
