@@ -8520,3 +8520,24 @@ That is realistic — the bellows closes slowly because small containers pass sl
 
 **So the container generator now stands at: a POOL** (numbers · weights · presets by spread) **× an ORDER** (stickiness · interrupt) **× a
 CONTOUR** (grow · shrink · open–close · close–open, with turn · bow · depth). Everything seeded.
+
+## §309. PLAN 1o — phase 1 closed in four topics; the top line put
+
+Composer, 2026-09-08: *"good"* to the container generator as it now stands. **Phase 1 is complete.** What the four topics settled:
+
+1. **What 1o is** (§301, §303, CN-56) — the swells REPLACE the strikes; no accent; the dealt chord notes themselves are the crescendos, so
+   a count of 2-4 is how many swells begin together. Every rhythm the drawer already makes is in scope.
+2. **The duration** (§304) — a MULTIPLE OF THE LOCAL GAP, computed at each entry, so it follows an accelerando by itself. The multiplier is
+   the density dial (length / gap of 1 gives about 2.5 voices sounding, 2 gives about 4, 3 saturates); a typed length stays available; the
+   predicted thickness and the flag count are a readout.
+3. **Where it lives** (§304) — a SOUND SWITCH, attack or crescendo, orthogonal to the drawer mode. So *chords + crescendo* IS 1o, and
+   nothing is written twice.
+4. **The time containers** (§305-308) — a POOL (numbers, weights, presets sorted by SPREAD) x an ORDER (stickiness, interrupt) x a CONTOUR
+   (grow, shrink, open-close, close-open, with turn, bow, depth). Units default to 1 second; a roll stops short and says by how much.
+
+**THE TOP LINE, put to him (phase 2):**
+
+1. **The sound switch** - attack or crescendo, the length rule and its density readout, and the crescendos written into the score.
+2. **The time container generator** - pool x order x contour, pure, and its own module from the start because he asked for exactly that.
+3. **The containers in the drawer** - the new entry in the shape menu, its controls, the presets, the readout.
+4. **Verify and document** - the node checks, the walk on a copy, the documents; then his first crescendo strikes.
