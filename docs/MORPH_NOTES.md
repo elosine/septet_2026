@@ -975,6 +975,24 @@ velocity/CC7 readout per breath would have ended this on day one, and its absenc
 in the panel and jumped in the score. Anything that overrides the loudness law has to travel WITH the note (here `velRef`, into the
 score object), or the two copies drift.
 
+### 2026-09-09 — THE FLOOR: the drawn dynamic scale is 9.96 dB, so no drawn curve can fade from silence (RUNNING_LOG §316)
+
+*"still not working. why? what is going on? any way to look at the file I'm actually generating"* — and the isolated test he asked for
+found it at once. **A drawn held note running the full 0 → 10 sends CC7 88 → 127, not 0 → 127.** `HELD_LO = 65, HELD_HI = 127` makes the
+drawn 0–10 a scale of anchor velocities, which on the measured remap is **−39.18 to −29.22 dB — 9.96 dB end to end**. Every fade so far
+has been a ten-decibel swell whose bottom was already two thirds of the way up.
+
+**And it means §315 did not do what he said.** His words were *"we start at the beginning zero CC7"* — CC7 zero. I ramped the LEVEL,
+which passes through the anchor scale and cannot come out below 88.
+
+**FOR THE REVISION.** The tool has two loudness vocabularies and they are not interchangeable: **level** (a musical scale, deliberately
+floored at the ensemble's soft end) and **CC7** (the actual fader, 0 = off). Everything written for the score speaks the first; a fade
+from nothing can only be said in the second. A future morph panel needs both, named apart, and needs to show which one a control is
+speaking — `cc7Abs` is the seed of it here.
+
+**Still open, and it is the question the whole design turns on:** is CC7 0 actually silent on these samplers, or does a struck note
+speak through it? `scores/cc7-ramp-test.json` column 6 answers it in ten seconds.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

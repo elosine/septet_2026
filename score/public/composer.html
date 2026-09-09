@@ -9462,7 +9462,18 @@ const Composer = {
         return rec;
     },
     heldVel(wc) { return this._velRemap ? this.heldDyn(wc).vel : 100; },
+    // AND A NOTE MAY DRIVE CC7 DIRECTLY (2026-09-09, §316). The held-note law above is a scale of ANCHOR VELOCITIES, 65 to 127, which
+    // on the measured remap is -39.18 to -29.22 dB: the drawn 0-10 spans **9.96 dB**, and drawn 0 sends CC7 88. That is right for
+    // ordinary music - a written note should not fall below the ensemble's floor - and it makes a fade FROM SILENCE impossible, because
+    // the bottom of the curve is already two thirds of the way up. His instruction was literal and I had not honoured it: *"we start at
+    // the beginning zero CC7 and do a smooth curve up to that CC7 level that we read at twenty four seconds."* CC7 zero, not level zero.
+    // So `cc7Abs: {lo, hi}` maps the drawn height straight onto a CC7 range, bypassing the anchor scale. Absent, nothing changes.
     heldCc7(wc, h) {
+        const abs = wc && wc.cc7Abs;
+        if (abs) {
+            const lo = abs.lo != null ? abs.lo : 0, hi = abs.hi != null ? abs.hi : 127;
+            return Math.max(0, Math.min(127, Math.round(lo + (hi - lo) * Math.max(0, Math.min(1, h)))));
+        }
         if (!this._velRemap) return this.curveValToCC(h);
         const d = this.heldDyn(wc), tr = TRACKS[wc.layer];
         return VelocityRemap.cc7ForHeight(this._velRemap, tr ? tr.instKey : null, wc.sonifyNote, d.vel, HELD_LO + (HELD_HI - HELD_LO) * Math.max(0, Math.min(1, h)));

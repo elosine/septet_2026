@@ -8926,3 +8926,70 @@ port 5301: the `how` menu offers fade, the seconds box resolves 0.6 to 24, the b
 **Left alone and reported instead:** `tools/cresc_check.js` fails one assertion, and it failed identically before this work. It hard-codes
 **18** morph re-breath pairs read out of `scores/piece-septet.json` — his live working score — and that morph is no longer in it, so the
 count is 0 of 15. A test whose ground truth is a file he edits daily will keep doing this. → NITS.
+
+## §316. THE FLOOR: a drawn note's whole dynamic range is 9.96 dB, and "level 0" sends CC7 88 — so a fade from silence was never expressible
+
+Composer, 2026-09-09, on the §315 build:
+
+> *"still not working. why? what is going on? any way to look at the file I'm actually generating"* … *"What is the easiest way to
+> generate a ramp using CC seven so I can listen to it? … can you just generate one and put it in an experimental save file … Let's do a
+> smooth CC7 ramp from zero to full volume over ten seconds."*
+
+**He was right to ask for the isolated test, and it found the answer in one measurement.** Every round so far had measured the MORPH,
+which is four mechanisms at once — carrier, re-breaths, the remap, the shape — so none of them could see this. A plain drawn held note
+with a curve running the full 0 → 10 sends:
+
+```
+CC7 88 → 127          (Vn1, F#5, velocity 120)
+```
+
+**Not 0 → 127. Eighty-eight.** And the reason is `HELD_LO = 65, HELD_HI = 127` (1g item 5, §120): the drawn 0–10 is a scale of ANCHOR
+VELOCITIES from 65 to 127, which on the measured remap is:
+
+| anchor velocity | 1 | 32 | 48 | **65** | 80 | 96 | 110 | **127** |
+|---|---|---|---|---|---|---|---|---|
+| dB | −50.44 | −47.13 | −43.16 | **−39.18** | −36.17 | −33.21 | −31.47 | **−29.22** |
+
+**The entire drawn dynamic range of a sustained note in this score is −39.18 to −29.22 dB — 9.96 dB.** Ten decibels, roughly "half as
+loud" to "full". That is not a fade-in, it is a modest swell, and it is why no dial ever helped: the bottom of every curve was already
+two thirds of the way up. (Even taking the scale all the way down to anchor velocity 1 gives CC7 57 and 21.22 dB — still not silence.)
+
+**And it means I did not build what he asked for.** His instruction was literal:
+
+> *"we start at the beginning zero CC7 and do a smooth curve or whatever curve I dial in up to that CC7 level that we read at twenty
+> four seconds."*
+
+**CC7 zero.** I ramped the LEVEL, which then passes through the anchor scale and cannot come out below CC7 88. §315's fade is correct in
+every respect that was tested — one velocity, a continuous ramp, an exact join — and all of it happens inside a ten-decibel window.
+
+**The 10 dB scale is not a bug.** It is the right default for written music: a drawn note should not fall below the ensemble's floor, and
+it matches the trill's default. The mistake was assuming a fade could be expressed in it.
+
+**BUILT, as the instrument for finding out rather than a fix:** `tools/cc7_ramp_test.js` → `scores/cc7-ramp-test.json`, at his ask for
+*"an experimental save file"*. Seven columns on all seven players at the same times, so soloing a lane swaps the instrument without
+moving the playhead. Every object is an ordinary drawn held note — no crescendo block, no morph — so it exercises the score's held-note
+law and nothing else. Measured on Vn1 before he hears it:
+
+| | what it is | velocity | CC7 |
+|---|---|---|---|
+| 1 | one note, drawn 0 → 10 | 120 | **88 → 127** |
+| 2 | one note, drawn 0.4 → 10 | 120 | 89 → 127 |
+| 3 | one note, flat at 10 — the reference | 120 | 127 |
+| 4 | 3 notes sharing one ramp, each struck for its own top | **82 · 101 · 120** | 106 · 110 · 111 |
+| 5 | the same 3 at ONE velocity (§315's `velRef`) | 120 · 120 · 120 | 88 → 101 → 111 → 127 |
+| 6 | one note, **CC7 driven 0 → 127** | 120 | **0 → 127** |
+| 7 | 3 notes sharing **one CC7 0 → 127 ramp** at one velocity | 120 · 120 · 120 | 0 → 42 → 85 → 127 |
+
+**4 against 5 tests §315's fix; 5 against 7 tests this entry's finding; 6 answers the one question nobody has asked yet — IS CC7 0
+ACTUALLY SILENT ON THESE SAMPLERS?** If it is, the fade wants a CC7 ramp and the level scale is the wrong vehicle. If it is not — if a
+struck note speaks through CC7 0 — then a fade-in on this rack has to come from velocity after all, and the whole design changes. Either
+way one listen decides it, which is what the previous four rounds lacked.
+
+**`cc7Abs: {lo, hi}` added to `Composer.heldCc7`** — a note may map its drawn height straight onto a CC7 range, bypassing the anchor
+scale. Absent, nothing changes; columns 6 and 7 are the only things using it. It is deliberately the smallest possible mechanism, since
+what the fade should finally use is exactly what this file is for finding out.
+
+**METHOD, and it is the second time in two days the same lesson has bitten:** measure the layer that reaches the instrument, not the
+layer you built. §314 was velocities read at the emitter; this is CC7 read at the score. Both were invisible while the measurement
+stopped at the engine. **The morph panel and the score should be able to SHOW what they are sending** — a velocity/CC7 readout per note
+would have ended this on the first day. → MORPH_NOTES, NITS.

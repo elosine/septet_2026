@@ -169,3 +169,10 @@ would newly block. That morph is no longer in his score, so the count is 0 of 15
 fade work, and nothing in the app is wrong. The fixture is the composer's working file, which he edits daily. **Fix when touched:** hold
 the gesture clause against a stored fixture, or assert the invariant (every newly-blocked pair is either inside one gesture or a trill
 followed by a strike) rather than a count.
+
+### The panel and the score cannot show what they are SENDING (2026-09-09, §314 and §316)
+
+Two bugs in two days were invisible for the same reason: every measurement stopped at the engine's level curve, and both faults were
+downstream of it — §314 in the velocities the emitter chose, §316 in the CC7 the score's held-note law produces. **A readout of velocity
+and CC7 per note — in the morph panel beside Play, and on a selected drawn note — would have ended each of them on the first day.**
+Cheap to build (both numbers already exist at emit time) and it pays for itself the first time a dynamic does not sound right.
