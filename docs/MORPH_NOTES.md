@@ -834,6 +834,65 @@ the all-purpose tool: ONE render path shared by the panel and the store, the pro
 first-class verb beside hear and place. RUNNING_LOG §213.
 
 
+### 2026-09-09 — THE FADE-IN DOES NOT FADE: measured, analysed, NOT CHANGED (his ask); RUNNING_LOG §311
+
+**His words, verbatim:**
+
+> *"Can you look at the fade in mechanism? And I don't know how you might test this, but what I hear is it start quite soft for a second
+> or two, and then the next entries jump in rather loud. So there's no real fade in there. I'm not sure if that's a bug. And the fade in
+> doesn't seem to correspond with the amount I put where you set. So regardless of how much I dial in there, the initial entry is quiet,
+> but soon thereafter, it's like a loud attack. So maybe the fade doesn't apply to the second attack. … Could you do the analysis and look
+> at it and then check-in with me before changing anything?"*
+
+> *"1st entry, flute in quiet, then all the others loud after"* — and, switching the entry mode: *"together quiet, then the second
+> entries are loud."*
+
+**MEASURED** by rendering BLOOM in node with his own settings (`len 8 · entry together · curve linear · from 0 · peak 1`) and reading the
+level breakpoints the engine emits. **He is right, and it is worse than he thought.**
+
+Voice 0's five notes, with the fade and without — **they diverge only in note 1:**
+
+| note | starts | with the 8 s fade | with no shape at all |
+|---|---|---|---|
+| 1 | 0.00 s | 0 → **4.3** | 0.8 → **4.6** |
+| 2 | 8.05 s | 2.6 → 9.0 | 2.6 → 9.0 |
+| 3 | 16.28 s | 6.6 → 9.2 | 6.6 → 9.2 |
+| 4 | 24.23 s | 0.8 → 6.0 | 0.8 → 6.0 |
+
+And the peak of each successive note as the attack length grows (span 40 s, breaths 6–10 s):
+
+| attack len | note 1 | note 2 | note 3 | note 4 |
+|---|---|---|---|---|
+| none | 4.6 | 9.0 | 9.2 | 6.0 |
+| **3 s (the preset's own default)** | **4.6** | **9.0** | **9.2** | **6.0** |
+| 8 s | 4.3 | 9.0 | 9.2 | 6.0 |
+| 15 s | 2.3 | 9.0 | 9.2 | 6.0 |
+| 20 s | 1.7 | 7.0 | 8.8 | 6.0 |
+| 30 s | 1.1 | 4.7 | 5.9 | 4.9 |
+
+**A 3 s fade on this morph is bit-identical to no fade at all.** An 8 s fade moves note 1's peak from 4.6 to 4.3 — six per cent — and
+changes nothing else in the gesture.
+
+**THE DIAGNOSIS (the AI's, marked as such).** `shapeGain(shape, t, span)` multiplies the dynamics layer and its `t` is **ABSOLUTE GESTURE
+TIME**; past `len` the gain is exactly 1 and every later note is untouched. This model's breaths are 6–10 s (`carrier.segLen` 8), so any
+fade shorter than one breath shapes the FIRST NOTE ONLY, and the second breath arrives at full level on a fresh note-on — which the
+sampler articulates, so it is heard as an attack. **Not a coding error: a scaling error between two numbers chosen independently** — the
+preset's 3 s (written for the tuba piece and marked *UNHEARD* in `bank/shape_presets.json`) against this model's 8 s breath.
+
+**Two further findings.** (1) It reads as a JUMP rather than a plateau because the fade fights the dynamics swell and loses: note 1 ends
+at 4.3 while note 2 climbs to 9.0, so when the window closes the swell does not merely reach the body, it overtakes where the fade left
+off. (2) **`entry: ramp` cancels the fade by construction** — the entries are spread across the same window the gain is measured in, so
+the last voice to enter begins at gain 1.00. That is his *"1st entry quiet, then all the others loud after"*.
+
+**FOUR OPTIONS, none taken — his call when he comes back to it:**
+
+- **(a) scale the attack as a FRACTION OF THE SPAN** rather than in seconds — immune to breath length, and the dial then means the same
+  thing on every model;
+- **(b) measure the gain from each voice's OWN entry** — fixes `ramp` cancelling itself; does not fix the second-breath cliff;
+- **(c) make the fade a RISING CEILING** that caps the dynamics layer instead of multiplying it, so a swell cannot overtake it — the AI's
+  reading is that this is the one that would actually sound like a fade-in;
+- **(d) leave the engine alone and fix the PRESET's number** — the smallest change, no engine risk, and possibly all he wants.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

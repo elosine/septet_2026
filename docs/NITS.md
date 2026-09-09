@@ -152,3 +152,11 @@
 - **The lines' bar covers the first pixels of the piano lane** (AI, 2026-09-08; RUNNING_LOG §232). The strip sits at the lane's left end
   over the content, so a line scrolled under it cannot be clicked there; scroll it a little right. A place in the lane's label column
   (widened) would free the content; for the revision of the tool.
+
+- **THE MORPH'S FADE-IN DOES NOT FADE** (composer, 2026-09-09; measured, RUNNING_LOG §311; `docs/MORPH_NOTES.md` §3). `shapeGain` is a
+  multiplier on ABSOLUTE gesture time and is exactly 1 past `attack.len`, so a fade shorter than one breath (6–10 s on BLOOM) shapes the
+  first note only and the second breath enters at full level on a fresh note-on. **Measured: a 3 s fade — the preset's own default — is
+  bit-identical to no fade at all; an 8 s fade moves one note's peak from 4.6 to 4.3 and changes nothing else.** `entry: ramp` cancels it
+  outright, because the entries are spread across the very window the gain is measured in. Four options are written up in MORPH_NOTES:
+  scale it as a fraction of the span · measure it from each voice's own entry · make it a rising CEILING on the dynamics layer rather
+  than a multiplier · or just change the preset's number. **His analysis was asked for and given; nothing was changed.**
