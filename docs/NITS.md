@@ -176,3 +176,18 @@ Two bugs in two days were invisible for the same reason: every measurement stopp
 downstream of it — §314 in the velocities the emitter chose, §316 in the CC7 the score's held-note law produces. **A readout of velocity
 and CC7 per note — in the morph panel beside Play, and on a selected drawn note — would have ended each of them on the first day.**
 Cheap to build (both numbers already exist at emit time) and it pays for itself the first time a dynamic does not sound right.
+
+### The morph panel's Play never got §103's timestamp fix, and both CC7 streams are still per-frame (2026-09-09, §318)
+
+§103 moved the SCORE's notes onto Web MIDI timestamps with a 100 ms lookahead — the cure for *"still sounds quite jumpy"*. Two gaps are
+left, found when a fade could not be verified in the harness:
+
+- **`morph_emit.js` was never converted at all.** Every note-on, note-off, bend pre-arm and CC7 pre-arm in the panel's Play is a
+  `setTimeout`. §102's finding was that attacks are what the ear locks onto, and this is the panel where every morph is auditioned.
+  **The bigger of the two, and the pattern to copy is proven.**
+- **The continuous CC7 stream is per-frame in both places**, by §103's deliberate choice (*"continuous controllers, not attacks"*). A
+  fade argues with that choice, because there the stream carries the whole gesture. Measured: pre-scheduling would send the SAME number
+  of messages (~1100 on a full BLOOM, unchanged from a 16.7 ms step to a 50 ms one, because CC7 is 7-bit and already deduped), with
+  ~7 queued at a time on a 200 ms lookahead. It also makes the stream testable — the Browser pane throttles rAF to nothing while hidden.
+
+Bend stays per frame either way: 14-bit and genuinely dense.

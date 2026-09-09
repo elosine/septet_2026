@@ -573,6 +573,15 @@ const PANEL = {
             const i = document.createElement('input');
             i.type = 'number'; i.step = step; i.value = val; i.dataset.path = path;
             i.style.cssText = 'width:84px;background:#1b1b20;color:#ddd;border:1px solid #444;padding:1px 4px;font-size:13px';
+            // THE LAST BOX TOUCHED WINS. `lenPct` outranks `len` downstream, so with a fraction set the seconds box was reporting a
+            // resolved number and silently discarding anything typed into it — his "and len cant be changed now". Typing seconds
+            // clears the fraction; typing a fraction wins again and the seconds box goes back to reporting it.
+            if (path === 'shape.attack.len') {
+                i.addEventListener('input', () => {
+                    const pctBox = f.querySelector('input[data-path="shape.attack.lenPct"]');
+                    if (pctBox) pctBox.value = '';
+                });
+            }
             i.addEventListener('change', () => this.generate());
             w.appendChild(i); f.appendChild(w);
         };
@@ -748,7 +757,9 @@ const PANEL = {
                 // when a fraction is set it WINS, so the seconds box shows what it resolved to rather than a stale default —
                 // a box reading 2 beside a fade that is actually running 24 s is worse than no box at all
                 const aSpan = (p.carrier && p.carrier.span) || 0;
-                row('len (s)', 'shape.attack.len',
+                // and the label says which of the two is in charge, because a box reading 24 that ignores what you type into it is
+                // worse than no box at all — typing seconds now clears the fraction and takes over (2026-09-09)
+                row(sh.attack.lenPct != null ? 'len (s) ← from %' : 'len (s)', 'shape.attack.len',
                     sh.attack.lenPct != null ? Math.round(sh.attack.lenPct * aSpan * 100) / 100 : num(sh.attack.len, 2), 0.25);
                 row('len % of span', 'shape.attack.lenPct', num(sh.attack.lenPct, ''), 0.05);
                 sel('how', 'shape.attack.mode', num(sh.attack.mode, 'multiply'), M.ATTACK_MODES);
@@ -989,6 +1000,10 @@ const PANEL = {
             if (!t) return;
             const v = parseFloat(i.value);
             if (!isNaN(v)) t.obj[t.key] = v;
+            // AN EMPTY BOX MEANS NOT SET (2026-09-09, his "and len cant be changed now"). Every other row is drawn with a default so
+            // it is never empty; `len % of span` is drawn with '' when absent, and skipping it here meant a fraction could be typed
+            // in but never taken back out — which is half of why the seconds box had stopped responding.
+            else if (i.value === '' && t.obj[t.key] != null) delete t.obj[t.key];
         });
         this.el.querySelectorAll('#morphFields select').forEach(s => {
             // Same as above: the SHAPE PRESET picker lives here and owns

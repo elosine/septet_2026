@@ -9049,3 +9049,71 @@ exact meeting at the window's end, and the identity above. `morph_septet_check.j
 was CC7 88, which is Vn1's figure, against a suite that measures a different instrument and reads 71–76. Corrected to the measurement,
 with the variation noted in place. That is the second time in this sequence; the rule is worth stating flatly: **write the assertion
 after the number, never before it.**
+
+## §318. "len cant be changed now" — fixed; and the rAF question answered: the fix he remembers is §103's Web MIDI timestamps, and it was never applied to the morph panel at all
+
+Two things from the composer on 2026-09-09.
+
+### 1 · *"and len cant be changed now"* — his screenshot, and he was right
+
+With `len % of span` set to 0.6, typing into `len (s)` did nothing. **`lenPct` outranks `len` in `normaliseShape`, and `readFields`
+writes BOTH boxes back on every render** — so the seconds box showed the resolved 24 and silently discarded anything typed into it. It
+is the same trap that would have defeated the fade ladder (§315 caught that one and cleared `lenPct` per rung); I did not think to look
+at the box a person types in.
+
+**Fixed, three small things, all of them "the last box touched wins":**
+
+- typing in `len (s)` clears the `len % of span` box on `input`, so the seconds you type are the seconds you get
+- **an empty numeric box now DELETES its key** rather than being skipped. Every other row is drawn with a default and is never empty;
+  `lenPct` is drawn with `''` when absent, so without this a fraction could be typed in but never taken back out
+- the label reads **`len (s) ← from %`** while the fraction is in charge, and plain `len (s)` when it is not — a box reading 24 that
+  ignores what you type is worse than no box
+
+**Verified in the running app**, both directions and across a re-render: type 8 → the % box empties, the render comes back at **L = 8**,
+the label reverts — and 8 SURVIVES an unrelated nudge (the seed), which is the subtler half of "cannot be changed". Type 0.3 → L = 12 on
+a 40 s span, the seconds box reports 12, the label goes back to `← from %`.
+
+### 2 · *"we moved the screen to the web audio or something like that … investigate"*
+
+**He is remembering §102–103, and it was Web MIDI TIMESTAMPS, not Web Audio.** `output.send(msg, performance.now() + delay)` is
+delivered by the browser to the millisecond whatever the frame rate; §103 rewrote `tickCurvePlayback` so every plain / KS / curve NOTE
+is handed over up to 100 ms ahead with its exact timestamp on the transport's clock. That is what cured *"still sounds quite jumpy"*.
+
+**And §103 drew a line, deliberately:** *"The curve-following CC7 stream and the morph bend stay per frame — continuous controllers,
+not attacks."* Reasonable then. A FADE is the case that argues with it, because in a fade the continuous stream carries the entire
+musical content.
+
+**So there are two gaps, and the one nobody has looked at is the bigger:**
+
+| | attacks (note-on/off, CC0, the CC7 pre-arm) | the continuous CC7 / bend stream |
+|---|---|---|
+| **the score** (`composer.html`) | §103's timestamps + 100 ms lookahead ✅ | per frame |
+| **the morph panel** (`morph_emit.js`) | **`setTimeout` — §103 was never applied here** | per frame (rAF) |
+
+**`morph_emit.js` never got §103's fix at all.** Every note-on, note-off, bend pre-arm and CC7 pre-arm in the panel's Play is a
+`setTimeout`. By §102's own finding — attacks are what the ear locks onto — that is a bigger prize than the CC7 stream, and it is the
+panel where every morph gets auditioned. The pattern to copy already exists and is proven.
+
+**CAN the continuous stream be timestamped too? Yes, and the cost is nothing.** Measured on BLOOM + `fade-in-slow`, counting the CC7
+messages each scheme would actually send (both dedupe — CC7 is 7-bit, so a value is only sent when it changes):
+
+| sampling step | 16.7 ms | 20 ms | 25 ms | 33 ms | 50 ms |
+|---|---|---|---|---|---|
+| **CC7 messages sent** | 1107 | 1100 | 1102 | 1098 | 1063 |
+
+**The message count barely moves**, because the dedupe dominates: the value changes about 27 times a second however often you look. The
+24 s fade window alone is **742 messages across 20 notes**, ~31/s, and **a 200 ms lookahead holds about 7 queued messages at a time.**
+
+So pre-scheduling sends the SAME messages — it just hands them over early with exact timestamps instead of at frame times. The refill
+loop can then be a `setInterval`, which fires when the page is not painting at all. Cancellation already has its pattern:
+`flushCurvePlayback` calls `out.clear()` where the output has it.
+
+**Honest about what he would hear today:** with the window visible at 60 fps, 60 samples a second covers a 27/s change rate, so the
+stream is probably fine in the panel. It degrades exactly where §102 said frames drop — *"a scrolling SVG with hundreds of objects"* —
+which is the score, playing the full piece, which is where a 24 s fade will actually live. **And it is the reason the stream cannot be
+verified in the harness at all: the Browser pane throttles rAF to nothing while hidden — six samples in five seconds, all of them
+note-on values.** Timestamped scheduling would make it testable, which is worth something on its own after this week.
+
+**Recommended, in this order, on his word:** (a) `morph_emit.js` attacks onto timestamps + lookahead, copying `tickCurvePlayback`;
+(b) the CC7 stream pre-scheduled on a rolling window in both places, bend left per frame (14-bit and genuinely dense). Not built — he
+asked to be told first. → NITS.
