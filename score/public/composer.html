@@ -10935,6 +10935,9 @@ const Composer = {
         // note-off at its end — the pattern of tickZoneMidiPlayback (piece #2's zone tick). The curve-
         // following CC7 stream and the morph bend stay per frame: continuous controllers, not attacks.
         const LOOKAHEAD_S = 0.1, PREARM_S = 0.15, OFF_HORIZON_S = 2.0;
+        // §319: the CC7 stream's own horizon and resolution. 0.2 s of queue survives a page painting at 5 fps; 20 ms is finer than a
+        // frame, and costs nothing because repeats are dropped.
+        const STREAM_AHEAD_S = 0.2, STREAM_STEP_S = 0.02;
         const nowPerf = performance.now();
         const perfAt = (sec) => this.playStartTime + (sec - this.playStartOffset / this.pixelsPerSecond) * 1000;
         const jumped = Math.abs(currentTimeSec - prevTime) > 0.5;   // a scrub, not a frame step
@@ -10991,13 +10994,23 @@ const Composer = {
                     st.offScheduled = true;
                 }
                 if (currentTimeSec < wc.startSeconds) return;   // scheduled, not yet sounding: nothing to stream
-                // curve-following: the CC7 stream (rate-limited, continuous — per frame is right for it)
-                const t01 = (currentTimeSec - wc.startSeconds) / Math.max(1e-6, wc.endSeconds - wc.startSeconds);
-                const cc = ksMode ? null : this.heldCc7(wc, this.evalWaveCurve(wc, t01), currentTimeSec);   // 1g item 5
-                const now = performance.now();
-                if (!ksMode && cc !== st.lastCC && now - st.lastSend >= 25) {
-                    output.send([0xB0 | ch, 7, cc]);
-                    st.lastCC = cc; st.lastSend = now;
+                // THE CC7 STREAM IS NOW QUEUED FORWARD, NOT SENT PER FRAME (2026-09-09, §319). §103 timestamped the ATTACKS and left
+                // the continuous controllers on the animation frame, which was reasonable until a FADE arrived: there the stream is
+                // the whole gesture, and a page dropping frames — a scrolling SVG with hundreds of objects, which is what §102
+                // measured — steps a 24-second ramp coarsely. So each tick tops the queue up to STREAM_AHEAD_S with exact
+                // timestamps. The tick now only has to run often enough to REFILL, which even a badly throttled page manages.
+                // Repeats are dropped, so this sends no more messages than the per-frame version did — measured, the count barely
+                // moves between a 17 ms step and a 50 ms one, because CC7 is 7-bit.
+                if (!ksMode) {
+                    if (st.ccNext == null) st.ccNext = Math.max(wc.startSeconds, currentTimeSec);
+                    const horizon = Math.min(wc.endSeconds, currentTimeSec + STREAM_AHEAD_S);
+                    const dur = Math.max(1e-6, wc.endSeconds - wc.startSeconds);
+                    while (st.ccNext <= horizon + 1e-9) {
+                        const tSec = st.ccNext;
+                        const v = this.heldCc7(wc, this.evalWaveCurve(wc, Math.max(0, Math.min(1, (tSec - wc.startSeconds) / dur))), tSec);
+                        if (v !== st.lastCC) { output.send([0xB0 | ch, 7, v], Math.max(nowPerf, perfAt(tSec))); st.lastCC = v; }
+                        st.ccNext = tSec + STREAM_STEP_S;
+                    }
                 }
                 // PLAN 2v: a morph note carries `morphBend`, note-relative cents breakpoints against its
                 // written key. Nothing else in the score has one, so absent morphBend this block is skipped.
@@ -11032,8 +11045,10 @@ const Composer = {
             preArm(Math.max(nowPerf, onAt - (lateSwitch ? TRILL_SWITCH_LEAD_MS : PREARM_S * 1000)));
             output.send([0x90 | ch, wc.sonifyNote,
                 (wc.sonifyMode === 'plain' && wc.recVel != null) ? wc.recVel : (ksMode ? 100 : this.heldVel(wc))], onAt);   // 1g item 5: the velocity for the curve's top
+            // `ccNext` is where the queue has been filled to, in score seconds; `lastCC` starts at what the pre-arm just sent, so the
+            // first streamed value is only sent if it actually differs
             const rec = { note: wc.sonifyNote, onAt, lastCC: ksMode ? null : this.heldCc7(wc, this.evalWaveCurve(wc, 0)),
-                lastSend: nowPerf, offScheduled: false };
+                ccNext: null, lastSend: nowPerf, offScheduled: false };
             if (wc.endSeconds - wc.startSeconds <= OFF_HORIZON_S) {
                 this.seccoCut(wc, output, ch, portKey, perfAt(wc.endSeconds));   // PLAN 1l step 5
                 output.send([0x80 | ch, wc.sonifyNote, 0], Math.max(onAt + 1, perfAt(wc.endSeconds)));

@@ -43,6 +43,17 @@ if (!M) { console.warn('[morph_emit] morph.js must load first'); return; }
 // no bite — the blip needs CC7 to be MOVING under sounding audio, not a
 // sample transient and not velocity. Day 13's three fixes corrected the
 // VALUES; this is the TIMING.
+// EVERY ATTACK IS TIMESTAMPED, AND THE CC7 STREAM IS QUEUED AHEAD (2026-09-09, RUNNING_LOG §319).
+//
+// This file had neither of §103's fixes. Attacks went out on `setTimeout` — better than frames, but still at the mercy of a busy main
+// thread — and the CC7 stream was sent one value per animation frame, which stops entirely when the page is not painting. A FADE is
+// the case that makes the second unacceptable: there the stream IS the gesture, and nothing else is carrying it.
+//
+// Web MIDI delivers `send(msg, timestamp)` to the millisecond whatever the frame rate, and every value is known before a note starts,
+// so the whole run is handed over at play() time. Measured on a full BLOOM with the fade: ~1100 CC7 messages for 40 seconds, and the
+// count barely moves between a 16.7 ms step and a 50 ms one, because CC7 is 7-bit and repeats are dropped. The frame rate now touches
+// nothing; the rAF tick is left for BEND alone, which is 14-bit, genuinely dense, and far less exposed to a dropped frame.
+const STREAM_STEP_S = 0.02;   // 50 Hz — finer than a frame, and the dedupe means it costs nothing to ask often
 const CC_LEAD_MS = 250;   // > the score's proven 150 ms, imperceptible on a play button
 const TAIL_MS    = 2000;  // CC7-restore delay past note-off; ord tail measured 0.69 s
 
@@ -114,9 +125,22 @@ const EMIT = {
         if (this._raf) { cancelAnimationFrame(this._raf); this._raf = null; }
         this._playing = false;
 
+        // 0. CANCEL WHAT IS STILL QUEUED (§319). With the run handed to Web MIDI in advance, stopping means emptying the driver's
+        //    queue first — otherwise note-ons and a whole CC7 ramp would keep arriving after the note-offs below.
+        const seen = [];
+        this._active.forEach(a => { if (seen.indexOf(a.out) < 0) seen.push(a.out); });
+        seen.forEach(out => { try { if (typeof out.clear === 'function') out.clear(); } catch (e) {} });
+
         // 1. explicit note-off for everything WE started — the registry is the
         //    source of truth, not memory of what "should" be sounding
-        this._active.forEach(a => { try { a.out.send([0x80 | a.ch, a.key, 0]); } catch (e) {} });
+        const nowP = performance.now();
+        this._active.forEach(a => {
+            try {
+                // a note whose own note-on is still ahead is closed just after it, which also covers an output without `clear()`
+                if (a.onAt != null && a.onAt > nowP) a.out.send([0x80 | a.ch, a.key, 0], a.onAt + 5);
+                else a.out.send([0x80 | a.ch, a.key, 0]);
+            } catch (e) {}
+        });
         const started = this._active.length;
         this._active = [];
 
@@ -320,6 +344,10 @@ const EMIT = {
             if (this._restore[r.key]) { clearTimeout(this._restore[r.key]); delete this._restore[r.key]; }
         });
 
+        // ONE CLOCK for the whole run, taken before anything is queued: every timestamp below is an offset from it, and the rAF tick
+        // measures against the same base, so the bend it still streams cannot drift from the notes it belongs to.
+        const t0 = performance.now();
+        const at = ms => t0 + Math.max(0, ms);
         resolved.forEach(r => {
             const n = r.n, route = r.route;
             const key = n.midi;
@@ -340,19 +368,32 @@ const EMIT = {
             const bend = n.bend.map(pt => [pt[0], pt[1]]);
 
             const dyn = dynOf(n, route), cc7At = ccOf(n, route, dyn);
+            const send = (msg, ms) => { try { route.out.send(msg, at(ms)); } catch (e) {} };
             // pre-arm the bend so the note STARTS at pitch (probe 0.3)
-            this._timers.push(setTimeout(() => this.sendBend(route, bend[0][1]),
-                Math.max(0, r.onMs - prearm)));
-            // the switch (the septet's CC0 preset or a keyswitch) and CC7 for this note's opening level; the level curve is followed below
-            this._timers.push(setTimeout(() => {
-                try {
-                    if (route.cc0 != null) route.out.send([0xB0 | route.ch, 0, route.cc0]);
-                    if (route.ks != null) { route.out.send([0x90 | route.ch, route.ks, 100]); route.out.send([0x80 | route.ch, route.ks, 0]); }
-                    route.out.send([0xB0 | route.ch, 7, Math.round(cc7At(n.level[0][1]) * fadeAt(n, 0))]);
-                } catch (e) {}
-            }, Math.max(0, cold ? r.onMs - CC_LEAD_MS : r.onMs - prearm + 5)));
-            this._timers.push(setTimeout(() => this.noteOn(route, key, velFor(n, dyn)), r.onMs));
-            this._timers.push(setTimeout(() => this.noteOff(route, key), r.offMs));
+            const b0 = M.bendValue(bend[0][1], route.bendRangeSt || undefined);
+            send([0xE0 | route.ch, b0 & 0x7F, (b0 >> 7) & 0x7F], r.onMs - prearm);
+            this._bentCh[route.port + '|' + route.ch] = true;
+            // the switch (the septet's CC0 preset or a keyswitch) and CC7 for this note's opening level
+            const armMs = cold ? r.onMs - CC_LEAD_MS : r.onMs - prearm + 5;
+            if (route.cc0 != null) send([0xB0 | route.ch, 0, route.cc0], armMs);
+            if (route.ks != null) { send([0x90 | route.ch, route.ks, 100], armMs); send([0x80 | route.ch, route.ks, 0], armMs); }
+            const cc7Open = Math.max(0, Math.min(127, Math.round(cc7At(n.level[0][1]) * fadeAt(n, 0))));
+            send([0xB0 | route.ch, 7, cc7Open], armMs);
+            send([0x90 | route.ch, key, velFor(n, dyn)], r.onMs);
+            send([0x80 | route.ch, key, 0], r.offMs);
+            // `_active` is the registry panic closes, and it is filled when the note is QUEUED rather than when it sounds — a note-off
+            // for a key that never spoke is a no-op, while a note we forgot to register is a hung note. `onAt` lets panic close one
+            // that is still ahead 5 ms after its own note-on, which covers an output with no `clear()`.
+            this._active.push({ out: route.out, ch: route.ch, key: key, port: route.port, onAt: at(r.onMs) });
+
+            // THE WHOLE CC7 STREAM, QUEUED NOW. Every value is a function of the note's own level curve and the fade's weight, both
+            // known before a sound is made, so there is nothing to compute at play time and nothing for a dropped frame to miss.
+            let lastCc = cc7Open;
+            const durS = Math.max(0, (r.offMs - r.onMs) / 1000);
+            for (let dt = STREAM_STEP_S; dt <= durS + 1e-9; dt += STREAM_STEP_S) {
+                const v = Math.max(0, Math.min(127, Math.round(cc7At(this.interp(n.level, dt)) * fadeAt(n, dt))));
+                if (v !== lastCc) { send([0xB0 | route.ch, 7, v], r.onMs + dt * 1000); lastCc = v; }
+            }
             scheduled.push({ route: route, bend: bend, level: n.level, cc7Fade: n.cc7Fade, tStart: n.tStart,
                              onMs: r.onMs, offMs: r.offMs,
                              lastB: null, lastC: null, cc7At: cc7At });
@@ -366,7 +407,7 @@ const EMIT = {
 
         const span = (o.span || result.meta.span) * 1000 + 1200 + CC_LEAD_MS;
         this._plan = scheduled;
-        this._t0 = performance.now();
+        this._t0 = t0;
         this._playing = true;
 
         const tick = () => {
@@ -375,16 +416,11 @@ const EMIT = {
             scheduled.forEach(s => {
                 if (el < s.onMs || el > s.offMs) return;
                 const dt = (el - s.onMs) / 1000;
+                // BEND ONLY (§319). CC7 is queued with timestamps at play() time, so a dropped frame can no longer step on a fade.
+                // Bend stays here: 14-bit and changing constantly, it would queue an order of magnitude more messages for a
+                // dimension where a frame's worth of lag is inaudible.
                 const bv = Math.round(this.interp(s.bend, dt));
                 if (bv !== s.lastB) { this.sendBend(s.route, bv); s.lastB = bv; }
-                const ccBase = s.cc7At ? s.cc7At(this.interp(s.level, dt)) : this.levelToCC(this.interp(s.level, dt));
-                // the fade rides on top of whichever law produced it — the measured remap or the tuba map — because it is a statement
-                // about the FADER and not about the dynamic the player is reading (§317)
-                const cc = s.cc7Fade ? Math.max(0, Math.min(127, Math.round(ccBase * M.fadeWeight(s.cc7Fade, s.tStart + dt)))) : ccBase;
-                if (cc !== s.lastC) {
-                    try { s.route.out.send([0xB0 | s.route.ch, 7, cc]); } catch (e) {}
-                    s.lastC = cc;
-                }
             });
             // the host's clock runs in RENDER time — take the shift back out
             if (this.onFrame) try { this.onFrame(Math.max(0, el - CC_LEAD_MS) / 1000); } catch (e) {}

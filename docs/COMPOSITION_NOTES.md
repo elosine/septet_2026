@@ -1321,3 +1321,16 @@ See RUNNING_LOG §289–290.
 5. **The open question is the DURATION of each crescendo**, and he wants possibilities clearly stated with a recommendation.
 
 See RUNNING_LOG §301–303.
+
+### 2026-09-09 — panel settings kept: BLOOM + fade-in-slow at 183 s
+
+> *"and then just capture these settings for me pls"*
+
+Read off the panel and written into **`docs/PANEL_CAPTURES.md`** — the model and its take (strikes #29, seed 20, k 1, per pair
+*one, doubled* → C#5 A5 G6), the beating BLOOM stock at *slower / longer* 0.64, all nine dials (span 42 · duration 100 · release 12 ·
+segment 8 · bias 0.3 · spread 0.35 · depth 1 · dyn 0.42 swell · seed 33), the three visible pairs, and the shape (`fade-in-slow`,
+60 % of span = 25.2 s, linear, from 0). 93 notes.
+
+*The AI's note:* what a screenshot cannot carry is the render itself. **`Save as ACTUAL`** captures the resolved parameters, the engine
+constants and every object, and puts it one click from RECALL — worth pressing whenever a setting is one to come back to. The pairs
+below the third, and anything under SHAPE · release, were off the bottom of the screenshots and are not in the record.

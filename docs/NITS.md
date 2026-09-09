@@ -177,7 +177,7 @@ downstream of it — §314 in the velocities the emitter chose, §316 in the CC7
 and CC7 per note — in the morph panel beside Play, and on a selected drawn note — would have ended each of them on the first day.**
 Cheap to build (both numbers already exist at emit time) and it pays for itself the first time a dynamic does not sound right.
 
-### The morph panel's Play never got §103's timestamp fix, and both CC7 streams are still per-frame (2026-09-09, §318)
+### ~~The morph panel's Play never got §103's timestamp fix, and both CC7 streams are still per-frame~~ — **BUILT the same day (§319)**
 
 §103 moved the SCORE's notes onto Web MIDI timestamps with a 100 ms lookahead — the cure for *"still sounds quite jumpy"*. Two gaps are
 left, found when a fade could not be verified in the harness:

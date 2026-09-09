@@ -9117,3 +9117,54 @@ note-on values.** Timestamped scheduling would make it testable, which is worth 
 **Recommended, in this order, on his word:** (a) `morph_emit.js` attacks onto timestamps + lookahead, copying `tickCurvePlayback`;
 (b) the CC7 stream pre-scheduled on a rolling window in both places, bend left per frame (14-bit and genuinely dense). Not built — he
 asked to be told first. → NITS.
+
+## §319. Both timing fixes built: the panel's Play onto Web MIDI timestamps, and BOTH CC7 streams queued ahead — and the fade is finally measurable
+
+Composer, 2026-09-09: *"yes do both please"*, on §318's two recommendations.
+
+### What changed
+
+**`morph_emit.js` — every attack is now timestamped.** §103 gave the SCORE this fix and this file never received it: note-on, note-off,
+the bend pre-arm and the CC0/CC7 pre-arm were all `setTimeout`. They are now `out.send(msg, t0 + offset)` against one clock taken
+before anything is queued, which the rAF tick also measures against so the bend it still streams cannot drift from the notes.
+
+**And the CC7 stream is queued at `play()` time, in full.** Every value is a function of the note's own level curve and the fade's
+weight, both known before a sound is made — so there is nothing to compute later and nothing for a dropped frame to miss. The rAF tick
+is left with BEND alone: 14-bit, genuinely dense, and a frame's lag in a gliss is inaudible where a frame's lag in a fade is not.
+
+**`composer.html` — the score's stream became a lookahead queue.** It cannot pre-schedule everything (its notes can be a minute long
+and it must survive a scrub), so each tick tops the queue up to **`STREAM_AHEAD_S` 0.2 s in `STREAM_STEP_S` 0.02 s steps**, deduped,
+timestamped. **The tick now only has to run often enough to REFILL**, which is the whole point: 0.2 s of queue survives a page
+painting at 5 fps.
+
+**`panic()` gained the cancel it now needs** — with a run handed to the driver in advance, stopping means emptying the queue first
+(`out.clear()` where the output has it), and a note whose own note-on is still ahead is closed 5 ms after it, which covers an output
+with no `clear()`. That last trick is §103's, reused. `_active` is filled when a note is QUEUED rather than when it sounds: a note-off
+for a key that never spoke is a no-op, a note we forgot to register is a hung note.
+
+### Measured — and this is the part that matters beyond the fix
+
+**The 24-second fade, captured whole, in one call, with rAF dead.** Every message the panel would send, timestamped:
+
+| | 0 s | 3 s | 6 s | 12 s | 18 s | 24 s | 30 s |
+|---|---|---|---|---|---|---|---|
+| **CC7** | **0** | 11 | 23 | 46 | 70 | **120** | 105 |
+
+1047 CC7 messages and 31 note-ons, **all timestamped**, 1171 messages queued the instant `play()` returned. Three sessions running,
+this stream could not be measured at all — §317 had to be reported with *"the note-ons are measured and the stream is not"*, because
+the Browser pane throttles `requestAnimationFrame` to nothing while hidden (six samples in five seconds). **Timestamped scheduling did
+not only make the fade robust; it made it testable.** That is the larger win and it will pay for itself again.
+
+**The score's stream, driven BY HAND at 5 Hz** — far worse than any real page — still produced **31 timestamped CC7 messages rising
+0 → 30 monotonically** across one faded note. Per frame at 5 Hz it would have sent five coarse steps a second and nothing between them.
+
+### The cost, which is the reason this was safe to do
+
+Both schemes drop repeats — CC7 is 7-bit — so the message count barely moves with the sampling rate: measured on a full BLOOM,
+**1107 messages at a 16.7 ms step and 1063 at 50 ms**. Pre-scheduling sends the SAME messages; it just hands them over early with exact
+timestamps instead of at frame times. A 200 ms horizon holds about 7 queued at a time.
+
+### Left alone, deliberately
+
+Bend stays per frame in both places. It is 14-bit and changes constantly — an order of magnitude more messages for a dimension where a
+frame's lag cannot be heard. If a gliss ever sounds stepped, this is the first thing to revisit.
