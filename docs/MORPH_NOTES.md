@@ -893,6 +893,29 @@ the last voice to enter begins at gain 1.00. That is his *"1st entry quiet, then
   reading is that this is the one that would actually sound like a fade-in;
 - **(d) leave the engine alone and fix the PRESET's number** — the smallest change, no engine risk, and possibly all he wants.
 
+### 2026-09-09 — the fade-in fix SIMULATED before recommending: a straight ceiling does nothing (RUNNING_LOG §312)
+
+His question: *"and what is the recommend c + a?"* — so the options were simulated on the real render rather than reasoned about.
+Voice 0-s five breath peaks (t = 0 · 8 · 16 · 24 · 34 s, span 40 s):
+
+| | 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|
+| the morph on its own | 4.6 | 9.0 | 9.2 | 6.0 | 0.8 |
+| multiplier, 8 s (what he has) | 4.2 | 9.0 | 9.2 | 6.0 | 0.8 |
+| multiplier, 16 s | 2.1 | 8.8 | 9.2 | 6.0 | 0.8 |
+| **ceiling, 16 s, straight** | **4.6** | **9.0** | **9.2** | 6.0 | 0.8 |
+| **ceiling, 24 s, held back** | **0.9** | **4.2** | **8.0** | 6.0 | 0.8 |
+
+**A straight ceiling does nothing** — a lid rising linearly to full sits above the swell at every moment. Only the HELD-BACK, LONG ceiling
+grades the breaths. The reason is worth keeping: **a multiplier scales the swell, so a loud breath stays proportionally loud; a ceiling
+flattens it, removing the peak.** And the curve dial has no held-back option — measured,  is FRONT-loaded (0.35 at u = 0.1) and runs
+the wrong way for a fade.
+
+**Underneath all of it:** the morph-s own dynamics already DOUBLE from breath 1 to breath 2 (4.6 → 9.0) with no shape at all. A multiplier
+on the first seconds therefore scales down the breath that was already quietest and leaves the loud one alone — it makes the contrast
+worse. **The recommendation: (a) the length as a fraction of the span, about 60 % · (c) a ceiling not a multiplier · plus a held-back curve
+in the dial. (d) alone is measurably not enough.** Not built.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

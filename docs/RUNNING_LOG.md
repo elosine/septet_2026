@@ -8652,3 +8652,42 @@ gain is measured in, so the last voice to enter starts at gain 1.00 — the ramp
 seconds; (b) measure the gain from each voice's OWN entry so `ramp` and the fade stop cancelling; (c) make the fade a ceiling that rises
 — it caps the dynamics layer instead of multiplying it, so a swell cannot overtake it; (d) leave the engine alone and fix the PRESET's
 number, which is the smallest change and may be all he wants.
+
+## §312. The fade-in, simulated: (c)+(a) confirmed, but a STRAIGHT ceiling does nothing and the curve dial has no held-back option
+
+Composer, 2026-09-09: *"and what is the recommend c + a?"* — so the four options of §311 were simulated on the real render before answering,
+rather than recommending from the shape of the idea.
+
+**The method:** render BLOOM with NO shape (that is the dynamics layer on its own), then apply each candidate to its emitted level
+breakpoints and read the peak of each of voice 0's five breaths (t = 0 · 8 · 16 · 24 · 34 s, span 40 s).
+
+| | breath 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|
+| **the morph on its own** | 4.6 | 9.0 | 9.2 | 6.0 | 0.8 |
+| multiplier, 8 s *(what he has)* | 4.2 | 9.0 | 9.2 | 6.0 | 0.8 |
+| multiplier, 16 s *(a alone)* | 2.1 | 8.8 | 9.2 | 6.0 | 0.8 |
+| **ceiling, 16 s, straight** *(c + a as first put)* | **4.6** | **9.0** | **9.2** | 6.0 | 0.8 |
+| ceiling, 16 s, held back (squared) | 2.1 | 9.0 | 9.2 | 6.0 | 0.8 |
+| **ceiling, 24 s, held back (squared)** | **0.9** | **4.2** | **8.0** | 6.0 | 0.8 |
+| ceiling, 24 s, cubed | 0.3 | 2.8 | 7.6 | 6.0 | 0.8 |
+
+**Three findings, and the first is the one that corrects §311's recommendation.**
+
+1. **A STRAIGHT ceiling does nothing at all** — 4.6 / 9.0 / 9.2, identical to the bare morph. A lid rising linearly to full over 16 s sits
+   ABOVE the swell at every moment, so it never bites. (c) as I first put it to him was wrong on its own.
+2. **Only the held-back, long ceiling reads as a fade** — 0.9 / 4.2 / 8.0 across three breaths. And it works for a reason worth keeping:
+   **a multiplier SCALES the swell, so a loud breath stays proportionally loud; a ceiling FLATTENS it, removing the peak, which is what
+   makes successive breaths grade.**
+3. **The curve dial has no held-back option.** Measured: `linear` is 0.10 at u = 0.1; **`expo` is 0.35 — it is FRONT-loaded**, rising
+   fastest at the start, the opposite of what a fade wants; `sudden` is a step at the very end. A squared ease (0.01 at u = 0.1) is what
+   the table above uses and nothing in the vocabulary provides it.
+
+**And the fact underneath all of it:** the morph's own dynamics already **double** from breath 1 to breath 2 (4.6 → 9.0) with no shape at
+all. The gesture is a bloom that grows; that growth is not the fade's doing. **A multiplier applied to the first seconds therefore scales
+down the breath that was already the quietest and leaves the loud one alone — it makes the contrast WORSE, not better**, which is exactly
+what he hears.
+
+**The recommendation as it now stands, put to him and not built:** **(a)** the length as a fraction of the span, wanting about **60 %**
+rather than 40 % · **(c)** a ceiling rather than a multiplier · **and a third piece §311 did not know it needed** — a held-back curve
+added to the dial, since `expo` runs the wrong way for this job. **(d)** — changing the preset's number alone — is now measurably not
+enough: the multiplier at 16 s still leaves a 2.1 → 8.8 cliff.
