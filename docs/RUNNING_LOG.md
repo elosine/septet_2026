@@ -9168,3 +9168,60 @@ timestamps instead of at frame times. A 200 ms horizon holds about 7 queued at a
 
 Bend stays per frame in both places. It is 14-bit and changes constantly — an order of magnitude more messages for a dimension where a
 frame's lag cannot be heard. If a gliss ever sounds stepped, this is the first thing to revisit.
+
+## §320. THE STUCK RACK — §319 queued the whole run on the strength of a `MIDIOutput.clear()` that Chrome does not implement
+
+Composer, 2026-09-09, minutes after §319 was pushed:
+
+> *"midi is frozen now wont stop playing, panic doesnt work"*
+
+**My fault, and the mechanism is worth stating exactly.** §319 handed the ENTIRE run to Web MIDI at `play()` time — up to a hundred
+seconds of note-ons and CC7 — and made `panic()` cancel it with `out.clear()`, guarded by `typeof out.clear === 'function'`. That guard
+was doing all the work and I never checked which way it fell:
+
+```
+MIDIOutput.prototype → ['send', 'constructor']
+```
+
+**`clear()` is in the Web MIDI spec and Chrome does not implement it.** So the guard quietly skipped, nothing was cancelled, panic's
+note-offs went out immediately, and every queued note-on kept arriving behind them. The rack was left sounding with no way to reach it
+— Stop genuinely could not work, because there was nothing Stop could do.
+
+**Immediate cure given first:** reload the page (that tears down the MIDIAccess and its queue), then an all-sound-off / all-notes-off
+sweep on every channel of every output from the console.
+
+### The principle, which is the real content of this entry
+
+**Never queue what cannot be un-queued.** Timestamps are only half of the scheduling pattern; the other half is a BOUND. The score has
+always had one — §103 queues 100 ms of notes ahead — which is why the same missing `clear()` in `flushCurvePlayback` has never once
+shown itself there. §319 took the timestamps and dropped the bound, and the bound was the part keeping everyone safe.
+
+### The rebuild
+
+- **`SCHED_AHEAD_MS = 250`**, and every message of the run is now built into ONE sorted event list at `play()` time and released a
+  horizon at a time by a cursor. The expensive part still happens once; the driver never holds more than a quarter second.
+- **The refill is a `setInterval` at 60 ms**, not `requestAnimationFrame` — §319's whole purpose, kept: a timer fires when the page is
+  not painting, and since each message carries its own timestamp, a late tick still delivers on the millisecond.
+- **`panic()` stops refilling first**, then closes what is sounding, then — §103's trick, restored — closes any note whose own note-on is
+  COMMITTED but has not arrived yet, timestamped 5 ms after that note-on. That is the precise cure: one key on one channel.
+- **A belt-and-braces CC120 + CC123 sweep at one horizon + 60 ms**, and it is a **cancellable timer, not a timestamp**. Making it a
+  timestamp was my second bug of the hour, caught before it shipped: a timestamped message cannot be recalled either, so a Play pressed
+  straight after a Stop would have taken an all-notes-off 310 ms into the new run. `play()` cancels it.
+
+### Measured, before and after
+
+| | §319 | §320 |
+|---|---|---|
+| messages handed over at `play()` | **1171** | **24** |
+| furthest message queued | **40 252 ms** | **251 ms** |
+| note-ons arriving after Stop | **all of them** | **0** |
+| Stop → Play immediately | — | no stray all-notes-off, refill running |
+
+The sweep fires at 312 ms after a stop across all four channels, and both `_sched` and `_sweep` come back null.
+
+### What this cost and what it bought
+
+The fade's numbers from §319 are unchanged — the stream is still timestamped, still immune to a dropped frame, still measurable in the
+harness. Only the depth of the queue changed. **The lesson is one line: a feature guard on a capability I never verified was the whole
+bug.** `typeof out.clear === 'function'` looked like defensive code and was in fact an unexamined assumption with his rack on the other
+end of it. Three minutes in the console before writing it would have found it — the same three minutes that §316 and §314 both turned on.

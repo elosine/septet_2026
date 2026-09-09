@@ -1012,6 +1012,20 @@ rounds were lost to a control that looked like loudness and was actually notatio
 same one. Every earlier bug in this sequence came from a law that existed in two places (§315: the velocity rule in the emitter and again
 in `Composer.heldDyn`). One formula, one fade.
 
+### 2026-09-09 — NEVER QUEUE WHAT CANNOT BE UN-QUEUED (RUNNING_LOG §320)
+
+*"midi is frozen now wont stop playing, panic doesnt work."* The morph panel had just been changed to hand its whole run to Web MIDI
+in advance, cancelling on Stop with `out.clear()`. **`MIDIOutput.clear()` is in the spec and Chrome does not implement it** — the
+prototype carries `send` and `constructor` — so Stop cancelled nothing and a hundred seconds of note-ons kept arriving.
+
+**FOR THE REVISION, and it applies to any scheduler this tool ever grows:** timestamped scheduling needs a BOUND as much as it needs
+timestamps. Hold at most a fraction of a second in the driver, top it up from a timer, and a stop is always within that fraction of
+silence. The score has had a 100 ms bound since §103, which is why the identical missing `clear()` there has never once been felt.
+
+**And the guard that caused it is a pattern to distrust:** `typeof out.clear === 'function'` reads as defensive code and was actually an
+unverified assumption about the platform, with the rack on the other end. A capability check is only defensive if you have looked at
+which way it falls.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

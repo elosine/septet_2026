@@ -54,6 +54,15 @@ if (!M) { console.warn('[morph_emit] morph.js must load first'); return; }
 // count barely moves between a 16.7 ms step and a 50 ms one, because CC7 is 7-bit and repeats are dropped. The frame rate now touches
 // nothing; the rAF tick is left for BEND alone, which is 14-bit, genuinely dense, and far less exposed to a dropped frame.
 const STREAM_STEP_S = 0.02;   // 50 Hz — finer than a frame, and the dedupe means it costs nothing to ask often
+// AND THE QUEUE IS BOUNDED (2026-09-09, §320, after §319 hung his rack). Timestamps are only half the pattern; the other half is that
+// **nothing may be queued that cannot be un-queued**, and on this platform NOTHING can be un-queued: `MIDIOutput.clear()` is in the
+// Web MIDI spec and **Chrome does not implement it** — the prototype carries `send` and `constructor`, nothing else. §319 handed the
+// whole run to the driver on the strength of a `clear()` that silently did not exist, so Stop cancelled nothing, the note-offs went
+// out while the note-ons kept arriving behind them, and the rack was left sounding with no way to reach it. Hence: never hold more
+// than SCHED_AHEAD_MS in the driver, top it up from a TIMER (which fires when the page is not painting — the whole point of §319),
+// and let Stop simply stop refilling. The worst case is then one horizon of already-committed sound, and 250 ms is inaudible.
+const SCHED_AHEAD_MS = 250;   // how far ahead the driver ever holds — also exactly how long a panic can take to bite
+const SCHED_TICK_MS  = 60;    // the refill timer; four chances inside every horizon, so a late tick cannot open a gap
 const CC_LEAD_MS = 250;   // > the score's proven 150 ms, imperceptible on a play button
 const TAIL_MS    = 2000;  // CC7-restore delay past note-off; ord tail measured 0.69 s
 
@@ -65,6 +74,8 @@ const EMIT = {
     _playing: false,
     _t0: 0,
     _raf: null,
+    _sched: null,       // the refill interval (§320) — the only thing feeding the driver
+    _sweep: null,       // the belt-and-braces silence after a stop; CANCELLED by the next play, or it would land inside it
     _plan: null,
     CC_LEAD_MS: CC_LEAD_MS,   // exposed so the panel can align narration
     onFrame: null,      // host hook: (elapsedSec) => void
@@ -123,20 +134,18 @@ const EMIT = {
         this._timers.forEach(clearTimeout);
         this._timers = [];
         if (this._raf) { cancelAnimationFrame(this._raf); this._raf = null; }
+        // STOP REFILLING FIRST (§320). Everything past the horizon has not been handed over and now never will be; what is already in
+        // the driver cannot be recalled on this platform, so the sweep below is timed to land after it.
+        if (this._sched) { clearInterval(this._sched); this._sched = null; }
         this._playing = false;
-
-        // 0. CANCEL WHAT IS STILL QUEUED (§319). With the run handed to Web MIDI in advance, stopping means emptying the driver's
-        //    queue first — otherwise note-ons and a whole CC7 ramp would keep arriving after the note-offs below.
-        const seen = [];
-        this._active.forEach(a => { if (seen.indexOf(a.out) < 0) seen.push(a.out); });
-        seen.forEach(out => { try { if (typeof out.clear === 'function') out.clear(); } catch (e) {} });
 
         // 1. explicit note-off for everything WE started — the registry is the
         //    source of truth, not memory of what "should" be sounding
+        //    — and a note whose own note-on is COMMITTED but has not arrived yet is closed just after it (§103's trick), which is the
+        //    precise cure: it names one key on one channel rather than silencing everything
         const nowP = performance.now();
         this._active.forEach(a => {
             try {
-                // a note whose own note-on is still ahead is closed just after it, which also covers an output without `clear()`
                 if (a.onAt != null && a.onAt > nowP) a.out.send([0x80 | a.ch, a.key, 0], a.onAt + 5);
                 else a.out.send([0x80 | a.ch, a.key, 0]);
             } catch (e) {}
@@ -151,6 +160,20 @@ const EMIT = {
             const out = this.outputFor(port);
             if (out) { outs[k] = { out: out, ch: ch }; try { out.send([0xB0 | ch, 123, 0]); } catch (e) {} }
         });
+
+        // 2b. AND AGAIN AFTER THE HORIZON (§320), as belt and braces. The per-note close above is the real cure; this catches anything
+        //     the registry could have missed. It must be a TIMER and not a timestamp: a timestamped message cannot be recalled on this
+        //     platform, so a Play pressed straight after a Stop would have taken an all-notes-off 310 ms into the new run. `play()`
+        //     cancels it. Late is harmless — the horizon is only 250 ms, so the worst case without it is inaudible anyway.
+        if (this._sweep) clearTimeout(this._sweep);
+        this._sweep = setTimeout(() => {
+            this._sweep = null;
+            Object.keys(outs).forEach(k => {
+                const o = outs[k];
+                try { o.out.send([0xB0 | o.ch, 120, 0]); } catch (e) {}   // all sound off
+                try { o.out.send([0xB0 | o.ch, 123, 0]); } catch (e) {}   // all notes off
+            });
+        }, SCHED_AHEAD_MS + 60);
 
         // 3. centre the bend NOW (RESET_GAP_S measured 0 — inaudible), but the
         //    CC7=127 restore waits TAIL_MS past the note-offs. Restoring in the
@@ -232,6 +255,8 @@ const EMIT = {
     async play(result, opts) {
         const o = opts || {};
         this.panic();
+        // panic arms a silence for one horizon's time; this run starts now, so that silence would land inside it (§320)
+        if (this._sweep) { clearTimeout(this._sweep); this._sweep = null; }
         if (!result || !result.notes || !result.notes.length) {
             return { scheduled: 0, skipped: 0, reason: 'nothing rendered' };
         }
@@ -348,6 +373,7 @@ const EMIT = {
         // measures against the same base, so the bend it still streams cannot drift from the notes it belongs to.
         const t0 = performance.now();
         const at = ms => t0 + Math.max(0, ms);
+        const events = [];       // every message of the whole run, built now, released a horizon at a time
         resolved.forEach(r => {
             const n = r.n, route = r.route;
             const key = n.midi;
@@ -368,31 +394,29 @@ const EMIT = {
             const bend = n.bend.map(pt => [pt[0], pt[1]]);
 
             const dyn = dynOf(n, route), cc7At = ccOf(n, route, dyn);
-            const send = (msg, ms) => { try { route.out.send(msg, at(ms)); } catch (e) {} };
+            // EVERY MESSAGE IS COMPUTED NOW AND SENT LATER. The values all follow from the note's own level curve and the fade's
+            // weight, both known before a sound is made — so the expensive part happens once, here, and the refill below is a walk
+            // along a sorted list. What it does NOT do is hand them to the driver: see SCHED_AHEAD_MS.
+            const ev = (ms, msg, kind) => events.push({ ms: ms, msg: msg, route: route, kind: kind, key: key });
             // pre-arm the bend so the note STARTS at pitch (probe 0.3)
             const b0 = M.bendValue(bend[0][1], route.bendRangeSt || undefined);
-            send([0xE0 | route.ch, b0 & 0x7F, (b0 >> 7) & 0x7F], r.onMs - prearm);
+            ev(r.onMs - prearm, [0xE0 | route.ch, b0 & 0x7F, (b0 >> 7) & 0x7F]);
             this._bentCh[route.port + '|' + route.ch] = true;
             // the switch (the septet's CC0 preset or a keyswitch) and CC7 for this note's opening level
             const armMs = cold ? r.onMs - CC_LEAD_MS : r.onMs - prearm + 5;
-            if (route.cc0 != null) send([0xB0 | route.ch, 0, route.cc0], armMs);
-            if (route.ks != null) { send([0x90 | route.ch, route.ks, 100], armMs); send([0x80 | route.ch, route.ks, 0], armMs); }
+            if (route.cc0 != null) ev(armMs, [0xB0 | route.ch, 0, route.cc0]);
+            if (route.ks != null) { ev(armMs, [0x90 | route.ch, route.ks, 100]); ev(armMs, [0x80 | route.ch, route.ks, 0]); }
             const cc7Open = Math.max(0, Math.min(127, Math.round(cc7At(n.level[0][1]) * fadeAt(n, 0))));
-            send([0xB0 | route.ch, 7, cc7Open], armMs);
-            send([0x90 | route.ch, key, velFor(n, dyn)], r.onMs);
-            send([0x80 | route.ch, key, 0], r.offMs);
-            // `_active` is the registry panic closes, and it is filled when the note is QUEUED rather than when it sounds — a note-off
-            // for a key that never spoke is a no-op, while a note we forgot to register is a hung note. `onAt` lets panic close one
-            // that is still ahead 5 ms after its own note-on, which covers an output with no `clear()`.
-            this._active.push({ out: route.out, ch: route.ch, key: key, port: route.port, onAt: at(r.onMs) });
+            ev(armMs, [0xB0 | route.ch, 7, cc7Open]);
+            ev(r.onMs, [0x90 | route.ch, key, velFor(n, dyn)], 'on');
+            ev(r.offMs, [0x80 | route.ch, key, 0], 'off');
 
-            // THE WHOLE CC7 STREAM, QUEUED NOW. Every value is a function of the note's own level curve and the fade's weight, both
-            // known before a sound is made, so there is nothing to compute at play time and nothing for a dropped frame to miss.
+            // the CC7 stream, as events on the same list — repeats dropped, so a slow fade is a handful of messages a second
             let lastCc = cc7Open;
             const durS = Math.max(0, (r.offMs - r.onMs) / 1000);
             for (let dt = STREAM_STEP_S; dt <= durS + 1e-9; dt += STREAM_STEP_S) {
                 const v = Math.max(0, Math.min(127, Math.round(cc7At(this.interp(n.level, dt)) * fadeAt(n, dt))));
-                if (v !== lastCc) { send([0xB0 | route.ch, 7, v], r.onMs + dt * 1000); lastCc = v; }
+                if (v !== lastCc) { ev(r.onMs + dt * 1000, [0xB0 | route.ch, 7, v]); lastCc = v; }
             }
             scheduled.push({ route: route, bend: bend, level: n.level, cc7Fade: n.cc7Fade, tStart: n.tStart,
                              onMs: r.onMs, offMs: r.offMs,
@@ -409,6 +433,37 @@ const EMIT = {
         this._plan = scheduled;
         this._t0 = t0;
         this._playing = true;
+
+        // THE REFILL. A cursor along the sorted list, handing the driver everything inside the horizon with its exact timestamp. The
+        // timing is the timestamp's, not the tick's — a late tick still delivers the message at the right millisecond — so this can
+        // run on a `setInterval`, which fires when the page is not painting at all. That was §319's whole purpose, kept; what §320
+        // adds is the bound, so that Stop is always within SCHED_AHEAD_MS of silence.
+        events.sort((a, b) => a.ms - b.ms);
+        let cursor = 0;
+        this._queuedTo = 0;
+        const refill = () => {
+            if (!this._playing) return;
+            const horizon = (performance.now() - t0) + SCHED_AHEAD_MS;
+            while (cursor < events.length && events[cursor].ms <= horizon) {
+                const e = events[cursor++];
+                try { e.route.out.send(e.msg, at(e.ms)); } catch (err) {}
+                // `_active` is the registry panic closes, and it is filled as a note-on is COMMITTED rather than when it sounds: a
+                // note-off for a key that never spoke is a no-op, a note we forgot to register is a hung note.
+                if (e.kind === 'on') this._active.push({ out: e.route.out, ch: e.route.ch, key: e.key, port: e.route.port,
+                                                         onAt: at(e.ms) });
+                else if (e.kind === 'off') {
+                    for (let i = this._active.length - 1; i >= 0; i--) {
+                        const a = this._active[i];
+                        if (a.ch === e.route.ch && a.key === e.key && a.port === e.route.port) { this._active.splice(i, 1); break; }
+                    }
+                }
+            }
+            this._queuedTo = horizon;
+            if (cursor >= events.length && this._sched) { clearInterval(this._sched); this._sched = null; }
+        };
+        if (this._sched) clearInterval(this._sched);
+        refill();                                   // the first horizon before anything else happens
+        this._sched = setInterval(refill, SCHED_TICK_MS);
 
         const tick = () => {
             if (!this._playing) return;
