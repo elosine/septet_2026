@@ -8254,3 +8254,44 @@ lengths come out uneven and alive. A swell whose player is never dealt again tak
 
 *(The AI's own note: my first framing of topic 1 conflated the two — it offered "typed" and "derived from the room" as alternatives when
 they are in fact the two halves of one answer, done in order. His question is what separated them.)*
+
+## §303. PLAN 1o — the scope widens (CN-56) and the duration is measured: length ÷ gap IS the density
+
+Composer, 2026-09-08 (CN-56, verbatim in COMPOSITION_NOTES): 1o is what he originally set out to do, the swells REPLACE the strikes, and
+**every rhythm the drawer can make is in scope** — the acceleration and its curves, even, random, and the recorded strike *as played* or
+*spaced out*, which turns a strike's own irregular attack pattern into a **scattered onset of crescendos**. Plus one thing the drawer
+does not have: **TIME CONTAINERS** — a set of numbers he types, weighted, rolled to fill an overall duration; *"worth abstracting into its
+own module"* eventually, because *"this is a type of technique I do a lot of"*, but not now. The dealing is 1k's unchanged: a count range
+per entry, the round robin, collisions avoided, a manual override available.
+
+**THE MEASUREMENT that answers his duration question.** Driving  over 40 onsets, six players, 2–4 voices per entry, and
+sampling how many voices actually sound at any instant:
+
+| gap | length | voices sounding (measured) | formula  | flagged |
+|---|---|---|---|---|
+| 500 ms | 0.5 s | 2.50 | 3 | 0 |
+| 500 ms | 1.0 s | 3.95 | 6 | 2 |
+| 500 ms | 2.0 s | 4.75 | 6 | 17 |
+| 1000 ms | 1.0 s | 2.50 | 3 | 0 |
+| 1000 ms | 2.0 s | 3.95 | 6 | 2 |
+| 1000 ms | 3.0 s | 4.45 | 6 | 12 |
+| 2000 ms | 2.0 s | 2.50 | 3 | 0 |
+| 2000 ms | 3.0 s | 3.73 | 4.5 | 0 |
+
+**The finding, and it is the whole answer: the RATIO length ÷ gap is the density dial, and nothing else is.**
+
+| length ÷ gap | voices sounding | what it is |
+|---|---|---|
+| 0.5 | ~1.4 | sparse — real silence between entries |
+| **1** | **~2.5** | comfortable — always sounding, still breathing |
+| 2 | ~4 | thick — a few entries begin to thin |
+| 3 | ~4.5–5 | saturated, and 12–23 of 40 entries cannot be met |
+
+With six players at 2–4 per entry the ceiling is about **ratio 2**. The formula over-predicts once the ensemble saturates, which is
+exactly where the flags appear — so the flag count is the honest signal, not the formula.
+
+**Six ways the duration could be set, put to him with (C) recommended:** a typed length · a rolled range · **a multiple of the local gap**
+· to the player's next turn (a continuous wall, no silence) · a share of that room · derived from a target thickness. (C) is recommended
+because his main case is an ACCELERATION: a fixed length jams as the gaps close, while a multiple of the gap shortens with the run —
+which is what his own hand did with the trills at 135.78 s (1.33 s → 0.15 s as the run accelerated, §285). And the ratio is the density,
+so the one number he turns is the thing he actually hears.

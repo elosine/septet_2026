@@ -1281,3 +1281,43 @@ single long.** That is the same shape topic 2 produced for the anchors (CN-54, R
 three. The strategies proposed: from the pattern (this accent · the one before · the one after · the whole collection dealt) · from a
 sonority (1m's harmony bar whole) · a chain (a fixed interval from the previous long) · vertical (the note the sounding chord is missing).
 See RUNNING_LOG §289–290.
+
+## CN-56 — crescendo strikes: every rhythm the drawer can make, plus TIME CONTAINERS (2026-09-08)
+
+> "Okay. I think I understand. So, yes, I do want this possibility, but then they would take the place of the strikes. And that's kind of
+> what I originally set out to do. And now we've done a lot of other things, which is great. So in this case, I did want the rhythms or
+> the possibilities that were in the strikes drawer. so I can create an acceleration, or I can create even or random distributions or
+> whatever. And So I guess in the drawer, just like with strikes, I create a overall duration or I create a gap. So look. It's... the
+> strikes drawer was geared towards acceleration and some other things. I think I also want a facility for rolling and generating a set of
+> time containers too. So in other words, instead of in the place of an acceleration, we can also have just a set of time containers. And
+> we should put some thought into the generator for the time container because at some point, we don't have to do it now, but at some
+> point, it'd be worth abstracting it into its own module because this is a type of technique I do a lot of. So maybe it's like a a random
+> choose from a set. Maybe I give numbers like two five seven fifteen or something like that. And then you can have random waiting. So
+> twenty percent fifteen and spread the eighty eighty percent out among the rest or something like that. then I'm not sure what the
+> limiting factor should be, but something like a duration maybe then overall, and then we roll for a set of time containers to fill that
+> duration. And then then it's like the chord strikes. So with any rhythm set, like accelerations or, uh, number cut time containers or
+> even or anything like that, I can assign one or more players per per crescendo in the sequence. and then we'll need the same sort of...
+> I guess, we'll need the same sort of round robin. So I wouldn't manually assign or have the option to manually assign, but we would
+> orchestrate out by algorithm just like we do with court strikes. and then we avoid collisions, etcetera. And then I guess with court
+> strikes, I have the the numbers too. I can say, like, between two and four players per strike and then have the machinery resolve
+> exceptions when we can't get that in. And then I also want something like the original functionality of the strike score where I can
+> have a strike, like, as played or slightly more spaced out. And then that would be just the... instead of a strike or short note, it'd be
+> the onset of the crescendos. So there'd be this, like, scattered onset of crescendos. I wanna be able to do that too. So, essentially,
+> everything we could do in the strikes and court strikes drawer rhythm wise plus this time container enhancement. And then the question
+> actually was about duration. So let's talk through duration of the individual crescendos and give me kind of very clearly stated
+> recommendations or possibilities. Thank you."
+
+**The AI reads it as** (marked as the AI's, not his):
+
+1. **1o is what he originally set out to do** — the swells REPLACE the strikes; 1k · 1l · 1m · 1n were the road to it.
+2. **Every rhythm the drawer can already make is in scope**: the acceleration and its curves (1h), even, random, the recorded strike
+   *as played* and *spaced out* — and that last one is the one to notice, because it makes a **scattered onset of crescendos**, the strike's
+   own irregular attack pattern turned into entries.
+3. **NEW: TIME CONTAINERS**, a rhythm generator the drawer does not have. A set of numbers he types (*"two five seven fifteen"*),
+   **weighted** (*"twenty percent fifteen and spread the eighty percent out among the rest"*), rolled to fill an overall duration.
+   **He asks that it eventually be its own module** — *"this is a type of technique I do a lot of"* — but not now.
+4. **The dealing is 1k's, unchanged in kind**: one or more players per entry, a count range (2–4) with the machinery resolving what it
+   cannot meet, the round robin, collision avoidance, and a manual override available but not the way he works.
+5. **The open question is the DURATION of each crescendo**, and he wants possibilities clearly stated with a recommendation.
+
+See RUNNING_LOG §301–303.
