@@ -634,8 +634,11 @@ cut mid-way — write patch scripts to the scratchpad, splice by exact anchor, a
   trill's velocities are his played ones, 41–123 by speed (RUNNING_LOG §100); a loudness normalization — a level knob or a target
   per instrument — for the trill module, phase 4b or 5, on his word)*.
 - *(AI-added, the composer's standing reminder from the rack session:)* **check each instrument
-  plugin's gain** (unity; preset FX such as the maximizer / tilt bypassed) whenever a Kontakt or
-  UVI instrument is loaded or its preset changed — SAMPLER_QUIRKS.md has the rule.
+  plugin's gain** (unity; preset FX such as the maximizer / tilt bypassed) **and that its MIC
+  POSITIONS are enabled** whenever a Kontakt or UVI instrument is loaded or its preset changed —
+  SAMPLER_QUIRKS.md has both rules. *(The mic half is his own find of 2026-09-09: a piano voice
+  was silent with the app routing it correctly — "ok fixed the mic choices were all turned off."
+  A part with its mics off looks healthy and makes no sound.)*
 
 - **Next piece (after the septet): the "Lake George" piece** — pairs: english horn/bassoon,
   horn/trumpet, cello/bass, + percussion; start with a morph section (composer, 2026-09-04;

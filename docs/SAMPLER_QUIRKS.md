@@ -39,6 +39,12 @@
   C-1–G#-1 are Bar Hits (hands / sticks / mallets on the cast-iron plate).
 - **Preset FX ship on:** IR reverb, and in PP2 a Maximizer (threshold −1 dB) and a Tilt EQ —
   bypass all of them in the rack (PLAN 0e's per-track rule).
+- **A part with every MIC POSITION disabled is SILENT, and looks perfectly healthy** (composer,
+  2026-09-09, RUNNING_LOG §321). A piano voice on its own channel produced nothing; the app's
+  routing was correct all along (`plucked` ch 2 · `harmonics` ch 3 · `muted` ch 5 on port `Piano`,
+  both Reaper tracks armed on all channels of the one device) and the cause was inside the plugin:
+  *"ok fixed the mic choices were all turned off."* **Check the mics before suspecting the routing** —
+  MIDI arrives, the meters may even move, and no sound comes out.
 
 - **Flute: the SI2 Pizzicato sample stands in for the written TONGUE RAM** (composer, 2026-09-04:
   "pizzicato sounds loud in sample, just note that we'll notate this as tongue ram"). The recipe
