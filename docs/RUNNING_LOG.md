@@ -8324,3 +8324,42 @@ Under (b) the switch changes exactly four things: the dealt sound's length (140 
 what is written into the score (a short `waveCurve` → a 1l crescendo), and the readout (the density and the flags). **And TIME CONTAINERS
 becomes one more entry in the existing `shape` menu**, so it serves attacks and swells, notes and chords alike, rather than belonging to
 1o.
+
+## §305. PLAN 1o — the sound switch adopted; topic 3 put: the TIME CONTAINER generator, rolled on his own example
+
+Composer, 2026-09-08: *"b good"* — **1o is a SOUND SWITCH (`attack | crescendo`), orthogonal to the drawer's mode**, not a fourth mode.
+So *chords + crescendo* IS 1o, every rhythm shape and voicing and take already in the drawer serves both, nothing is written twice, and
+**TIME CONTAINERS joins the existing `shape` menu** where it serves short notes as well as swells.
+
+**Topic 3: the container generator, stated back and rolled on his own example.** His sketch (CN-56): *"a random choose from a set. Maybe I
+give numbers like two five seven fifteen … you can have random waiting. So twenty percent fifteen and spread the eighty percent out among
+the rest … something like a duration maybe then overall, and then we roll for a set of time containers to fill that duration."*
+
+**Read back as:** a SET of numbers he types · an optional WEIGHT beside any of them, the ones without a weight sharing what is left
+equally · rolled one after another until an overall DURATION is filled · seeded, so a roll repeats.
+
+**Rolled, with his own set — 2 5 7 15 seconds, 15 weighted at 20 %, the other three sharing 26.7 % each (mean container 6.73 s), filling
+60 s:**
+
+| seed | the roll | total |
+|---|---|---|
+| 1 | 15 · 7 · 7 · 7 · 5 · 7 · 2 · 2 | 52 s in 8 containers |
+| 2 | 15 · 5 · 15 · 7 · 2 · 7 | 51 s in 6 containers |
+| 3 | 7 · 2 · 7 · 7 · 5 · 2 · 2 · 5 · 2 · 7 · 5 · 5 · 2 | 58 s in 13 containers |
+
+The character changes completely with the seed — 6 containers against 13 over the same span — which is the weighting doing its work, and
+is why the seed matters as much here as in the deck.
+
+**And the consequence worth naming, because it links topic 3 back to topic 1:** a container is the gap to the next entry, and the duration
+rule settled in §304 is a MULTIPLE OF THE LOCAL GAP. So a 7 s container gives a ~10 s swell and a 2 s container a ~3 s one — **the
+containers shape the swell lengths directly**. A set with a wide spread makes a texture of long held swells punctuated by quick ones,
+without any second control.
+
+**The two questions only he can answer, put with recommendations:**
+
+1. **The units.** (a) the numbers ARE seconds; (b) they are proportions scaled to fill the duration; (c) **recommended** — a UNIT he sets,
+   defaulting to 1 second, so *2 5 7 15* is seconds out of the box and one number rescales the whole shape faster or slower (at 0.4 s a
+   unit the same set becomes 0.8 · 2.0 · 2.8 · 6.0 s, rolled to 20 s in 5–7 containers).
+2. **The end**, since a roll rarely lands exactly. (a) **recommended** — stop short and report the shortfall, because the container values
+   are the point; (b) let the last one overshoot; (c) stretch everything to land exactly on the duration, which keeps the proportions but
+   loses the typed numbers.
