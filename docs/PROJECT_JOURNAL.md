@@ -82,250 +82,81 @@
 
 ## §2 Resume Here
 
-**Session 4 — 2026-09-06 → 07 (in progress, Claude Code / Fable 5.1) — RUNNING_LOG §111–174.** The composer composes and tests on his
-own server (:5300); the AI built at his word, one chunk at a time:
-- **Session 4, continued after the clear — 2026-09-07 late → 08 early (RUNNING_LOG §196–216):** the beating drawer PARKED at his word
-  ("keep it simple for now"; its list in NITS for a rebuild session); **the MORPH PANEL back the tuba way for the septet** — the palette
-  per voice into the pure engine (the tuba renders byte-identical), the string quartet's key rule and the 5 ms re-key overlap, three
-  PAIRS with seat pull-downs folding as one unit (D26), Play / Insert on the ticked pairs, the six models re-voiced (§204); **the PITCH
-  SOURCE** — a sonority pull-down (kept · starters · the models' sets · stacks and Messiaen's modes from a root · the harmony list),
-  the take rules (by register the default), keep / remove (§208); the root box fixed (§211); the actual's default label with its
-  number (§212); **RECALL → MODELS** on every ACTUALs card and, found on the way, the server's save path rendering without the palette —
-  fixed, his actuals rebuilt (§213); **RESTORE** (D27, §216); section 2 begins at 183 s (CN-41); CN-40 the piano's harmonics at the
-  morph's re-breaths → PLAN 1i (todo); CN-42 Lake George a rondo with the morph as the refrain; the rules: the takes, the actuals AND
-  the score files committed at every wrap (§209, §216).
-- **Session 4, continued after the second clear — 2026-09-08 (RUNNING_LOG §217–218):** PLAN 1i's FIRST PASS at his *"good go please"* —
-  **♪ piano harmonics** on the morph panel: one piano note per re-breath of the morph under the playhead (the player's pitch at the
-  re-breath → the nearest key whose sampled octave harmonic sounds it; a switch *at the pitch / an octave above*; a level box), the
-  notes in the morph's group with their provenance (NAMING §2.12), replaced by a re-run, undone by CTRL+Z; `piano_harmonics.js`
-  (pure) + the CLI + 38 checks; verified on a copy with real events and the decoded MIDI (channel 3, the three opening harmonics);
-  the ambiguity in CN-40 ("detuned from what's being played" → at the pitch) built as the switch, the default at the pitch (§217);
-  two NITS (the harmonics loudness law, the placed morph's level scale). **His listening pending; the second pass (CC21) at his word.**
-- **Session 4, the afternoon of 2026-09-08 (RUNNING_LOG §219–233):** CN-43 — *"just articulation points … lines in the piano part … click a line,
-  keyboard pops up"* — PLANNED by the method in twelve turns (§219–228: a line is an empty note; the picker card with the ensemble on
-  the keyboard and a key click that sets and sounds; the bar on the piano lane with kind AND player ticks; the five steps) and BUILT the
-  same day at his *"implement the full plan"* (§229–233): `piano_cues.js` (pure), `cue_picker.js`, the hooks in composer.html, the
-  button on the morph panel, the CLI, 32 checks; walked on a copy with real events and the decoded MIDI, two defects fixed on the
-  walk (the *next* preset's gap, the re-run's duplicate line). **His test pending — of 1j, and of 1i's first pass (§218).**
-- **Session 4, the evening of 2026-09-08 (RUNNING_LOG §234–251):** CN-44 … CN-47 — the strikes drawer's CHORDS — planned by the method
-  in fourteen turns (§234–247: the menus the machine solves; the SELECTION and the ADVANCE as two axes; the manual onset; the dealer by
-  register with the count lowered inside his range under a 200 ms rest; the card at the onset; the span by drag or SHIFT-click; the save
-  carrying the result and the recipe) and BUILT the same evening at his *"good to go for the build"* (§248–251): `strike_chords.js`
-  (pure, 35 checks), `strike_chords_ui.js` (chords mode as a mixin on the drawer), five dispatch lines in `strike_drawer.js`; walked on
-  a copy with real events and the decoded MIDI, three defects fixed on the walk; STRIKES_TOOL §X. **His test pending.**
-- **Session 4, the night of 2026-09-08 (RUNNING_LOG §252–262):** CN-48 — the CRESCENDOS — organized as four items at his word (1l the
-  foundation, then 1m the C key, 1n the sequence filler, 1o crescendo strikes, all four in PLAN.md, the last three as stubs so the
-  order survives a clear); **PLAN 1l planned and BUILT the same night**: `cresc.js` (the object), `scores/cresc-test.json` (the
-  listening test, 63 crescendos he solos), `spacing.js` (one rule: free 150 ms after the last sound ENDS, between gestures), 43
-  checks, `docs/CRESCENDO.md`. The survey was a READ of his own tuba docs; the piece was MEASURED before the rule was written, which
-  is what caught the gesture clause. **His listening is the one thing left.**
-- **Session 4, still 2026-09-08 (RUNNING_LOG §263–284):** the crescendo suite carried on without him at his word. **PLAN 1l finished**
-  — the STANDARD named by his listening test (surge is the default; line and bloom stay as options; bloom revisited at first use),
-  **SECCO** (CN-49: on by default, the notation word, the strings' damp, a CC7 cut ten ms before the note-off) and **THE ROUND ROBIN**
-  (CN-50: *"the rotation happens in the back-end"*) — which turned out not to be a new idea but **D11's curve channels**, decided by him
-  on 2026-09-03 and never read by the app: ch 1 MAIN for plain notes, ch 2/3/4 CURVE A/B/C for anything writing a continuous controller.
-  Wired for all seven players (§270–274), so a secco cut and the next event never share a slot. **PLAN 1m PLANNED by the method in
-  eight turns (§276–283) and BUILT the same day (§284) at his *"yes, build 1m as much as you can independently"*:** the **C key** (a
-  crescendo on a selected note at once, the source note greyed by a live `mutedBy` and restored by deleting it, one crescendo per
-  selected note under one undo), the **CARD** (`cresc_card.js` — the dynamic range, the duration typed or by the rule, the articulation
-  on the player's ordinary voice, the secco tick, all written onto the LIVE crescendo; ♪ alone and ► in context; ENTER keeps, ESC
-  removes, a click reopens, the settings remembered), and the **HARMONY BAR** (his own morph pitch menu reused rather than rebuilt, 1k's
-  seeded deck, the octave fold, the count and the lap, *restart* and *change…*; the browser's, not the file's). The walk found the
-  build's one real defect — the end rule looks only FORWARD, so C could lay a crescendo on a player still sounding — and the fix is
-  1l's own spacing rule applied over every event class with the gesture clause; measured on his piece, C makes a crescendo on 526 of
-  593 notes and refuses the rest with a reason. 27 node checks; `docs/CRESCENDO.md` §6.
-  **► WAITING ON HIM, and it is the whole of what is left here: HIS EAR.** Four things stand built and untried — his first crescendos
-  in the piece (1m), chords mode (1k), the piano's lines (1j), the piano's harmonics (1i) — plus the `cresc-secco-test` file. **The
-  rack needs nothing:** he loaded the three Flute Ordinario copies on `Fluteb` 4 · 5 · 6 and §275 corrected them through the UVI text
-  path (+6 dB, the EQ and Maximizer bypassed), so all seven players are protected by architecture. After his verdicts: **1n (the
-  sequence filler) planned by the method, then 1o.**
-- **Session 4, late 2026-09-08 (RUNNING_LOG §285–300):** **PLAN 1n — THE SEQUENCE FILLER — planned whole by the method and BUILT the
-  same day.** The unit is his (CN-54): *"the accent and the prolongued thing … the accent kicks off the long as if they were one unit"*,
-  **two players**, a long on EVERY attack, overlaid as a second pass on a strike pattern the drawer already made. Four topics and five
-  steps, each agreed in one turn. **His own trill texture at 135.78 s was measured before anything was designed** — 44 trills over 46
-  attacks, every one starting at another instrument's attack, every one ending 171 ms before its own player's next (which is 1l's 0.17 s,
-  found independently), five or six players sustaining 73 % of the time — and that measurement is what caught that his STATED rule
-  (*"the empty instrument with the shortest available space"*) would give a median long of 0.13 s, the very *"lot of short longs in a
-  row"* he wanted to avoid, and that his own hand never did it. Built: `fill.js`, `fill_pitch.js`, `fill_ui.js` (a third drawer mode),
-  the three scopes on 1m's card and the **F** key; 81 checks; four defects found and fixed on the walk. `docs/STRIKES_TOOL.md` §Y.
-  **► WAITING ON HIM, and it is again the whole of what is left: HIS EAR.** His first filled section (all crescendos, 1n) and his first
-  crescendos (1m); then chords mode (1k), the piano's lines (1j), the piano's harmonics (1i), and the `cresc-secco-test` file. After his
-  verdicts: **1o (crescendo strikes) planned — the last of the crescendo suite** — and the three tails: 1k step 7 (the piano's remainder
-  in a chord strike), 1i item 2 (the harmonics' CC21 shift), 0c.7 (a) (trills and beatings still routed on MAIN).
-- **Session 4, the end of 2026-09-08 (RUNNING_LOG §301–310):** **PLAN 1o — CRESCENDO STRIKES — planned and BUILT, and with it the whole
-  crescendo suite (1l · 1m · 1n · 1o).** 1o is the one he set out to make: the strikes drawer's own rhythms sounding as SWELLS instead of
-  hits. The planning did most of the work — **three of his four CN-48 asks were already built** by 1g, 1k and 1l, leaving one real
-  question, and **his own question corrected my framing of it**: 1n needs no length rule because its pattern already exists, while in 1o
-  the deal is what CREATES the pattern, so the length is an input to it. Built: a **SOUND SWITCH** beside the drawer mode (so *chords +
-  crescendo* is 1o and nothing is written twice), the length a **multiple of the local gap** which is also the density dial, and **TIME
-  CONTAINERS** — a new rhythm in the shape menu and **its own standalone module at his ask**, with a pool (16 presets sorted by spread) ×
-  an order (stickiness and interrupt) × a contour (his accordion). 150 checks across the suite; three defects found on the walk.
-  **► WAITING ON HIM, and it is now the whole of what is left on this work: HIS EAR.** His first crescendo strikes (1o), his first filled
-  section (1n), his first crescendos (1m); then chords mode (1k), the piano's lines (1j), the piano's harmonics (1i), and the
-  `cresc-secco-test` file. After his verdicts the crescendo suite closes, and phase 1's remainder is three tails: 1k step 7 (the piano's
-  remainder in a chord strike), 1i item 2 (the harmonics' CC21 shift), 0c.7 (a) (trills and beatings still routed on MAIN).
-- **PLAN 1f step 1 built and its probe run, 2026-09-07 about 00:00–01:00 (§167–168), at his word *"run the plan independantly … I'll
-  check in after the build"*:** the palette — the recipe's `playerBendSt` (his semitone) · `bendRangeSt` · `beating: false` (the
-  piano); `score/public/beating_calc.js` (the players, the ordinary voices' measured ranges, the bend limits, the pairing rule, the
-  intervals with their partials and just offsets; 37 checks); the bend probe on this repo's kit (`balance_schedule.js --bend`, the
-  player's bend / RPN / reset events, `probe_run.sh`'s analyzer switch and stale-take guard, `analyze_bend.py` with the octave band
-  for the RPN slots and the reference subtracted, `selftest_bend.py` on six unlike simulated players, `apply_bend_ranges.js`) — **run
-  in the rack** (the bridge up and idle): SI2 ±2.00 st, the Xsample five ±0.96–0.99 st (set to a semitone in Kontakt), RPN 0 ignored
-  on all six, the residue real on all six, the pre-arm at 300 ms fine (the scoop is the samples' own attack — measured against the
-  unbent reference after a first false flag); `MEASURED_BEND` in the recipe; `docs/BEATING_TOOL.md` opened.
-- **PLAN 1f steps 2–7 built the same night (§169–174):** the math (77 checks) · one pair in the score (B, the snippet's bend
-  events, the tick) · the panel (`beating_panel.js`) · the pitch side (the strike menu, the keyboard, the relations) · the insertion
-  (one group with a META shape, the shape's drag / stretch / delete) · the end-to-end (within 0.006 beats/s of the panel on every
-  pair; a double-booked player found and fixed) · the documents (BEATING_TOOL, MORPH_NOTES §1 / §4, NAMING §2.10, D24 / D25, the
-  help line `?`). **1f built; his listening pending.**
-- **His check-in, morning of 2026-09-07 (§175–178):** the panel a full-page drawer with the fonts up; the trapped note's two causes
-  closed (a long note's release never queued ahead; ■ Panic; `probes/panic.ps1`); the harmonies on the left in three banners
-  (`bank/harmonies.json` by `tools/harmony_scrape.js`), ▶ chord on the piano, the harmony in the take (CN-36); **CN-35 the harmony
-  module noted in PLAN 1d for later.**
-- **The pitch side's second pass, early afternoon (§179–181; BEATING_TOOL §12; MORPH_NOTES §3 2026-09-07), his six asks discussed
-  first (the planning method's phase 1, §179), his answers (§180: at most an octave apart · the tool offers, never applies · a pair
-  follows its sonority note · a tie folds down), then built at his word without the plan regime:** `BeatingCalc` — `P8`, `foldPair`
-  (the pair folds as one unit), `pairLadder`, `seatOptions`, `voiceChord` (the strikes presets, the octave box, the octave range as
-  the scatter window; pure) — 102 checks; the block's `srcPitch · fold · noteIndex · skip`; the panel — the voicing bar with the seeded
-  reshuffle and its chips, every player in the partner menu with its pitch and ↑ / ↓ or ✕, the chips beside the seats, the ladder of
-  offers, the players' ranges as columns on the keyboard, the three-state keys, the dotted lines from key to node, the take's
-  `voicing`; B folds the same way; the labels show the fold. Verified with real DOM events on a copy (`zz-ai-pitch2`, deleted).
-  **His test pending (a hard reload first).**
-- **His first hour with the drawer, afternoon (§182; BEATING_TOOL §13; MORPH_NOTES §3), nine asks built in one pass at his word:** the
-  sequence strip (a track per pair, the pair a zone dragged and stretched like the trill zones, a bound zone moving in the score), a
-  length and a play per pair, the sequence box stretching everything in proportion, SPACE by focus (sequence · pair · chord) and the
-  number boxes freed, the score's slope diamonds on the rate curves and the crescendo (`[p, v, slope]` in the block), the level box
-  keeping a drawn shape (the "snaps back" was the level box popping a burst), pair takes (`beatingPairs`), the crosshair; the stutter
-  examined — the emitted streams are as smooth as #1's, his A/B pending; the 0–1 level answered (the curve height). Verified on a copy
-  (`zz-ai-seq`, deleted).
-- **The discussion and the sweep, late afternoon → evening (§183–184; BEATING_TOOL §14; HOW_WE_WORK):** strategy A — his walk-through
-  in his words, written back as a 23-line script with works · awkward · missing marks; rule B a standing rule (a panel borrows the
-  score's idiom; a tool is planned against how he works, the script is the unit); C (the listening ladder) held. **The sweep built in
-  one pass at his "go ahead"** with his refinements (born empty, hold the line, ppp … fff over the whole scale, fourths ↔ fifths one
-  family, a–d): see §184. Walked on a copy (`zz-ai-sweep`, deleted) with real events; two defects found on the walk and fixed (the
-  per-player crescendo not reaching the sound; revert remembering the wrong harmony).
-- **His first test, late evening (§185):** the bend rebuilt as the score's grab-and-pull control point (two degrees of freedom; the
-  slope gone), the hold shape's attack and release in seconds (`adsr { attackS, releaseS }`, the hold absorbs the length), the end
-  handle 1 s per 50 px, SHIFT clamps a node; his settings so far recorded (cs-015, BCl + Fl on D4, 2.1 s, 8 Hz, hold, p → ff). Verified
-  on a copy (`zz-ai-bend`, deleted). Then (§186) the lanes on a REAL time axis — the pair ends at its length, the end dot follows the
-  mouse in seconds — after his "I still can't move it" (the drag worked; the dot was pinned by the normalised drawing). Then (§187), his
-  "I can't get the visual to look like the sound": the beats themselves drawn and counted (the integral of the heard rate), the hold
-  shape typed in seconds, a node typed by double-click, one time scale for every row with a zoom, CTRL+Z the drawer's undo from
-  anywhere. Then (§188), after his *"this working process is not working"* and his correction (*"all the points should be independent
-  on the timeline"*): **the region model** — the lanes on the sequence timeline, every node at its own time, the region's edges as
-  cuts, the score's zoom and scroll, a cursor while it plays, a gesture card; the double-click on a node that never fired (a click
-  re-rendered the lane) fixed; HOW_WE_WORK: one round per sitting, gestures as real mouse sequences, a model agreed in one line
-  before it is built. Then (§189) the rows column jumping to pair 1 at every edit — a render rebuilt it and lost its scroll — fixed;
-  the zoom's sensitivity and its centre saved in NITS as feature requests at his word. **Next: his test of the region model, then the
-  first beating sequence in the piece; the stutter A/B still his.**
-- **Tools on his hands (§111–114):** the bend cursor only when Points is off; TRILLS phase 4 (a trill runs to the player's next
-  strike note, a stretch regenerates at once); a nudged trill keeps its attack note (a 60 ms eating window; the drag keeps a
-  trill's start; the articulation switch arbitrated on a shared sampler slot — the tail and the lead); the drawer's pick no
-  longer parks the playhead, `⌖ original` on request, an insert replaces only at its own time (strikes recur, CN-28); a
-  duplicated trill complete at once.
-- **PLAN 1g done (§115–120, D23):** a curve height is the same loudness on every instrument — the velocity and CC7 sweeps
-  through the bridge, the per-instrument remap anchored on the violins (velocity for the layer, a CC7 trim for the rest on the
-  stepped samplers; `bank/velocity_remap.json`, `score/public/velocity_remap.js`), the trill's velocity switch (new trills follow
-  the curve 65 → 127; the panel's Velocity row and the **All trills** batch), the ordinary voice per instrument, the notation
-  rule (height = ppp … fff; NAMING §2.9), crescendos on held notes. The analyzer's own 2 dB Hann error found and fixed on the way.
-- **PLAN 0d done (§122):** the samples' true ranges and one-shot lengths — 46 techniques measured; the Bartók tops E6 / E5 / B4,
-  the gettato tops B6 / E6 / E5; `MEASURED_RANGES` in the recipe; `tools/range_check.js`; the trill label's attack warning.
-- **His score edited at his word (§123–124):** 16 out-of-range strike notes and the two bass clarinet trills folded down in
-  `scores/piece-septet.json` (snapshots `piece-septet-v1.9-beforeFold` / `-beforeTrillFold`); the checker clean.
-- **PLAN 1h built (§125–129, CN-30):** the acceleration calculator (`score/public/accel_calc.js`, the math alone, page and tools;
-  `tools/accel_calc_check.js`, 52 checks) and the drawer's run dials — `run` (six shapes, the tuba curve dial among them), its dial, the
-  length by steep / notes / ms, jitter, hold, mirror, a level ramp through the remap, decelerations; his take 34-a unchanged; the same evening the free dealer and the whole-strike pitch pool (§135–138), the even run (§142); §139: the version suggestion
-  counts suffixed names, the All-trills attack batch, a free trill ends 0.17 s before the next strike note; §141: the minor-2nd script; §143: Reload is the way back to a named version (Name version saves the file too); §144: a
-  multi-selection drag carries the strikes' groups. No
-  calibration (his word). **107.81 s = the next section's start** (CN-30). CN-31: Lake George's pointillistic multitempo section.
-- **Process:** `docs/PLANNING_METHOD.md` (state and restate → the top line → one step at a time: goal, sub-steps, into the plan),
-  the user-level `/plan-item` skill and trigger lines; `docs/MORPH_NOTES.md` (D22, a standing practice); CN-28 (the form's
-  middle: strikes with morph chords → PLAN 1f; patterned / call-and-response strikes) and CN-29 (the morph event's four elements).
+**Last session (4 — 2026-09-06 → 08, Claude Code / Opus 5) — RUNNING_LOG §111–310.** Long; it ran through three clears. What it built:
 
-- **PLAN 1f planned whole, evening (§145–166) — the beatings:** #4's morph tool read cold (§145: the engine, the panel, the banks, the
-  build days, the feature requests, the section form, the notation; the port byte-identical to the tuba's; the one structural fact:
-  the pair was never the unit). **The object is a *beating*** (his word, §146): one pair of players on one pitch, both bending around
-  it by mirrored curves, a gap that beats; seven elements. **The beating panel** (§147, his picture): a row per pair (up to three),
-  the two mirrored rate curves slid against each other for phase, the beating band between them tinted by zone, a crescendo lane, a
-  breath lane (the dotted go lines on sliders, a ceiling warning, one · continuous · designated, a seeded breath shuffle — §152),
-  shapes with handles on rails or the trill's curve tool, a whole row slid in time, the space bar, a typed duration, takes; the
-  shuffle drawer of §146 parked. **The axis beats per second** (§148; at a fifth / fourth / third the beating is between coincident
-  partials, 3× / 4× / 5× per cent). **The pitch side** (§148–149, §158): the bank's strike chords on the drawer's keyboard → the
-  pair's lower note, the partner above at the just interval; the sonority between pairs by relation from a root. **The piano out**
-  (CN-34): six players, three pairs. **The beating out of the strike chain** (§160, his word: no mute rule, no eating, no overlap
-  avoidance; accents by hand; "its own thing"). **The palette** (§150): #1's bend convention (bend before the note, centre after,
-  re-key past the range; Xsample ran at ±1 st there), the player's range within a semitone. PLAN 1f: eight steps in the fixed
-  format, all agreed (*"yes that's it"*, §166). CN-33: section 3 = cycles of strikes with crescendos on the beating pairs; train the
-  performers on the full beating curve.
+- **The BEATING tool (1f)** — measured bend ranges in the rack, the math, the panel, the pitch side, the insertion (D24 · D25;
+  `docs/BEATING_TOOL.md`). Then **PARKED at his word** (*"keep it simple for now"*); its wish list is in NITS for a rebuild session.
+- **The MORPH PANEL back the tuba way** — the palette per voice into the pure engine, three PAIRS folding as one unit (D26), the
+  **pitch source** (a sonority pull-down over the harmony banks, his kept sets, the models' sets, stacks and Messiaen modes from a
+  root) and its take rules, RECALL → MODELS, **RESTORE** (D27). Section 2 begins at 183 s (CN-41).
+- **Three piano/strike tools** — **1i** the piano's harmonics at a morph's re-breaths (first pass; item 2, the CC21 shift, not begun) ·
+  **1j** the piano's articulation lines, each clicked into a note · **1k** chords mode in the strikes drawer (a rhythm whose onsets
+  carry chords, players dealt per onset under the rest rule). **All three still await his ear.**
+- **THE CRESCENDO SUITE, all four items (1l · 1m · 1n · 1o)** — see below. This was the bulk of 2026-09-08.
+- **D11's curve channels wired** (0c.7) — a crescendo, a morph note or a drawn swell rotates over ch 2/3/4 while plain notes stay on
+  MAIN, so a secco cut can never be revived by the next event. All seven players protected; the flute by three UVI Ordinario copies
+  he loaded and §275 corrected (+6 dB, EQ and Maximizer bypassed).
 
-**Last session (3, 2026-09-04 → 06):** the piece to #31 / 72 s; the drawer U5–U13b; the trill module phases 0–3 and the curve
-windows (D18–D21); the timestamped playback. RUNNING_LOG §65–110.
+**THE CRESCENDO SUITE — built 2026-09-08, and it is finished but for his ear** (`docs/CRESCENDO.md`, `docs/STRIKES_TOOL.md` §Y and §Z):
 
-**NEXT STEPS · MODEL · CLEAR:**
-1. ☑ 0a · 0b · 0d · 0e · 0g · 0i · 0j · 0k.1–0k.4 · 1a · 1b · 1c (U1–U13b) · 1e phases 0–4 · 1g · 1h · **1f steps 1–7** DONE and pushed
-   (1f built overnight 2026-09-07 at his word, RUNNING_LOG §167–174; D24 / D25; `docs/BEATING_TOOL.md`).
-2. ► **HIS CHECK-IN on the beating tool** (the plan's "his listening" at steps 3–7, BEATING_TOOL §11, in that order): a hard reload
-   (CTRL+SHIFT+R) · B on a strike note, unison, then the fifth and the fourth (step 3) · the panel's feel (step 4) · the pitch side
-   (step 5) · an insertion (step 6) · the first pattern in the piece placed by him; the verdicts to MORPH_NOTES §3 and BEATING_TOOL,
-   each a new entry in the lab journal; the piece file is his (every AI run was on a copy). Section 1 stays drafted at 175.7 s
-   (v1.23-sec1DraftDone). **Begun 2026-09-07 morning (§175–176):** "where is the panel?" → the panel made a full-page drawer like
-   the strikes with the fonts one step up — done; "midi note trapped won't stop playing" → the rack silenced (`probes/panic.ps1`),
-   the cause fixed (every long note released on stop), **■ Panic** in the toolbar — done; "i still have a trapped viola note playing"
-   (§178) → the second way closed: a long note's release never queued ahead (the tick sends it when due, an audition from a timer) —
-   done; CN-36 (§177): the harmonies on the left
-   in three collapsible banners (the strikes · the tuba's blasts · the two-piano chord shapes, scraped into `bank/harmonies.json` by
-   `tools/harmony_scrape.js`), ▶ chord on the piano, a double-click arms, the pairs' nodes, the harmony in the take — done; **CN-35
-   (a harmony module with the strikes drawer's whole facility over every collection) noted for later in PLAN 1d — to be planned on
-   his word**; the listening itself still to come.
-3. **After his verdicts:** the fixes they ask for (the chunk cadence); 1f item 8's four held things when their lines come (the
-   shuffle as a writer, cycles for section 3 — CN-33, the training material, the notation at 2a); TRILLS_TOOL phase 5 (the weave) on
-   his go; the run dials' calibration ladder (1h item 6) on his go; the notation of trills and beatings at 2a.
-4. **0c / 0h** (the recipes' completion; the phase-0 gate) when the music asks; 0d.3 / 0d.4 remain as the remainder.
+| | what it is | how it is reached |
+|---|---|---|
+| **1l** | the crescendo OBJECT — a held note whose curve rises; surge 5× the standard; the end 0.17 s before that player's next sound, else 5 s; secco; ONE spacing rule with its gesture clause (`spacing.js`) | — |
+| **1m** | **C** on a selected note makes one at once and opens a CARD (range · duration · articulation · secco); the source note greys and comes back; a HARMONY BAR deals pitches when nothing is selected | the **C** key, or the *Crescendo* button |
+| **1n** | a long on EVERY attack of a strike pattern, each in another instrument; anchors as attack ids; seven pitch strategies; three scopes | STRIKES → **fill** mode |
+| **1o** | the drawer's own rhythms sounding as SWELLS instead of hits, plus **TIME CONTAINERS** as a new rhythm | STRIKES → the **sound** switch, and *containers* in the shape menu |
 
-**Open at session end** *(2026-09-08, after PLAN 1i's first pass — for an AI that has never seen this conversation):*
-- **Task and state:** the composer composes SECTION 2 of the piece from 183 s in his own server (:5300) — the morph panel (the cast,
-  the pitch menu, the actuals with recall) and now **♪ piano harmonics** (PLAN 1i's first pass, RUNNING_LOG §217–218), trying things
-  and reverting (Name version at each try · Reload · Restore…, D27); the BEATING DRAWER is parked (its list in `docs/NITS.md`, his
-  words in `docs/MORPH_NOTES.md` §3, a rebuild session later); every remark about the morph tool is SAVED to NITS and MORPH_NOTES
-  §3 and built only at his word (HOW_WE_WORK), "fix now" and a broken agreed behaviour the exceptions. His server must be restarted
-  after any change to `score/server.js` or `tools/model_bank.js`; a page change needs a hard reload (CTRL+SHIFT+R).
-- **Latest deliverable:** PLAN 1l built (§262): `score/public/cresc.js` (the crescendo object — his three families, the end rule, the
-  orange fill), `score/public/spacing.js` (the one rule with its gesture clause), `tools/cresc_test.js` → `scores/cresc-test.json`
-  (the listening test), `tools/cresc_check.js` (43 checks), `docs/CRESCENDO.md`; the strikes drawer's box re-read and the trill's
-  fallback moved to 3 s. Before it: 1k (chords mode, §251), 1j (the piano's lines, §233), 1i's first pass (§218). Committed, pushed.
-- **NEXT CONCRETE STEP — THE FLUTE'S DECISION (0c.7), then his ear (D11 is wired, RUNNING_LOG §270–271).**
-  The standard is named (surge; §263) and steps 1–4 are built (§262). Step 5: the residue tolerance measured as a score file
-  (`scores/cresc-secco-test.json` — a crescendo, CC7 0 at its end, then a re-pin after 0.25 · 0.5 · 1 · 2 · 3 s, per string and the
-  flute, he solos); the slot pool in the recipe (the strings and the bass clarinet have free channels inside their existing Kontakt
-  instance — the FLUTE's port is full, its exception is the second UVI instance or one new loopMIDI port); the extra slots tried
-  through the Kontakt Lua API first, else five minutes of his GUI time; the back-end rotation (a crescendo asks for a slot, the
-  front end never sees it); the CC7 cut with its guard; the warning when the rotation cannot keep the tolerance. **Then 1m (the C
-  key) is planned, then 1n, then 1o.** **Three tests still wait on him:** 1k chords mode (§251), 1j the piano's lines (§233), 1i the
-  piano's harmonics (§218) — and the crescendo listening test itself, whose verdict he has now given.
-- **Resume reads:** `docs/CRESCENDO.md` (the whole of 1l in one page) · RUNNING_LOG §252–262 · `docs/PLAN.md` 1l and the stubs 1m ·
-  1n · 1o · CN-48 · NAMING §2.14–2.15. For the three tests waiting: §251 (chords mode), §233 (the lines), §218 (the harmonics).
-- **How the AI works the app (verified ways):** the Browser pane on :5301 (`preview_start score-5301`), a `zz-ai-*` copy of the score
-  (`cp`, then `Composer.openScore('zz-ai-…')`), deleted after with its `-work` (stop the server first); fake outputs in
-  `_zoneMidiOutputs` keyed by port lower-case (Flute · BassCl · Piano · Vn1 · Vn2 · Va · Vc) with `_zoneMidiInited = true` capture the
-  MIDI; the pane is usually hidden — timers throttle, rAF never fires, `resize_window` 1400 × 900 for layout (reset after); a gesture
-  as real events (`MouseEvent` click, a select's `change`); `MorphPanel` is a global (`toggle · generate · play · insert · heard ·
-  castOf · applyPitch · recallActual · pianoHarmonics · pianoCues`, `_cast · _lastParams · pitch · pairs`); the picker is `CuePicker` (`open(wc, e) · close · apply · st`), opened by a real mousedown · mouseup · click on a line's hit rect, a key by a mousedown on a `.cpKey`, ENTER / ESC as keydown on `document`; the bar's ticks by a real `change`; files patched by exact-string node scripts through the
-  scratchpad's `eol.js` (CRLF-safe, VERBATIM replacement — a `$'` or `$&` in a replacement once garbled composer.html, §216);
-  `node tools/morph_septet_check.js` (64 checks), `node tools/model_bank.js --validate` / `--rebuild`; commits by explicit paths, pushed.
-- **Pending the composer:** the crescendo listening test (§262, the one thing 1l waits on) · his test of PLAN 1k (chords mode) · his
-  test of PLAN 1j (the piano's lines) · his listening of 1i's piano harmonics · his listening of the morph panel · the beating
-  drawer's list (NITS) for the rebuild session · the Kontakt bend range and the all-notes-off (NITS, his hands) · the two NITS of
-  §218 · PLAN 1i item 2 at his word · the stutter A/B (§182) · the trills' phase 5 and the run dials' calibration on his go.
-- **The deliberately-uncommitted list (`git status --short` at this wrap):** `scores/trillBuildTst.json` — his trill test score,
-  untracked since 2026-09-05, never part of the piece; left as it was (say the word and it is committed). Everything else of his —
-  the test score, the piece file, the named versions, the takes, the actuals (ACT-BLOOM-03 / -04 saved after the checkpoint), the
-  model store — is committed at this wrap by the rules of §209 and §216 (the working copies are gitignored).
+**Earlier sessions, one line each:** **3** (2026-09-04 → 06) the piece to #31 / 72 s, the drawer U5–U13b, the trill module phases 0–3
+and the curve windows (D18–D21), timestamped playback — §65–110. **2** the strikes drawer and the sandbox. **1** the port from the
+tuba piece.
 
-**Open questions:** Q1 the flute doubling (piccolo vs bass flute; SI2 flute in C until then) · Q5 print format (A3 landscape;
-#4's tabloid is 432 mm) · ~~Q6 the violins' Bartók top~~ measured 2026-09-06: E6 (88), the viola's E5, the cello's B4 (§122) ·
-Q7 the bass clarinet's bottom B♭1 (34) — confirm the ensemble's instrument reaches low C.
+**NEXT UP — and it is his, not the AI's:**
+1. ► **HIS EAR.** Nothing in the crescendo suite has been heard by him. In the order that unblocks the most: **1o** his first
+   crescendo strikes · **1n** his first filled section (all crescendos) · **1m** his first crescendos · then the three older tools —
+   **1k** chords mode, **1j** the piano's lines, **1i** the piano's harmonics — and the `cresc-secco-test` file (the residue
+   tolerance, he solos each player).
+2. His verdicts → `docs/CRESCENDO.md`, `docs/STRIKES_TOOL.md`, `docs/MORPH_NOTES.md` §3 and NITS, each a new RUNNING_LOG entry;
+   anything he marks *"fix now"* built at once.
+3. **Then phase 1's three tails:** 1k step 7 (the piano playing a chord's remainder, CN-52) · 1i item 2 (the harmonics' CC21 shift) ·
+   0c.7 (a) (trills and beatings still routed on MAIN — their zones carry precomputed snippets with explicit channels).
+4. **0c / 0h** (the recipes' completion; the phase-0 gate) when the music asks; 0d.3 / 0d.4 remain.
+
+**Open at session end** *(2026-09-08, written for an AI that has never seen this conversation):*
+
+- **Task and state:** he composes SECTION 2 from 183 s on his own server (:5300), trying and reverting (Name version · Reload ·
+  Restore…, D27). The AI's work is done and pushed; **nothing is in flight.** The beating drawer is parked. Every remark about the
+  morph tool goes to NITS and MORPH_NOTES §3 and is built only at his word (HOW_WE_WORK) — *"fix now"* and a broken agreed behaviour
+  are the exceptions. His server must be restarted after a change to `score/server.js` or `tools/model_bank.js`; a page change needs
+  a hard reload (CTRL+SHIFT+R) — **three sessions' worth of new script files landed today, so tell him to hard-reload first.**
+- **Latest deliverable:** PLAN 1o steps 1–3 (§310) — `score/public/time_containers.js` (standalone at his ask),
+  `score/public/swell_ui.js` (the sound switch), `score/public/containers_ui.js` (containers in the shape menu). Before it 1n (§300)
+  and 1m (§284). 150 checks across `check_containers` (37) · `check_fill` (81) · `check_cresc_deck` (32), all passing.
+- **NEXT CONCRETE STEP:** there is no AI step. **Wait for his verdicts**, then fix what he marks. If he wants to keep building
+  instead, the three tails above are the queue, and 1k step 7 is the one with a written note already (CN-52).
+- **Resume reads:** `docs/CRESCENDO.md` (1l · 1m · the suite in one page) · `docs/STRIKES_TOOL.md` §X (chords) §Y (fill) §Z (swells
+  and containers) · `docs/PLAN.md` 1i–1o · `docs/NAMING.md` 14–20 · CN-48 · CN-54 · CN-55 · CN-56 · RUNNING_LOG §301–310 for the last
+  build.
+- **How the AI works the app (verified, and it saved hours):** the Browser pane at `preview_start` on
+  `http://localhost:5300/composer.html?score=<name>`; **always a `zz-ai-*` copy** of the score (`cp`), deleted after with its `-work`.
+  `Composer` is a top-level `const`, so it is **`Composer`, never `window.Composer`**. Fake MIDI by replacing `Composer._zoneMidiOutputs`
+  (keys lower-case: `flute · basscl · piano · vn1 · vn2 · va · vc`) with `_zoneMidiInited = true`; for the drawer, replace
+  `MorphEmit.routeFor` / `noteOn` / `noteOff` / `ensureMidi`. **The pane coalesces `setTimeout` into 1-second buckets**, so verify a
+  SCHEDULE (patch `window.setTimeout` and read the delays) rather than the firing. A key press must be dispatched on `document.body`,
+  not `document` — the handlers call `e.target.matches`, which `document` does not have. Files are patched by exact-string **Python**
+  scripts written with the Write tool: **a bash heredoc eats backticks and `$`, which has garbled a log entry three times today.**
+  `node score/tools/<check>.js` for the pure modules. Commits by explicit paths, pushed (D8).
+- **Pending the composer, in one list:** the six listenings above · the beating drawer's rebuild list (NITS) · the Kontakt bend range
+  and the all-notes-off (NITS, his hands) · the two NITS of §218 · the stutter A/B (§182) · TRILLS_TOOL phase 5 and the run dials'
+  calibration on his go.
+- **The deliberately-uncommitted list:** **none** — the tree is clean and everything is pushed. But `node tools/unsaved_check.js`
+  reports **three working copies holding edits their files do not** — `piano-harmonics-test` · `trill-curve-test` · `trillBuildTst`.
+  Per D17 those are HIS to Save or Reload in the app; the AI must not touch them, and they are gitignored so they do not block a commit.
+
+**Open questions:** Q1 the flute doubling (piccolo vs bass flute; SI2 flute in C until then) · Q5 print format (A3 landscape; #4's
+tabloid is 432 mm) · Q7 the bass clarinet's bottom B♭1 (34) — confirm the ensemble's instrument reaches low C.
 
 **Blockers:** none.
+
 
 ---
 
@@ -634,6 +465,35 @@ sources; verified here only when they bite.)*
   any of them or the start recoverable. *Rejected:* the tuba's numbering chain that D17 removed (Restore comes back without it); the
   AI swapping files by hand at each branch (works, slow).
 
+- **D28** *(2026-09-08, the crescendo suite's talk — CN-48 · CN-54 · CN-55 · CN-56; RUNNING_LOG §252–310)* — **A crescendo is an ordinary
+  held note whose curve rises, and every crescendo tool writes that same object.** `waveCurve` + `sonifyNote`, two nodes carrying the
+  dynamic range, one segment carrying the shape, `properties.cresc` carrying the provenance — so drag, stretch, delete, undo, save, the
+  tick and the extractor all work with no new case. The standard is **surge 5×**, named by his own listening test; the end is a CLIFF,
+  0.17 s before that player's next sound, else 5 s; **secco** is on by default. *Why:* four tools (1l · 1m · 1n · 1o) had to agree, and a
+  new object type would have needed four of everything. *Rejected:* a `crescendo` type of its own (every score operation rewritten); a
+  zone like the trill's (the trill needs a zone because it generates notes; a crescendo generates nothing).
+
+- **D29** *(2026-09-08, the AI's measurement of his own texture at 135.78 s — RUNNING_LOG §285–286, §303)* — **A tool's rule is measured
+  against what he already wrote before it is built.** Twice in one day this changed the design. His STATED selection rule for the
+  sequence filler (*"the empty instrument with the shortest available space"*) was measured on his own 44 trills and DROPPED — it gives a
+  median long of 0.13 s with 40 of 46 under 0.4 s, the very *"lot of short longs in a row"* he wanted to avoid, and his hand never did it
+  (he took the third-to-fifth roomiest). And 1l's 0.17 s end gap, chosen independently, turned out to be exactly the median gap of his own
+  hand-made trills. *Why:* his practice is more reliable evidence than his description of it, and cheaper to consult than to guess wrong
+  and rebuild. *Rejected:* building the stated rule and letting him find it wrong by ear (a wasted build and a bad first impression).
+
+- **D30** *(2026-09-08, composer, CN-56: "instead of a strike or short note, it'd be the onset of the crescendos"; RUNNING_LOG §304)* —
+  **A new kind of SOUND is a switch, not a new mode.** The strikes drawer's `sound: attack | crescendo` sits BESIDE `mode: notes | chords
+  | fill`, so *chords + crescendo* is PLAN 1o and every rhythm shape, voicing, order, span, take and insert serves both. *Why:* a fourth
+  mode would have duplicated the whole notes/chords screen for one changed fact, and every later fix would have to be made twice.
+  *Rejected:* a *swells* mode of its own (clean box, doubled maintenance). **The same reasoning put TIME CONTAINERS in the drawer's own
+  `shape` menu** rather than inside 1o, so they serve attacks as well as swells.
+
+- **D31** *(2026-09-08, composer, CN-56: "it'd be worth abstracting it into its own module because this is a type of technique I do a
+  lot of"; RUNNING_LOG §305, §310)* — **A technique he uses across pieces is built standalone from the first line, not extracted later.**
+  `score/public/time_containers.js` knows nothing of the drawer, the score, crescendos or MIDI: it takes numbers and gives back numbers.
+  *Why:* extraction after the fact never happens on a deadline, and the next piece (Lake George) will want it. *Rejected:* building it
+  inside the drawer and abstracting it "when there is time" — which is how the beating drawer became a parked rebuild.
+
 ---
 
 ## §5 Playbooks
@@ -677,6 +537,13 @@ cut mid-way — write patch scripts to the scratchpad, splice by exact anchor, a
 ---
 
 ## §6 Done
+
+- 2026-09-08 — **THE CRESCENDO SUITE, all four items** (RUNNING_LOG §252–310; D28–D31; docs/CRESCENDO.md, STRIKES_TOOL §Y and §Z):
+  **1l** the object, the standard named by his own listening test, and ONE spacing rule with its gesture clause · **1m** the **C** key,
+  the card and the harmony bar · **1n** the sequence filler — a long on every attack of a pattern, each in another instrument · **1o**
+  the sound switch and TIME CONTAINERS. Nine new modules, 150 node checks, four browser walks, eleven defects found and fixed on those
+  walks. Planned end to end by `docs/PLANNING_METHOD.md`, which twice caught a design error before it was built. — `built`;
+  **his ear on all four is the one thing outstanding**.
 
 - 2026-09-07 — **1f** the beatings, steps 1–7 built overnight at his word (RUNNING_LOG §167–174; D24, D25): the palette with the
   bend probe run in the rack (§168), the math (77 checks), the object (B, the snippet's bend events, the tick), the panel, the pitch
