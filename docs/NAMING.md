@@ -209,6 +209,23 @@ or not at all.**
     **`pinned: true`** on a long means he has edited it by hand: a re-Generate leaves it alone and still counts it as occupying its
     player — 1k's own idiom (*pinned and flagged, never lowered*), reused rather than reinvented.
 
+
+19. **A SWELL STRIKE (PLAN 1o, 2026-09-08; RUNNING_LOG §301–310; CN-48 · CN-56; `docs/STRIKES_TOOL.md` §Z)** is what the strikes drawer
+    deals when its SOUND SWITCH is set to *crescendo* instead of *attack*: the dealt notes themselves are 1l crescendos (entry 14) rather
+    than short notes — **no accent, so the drawer's rhythm becomes a schedule of ENTRIES rather than a pulse**. A pass is written as its
+    own group **`grp-swell-<ch|nt>-<strike index>-<t×10>`** with a META shape, replacing an earlier pass of the same rhythm at the same
+    time. Each crescendo carries `properties.cresc.swell = { from, mode, lengthMode, lengthMul, onMs }`, and `properties.cresc.end` is
+    `"swell"`. **The length is a MULTIPLE OF THE LOCAL GAP** of the rhythm, capped so it can never run into that player's own next dealt
+    note (0.17 s before it) and floored at 1l's `minS`; the multiplier is also the density dial, and the drawer's readout gives the
+    measured voices sounding and how many entries could not be met.
+
+20. **TIME CONTAINERS (PLAN 1o step 2; `score/public/time_containers.js`)** are a rhythm, not a score object: a rolled sequence of
+    durations from **a POOL** (numbers · optional weights, where a typed weight stands and the rest share what is left · a `unit` in
+    seconds) **× an ORDER** (`stick`, `jump`) **× a CONTOUR** (`grow` · `shrink` · `openClose` · `closeOpen`, with `turn`, `bow`, `depth`),
+    seeded, filling a total and **stopping short with the shortfall reported**. They live in the drawer's own `shape` menu, so they serve
+    attacks and swells, notes and chords alike, and the settings ride in the drawer's config (`cfg.ct`) and its takes — not in the score.
+    **The module is deliberately standalone** at his ask, knowing nothing of the drawer or the score, so the next piece can take it whole.
+
 ## 3. Not S1's business (where the piece-specific work goes)
 
 - **Technique → notation class** is registry data + classifier rules

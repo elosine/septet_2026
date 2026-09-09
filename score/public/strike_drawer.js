@@ -200,6 +200,8 @@ const D = {
         this.applyHeight();
         if (this.injectChordUI) this.injectChordUI();   // PLAN 1k: the mode switch and the chords foot (strike_chords_ui.js)
         if (this.injectFillUI) this.injectFillUI();     // PLAN 1n: the fill mode button and its foot (fill_ui.js) — after the mode row exists
+        if (this.injectSwellUI) this.injectSwellUI();   // PLAN 1o: the sound switch (attack | crescendo) and its foot (swell_ui.js)
+        if (this.injectContainerUI) this.injectContainerUI();   // PLAN 1o: time containers in the shape menu (containers_ui.js)
         // wiring
         const q = s => d.querySelector(s);
         q('#skClose').addEventListener('click', () => this.toggle(false));

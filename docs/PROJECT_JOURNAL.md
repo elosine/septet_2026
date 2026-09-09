@@ -152,6 +152,18 @@ own server (:5300); the AI built at his word, one chunk at a time:
   crescendos (1m); then chords mode (1k), the piano's lines (1j), the piano's harmonics (1i), and the `cresc-secco-test` file. After his
   verdicts: **1o (crescendo strikes) planned — the last of the crescendo suite** — and the three tails: 1k step 7 (the piano's remainder
   in a chord strike), 1i item 2 (the harmonics' CC21 shift), 0c.7 (a) (trills and beatings still routed on MAIN).
+- **Session 4, the end of 2026-09-08 (RUNNING_LOG §301–310):** **PLAN 1o — CRESCENDO STRIKES — planned and BUILT, and with it the whole
+  crescendo suite (1l · 1m · 1n · 1o).** 1o is the one he set out to make: the strikes drawer's own rhythms sounding as SWELLS instead of
+  hits. The planning did most of the work — **three of his four CN-48 asks were already built** by 1g, 1k and 1l, leaving one real
+  question, and **his own question corrected my framing of it**: 1n needs no length rule because its pattern already exists, while in 1o
+  the deal is what CREATES the pattern, so the length is an input to it. Built: a **SOUND SWITCH** beside the drawer mode (so *chords +
+  crescendo* is 1o and nothing is written twice), the length a **multiple of the local gap** which is also the density dial, and **TIME
+  CONTAINERS** — a new rhythm in the shape menu and **its own standalone module at his ask**, with a pool (16 presets sorted by spread) ×
+  an order (stickiness and interrupt) × a contour (his accordion). 150 checks across the suite; three defects found on the walk.
+  **► WAITING ON HIM, and it is now the whole of what is left on this work: HIS EAR.** His first crescendo strikes (1o), his first filled
+  section (1n), his first crescendos (1m); then chords mode (1k), the piano's lines (1j), the piano's harmonics (1i), and the
+  `cresc-secco-test` file. After his verdicts the crescendo suite closes, and phase 1's remainder is three tails: 1k step 7 (the piano's
+  remainder in a chord strike), 1i item 2 (the harmonics' CC21 shift), 0c.7 (a) (trills and beatings still routed on MAIN).
 - **PLAN 1f step 1 built and its probe run, 2026-09-07 about 00:00–01:00 (§167–168), at his word *"run the plan independantly … I'll
   check in after the build"*:** the palette — the recipe's `playerBendSt` (his semitone) · `bendRangeSt` · `beating: false` (the
   piano); `score/public/beating_calc.js` (the players, the ordinary voices' measured ranges, the bend limits, the pairing rule, the

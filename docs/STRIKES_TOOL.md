@@ -736,6 +736,115 @@ mixin on the drawer) · one dispatch line in `strike_drawer.js` · a row on `cre
 *(The pane used for the walk coalesces `setTimeout` into 1-second buckets, so Hear's firing could not be timed there — the SCHEDULE was
 verified instead, and it is the same mechanism the drawer's own Hear has always used.)*
 
+## Z · The sound switch and time containers — `built 2026-09-08 (PLAN 1o steps 1–3; RUNNING_LOG §301–310; CN-48 · CN-56)`
+
+His words (CN-56): *"they would take the place of the strikes. And that's kind of what I originally set out to do … instead of a strike or
+short note, it'd be the onset of the crescendos."*
+
+### The sound switch
+
+**Not a fourth mode — a switch beside the mode**, so the two are independent:
+
+| | **attack** | **crescendo** |
+|---|---|---|
+| **notes** | the drawer as it always was | a single line of swells |
+| **chords** | the chords of 1k | **1o — chords of swells** |
+| **fill** | 1n (it already writes crescendos) | — |
+
+Every rhythm shape, voicing, order, span, take and insert serves both, without being written twice.
+
+**Three of his four CN-48 asks were already built when 1o opened.** The ordinary voice per player is the recipe's `ordinary` field; *"150 ms
+after the end"* is 1l step 3, and the chord engine has measured its rest from the END since 1k (`soundMs` + `markEnd`); the crescendo is
+1l's object. **So the switch changes exactly four things:**
+
+1. **the length** — 140 ms becomes `lengthMul` × the local gap of the rhythm;
+2. **what the deal assumes** a sound occupies — the same number, so the dealing already respects the swells;
+3. **what is written** — a short `waveCurve` becomes a 1l crescendo at 1l/1m's defaults, in its own `grp-swell-…` group with a META shape;
+4. **the readout** — the voices actually sounding, and what could not be met.
+
+### Why the length has to be decided at all — and 1n's does not
+
+His own question, and it improved the design (§302). **In 1n the pattern already exists**, so *"when is the viola next needed?"* is a fact to
+look up and the length falls out of it. **In 1o the pattern does not exist yet — the deal is what creates it** — and the deal must know how
+long a sound ties up a player in order to work out who is free:
+
+```
+who is free?   needs → how long a swell lasts
+how long?      needs → when that player is next needed
+when is that?  needs → the deal
+```
+
+So the length is an **INPUT**. It is given to the deal as the multiplier against the rhythm's median gap; each swell's own length is then
+taken from its own local gap and **capped so it can never run into that player's own next dealt note** (0.17 s before it).
+
+### The multiplier IS the density dial
+
+Measured on the engine — six players, 2–4 voices per entry:
+
+| length ÷ gap | voices sounding | |
+|---|---|---|
+| 0.5 | ~1.5 | sparse, real silence between |
+| **1.2** | **~3** | comfortable |
+| 2 | ~4 | thick, entries begin to thin |
+| 3 | — | saturated; 12–23 of 40 entries fail |
+
+The readout gives the **measured** voices, the peak, and the count that could not be met — the honest half, because the arithmetic
+over-predicts once the ensemble saturates. And a rhythm can simply be too fast: an accel run of 100 ms gaps puts every swell on 1l's 0.30 s
+floor, and the readout says so in those words.
+
+### Time containers
+
+A new entry in the drawer's own **shape** menu, beside *as played · even · … · accel* — so it makes a rhythm for **attacks and swells, notes
+and chords alike**. `time_containers.js` is its own module and knows nothing of the drawer, because that is what he asked for: *"worth
+abstracting it into its own module because this is a type of technique I do a lot of."*
+
+**Three independent axes:**
+
+- **the POOL** — the numbers he types, with optional weights (*a typed weight stands, the rest share what is left* — his own rule), in
+  **units** defaulting to 1 second so one number rescales a whole shape. Rolled until an overall duration is filled, **stopping short and
+  saying by how much**, because the numbers he typed are the point.
+- **the ORDER** — `stick` (how much the next value stays near the last: his *periodic*) and `interrupt` (how often it deliberately leaps:
+  his *interrupted*). **Two controls, not one, because stickiness alone LOCKS UP** — at 2.5 the roll never leaves the value it found.
+- **the CONTOUR** — his **accordion**: *grow · shrink · open–close · close–open*, with **turn** (where the reversal sits — the asymmetry),
+  **bow** (broad or sharp) and **depth**. **Depth decides whether the large-scale form is the subject or the background**, because the
+  contour and the interruptions pull against each other.
+
+**The presets are sorted by SPREAD** (largest ÷ smallest), not by name or source, because the spread is what is actually audible — it
+governs both how much the seed changes the result and the range of swell lengths that follow:
+
+| | spread | | | spread |
+|---|---|---|---|---|
+| even · 4 | 1× | | primes · 2 3 5 7 11 13 | 6.5× |
+| gently uneven · 3 4 5 | 1.7× | | one rare long · 2 5 7 15 (15 at 20 %) | 7.5× |
+| Pythagorean 6:8:9:12 (Palladio) | 2× | | Modulor-ish φ series | 9× |
+| √2 · ad quadratum (DIN, Gothic) | 2.8× | | Fibonacci · 1 2 3 5 8 13 | 13× |
+| long and short · 2 7 | 3.5× | | jagged · 1 2 8 13 | 13× |
+| harmonic series · 3 4 6 12 | 4× | | triangular · 1 3 6 10 15 | 15× |
+| golden section φ | 4.2× | | powers of two · 1 2 4 8 16 | 16× |
+| √3 · ad triangulum | 5.2× | | | |
+| silver ratio (Japanese temple) | 5.8× | | | |
+
+**On the proportion systems, honestly:** in architecture these ratios are seen all at once and compared by the eye; in time they are heard
+one after another and compared only by memory. There is no body of results saying a √2 time-set sounds a particular way. What they
+reliably give is their spread and their lack of a common factor — which is what the table measures. They are also ratio sets, so turn the
+unit down.
+
+Picking a preset **fills the boxes**; it is a starting point he edits, not a mode he enters.
+
+### What it is made of
+
+`score/public/time_containers.js` (the generator, pure and standalone) · `score/public/swell_ui.js` (the sound switch, a mixin) ·
+`score/public/containers_ui.js` (the shape, a mixin) · two lines in `strike_chords_ui.js` so the deal is told the sound's length · two
+hooks in `strike_drawer.js`. 37 checks in `score/tools/check_containers.js`.
+
+### Found on the walk, and fixed
+
+- **The shape menu is rebuilt by every render**, so adding *containers* once at load was not enough — the entry is ensured after each render.
+- **1l's 5 s fallback was being used as a length CEILING**, which silently crushed a long container: a 15 s container at 1.2× came out as a
+  5 s swell instead of an 18 s one. The real ceiling is the player's own next dealt note; the 5 s bound is gone.
+- **The last swell of a pass had no next onset**, so it took the sanity bound and came out 60 s long. It now takes the gap BEHIND it — the
+  local tempo where it sits.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the

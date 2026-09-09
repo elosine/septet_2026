@@ -74,11 +74,13 @@ Object.assign(D, {
         if (c.frozen && c.frozen.events) return c.frozen;   // a take loaded "as it was": the stored sequence stands until a dial is touched
         const players = this.chordPlayers(), onsets = this.chordOnsets();
         const key = JSON.stringify([onsets, c.list.map(x => [x.id, x.pitches]), players.map(p => [p.lane, p.tech, p.lo, p.hi]),
-            c.order, c.advance, c.timesMin, c.timesMax, c.selection, c.countMin, c.countMax, c.reattackMs, c.dealer, c.seed, c.manual]);
+            c.order, c.advance, c.timesMin, c.timesMax, c.selection, c.countMin, c.countMax, c.reattackMs, c.dealer, c.seed, c.manual,
+            c.soundMs]);   // PLAN 1o: a swell occupies its player far longer than a hit, so the length is part of the deal (§302)
         if (this._chSeq && this._chSeq.key === key) return this._chSeq.out;
         const out = S.deal(onsets, c.list, players, {
             order: c.order, advance: c.advance, timesMin: +c.timesMin, timesMax: +c.timesMax, selection: c.selection,
             countMin: +c.countMin, countMax: +c.countMax, reattackMs: +c.reattackMs, dealer: c.dealer, seed: +c.seed,
+            soundMs: c.soundMs != null ? +c.soundMs : undefined,   // PLAN 1o: 140 ms for a hit, the swell's own length for a swell
         }, (pitch, p) => this.realize(pitch, p), c.manual);
         this._chSeq = { key, out };
         return out;

@@ -1386,7 +1386,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        once; then **1o (crescendo strikes) is planned**.
 
 - **1o — Crescendo strikes: the drawer's rhythms sounding as swells, plus TIME CONTAINERS (CN-48 build 2; CN-56)** —
-  `PLANNED WHOLE 2026-09-08 — phase 1 in four topics and the top line confirmed (RUNNING_LOG §301–309); BUILDING at his word`
+  `STEPS 1–3 BUILT and walked 2026-09-08 (RUNNING_LOG §310); step 4's checks and documents done — WAITING ON HIS EAR for his first
+  crescendo strikes, which completes the crescendo suite (RUNNING_LOG §301–310)`
   *(composer, 2026-09-08, CN-48: "like the recent strike chords/and-or strikes but instead of single attack, they will be crescendos …
   the spacing/overlap rules need to adjust next articulation for any one instrument will be 150ms after end of crescendo; others?"; and
   CN-56: "they would take the place of the strikes. And that's kind of what I originally set out to do … I did want the rhythms or the
@@ -1424,7 +1425,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 
   *The top line, confirmed ("good", §309):*
   1. **The sound switch** (attack or crescendo; the length rule and its density readout; the crescendos written into the score) —
-     `agreed 2026-09-08 (RUNNING_LOG §309)`. *Result when done:* one switch in the drawer turns every dealt sound from a hit into a swell,
+     `done — `score/public/swell_ui.js`, built and walked 2026-09-08 (RUNNING_LOG §310)`. *Result when done:* one switch in the drawer turns every dealt sound from a hit into a swell,
      in notes mode and chords mode alike; the length follows the local gap by a multiplier he sets; the readout says how thick the texture
      will be and how many entries could not be met; and Insert writes real 1l crescendos as their own group. The to-dos:
      - `sound: 'attack' | 'cresc'` on the drawer's config, painted like the mode buttons, remembered in the take;
@@ -1437,7 +1438,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - the piano is out of the dealing as it always is (CN-34: a piano cannot swell);
      - check: the switch changes nothing in notes/chords mode when set to *attack*; the lengths follow the gaps; the readout matches what
        is written; a re-insert replaces.
-  2. **The time container generator** (`score/public/time_containers.js`, pure and standalone) — `agreed 2026-09-08 (RUNNING_LOG §309)`.
+  2. **The time container generator** (`score/public/time_containers.js`, pure and standalone) — `done — built and checked 2026-09-08,
+     37 checks in `score/tools/check_containers.js` (RUNNING_LOG §310)`.
      *Result when done:* a module that rolls a sequence of durations from a pool, an order and a contour, deterministic from a seed, with
      no DOM and no knowledge of the drawer — **its own module from the start, because he asked for exactly that** (*"worth abstracting it
      into its own module … this is a type of technique I do a lot of"*). The to-dos:
@@ -1452,7 +1454,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - `describe()` and `spreadOf()` for the readout;
      - the checks in node: the same seed repeats a roll; the weights are honoured; stickiness raises the run length and interrupt breaks it;
        each contour moves the mean the way it says; a roll never overshoots the total.
-  3. **The containers in the drawer** (the new shape, its controls, the presets, the readout) — `agreed 2026-09-08 (RUNNING_LOG §309)`.
+  3. **The containers in the drawer** (the new shape, its controls, the presets, the readout) — `done — `score/public/containers_ui.js`,
+     built and walked 2026-09-08 (RUNNING_LOG §310)`.
      *Result when done:* *containers* joins the drawer's own `shape` menu, so it makes a rhythm for attacks and swells, notes and chords
      alike; its controls sit where the accel dials sit; the preset menu fills the boxes; and the readout says what the roll gave. The to-dos:
      - `containers` in the shape pull-down beside *accel*;
@@ -1463,7 +1466,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        untouched;
      - check: containers with *attack* gives short notes at the rolled gaps; with *crescendo* gives swells whose lengths follow them.
   4. **Verify and document** (the node checks, the walk on a copy, the documents; then his first crescendo strikes) —
-     `agreed 2026-09-08 (RUNNING_LOG §309)`. The to-dos:
+     `checks and documents DONE 2026-09-08 (`docs/STRIKES_TOOL.md` §Z; NAMING 19–20); ► WAITING ON HIS EAR for the last to-do
+     (RUNNING_LOG §310)`. The to-dos:
      - the node checks for the pure parts (the container roll and its three axes; the length rule and the density arithmetic);
      - the walk on a `zz-ai-` copy with real events and the decoded MIDI: the switch in both modes, the containers as a rhythm, Generate ·
        Hear · Insert, the readout against what lands, a re-insert, undo;

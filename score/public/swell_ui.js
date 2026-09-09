@@ -1,0 +1,279 @@
+// swell_ui.js — THE SOUND SWITCH: attack or crescendo (PLAN 1o step 1; CN-48 · CN-56; RUNNING_LOG §301–309).
+//
+// His words (CN-56): *"they would take the place of the strikes. And that's kind of what I originally set out to do … instead of a strike
+// or short note, it'd be the onset of the crescendos."*
+//
+// So this is NOT a fourth drawer mode. It is a switch ORTHOGONAL to the mode (§304): *notes + crescendo* is a single line of swells,
+// *chords + crescendo* is 1o proper — chords of swells — and every rhythm shape, voicing, order, span, take and insert already in the
+// drawer serves both without being written twice.
+//
+// WHAT THE SWITCH ACTUALLY CHANGES — four things, and no more:
+//   1. the dealt sound's LENGTH: 140 ms becomes `lengthMul` × the local gap of the rhythm, capped so it cannot run into that player's own
+//      next dealt note (0.17 s before it, 1l's number) and floored at 1l's `minS`;
+//   2. what the chord deal ASSUMES a sound occupies (`soundMs`), so the dealing already respects the swells — this is the circularity his
+//      question uncovered (§302): the length is an INPUT to the deal, not something readable afterwards, because the deal is what creates
+//      the who-plays-when in the first place;
+//   3. what is WRITTEN: a short `waveCurve` becomes a 1l crescendo at 1l/1m's own defaults, in its own `grp-swell-…` group;
+//   4. the READOUT: the voices actually sounding, and the flag count, which is the honest signal once the ensemble saturates and the
+//      arithmetic stops holding (§303: length ÷ gap of 1 gives about 2.5 voices, 2 about 4, 3 saturates and fails a third of the entries).
+//
+// The piano stays out of the dealing as it always has (CN-34): a piano cannot swell.
+(function (root) {
+'use strict';
+const D = root.StrikeDrawer;
+if (!D) { console.warn('[swell_ui] the strikes drawer is not loaded'); return; }
+
+const CR = () => root.Cresc;
+const C_ = () => (typeof Composer !== 'undefined') ? Composer : (root.Composer || null);
+const TRK = () => (typeof TRACKS !== 'undefined') ? TRACKS : (root.TRACKS || []);
+const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+const INP = 'background:#111114;color:#ddd;border:1px solid #444;padding:1px 3px;font-size:11px';
+const BTN = 'background:#2a2a30;color:#ddd;border:1px solid #555;border-radius:3px;padding:1px 6px;font-size:11px;cursor:pointer';
+
+const SW_DEFAULTS = {
+    sound: 'attack',        // 'attack' | 'cresc'
+    lengthMode: 'gap',      // 'gap' = a multiple of the local gap (his choice, §304) · 'typed' = one length for the pass
+    lengthMul: 1.2,         // × the gap to the next onset of the rhythm
+    lengthS: 2,             // the typed length
+    dynLo: 0, dynHi: 10,    // ppp → fff, 1l's own default range
+    secco: true,            // CN-49
+};
+
+Object.assign(D, {
+
+    sw() {
+        if (!this.cfg.sw) this.cfg.sw = JSON.parse(JSON.stringify(SW_DEFAULTS));
+        else for (const k in SW_DEFAULTS) if (this.cfg.sw[k] === undefined) this.cfg.sw[k] = SW_DEFAULTS[k];
+        return this.cfg.sw;
+    },
+    isSwell() { return this.sw().sound === 'cresc'; },
+
+    // WHAT THE DEAL ASSUMES a sound occupies. The deal happens before the lengths are knowable per note (§302), so it is given the
+    // nominal: the multiplier against the rhythm's MEDIAN gap. The per-note length below then respects each player's own next note, so
+    // the assumption only has to be close, not exact.
+    swellSoundMs() {
+        const s = this.sw();
+        if (!this.isSwell()) return 140;
+        if (s.lengthMode === 'typed') return Math.max(300, (+s.lengthS || 2) * 1000);
+        const on = (this.chordOnsets ? this.chordOnsets() : []).slice().sort((a, b) => a - b);
+        const gaps = on.slice(1).map((v, i) => v - on[i]).filter(g => g > 0).sort((a, b) => a - b);
+        const med = gaps.length ? gaps[Math.floor(gaps.length / 2)] : 1000;
+        return Math.max(300, med * (+s.lengthMul || 1.2));
+    },
+
+    // THE LENGTH OF ONE SWELL. `notes` is the whole dealt set (each { lane, onMs, … }).
+    swellLenMs(n, notes) {
+        const s = this.sw(), CRe = CR();
+        const minMs = ((CRe && CRe.DEFAULTS.minS) || 0.3) * 1000;
+        // NOT 1l's 5 s fallback: that is the length a free-standing crescendo takes when nothing follows it, and as a CEILING here it
+        // would silently crush a long container — his time containers reach 15 s and more (found on the walk). The real ceiling is the
+        // player's own next dealt note, applied below; this is only a sanity bound.
+        const capMs = 60000;
+        const gapS = ((CRe && CRe.DEFAULTS.endGapS) || 0.17) * 1000;
+        let want;
+        if (s.lengthMode === 'typed') want = (+s.lengthS || 2) * 1000;
+        else {
+            // the LOCAL gap of the rhythm — the next onset of the sequence, whoever plays it. The LAST entry has no next onset, so it
+            // takes the gap BEHIND it instead (the local tempo there) rather than the sanity bound, which would give it a 60 s swell.
+            const later = notes.map(x => x.onMs).filter(t => t > n.onMs + 1).sort((a, b) => a - b);
+            let gap;
+            if (later.length) gap = later[0] - n.onMs;
+            else {
+                const earlier = notes.map(x => x.onMs).filter(t => t < n.onMs - 1).sort((a, b) => b - a);
+                gap = earlier.length ? n.onMs - earlier[0] : ((CRe && CRe.DEFAULTS.fallbackS) || 5) * 1000;
+            }
+            want = gap * (+s.lengthMul || 1.2);
+        }
+        // and it may never run into this player's OWN next dealt note
+        const mine = notes.filter(x => x.lane === n.lane && x.onMs > n.onMs + 1).map(x => x.onMs).sort((a, b) => a - b);
+        if (mine.length) want = Math.min(want, Math.max(minMs, mine[0] - n.onMs - gapS));
+        return Math.round(Math.max(minMs, Math.min(capMs, want)));
+    },
+
+    // the dealt notes with swell lengths on them — used by Hear and by Insert alike
+    swellNotes(mode) {
+        const notes = this._notesForPlain(mode);
+        if (!this.isSwell()) return notes;
+        return notes.map(n => Object.assign({}, n, { durMs: this.swellLenMs(n, notes), swell: true }));
+    },
+
+    // THE READOUT: what will actually sound, measured rather than predicted (§303 — the formula over-predicts once the ensemble saturates,
+    // and that is exactly where the flags appear, so the flag count is the honest half)
+    swellReadout() {
+        const notes = this.swellNotes('orch');
+        if (!notes.length) return { text: 'nothing dealt yet', voices: 0, flagged: 0 };
+        const t0 = Math.min.apply(null, notes.map(n => n.onMs));
+        const t1 = Math.max.apply(null, notes.map(n => n.onMs + n.durMs));
+        let sum = 0, k = 0, peak = 0;
+        for (let t = t0; t <= t1; t += 25) {
+            const v = notes.filter(n => n.onMs <= t && n.onMs + n.durMs > t).length;
+            sum += v; k++; if (v > peak) peak = v;
+        }
+        const lens = notes.map(n => n.durMs / 1000).sort((a, b) => a - b);
+        const seq = (this.isChords && this.isChords() && this.chordSeq) ? this.chordSeq() : null;
+        const flagged = seq ? seq.events.filter(e => e.flagged).length : 0;
+        const lowered = seq ? seq.events.filter(e => e.lowered).length : 0;
+        const voices = k ? sum / k : 0;
+        // a rhythm can simply be too fast for a swell (§303: a 0.30 s swell already wants 400 ms gaps). When the multiplier would put a
+        // length under 1l's floor, the floor wins and the entries start failing — so the readout says WHY rather than only that they did.
+        const minS = ((CR() && CR().DEFAULTS.minS) || 0.3);
+        const floored = notes.filter(n => Math.abs(n.durMs / 1000 - minS) < 1e-6).length;
+        return {
+            voices, peak, flagged, lowered, floored,
+            text: notes.length + ' swells · ' + lens[0].toFixed(2) + '–' + lens[lens.length - 1].toFixed(2) + ' s (median '
+                + lens[Math.floor(lens.length / 2)].toFixed(2) + ' s) · ' + voices.toFixed(1) + ' voices sounding, peak ' + peak
+                + (lowered ? ' · ' + lowered + ' entries thinned' : '')
+                + (lowered ? '' : '')
+                + (flagged ? ' · ' + flagged + ' could not be met' : '')
+                + (floored === notes.length && flagged ? ' — these gaps are too fast for a swell: every one is at the ' + minS.toFixed(2) + ' s floor' : ''),
+        };
+    },
+
+    // ---------------------------------------------------------------- the write
+    swellInsert() {
+        const C = C_(), CRe = CR(), s = this.sw();
+        if (!C || !CRe) { this.setStatus('the crescendo module is not loaded', true); return; }
+        const notes = this.swellNotes('orch');
+        if (!notes.length) { this.setStatus('nothing to insert — Generate first', true); return; }
+        const t = +C.getTimeAtPlayhead().toFixed(3);
+        const ML = (typeof META_LAYER !== 'undefined') ? META_LAYER : 7;
+        const tag = this.isChords && this.isChords() ? 'ch' : 'nt';
+        const group = 'grp-swell-' + tag + '-' + (this.strike ? this.strike.index : 0) + '-' + Math.floor(t * 10);
+        C.pushUndoState();
+        const before = C.objects.length;
+        C.objects = C.objects.filter(o => o.groupId !== group);
+        const replaced = before - C.objects.length;
+        let maxEnd = t, made = 0;
+        notes.forEach(n => {
+            const at = +(t + n.onMs / 1000).toFixed(3), dur = n.durMs / 1000;
+            const tech = (C.ordinaryTech && C.ordinaryTech(n.lane)) || {};
+            const wc = CRe.make(at, n.midi, { lane: n.lane, tech: tech.key, label: (TRK()[n.lane] || {}).short }, [],
+                { durS: dur, dynLo: +s.dynLo, dynHi: +s.dynHi, secco: s.secco !== false });
+            if (!wc) return;
+            wc.id = 'wc-' + (C.nextId++);
+            wc.groupId = group;
+            wc.properties.cresc.end = 'swell';
+            wc.properties.cresc.swell = { from: this.strike ? this.strike.id : null, mode: this.cfg.mode || 'notes',
+                                          lengthMode: s.lengthMode, lengthMul: +s.lengthMul, onMs: n.onMs };
+            wc.performanceNotes = 'cresc ' + wc.properties.cresc.shape + ' ' + wc.properties.cresc.ratio + '× '
+                + CRe.dynName(+s.dynLo) + '→' + CRe.dynName(+s.dynHi) + ' ' + dur.toFixed(2) + ' s (swell strike)';
+            maxEnd = Math.max(maxEnd, at + dur);
+            C.objects.push(wc);
+            made++;
+        });
+        C.objects.push({ id: 'wc-' + (C.nextId++), type: 'waveCurve', layer: ML, groupId: group,
+            startSeconds: t, endSeconds: Math.round(maxEnd * 1000) / 1000,
+            nodes: [{ pos: 0, y: 7.8, smooth: 0 }, { pos: 1, y: 7.8, smooth: 0 }], segments: [{ model: 'power', slope: 0 }],
+            color: '#C2410C', fillMode: 'bottom', opacity: 0.5, performanceNotes: 'swell strike (drag = move, box = stretch)', properties: {} });
+        C.lastInsertGroup = group;
+        C.curveDirty(); C.renderAll(); C.markDirty(); C.scheduleConflictRefresh();
+        const r = this.swellReadout();
+        this.setStatus('inserted ' + made + ' swells at ' + t.toFixed(3) + ' s as ' + group
+            + (replaced ? ' · replaced the earlier pass' : '') + ' · ' + r.text + ' — CTRL+Z undoes it');
+    },
+
+    // ---------------------------------------------------------------- the switch and its controls
+    injectSwellUI() {
+        if (!this.el || this.el.querySelector('#skSoundWrap')) return;
+        const head = this.el.querySelector('#skHead'); if (!head) return;
+        const wrap = document.createElement('span');
+        wrap.id = 'skSoundWrap';
+        wrap.style.cssText = 'display:inline-flex;gap:3px;align-items:center;white-space:nowrap';
+        wrap.title = 'PLAN 1o: what the drawer deals — a short attack as it always has, or a CRESCENDO in its place. The switch is beside the mode, not inside it, so notes and chords both serve it.';
+        wrap.innerHTML = '<span style="color:#9a9">sound</span>'
+            + '<button id="skSndAtk" style="' + BTN + '">attack</button><button id="skSndCr" style="' + BTN + '">crescendo</button>';
+        const modeWrap = this.el.querySelector('#skModeWrap');
+        if (modeWrap && modeWrap.parentNode) modeWrap.parentNode.insertBefore(wrap, modeWrap.nextSibling);
+        else head.appendChild(wrap);
+        wrap.querySelector('#skSndAtk').addEventListener('click', () => this.setSound('attack'));
+        wrap.querySelector('#skSndCr').addEventListener('click', () => this.setSound('cresc'));
+
+        const foot = this.el.querySelector('#skFoot');
+        const sf = document.createElement('span');
+        sf.id = 'skSwFoot';
+        sf.style.cssText = 'display:none;gap:6px;align-items:center;white-space:nowrap';
+        sf.innerHTML = '<span style="color:#555">|</span><span style="color:#9a9">swell</span>'
+            + '<select id="skSwMode" style="' + INP + '" title="the length of each swell: a multiple of the gap to the next onset (it follows an accelerando by itself), or one typed length for the whole pass">'
+            + '<option value="gap">× the gap</option><option value="typed">a typed length</option></select>'
+            + '<input id="skSwMul" type="number" step="0.1" min="0.2" style="' + INP + ';width:46px" title="the multiplier — and it IS the density dial: about 1 gives 2.5 voices sounding, 2 gives 4, 3 saturates">'
+            + '<input id="skSwLen" type="number" step="0.1" min="0.3" style="' + INP + ';width:46px" title="the typed length in seconds"><span style="color:#8a8">s</span>'
+            + '<select id="skSwLo" style="' + INP + ';width:50px" title="the dynamic each swell starts from"></select>'
+            + '<span style="color:#8a8">→</span>'
+            + '<select id="skSwHi" style="' + INP + ';width:50px" title="the dynamic each swell reaches"></select>'
+            + '<label title="secco: the cut at the end so nothing rings past it (CN-49)"><input id="skSwSecco" type="checkbox"> secco</label>'
+            + '<button id="skSwIns" style="' + BTN + ';color:#e8a06a" title="write the swells into the score at the playhead as their own group">Insert swells</button>'
+            + '<span id="skSwOut" style="color:#9a9"></span>';
+        foot.insertBefore(sf, foot.querySelector('#skTakeGrp'));
+        const CRe = CR();
+        const opts = (CRe ? CRe.DYN : ['ppp', 'fff']).map(d => '<option value="' + d + '">' + d + '</option>').join('');
+        sf.querySelector('#skSwLo').innerHTML = opts; sf.querySelector('#skSwHi').innerHTML = opts;
+        sf.querySelector('#skSwIns').addEventListener('click', () => this.swellInsert());
+        ['skSwMode', 'skSwMul', 'skSwLen', 'skSwLo', 'skSwHi', 'skSwSecco'].forEach(id => {
+            sf.querySelector('#' + id).addEventListener('change', () => {
+                const s = this.sw(), q = i => sf.querySelector('#' + i);
+                s.lengthMode = q('skSwMode').value;
+                s.lengthMul = +q('skSwMul').value || 1.2;
+                s.lengthS = +q('skSwLen').value || 2;
+                s.dynLo = CRe ? CRe.dynHeight(q('skSwLo').value) : 0;
+                s.dynHi = CRe ? CRe.dynHeight(q('skSwHi').value) : 10;
+                s.secco = q('skSwSecco').checked;
+                if (this.chordDirty) this.chordDirty();
+                this.save(); this.paintSound(); this.render();
+            });
+        });
+        this.paintSound();
+    },
+    paintSound() {
+        if (!this.el) return;
+        const on = this.isSwell(), s = this.sw(), CRe = CR();
+        const a = this.el.querySelector('#skSndAtk'), b = this.el.querySelector('#skSndCr');
+        if (a) a.style.cssText = BTN + (on ? '' : ';background:#4a2a12;color:#e8a06a;border-color:#C2410C');
+        if (b) b.style.cssText = BTN + (on ? ';background:#4a2a12;color:#e8a06a;border-color:#C2410C' : '');
+        const sf = this.el.querySelector('#skSwFoot');
+        if (!sf) return;
+        sf.style.display = (on && !(this.isFill && this.isFill())) ? 'inline-flex' : 'none';
+        const q = i => sf.querySelector('#' + i);
+        q('skSwMode').value = s.lengthMode;
+        q('skSwMul').value = s.lengthMul; q('skSwMul').style.display = s.lengthMode === 'gap' ? '' : 'none';
+        q('skSwLen').value = s.lengthS; q('skSwLen').style.display = s.lengthMode === 'typed' ? '' : 'none';
+        if (CRe) { q('skSwLo').value = CRe.dynName(s.dynLo); q('skSwHi').value = CRe.dynName(s.dynHi); }
+        q('skSwSecco').checked = s.secco !== false;
+        if (on) { try { q('skSwOut').textContent = this.swellReadout().text; } catch (e) { q('skSwOut').textContent = ''; } }
+    },
+    setSound(v) {
+        this.sw().sound = (v === 'cresc') ? 'cresc' : 'attack';
+        if (this.chordDirty) this.chordDirty();
+        this.save(); this.paintSound();
+        if (this.strike || this.isFill && this.isFill()) this.render();
+        this.setStatus(this.isSwell()
+            ? 'crescendo: every dealt sound is a swell — its length follows the gap, and the readout says how thick it will be'
+            : 'attack: the drawer as it always was');
+    },
+});
+
+// ---------------------------------------------------------------- the hooks, kept to three
+// 1 · notesFor gains the swell lengths, so Hear and the insert both see them
+D._notesForPlain = D.notesFor;
+D.notesFor = function (mode) {
+    if (this.isSwell && this.isSwell() && !(this.isFill && this.isFill())) return this.swellNotes(mode);
+    return this._notesForPlain.apply(this, arguments);
+};
+// 2 · the chord deal is told what a sound occupies (§302: the length is an INPUT to the deal)
+if (D.chordSeq) {
+    const _chordSeq = D.chordSeq;
+    D.chordSeq = function () {
+        const c = this.ch ? this.ch() : null;
+        if (c) c.soundMs = this.swellSoundMs();          // in the cache key through `c`, so a swell setting re-deals
+        return _chordSeq.apply(this, arguments);
+    };
+}
+// 3 · the mode paint carries the sound switch with it
+if (D.paintMode) {
+    const _paintMode = D.paintMode;
+    D.paintMode = function () { _paintMode.apply(this, arguments); if (this.paintSound) this.paintSound(); };
+}
+
+if (D.el) D.injectSwellUI();
+else if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => { if (D.el) D.injectSwellUI(); });
+else setTimeout(() => { if (D.el) D.injectSwellUI(); }, 0);
+}(typeof self !== 'undefined' ? self : this));

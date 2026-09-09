@@ -8541,3 +8541,55 @@ Composer, 2026-09-08: *"good"* to the container generator as it now stands. **Ph
 2. **The time container generator** - pool x order x contour, pure, and its own module from the start because he asked for exactly that.
 3. **The containers in the drawer** - the new entry in the shape menu, its controls, the presets, the readout.
 4. **Verify and document** - the node checks, the walk on a copy, the documents; then his first crescendo strikes.
+
+## §310. PLAN 1o steps 1–3 BUILT and walked — the crescendo suite is finished but for his ear
+
+Composer, 2026-09-08: *"good, build 1o as much as you can independently"*. PLAN 1o written whole — phase 1's four topics, the top line and
+all four steps with their sub-steps — then steps 1–3 built and walked; step 4's checks and documents done.
+
+**What was built.**
+
+- **Step 2 — `score/public/time_containers.js`**, and it is **its own module from the first line** at his ask (*"worth abstracting it into
+  its own module because this is a type of technique I do a lot of"*): it knows nothing of the drawer, the score, crescendos or MIDI. A
+  POOL (numbers, weights on his rule, a `unit`, 16 PRESETS sorted by SPREAD) × an ORDER (`stick`, `jump`) × a CONTOUR (his accordion:
+  grow · shrink · openClose · closeOpen with turn, bow, depth). 37 checks, and the contour is MEASURED rather than asserted — open–close
+  gives thirds of 2.68 → 5.95 → 3.13, and depth 0.3 against 2.5 gives a shapedness of 1.00 against 3.16.
+- **Step 1 — `score/public/swell_ui.js`**, the SOUND SWITCH beside the mode. `notes + crescendo` is a line of swells, `chords + crescendo`
+  is 1o. It changes four things and no more: the length (`lengthMul` × the local gap, capped at that player's own next dealt note minus
+  0.17 s, floored at 1l's `minS`), what the deal ASSUMES a sound occupies, what is written (1l crescendos in a `grp-swell-…` group with a
+  META shape), and the readout.
+- **Step 3 — `score/public/containers_ui.js`**, containers as an entry in the drawer's own `shape` menu, so the rhythm serves attacks and
+  swells, notes and chords alike. In chords mode it takes the whole roll; in notes mode it takes the roll's first n gaps, keeping the
+  strike's own note count.
+
+**Verified in the running app** on a `zz-ai-` copy with real events:
+
+| | |
+|---|---|
+| the switch, attack | 35 notes, every one 140 ms, the deal told 140 ms |
+| the switch, crescendo | 32 swells, 2.40–5.00 s (median 3.60), the deal told 3600 ms — three fewer entries, because a swell ties up its player |
+| the multiplier as the density dial | 0.5 → **1.53 voices**; 1.2 → **3.04**; 2.5 → 2.82 with 3 entries failing |
+| containers as a rhythm | `7 7 7 2 5 2 5 5 2 2 7 7 2` — 13 containers filling 60 s exactly; the notes-mode pattern followed them |
+| the accordion in the drawer | `3 3 3 5 4 5 4 4 5 5 5 5 3 3 3` — open–close, turn 0.4 |
+| a preset | Fibonacci filled the boxes and rolled `8 8 8 2 3 1 2 3 1 1 5 5 1 5 5 2` |
+| Insert | 32 crescendos + 1 META shape in `grp-swell-ch-0-2000`, morph orange, secco, at the player's ordinary voice, each carrying its provenance; a re-insert replaced; CTRL+Z undid |
+
+**THREE DEFECTS THE WALK FOUND, all fixed:**
+
+1. **The shape menu is rebuilt by every render**, so adding *containers* once at load left it missing. The entry is now ensured after each
+   render — hooking `paintMode` alone was not enough, because a render can happen without a mode change.
+2. **1l's 5 s fallback was being used as a length CEILING.** It is the length a free-standing crescendo takes when nothing follows it, and
+   as a ceiling here it silently crushed a long container: a 15 s container at 1.2× came out a 5 s swell instead of an 18 s one. The real
+   ceiling is the player's own next dealt note; the arbitrary bound is gone. **His time containers reach 15 s and more, so this would have
+   bitten on his first long-form pass.**
+3. **The last swell of a pass had no next onset** and so took the sanity bound — 60 s. It now takes the gap BEHIND it, the local tempo
+   where it sits.
+
+**And one thing the walk confirmed rather than fixed: a rhythm can simply be too fast for a swell.** An accel run of ~100 ms gaps puts
+every swell on the 0.30 s floor and fails most entries. That is §303's arithmetic showing up in practice (a 0.30 s swell already wants
+400 ms gaps), so the readout now says it in those words: *"these gaps are too fast for a swell: every one is at the 0.30 s floor"*.
+
+**Written:** `docs/STRIKES_TOOL.md` §Z (the switch, the containers, the presets, the honest note on proportion systems, the defects),
+`docs/NAMING.md` 19 (the swell group and its provenance) and 20 (time containers as a rhythm, and why the module stands alone),
+`docs/CRESCENDO.md`'s 1o line, PLAN 1o's statuses, PLANNER NOW, the journal §2. 150 checks now across the three crescendo check scripts,
+all passing.

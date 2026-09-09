@@ -259,8 +259,9 @@ says so in its own tooltip.
   every attack of a pattern, each in another instrument — the anchors as attack ids, the seeded rotation, seven pitch strategies,
   the three scopes. A crescendo written by it is one of these objects with a `fill` block; a cut one ends at the END of the accent
   note rather than 0.17 s before it, which is the one place 1n departs from §4's rule.
-- **1o — crescendo strikes:** the articulation, the ordinary voice, the velocity law for a long sound, what a "count" means when the
-  sounds overlap.
+- ~~1o — crescendo strikes~~ **BUILT 2026-09-08** (`docs/STRIKES_TOOL.md` §Z): a SOUND SWITCH in the strikes drawer turns every
+  dealt sound into a swell — *chords + crescendo* is 1o — with the length a multiple of the local gap and the multiplier as the
+  density dial. Three of his four asks for it were already built by 1g, 1l and 1k. The crescendo suite is complete but for his ear.
 - **The notation of a crescendo** (2a).
 - **The velocity of a crescendo's attack:** the app takes the note-on velocity from the curve's TOP, so a crescendo attacks at its
   loudest velocity and CC7 shapes it down. That is how every held note in this app has always played, trills included — but it is

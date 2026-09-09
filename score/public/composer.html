@@ -560,9 +560,12 @@
 <script src="/strike_chords.js"></script>   <!-- PLAN 1k: the strikes drawer's chord engine (pure) -->
 <script src="/fill.js"></script>   <!-- PLAN 1n step 1: the sequence filler — a strike pattern in, one long per attack out (pure) -->
 <script src="/fill_pitch.js"></script>   <!-- PLAN 1n step 2: the pitch strategies — the pattern, a sonority, a chain, the vertical filter (pure) -->
+<script src="/time_containers.js"></script>   <!-- PLAN 1o step 2: a set of time containers, rolled — a pool × an order × a contour (pure, its own module at his ask) -->
 <script src="/strike_drawer.js" defer></script>   <!-- PLAN 1c.2: the STRIKES drawer (docs/STRIKES_TOOL.md) -->
 <script src="/strike_chords_ui.js" defer></script>   <!-- PLAN 1k: chords mode in the strikes drawer (a mixin on it) -->
 <script src="/fill_ui.js" defer></script>   <!-- PLAN 1n step 3: fill mode in the strikes drawer (a mixin, after chords mode) -->
+<script src="/swell_ui.js" defer></script>   <!-- PLAN 1o step 1: the sound switch — attack or crescendo (a mixin, after fill mode) -->
+<script src="/containers_ui.js" defer></script>   <!-- PLAN 1o step 3: time containers as a rhythm in the drawer (a mixin) -->
 <script src="/beating_panel.js" defer></script>   <!-- PLAN 1f step 4: the BEATING panel (docs/BEATING_TOOL.md §6) -->
 <script>
 // ============================================
