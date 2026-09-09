@@ -9225,3 +9225,77 @@ The fade's numbers from §319 are unchanged — the stream is still timestamped,
 harness. Only the depth of the queue changed. **The lesson is one line: a feature guard on a capability I never verified was the whole
 bug.** `typeof out.clear === 'function'` looked like defensive code and was in fact an unexamined assumption with his rack on the other
 end of it. Three minutes in the console before writing it would have found it — the same three minutes that §316 and §314 both turned on.
+
+## §321. Editing the piano takes: the stack, the marks, and a NOTE CARD — built against a stated rule of "no back and forth"
+
+Composer, 2026-09-09, after recording piano parts against the morph:
+
+> *"the interface isn't working for me, but I don't wanna spend all afternoon trying to troubleshoot it … if I play two notes at the
+> same time, it produces two tiles, and one is overlapping the other, and I can't choose the one underneath. The other issue is
+> … the warnings, the hard soft warnings … Is there a way to toggle this off? … I don't wanna go back and forth and say, tell AI to do
+> this and then have it not work and then go back and forth. I've already spent too much of today just going down a rabbit hole."*
+
+Then, mid-build: *"I want to be able to select a note, choose a different instrument, and maybe choose a different pitch, and then drag
+the block so I can edit the duration or location."* And: *"also no ability to change dynamic in panel."*
+
+**The constraint shaped the design.** "Do not come back with something that does not work" argues for one self-contained thing that
+can be verified end to end, not four patches spread through a UI that is already misbehaving. So: a new file with its own DOM, plus
+two small generalisations of code that already existed and was already proven.
+
+### 1 · The note underneath — the mechanism was already written, for one lane only
+
+`pickFromMetaStack` has cycled through stacked shapes on the META lane since 2026-08-14. It was META-only, which is exactly why two
+piano notes played together left the lower one unreachable. Generalised to `stackAt(t, layer)` / `pickFromStack(e, layer)` and applied
+on every lane: **clicking the same spot again takes the next one down, and wraps**, with the status line naming it — `G4 · main — 1/2
+stacked`. Sorted narrowest-first (a short note buried under a long one is pick #1) then by pitch, top down.
+
+**A note that is alone is untouched** — the stack is 1 and the function returns it as before, so the ordinary case carries no risk.
+
+### 2 · The conflict marks — a toggle, and the count stays
+
+`marks on / marks off` beside the badge. The conflicts are still computed and still counted; only the boxes drawn over the notes go
+away. Nothing is hidden from the record — only from the picture he is trying to edit in. The button appears only when there are
+conflicts to hide.
+
+### 3 · THE NOTE CARD (`score/public/note_card.js`)
+
+Select a pitched note on a player's lane and a card opens beside it: **voice · pitch · dyn · start · length**, and nothing else.
+
+**The one design decision worth stating: every change is auditioned the instant it is made, and the card prints the MIDI channel it
+went out on.** A voice that does not speak is precisely what cost him the afternoon, and no amount of correct-looking UI tells him
+whether a sound came out. The voice menu therefore reads
+
+```
+8Dio 1969 Legacy Piano (Steinway 1969)  [ch 1]
+Plucked Piano (Spitfire)                [ch 2]
+Harmonics (Prepared Piano 2)            [ch 3]
+Muted strings (Prepared Piano 2)        [ch 5]
+```
+
+so a silent voice is a one-glance diagnosis instead of an hour: the channel is visible, and the readout says whether the port is even
+open. The dynamic reuses `Cresc.DYN` / `dynHeight` / `dynName` — the ensemble's own ppp…fff — so the card cannot drift from the
+crescendos; underneath it is one value, the drawn height, with a captured note's `recVel` kept in step so what is seen and what is
+heard cannot disagree.
+
+### The silent voice was NOT the app, and he found it himself
+
+Diagnosed from the data while building: a captured note has `sonifyMode: 'plain'`, so `isCurveEvent` is false, so it never takes a D11
+curve channel and `routeForNote` returns the technique's own — ch 1 / 2 / 3 / 5 on port `Piano`. **The routing was correct.** Both
+Reaper piano tracks read `REC 1 5408 …` = one device, ALL channels, so the channels do arrive; what was missing was downstream. His
+own answer, minutes later: **"ok fixed the mic choices were all turned off."** Recorded because the diagnosis pointed at the right
+layer and the composer, not the AI, closed it.
+
+### Verified in the app, on a throwaway copy, before he was told anything
+
+`zz-ai-notecard` (deleted with its `-work`). Two simultaneous piano notes made; the cycle returns **G4 → C4 → G4**; the card opens
+reading *2 of 2 stacked*; voice → `harmonics` moves the route to **ch 3**; pitch +2 → C4 becomes D4; dyn → **ff** sets both nodes to
+8.6 and `recVel` to 109 together; length 2.5 and start 402 land exactly. Zero console errors.
+
+**A mistake caught in that run and worth the entry on its own:** the card first threw `Cannot read properties of undefined (reading
+'trackTechniques')`. `Composer` and `Cresc` are top-level `const`s in composer.html — a lexical global, **not** properties of `window`
+— which is written down in §2 of the journal, and I used `root.Composer` anyway. The fix is a two-line accessor, and the reason it is
+recorded is that the harness caught it rather than he did, which was the whole point of testing before reporting.
+
+**And his working copy was protected.** The first test ran against `piece-septet` by mistake; the two objects were removed within the
+same minute and `piece-septet-work.json` was checked on disk and found clean (755 objects, none of them mine) before anything else was
+done. The rule stands and is worth restating: **build on a `zz-ai-` copy from the first command, not from the second.**

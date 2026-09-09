@@ -355,6 +355,7 @@
     <span id="buildTag" style="color:#7a8; font-size:11px" title="code build loaded in this page">b37-save</span>
     <span style="flex:1 1 auto"></span>
     <button id="conflictBadge" title="playability: notes double-booked on one player (red) or too close to re-attack (amber). Click to resolve." style="display:none; background:#4a1414; color:#ff8080; font-family:Consolas,monospace">&#9888; 0</button>
+    <button id="conflictMarksBtn" title="show or hide the conflict boxes drawn over the notes (the count stays either way)" style="display:none">marks on</button>
     <button id="blastsBtn" title="insertion strip: pick a source, flip through a list, audition, insert at the playhead">Insertion</button>
 </div>
 <!-- D17 (composer 2026-09-04: "put in some hints ... reminders how to use the save system"): one line,
@@ -556,7 +557,8 @@
 <script src="/multitempo_panel.js" defer></script>
 <script src="/cresc.js"></script>   <!-- PLAN 1l: the crescendo — the shapes, the end rule, the object (pure) -->
 <script src="/spacing.js"></script>   <!-- PLAN 1l: the one spacing rule — a player is free 150 ms after its last sound ENDS, between gestures (pure) -->
-<script src="/cresc_card.js"></script>   <!-- PLAN 1m step 2: the crescendo card — the four controls on the live crescendo, hear alone / in context, ENTER keeps / ESC removes -->
+<script src="/cresc_card.js"></script>
+<script src="/note_card.js"></script>   <!-- 2026-09-09: select a note → voice, pitch, start, length, and every change auditioned at once -->   <!-- PLAN 1m step 2: the crescendo card — the four controls on the live crescendo, hear alone / in context, ENTER keeps / ESC removes -->
 <script src="/strike_chords.js"></script>   <!-- PLAN 1k: the strikes drawer's chord engine (pure) -->
 <script src="/fill.js"></script>   <!-- PLAN 1n step 1: the sequence filler — a strike pattern in, one long per attack out (pure) -->
 <script src="/fill_pitch.js"></script>   <!-- PLAN 1n step 2: the pitch strategies — the pattern, a sonority, a chain, the vertical filter (pure) -->
@@ -2642,8 +2644,20 @@ const Composer = {
         this.updateConflictBadge();
         if (this._resolverOpen) this.renderResolver();
     },
+    showConflictMarks: true,   // 2026-09-09: he edits under them — *"is there a way to toggle this off?"*. The COUNT is unaffected.
     renderConflictMarks() {
         const svgNS = 'http://www.w3.org/2000/svg';
+        // off: strip what is drawn and stop. The conflicts are still computed and the badge still counts them, so nothing is hidden
+        // from the record — only from the picture he is trying to edit in.
+        if (!this.showConflictMarks) {
+            for (const o of this.noteEvents()) {
+                const g = this.elementCache.get(o.id);
+                if (!g) continue;
+                const old = g.querySelector('.conflictMark');
+                if (old) old.remove();
+            }
+            return;
+        }
         const marks = this._conflicts || new Map();
         for (const o of this.noteEvents()) {
             const g = this.elementCache.get(o.id);
@@ -2669,6 +2683,13 @@ const Composer = {
         }
     },
     updateConflictBadge() {
+        const mb = document.getElementById('conflictMarksBtn');
+        if (mb) {
+            const any = (this._conflicts && this._conflicts.size) > 0;
+            mb.style.display = any ? '' : 'none';
+            mb.textContent = this.showConflictMarks ? 'marks on' : 'marks off';
+            mb.style.opacity = this.showConflictMarks ? '' : '0.55';
+        }
         const el = document.getElementById('conflictBadge');
         if (!el) return;
         const pairs = this._conflictPairs || [];
@@ -4476,6 +4497,7 @@ const Composer = {
         hp.style.pointerEvents = 'all';
         hp.addEventListener('mousedown', (e) => {
             e.stopPropagation(); e.preventDefault();
+            this._lastPointer = { clientX: e.clientX, clientY: e.clientY };   // so the note card opens beside the note
             this._cueDown = { x: e.clientX, y: e.clientY };   // PLAN 1j: a click (no drag) on a note born of a line reopens the picker
             if (CURVE_LAYERS.includes(wc.layer)) {   // the curve windows
                 const now = performance.now(), last = this._lastLineDown;
@@ -4498,11 +4520,10 @@ const Composer = {
             // META overlay (composer 2026-08-14): gesture shapes may cover each
             // other. ALT+click = pick from a list of everything stacked here;
             // plain clicks at the same spot cycle down through the stack.
+            // …and the same for every other lane (2026-09-09): notes played together stack, and the one underneath was unreachable.
             let target = wc;
-            if (wc.layer === META_LAYER) {
-                if (e.altKey) { this.openMetaStackPicker(e); return; }
-                target = this.pickFromMetaStack(e);
-            }
+            if (e.altKey && wc.layer === META_LAYER) { this.openMetaStackPicker(e); return; }
+            target = this.pickFromStack(e, wc.layer) || wc;
             this.selectObject(target);
             this.startWCBodyDrag(target, e);
         });
@@ -5187,14 +5208,19 @@ const Composer = {
     // here keeps each one reachable: stack query, click-cycling, an ALT+click
     // picker, and selected-shape-to-front so its handles are never buried.
 
-    metaStackAt(timeSec) {
+    // EVERYTHING SOUNDING AT ONE INSTANT ON ONE LANE (2026-09-09). This was META-only, which is why two piano notes played together
+    // left the lower one unreachable: *"if I play two notes at the same time, it produces two tiles, and one is overlapping the
+    // other, and I can't choose the one underneath."* The rule is the same everywhere — narrowest first, so a short note buried under
+    // a long one is the FIRST pick rather than the last; then by pitch, top down, which is how a stacked chord is read.
+    stackAt(timeSec, layer) {
         return this.objects
-            .filter(o => o.type === 'waveCurve' && o.layer === META_LAYER &&
+            .filter(o => o.type === 'waveCurve' && o.layer === layer &&
                 timeSec >= o.startSeconds && timeSec <= o.endSeconds)
-            // narrowest first: a short shape buried under a long one is pick #1
             .sort((a, b) => (a.endSeconds - a.startSeconds) - (b.endSeconds - b.startSeconds) ||
+                (b.sonifyNote || 0) - (a.sonifyNote || 0) ||
                 a.startSeconds - b.startSeconds);
     },
+    metaStackAt(timeSec) { return this.stackAt(timeSec, META_LAYER); },
 
     metaShapeLabel(wc) {
         if (wc.groupId) {
@@ -5204,9 +5230,11 @@ const Composer = {
         return String(wc.performanceNotes || 'META shape').split(' (')[0];
     },
 
-    pickFromMetaStack(e) {
+    // Clicking the same spot again takes the next one down, and wraps. Nothing changes for a note that is alone — the stack is 1 and
+    // this returns it untouched — so the ordinary case cannot have been made worse.
+    pickFromStack(e, layer) {
         const t = this.clientXToTime(e.clientX);
-        const stack = this.metaStackAt(t);
+        const stack = this.stackAt(t, layer);
         if (stack.length <= 1) { this._metaCycle = null; return stack[0] || this.selectedObject; }
         const ids = stack.map(s => s.id).join(',');
         const sameSpot = this._metaCycle && this._metaCycle.ids === ids &&
@@ -5214,9 +5242,18 @@ const Composer = {
         const idx = sameSpot ? (this._metaCycle.idx + 1) % stack.length : 0;
         this._metaCycle = { x: e.clientX, idx, ids };
         const pick = stack[idx];
-        this.saveStatus.textContent = this.metaShapeLabel(pick) +
+        this.saveStatus.textContent = this.stackLabel(pick) +
             ' — ' + (idx + 1) + '/' + stack.length + ' stacked (click again to cycle · ALT+click = list)';
         return pick;
+    },
+    pickFromMetaStack(e) { return this.pickFromStack(e, META_LAYER); },
+    // a pitched note names itself by pitch and voice; a META shape keeps its own label
+    stackLabel(wc) {
+        if (wc.layer >= META_LAYER) return this.metaShapeLabel(wc);
+        const N = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        const m = wc.sonifyNote;
+        return (m == null ? 'note' : N[((m % 12) + 12) % 12] + (Math.floor(m / 12) - 1)) +
+               (wc.technique ? ' · ' + wc.technique : '');
     },
 
     bringMetaToFront(wc) {
@@ -5275,6 +5312,7 @@ const Composer = {
 
     selectObject(obj, opts) {
         const additive = !!(opts && opts.additive);
+        // where the card should appear: the last press, so it opens beside the note rather than in a fixed corner
         if (additive) {
             const idx = this.selectedObjects.indexOf(obj);
             if (idx >= 0) {
@@ -5315,6 +5353,12 @@ const Composer = {
         }
         if (obj.type === 'lineWedge') this.renderLWNodeHandles(obj);
         this.showPropertyPanel();
+        // THE NOTE CARD (2026-09-09). A pitched note on a player's lane gets the four controls he asked for; anything else closes it.
+        if (typeof NoteCard !== 'undefined') {
+            if (obj.type === 'waveCurve' && obj.sonifyNote != null && obj.layer < META_LAYER &&
+                !(obj.properties && obj.properties.cresc)) NoteCard.open(obj, this._lastPointer);
+            else NoteCard.close();
+        }
     },
 
     deselectAll() {
@@ -18073,6 +18117,16 @@ document.addEventListener('DOMContentLoaded', () => Composer.init());
   document.getElementById('blastInsertCol').addEventListener('click', function () { insertIntoColumn(false); });
   document.getElementById('blastReplaceCol').addEventListener('click', function () { insertIntoColumn(true); });
   document.getElementById('blastDeleteCol').addEventListener('click', deleteColumn);
+  (function () {
+    const b = document.getElementById('conflictMarksBtn');
+    if (!b) return;
+    b.addEventListener('click', function () {
+      Composer.showConflictMarks = !Composer.showConflictMarks;
+      b.textContent = Composer.showConflictMarks ? 'marks on' : 'marks off';
+      b.style.opacity = Composer.showConflictMarks ? '' : '0.55';
+      Composer.renderConflictMarks();
+    });
+  })();
   document.getElementById('conflictBadge').addEventListener('click', function () {
     this.blur();
     if (Composer._resolverOpen) Composer.closeResolver(); else Composer.openResolver();
