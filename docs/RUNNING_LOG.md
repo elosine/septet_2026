@@ -8212,3 +8212,45 @@ ANOTHER; the attacks stay attacks. In 1o there is no accent — **the dealt chor
 **Topic 1 put to him:** where does a crescendo strike's length come from — (a) typed, one for the pass; (b) **derived from the room**, 1n's
 own rule (to 0.17 s before that player's next sound), recommended, because it is what makes the density self-solving and it points 1o at
 `fill.js` rather than a second engine; (c) to the next onset of the sequence, so the swells shingle.
+
+## §302. PLAN 1o — his question corrects the topic: the length is an INPUT to the deal, not an output, and that is the only reason it needs deciding
+
+Composer, 2026-09-08, on topic 1 as I put it:
+
+> *"but what is the context? So we've established, for example, that there'll be an accent and a crescendo with that accent. And then it
+> ends at a certain gap before that same player holding the crescendo needs to play the next note. So what's the context for these swells?
+> Why do we need to determine a length? or is there certain contexts that we have to decide a length for?"*
+
+**He is right, and the question is better than the one I asked.** I put three ways to choose a length without saying why a length has to
+be chosen at all — when 1n, built the same day, chooses none.
+
+**Why 1n needs no length decision.** Its pattern ALREADY EXISTS in the score. *"When is the viola next needed?"* is a fact to look up, so
+the room is knowable and the length falls out of it. Nothing to decide.
+
+**Why 1o is different, and it is a genuine circularity.** In 1o the pattern does not exist yet — **the deal is what creates it**. And
+`StrikeChords.deal` has to know how long a sound occupies a player in order to work out who is free (`soundMs` feeds `markEnd(lane, t) =
+t + soundMs`, which is what `wait()` then tests against the 150 ms rest):
+
+```
+to know who is free   → you must know how long a swell lasts
+to know how long      → you must know when that player is next needed
+to know that          → you must have dealt
+```
+
+So the length is an **INPUT** to the deal, not something readable afterwards. That is the whole of why 1o needs the decision and 1n did
+not, and it is what topic 1 should have said.
+
+**Which splits the topic in two, and both halves are real:**
+
+1. **What does the deal ASSUME a swell occupies?** This is the number that sets how dense the result can be — the §301 table
+   (0.14 s needs 400 ms gaps · 0.70 s needs 900 ms · 1.50 s needs 2000 ms; roughly gap = length × 1.3). Some number must go in; there is
+   no way round it.
+2. **Once dealt, is each swell then STRETCHED to its player's real next turn?** After the deal, who-plays-when IS a fact, so 1n's room
+   rule becomes available. **No** → every swell is the assumed length, even and predictable. **Yes** → they breathe as 1n's do, a player
+   not needed for a while holding longer.
+
+**The recommendation, restated:** **one number for the spacing, then stretch to the room.** The number is his control over density; the
+lengths come out uneven and alive. A swell whose player is never dealt again takes 1l's 5 s fallback, exactly as in 1n.
+
+*(The AI's own note: my first framing of topic 1 conflated the two — it offered "typed" and "derived from the room" as alternatives when
+they are in fact the two halves of one answer, done in order. His question is what separated them.)*
