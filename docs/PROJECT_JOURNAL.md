@@ -82,106 +82,59 @@
 
 ## §2 Resume Here
 
-**Session 5 — 2026-09-09, Claude Code / Opus 5 — RUNNING_LOG §311–315. One thing only: THE MORPH'S FADE-IN, from his report to a
-build he has not yet heard.**
+**Last session (6 — 2026-09-09, Claude Code / Opus 5) — RUNNING_LOG §311–323.** A whole day on ONE thing that turned into five:
+the morph's fade-in, and then the editing interface around the piano parts he recorded against it.
 
-- He asked *"can the fade in be variable?"* and then reported that it did not fade: *"the initial entry is quiet, but soon thereafter,
-  it's like a loud attack."* He was right three times over, and it took three wrong rounds to find out why.
-- **§311–313** — a 3 s fade on BLOOM was **bit-identical to no fade at all** (the breaths are 6–10 s). Added `lenPct` (the length as a
-  fraction of the span), the `ceiling` mode and the `held` curve.
-- **§314**, after he stopped me — *"I would like to cut to what the actual problem is … make sure we understand what the actual bug
-  is"* — **the level curve was correct all along; the bug was in the emitter**, which struck every note at the velocity for that note's
-  PEAK. No fade setting could reach it. I had been measuring the engine instead of the MIDI.
-- **§315 — THE ONE THAT IS RIGHT, and the design is his.** He asked how the morph fades when nobody dials anything: **one velocity for
-  every breath, CC7 alone climbing.** So `attack.mode: 'fade'` now does that — per part, the breath in progress at the end of the window
-  gives the velocity for every breath before it, and the level ramps to that part's natural level at the end, in absolute time. The
-  join is exact by construction; nothing is calibrated. `multiply` and `ceiling` stay as legacy and were checked to be inert.
-- **The same bug lived in the score** (`Composer.heldDyn` also took the velocity from the top of the curve), so `velRef` travels into
-  the score object — otherwise an inserted fade would have auditioned right and jumped only once placed.
-- `fade-in-slow` is now **60 % · fade · linear** (presets rev 5). 62 checks in `tools/fade_check.js`; `morph_septet_check` ALL PASS;
-  verified in the running app on :5301.
-- **NOT YET HEARD BY HIM.** This is the first thing to play. `tools/cresc_check.js` fails one pre-existing assertion → NITS.
+- **THE FADE, three wrong builds and then his own design (§311–317).** A 3 s fade on BLOOM was bit-identical to no fade
+  (`lenPct` added). Then the emitter was found striking every note at the velocity for that note's PEAK, so no fade setting could be
+  heard between breaths (§314). Then his algorithm was built in LEVEL space and still did not fade — because **the drawn 0–10 scale is
+  anchor velocities 65…127 = 9.96 dB, and level 0 sends CC7 88** (§316, measured on a plain drawn note with no morph in it).
+  **`attack.mode: 'fade'` now lives in CC7** and leaves every written dynamic untouched (§317). `fade-in-slow` = 60 % · fade · linear.
+- **TIMESTAMPED PLAYBACK, and the rack it hung (§318–320).** The panel's Play never got §103's Web MIDI timestamps; both CC7 streams
+  were per frame. Both converted — and §319 **hung his rack**, because it queued the whole run on the strength of an `out.clear()` that
+  **Chrome does not implement**. Rebuilt bounded: never more than 250 ms in the driver, refilled from a timer.
+- **THE NOTE CARD and the editing blockers (§321–323).** Stacked notes now cycle on every lane (click the same spot again) · a
+  `marks on/off` toggle for the conflict boxes · `score/public/note_card.js` — select a note, get **voice · pitch · dyn · start ·
+  length**, every change auditioned at once and the MIDI channel printed. Grain drag fixed (a flat capture had no peak for `grainDur`
+  to anchor on; the 0.5 s minimum length; handles wider than the note). **Hung held notes fixed**: the note-off was going to the
+  technique's channel while the note-on went to a D11 curve channel — and for the flute a different PORT.
+- **He answered two himself:** the silent piano voices were *"the mic choices were all turned off"*, not the app; and his rack's piano
+  gain is confirmed **+7.00 dB** on both tracks, matching `balance.json`.
 
-**Last session (4 — 2026-09-06 → 08, Claude Code / Opus 5) — RUNNING_LOG §111–310.** Long; it ran through three clears. What it built:
+**NEXT UP — all of it his ear, none of it AI work:**
+1. ► **THE FADE.** Morph panel → BLOOM → preset `fade-in-slow` (or SHAPE·attack: *how* **fade**, *len % of span* 0.6, *curve* linear,
+   *from* 0) → Play. Expect one strike weight throughout and CC7 climbing from **0** across the first 60 %, the morph carrying on
+   unchanged after. **Nothing in §311–323 has been heard by him.**
+2. ► **The editing card**, on the piano takes he recorded: cycle a stacked note, change its voice, pitch, dyn, drag its edges.
+3. ► The six older listenings still waiting: **1o** crescendo strikes · **1n** a filled section · **1m** crescendos · **1k** chords ·
+   **1j** the piano's lines · **1i** the piano's harmonics · and `cresc-secco-test`.
+4. Then the three tails: 1k step 7 (the piano's chord remainder, CN-52) · 1i item 2 (the harmonics' CC21 shift) · 0c.7 (a) (trills and
+   beatings still on MAIN).
 
-- **The BEATING tool (1f)** — measured bend ranges in the rack, the math, the panel, the pitch side, the insertion (D24 · D25;
-  `docs/BEATING_TOOL.md`). Then **PARKED at his word** (*"keep it simple for now"*); its wish list is in NITS for a rebuild session.
-- **The MORPH PANEL back the tuba way** — the palette per voice into the pure engine, three PAIRS folding as one unit (D26), the
-  **pitch source** (a sonority pull-down over the harmony banks, his kept sets, the models' sets, stacks and Messiaen modes from a
-  root) and its take rules, RECALL → MODELS, **RESTORE** (D27). Section 2 begins at 183 s (CN-41).
-- **Three piano/strike tools** — **1i** the piano's harmonics at a morph's re-breaths (first pass; item 2, the CC21 shift, not begun) ·
-  **1j** the piano's articulation lines, each clicked into a note · **1k** chords mode in the strikes drawer (a rhythm whose onsets
-  carry chords, players dealt per onset under the rest rule). **All three still await his ear.**
-- **THE CRESCENDO SUITE, all four items (1l · 1m · 1n · 1o)** — see below. This was the bulk of 2026-09-08.
-- **D11's curve channels wired** (0c.7) — a crescendo, a morph note or a drawn swell rotates over ch 2/3/4 while plain notes stay on
-  MAIN, so a secco cut can never be revived by the next event. All seven players protected; the flute by three UVI Ordinario copies
-  he loaded and §275 corrected (+6 dB, EQ and Maximizer bypassed).
+**Open at session end** *(written cold, 2026-09-09)*:
 
-**THE CRESCENDO SUITE — built 2026-09-08, and it is finished but for his ear** (`docs/CRESCENDO.md`, `docs/STRIKES_TOOL.md` §Y and §Z):
+- **Task and state:** the AI's work is done and pushed; **nothing is in flight.** He is composing and recording piano into
+  `piece-septet` on his own server (:5300). **Four files changed today that need a hard reload (CTRL+SHIFT+R) before anything is
+  judged:** `morph.js` · `morph_emit.js` · `composer.html` · the new `note_card.js`.
+- **Latest deliverable:** §321–323 — the note card, the stack cycling, the marks toggle, the grain-drag fixes and the hung-note fix.
+  All verified in the running app on a `zz-ai-` copy (deleted). 62 checks in `tools/fade_check.js`, `morph_septet_check` ALL PASS.
+- **NEXT CONCRETE STEP:** none for the AI. **Wait for his verdicts**, fix what he marks. If he wants to keep building instead, item 4
+  above is the queue.
+- **Resume reads:** RUNNING_LOG §311–323 (the fade's whole arc, in order) · `docs/MORPH_NOTES.md` §3 (the last four entries are this
+  day) · `docs/PANEL_CAPTURES.md` (his BLOOM settings of 2026-09-09) · `docs/NITS.md` (two new).
+- **The deliberately-uncommitted list:** `scores/piece-septet.json`, `bank/morph_models.json`, `reaper/septet_rack.rpp`, four new
+  `bank/actuals/ACT-*.json` and three `scores/piece-septet-v1.28–1.30-*.json` — **all his own work from today, none of it the AI's,
+  none of it committed.** `tools/unsaved_check.js` still reports the same three working copies as yesterday (`piano-harmonics-test`,
+  `trill-curve-test`, `trillBuildTst`) — D17: his to Save or Reload, never the AI's to touch.
+- **A known failing check, not a regression:** `tools/cresc_check.js` fails one assertion. It hard-codes **18** morph re-breath pairs
+  read out of his live `piece-septet.json`, and that morph is no longer in it. It failed identically before this session. → NITS.
 
-| | what it is | how it is reached |
-|---|---|---|
-| **1l** | the crescendo OBJECT — a held note whose curve rises; surge 5× the standard; the end 0.17 s before that player's next sound, else 5 s; secco; ONE spacing rule with its gesture clause (`spacing.js`) | — |
-| **1m** | **C** on a selected note makes one at once and opens a CARD (range · duration · articulation · secco); the source note greys and comes back; a HARMONY BAR deals pitches when nothing is selected | the **C** key, or the *Crescendo* button |
-| **1n** | a long on EVERY attack of a strike pattern, each in another instrument; anchors as attack ids; seven pitch strategies; three scopes | STRIKES → **fill** mode |
-| **1o** | the drawer's own rhythms sounding as SWELLS instead of hits, plus **TIME CONTAINERS** as a new rhythm | STRIKES → the **sound** switch, and *containers* in the shape menu |
+**Earlier sessions, one line each:** **5** — folded into 6 above (same day). **4** (2026-09-06 → 08) the BEATING tool (parked), the
+morph panel the tuba way + the pitch source, three piano/strike tools (1i · 1j · 1k), **the crescendo suite 1l–1o**, D11's curve
+channels wired — §111–310. **3** (2026-09-04 → 06) the piece to #31 / 72 s, the drawer U5–U13b, the trill module phases 0–3, the curve
+windows (D18–D21), timestamped playback — §65–110. **2** the strikes drawer and the sandbox. **1** the port from the tuba piece.
 
-**Earlier sessions, one line each:** **3** (2026-09-04 → 06) the piece to #31 / 72 s, the drawer U5–U13b, the trill module phases 0–3
-and the curve windows (D18–D21), timestamped playback — §65–110. **2** the strikes drawer and the sandbox. **1** the port from the
-tuba piece.
-
-**NEXT UP — and it is his, not the AI's:**
-0. ► **THE FADE (§315), newest and most likely to need his verdict.** Open the morph panel on BLOOM, take the `fade-in-slow` preset
-   (or set SHAPE · attack → *how* = **fade**, *len % of span* = 0.6, *curve* = linear, *from* = 0) and Play. What it should sound like:
-   one strike weight throughout, the loudness climbing smoothly across the whole first 60 %, and the morph carrying on unchanged after
-   it. Hard-reload first (CTRL+SHIFT+R) — `morph.js`, `morph_emit.js`, `morph_panel.js` and `composer.html` all changed.
-1. ► **HIS EAR.** Nothing in the crescendo suite has been heard by him. In the order that unblocks the most: **1o** his first
-   crescendo strikes · **1n** his first filled section (all crescendos) · **1m** his first crescendos · then the three older tools —
-   **1k** chords mode, **1j** the piano's lines, **1i** the piano's harmonics — and the `cresc-secco-test` file (the residue
-   tolerance, he solos each player).
-2. His verdicts → `docs/CRESCENDO.md`, `docs/STRIKES_TOOL.md`, `docs/MORPH_NOTES.md` §3 and NITS, each a new RUNNING_LOG entry;
-   anything he marks *"fix now"* built at once.
-3. **Then phase 1's three tails:** 1k step 7 (the piano playing a chord's remainder, CN-52) · 1i item 2 (the harmonics' CC21 shift) ·
-   0c.7 (a) (trills and beatings still routed on MAIN — their zones carry precomputed snippets with explicit channels).
-4. **0c / 0h** (the recipes' completion; the phase-0 gate) when the music asks; 0d.3 / 0d.4 remain.
-
-**Open at session end** *(2026-09-08, written for an AI that has never seen this conversation):*
-
-- **Task and state:** he composes SECTION 2 from 183 s on his own server (:5300), trying and reverting (Name version · Reload ·
-  Restore…, D27). The AI's work is done and pushed; **nothing is in flight.** The beating drawer is parked. Every remark about the
-  morph tool goes to NITS and MORPH_NOTES §3 and is built only at his word (HOW_WE_WORK) — *"fix now"* and a broken agreed behaviour
-  are the exceptions. His server must be restarted after a change to `score/server.js` or `tools/model_bank.js`; a page change needs
-  a hard reload (CTRL+SHIFT+R) — **three sessions' worth of new script files landed today, so tell him to hard-reload first.**
-- **Latest deliverable (2026-09-09):** the morph's fade, `attack.mode: 'fade'` — `score/public/morph.js` (the post-render rewrite,
-  `meta.shape.attackMode`, `velRef` into `toScoreObjects`, the ladder clearing `lenPct`), `score/public/morph_emit.js` (velRef governs
-  velocity and CC7), `score/public/composer.html` (`curveTop` honours velRef), `bank/shape_presets.json` rev 5, 62 checks in
-  `tools/fade_check.js`. **Waiting on his ear.** Before it: PLAN 1o steps 1–3 (§310) — `score/public/time_containers.js` (standalone at his ask),
-  `score/public/swell_ui.js` (the sound switch), `score/public/containers_ui.js` (containers in the shape menu). Before it 1n (§300)
-  and 1m (§284). 150 checks across `check_containers` (37) · `check_fill` (81) · `check_cresc_deck` (32), all passing.
-- **NEXT CONCRETE STEP:** there is no AI step. **Wait for his verdicts** — the fade first, then the six listenings — and fix what he
-  marks. If he wants to keep building
-  instead, the three tails above are the queue, and 1k step 7 is the one with a written note already (CN-52).
-- **Resume reads:** `docs/CRESCENDO.md` (1l · 1m · the suite in one page) · `docs/STRIKES_TOOL.md` §X (chords) §Y (fill) §Z (swells
-  and containers) · `docs/PLAN.md` 1i–1o · `docs/NAMING.md` 14–20 · CN-48 · CN-54 · CN-55 · CN-56 · RUNNING_LOG §301–310 for the last
-  build.
-- **How the AI works the app (verified, and it saved hours):** the Browser pane at `preview_start` on
-  `http://localhost:5300/composer.html?score=<name>`; **always a `zz-ai-*` copy** of the score (`cp`), deleted after with its `-work`.
-  `Composer` is a top-level `const`, so it is **`Composer`, never `window.Composer`**. Fake MIDI by replacing `Composer._zoneMidiOutputs`
-  (keys lower-case: `flute · basscl · piano · vn1 · vn2 · va · vc`) with `_zoneMidiInited = true`; for the drawer, replace
-  `MorphEmit.routeFor` / `noteOn` / `noteOff` / `ensureMidi`. **The pane coalesces `setTimeout` into 1-second buckets**, so verify a
-  SCHEDULE (patch `window.setTimeout` and read the delays) rather than the firing. A key press must be dispatched on `document.body`,
-  not `document` — the handlers call `e.target.matches`, which `document` does not have. Files are patched by exact-string **Python**
-  scripts written with the Write tool: **a bash heredoc eats backticks and `$`, which has garbled a log entry three times today.**
-  `node score/tools/<check>.js` for the pure modules. Commits by explicit paths, pushed (D8).
-- **Pending the composer, in one list:** the six listenings above · the beating drawer's rebuild list (NITS) · the Kontakt bend range
-  and the all-notes-off (NITS, his hands) · the two NITS of §218 · the stutter A/B (§182) · TRILLS_TOOL phase 5 and the run dials'
-  calibration on his go.
-- **The deliberately-uncommitted list:** **none** — the tree is clean and everything is pushed. But `node tools/unsaved_check.js`
-  reports **three working copies holding edits their files do not** — `piano-harmonics-test` · `trill-curve-test` · `trillBuildTst`.
-  Per D17 those are HIS to Save or Reload in the app; the AI must not touch them, and they are gitignored so they do not block a commit.
-
-**Open questions:** Q1 the flute doubling (piccolo vs bass flute; SI2 flute in C until then) · Q5 print format (A3 landscape; #4's
-tabloid is 432 mm) · Q7 the bass clarinet's bottom B♭1 (34) — confirm the ensemble's instrument reaches low C.
+**Open questions:** Q1 the flute doubling (piccolo vs bass flute) · Q5 print format (A3 landscape) · Q7 the bass clarinet's bottom B♭1.
 
 **Blockers:** none.
 
@@ -220,6 +173,30 @@ sources; verified here only when they bite.)*
 11. **Learn a plugin's vocabulary by diffing the GUI's change, not by guessing from strings**
     (2026-09-04, §59). The plugin binary said "Out 2"; the state the GUI wrote said
     `$Engine/Out 2`. One click by the composer and a diff settled an hour of hypotheses.
+12. **Measure the layer that reaches the INSTRUMENT, not the layer you built** (2026-09-09,
+    §314 and §316). Three rounds were spent tuning a fade whose level curve was correct all
+    along: the fault was first in the velocities the emitter chose and then in the CC7 the
+    score's held-note law produces, and both were invisible while the measurement stopped at
+    the engine's own output. Print the MIDI.
+13. **Never queue what cannot be un-queued** (2026-09-09, §320 — and it hung his rack).
+    Timestamped scheduling needs a BOUND as much as it needs timestamps: hold at most a
+    fraction of a second in the driver and refill from a timer, so a stop is always within
+    that fraction of silence. **`MIDIOutput.clear()` is in the Web MIDI spec and Chrome does
+    not implement it** — the prototype carries `send` and `constructor`. A capability check is
+    only defensive once you have looked at which way it falls.
+14. **Where a note is STARTED by one piece of routing, it must be STOPPED by the same one**
+    (2026-09-09, §323). A held note was closed on the technique's channel while it had been
+    opened on a D11 curve channel — and, for the flute, on another port. Two copies of a
+    routing rule drift, and the symptom is always a hung note. One function decides where a
+    note goes; everything that touches that note calls it.
+15. **Write the assertion after the number, never before it** (2026-09-09, §314 and §317).
+    Four checks in two days failed on their first run because they were written to the story
+    being told rather than to what had been measured — twice quoting a figure from a different
+    instrument. Measure, then assert.
+16. **Build on a `zz-ai-` copy from the FIRST command, not the second** (2026-09-09, §321).
+    A verification run started against `piece-septet` itself; the objects were removed inside
+    the minute and the work file checked clean on disk, but the rule exists precisely so that
+    never depends on noticing.
 
 ---
 
@@ -524,6 +501,29 @@ sources; verified here only when they bite.)*
 
 ---
 
+- **D32** *(2026-09-09, composer's design, RUNNING_LOG §315–317)* — **A fade is expressed in CC7, never in level.** The morph's
+  `attack.mode: 'fade'` leaves every level untouched and multiplies CC7 by a weight running from `from` to exactly 1 at the window's
+  end, under ONE velocity per part (the breath in progress when the window ends). *Why:* the drawn 0–10 level scale is a scale of
+  anchor velocities 65…127 — **9.96 dB end to end, with level 0 sending CC7 88** — so a ramp built there cannot start from silence
+  however it is dialled, which is what he heard three times; CC7 is the fader and reaches 0, and his instruction was literal from the
+  first: *"we start at the beginning zero CC7."* A second consequence earns it on its own: **a faded render is now byte-identical to
+  the unfaded one but for two stamps**, so an inserted fade cannot write different WRITTEN DYNAMICS into the score than the morph it
+  came from. *Rejected:* `multiply` and `ceiling`, which scale the level — kept as legacy and checked inert, but they move the
+  velocity between breaths, which is heard as a lurch at every re-breath and not as a fade.
+- **D33** *(2026-09-09, RUNNING_LOG §319–320)* — **Playback is scheduled with Web MIDI timestamps inside a bounded horizon,
+  refilled from a timer.** The panel's Play holds at most 250 ms in the driver; the score's CC7 stream tops up 200 ms ahead in 20 ms
+  steps. *Why:* timestamps make the timing immune to frame rate — which `requestAnimationFrame` is not, and which also made the fade
+  impossible to measure in the harness — while the bound is what makes a stop possible at all. *Rejected:* queueing the whole run
+  (tried, and it hung his rack: `MIDIOutput.clear()` does not exist in Chrome, so nothing could cancel it); and leaving the streams on
+  rAF, which §103 chose reasonably before a fade existed to argue with it.
+- **D34** *(2026-09-09, RUNNING_LOG §321)* — **A note is edited from its own card, not from the properties panel.**
+  `score/public/note_card.js`: select a pitched note on a player's lane and get voice · pitch · dyn · start · length, **every change
+  auditioned the instant it is made, with the MIDI channel printed beside it**. *Why:* his own constraint — *"I don't wanna go back and
+  forth and say, tell AI to do this and then have it not work"* — argues for one self-contained thing that can be verified end to end
+  rather than four patches inside a UI already misbehaving; and a voice that does not speak is what cost him the afternoon, so the card
+  must prove a sound came out rather than merely look correct. *Rejected:* extending the existing properties panel (entangled with the
+  code that was already failing him).
+
 ## §5 Playbooks
 
 - **Sound research (mapping a sample library):** piece #3's journal §5.1 — the escalation
@@ -565,6 +565,15 @@ cut mid-way — write patch scripts to the scratchpad, splice by exact anchor, a
 ---
 
 ## §6 Done
+
+- 2026-09-09 — **THE MORPH'S FADE-IN, and the note-editing interface around it** (RUNNING_LOG §311–323; D32–D34). The fade took three
+  wrong builds before his own question found it — *"in the morphs without any fade in … how do you achieve that fade in?"* — and the
+  answer was that the morph already fades with ONE velocity and a rising CC7. `attack.mode: 'fade'` now does that, in CC7 space, after
+  §316 measured why level space could not: the drawn 0–10 scale spans **9.96 dB** and its floor is CC7 88. Playback moved onto Web MIDI
+  timestamps in both the panel and the score — which also made the stream measurable for the first time, and which hung his rack once
+  on the way (§320, `MIDIOutput.clear()` does not exist in Chrome). Then the editing: stack cycling on every lane, a conflict-marks
+  toggle, `note_card.js`, the grain-drag fixes, and a hung-note bug whose note-offs had been going to the wrong channel — and, for the
+  flute, the wrong port. — `built`; **none of it heard by him yet.**
 
 - 2026-09-08 — **THE CRESCENDO SUITE, all four items** (RUNNING_LOG §252–310; D28–D31; docs/CRESCENDO.md, STRIKES_TOOL §Y and §Z):
   **1l** the object, the standard named by his own listening test, and ONE spacing rule with its gesture clause · **1m** the **C** key,
