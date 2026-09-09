@@ -1385,15 +1385,91 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
      - **then his first filled section**, all crescendos; his verdicts → the documents and NITS, the fixes he marks "fix now" built at
        once; then **1o (crescendo strikes) is planned**.
 
-- **1o — Crescendo strikes: the chords and strikes of 1k sounding as crescendos (CN-48 build 2)** — `todo — to be planned after 1n`
-  *(composer, 2026-09-08, CN-48: "like the recent strike chords/and-or strikes but instead of single attack, they will be crescendos,
-  help me walk thru what needs to be changed for the new articulation, change default instrument, ordinaro or senza vibrato velocity,
-  the spacing/overlap rules need to adjust next articulation for any one instrument will be 150ms after end of crescendo; others?")*.
-  *Why:* the chords of PLAN 1k are attacks; the same rhythms and the same dealing with crescendos instead give the section its other
-  face. **What 1l settles for it:** the curve, the dynamic range and the spacing rule (his 150 ms after the end is 1l step 3, already
-  decided and shared). **What is left to plan here:** the articulation and the ordinary voice per player, the velocity law for a
-  crescendo (1g's held-note law rather than the attack's), what a "count" means when the sounds overlap, and how the drawer shows a
-  sequence of long sounds rather than points. *To be laid out when we discuss it.*
+- **1o — Crescendo strikes: the drawer's rhythms sounding as swells, plus TIME CONTAINERS (CN-48 build 2; CN-56)** —
+  `PLANNED WHOLE 2026-09-08 — phase 1 in four topics and the top line confirmed (RUNNING_LOG §301–309); BUILDING at his word`
+  *(composer, 2026-09-08, CN-48: "like the recent strike chords/and-or strikes but instead of single attack, they will be crescendos …
+  the spacing/overlap rules need to adjust next articulation for any one instrument will be 150ms after end of crescendo; others?"; and
+  CN-56: "they would take the place of the strikes. And that's kind of what I originally set out to do … I did want the rhythms or the
+  possibilities that were in the strikes drawer … I think I also want a facility for rolling and generating a set of time containers too
+  … it'd be worth abstracting it into its own module because this is a type of technique I do a lot of")*.
+  *Why:* it is what the whole crescendo suite was for — 1l gave the object, 1m the hand, 1n the overlay, and 1o is the one he set out to
+  make: the strikes drawer's own rhythms with swells instead of hits.
+
+  **Three of his four CN-48 asks were already built when 1o opened (§301):** the ordinary voice per player is the recipe's `ordinary`
+  field (1g item 4, confirmed at 1m); *"150 ms after the end"* is 1l step 3, and **1k's chord engine already measures its rest from the
+  END** (`soundMs` + `markEnd`); and the crescendo object is 1l's. **So the mechanical change is one line of intent: `soundMs` stops being
+  140 ms and becomes the crescendo's length.**
+
+  **Phase 1, the four topics:**
+  1. **What 1o is** (§301, §303) — the swells REPLACE the strikes. **No accent**: the dealt chord notes THEMSELVES are the crescendos, so
+     a count of 2–4 is how many swells begin together, and the drawer's rhythm stops being a pulse you hear and becomes a **schedule of
+     entries** (a crescendo starts at ppp; its onset is nearly inaudible). Every rhythm the drawer already makes is in scope — *as played ·
+     even · front · back · centre · edges · random · accel*, with the time stretch that gives his *"as played or slightly more spaced out"*,
+     i.e. **a scattered onset of crescendos**.
+  2. **The duration** (§303, §304) — **A MULTIPLE OF THE LOCAL GAP**, computed at each entry from the gap right there, so it follows an
+     accelerando by itself and shortens as the run speeds up — which is what his own hand did with the trills at 135.78 s (1.33 → 0.15 s,
+     §285). **The multiplier IS the density dial**, measured: length ÷ gap ≈ 1 gives about 2.5 voices sounding, ≈ 2 about 4, ≈ 3 saturates
+     and fails 12–23 of 40 entries. A typed length stays available; **the predicted thickness and the flag count are a READOUT**, not a mode.
+  3. **Where it lives** (§304) — **a SOUND SWITCH (`attack | crescendo`) orthogonal to the drawer's mode**, not a fourth mode. So *chords +
+     crescendo* IS 1o, *notes + crescendo* is a single line of swells, and every rhythm, voicing, order, span, take and insert already in
+     the drawer serves both without being written twice. His own words decided it: *"instead of a strike or short note, it'd be the onset
+     of the crescendos."*
+  4. **The time containers** (§305–308) — **a POOL × an ORDER × a CONTOUR**, all seeded. The POOL is the numbers he types with optional
+     weights (a typed weight is taken as given, the rest share what is left), in UNITS defaulting to 1 second so one number rescales a
+     whole shape, rolled until an overall duration is filled and **stopping short with the shortfall reported**. The ORDER is *stickiness*
+     (how much the next value stays near the last) and *interrupt* (how often it deliberately jumps) — **two controls, because stickiness
+     alone LOCKS UP** (at 2.5 it never leaves the value it found). The CONTOUR is his **accordion**: grow · shrink · **open–close** ·
+     **close–open**, with *turn* (where the reversal sits — the asymmetry), *bow* (broad or sharp) and *depth*, and **depth is what decides
+     whether the large-scale form is the subject or the background**.
+
+  *The top line, confirmed ("good", §309):*
+  1. **The sound switch** (attack or crescendo; the length rule and its density readout; the crescendos written into the score) —
+     `agreed 2026-09-08 (RUNNING_LOG §309)`. *Result when done:* one switch in the drawer turns every dealt sound from a hit into a swell,
+     in notes mode and chords mode alike; the length follows the local gap by a multiplier he sets; the readout says how thick the texture
+     will be and how many entries could not be met; and Insert writes real 1l crescendos as their own group. The to-dos:
+     - `sound: 'attack' | 'cresc'` on the drawer's config, painted like the mode buttons, remembered in the take;
+     - **the length**: `lengthMul` × the gap to the next onset, floored at 1l's `minS` and capped at the 5 s fallback; a typed length as an
+       override; the value handed to the deal as `soundMs` so the dealing already respects it;
+     - **the readout** beside the multiplier: the predicted voices sounding (`count × length ÷ gap`), the measured spread, and the FLAG
+       COUNT, which is the honest signal once the ensemble saturates and the formula stops holding;
+     - **the write**: each dealt note becomes `Cresc.make` at 1l/1m's defaults (surge 5×, ppp → fff, secco, the player's ordinary voice),
+       in its own `grp-swell-…` group with a META shape, replacing an earlier pass of the same rhythm at the same time;
+     - the piano is out of the dealing as it always is (CN-34: a piano cannot swell);
+     - check: the switch changes nothing in notes/chords mode when set to *attack*; the lengths follow the gaps; the readout matches what
+       is written; a re-insert replaces.
+  2. **The time container generator** (`score/public/time_containers.js`, pure and standalone) — `agreed 2026-09-08 (RUNNING_LOG §309)`.
+     *Result when done:* a module that rolls a sequence of durations from a pool, an order and a contour, deterministic from a seed, with
+     no DOM and no knowledge of the drawer — **its own module from the start, because he asked for exactly that** (*"worth abstracting it
+     into its own module … this is a type of technique I do a lot of"*). The to-dos:
+     - `roll(pool, opts)` → `{ seq, filled, short, why }`, filling `total`, stopping short and reporting the shortfall;
+     - the POOL: values, optional weights (given weights taken as read, the rest sharing the remainder equally), a `unit` multiplier;
+     - the ORDER: `stick` and `jump`, the second preferring a FAR value so an interruption reads as one;
+     - the CONTOUR: `grow · shrink · openClose · closeOpen` with `turn`, `bow`, `depth`;
+     - **PRESETS sorted by SPREAD** (max ÷ min), because the spread is what is actually audible — *even · gently uneven · Pythagorean
+       6:8:9:12 · √2 ad quadratum · long and short · harmonic · golden φ · √3 ad triangulum · silver · primes · Fibonacci · jagged ·
+       triangular · Modulor-ish · powers of two* — each carrying its numbers, its source and its spread, and **filling the boxes rather
+       than entering a mode**;
+     - `describe()` and `spreadOf()` for the readout;
+     - the checks in node: the same seed repeats a roll; the weights are honoured; stickiness raises the run length and interrupt breaks it;
+       each contour moves the mean the way it says; a roll never overshoots the total.
+  3. **The containers in the drawer** (the new shape, its controls, the presets, the readout) — `agreed 2026-09-08 (RUNNING_LOG §309)`.
+     *Result when done:* *containers* joins the drawer's own `shape` menu, so it makes a rhythm for attacks and swells, notes and chords
+     alike; its controls sit where the accel dials sit; the preset menu fills the boxes; and the readout says what the roll gave. The to-dos:
+     - `containers` in the shape pull-down beside *accel*;
+     - the controls: the numbers box, the weights, the unit, the total, stickiness, interrupt, the contour with its three dials, the seed;
+     - the preset menu, sorted by spread, each entry naming its source and its numbers;
+     - the readout: the rolled sequence, how many containers, the shortfall, the spread;
+     - the rolled gaps become the drawer's onsets, so everything downstream — the dealing, the voicing, Hear, Insert, the takes — is
+       untouched;
+     - check: containers with *attack* gives short notes at the rolled gaps; with *crescendo* gives swells whose lengths follow them.
+  4. **Verify and document** (the node checks, the walk on a copy, the documents; then his first crescendo strikes) —
+     `agreed 2026-09-08 (RUNNING_LOG §309)`. The to-dos:
+     - the node checks for the pure parts (the container roll and its three axes; the length rule and the density arithmetic);
+     - the walk on a `zz-ai-` copy with real events and the decoded MIDI: the switch in both modes, the containers as a rhythm, Generate ·
+       Hear · Insert, the readout against what lands, a re-insert, undo;
+     - the documents: `docs/STRIKES_TOOL.md` gains 1o as its own section, `docs/NAMING.md` the swell group and its provenance,
+       `docs/CRESCENDO.md` §7's 1o line, PLAN 1o's statuses, PLANNER NOW, the journal §2, a title on every new control;
+     - **then his first crescendo strikes**; his verdicts → the documents and NITS; then the crescendo suite is complete.
 
 ## 2. Notate — `deferred` until the first real page exists
 
