@@ -8412,3 +8412,59 @@ jagged         13  2 13  8  1  8 13  2
 *extreme*; each entry carries its source name, its numbers, and its spread; and **picking one simply fills the boxes**, so it is a
 starting point he edits rather than a mode he enters. His own weighted example (*2 5 7 15 with 15 at 20 %*) stays available as a preset of
 its own kind — a mostly-quick set with one rare long hold.
+
+## §307. PLAN 1o — his "interrupted" corrects the container generator: the POOL is one axis, the ORDER is a second and independent one
+
+Composer, 2026-09-08:
+
+> *"I think also fairly typical for me is interrupted for lack of a better term. So maybe a few similar containers, like maybe a four and
+> then a five and then a three but then it might be interrupted. So there might be, like, a four and then a one and then a five and then a
+> two and then a three and then a nine or something like that. or it might be something, like, not so predictable. It might be a three, a
+> five, a one, a four, a one, a two, a three, a one, a seven like that. So I guess this is, like, periodic versus aperiodic or contrasting
+> versus not so contrasting. And then within the contrast, it's not just, like, long short, long short, but it might be long short short,
+> long, really long, long short, long short short short, long long long, or something like that. And then some larger scale form ones. So
+> ones that are still slightly uneven, but statistically get kind of bigger over time or shrink over time, but in asymmetric ways. And,
+> yes, I'm also interested in other things. I don't know if golden or any of the other ones are exponential or anything lends something
+> interesting. But, again, are there models in architecture or things that deal with ratios and proportion that are known and that give
+> known effects."*
+
+**The correction, and it is a real one.** §306's presets vary only the POOL — which numbers are available. Everything he has just described
+is about the **ORDER they come out in**, which the roll had no control over at all: it was memoryless, so it could produce exactly one of
+his characters (*"not so predictable"*) and none of the others. **Pool and order are two independent axes**, and the generator needs both.
+
+**Probed, and two behaviours cover everything he named.** Pool 1 2 3 4 5 7 9, filling 60 s:
+
+| behaviour | a roll | his words |
+|---|---|---|
+| memoryless | `7 7 7 5 3 7 2 1 9 4 7 1` | *"not so predictable"* |
+| sticky (1.2) | `7 7 7 7 7 7 5 3 5 5` | periodic, then interrupted |
+| sticky (1.2), another seed | `7 5 5 5 4 2 1 2 1 2 2 2 2 2 2 1 4 4 1 1 2 1` | *"a few similar containers … but then it might be interrupted"* |
+| drift + | `2 1 1 2 5 4 1 4 2 2 1 3 1 1 3 1 1 5 5 7 5` | *"statistically get kind of bigger over time"* |
+| drift −, curve 0.4 | `7 5 3 4 5 4 1 4 2 2 1 2 1 1 2 1 1 4 3 3 1` | shrinking, and asymmetrically — the change front-loaded |
+
+**A finding that shapes the design: stickiness alone LOCKS UP.** At 2.5 it stops leaving the value it found — `7 7 7 7 7 7 7 7`, then
+`9 9 9 9 9 9`. So one number cannot serve; the interruption has to be **its own control**. Which is also his own vocabulary: **how much it
+stays near the last value** (the periodicity) and **how often it deliberately jumps** (the interruption) are two different musical
+decisions, and the second is what he named the behaviour after.
+
+**So the generator is: a POOL (numbers, weights, presets sorted by spread — §306) × an ORDER (stickiness · interrupt chance · drift with an
+asymmetry curve).** Three numbers on the order side, all seeded. His *"long short short, long, really long, long short, long short short
+short, long long long"* is stickiness at a middle setting over a wide pool — it falls out rather than needing its own rule.
+
+**His architecture question, answered honestly.** The systems are real and they slot into the same spread scale:
+
+| system | as a pool | spread |
+|---|---|---|
+| √2 · *ad quadratum* (DIN paper, Gothic design) | 10 14 20 28 | 2.8× |
+| Pythagorean 6:8:9:12 (Palladio's room ratios) | 6 8 9 12 | 2.0× |
+| golden section φ | 10 16 26 42 | 4.2× |
+| √3 · *ad triangulum* | 10 17 30 52 | 5.2× |
+| silver ratio (Japanese temple proportion) | 10 24 58 | 5.8× |
+| Modulor-ish φ series | 3 4 6 10 16 27 | 9.0× |
+
+**But the honest part:** in architecture these ratios are seen ALL AT ONCE and can be compared by the eye. In time they are heard one after
+another and compared only by memory. There is no established body of results saying a √2 time-set sounds a particular way — the claim
+would be decoration. **What they reliably give is their spread and their lack of a common factor**, which is exactly what the table above
+measures, so they earn their place as pools with good pedigree rather than as effects with known outcomes. They are also RATIO sets, so
+they want the unit turned down (§306's setting (c)): φ at 0.2 s a unit is 2 · 3.2 · 5.2 · 8.4 s, which is usable, where the raw numbers
+give two containers in two minutes.
