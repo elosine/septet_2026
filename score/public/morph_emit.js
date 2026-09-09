@@ -279,6 +279,10 @@ const EMIT = {
             if (l0 >= 0.4) return base;
             return Math.max(1, Math.round(base * (l0 / 0.4)));
         };
+        // THE FADE IS APPLIED HERE, TO CC7 (2026-09-09, §317), and not to the level it used to rewrite. `cc7ForHeight` answers in the
+        // MUSICAL scale — anchor velocities 65…127, 9.96 dB, bottoming out at CC7 88 (§316) — so a fade expressed there can never
+        // start from silence. The weight multiplies the answer instead: 0 is CC7 0, which is the fader shut.
+        const fadeAt = (n, dt) => n.cc7Fade ? M.fadeWeight(n.cc7Fade, n.tStart + dt) : 1;
         const ccOf = (n, route, dyn) => (h => dyn
             ? VR.cc7ForHeight(bank, route.instKey, n.midi, dyn.vel, LO + (HI - LO) * Math.max(0, Math.min(1, h / 10)))
             : this.levelToCC(h));
@@ -344,12 +348,13 @@ const EMIT = {
                 try {
                     if (route.cc0 != null) route.out.send([0xB0 | route.ch, 0, route.cc0]);
                     if (route.ks != null) { route.out.send([0x90 | route.ch, route.ks, 100]); route.out.send([0x80 | route.ch, route.ks, 0]); }
-                    route.out.send([0xB0 | route.ch, 7, cc7At(n.level[0][1])]);
+                    route.out.send([0xB0 | route.ch, 7, Math.round(cc7At(n.level[0][1]) * fadeAt(n, 0))]);
                 } catch (e) {}
             }, Math.max(0, cold ? r.onMs - CC_LEAD_MS : r.onMs - prearm + 5)));
             this._timers.push(setTimeout(() => this.noteOn(route, key, velFor(n, dyn)), r.onMs));
             this._timers.push(setTimeout(() => this.noteOff(route, key), r.offMs));
-            scheduled.push({ route: route, bend: bend, level: n.level, onMs: r.onMs, offMs: r.offMs,
+            scheduled.push({ route: route, bend: bend, level: n.level, cc7Fade: n.cc7Fade, tStart: n.tStart,
+                             onMs: r.onMs, offMs: r.offMs,
                              lastB: null, lastC: null, cc7At: cc7At });
         });
 
@@ -372,7 +377,10 @@ const EMIT = {
                 const dt = (el - s.onMs) / 1000;
                 const bv = Math.round(this.interp(s.bend, dt));
                 if (bv !== s.lastB) { this.sendBend(s.route, bv); s.lastB = bv; }
-                const cc = s.cc7At ? s.cc7At(this.interp(s.level, dt)) : this.levelToCC(this.interp(s.level, dt));
+                const ccBase = s.cc7At ? s.cc7At(this.interp(s.level, dt)) : this.levelToCC(this.interp(s.level, dt));
+                // the fade rides on top of whichever law produced it — the measured remap or the tuba map — because it is a statement
+                // about the FADER and not about the dynamic the player is reading (§317)
+                const cc = s.cc7Fade ? Math.max(0, Math.min(127, Math.round(ccBase * M.fadeWeight(s.cc7Fade, s.tStart + dt)))) : ccBase;
                 if (cc !== s.lastC) {
                     try { s.route.out.send([0xB0 | s.route.ch, 7, cc]); } catch (e) {}
                     s.lastC = cc;

@@ -561,12 +561,21 @@ const ATTACK_MOTIONS  = ['converge', 'gliss-in', 'none'];
 //   ceiling  — level = min(dyn, g × 10). It CAPS the layer, flattening the peaks off, so what comes through grows as the lid rises.
 //              Right for a FADE, and the difference is not cosmetic: measured on BLOOM, the multiplier left breaths at 4.2 / 9.0 / 9.2
 //              while the ceiling gave 0.9 / 4.2 / 8.0 — the first is a cliff, the second is a fade.
-//   fade     — the composer's own design (2026-09-09, §315) and the only one that matches how the morph ALREADY fades: ONE CC7 ramp
-//              under a CONSTANT velocity. Measured, a bare bloom enters every breath at velocity 103 and climbs CC7 76 → 122; both
-//              modes above instead move the velocity between breaths, which is heard as a lurch and not as a fade. So `fade` does not
-//              scale the gain at all — it REWRITES the level up to the window's end as a single ramp in absolute time, per part, from
-//              `from` to that part's natural level AT the window's end, and stamps every note before it with the velocity of the
-//              breath that is in progress there. Nothing has to be matched at the join: the ramp's last value IS the natural value.
+//   fade     — the composer's own design (§315), corrected into CC7 space once §316 measured why it could not work there. It matches
+//              how the morph ALREADY fades: ONE CC7 ramp under a CONSTANT velocity (a bare bloom enters every breath at velocity 103
+//              and climbs CC7 76 → 122). The two modes above instead move the VELOCITY between breaths, which is heard as a lurch.
+//
+//              IT DOES NOT TOUCH THE LEVEL, and that is the whole correction. Level is a MUSICAL scale: the drawn 0-10 is anchor
+//              velocities 65…127, which on the measured remap is −39.18 … −29.22 dB — **9.96 dB end to end, with level 0 sending CC7
+//              88**. A ramp built there cannot start from silence however it is dialled, which is exactly what he kept hearing. CC7 is
+//              the fader and it reaches 0, and his instruction was always literal: *"we start at the beginning zero CC7 and do a
+//              smooth curve or whatever curve I dial in up to that CC7 level that we read at twenty four seconds."*
+//
+//              So the render leaves every level alone — the players' written dynamics stay the morph's own — and stamps two things on
+//              each note inside the window: `velRef`, the velocity of the breath in progress when the window ends, so one velocity
+//              covers them all; and `cc7Fade`, a weight curve the emitter and the score multiply CC7 by. The weight reaches 1 exactly
+//              at the end of the window, so the morph resumes on its own CC7 with nothing to match. Linear is the right default
+//              because CC7 is very nearly linear in dB, which makes a straight ramp a smooth exponential fade.
 const ATTACK_MODES    = ['multiply', 'ceiling', 'fade'];
 const RELEASE_MOTIONS = ['disperse', 'to-unison', 'gliss-out', 'none'];
 
@@ -837,7 +846,11 @@ function normaliseShape(raw, span) {
         warn.push('SHAPE: attack.mode "fade" ends on the morph\'s own level by construction — "peak" is ignored');
     }
     if (attack && attack.mode === 'fade' && decay) {
-        warn.push('SHAPE: attack.mode "fade" replaces the level through the window — the decay block has no peak to walk back');
+        warn.push('SHAPE: attack.mode "fade" holds the gain at 1 through the window — the decay block has no peak to walk back');
+    }
+    if (attack && attack.mode === 'fade' && attack.from > 0.9) {
+        warn.push('SHAPE: attack.mode "fade" with from ' + attack.from + ' starts at ' + Math.round(attack.from * 100) +
+                  '% of the morph\'s own CC7 — barely a fade');
     }
     if (attack && attack.mode === 'ceiling' && attack.peak > 1) {
         warn.push('SHAPE: attack.mode "ceiling" with peak ' + attack.peak + ' > 1 — a ceiling cannot overshoot; peak ignored');
@@ -1511,8 +1524,10 @@ function render(params, opts) {
         // So the floor drops to 0 only INSIDE the attack window. Body and
         // release keep 0.4; legacy renders never reach this at all, since
         // with no shape g === 1 and dynLevel already clamps to 0.4.
+        // … and NOT in `fade` mode (§317), which no longer touches the level at all: dropping the floor there would let a level dip
+        // below what the bare morph would ever write, for no gain, since CC7 now carries the whole fade.
         const inAttack = !!(P.shape && P.shape.attack && P.shape.attack.len > 0 &&
-                            t < P.shape.attack.len);
+                            P.shape.attack.mode !== 'fade' && t < P.shape.attack.len);
         const levelFloor = inAttack ? 0 : 0.4;
         // MULTIPLY OR CAP. `multiply` is the original and stays the default, so every render in the bank is unchanged. `ceiling`
         // applies ONLY inside the attack window: the release must keep multiplying or it would not fade at all, and the body is at
@@ -1939,6 +1954,7 @@ function render(params, opts) {
     if (SH_A && SH_A.mode === 'fade' && aLen > 0) {
         const L = aLen;
         const fromF = clamp(SH_A.from != null ? SH_A.from : 0, 0, 1);
+        const fadeSpec = { start: 0, end: round3(L), from: fromF, curve: SH_A.curve };
         const byVoice = {};
         notes.forEach(nt => { (byVoice[nt.voice] = byVoice[nt.voice] || []).push(nt); });
         Object.keys(byVoice).forEach(k => {
@@ -1949,25 +1965,9 @@ function render(params, opts) {
             const straddler = list.find(nt => nt.tStart <= L + 1e-9 && nt.tStart + nt.dur > L - 1e-9) ||
                               before[before.length - 1];
             const velRef = Math.max.apply(null, straddler.level.map(pt => pt[1]));
-            const levelAtL = levelOfNoteAt(straddler, Math.min(L, straddler.tStart + straddler.dur));
             before.forEach(nt => {
-                nt.velRef = round3(velRef);
-                nt.level = nt.level.map(pt => {
-                    const tAbs = nt.tStart + pt[0];
-                    if (tAbs > L + 1e-9) return pt;                  // past the window the morph's own levels stand
-                    const u = clamp(tAbs / L, 0, 1);
-                    return [pt[0], round3((fromF + (1 - fromF) * curveEase(SH_A.curve, u)) * levelAtL)];
-                });
-                // AND THE TWO HALVES ARE PINNED TOGETHER AT L. Without this the breath that spans the end of the window has no
-                // breakpoint there, so the one segment crossing it runs from the last FADED point straight up to the first NATURAL
-                // one — measured before it was added, an overshoot of up to 0.48 of level across about half a second, sitting exactly
-                // on the join. A breakpoint at L valued at what the ramp was aiming for makes the meeting exact instead of nearly so.
-                const dtL = round3(L - nt.tStart);
-                if (dtL > 1e-3 && dtL < round3(nt.dur) - 1e-3) {
-                    const i = nt.level.findIndex(pt => pt[0] > dtL - 1e-6);
-                    if (i >= 0 && Math.abs(nt.level[i][0] - dtL) < 1e-3) nt.level[i] = [nt.level[i][0], round3(levelAtL)];
-                    else if (i >= 0) nt.level.splice(i, 0, [dtL, round3(levelAtL)]);
-                }
+                nt.velRef = round3(velRef);      // one velocity for the window: the one the morph will be using when it ends
+                nt.cc7Fade = fadeSpec;           // and the weight CC7 is multiplied by, reaching 1 exactly at the end
             });
         });
     }
@@ -2046,20 +2046,15 @@ function buildLadder(base, lens, opts) {
 //     conversion and cannot drift apart.
 // ===========================================================================
 
-// A rendered note's level at an ABSOLUTE time, by linear interpolation of its own breakpoints. Only the fade uses it, and only to
-// read the value it must land on — so the fade's endpoint is measured from the render rather than recomputed from the parameters,
-// and cannot drift from it.
-function levelOfNoteAt(note, tAbs) {
-    const pts = note.level, dt = tAbs - note.tStart;
-    if (!pts || !pts.length) return 0;
-    if (dt <= pts[0][0]) return pts[0][1];
-    for (let i = 1; i < pts.length; i++) {
-        if (dt <= pts[i][0]) {
-            const a = pts[i - 1], b = pts[i];
-            return a[1] + (b[1] - a[1]) * ((dt - a[0]) / Math.max(1e-6, b[0] - a[0]));
-        }
-    }
-    return pts[pts.length - 1][1];
+// THE FADE'S WEIGHT AT A TIME (§317). CC7 is multiplied by this: 0 is silence, 1 is the morph's own CC7. `start` and `end` are in
+// whatever clock the caller is using — gesture seconds for a render note, score seconds for an inserted object — which is why the
+// stamp carries both and not a length. Exported because the engine, the emitter and the score's playback must all compute it the same
+// way; a second copy of this formula is a second fade.
+function fadeWeight(f, tAbs) {
+    if (!f || !(f.end > f.start)) return 1;
+    const u = clamp((tAbs - f.start) / (f.end - f.start), 0, 1);
+    const from = f.from != null ? f.from : 0;
+    return from + (1 - from) * curveEase(f.curve, u);
 }
 
 function toScoreObjects(result, at, opts) {
@@ -2123,6 +2118,9 @@ function toScoreObjects(result, at, opts) {
             // jump at every breath once it was in the score, which is the harder bug to find of the two. Present only on a fade, so
             // every other render's objects are byte-identical.
             velRef: n.velRef != null ? n.velRef : undefined,
+            // and the fade's window in SCORE seconds, so the inserted object needs nothing from the render it came from
+            cc7Fade: n.cc7Fade ? { start: round3(at + n.cc7Fade.start), end: round3(at + n.cc7Fade.end),
+                                   from: n.cc7Fade.from, curve: n.cc7Fade.curve } : undefined,
         };
     });
 }
@@ -2150,7 +2148,7 @@ return {
     applyBias: applyBias, staggerOrder: staggerOrder, voiceProgress: voiceProgress,
     partialCents: partialCents, MODELS: MODELS,
     normaliseParams: normaliseParams, unknownKeys: unknownKeys,
-    render: render, toScoreObjects: toScoreObjects,
+    render: render, toScoreObjects: toScoreObjects, fadeWeight: fadeWeight,
     buildLadder: buildLadder,
     LADDER_HOLD_S: LADDER_HOLD_S, LADDER_GAP_S: LADDER_GAP_S,
 };

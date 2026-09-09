@@ -993,6 +993,25 @@ speaking — `cc7Abs` is the seed of it here.
 **Still open, and it is the question the whole design turns on:** is CC7 0 actually silent on these samplers, or does a struck note
 speak through it? `scores/cc7-ramp-test.json` column 6 answers it in ten seconds.
 
+### 2026-09-09 — THE FADE LIVES IN CC7, NOT IN LEVEL (RUNNING_LOG §317)
+
+*"Never mind about the tests — if you think that's the problem, then what needs to be fixed in the system?"* **The units.** Level is a
+musical scale spanning 9.96 dB whose floor is CC7 88; CC7 is the fader and reaches 0. A fade can only be said in the second.
+
+So `attack.mode: 'fade'` now leaves every level untouched and stamps two things: `velRef` (one velocity across the window) and
+`cc7Fade` (a weight CC7 is multiplied by, reaching exactly 1 at the window's end). **A faded render is byte-identical to the unfaded one
+once the stamps are removed** — the players' written dynamics are the morph's own, and the fade sits over them.
+
+**FOR THE REVISION, the general principle this arrived at:** the tool has TWO loudness vocabularies and they are not interchangeable.
+**Level** is what the player reads — deliberately floored at the ensemble's soft end, because a written note should not fall below it.
+**CC7** is the fader — 0 is off. Anything that shapes the SOUND rather than the notation belongs in the second: fades, mix gestures,
+the electronics-facing side of a morph. A future panel should name the two apart and show which one a control speaks, because three
+rounds were lost to a control that looked like loudness and was actually notation.
+
+**And one API note worth keeping:** the weight function is exported and all three consumers — engine, emitter, score playback — call the
+same one. Every earlier bug in this sequence came from a law that existed in two places (§315: the velocity rule in the emitter and again
+in `Composer.heldDyn`). One formula, one fade.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·

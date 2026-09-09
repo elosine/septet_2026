@@ -8993,3 +8993,59 @@ what the fade should finally use is exactly what this file is for finding out.
 layer you built. §314 was velocities read at the emitter; this is CC7 read at the score. Both were invisible while the measurement
 stopped at the engine. **The morph panel and the score should be able to SHOW what they are sending** — a velocity/CC7 readout per note
 would have ended this on the first day. → MORPH_NOTES, NITS.
+
+## §317. THE FADE MOVED INTO CC7, where it can reach silence — and the written music is left completely alone
+
+Composer, 2026-09-09, after §316 named the floor:
+
+> *"Okay. Never mind about the tests if you think that's the problem, then what needs to be fixed in the system?"*
+
+**What needed fixing was the UNITS.** §315 built his algorithm faithfully and in the wrong space. Level is a MUSICAL scale — the drawn
+0–10 is anchor velocities 65…127, −39.18 … −29.22 dB, **9.96 dB end to end, with level 0 sending CC7 88** — so a ramp built there
+starts most of the way up however it is dialled. CC7 is the FADER and it reaches 0. His instruction had said so from the beginning:
+*"we start at the beginning zero CC7."*
+
+**THE FIX, and it makes the fade smaller rather than bigger.** `attack.mode: 'fade'` no longer touches the level at all. It stamps two
+things on every note inside the window and changes nothing else:
+
+- **`velRef`** — the velocity of the breath in progress when the window ends, so one velocity covers the whole window (unchanged
+  from §315, and still the thing that stops the lurch at each re-breath).
+- **`cc7Fade: {start, end, from, curve}`** — a weight, computed by one exported function `Morph.fadeWeight`, that CC7 is multiplied
+  by. It runs from `from` to **exactly 1 at the end of the window**, so the morph resumes on its own CC7 with nothing to match.
+
+`fadeWeight` is exported precisely because three places consume it — the engine's own reasoning, `morph_emit.js` (the panel's Play) and
+`Composer.heldCc7` (the score's playback). **A second copy of that formula would be a second fade.**
+
+**THE STRONGEST RESULT, and it is the part I would not have thought to ask for:** a faded render is now **byte-identical to the same
+shape at gain 1 once the two stamps are removed** — every level, entry, duration, pitch, bend and technique is the morph's own. The
+written dynamics are what the players read; the fade is a statement about the fader laid over them. §315 rewrote the levels, which meant
+a faded morph inserted into the score would have shown DIFFERENT written dynamics from the morph it came from. It no longer can.
+
+**Measured in the running app, which is the only measurement that counts here.** The score's own CC7 law across the 24 s window, on the
+first inserted object:
+
+| weight | 0.00 | 0.25 | 0.50 | 0.75 | 1.00 |
+|---|---|---|---|---|---|
+| **CC7** | **0** | 23 | 50 | 74 | 99 |
+
+and without the fade that same note opens at CC7 **76**. The emitter agrees: with MIDI faked and every byte captured, **every note-on in
+the first second carries CC7 0**, where before it carried 76.
+
+**What could NOT be verified here, said plainly:** the emitter's continuous CC7 stream is driven by `requestAnimationFrame`, and the
+Browser pane throttles it to nothing while hidden — six samples in five seconds, all of them the note-on values. So the note-ons are
+measured and the stream is not. The stream is one multiplication by the same exported `fadeWeight` that the score path was measured
+through, and its wiring (`cc7Fade` and `tStart` onto the scheduled entry, `dt` note-relative so `s.tStart + dt` is gesture time) was read
+back line by line. **His ear is the test of the stream.**
+
+**Also done:** the 0 level floor that §313 opened inside the attack window is closed again for `fade` — nothing needs it now, and leaving
+it open would let a level dip below anything the bare morph would write. `levelOfNoteAt`, added in §315 for the level rewrite, is deleted
+with it. A `from` above 0.9 now warns that it is barely a fade.
+
+**62 checks, all passing**, section 6 rewritten end to end to measure **CC7** rather than level — including §316's finding kept as a
+standing check (the quietest thing the level scale can say is still over half fader), the continuity of the ramp across re-breaths, the
+exact meeting at the window's end, and the identity above. `morph_septet_check.js` ALL PASS.
+
+**Two of my own assertions failed on the first run, again by being written to a story rather than a number** — I asserted the level floor
+was CC7 88, which is Vn1's figure, against a suite that measures a different instrument and reads 71–76. Corrected to the measurement,
+with the variation noted in place. That is the second time in this sequence; the rule is worth stating flatly: **write the assertion
+after the number, never before it.**

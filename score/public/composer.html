@@ -9468,7 +9468,17 @@ const Composer = {
     // the bottom of the curve is already two thirds of the way up. His instruction was literal and I had not honoured it: *"we start at
     // the beginning zero CC7 and do a smooth curve up to that CC7 level that we read at twenty four seconds."* CC7 zero, not level zero.
     // So `cc7Abs: {lo, hi}` maps the drawn height straight onto a CC7 range, bypassing the anchor scale. Absent, nothing changes.
-    heldCc7(wc, h) {
+    // `atSec` is the SCORE time the value is for, and it is optional: absent, the note's own start. It exists for `cc7Fade` (§317) —
+    // a morph note faded in carries the window in score seconds and CC7 is multiplied by the weight at this instant. The fade is a
+    // statement about the fader, not about the written dynamic, which is why it multiplies the answer rather than changing the curve.
+    heldCc7(wc, h, atSec) {
+        const fade = wc && wc.cc7Fade;
+        if (fade) {
+            const w = (typeof Morph !== 'undefined' && Morph.fadeWeight)
+                ? Morph.fadeWeight(fade, atSec != null ? atSec : wc.startSeconds) : 1;
+            const base = this.heldCc7(Object.assign({}, wc, { cc7Fade: null }), h, atSec);
+            return Math.max(0, Math.min(127, Math.round(base * w)));
+        }
         const abs = wc && wc.cc7Abs;
         if (abs) {
             const lo = abs.lo != null ? abs.lo : 0, hi = abs.hi != null ? abs.hi : 127;
@@ -10983,7 +10993,7 @@ const Composer = {
                 if (currentTimeSec < wc.startSeconds) return;   // scheduled, not yet sounding: nothing to stream
                 // curve-following: the CC7 stream (rate-limited, continuous — per frame is right for it)
                 const t01 = (currentTimeSec - wc.startSeconds) / Math.max(1e-6, wc.endSeconds - wc.startSeconds);
-                const cc = ksMode ? null : this.heldCc7(wc, this.evalWaveCurve(wc, t01));   // 1g item 5
+                const cc = ksMode ? null : this.heldCc7(wc, this.evalWaveCurve(wc, t01), currentTimeSec);   // 1g item 5
                 const now = performance.now();
                 if (!ksMode && cc !== st.lastCC && now - st.lastSend >= 25) {
                     output.send([0xB0 | ch, 7, cc]);
