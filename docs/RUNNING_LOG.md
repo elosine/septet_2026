@@ -8295,3 +8295,32 @@ exactly where the flags appear — so the flag count is the honest signal, not t
 because his main case is an ACCELERATION: a fixed length jams as the gaps close, while a multiple of the gap shortens with the run —
 which is what his own hand did with the trills at 135.78 s (1.33 s → 0.15 s as the run accelerated, §285). And the ratio is the density,
 so the one number he turns is the thing he actually hears.
+
+## §304. PLAN 1o — the duration settled (C, a multiple of the local gap); topic 2 put: 1o is a SOUND SWITCH, not a fourth drawer mode
+
+Composer, 2026-09-08: *"c good"*.
+
+**Settled: a crescendo strike's length is a MULTIPLE OF THE LOCAL GAP**, computed at each entry from the gap right there — so it follows an
+accelerando by itself, shortening as the run speeds up, which is exactly what his own hand did with the trills at 135.78 s (1.33 s →
+0.15 s, §285). The multiplier IS the density dial (§303: length ÷ gap ≈ 1 gives about 2.5 voices sounding, ≈ 2 gives about 4, ≈ 3
+saturates and starts failing entries). A typed length stays available; the predicted thickness and the flag count are a READOUT beside the
+multiplier, not a mode of their own.
+
+**The drawer's rhythm vocabulary read, and it already holds everything he asked for** (`strike_drawer.js` line 901): *as played · even ·
+front-loaded · back-loaded · centre · edges · random · accel · round robin*, with `timeX` (the time stretch that gives his *"as played or
+slightly more spaced out"*), `amount`, `jitterMs`, `reverse`, `rotate` and a seed. **The one thing genuinely new in CN-56 is TIME
+CONTAINERS.**
+
+**Topic 2 put to him: where 1o lives.** The drawer now has `mode: notes | chords | fill`. Two ways to add crescendo strikes:
+
+- **(a) a fourth mode**, *swells*, beside them. A clean box, but it duplicates the whole notes/chords screen for the sake of one changed
+  fact about the sound.
+- **(b) RECOMMENDED — a SOUND SWITCH, orthogonal to the mode**: `sound: attack | crescendo`. Then *notes + crescendo* is a single line of
+  swells, *chords + crescendo* is 1o proper — chords of swells — and every rhythm shape, voicing, order, span, take and insert already in
+  the drawer works for both without being written twice. It is also truer to his own words (*"instead of a strike or short note, it'd be
+  the onset of the crescendos"*): the machinery is the same, the sound is what changes.
+
+Under (b) the switch changes exactly four things: the dealt sound's length (140 ms → the multiplier rule), what `soundMs` feeds the deal,
+what is written into the score (a short `waveCurve` → a 1l crescendo), and the readout (the density and the flags). **And TIME CONTAINERS
+becomes one more entry in the existing `shape` menu**, so it serves attacks and swells, notes and chords alike, rather than belonging to
+1o.
