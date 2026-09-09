@@ -8468,3 +8468,55 @@ would be decoration. **What they reliably give is their spread and their lack of
 measures, so they earn their place as pools with good pedigree rather than as effects with known outcomes. They are also RATIO sets, so
 they want the unit turned down (§306's setting (c)): φ at 0.2 s a unit is 2 · 3.2 · 5.2 · 8.4 s, which is usable, where the raw numbers
 give two containers in two minutes.
+
+## §308. PLAN 1o — the ACCORDION: his image is two-way, and §307's drift was only one-way
+
+Composer, 2026-09-08:
+
+> *"Have you addressed the accretion or decreasing. I'm gonna call them accordion patterns because it could increase or spread
+> asymmetrically. So contraction versus expansion like accordion bellows."*
+
+**Partly, and the shortfall is real.** §307's `drift` is MONOTONIC — small → large, or large → small, with a curve for where the change
+sits. His accordion image is **two-way**: out and back, or in and out, with the turning point anywhere, so the two halves are unequal.
+Drift as built cannot do that at all.
+
+**Rebuilt as a CONTOUR** — the size the roll is pulled toward, as a shape across the span. Four of them, and three dials for the shape:
+
+| the contour | what it does |
+|---|---|
+| grow | small → large |
+| shrink | large → small |
+| **open–close** | small → large → small (the bellows out and back) |
+| **close–open** | large → small → large (squeezed, then opened) |
+
+| the dial | what it changes |
+|---|---|
+| **turn** (0–1) | where the reversal sits — this is the asymmetry: 0.25 turns early, 0.75 turns late |
+| **bow** | broad or sharp at the turn — a long plateau, or a point |
+| **depth** | how hard the contour pulls against the stickiness and the interruptions |
+
+**Rolled, pool 1 2 3 4 5 7 9 filling 60 s, stickiness 0.9, interrupt 8 %:**
+
+```
+grow                       1 2 2 7 4 4 1 1 4 5 7 7 5 4 5
+shrink                     5 5 5 9 7 7 1 1 4 4 5 5 2
+
+open-close, turn at 0.25   1 2 3 9 9 9 2 1 5 5 7 7
+open-close, turn at 0.75   1 2 2 7 4 4 1 1 5 5 7 9 7 4
+close-open, turn at 0.35   5 5 5 7 3 3 1 1 4 4 7 7 5
+
+open-close, sharp turn     1 2 2 7 4 4 1 1 5 7 9 9 3 1 2 1
+open-close, depth 2        1 1 2 5 3 4 2 1 7 7 9 9 3 2 2 1
+```
+
+**The finding worth keeping: the contour and the interruptions FIGHT each other**, and that is a control rather than a fault. At depth 0.4
+the bellows is a tendency you half-hear under the interruptions; at depth 2 (`1 1 2 5 3 4 2 1 7 7 9 9 3 2 2 1`) the shape is plainly
+audible and the interruptions become detail on top of it. **`depth` is therefore the dial that decides whether the large-scale form is the
+subject or the background** — which is exactly the distinction he was reaching for with *"some larger scale form ones"*.
+
+**One consequence of measuring the contour against TIME rather than against the container count:** a closing half made of small numbers
+takes many containers to cover its share of the span, so an *open–close* with an early turn spends most of its events in the closing half.
+That is realistic — the bellows closes slowly because small containers pass slowly — and it is left as is.
+
+**So the container generator now stands at: a POOL** (numbers · weights · presets by spread) **× an ORDER** (stickiness · interrupt) **× a
+CONTOUR** (grow · shrink · open–close · close–open, with turn · bow · depth). Everything seeded.
