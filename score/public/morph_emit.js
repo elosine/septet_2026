@@ -249,18 +249,32 @@ const EMIT = {
         //
         // So inside the attack window the reference is the level the note OPENS at. CC7 is calibrated against the same reference
         // (`ccOf` takes this `dyn`), so the two stay consistent and the note still ends where its curve says.
-        const attackEnd = (result.meta && result.meta.shape && result.meta.shape.attackLen) || 0;
+        //
+        // AND THE FADE RETIRES THAT RULE (2026-09-09, §315). Opening-level velocities still MOVE between breaths, and a moving
+        // velocity is what he hears as a jump — measured, that fix gave 1 · 63 · 103 · 103, better but still a lurch, and the two
+        // extremes are off the remap's measured range in opposite directions (velocity 1 forces CC7 to 123; velocity 63 forces 127).
+        // The morph's own fade, which sounds right, holds ONE velocity and moves only CC7. So in `fade` mode the engine stamps every
+        // note inside the window with `velRef` — the velocity of the breath in progress at the end of it — and this reads it. The
+        // level curve, already rewritten into the ramp, then drives CC7 alone. `multiply` and `ceiling` keep the §314 rule below.
+        const shMeta = (result.meta && result.meta.shape) || null;
+        const attackEnd = (shMeta && shMeta.attackLen) || 0;
+        const fadeMode = !!(shMeta && shMeta.attackMode === 'fade');
         const dynOf = (n, route) => {
             if (!bank || !VR || !route.instKey) return null;
             const hMax = Math.max.apply(null, n.level.map(l => l[1])) / 10;
             const hOpen = (n.level[0] && n.level[0][1] != null ? n.level[0][1] : 0) / 10;
-            const h = (attackEnd > 0 && n.tStart < attackEnd) ? hOpen : hMax;
+            const h = n.velRef != null ? n.velRef / 10
+                    : (!fadeMode && attackEnd > 0 && n.tStart < attackEnd) ? hOpen
+                    : hMax;
             return VR.heldNote(bank, route.instKey, n.midi, LO + (HI - LO) * Math.max(0, Math.min(1, h)));
         };
         // and below the engine's 0.4 floor the remap has nothing left to give, so the velocity is scaled by hand — the old rule, kept,
         // because a fade that opens at level 0 must open at silence and MIDI velocity 0 means note-off (the floor is 1)
         const velFor = (n, dyn) => {
             const base = dyn ? dyn.vel : velBase;
+            // A STAMPED NOTE IS ALREADY AT ITS VELOCITY (§315) — and it is the constant one, so this softening, which reads the
+            // level the note OPENS at, would drive the first breath of a fade to velocity 1 and put the jump straight back.
+            if (n.velRef != null) return base;
             const l0 = (n.level && n.level[0] && n.level[0][1] != null) ? n.level[0][1] : 10;
             if (l0 >= 0.4) return base;
             return Math.max(1, Math.round(base * (l0 / 0.4)));

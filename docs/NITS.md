@@ -161,3 +161,11 @@
   outright, because the entries are spread across the very window the gain is measured in. Four options are written up in MORPH_NOTES:
   scale it as a fraction of the span · measure it from each voice's own entry · make it a rising CEILING on the dynamics layer rather
   than a multiplier · or just change the preset's number. **His analysis was asked for and given; nothing was changed.**
+
+### `tools/cresc_check.js` asserts a hard-coded count against his live score (2026-09-09, §315)
+
+One assertion reads `scores/piece-septet.json` and requires exactly **18** morph re-breath pairs to be the ones the plain spacing rule
+would newly block. That morph is no longer in his score, so the count is 0 of 15 and the check fails — it failed identically before the
+fade work, and nothing in the app is wrong. The fixture is the composer's working file, which he edits daily. **Fix when touched:** hold
+the gesture clause against a stored fixture, or assert the invariant (every newly-blocked pair is either inside one gesture or a trill
+followed by a strike) rather than a count.

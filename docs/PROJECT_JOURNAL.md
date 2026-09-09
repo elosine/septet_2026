@@ -82,6 +82,26 @@
 
 ## §2 Resume Here
 
+**Session 5 — 2026-09-09, Claude Code / Opus 5 — RUNNING_LOG §311–315. One thing only: THE MORPH'S FADE-IN, from his report to a
+build he has not yet heard.**
+
+- He asked *"can the fade in be variable?"* and then reported that it did not fade: *"the initial entry is quiet, but soon thereafter,
+  it's like a loud attack."* He was right three times over, and it took three wrong rounds to find out why.
+- **§311–313** — a 3 s fade on BLOOM was **bit-identical to no fade at all** (the breaths are 6–10 s). Added `lenPct` (the length as a
+  fraction of the span), the `ceiling` mode and the `held` curve.
+- **§314**, after he stopped me — *"I would like to cut to what the actual problem is … make sure we understand what the actual bug
+  is"* — **the level curve was correct all along; the bug was in the emitter**, which struck every note at the velocity for that note's
+  PEAK. No fade setting could reach it. I had been measuring the engine instead of the MIDI.
+- **§315 — THE ONE THAT IS RIGHT, and the design is his.** He asked how the morph fades when nobody dials anything: **one velocity for
+  every breath, CC7 alone climbing.** So `attack.mode: 'fade'` now does that — per part, the breath in progress at the end of the window
+  gives the velocity for every breath before it, and the level ramps to that part's natural level at the end, in absolute time. The
+  join is exact by construction; nothing is calibrated. `multiply` and `ceiling` stay as legacy and were checked to be inert.
+- **The same bug lived in the score** (`Composer.heldDyn` also took the velocity from the top of the curve), so `velRef` travels into
+  the score object — otherwise an inserted fade would have auditioned right and jumped only once placed.
+- `fade-in-slow` is now **60 % · fade · linear** (presets rev 5). 62 checks in `tools/fade_check.js`; `morph_septet_check` ALL PASS;
+  verified in the running app on :5301.
+- **NOT YET HEARD BY HIM.** This is the first thing to play. `tools/cresc_check.js` fails one pre-existing assertion → NITS.
+
 **Last session (4 — 2026-09-06 → 08, Claude Code / Opus 5) — RUNNING_LOG §111–310.** Long; it ran through three clears. What it built:
 
 - **The BEATING tool (1f)** — measured bend ranges in the rack, the math, the panel, the pitch side, the insertion (D24 · D25;
@@ -111,6 +131,10 @@ and the curve windows (D18–D21), timestamped playback — §65–110. **2** th
 tuba piece.
 
 **NEXT UP — and it is his, not the AI's:**
+0. ► **THE FADE (§315), newest and most likely to need his verdict.** Open the morph panel on BLOOM, take the `fade-in-slow` preset
+   (or set SHAPE · attack → *how* = **fade**, *len % of span* = 0.6, *curve* = linear, *from* = 0) and Play. What it should sound like:
+   one strike weight throughout, the loudness climbing smoothly across the whole first 60 %, and the morph carrying on unchanged after
+   it. Hard-reload first (CTRL+SHIFT+R) — `morph.js`, `morph_emit.js`, `morph_panel.js` and `composer.html` all changed.
 1. ► **HIS EAR.** Nothing in the crescendo suite has been heard by him. In the order that unblocks the most: **1o** his first
    crescendo strikes · **1n** his first filled section (all crescendos) · **1m** his first crescendos · then the three older tools —
    **1k** chords mode, **1j** the piano's lines, **1i** the piano's harmonics — and the `cresc-secco-test` file (the residue
@@ -128,10 +152,14 @@ tuba piece.
   morph tool goes to NITS and MORPH_NOTES §3 and is built only at his word (HOW_WE_WORK) — *"fix now"* and a broken agreed behaviour
   are the exceptions. His server must be restarted after a change to `score/server.js` or `tools/model_bank.js`; a page change needs
   a hard reload (CTRL+SHIFT+R) — **three sessions' worth of new script files landed today, so tell him to hard-reload first.**
-- **Latest deliverable:** PLAN 1o steps 1–3 (§310) — `score/public/time_containers.js` (standalone at his ask),
+- **Latest deliverable (2026-09-09):** the morph's fade, `attack.mode: 'fade'` — `score/public/morph.js` (the post-render rewrite,
+  `meta.shape.attackMode`, `velRef` into `toScoreObjects`, the ladder clearing `lenPct`), `score/public/morph_emit.js` (velRef governs
+  velocity and CC7), `score/public/composer.html` (`curveTop` honours velRef), `bank/shape_presets.json` rev 5, 62 checks in
+  `tools/fade_check.js`. **Waiting on his ear.** Before it: PLAN 1o steps 1–3 (§310) — `score/public/time_containers.js` (standalone at his ask),
   `score/public/swell_ui.js` (the sound switch), `score/public/containers_ui.js` (containers in the shape menu). Before it 1n (§300)
   and 1m (§284). 150 checks across `check_containers` (37) · `check_fill` (81) · `check_cresc_deck` (32), all passing.
-- **NEXT CONCRETE STEP:** there is no AI step. **Wait for his verdicts**, then fix what he marks. If he wants to keep building
+- **NEXT CONCRETE STEP:** there is no AI step. **Wait for his verdicts** — the fade first, then the six listenings — and fix what he
+  marks. If he wants to keep building
   instead, the three tails above are the queue, and 1k step 7 is the one with a written note already (CN-52).
 - **Resume reads:** `docs/CRESCENDO.md` (1l · 1m · the suite in one page) · `docs/STRIKES_TOOL.md` §X (chords) §Y (fill) §Z (swells
   and containers) · `docs/PLAN.md` 1i–1o · `docs/NAMING.md` 14–20 · CN-48 · CN-54 · CN-55 · CN-56 · RUNNING_LOG §301–310 for the last

@@ -8821,3 +8821,108 @@ wanted. No-shape renders, which are almost everything, are untouched.
 **The method lesson, and it is his:** *"make sure we understand what the actual bug is."* Two rounds were spent tuning a layer that was
 already correct, because I measured the engine's output instead of the MIDI. The moment the velocities were printed the bug was obvious.
 30 checks in `tools/fade_check.js`; `tools/morph_septet_check.js` ALL PASS.
+
+## §315. HIS FADE, BUILT: one velocity per part, CC7 doing all the movement — the mechanism the morph was already using
+
+Composer, 2026-09-09, after §314's velocity fix was still wrong in his ear:
+
+> *"Still not right. So now it's coming in not quite enough as before. When it first starts, it's a little bit louder than it should
+> be. And then the second breath is still giving a jump in volume … Is this just a matter of calibration? Are we still using both CC7
+> and velocity?"*
+
+Then, and this is the turn that solved it, he stopped asking about the fade and asked about the thing that already works:
+
+> *"First, please answer simply — in the morphs without any fade in … the original bloom morph … fades in quite gradually … How do
+> you achieve that fade in?"*
+
+**The answer, measured on voice 0 of a bare BLOOM:**
+
+| | b1 | b2 | b3 | b4 |
+|---|---|---|---|---|
+| velocity | 103 | 103 | 103 | 103 |
+| CC7 at the entry | 76 | 86 | 109 | 92 |
+
+**ONE velocity for every breath; CC7 alone climbs.** The morph's own fade-in is a CC7 ramp under a constant strike. Both of my attack
+modes did the opposite — they moved the velocity between breaths, which is not a fade, it is a series of differently-struck notes:
+
+| | b1 | b2 | b3 | what CC7 did |
+|---|---|---|---|---|
+| multiply | 1 | 63 | 103 | **127 · 127 · 93** |
+| the morph itself | 103 | 103 | 103 | 76 · 86 · 109 |
+
+And the CC7 row explains the second half of his report. The remap is a compensating pair — CC7 is calibrated for the velocity actually
+used — so a velocity of 1 forces CC7 to **123** and a velocity of 63 forces it to **127**, both pinned at the top of the range and
+outside anything that was ever measured. *"A little bit louder than it should be"* at the start was a velocity-1 note at CC7 127.
+
+**HIS DESIGN, which he gave in full and I read back before building:**
+
+> *"What I propose is that we do a bit of a look ahead. So for example, if the shape attack is twenty four seconds, then we find for
+> each part what rebreath they're on … We take that third breath's [velocity]. So no matter when it was onset, we take that third
+> breath's [velocity] and use it from the beginning … Then we look at where the CC7 level is at twenty four seconds in the third
+> [breath] … and then we start at the beginning zero CC7 and do a smooth curve or whatever curve I dial in up to that CC7 level that we
+> read at twenty four seconds."*
+
+Plus three conditions, added when he confirmed the read-back: *"keep multiply and ceiling as legacy, but make sure they won't interfere
+resudially"* · *"will everything be able to rejoin at the end of the attack length"* · *"the original rebreath timings should still be
+there."*
+
+**Why it is right, and not merely what he asked for.** The ramp's endpoint is the part's own natural level at the end of the window, so
+the join is exact BY CONSTRUCTION rather than by calibration — there is no number to tune, which is what the previous three rounds were
+doing. And the velocity is that of the breath that is sounding when the window ends, so at the moment of the join the note is already at
+the velocity it was always going to have, with its CC7 curve already calibrated for it. Nothing switches at L; the ramp simply stops
+being the thing that decides the level.
+
+**BUILT** as `shape.attack.mode: 'fade'` — a MODE, not a curve, because it does not scale the gain at all: it rewrites the level up to the
+window's end, per part, as one ramp in **absolute time** (continuous across breath boundaries — a per-note envelope restarts at every
+breath, and that restart IS *"a jump at the second breath"*), and stamps `velRef` on every note inside it.
+
+**A PRE-BUILD SWEEP AT HIS INSTRUCTION** — *"do one more pass to see if any of the existing architecture or things we added are going to
+have effects on what you're building"* — and it earned its keep. Five real interactions, all in the build:
+
+1. **`shapeGain` would have faded it twice.** The gain still runs; in fade mode it returns 1 through the attack *and the decay*, since a
+   decay block exists only to walk `peak` back to 1 and there is no peak to walk back.
+2. **`buildLadder` sets `len` per rung, and `lenPct` outranks `len`.** The Fade ladder would have auditioned one length five times
+   without saying so. The rung now clears the fraction.
+3. **`velFor`'s sub-0.4 softening would have put the jump straight back** — it reads the level a note OPENS at, which for the first
+   breath of a fade is 0, so it would drive that note to velocity 1 whatever the stamp said. Skipped when a stamp is present.
+4. **The §314 open-level rule is residual interference in exactly his sense** — it fires on `attackLen > 0`, which a fade also sets. So
+   the render now reports `meta.shape.attackMode` and the emitter reads it: `fade` retires the rule, `multiply` and `ceiling` keep it.
+5. **THE SCORE HAS THE SAME VELOCITY LAW AS THE PANEL.** `Composer.heldDyn` takes a drawn note's velocity from the TOP of its curve —
+   the identical bug, in the harder place, because an inserted fade would have auditioned correctly and jumped only once it was in the
+   score. `velRef` now travels into the score object and `curveTop` honours it. **Measured on one inserted object: with the stamp,
+   velocity 79 — its part's reference; without it, 63.** That is the divergence, and it would have been very hard to find later.
+
+**AND THE CHECKS FOUND A SIXTH, which the sweep did not.** 6e asserted the straddling breath meets its natural level exactly at L and it
+failed — by 0.03, 0.48 and 0.25 across the three parts that were mid-breath there. Nothing pinned the two halves together: the note had
+no breakpoint at L, so the one segment crossing it ran from the last FADED point straight up to the first NATURAL one, an overshoot
+sitting exactly on the join. Fixed by inserting a breakpoint at L valued at what the ramp was aiming for; the three now read
+8.14≈8.14 · 4.58≈4.58 · 6.71≈6.71.
+
+**A false failure worth recording as a method note.** That same check first failed against the wrong control. I compared the fade to
+`multiply, from 0`, whose levels inside the window are themselves scaled — so reading a "natural" level from it just below L reads a
+faded one. The control has to be gain-neutral: **`multiply, from 1`** makes the attack gain `1 + (peak-1)×ease === 1` at every t, giving
+the same entry schedule and length with the morph's own levels. The bare morph is not a control here at all, because `entry: together`
+moves every voice's first entry — which is the attack block's job and predates all of this.
+
+**THE RESULT, voice 0, what the sampler receives:**
+
+| | b1 | b2 | b3 | b4 (past the window) |
+|---|---|---|---|---|
+| **the fade** | 103, CC7 71→83 | 103, 84→97 | 103, 98→109 | 103, 92→106 |
+| **the bare morph** | 103, CC7 76→99 | 103, 86→123 | 103, 109→124 | 103, 92→106 |
+
+One velocity throughout, CC7 climbing 71 → 109 across the whole 24 s and starting five below where the morph starts on its own — the same
+mechanism as the row beneath it, which is the row he says sounds right. **And breath 4 is identical in both**: the morph resumes.
+
+**His three conditions, checked rather than asserted:** the fade moves no entry, no duration, no pitch and no technique that the same
+settings would not move anyway (6f) · both legacy modes render exactly as they did and stamp nothing for the emitter to find (6g) · a
+no-shape render still has no shape meta at all, and a no-shape insert gains no new field. `fade-in-slow` is now `60 % · fade · linear`
+(rev 5); `fade-in-3s`, `hit-and-settle` and `brassy-hit` are untouched because his ACTUALs point at them.
+
+**62 checks in `tools/fade_check.js`** (sections 6a–j new), `tools/morph_septet_check.js` ALL PASS, and verified in the running app on
+port 5301: the `how` menu offers fade, the seconds box resolves 0.6 to 24, the browser's own copy of the engine renders mode `fade` with
+23 notes stamped, no console errors.
+
+**Left alone and reported instead:** `tools/cresc_check.js` fails one assertion, and it failed identically before this work. It hard-codes
+**18** morph re-breath pairs read out of `scores/piece-septet.json` — his live working score — and that morph is no longer in it, so the
+count is 0 of 15. A test whose ground truth is a file he edits daily will keep doing this. → NITS.

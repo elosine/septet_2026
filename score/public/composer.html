@@ -9441,7 +9441,15 @@ const Composer = {
 
     // 1g item 5 (§120): a drawn sustained note — its velocity chosen for the TOP of its own curve, its CC7 following the height
     // through the measured curves (the trill's hybrid, live); the tuba piece's CC7 map and velocity 100 when no remap is loaded
-    curveTop(wc) { const ys = (wc.nodes || []).map(n => +n.y).filter(y => !isNaN(y)); return Math.max(0, Math.min(1, (ys.length ? Math.max.apply(null, ys) : 10) / 10)); },
+    // … EXCEPT where the note carries its own reference. A morph rendered with attack.mode 'fade' (§315) stamps `velRef` on every
+    // note inside the fade: one velocity for the whole window, CC7 alone doing the fading. Taking the top of the curve there would
+    // strike each breath for where it ENDS and undo the fade — the same bug the panel had, in the place it is harder to notice,
+    // because the panel would sound right and only the score would jump.
+    curveTop(wc) {
+        if (wc.velRef != null) return Math.max(0, Math.min(1, +wc.velRef / 10));
+        const ys = (wc.nodes || []).map(n => +n.y).filter(y => !isNaN(y));
+        return Math.max(0, Math.min(1, (ys.length ? Math.max.apply(null, ys) : 10) / 10));
+    },
     heldDyn(wc) {
         const stamp = this._velRemap ? this._velRemap.measuredAt : null, hMax = this.curveTop(wc);
         if (!this._heldCache) this._heldCache = new Map();

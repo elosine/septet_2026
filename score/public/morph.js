@@ -561,7 +561,13 @@ const ATTACK_MOTIONS  = ['converge', 'gliss-in', 'none'];
 //   ceiling  — level = min(dyn, g × 10). It CAPS the layer, flattening the peaks off, so what comes through grows as the lid rises.
 //              Right for a FADE, and the difference is not cosmetic: measured on BLOOM, the multiplier left breaths at 4.2 / 9.0 / 9.2
 //              while the ceiling gave 0.9 / 4.2 / 8.0 — the first is a cliff, the second is a fade.
-const ATTACK_MODES    = ['multiply', 'ceiling'];
+//   fade     — the composer's own design (2026-09-09, §315) and the only one that matches how the morph ALREADY fades: ONE CC7 ramp
+//              under a CONSTANT velocity. Measured, a bare bloom enters every breath at velocity 103 and climbs CC7 76 → 122; both
+//              modes above instead move the velocity between breaths, which is heard as a lurch and not as a fade. So `fade` does not
+//              scale the gain at all — it REWRITES the level up to the window's end as a single ramp in absolute time, per part, from
+//              `from` to that part's natural level AT the window's end, and stamps every note before it with the velocity of the
+//              breath that is in progress there. Nothing has to be matched at the join: the ramp's last value IS the natural value.
+const ATTACK_MODES    = ['multiply', 'ceiling', 'fade'];
 const RELEASE_MOTIONS = ['disperse', 'to-unison', 'gliss-out', 'none'];
 
 const SHAPE_KEYS    = ['attack', 'decay', 'release'];
@@ -621,6 +627,10 @@ function shapeGain(shape, t, span, rel) {
     const aLen = A ? A.len : 0;
     const dLen = D ? D.len : 0;
     const peak = A ? A.peak : 1;
+    // A FADE IS NOT A GAIN (§315). In `fade` mode the level up to the window's end is rewritten wholesale after the render, so
+    // scaling it here as well would fade it twice — and the decay block, which exists only to walk `peak` back to 1, would then be
+    // walking back a peak that was never applied. Both windows are gain 1, and the rewrite is the entire shape.
+    if (A && A.mode === 'fade' && aLen > 0 && t < aLen + dLen) return 1;
     if (A && aLen > 0 && t < aLen) {
         return A.from + (peak - A.from) * curveEase(A.curve, t / aLen);
     }
@@ -823,6 +833,12 @@ function normaliseShape(raw, span) {
     // peak > 1 with no decay would leave the gesture parked above the body for
     // the whole span, which is never what "hit it and settle" means. Supply the
     // decay AND say so — a default that hides is a bug with a nice manner.
+    if (attack && attack.mode === 'fade' && attack.peak != null && attack.peak !== 1) {
+        warn.push('SHAPE: attack.mode "fade" ends on the morph\'s own level by construction — "peak" is ignored');
+    }
+    if (attack && attack.mode === 'fade' && decay) {
+        warn.push('SHAPE: attack.mode "fade" replaces the level through the window — the decay block has no peak to walk back');
+    }
     if (attack && attack.mode === 'ceiling' && attack.peak > 1) {
         warn.push('SHAPE: attack.mode "ceiling" with peak ' + attack.peak + ' > 1 — a ceiling cannot overshoot; peak ignored');
         attack.peak = 1;
@@ -1894,11 +1910,66 @@ function render(params, opts) {
             entry: SH.attack ? SH.attack.entry : 'together',
             exit: SH.release ? SH.release.exit : null,
             attackLen: SH.attack ? SH.attack.len : 0,
+            attackMode: SH.attack ? SH.attack.mode : null,      // the emitter reads this: `fade` retires the §314 open-level rule
             decayLen: SH.decay ? SH.decay.len : 0,
             releaseLen: SH.release ? SH.release.len : 0,
             dropped: shapeInfo.dropped.slice(),
             noiseVoices: shapeInfo.noise,
         };
+    }
+
+    // ======================= THE FADE (attack.mode 'fade', §315) =======================
+    // Runs LAST, on the finished notes, because it needs each part's BREATHS — and the breaths are the notes. It is deliberately the
+    // only thing in the engine that reads notes back: the fade is a statement about a part's whole first L seconds, which no
+    // per-sample function can see. Per part:
+    //
+    //   · velRef — the natural peak of the breath IN PROGRESS at L. Every note starting before L is stamped with it, so the emitter
+    //     strikes them all at ONE velocity: the velocity that breath was going to have anyway. That is why the join needs nothing
+    //     done to it — the straddling breath is already sounding at that velocity when the window ends, with its own CC7 curve
+    //     correctly calibrated for it, and the morph simply continues.
+    //   · the LEVEL up to L becomes one ramp in ABSOLUTE time — continuous ACROSS note boundaries, which is the whole point: a
+    //     per-note envelope restarts at every breath and that restart is what he heard as "a jump at the second breath".
+    //
+    // Everything else on a note is untouched: tStart, dur, midi, cents, bend, technique, flags. So the RE-BREATH TIMINGS ARE THE
+    // MORPH'S OWN — they are decided from stateAt, whose level inside the window is now the unscaled one (shapeGain returns 1 here),
+    // i.e. the timings of the piece at full voice. His requirement: *"the original re-breath timings should still be there."*
+    //
+    // The transient and noise layers are included on purpose. They are notes sounding before L, and a fade-in that leaves a hit at
+    // full force on top of it is not a fade-in.
+    if (SH_A && SH_A.mode === 'fade' && aLen > 0) {
+        const L = aLen;
+        const fromF = clamp(SH_A.from != null ? SH_A.from : 0, 0, 1);
+        const byVoice = {};
+        notes.forEach(nt => { (byVoice[nt.voice] = byVoice[nt.voice] || []).push(nt); });
+        Object.keys(byVoice).forEach(k => {
+            const list = byVoice[k].slice().sort((a, b) => a.tStart - b.tStart);
+            const before = list.filter(nt => nt.tStart < L - 1e-9);
+            if (!before.length) return;
+            // the breath in progress at L — the one spanning it; if the part happens to be between breaths there, the last one before
+            const straddler = list.find(nt => nt.tStart <= L + 1e-9 && nt.tStart + nt.dur > L - 1e-9) ||
+                              before[before.length - 1];
+            const velRef = Math.max.apply(null, straddler.level.map(pt => pt[1]));
+            const levelAtL = levelOfNoteAt(straddler, Math.min(L, straddler.tStart + straddler.dur));
+            before.forEach(nt => {
+                nt.velRef = round3(velRef);
+                nt.level = nt.level.map(pt => {
+                    const tAbs = nt.tStart + pt[0];
+                    if (tAbs > L + 1e-9) return pt;                  // past the window the morph's own levels stand
+                    const u = clamp(tAbs / L, 0, 1);
+                    return [pt[0], round3((fromF + (1 - fromF) * curveEase(SH_A.curve, u)) * levelAtL)];
+                });
+                // AND THE TWO HALVES ARE PINNED TOGETHER AT L. Without this the breath that spans the end of the window has no
+                // breakpoint there, so the one segment crossing it runs from the last FADED point straight up to the first NATURAL
+                // one — measured before it was added, an overshoot of up to 0.48 of level across about half a second, sitting exactly
+                // on the join. A breakpoint at L valued at what the ramp was aiming for makes the meeting exact instead of nearly so.
+                const dtL = round3(L - nt.tStart);
+                if (dtL > 1e-3 && dtL < round3(nt.dur) - 1e-3) {
+                    const i = nt.level.findIndex(pt => pt[0] > dtL - 1e-6);
+                    if (i >= 0 && Math.abs(nt.level[i][0] - dtL) < 1e-3) nt.level[i] = [nt.level[i][0], round3(levelAtL)];
+                    else if (i >= 0) nt.level.splice(i, 0, [dtL, round3(levelAtL)]);
+                }
+            });
+        });
     }
 
     return { notes: notes, summary: summary, warnings: warnings, meta: meta };
@@ -1941,7 +2012,10 @@ function buildLadder(base, lens, opts) {
     let t = 0, meta = null;
     use.forEach(L => {
         const p = JSON.parse(JSON.stringify(base));
+        // `lenPct` WINS over `len` in normaliseShape, so a ladder that set only `len` would render every rung at the same length and
+        // the audition would silently compare a length against itself (§315).
         p.shape.attack.len = L;
+        if (p.shape.attack.lenPct != null) delete p.shape.attack.lenPct;
         let r;
         try {
             r = doRender(p);
@@ -1971,6 +2045,22 @@ function buildLadder(base, lens, opts) {
 //     Kept here (pure) so both the panel preview and the insert path use one
 //     conversion and cannot drift apart.
 // ===========================================================================
+
+// A rendered note's level at an ABSOLUTE time, by linear interpolation of its own breakpoints. Only the fade uses it, and only to
+// read the value it must land on — so the fade's endpoint is measured from the render rather than recomputed from the parameters,
+// and cannot drift from it.
+function levelOfNoteAt(note, tAbs) {
+    const pts = note.level, dt = tAbs - note.tStart;
+    if (!pts || !pts.length) return 0;
+    if (dt <= pts[0][0]) return pts[0][1];
+    for (let i = 1; i < pts.length; i++) {
+        if (dt <= pts[i][0]) {
+            const a = pts[i - 1], b = pts[i];
+            return a[1] + (b[1] - a[1]) * ((dt - a[0]) / Math.max(1e-6, b[0] - a[0]));
+        }
+    }
+    return pts[pts.length - 1][1];
+}
 
 function toScoreObjects(result, at, opts) {
     const o = opts || {};
@@ -2028,6 +2118,11 @@ function toScoreObjects(result, at, opts) {
             technique: n.technique,
             morphBend: bend,            // the one genuinely new field
             morphFlags: n.flags.length ? n.flags.slice() : undefined,
+            // THE SCORE HAS THE SAME VELOCITY LAW AS THE PANEL (§315). `Composer.heldDyn` takes a drawn note's velocity from the TOP
+            // of its curve, exactly as the emitter did — so without this an inserted fade would audition correctly in the panel and
+            // jump at every breath once it was in the score, which is the harder bug to find of the two. Present only on a fade, so
+            // every other render's objects are byte-identical.
+            velRef: n.velRef != null ? n.velRef : undefined,
         };
     });
 }

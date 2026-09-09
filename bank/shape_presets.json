@@ -2,7 +2,7 @@
   "_comment": "SHAPE PRESET library (PLAN 2y §5.1). A preset is a named, copyable `shape` block (2z's schema) plus the label, tags and verdict that blessed it. Because a shape is just params, applying one to any model is a MERGE, not a feature — reuse by construction, no category system. Filed by the AI from the narrated sessions the moment a shape is kept (docs/TAXONOMY.md contract); `?` note when unsure. If genuine categories of attack ever emerge they are harvested then (D6), never designed up front. Lessons from each build go to docs/SHAPE_LESSONS.md.",
   "_howTheAttackJoins": "FR-4. The gain is MULTIPLICATIVE over the body, so when the attack reaches 1 the level IS whatever the body says — nothing to calculate and nothing to match. No overshoot means the ramp simply rises to the body and `decay` is 0; an overshoot means `peak` > 1 and `decay` exists only to bring it back down. `entry: together` overrides the striated entry so everyone starts as one.",
   "_unheard": "ALL THREE ARE UNHEARD. These are starting points for the D31 bespoke loop, not blessed shapes — the day-12 lesson was that guessed preset NUMBERS are exactly what fails. Narrate a correction and the numbers change.  fade-in-3s and its two siblings remain UNHEARD and UNCHANGED because his saved ACTUALs point at them; 'fade-in-slow' is the 2026-09-09 replacement and is the one that was measured.",
-  "rev": 4,
+  "rev": 5,
   "presets": {
     "fade-in-3s": {
       "label": "fade in — everyone together, no attack at all",
@@ -23,7 +23,7 @@
     },
     "fade-in-slow": {
       "label": "fade in — the morph's own level scaled from silence over the first 60% of the gesture",
-      "notes": "THE ONE THAT ACTUALLY FADES, and the first preset here that was MEASURED rather than guessed (RUNNING_LOG §311–314). It is the composer's own logic and not a second layer: the morph's own volume, scaled from silence at the start to exactly its natural level at the end of the window. `lenPct` — a FRACTION OF THE SPAN, because seconds are meaningless against a breath length he cannot see: on BLOOM the breaths are 6–10 s, so the old 3 s fade was bit-identical to no fade at all. `multiply` — it scales the morph rather than capping it, so the fade lands exactly on the natural level and the join is smooth by construction (a `ceiling` is available and has a kink). `linear` — level here is the score's 0-10 drawn height across a 40 dB CC7 span, so level-space IS roughly dB-space and a linear ramp is a smooth exponential amplitude fade. `held` hangs low and then rushes; `expo` is front-loaded and lunges. NOTE that the fade could not be heard at all until the EMITTER was fixed the same day: it struck every note at the velocity for that note's PEAK, so each breath after the first entered at full force whatever the fade said.",
+      "notes": "THE ONE THAT ACTUALLY FADES, and the only preset here that was MEASURED rather than guessed (RUNNING_LOG §311–315). `mode: fade` is the composer's own design and it is how the morph ALREADY fades when left alone: ONE velocity for the whole window with CC7 doing all the movement. Per part the engine finds the breath in progress at the end of the window, uses THAT breath's velocity for every breath before it, and ramps the level from silence to that part's natural level at the end — so the morph rejoins itself with nothing to match. Both older modes moved the velocity between breaths, which is heard as a lurch at every re-breath and not as a fade. `lenPct` — a FRACTION OF THE SPAN, because seconds are meaningless against a breath length you cannot see: on BLOOM the breaths are 6–10 s, so the old 3 s fade was bit-identical to no fade at all. `linear` — level here is the 0-10 drawn height across a 40 dB CC7 span, so level-space IS roughly dB-space and a linear ramp is a smooth exponential amplitude fade; `held` hangs low and then rushes, `expo` lunges. Re-breath timings are the morph's own throughout — the fade changes loudness and nothing else.",
       "tags": [
         "attack",
         "fade",
@@ -34,7 +34,7 @@
       "shape": {
         "attack": {
           "lenPct": 0.6,
-          "mode": "multiply",
+          "mode": "fade",
           "entry": "together",
           "curve": "linear",
           "from": 0

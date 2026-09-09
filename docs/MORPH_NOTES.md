@@ -952,6 +952,29 @@ curve hangs low then rushes — which was audibly his *"quiet for 300 ms then ra
 **One number he should have before judging by ear:** the morph's own entries jump **3.3× then 2.5×** with no fade at all. That growth is the
 gesture; a fade scales it and cannot remove it. A longer `lenPct` is the dial if he wants the entries flatter still.
 
+### 2026-09-09 — THE FADE, HIS DESIGN: one velocity per part, CC7 doing the movement (RUNNING_LOG §315)
+
+The question that solved it was his, and it was not about the fade: *"in the morphs without any fade in … the original bloom morph
+fades in quite gradually … How do you achieve that fade in?"* **Measured: one velocity for every breath (103, 103, 103, 103) with CC7
+alone climbing 76 → 86 → 109.** Both attack modes I had built did the opposite — they moved the velocity between breaths, which reads
+as a series of differently-struck notes and not as a fade, and drove CC7 to 127 at both ends of the remap.
+
+**His design, built as `attack.mode: 'fade'`:** per part, find the breath in progress at the end of the window; use THAT breath's
+velocity for every breath before it; ramp the level from `from` to that part's natural level at the end of the window, in ABSOLUTE
+time so the ramp is continuous across breath boundaries. The endpoint is read from the render, so the join is exact by construction —
+**there is no number to calibrate**, which is what the three failed rounds before it were doing.
+
+**FOR THE REVISION, the general lesson, and it is bigger than the fade.** *A dynamic instruction must be expressed in the mechanism the
+instrument already uses for that dimension.* This sampler's loudness-over-time is CC7 under a fixed strike; a layer that also moves the
+strike is not a refinement of it but a second, competing voice. Three rounds were spent tuning a correct level curve because the level
+curve was the only layer I was looking at. **The tool should be able to show what it is SENDING, not only what it computed** — a
+velocity/CC7 readout per breath would have ended this on day one, and its absence is the real finding here.
+
+**Second, and specific to any renderer feeding a score app:** the engine's velocity law was duplicated in `Composer.heldDyn` — the same
+"take the top of the curve" rule in two places. Fixing one silently left the other, so an inserted fade would have auditioned correctly
+in the panel and jumped in the score. Anything that overrides the loudness law has to travel WITH the note (here `velRef`, into the
+score object), or the two copies drift.
+
 ## 4 · For the eventual revision (the digest — rewritten freely)
 
 - *(seed)* A morph event as ONE object: pairs · a glissando / beating curve per pair · a re-articulation pattern · a dynamic curve ·
