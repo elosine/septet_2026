@@ -9299,3 +9299,55 @@ recorded is that the harness caught it rather than he did, which was the whole p
 **And his working copy was protected.** The first test ran against `piece-septet` by mistake; the two objects were removed within the
 same minute and `piece-septet-work.json` was checked on disk and found clean (755 objects, none of them mine) before anything else was
 done. The rule stands and is worth restating: **build on a `zz-ai-` copy from the first command, not from the second.**
+
+## §322. "still no access to drag nodes for length" — the handles were there; three things stopped them working on a CAPTURED note
+
+The transform box has drawn edge handles for grains since the grain suite. All three faults below are invisible on a drawn swell and
+fatal on a short flat capture, which is why they had never been met.
+
+**1 · `grainDur` cannot work on a flat note.** The left handle runs the peak-anchored stretch: the peak and everything after it stay
+fixed while the pre-peak times scale. A captured note is FLAT — every node at the same height — so it has no peak, `apexIdx` is 0 and
+`tPeak` lands on the note's own start. The clamp `tPeak - 0.15` then permits the start to move EARLIER and never later, and the scale
+factor divides by `tPeak - origStart` = 0. **The left handle could not lengthen a captured note at all.** A flat grain now takes the
+plain `left` edge, which is what it means anyway: move the start, keep the end.
+
+**2 · A half-second floor on a piano attack.** Both edges clamped the length to a minimum of **0.5 s**. His captures are 0.1–0.3 s, so
+neither edge could shorten one and both looked dead. Now 0.05 s, the shortest thing the score draws. Measured after the fix: a 0.22 s
+note drags out to 0.84, its start back to 399.69, and **shrinks to 0.05**.
+
+**3 · Two 12 px handles on a 14 px note.** At 64 px/s his 0.22 s note is fourteen pixels wide and the two edge handles overlapped
+almost exactly — whichever he grabbed, he got the same one. Under 26 px the handles now step OUTSIDE the box, left to the left and
+right to the right, and every handle gained a 22 px invisible grab pad behind the drawn square. Measured: three pads, 32 px apart.
+
+Zooming in (the wheel, to 500 px/s) would also have separated them, and nobody should have to zoom to grab an edge.
+
+## §323. THE HUNG NOTES: the note-off was going to the wrong channel — and for the flute, the wrong port
+
+Composer, 2026-09-09: *"also if I stop in the middle of a held note it keeps playing, especially in the flute but I noticed it in bcl."*
+
+**"Especially in the flute" was the clue that unpicked it**, and there were three causes stacked.
+
+**1 · The note-off did not follow the note-on.** `flushCurvePlayback` closed each sounding note on the TECHNIQUE's port and channel.
+But a curve-bearing note is STARTED through `routeForNote`, which hands it a **D11 curve channel** — 2, 3 or 4 — and for the flute a
+different **port**, because its three ordinario copies live on `Fluteb`. So every held note was closed on channel 1 of the wrong port
+and went on sounding. The flute was worst because it was wrong in both dimensions; every other instrument was merely on the wrong
+channel. Now the flush calls `routeForNote` — the same function that started it.
+
+**2 · The safety sweep could not see the flute's curve channels.** `resetCC7All` builds its extra channels with
+`c => ({ port: inst.port, channel: c })`. Every other instrument declares `curve: [2, 3, 4]` — numbers — and was swept correctly. **The
+flute declares `curve: [{port: "Fluteb", ch: 4}, …]`**, so `channel` held an object, `(tech.channel || 1) - 1` evaluated to NaN and the
+port stayed `Flute`. The flute's three curve channels were the one place in the score this sweep never reached — which is exactly the
+difference he heard between the flute and the bass clarinet.
+
+**3 · And a note-on inside the lookahead outlives the sweep.** §320's lesson again, in the other file: `clear()` does not exist in
+Chrome, so a note-on already handed to the driver inside `tickCurvePlayback`'s 100 ms lookahead arrives AFTER everything the stop does
+— and a note longer than `OFF_HORIZON_S` has no note-off scheduled yet, because it only gets one when its end comes into view. A second
+sweep 160 ms later catches it, as a **cancellable timer** so `startPlay` can cancel it and it can never land inside the next run.
+
+**Measured in the app**, a 30 s held flute note stopped mid-way: the note-on goes out on **Fluteb ch5**, and the note-off now goes to
+**Fluteb ch5** where it used to go to Flute ch1; the sweep now reaches **all six Fluteb channels** where it reached none.
+
+**The pattern worth naming, because this is the third time this week:** wherever a note is STARTED by one piece of routing and STOPPED
+by another, they will drift apart, and the symptom is always a hung note. §315 found the velocity law duplicated between the emitter
+and the score; §320 found a stop that could not cancel; this is a stop that could not aim. **One function decides where a note goes,
+and everything that touches that note calls it.**
