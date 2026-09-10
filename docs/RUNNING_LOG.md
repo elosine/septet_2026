@@ -9948,3 +9948,34 @@ window.dupNote = function (offset) {
 **Given as `crescStrikes()`** (saved at `score/public/cresc_strikes_console.js`, pasted not loaded — no reload, so nothing of his in flight is lost). One `pushUndoState`, so CTRL+Z takes all 23. **`crescStrikes.clear()`** removes exactly its own (they carry `groupId: 'grp-cresc-strike'`) — written because "how do I delete what I just put in" was SWEEP_LIST #3's complaint, and a batch tool that cannot be undone in one move would have earned the same one.
 
 **Not run in the app.** His console, his ear.
+
+## §357. "the plucked piano seems very loud" — the probes were never run on it, and the +7 dB it rides was measured on the Steinway alone
+
+*(2026-09-10, session 8, Claude Code / Opus 5. His ask: *"I don't know if we ran volume probes on the plucked piano, harmonics, and muted piano. If you could look into... first, evaluate if we did the probes on those yet. And then we'll evaluate from there."* An evaluation, so nothing was built.)*
+
+**The answer is no, and the file says so in one field.** In `bank/balance.json` every instrument carries a `techniques: {}` sub-map for the voices probed beyond its plain one:
+
+| instrument | plain probed | extra voice probed | that voice vs its plain |
+|---|---|---|---|
+| flute | ord | pizzicato | −36.8 dB |
+| bass clarinet | senza_vel | slap tongue | −24.0 dB |
+| violin 1 / 2 | senza_vel | Bartók pizz | −7.4 / −7.6 dB |
+| viola / cello | senza_vel | gettato | −4.2 / −3.6 dB |
+| **piano** | **main only** | **`techniques: {}` — empty** | **never measured** |
+
+**And the reason is a decision written into the scheduler**, `tools/balance_schedule.js` line 11: *"the piano has none (its main is its strike)"*. True on 2026-09-04, when the piano's second voices were not yet in play. Plucked, harmonics and muted have been unmeasured ever since.
+
+**Why that makes plucked loud, in the numbers.** The trim is **one number for the whole instrument** — `sandbox/instruments.js:182`, `piano: { balanceDb: 7 }` — and it was derived from `main` alone: the Steinway measured **−34.42 dBK at velocity 127**, the *quietest* of the seven (flute −6.58 · bass clarinet −18.41 · viola −23.91 · violin 2 −27.25 · violin 1 −27.70 · cello −26.26), against a target of −27.45. So **+7 dB**, and his rack carries it on **both** piano tracks (§320's confirmation).
+
+Every other piano voice then rides a gain calibrated for a 1969 Steinway:
+
+- **plucked** — Spitfire Plucked Piano, channel 2, a *different library* in the same Kontakt instance.
+- **harmonics** (ch 3) and **muted** (ch 5) — IRCAM Prepared Piano 2, a *different plugin* on the second track.
+
+Nothing ties any of their output levels to the Steinway's. **+7 dB does not correct a mismatch, it amplifies whatever mismatch exists.** His ear is a measurement: plucked is loud, and there is no number anywhere that contradicts it.
+
+**The design limit this exposes, and it is not only the piano's.** The flute's pizzicato was measured 36.8 dB below its ordinary and still gets the flute's single −21 trim, landing at −64.2 dB (`afterTrimDb`). So **one trim per instrument already mis-serves second voices even where they HAVE been measured.** The piano is the case where the measurement is missing as well.
+
+**What a probe would cost, read from the tool:** `--strike inst=tech` takes **one** extra technique per instrument (`STRIKE_TECHS[k] = v`, line 104 — last one wins). Three piano voices is therefore three runs of `tools/probe_run.sh`, or a small change to let the flag take a list. Six notes per voice (3 pitches × vel 127/64), same as every probe so far.
+
+**Not diagnosed, deliberately:** how much louder plucked is. There is no measurement, and AI_METHODOLOGY's rule is that no clear evidence means no diagnosis. **Nothing changed. His call on what follows.**
