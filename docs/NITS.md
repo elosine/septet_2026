@@ -278,3 +278,5 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 - Live playback cuts a secco crescendo at its end (`composer.html` → `seccoCut`, with a neighbour guard). **`sonify_core.js` has no
   secco handling at all** — only the `endSweep` STOP cure. So a rendered or exported swell rings past its end where the live one cuts.
 - Same family as the `cc7Fade` gap already noted above: the render path keeps missing the crescendo's later features.
+
+- **2026-09-10 — can Kontakt 8's instrument volume be typed?** SHIFT+drag gives fine resolution for certain; whether the header volume knob takes a typed dB value is unverified (a plugin UI, not in this repo). One look in Kontakt settles it. Moot if the plucked voice is split to its own Reaper track, where the fader types (RUNNING_LOG §369).
