@@ -155,15 +155,43 @@ it was found missing from this repo's CLAUDE.md, which is why the advice had gon
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| 1 | **His ear on the overnight revision** — the walk in STRIKES_TOOL §AD; chords at an onset, the crescendo's % and anchor, Hear's ramp, accents in the score's card | conversation, either — **Opus** while he is listening and reporting | no |
-| 2 | **Fix what he marks** — small, named defects against a built thing | **Opus** | no |
-| 3 | **A defect whose cause is unknown**, or a verdict on how a gesture should behave | **Fable** | **yes** — wrap on Opus, `/clear`, switch, `/postclear` |
-| 4 | **The piano as two hands** (CN-60, §329) — the top line is agreed and written; steps 1–5 are a spec | **Opus** | **yes** at the start (a fresh context for a build) |
-| 5 | The six older listenings (1o · 1n · 1m · 1k · 1j · 1i) and the three tails | **Opus** to run, **Fable** only for a verdict that reframes | at each chunk wrap |
+| 1 | **Tell him the chord tool is in NOTES mode** (§348), then his verdicts on today's nine fixes after a hard reload | **Opus** | no |
+| 2 | Fix what he marks | **Opus** | no |
+| 3 | **The two articulation sets** — percussive / all-spiccato (§AB1-c) | **Opus** | no |
+| 4 | **The pinned player** that survives a shuffle (§AF2) | **Opus** | no |
+| 5 | **The rhythm drawer remodel** (§AE) — one decision from him first | **Opus** | **yes**, fresh context for a build |
+| 6 | PLAN 1q proper, on the 1q-PRINCIPLE — one Insert, one Hear, one law | **Fable** | **yes** — wrap on Opus, clear, switch |
 
 **The standing rule:** Fable for the turns where a wrong reading costs a day; Opus for every turn where
 the plan is already on paper. Wrap on Opus, always.
 
+
+**CHECKPOINT (mid-session, 2026-09-10 late, before a /clear — session 7 continued, Claude Code / Opus 5):**
+
+- **Task and state:** a long defect-clearing day on the strikes drawer and the crescendos. **Nine faults found and fixed, RUNNING_LOG §340–351,
+  ALL PUSHED.** Nothing is in flight. **None of it has been heard or seen by him except the bricks and the fff long tones that started it.**
+- **THE FINDING OF THE DAY, and it outranks the fixes:** every one of the nine was **a rule wired into one code path and not its sibling** —
+  not one was a reasoning failure. He asked twice whether to use a stronger model; the answer given both times was no, with the evidence.
+  His own rule is now PLAN **1q-PRINCIPLE**: *"insert at playhead means insert what I'm listening to at the playhead."*
+- **THE ONE THING TO TELL HIM FIRST (§348):** the chord tool he specified — pick a rhythm, a chord on each onset, choose its harmony, dealt to
+  free players — **exists and works, but in NOTES mode.** `strike_sounds.js` returns early in chords mode (lines 97 and 231). He has been in
+  **chords mode** all day, which is the older 1k path. **Notes mode → build the rhythm → double-click an onset dot → click a harmony in the left
+  column.** Most of "nothing is working" is probably this.
+- **Fixed, pushed, unverified by him** — all need a hard reload: `keep rhythm + orchestrate on a new pick` (a checkbox by `reset rhythm`, OFF by
+  default) · the piano dropped from crescendo passes · `Insert @ playhead` writes crescendos when the sound is crescendo · **Insert now writes
+  HEAR's own numbers** (curve sampled off Hear's law, `cc7Abs {65,127}`, `velAbs` — measured 0 mismatches across 17 samples) · secco fixed (it
+  was overwritten 5 ms later by its own ramp) with a neighbour guard · the strip reserves the control panel's MEASURED width · the sound card no
+  longer sticks to the mouse · the crescendo card shows MIDI numbers and has `hold to the crescendo end`.
+- **NEXT CONCRETE STEP:** tell him the notes-mode thing first, then take his verdicts on the reload and fix what he marks. **Then build, in this
+  order, all three collected and specified:** (1) **the two articulation sets** — percussive / all-spiccato, one click each (STRIKES_TOOL §AB1-c);
+  (2) **the pinned player** that survives a shuffle (§AF2 — small, and it is the answer to `keep rhythm` re-dealing everything); (3) **the rhythm
+  drawer remodel** (§AE — he owes one decision there: whether the 250 % narrows the strip or widens the panel).
+- **Pending decisions from him:** §AE's width direction · whether a HELD accent should also swell (it is a steady note today).
+- **Deliberately uncommitted:** `bank/panel_snapshots.json` (his takes), `scores/SeptetSec03-Materials-B.json`, `scores/SeptetSec03-Materialsa.json`
+  — all his own work today, never the AI's to commit. `tools/unsaved_check.js` reports **8 unsaved working copies** including `Sec3-Materials`
+  (never saved at all) and `SeptetSec03-Materials-B` — D17: his to Save or Reload, never the AI's to touch.
+- **Resume reads: nothing beyond §2.** (If he raises a crescendo/audition question, RUNNING_LOG §349–350 carry the measured numbers; if he
+  raises chords mode, §348. Do not read them pre-emptively.)
 
 **Open at session end** *(written cold, 2026-09-09)*:
 
