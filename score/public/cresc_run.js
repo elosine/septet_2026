@@ -126,6 +126,7 @@ function write(o, R) {
     const C = C_(), CRe = CR();
     const onsets = R.onsets, N = onsets.length;
     const t0 = o.at != null ? +o.at : +C.getTimeAtPlayhead().toFixed(3);
+    if (crescRun.last) { crescRun.last.at = t0; save(LAST_KEY, crescRun.last); }   // the place is remembered: the next line lands here, not where playback left the playhead (§332)
     const lanes = (o.players || DEFAULTS.players).map(Number).filter(l => l >= 0 && C.trackInstrument(l));
     if (!lanes.length) { console.error('[crescRun] no playable lanes in players'); return null; }
     const pitch = pitchAt(o.pitches);

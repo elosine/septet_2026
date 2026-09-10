@@ -158,6 +158,9 @@ async function chordRun(opts) {
         }, realize, Object.keys(manual).length ? manual : null);
         // ---- write, as the drawer's insert writes a strike
         const t0 = o.at != null ? +o.at : +C.getTimeAtPlayhead().toFixed(3);
+        // the place is remembered like every other number: the next line lands HERE, not wherever playback left the playhead
+        // (2026-09-10 05:20, "it moved all of the notes, 578.75") — goTo(...) or at: ... moves it
+        chordRun.last.at = t0; save(LAST_KEY, chordRun.last);
         const T = (typeof TRACKS !== 'undefined' ? TRACKS : root.TRACKS || []);
         const ML = (typeof META_LAYER !== 'undefined') ? META_LAYER : root.META_LAYER;
         const D = root.StrikeDrawer;
@@ -220,7 +223,10 @@ root.goTo = function (seconds) {
     const t = Math.max(0, +seconds || 0);
     C.scrollOffset = t * C.pixelsPerSecond; if (typeof C.applyScroll === 'function') C.applyScroll();
     const now = +C.getTimeAtPlayhead().toFixed(3);
-    console.log('%c[goTo] playhead at ' + now.toFixed(2) + ' s — SPACE plays from here', 'color:#e8cf9a');
+    // goTo is "this is where I am working": the next chordRun / crescRun line lands here
+    if (root.chordRun) { root.chordRun.last = Object.assign({}, root.chordRun.last || {}, { at: now }); save(LAST_KEY, root.chordRun.last); }
+    if (root.crescRun && root.crescRun.last) { root.crescRun.last.at = now; try { localStorage.setItem('septet.crescRun.last.v1', JSON.stringify(root.crescRun.last)); } catch (e) {} }
+    console.log('%c[goTo] playhead at ' + now.toFixed(2) + ' s — SPACE plays from here; the next chordRun / crescRun line lands here', 'color:#e8cf9a');
     if (C.saveStatus) C.saveStatus.textContent = 'playhead at ' + now.toFixed(2) + ' s';
     return now;
 };
