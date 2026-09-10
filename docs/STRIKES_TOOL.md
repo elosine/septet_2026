@@ -889,6 +889,7 @@ for the planning method; keeping the rhythm dials while browsing harmonies (a on
 - **AB1 · Articulation presets.** Named sets for the seven articulation pull-downs: *default* (what the drawer opens with today) · *all ordinary*
   (each player's `ordinary` voice — the recipe field 1o already reads) · more as he names them; his own sets keepable (a take carries the
   articulations already, so a preset is a take of the rows alone). *(AI reading, marked as such.)*
+  **AB1-b · the "all staccato" preset** (composer, 2026-09-10 03:20, from his screenshot: *"lets have this as one of the presets, add to features list"*): Fl **Staccato** · BCl **Staccato Velocity (#19)** · Pno **8Dio 1969 Legacy Piano (Steinway 1969)** (its one voice) · Vn1 · Vn2 · Va · Vc **Staccato Velocity (#19)**. The first named set of AB1, exactly as the rows stood.
 
 > *"Another feature is I'd like to be able to transpose the harmony in the keyboard step by step. There's seems to be an octave one. But, a,
 > the octave one only seems to work when I've chosen, like, one of the cluster, cluster low, etcetera. And if I can move the whole shape up by
