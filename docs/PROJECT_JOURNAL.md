@@ -141,6 +141,15 @@ the morph's fade-in, and then the editing interface around the piano parts he re
   row), the crescendo's `% of the gap` and `starts / ends on the onset`, Hear that swells, the ACCENT row in the score's crescendo card.
   Verified on a copy with real events; **unheard by him.** The morning's walk is in STRIKES_TOOL §AD. Revert: the tag, or the classic flag.
 
+**CHECKPOINT (mid-session, 2026-09-10 ~09:30, before a /clear — session 7, Claude Code / Fable 5.1):**
+- **Task and state:** the overnight revision is BUILT, verified on a copy, committed and pushed (09ca201); nothing is in flight. He is about to
+  test it by ear. The console lines of the night (crescRun · chordRun · goTo) are in and documented (§325–332).
+- **Latest deliverable:** §334 — strike_sounds.js (a chord at an onset), swell_ui.js (% of the gap · starts/ends on the onset · Hear with the
+  ramp), cresc_card.js (the ACCENT row). The walk for him is in STRIKES_TOOL §AD. Revert: tag pre-revision-2026-09-10 / the classic flag.
+- **NEXT CONCRETE STEP:** his verdicts on the revision, fix what he marks. Then, on his word: the piano as two hands in the chord deal
+  (CN-60, §329 — the top line agreed, no plan;  stays the default). PLAN 1q built · 1k step 7 planning · 1p/1r built.
+- **Pending decisions:** none. **Resume reads:** RUNNING_LOG §324–334 in order; STRIKES_TOOL §AA–§AD; NITS 2026-09-10.
+
 **Open at session end** *(written cold, 2026-09-09)*:
 
 - **Task and state:** the AI's work is done and pushed; **nothing is in flight.** He is composing and recording piano into
