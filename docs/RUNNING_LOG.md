@@ -10150,3 +10150,32 @@ End to end, still nothing injected: stamped a range **1.00 → 5.00**, which cau
 **Nothing of his was lost:** `bank/passages/` holds only its README, so no capture was half-written. The whole exchange cost him a click and a typed name.
 
 **The rule this adds, and it is the third of the day's delivery rules** (after *never deliver a paste*, §358, and *never verify by assigning the property under test*, §363): **say which layer changed.** Static file → reload the page. `server.js` → restart node. A hand-off that does not distinguish them will fail exactly this way, silently, and look like the feature is broken.
+
+## §365. "deleting meta shape doesn't delete accents only crescendos" — they were my strikes, in a group of their own, and that was the bug
+
+*(2026-09-10, session 8, Claude Code / Opus 5.)*
+
+**Read his own saved scores before answering.** What survives the delete is not a crescendo-card accent. In `SeptetSec03-Materials-C` the fifteen leftovers are **`crescStrikes()`'s piano strikes** — lane 2, `srcKind: 'strike'`, `technique: 'plucked'`, `performanceNotes: "strike at the end of wc-2052"`. He calls them accents, which is right musically; they are mine.
+
+**The fault, in one line.** The crescendos and the META shape carry `grp-swell-nt-cs-014-0`. My strikes carried **`grp-cresc-strike`** — a group of their own, invented in §356 so `clear()` could find them. The score deletes a gesture by gathering everything sharing the META shape's groupId (`composer.html:5760`), so the crescendos and the shape went and the strikes stayed: orphans on the piano lane with no handle.
+
+**And the existing code already had the right answer.** `cresc_card.js` gives an accent `groupId: wc.groupId || null` — it joins the crescendo's group and dies with it. **Fourth time today** the fault is the same shape: a rule present in one sibling and not carried to the other. Here it is the worst version — a NEW group invented where the existing one was the answer, purely so my own tool could find its work.
+
+**Fixed by separating the two jobs the groupId was doing.**
+
+- **Belonging** is the crescendo's: `groupId: c.groupId || null`. The strike is part of the gesture — deleted with its META shape, and it will move and behave like every other part.
+- **Ownership** is a marker on the object: `properties.crescStrike = { of: <crescendo id> }`. `clear()` and `set()` find their work by that, not by a group. The old tag is still recognised, so this morning's scores still answer to both.
+
+**`crescStrikes.adopt()`** re-homes strikes made by the first build, reading the parent from the marker or from the note the first build already wrote on every one of them. A strike whose crescendo is gone is **left alone and reported** — deleting it is his call, not the tool's.
+
+**Verified headless against his real files, simulating the score's own delete:**
+
+| | before | after |
+|---|---|---|
+| strikes in their crescendo's group (fresh run) | 0 of 23 | **23 of 23** |
+| a META delete would remove | 24 objects, 0 strikes | **47 objects, 23 of 23 strikes**, 0 left behind |
+| `set()` still reaches them | — | 23 of 23 |
+| `clear()` still removes them | — | 0 left |
+| **his `SeptetSec03-Materials-C`, 15 orphans** | META delete takes **0** | after `adopt()`, takes **15 of 15** |
+
+**For his two saved scores:** a reload, then `crescStrikes.adopt()` once in each of C and D, and the leftovers become part of the gesture. Fresh runs need nothing.
