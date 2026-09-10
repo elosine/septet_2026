@@ -10281,3 +10281,38 @@ So **muted is nearly right on its own** once the unearned +7 goes — a 2.7 dB e
 **And the number changes when it moves.** Split out, plucked no longer passes the `Piano Kontakt` fader, so it leaves the **+7 behind**: the new track wants **7 − 8.7 = −1.7 dB**, not −8.7. Recorded here because getting that wrong would be silent and would look exactly like the trim not working.
 
 **Nothing was changed.** The rack is his.
+
+## §370. "plucked to -8.7 saved" — PP2 landed exactly as predicted; the plucked trim did not take, and the per-pitch numbers prove it
+
+*(2026-09-10, session 8, Claude Code / Opus 5. Re-run of §366's probe after his rack changes. `01-REC-260910_1551.wav`.)*
+
+**Rack read first:** `Piano Kontakt` +7.00 · `Piano PP2` **0.00**.
+
+| voice | §366 | now | predicted in §368 | vs `main` |
+|---|---|---|---|---|
+| main | −25.8 | **−25.8** | unchanged | — |
+| plucked | −17.1 | **−18.0** | −25.8 | **+7.8 dB** |
+| harmonics | −12.6 *(clipped)* | **−19.5** | **−19.6** | +6.3 dB |
+| muted | −16.1 | **−23.0** | **−23.1** | +2.8 dB |
+
+**Two of the three are settled and the arithmetic of §368 was exact.** Taking the unearned +7 off PP2 put harmonics at −19.5 against a prediction of −19.6, and muted at −23.0 against −23.1. **And the clipping is gone** — highest sample peak now **−5.3 dBFS**, where §366 hit 0.0. The +7 was the cause, as §368 said.
+
+**But the plucked trim did not take, and this is not a judgement call.** A gain change moves every pitch by the same amount. His three did not move together:
+
+| pitch | §366 | now | change |
+|---|---|---|---|
+| 43 | −17.5 | −20.7 | **−3.2** |
+| 65 | −16.5 | −16.1 | **+0.4** |
+| 86 | −17.1 | −17.1 | **0.0** |
+
+**Pitch 86 is identical to a tenth of a dB and 65 got slightly louder.** That is sample-to-sample variation between two takes — Spitfire round robins — not a −8.7 dB trim, which would have put all three near −26. The overall −0.9 dB is that variance, not his edit.
+
+**What it is not:** he did not touch the wrong voice by mistake — `main` is unchanged at −25.8 across both runs, so the Steinway was not moved. **Diagnosis stops there:** the AI cannot see inside his Kontakt, and per AI_METHODOLOGY no clear evidence means no diagnosis. The check is his — does that knob still read −8.7, and is it the Plucked Piano instrument's own volume rather than a control outside the signal path.
+
+**The remaining trims, from clean unclipped readings, to match `main` at −25.8:**
+
+| voice | now | **still needs** |
+|---|---|---|
+| plucked | −18.0 | **−7.8 dB** |
+| harmonics | −19.5 | **−6.3 dB** |
+| muted | −23.0 | **−2.8 dB** |
