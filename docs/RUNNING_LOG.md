@@ -10179,3 +10179,26 @@ End to end, still nothing injected: stamped a range **1.00 → 5.00**, which cau
 | **his `SeptetSec03-Materials-C`, 15 orphans** | META delete takes **0** | after `adopt()`, takes **15 of 15** |
 
 **For his two saved scores:** a reload, then `crescStrikes.adopt()` once in each of C and D, and the leftovers become part of the gesture. Fresh runs need nothing.
+
+## §366. The piano's alternate voices, measured at last — plucked is +8.8 dB over the Steinway, harmonics +13.2 and clipping
+
+*(2026-09-10, session 8, Claude Code / Opus 5. Answers §357, which found they had never been probed. His word: "can we run the piano alt voices probe now?")*
+
+**One change to make it one run instead of three.** `--strike` took a single technique per instrument (`STRIKE_TECHS[k] = v`). It now takes a list — `--strike piano=plucked+harmonics+muted` — so all three alternate voices are measured **against `main` in the same recording**, which is the only way the comparison is honest. The analyzer needed nothing: it already keys its `techniques` map off each note's own tech name (`analyze_balance.py:322`). **Regression checked** by running the pre-edit tool out of git and diffing: the default schedule is identical, 78 notes, 13 plan rows, 224 s.
+
+**A data-loss near-miss, caught before running.** `analyze_balance.py` defaults `--out` to **`bank/balance.json`** — a piano-only run would have overwritten the whole ensemble file, destroying the flute, bass clarinet and string measurements of 2026-09-04. Directed to `bank/balance_piano_alt.json` instead; `bank/balance.json` verified untouched afterwards, still 7 instruments, still stamped 2026-09-04.
+
+**The run:** `01-REC-260910_1535.wav`, 71.4 s, 24 notes, three pitches × velocity 127/64 per voice. REC armed, both piano tracks armed and monitored, checked first.
+
+| voice | channel | plugin | 127 dB(K) | vs `main` |
+|---|---|---|---|---|
+| **main** — 8Dio 1969 Legacy | 1 | Kontakt | **−25.8** | — |
+| **plucked** — Spitfire | 2 | *same Kontakt instance* | **−17.1** | **+8.8 dB** |
+| **harmonics** — Prepared Piano 2 | 3 | PP2 | **−12.6** | **+13.2 dB** |
+| **muted** — Prepared Piano 2 | 5 | PP2 | **−16.1** | **+9.7 dB** |
+
+**His ear was right and the number is large.** *"the plucked piano seems very loud"* — it is **8.8 dB** over the Steinway, and it has been riding the piano's **+7 dB** trim, which was derived from `main` alone (§357). Harmonics is worse still.
+
+**Harmonics CLIPPED** — pitch 49 at velocity 127 hit sample peak 0.0 dBFS, so **−12.6 is an understatement**; its true level is higher. That voice needs the PP2 track lowered and a re-run before its number can be trusted. Recorded as a known-uncertain reading rather than a measurement.
+
+**The awkward part, which is structural and his to decide.** One trim per instrument in `sandbox/instruments.js` (`piano: { balanceDb: 7 }`), and in the rack the voices are paired **the wrong way for a fader fix**: `Piano Kontakt` carries **main + plucked**, `Piano PP2` carries **harmonics + muted**. So a track fader cannot separate plucked from main — they are one Kontakt instance. It *can* address harmonics and muted together, though they differ from each other by 3.5 dB. **Nothing was changed:** the rack is his, and which of the three routes to take (Kontakt's own per-instrument output, a per-voice trim in the app, or written velocity) is a decision, not a fix.

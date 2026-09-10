@@ -101,7 +101,12 @@ const preMs = 300;                                                       // CC7 
 const vels = opt('vels', '127,64').split(',').map(Number);
 const only = opt('only', '').split(',').filter(Boolean);
 const noStrike = args.includes('--nostrike');
-opt('strike', '').split(',').filter(Boolean).forEach(kv => { const [k, v] = kv.split('='); STRIKE_TECHS[k] = v; });
+// --strike takes ONE OR MORE extra techniques per instrument: `--strike piano=plucked+harmonics+muted,cello=gettato_vel`
+// (composer 2026-09-10, RUNNING_LOG §366 — the piano has three alternate voices and one run should measure them all against the
+// same reference in the same recording; §357 found none of them had ever been probed). Instruments are separated by commas,
+// techniques within one instrument by `+`. The analyzer already keys its `techniques` map off each note's own tech name
+// (probes/analyze_balance.py:322), so it needed no change.
+opt('strike', '').split(',').filter(Boolean).forEach(kv => { const [k, v] = kv.split('='); STRIKE_TECHS[k] = v.split('+').filter(Boolean); });
 const out = path.resolve(ROOT, opt('out', bend ? 'probes/bend_schedule.json' : ranges ? 'probes/ranges_schedule.json' : held ? 'probes/held_schedule.json' : proof ? 'probes/proof_schedule.json' : sweep2 ? 'probes/sweep2_schedule.json' : sweep ? 'probes/sweep_schedule.json' : 'probes/balance_schedule.json'));
 
 const notes = [];
@@ -191,13 +196,26 @@ for (const role of ((proof || ranges || bend) ? [] : sweep2 ? ['ref', 'vel'] : s
         if (!I) { console.error('no recipe for', inst); process.exit(1); }
         let tech;
         if (role !== 'strike') tech = PLAIN_PREF.map(k => I.techniques.find(q => q.key === k)).find(Boolean) || I.techniques[0];
-        else { const k = STRIKE_TECHS[inst]; if (!k) continue; tech = I.techniques.find(q => q.key === k); if (!tech) { console.error('no technique ' + k + ' on ' + inst); process.exit(1); } }
-        plan.push({ inst, role, tech: tech.key });
-        if (role === 'ref') add(inst, I, tech, role, [127], [127]);
-        else if (role === 'vel' && sweep2) { const [vl, rp] = SWEEP2[inst] || [null, 1]; add(inst, I, tech, role, vl || SWEEP_VELS, [127], rp); }
-        else if (role === 'vel') add(inst, I, tech, role, SWEEP_VELS, [127]);
-        else if (role === 'cc7') add(inst, I, tech, role, [cc7Vel], SWEEP_CC7S);
-        else add(inst, I, tech, role);
+        // an instrument may carry SEVERAL extra voices; every other role has exactly one technique
+        const techList = [];
+        if (role !== 'strike') techList.push(tech);
+        else {
+            const ks = [].concat(STRIKE_TECHS[inst] || []);
+            if (!ks.length) continue;
+            for (const k of ks) {
+                const t2 = I.techniques.find(q => q.key === k);
+                if (!t2) { console.error('no technique ' + k + ' on ' + inst); process.exit(1); }
+                techList.push(t2);
+            }
+        }
+        for (const tq of techList) {
+            plan.push({ inst, role, tech: tq.key });
+            if (role === 'ref') add(inst, I, tq, role, [127], [127]);
+            else if (role === 'vel' && sweep2) { const [vl, rp] = SWEEP2[inst] || [null, 1]; add(inst, I, tq, role, vl || SWEEP_VELS, [127], rp); }
+            else if (role === 'vel') add(inst, I, tq, role, SWEEP_VELS, [127]);
+            else if (role === 'cc7') add(inst, I, tq, role, [cc7Vel], SWEEP_CC7S);
+            else add(inst, I, tq, role);
+        }
     }
 }
 const schedule = { generatedAt: new Date().toISOString(), source: 'sandbox/instruments.js', order: ORDER.filter(k => !only.length || only.includes(k)),
