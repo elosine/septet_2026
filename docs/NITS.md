@@ -252,3 +252,11 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   `probes/cc7_map.json`.
 - Not the cause of "they come in as long tones" (§344's suspect is the shared channel and the un-called slot pool), but it blunts the
   peak of every crescendo in the piece. Worth a look when the crescendos are being tuned by ear.
+
+## 2026-09-10 — two Insert buttons that write different KINDS of object (RUNNING_LOG §345)
+
+- `Insert @ playhead` (the drawer's own) and `Insert swells` (the swell foot's) look interchangeable and are not: the first wrote
+  plain notes, the second writes crescendo objects. Routed for now — in crescendo mode the main insert delegates to the swell one.
+- **The real fix is fewer buttons.** The sound switch already says what to write (note · chord · crescendo), so there should be ONE
+  insert that honours it. `Insert swells` is then redundant. Belongs with PLAN 1q's revision.
+- Same for Hear: one Hear that plays what that one Insert would write.

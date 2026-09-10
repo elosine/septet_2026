@@ -1123,6 +1123,15 @@ const D = {
     // ------------------------------------------------------------------ insert / replace (Q)
     insert(replace) {
         const C = C_(); if (!C || !this.strike) return;
+        // §345: with the sound switch on CRESCENDO, `notesFor` returns swell-LENGTH notes (swell_ui wraps it so Hear gets the
+        // lengths) — and this insert would then write them as PLAIN long notes: bricks, not crescendos. The crescendo objects
+        // only ever came from the swell foot's own `Insert swells`. His principle (§AC item 2) is that Hear plays what Insert
+        // writes; so Insert @ playhead now writes what Hear is playing.
+        if (this.isSwell && this.isSwell() && !(this.isFill && this.isFill()) && this.swellInsert) {
+            if (!replace) return this.swellInsert();
+            this.setStatus('the sound is CRESCENDO — swells are written at the PLAYHEAD; use Insert @ playhead, or set the sound back to attack', true);
+            return;
+        }
         const notes = this.notesFor('orch');   // PLAN 1k: in chords mode these are the dealt chords of the MARKED span (nothing marked = the whole)
         if (!notes.length) { this.setStatus(this.isChords() ? 'nothing to insert — build a chord list and Generate' : 'nothing to insert — shuffle or assign first', true); return; }
         let t = +C.getTimeAtPlayhead().toFixed(3);

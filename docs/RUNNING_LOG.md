@@ -9687,3 +9687,27 @@ The answer given: **this one was not model-sensitive** — he named the symptom 
 **The five-second test that discriminates** (his, not the AI's — the §340 rule): **insert ONE crescendo, alone, nothing overlapping it, and play it.** If that one swells, the cause is the shared channel and the cure is the slot pool. If it is still flat, the cause is upstream in the rack and no amount of rotation will help.
 
 **Not fixed tonight, deliberately.** The cure (`assignSlots` + `applySlots`, both already written) needs `pool[instKey]` — extra Kontakt slots on free channels in HIS rack — which is a decision about his REAPER setup, not a code change. **This is the first thing today that is genuinely his to answer before anything can be built.**
+
+## §345. "tools inserting long tones, bricks instead of crescendos" — TWO Insert buttons, and the obvious one wrote plain notes
+
+**His correction, and it was the whole answer** (2026-09-10): *"I know crescendo's work. We've inserted several. This is not a contact thing. Um, tools inserting long tones, bricks instead of crescendos. what we need to figure out is how to insert crescendos instead of just bricks of long tiles from the tool."*
+
+**§344 was chasing the wrong thing, and the correction is recorded as a correction, not an edit** (§324's rule). I had gone after the rack, the CC7 map and the un-called slot pool. He already knew crescendos work — he has inserted and heard them. The defect was never in playback. **It is that the drawer has TWO insert buttons and the obvious one writes the wrong object.** The measurements in §344 stand (the ramp is real; the saturation NIT is real); the diagnosis in it does not.
+
+**The mechanism, read.** `swell_ui.js` wraps the drawer's note builder — its own comment says so: *"notesFor gains the swell lengths, so Hear and the insert both see them."*
+
+```
+D._notesForPlain = D.notesFor;
+D.notesFor = function (mode) {
+    if (this.isSwell() && !this.isFill()) return this.swellNotes(mode);
+    return this._notesForPlain.apply(this, arguments);
+};
+```
+
+So with the switch on crescendo, `notesFor('orch')` returns notes carrying the **swell LENGTH** (`durMs` = the percentage of the gap) and a `swell: true` flag. `Hear orchestrated` uses that and ramps. But the drawer's main **`insert()` also calls `notesFor('orch')`** — and writes what it gets as **ordinary notes**. Long durations, no `properties.cresc`, no ramp. **A plain 2-second note draws as a flat filled bar and sounds as a long tone: his bricks, exactly.**
+
+The real crescendo objects only ever came from the swell foot's separate **`Insert swells`** (`swellInsert()` → `Cresc.make`). Verified in node that `make()` is correct: `nodes 0 → 10`, `segments exponential/0.4`, `surge 5× ppp→fff`. **Nothing was wrong with the crescendo; the wrong function was writing it.**
+
+**Fixed, on his own principle.** §AC item 2, his: *"Hear plays what Insert writes."* The converse had never held. **`Insert @ playhead` now writes what Hear is playing** — in crescendo mode it delegates to `swellInsert()`. `Insert @ original time` and `@ after previous` say plainly that swells are written at the playhead rather than writing bricks silently.
+
+**The pattern, FOURTH time in one session** — §342 (the run needs players the pick never supplied), §343 (CN-34 enforced in the chord deal only), the NITS sweep, and now this. **A behaviour wired into one path and not its sibling.** Here it was worse than a missing rule: two buttons that look interchangeable, one of which silently produces a different KIND of object. → NITS: the two inserts should not have been separate buttons at all; the sound switch already says what to write.
