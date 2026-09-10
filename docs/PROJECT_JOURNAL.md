@@ -150,6 +150,21 @@ the morph's fade-in, and then the editing interface around the piano parts he re
   (CN-60, §329 — the top line agreed, no plan; `one voice` stays the default). PLAN 1q built · 1k step 7 planning · 1p/1r built.
 - **Pending decisions:** none. **Resume reads:** RUNNING_LOG §324–334 in order; STRIKES_TOOL §AA–§AD; NITS 2026-09-10.
 
+**NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md; restored 2026-09-10 after
+it was found missing from this repo's CLAUDE.md, which is why the advice had gone quiet. Keep current.)*
+
+| # | Step | Model | Clear first? |
+|---|---|---|---|
+| 1 | **His ear on the overnight revision** — the walk in STRIKES_TOOL §AD; chords at an onset, the crescendo's % and anchor, Hear's ramp, accents in the score's card | conversation, either — **Opus** while he is listening and reporting | no |
+| 2 | **Fix what he marks** — small, named defects against a built thing | **Opus** | no |
+| 3 | **A defect whose cause is unknown**, or a verdict on how a gesture should behave | **Fable** | **yes** — wrap on Opus, `/clear`, switch, `/postclear` |
+| 4 | **The piano as two hands** (CN-60, §329) — the top line is agreed and written; steps 1–5 are a spec | **Opus** | **yes** at the start (a fresh context for a build) |
+| 5 | The six older listenings (1o · 1n · 1m · 1k · 1j · 1i) and the three tails | **Opus** to run, **Fable** only for a verdict that reframes | at each chunk wrap |
+
+**The standing rule:** Fable for the turns where a wrong reading costs a day; Opus for every turn where
+the plan is already on paper. Wrap on Opus, always.
+
+
 **Open at session end** *(written cold, 2026-09-09)*:
 
 - **Task and state:** the AI's work is done and pushed; **nothing is in flight.** He is composing and recording piano into

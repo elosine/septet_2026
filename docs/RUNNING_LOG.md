@@ -1718,7 +1718,8 @@ Reaper (Actions → ReaScript: Load… → bridge.lua) — the first proof is th
 ## §53. 0k.1 PROVEN: the bridge answers in 31 ms
 
 Composer ran `bridge.lua` through "ReaScript: Run ReaScript (EEL2 or Lua)…" (the console:
-`[bridge] 0.1 (2026-09-04) watching …eaperridge\inbox`). The first check from the AI
+`[bridge] 0.1 (2026-09-04) watching …
+eaperridge\inbox`). The first check from the AI
 had run seconds before the load — no heartbeat; the second: **alive, Reaper 7.72/x64, the
 rack project, 10 tracks**, and the `tracks` job answered with the whole rack — **0 ms inside
 Reaper, 31 ms round trip** through the files — every track's name, fader (all 0 dB), arm (all
@@ -9525,3 +9526,20 @@ and everything that touches that note calls it.**
 **His words** (09:40): *"I thought we were adding something to the main score like maybe double click the main time display?"* — right; `goTo()` had only reached the console. Built: **double-click the floating time readout** → a box over it with the current time → type `575`, or `9:35`, or `9:35.5` → ENTER goes there (and, as `goTo` does, tells chordRun and crescRun that this is the place); ESC or a click away cancels. In `chord_run.js` beside `goTo`.
 
 **Found on the walk, by a real ENTER:** the first build removed the box on ENTER, which fired the box's own `blur`, whose handler removed it again — a `NotFoundError` thrown inside the ENTER path before `goTo` ran, so the playhead never moved. Now a `closed` flag and the blur listener detached before the remove; the value read first. Verified on a `zz-ai-goto` copy with real events (the pane had opened his `cres2strike-work` by itself after the deleted copies — moved off it before touching anything): `9:35` → 575.00 and both tools' `last.at` 575; `600.5` → 600.50; ESC leaves it; the box gone each time.
+
+## §336. "could I also get credit management advice through the session ... but then is inconsistent" — THE RHYTHM was never in this repo's CLAUDE.md
+
+**What prompted it** (2026-09-10, after the postclear): he asked for strategies for **Fable credit hygiene** — *"So I have a separate fable allotment. than the rest. That's the one I'm more concerned about. I've been trying to be better about clearing more often, but are there other things I can do to optimize my fable credits?"* — and then, choosing (c) from the four offered: *"but could I also get credit management advice through the session? This was happening for a while, but then is inconsistent. So it would be something like, make a plan. This would be fable, and then clear and switch to opus to implement the plan or something like that. Some small bit of advice for bigger chunks."*
+
+**The finding, before anything was written.** He was describing a practice this project already had. **THE RHYTHM** — his own, from day 25 of the tuba piece (2026-08-23): *"plan out the next logical few steps, have a recommended model-switching rhythm, including a clear rhythm, and then AI can say 'this is a good time to clear' or 'this is a good time to switch models'."* It is written up in `docs/SESSION_HYGIENE.md` § Model strategy, which cites **"CLAUDE.md § THE RHYTHM"** as the standing instruction. In piece #4 that section exists (`for_seven_tubas/CLAUDE.md` line 82). **In the septet's CLAUDE.md it does not** — the copy-forward of 2026-09-03 dropped it. So the standing habit loaded in no septet session, and the advice appeared only when a session happened to read SESSION_HYGIENE. **That is exactly the inconsistency he reported**, and it had a cause, not a mood.
+
+**What was decided and done.**
+- **THE RHYTHM restored to `CLAUDE.md`**, ported from piece #4 with the provenance of the loss stated in place. So it loads every session, like the lab journal and the morph notes.
+- **The Fable-credit rules folded into it**, because the routing advice IS the credit advice once the allotment is separate: fewest round trips (batch independent calls, no exploratory reads) · no screenshots unless the screenshot is the proof asked for · **never a subagent on Fable** (`model: "sonnet"` if one is ever justified) · **wrap on Opus** · a lean `Resume reads`.
+- **The `Resume reads` rule tightened** in `.claude/commands/checkpoint.md` and in the user-level `~/.claude/skills/checkpoint/SKILL.md`: *name what the NEXT STEP needs, not what this session wrote.* The evidence was this morning's own postclear — the list read "RUNNING_LOG §324–334 in order; STRIKES_TOOL §AA–§AD; NITS 2026-09-10" for a next step of *wait for his ear*, and every line of it is then re-read in every turn of the session that follows.
+- **The running thread `NEXT STEPS · MODEL · CLEAR` written into journal §2** — the five steps in front of us with a model and a clear-first answer each. It is the first thing a model reads after a clear, so it is where the advice survives.
+- **A pointer added to `docs/HOW_WE_WORK.md`** § Session routines, since that is the reference card.
+
+**The advice itself, as given** (the AI's, marked): the meter moves with context size × turns, and a cold cache re-pays the whole prefix (this session's cache lives an hour); thinking is output, the priciest kind, so **effort level is a lever beside the model** — medium for routine sessions, max for the hard ones. **Routing by model is the biggest lever** and nothing else comes close: session-start, postclear, session-end, journal and doc updates, commits, verification walks and small fixes are Opus work. **Fixed overhead is worth one look:** every session carries the instructions of every attached connector, and this one carries Google Drive, Calendar, Chrome, computer use and scheduled tasks, none of which this project uses — detaching what the project never touches trims every turn. `/explain-usage` measures a real session; `/context` in a terminal `claude` breaks down the overhead.
+
+**Not done, and why:** nothing was changed about the effort level or the attached connectors — both are his to set, and neither is a repo file.

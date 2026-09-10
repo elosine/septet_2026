@@ -18,6 +18,13 @@
 
 Canonical procedures: `docs/SESSION_PROTOCOL.md`. The journal remembers so you don't have to.
 
+**THE RHYTHM (standing, restored 2026-09-10 — CLAUDE.md § THE RHYTHM):** at every juncture the AI
+states the next 2–4 steps with **model + clear** per step and announces switch/clear points without
+being asked; the running thread is journal §2 → **NEXT STEPS · MODEL · CLEAR**. The rules for the
+recommendation, and the Fable-credit rules that go with them (fewest round trips · no screenshots
+unless they are the proof · never a subagent on Fable · wrap on Opus · a lean `Resume reads`), are in
+CLAUDE.md and `docs/SESSION_HYGIENE.md` § Model strategy.
+
 ---
 
 ## The plan (`docs/PLAN.md`)

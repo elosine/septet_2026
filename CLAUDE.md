@@ -80,6 +80,36 @@ need — goes into **`docs/MORPH_NOTES.md`** §3 the moment it is said, dated, v
 adjusted for the current use now; the file is the memory for its revision into *"an easier to use all purpose tool"* after this
 piece or the next. Not optional, never asked for — the lab journal's rule, for one tool.
 
+## THE RHYTHM — next steps · model · clear (standing, composer 2026-08-23; restored here 2026-09-10)
+
+*(It was in piece #4's CLAUDE.md and the copy-forward dropped it, so it loaded in no
+septet session and the advice came only sometimes — his own verdict, 2026-09-10:
+"This was happening for a while, but then is inconsistent.")*
+
+At every juncture — a chunk wrap, a milestone, a mode change (execution ↔ conversation),
+or when asked "where are we" — the AI **states the next 2–4 logical steps, each with a
+recommended model and whether to clear before it**, and **says out loud when a good clear
+or switch point has arrived** ("this is a good time to clear", "switch to Opus for this").
+Not when asked — as a habit, like the lab journal. The rule for the recommendation is in
+`docs/SESSION_HYGIENE.md` § Model strategy (Fable = judgment / verdicts / design;
+Opus = executing a written plan; clear at milestones and mode changes; the cold-execution
+test before any clear).
+
+**The running thread lives in `docs/PROJECT_JOURNAL.md` §2 → "NEXT STEPS · MODEL · CLEAR".**
+Keep it current as steps complete — it is the first thing a model reads after a clear, and
+it must say what is next, with what model, right now.
+
+**Fable's allotment is separate and is the one he watches** (composer, 2026-09-10). So the
+routing advice is also credit advice, and these bind every Fable turn:
+- **Fewest round trips.** Batch independent reads and tool calls into one response; no
+  exploratory reads; name the question before opening anything.
+- **No screenshots unless the screenshot IS the proof he asked for.** `read_page` otherwise.
+- **Never spawn a subagent on Fable.** If one is ever justified, pass `model: "sonnet"`.
+- **Wrap on Opus.** `/checkpoint` and `/session-end` are mechanical work at the long,
+  expensive end of a session: switch to Opus, wrap, `/clear`, switch to Fable, `/postclear`.
+- **A `Resume reads:` list names what the NEXT STEP needs, not what the last session wrote.**
+  Every line on it is re-read in every turn of the session that follows.
+
 ## Apps (after PLAN 0b lands)
 
 - **Composer score:** `node score/server.js` → http://localhost:5300/composer.html

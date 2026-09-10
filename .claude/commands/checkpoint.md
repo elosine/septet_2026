@@ -34,7 +34,11 @@ Do these in order, then say plainly that it is safe to `/clear`.
    - the latest deliverable, by name/path
    - **the next concrete step, phrased as an instruction**
    - **`Resume reads:` — the exact docs/sections the next session must read beyond
-     journal §2** (or `Resume reads: nothing beyond §2`)
+     journal §2** (or `Resume reads: nothing beyond §2`). **Name what the NEXT STEP
+     needs, not what this session wrote** — every line on the list is re-read in every
+     turn of the session that follows, and on Fable that lands on the allotment he
+     watches (2026-09-10). A session resuming to "wait for his ear" needs almost nothing;
+     the history is in RUNNING_LOG and stays there until a question sends someone to it.
    - decisions pending the composer
    - **the deliberately-uncommitted list:** run `git status --short` and name every
      untracked or modified path being left alone **and why** — composer scores mid-edit,
@@ -45,4 +49,4 @@ Do these in order, then say plainly that it is safe to `/clear`.
    a dead context is unrecoverable. **Push follows the commit automatically** (D8).
 
 4. **Say it plainly:** what was committed, what was left, that it is safe to `/clear` and
-   then `/postclear` — and **which model to resume on**.
+   then `/postclear` — and **which model to resume on** (THE RHYTHM, CLAUDE.md).
