@@ -9543,3 +9543,16 @@ and everything that touches that note calls it.**
 **The advice itself, as given** (the AI's, marked): the meter moves with context size × turns, and a cold cache re-pays the whole prefix (this session's cache lives an hour); thinking is output, the priciest kind, so **effort level is a lever beside the model** — medium for routine sessions, max for the hard ones. **Routing by model is the biggest lever** and nothing else comes close: session-start, postclear, session-end, journal and doc updates, commits, verification walks and small fixes are Opus work. **Fixed overhead is worth one look:** every session carries the instructions of every attached connector, and this one carries Google Drive, Calendar, Chrome, computer use and scheduled tasks, none of which this project uses — detaching what the project never touches trims every turn. `/explain-usage` measures a real session; `/context` in a terminal `claude` breaks down the overhead.
 
 **Not done, and why:** nothing was changed about the effort level or the attached connectors — both are his to set, and neither is a repo file.
+
+## §337. "How do I create a relatively gradual acceleration?" — the first calibration of words to numbers on the run's dials
+
+**What prompted it** (2026-09-10, on Opus): *"In the Stripes drawer. How do I create a relatively gradual acceleration?"* — the strikes drawer, the rhythm column with `shape → accel`.
+
+**What was measured, not asserted.** `score/public/accel_calc.js` is pure, so the answer was computed from the module itself rather than read off the tooltips. The finding worth keeping:
+
+- **`steep` is not "how gradual".** It decides how many notes fit between the gap box and `→ last`; the tempo change is set entirely by those two numbers. On 800 → 400: `steep .85` = **5 notes, 2.92 s**; `steep .95` = **14 notes, 8.10 s** — the same start, the same landing, the same ratio of change, only the density and the length differ. This is the thing a tooltip cannot say and the reason the dials have felt unintuitive (§328's *"the controls are too unintuitive and hard to use"*).
+- **The recipe given:** `run → geometric` (a constant ratio is what reads as a steady push) · the gap box and `→ last` **close together** (the real lever) · then `steep` 0.93–0.97, or type `notes` and let steep follow.
+- **The series, measured:** 700→500 notes 12 = `700 677 654 633 612 592 572 553 535 517 500` · 800→400 steep .95 = `800 758 719 … 422 400` · 800→120 steep .85 = `800 673 567 … 143 120` (a collapse).
+- **The other shapes, on 800→400 / notes 12:** `linear ms` takes the same ms off every gap (`800 760 720 … 400`) — the evenest available · `late rush` is gradual for most of its length then falls (`800 794 778 752 …`) · `S-curve` ease 2 sits still, accelerates, then lands (`800 793 768 718 646 566 495 445 417 403 400`) · `two-phase` knee .5 holds 800 for six gaps then rushes · **`curve` with the dial below zero spends the whole change on the first gap** (dial −3: `800 423 408 403 401 400 …`) — worth avoiding unless that lurch is wanted.
+
+**Why this is an entry and not a chat answer:** §W closed with *"the calibration of words to numbers waits for his go."* This is the first of it — one word (*gradual*) mapped to the dials with measured series behind it. Nothing here was heard; the numbers are the arithmetic and his ear is the judge.
