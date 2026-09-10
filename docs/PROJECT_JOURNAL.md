@@ -206,6 +206,21 @@ the plan is already on paper. Wrap on Opus, always.
 - **Resume reads: nothing beyond §2.** (If he raises a crescendo/audition question, RUNNING_LOG §349–350 carry the measured numbers; if he
   raises chords mode, §348. Do not read them pre-emptively.)
 
+**CHECKPOINT (mid-session checkpoint, 2026-09-10 evening — session 8, Claude Code / Opus 5). RUNNING_LOG §352–375.**
+
+- **THE MODE CHANGE, and it is his:** he named the one-fault-at-a-time loop as the problem — *"these tools are failing me and just getting in the way ... I need to find a way to move forward."* **`docs/SWEEP_LIST.md` is now open: a fault met while composing is LOGGED, not fixed.** Nine entries, most closed the same day. He also asked, repeatedly and rightly, for **short answers** — no analysis dumps.
+- **Task and state:** nothing in flight. Everything below is built, verified and **pushed**; **none of it has been heard or judged by him.**
+- **Latest deliverables** — all need a **hard reload**, and `passages` also needed a **server restart** (done):
+  - `score/public/passages.js` + `bank/passages/` + `tools/passage_roundtrip.js` — **the passage collection.** Capture a range (`from`/`to` boxes with playhead stamps) or the whole score; insert at the playhead in any score. Round-trip proved field-by-field, 1029 objects / 225 groups on `piece-septet`. **He has captured two passages.**
+  - `score/public/cresc_strikes.js` — `crescStrikes()` · `.set({tech,dyn,ms})` · `.clear()` · `.adopt()`.
+  - `score/public/composer.html` + `note_card.js` — duplicate a note: CTRL+drag, and a `duplicate` button in the note card.
+  - `tools/balance_schedule.js` — `--strike inst=a+b+c` (several voices per instrument) and **`--nocc7`**.
+- **NEXT CONCRETE STEP — two lines on the rack, then stop:** set the **`PianoPlucked Kontakt` fader from −7.8 to −1.2** (it double-applies the old track's +7 — §375), and check **track 7's Kontakt no longer has Plucked Piano loaded** (both tracks take `Piano` omni, so a leftover doubles channel 2). Then **his ear on everything above.** If plucked still sounds wrong, one `--nocc7` probe settles it in 90 seconds — he has asked for **no more probes** until then.
+- **THE FINDING TO CARRY FORWARD, and he found it:** the balance probe sent **CC7 127** before every note. CC7 is MIDI volume and the plugins bind their volume knobs to it, so it **wiped every trim he set** — and since the app sends CC7 for dynamics too, **a plugin volume knob is the wrong place for a per-voice trim in this system.** Three AI explanations preceded it, all wrong, all about his plugins rather than what the probe transmits.
+- **Pending decisions from him:** whether to commit his two passages (`bank/passages/accentedcres01*.json`) — the store is a committed directory by design, but they are his work.
+- **Deliberately uncommitted** — all his, none the AI's: `bank/panel_snapshots.json` (his takes) · `reaper/septet_rack.rpp` (**the piano split he built this evening** — his to save) · `bank/passages/accentedcres01.json` + `-2.json` (his captures) · `scores/SeptetSec03-Materials-B/-C/-D/-a.json` (his working scores).
+- **Resume reads: nothing beyond §2.** (If he raises the piano balance, RUNNING_LOG §373 and §375 carry the numbers; if he raises a tool fault, `docs/SWEEP_LIST.md`. Do not read them pre-emptively.)
+
 **Open at session end** *(written cold, 2026-09-09)*:
 
 - **Task and state:** the AI's work is done and pushed; **nothing is in flight.** He is composing and recording piano into
