@@ -909,6 +909,44 @@ for the planning method; keeping the rhythm dials while browsing harmonies (a on
 
 - *(he will continue to give feature requests — they land here, verbatim, as they come)*
 
+## AC · The revision — a sketch to keep the thread, NOT a plan — `2026-09-10, 03:00 (RUNNING_LOG §328; CN-59; PLAN 1q)`
+
+His verdict on the night, verbatim, after the crescendo run had been made as a console line instead (§325–327):
+
+> *"I struggled with trying to get the right pitches in order. So maybe this is just a matter of that transposition thing or being able to
+> select manual pitches. I struggled with trying to get instruments in a certain order playing certain pitches, and then decoupling the
+> two. So the pitches go up while the instruments rotate. And then I think we already realized that the swells weren't already in the
+> drawer with the playback. And then just the controls are too unintuitive and hard to use. So I have to ask AI every time. How to make
+> things a certain way. It's too... the turnaround's too slow. … at some point, I wanna revise this whole drawer and be able to do things
+> like what we just did. … we can develop a more formal plan in a later time. But I just don't wanna lose this thread."*
+
+**What the night showed** *(AI reading, marked as such — to be planned with the planning method when he says so):* the whole gesture was
+made from **five independent choices**, each one line: the RHYTHM (a take, or four numbers) · WHO (an order of players, wrapping) · WHAT
+PITCH (a rule: a climb from a note, a list, a harmony dealt) · WHAT SOUND (a swell of length × the gap, a strike, a trill) · WHERE (a time).
+That is §L's three lists with two more — the sound and the place. The drawer binds them: a pitch belongs to a voice and a voice to a
+player, the rhythm to the strike, the sound to a switch in another band, and the audition does not play the sound it writes.
+
+**Things to consider, in his order of pain:**
+
+1. **Decouple pitch from player.** The pitch rule is its own row, dealt per onset — a typed list · *transpose the whole shape* (AB2) · a
+   climb from a note by an interval · a harmony from the banners dealt in turn or shuffled (1k's deck) · a chain (1n's) · the accent's own.
+   The players' rotation is its own row — a typed order, wrapping (his *"bass clarinet cello viola violin two violin one flute"*), round
+   robin or free, and an order that HOLDS every cycle (AB3). Chords mode already deals per onset; that engine generalises.
+2. **Hear plays what Insert writes.** A swell auditions with its ramp (fill mode's hear path is the model — NITS 2026-09-09 evening); a
+   trill as a trill. Until this holds, nothing else in the drawer can be judged by ear.
+3. **One screen, five rows, one Generate, SPACE.** The rows are the five choices, each with a *source* menu and its few numbers; the
+   turnaround is: change one number, SPACE. Everything else (the keyboard, the voicing presets, the seeds, the bands) is a second screen.
+4. **Standing settings as profiles.** *"always five seventy five for this one. Always that order of instruments, always those pitches"* —
+   a gesture's fixed choices are one click, not five controls; `crescRun.profiles.s3` is the first one.
+5. **The console line stays** as the power path, and the drawer is a FACE on the same function: crescRun's options = the drawer's rows,
+   so what he types and what he clicks never disagree. (§325's lesson: a handful of numbers was enough for the whole gesture.)
+6. **Rhythms as a collection** (CN-58): a take's rhythm, or a played one, chosen by name — the *rhythm from* menu of §AA, extended to
+   the takes and to new played sequences ingested as #46 ….
+7. **A new drawer or the old one modified?** The engines exist and are pure — `accel_calc`, `strike_chords`, `cresc`, `harm_source`,
+   `time_containers`, `fill`'s anchors — so a GESTURE drawer could be new and thin, with the strikes drawer kept for what it is good
+   at (a played strike on the keyboard, voiced and orchestrated by hand). Which — the planning method decides, with his walk-through in
+   his own words first (HOW_WE_WORK, 2026-09-07: *the script is the unit, not the ticket*).
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the

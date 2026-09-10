@@ -212,3 +212,5 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 - *Refinement (same evening):* **fill mode's own Hear DOES ramp** (STRIKES_TOOL §Y: "the crescendos get a CC7 ramp and their secco cut") —
   it is the sound switch's Hear (1o, notes and chords modes through `play()`) that sends plain note-ons. Fill mode's hear path is the
   model to copy when this is fixed.
+- **The strikes drawer's revision** is sketched in STRIKES_TOOL §AC (2026-09-10 03:00) and stands as PLAN 1q, `todo` — not a nit, a
+  thread: his own verdict on the night, kept so it is not lost.

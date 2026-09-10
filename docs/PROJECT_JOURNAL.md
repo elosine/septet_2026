@@ -122,6 +122,11 @@ the morph's fade-in, and then the editing interface around the piano parts he re
   SPACE plays it, the next call replaces it, `crescRun.keep()` freezes one. Rejected for now: a card (B), the drawer (its Hear never
   swells — plain note-ons; NITS). **He has heard none of it yet.** The morning's feature queue AB1–AB3 (STRIKES_TOOL §AB) is collected, not built.
 
+- **The thread not to lose (03:00; §328; PLAN 1q; STRIKES_TOOL §AC):** the strikes drawer is to be REVISED — the gesture as five choices
+  (rhythm · players · pitch rule · sound · place), Hear playing what Insert writes, profiles for standing settings, the console line as
+  the power path. A sketch is written; the plan comes by the planning method when he says so. **crescRun now has: the rhythm from a take,
+  the s3 profile (575 · his order · Bb3 up), a length ramp; his lines of the night are in §326–327.**
+
 **Open at session end** *(written cold, 2026-09-09)*:
 
 - **Task and state:** the AI's work is done and pushed; **nothing is in flight.** He is composing and recording piano into
