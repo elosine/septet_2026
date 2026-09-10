@@ -137,6 +137,10 @@ the morph's fade-in, and then the editing interface around the piano parts he re
   `git checkout pre-revision-2026-09-10 -- score/public` puts the drawer back as it was at 06:30; or, in the app, the console line
   `localStorage.setItem('septet.strikes.classic', '1')` and a reload leaves the new files out. He checks in in the morning.
 
+- **THE OVERNIGHT BUILD IS DONE (09:00; §334):** the sound at an onset (a chord dealt over the free players — double-click a dot, click a
+  row), the crescendo's `% of the gap` and `starts / ends on the onset`, Hear that swells, the ACCENT row in the score's crescendo card.
+  Verified on a copy with real events; **unheard by him.** The morning's walk is in STRIKES_TOOL §AD. Revert: the tag, or the classic flag.
+
 **Open at session end** *(written cold, 2026-09-09)*:
 
 - **Task and state:** the AI's work is done and pushed; **nothing is in flight.** He is composing and recording piano into

@@ -424,6 +424,8 @@ const D = {
 
     // ------------------------------------------------------------------ orchestration (E, F)
     instOf(lane) { const T = TRK(); return lane >= 0 && T[lane] ? INST()[T[lane].instKey] : null; },
+    // strike_sounds.js (2026-09-10): the voice a chord's note takes on a lane with no row voice — the strike voice he set (U2 revised), else the plain one
+    strikeTechOf(lane) { const inst = this.instOf(lane), T = TRK(); const key = STRIKE_DEFAULT[(T[lane] || {}).instKey]; return (inst && (inst.techniques || []).some(t => t.key === key)) ? key : plainTech(inst); },
     // U2: the strike default for a player, if its roster has it; else the plain technique
     defaultTech(lane) { const T = TRK(), inst = this.instOf(lane); if (!inst) return null; const want = T[lane] && STRIKE_DEFAULT[T[lane].instKey]; if (want && (inst.techniques || []).some(q => q.key === want)) return want; return plainTech(inst); },
     techOf(v) { return this.techOfR(v); },

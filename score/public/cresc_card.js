@@ -21,6 +21,11 @@ const INP = 'background:#1a1a22;color:#cca;border:1px solid #333;padding:2px 5px
 const BTN = 'background:#2a2a30;color:#ddd;border:1px solid #555;border-radius:3px;padding:2px 7px;font-size:11px;cursor:pointer';
 const LIT = 'background:#C2410C;color:#fff;border:1px solid #e07040;border-radius:3px;padding:2px 7px;font-size:11px;cursor:pointer';
 
+// REVERT (2026-09-10): localStorage septet.strikes.classic = '1' + reload leaves the ACCENT row out
+let CLASSIC = false; try { CLASSIC = !!localStorage.getItem('septet.strikes.classic'); } catch (e) {}
+// the accent's default voice per instrument — the strike voices he set on 2026-09-04 (U2 revised; strike_drawer.js STRIKE_DEFAULT)
+const STRIKE_DEFAULT = { flute: 'pizzicato', bass_clarinet: 'slap', violin1: 'bartok_vel', violin2: 'bartok_vel', viola: 'gettato_vel', cello: 'gettato_vel', piano: 'main' };
+const ACCENT_MS = 140;
 const CARD = {
     el: null, wc: null, _key: null, _ctxTimer: null, _born: false,
 
@@ -75,6 +80,16 @@ const CARD = {
             '<div><div style="color:#888">articulation</div><select id="ccTech" style="' + INP + ';width:100%"></select></div>',
             '<label style="display:flex;gap:5px;align-items:center" title="secco: the strings damp the string at the end for an abrupt cut; in the sound a CC7 cut so nothing rings past it (CN-49)">',
             '<input id="ccSecco" type="checkbox"> secco <span style="color:#777">(the cut)</span></label>',
+            // 2026-09-10 (his commission, STRIKES_TOOL §AD): the ACCENT row — a strike on the crescendo's start or its end, by another player
+            (CLASSIC ? '' : '<div id="ccAcc" style="border-top:1px solid #3a3a44;padding-top:5px">'
+            + '<div style="color:#888">accent <span style="color:#666">— a strike at the start or the end, by a player of your choice</span></div>'
+            + '<div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">'
+            + '<select id="ccAccAt" style="' + INP + ';width:70px"><option value="start">at start</option><option value="end">at end</option></select>'
+            + '<select id="ccAccLane" style="' + INP + ';width:56px" title="who plays the accent"></select>'
+            + '<input id="ccAccPitch" style="' + INP + ';width:44px" title="the accent\'s pitch — the crescendo\'s by default, folded into that player\'s range">'
+            + '<button id="ccAccAdd" style="' + BTN + '">+ add</button><button id="ccAccHear" style="' + BTN + '" title="hear the accent alone">&#9834;</button><button id="ccAccDel" style="' + BTN + '" title="remove the accent at this end">&#10005;</button></div>'
+            + '<select id="ccAccTech" style="' + INP + ';width:100%;margin-top:3px" title="the accent\'s articulation — that player\'s strike voice by default"></select>'
+            + '<div id="ccAccWho" style="color:#9a9"></div></div>'),
             // PLAN 1n step 4: the fill row, shown only for a long that belongs to a fill pass — its anchors and where they point
             '<div id="ccFill" style="display:none;border-top:1px solid #3a3a44;padding-top:5px">',
             '<div style="color:#888">this long is part of a fill</div>',
@@ -105,6 +120,17 @@ const CARD = {
         q('#ccTech').value = wc.technique;
         q('#ccSecco').checked = cr.secco !== false;
         this.paintFill();
+        if (!CLASSIC) {
+            q('#ccAccLane').innerHTML = TRK().map((t, i) => '<option value="' + i + '">' + esc(t.short || t.label) + '</option>').join('');
+            q('#ccAccLane').value = String((lane + 1) % Math.max(1, TRK().length));   // another player by default (CN-54: two players)
+            this.accentLaneChanged(true); this.paintAccent();
+            q('#ccAccAt').addEventListener('change', () => this.paintAccent());
+            q('#ccAccLane').addEventListener('change', () => this.accentLaneChanged(true));
+            q('#ccAccAdd').addEventListener('click', () => this.accentAdd());
+            q('#ccAccHear').addEventListener('click', () => this.accentHear());
+            q('#ccAccDel').addEventListener('click', () => this.accentRemove());
+            ['ccAccPitch', 'ccAccTech', 'ccAccLane', 'ccAccAt'].forEach(id => q('#' + id).addEventListener('keydown', k => { if (k.key === ' ') k.stopPropagation(); }));
+        }
         q('#ccDur').value = (wc.endSeconds - wc.startSeconds).toFixed(2);
         this.paint();
         q('#ccX').addEventListener('click', () => this.close());
@@ -251,6 +277,8 @@ const CARD = {
         const C = HOST(), wc = this.wc; if (!C || !wc) return;
         C.pushUndoState();
         C.objects = C.objects.filter(o => o !== wc);
+        // its accents go with it (2026-09-10)
+        Object.values((wc.properties.cresc && wc.properties.cresc.accents) || {}).forEach(id => { const a = C.objects.find(o => o.id === id); if (!a) return; C.objects = C.objects.filter(o => o !== a); const e2 = C.elementCache.get(a.id); if (e2) e2.remove(); C.elementCache.delete(a.id); });
         const el = C.elementCache.get(wc.id); if (el) el.remove();
         C.elementCache.delete(wc.id);
         C.objects.forEach(o => { if (o.mutedBy === wc.id) { delete o.mutedBy; C.renderWaveCurve(o); } });   // the grey original comes back (§277)
@@ -258,6 +286,77 @@ const CARD = {
         C.curveDirty(); C.markDirty(); C.scheduleConflictRefresh();
         C.saveStatus.textContent = 'crescendo removed — its note is back';
         this.close();
+    },
+    // ---- the ACCENT (2026-09-10, his commission): a short strike on the crescendo's start or its end, by a player of his choice, with its
+    // own pitch and articulation; a note of its own in the crescendo's group, remembered on the crescendo (properties.cresc.accents)
+    accentObj(at) { const C = HOST(), wc = this.wc; const acc = (wc && wc.properties.cresc && wc.properties.cresc.accents) || {}; return acc[at] ? C.objects.find(o => o.id === acc[at]) || null : null; },
+    accentTechs(lane) { const C = HOST(); return (C.trackTechniques && C.trackTechniques(lane)) || []; },
+    accentRange(lane, techKey) {
+        const C = HOST(), inst = C.trackInstrument ? C.trackInstrument(lane) : null, techs = this.accentTechs(lane), t = techs.find(x => x.key === techKey) || null;
+        return [t && t.rangeLow != null ? t.rangeLow : (inst && inst.rangeLow != null ? inst.rangeLow : 21), t && t.rangeHigh != null ? t.rangeHigh : (inst && inst.rangeHigh != null ? inst.rangeHigh : 108)];
+    },
+    accentLaneChanged(fillDefaults) {
+        const q = id => this.el.querySelector(id), Cr = C_(), wc = this.wc; if (!q('#ccAccLane')) return;
+        const lane = +q('#ccAccLane').value, techs = this.accentTechs(lane), instKey = (TRK()[lane] || {}).instKey;
+        const def = techs.some(t => t.key === STRIKE_DEFAULT[instKey]) ? STRIKE_DEFAULT[instKey] : (techs[0] ? techs[0].key : '');
+        q('#ccAccTech').innerHTML = techs.map(t => '<option value="' + esc(t.key) + '">' + esc(t.label || t.key) + '</option>').join('');
+        const existing = this.accentObj(q('#ccAccAt').value);
+        q('#ccAccTech').value = existing && existing.layer === lane ? existing.technique : def;
+        if (fillDefaults) {
+            const [lo, hi] = this.accentRange(lane, q('#ccAccTech').value);
+            const f = Cr.foldInto(wc.sonifyNote, lo, hi);
+            q('#ccAccPitch').value = existing && existing.layer === lane ? Cr.nm(existing.sonifyNote) : (f ? Cr.nm(f.pitch) : Cr.nm(wc.sonifyNote));
+        }
+    },
+    paintAccent() {
+        const q = id => this.el.querySelector(id), Cr = C_(); if (!q('#ccAccAt')) return;
+        const at = q('#ccAccAt').value, a = this.accentObj(at), other = this.accentObj(at === 'start' ? 'end' : 'start');
+        if (a) { q('#ccAccLane').value = String(a.layer); this.accentLaneChanged(false); q('#ccAccTech').value = a.technique; q('#ccAccPitch').value = Cr.nm(a.sonifyNote); q('#ccAccAdd').textContent = 'update'; }
+        else q('#ccAccAdd').textContent = '+ add';
+        const T = TRK();
+        q('#ccAccWho').textContent = (a ? 'at ' + at + ': ' + (T[a.layer] || {}).short + ' ' + Cr.nm(a.sonifyNote) + ' (' + (this.accentTechs(a.layer).find(t => t.key === a.technique) || {}).label + ')' : 'no accent at the ' + at)
+            + (other ? ' · the ' + (at === 'start' ? 'end' : 'start') + ' has one too' : '');
+    },
+    accentAdd() {
+        const C = HOST(), Cr = C_(), wc = this.wc, q = id => this.el.querySelector(id); if (!C || !wc) return;
+        const at = q('#ccAccAt').value, lane = +q('#ccAccLane').value, tech = q('#ccAccTech').value;
+        const m = /^([A-Ga-g])(#|b)?(-?\d)$/.exec(String(q('#ccAccPitch').value || '').trim());
+        const base = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+        let midi = m ? base[m[1].toUpperCase()] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0) + (parseInt(m[3], 10) + 1) * 12 : (isFinite(+q('#ccAccPitch').value) ? +q('#ccAccPitch').value : NaN);
+        if (!isFinite(midi)) { this.status('a pitch, please — C4, F#3, Bb2 …', true); return; }
+        const [lo, hi] = this.accentRange(lane, tech); const f = Cr.foldInto(midi, lo, hi); if (f) midi = f.pitch;
+        const t = at === 'end' ? wc.endSeconds : wc.startSeconds;
+        C.pushUndoState();
+        let a = this.accentObj(at);
+        const vel = 110, lv = Math.max(1, Math.round((vel / 127) * 100) / 10);
+        if (!a) { a = { id: 'wc-' + (C.nextId++), type: 'waveCurve', properties: {} }; C.objects.push(a); }
+        Object.assign(a, { layer: lane, groupId: wc.groupId || null, startSeconds: +t.toFixed(3), endSeconds: +(t + ACCENT_MS / 1000).toFixed(3),
+            nodes: [{ pos: 0, y: lv, smooth: 0.25 }, { pos: 1, y: lv, smooth: 0.25 }], segments: [{ model: 'power', slope: 0 }],
+            color: '#C9A05A', fillMode: 'bottom', opacity: 0.55, performanceNotes: 'accent at the ' + at + ' of a crescendo (' + Cr.nm(midi) + ')',
+            srcKind: 'strike', sonifyNote: midi, technique: tech, sonifyMode: 'plain', recVel: vel });
+        a.properties.accent = { of: wc.id, at };
+        wc.properties.cresc.accents = Object.assign({}, wc.properties.cresc.accents || {}, { [at]: a.id });
+        const old = C.elementCache.get(a.id); if (old) old.remove(); C.elementCache.delete(a.id);
+        if (C.renderWaveCurve) C.renderWaveCurve(a); else C.renderAll();
+        C.curveDirty(); C.markDirty(); if (C.scheduleConflictRefresh) C.scheduleConflictRefresh();
+        this.paintAccent(); this.status('accent at the ' + at + ': ' + (TRK()[lane] || {}).short + ' ' + Cr.nm(midi) + (f && f.fold ? ' (folded)' : ''));
+    },
+    accentHear() {
+        const q = id => this.el.querySelector(id), D = root.StrikeDrawer; if (!D || !D.hearOne) { this.status('the strikes drawer is not loaded', true); return; }
+        const a = this.accentObj(q('#ccAccAt').value);
+        const lane = a ? a.layer : +q('#ccAccLane').value, tech = a ? a.technique : q('#ccAccTech').value;
+        const Cr = C_(); const m = /^([A-Ga-g])(#|b)?(-?\d)$/.exec(String(q('#ccAccPitch').value || '').trim()); const base = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+        const midi = a ? a.sonifyNote : (m ? base[m[1].toUpperCase()] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0) + (parseInt(m[3], 10) + 1) * 12 : 60);
+        D.hearOne(lane, tech, midi); this.status('hearing ' + (TRK()[lane] || {}).short + ' ' + Cr.nm(midi));
+    },
+    accentRemove() {
+        const C = HOST(), wc = this.wc, q = id => this.el.querySelector(id); if (!C || !wc) return;
+        const at = q('#ccAccAt').value, a = this.accentObj(at); if (!a) { this.status('no accent at the ' + at); return; }
+        C.pushUndoState();
+        C.objects = C.objects.filter(o => o !== a); const el = C.elementCache.get(a.id); if (el) el.remove(); C.elementCache.delete(a.id);
+        const acc = Object.assign({}, wc.properties.cresc.accents || {}); delete acc[at]; wc.properties.cresc.accents = acc;
+        C.curveDirty(); C.markDirty(); if (C.scheduleConflictRefresh) C.scheduleConflictRefresh();
+        this.paintAccent(); this.status('accent at the ' + at + ' removed');
     },
     makeDraggable(box, handle) {
         let sx = 0, sy = 0, bx = 0, by = 0, on = false;

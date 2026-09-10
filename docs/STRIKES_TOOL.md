@@ -952,7 +952,7 @@ player, the rhythm to the strike, the sound to a switch in another band, and the
    at (a played strike on the keyboard, voiced and orchestrated by hand). Which — the planning method decides, with his walk-through in
    his own words first (HOW_WE_WORK, 2026-09-07: *the script is the unit, not the ticket*).
 
-## AD · The revision, commissioned — `2026-09-10 06:30: built overnight without a plan, at his word; the revert point is the git tag \`pre-revision-2026-09-10\` and the runtime flag below (RUNNING_LOG §333; PLAN 1q)`
+## AD · The revision, commissioned — `built 2026-09-10 by 09:00 (RUNNING_LOG §333–334): the sound at an onset (strike_sounds.js), the crescendo's percentage and begin/end anchor and a Hear that ramps (swell_ui.js), accents on crescendos in the score's card (cresc_card.js); the rhythm part untouched; the revert point is the git tag pre-revision-2026-09-10 and the runtime flag septet.strikes.classic — his ear next`
 
 > *"I would like to ask for a revision of the things that were built earlier. and we can dispense with the plan. I did careful planning, and it
 > wasn't very fruitful. So I'm going to ask you to try to work independently and see if this makes things any better. If you could have some
@@ -1002,7 +1002,19 @@ player, the rhythm to the strike, the sound to a switch in another band, and the
      on the strike), in the crescendo's group.
 - **Chords mode and fill mode stay** as they are, untouched; the new sound choices live in notes mode. **The revert:** the tag, or in the
   running app the flag `localStorage.setItem('septet.strikes.classic', '1')` + reload, which leaves the new files out.
-- **Built on a copy, walked with real clicks and keys, committed at the wrap; his ear in the morning.**
+- **Built on a copy, walked with real clicks and keys, committed at the wrap; his ear in the morning.** — done by 09:00; §334 has the numbers.
+
+**How to use it (the morning's walk):**
+1. Strikes drawer, mode `notes`, a strike or a harmony on the keyboard, the rhythm as always (as played · even · accel · `= ms`).
+2. **A chord on an onset:** double-click a dot on the rhythm strip → the onset's card; click a row in the left column (a strike, a blast, a chord
+   shape …) → the chord is dealt there over the players free at that moment, in their row voices; `all onsets ← this harmony` / `← banner in
+   turn` for the whole pattern; `note` puts one back; `take` decides which notes when there are more than free players.
+3. **Crescendos:** the head's `sound → crescendo`; the foot's swell group: `% of the gap` (100 = onset to onset), `starts on the onset` /
+   `ends on the onset`, the dynamics, secco; **Hear orchestrated now swells**; `Insert swells`.
+4. **An accent:** in the score, click a crescendo → the card → the ACCENT row: at start / at end · the player · the pitch · the articulation ·
+   `+ add` · ♪ · ✕.
+5. **If anything is worse:** console `localStorage.setItem('septet.strikes.classic', '1')` + reload = the drawer as it was; or the git tag.
+
 
 ## Open questions for the composer (only what blocks the next piece)
 

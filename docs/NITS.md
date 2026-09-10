@@ -224,3 +224,12 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 - **No `clear` on the chord list** beside `add all`; and the foot's five piano buttons (none · one · top+bottom · rest · all) stay on screen
   in chords mode where they set nothing — hide them there.
 - **The console lines (crescRun · chordRun) are the working path meanwhile.**
+
+## 2026-09-10 09:00 — after the overnight revision (RUNNING_LOG §334)
+
+- **The piano becomes a swell in 1o** when it holds a note of the pattern (pre-existing; "a piano cannot swell", CN-34) — a chord's or a
+  strike's piano note should stay a hit when the switch is on crescendo.
+- **A browser that already held `lengthMul` 1.2** keeps it until the box is touched — the 100 % default only reaches a fresh cfg.
+- **The sound card has no harmony menu of its own** — the left column is the menu (his "choose something from the drawer"); if he wants a
+  menu in the card, it is the banners' groups (harm_source_ui's `harmGroups()`), one line.
+- **Hear with the ramp** could not be heard in the pane (Web MIDI blocked); the path is fill mode's, which he has heard — his ear first.

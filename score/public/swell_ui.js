@@ -24,6 +24,9 @@ const D = root.StrikeDrawer;
 if (!D) { console.warn('[swell_ui] the strikes drawer is not loaded'); return; }
 
 const CR = () => root.Cresc;
+const E_ = () => (typeof MorphEmit !== 'undefined') ? MorphEmit : (root.MorphEmit || null);
+// REVERT (2026-09-10): localStorage septet.strikes.classic = '1' + reload keeps 1o exactly as it was — the 1.2 default, no anchor, the old Hear
+let CLASSIC = false; try { CLASSIC = !!localStorage.getItem('septet.strikes.classic'); } catch (e) {}
 const C_ = () => (typeof Composer !== 'undefined') ? Composer : (root.Composer || null);
 const TRK = () => (typeof TRACKS !== 'undefined') ? TRACKS : (root.TRACKS || []);
 const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
@@ -33,10 +36,11 @@ const BTN = 'background:#2a2a30;color:#ddd;border:1px solid #555;border-radius:3
 const SW_DEFAULTS = {
     sound: 'attack',        // 'attack' | 'cresc'
     lengthMode: 'gap',      // 'gap' = a multiple of the local gap (his choice, §304) · 'typed' = one length for the pass
-    lengthMul: 1.2,         // × the gap to the next onset of the rhythm
+    lengthMul: CLASSIC ? 1.2 : 1.0,   // × the gap to the next onset — shown as a PERCENTAGE: 100 = one onset to the next (his 2026-09-10 default; 1o opened at 1.2)
     lengthS: 2,             // the typed length
     dynLo: 0, dynHi: 10,    // ppp → fff, 1l's own default range
     secco: true,            // CN-49
+    anchor: 'start',        // 2026-09-10: the pattern marks each crescendo's BEGINNING ('start', as 1o always did) or its END ('end')
 };
 
 Object.assign(D, {
@@ -94,7 +98,28 @@ Object.assign(D, {
     swellNotes(mode) {
         const notes = this._notesForPlain(mode);
         if (!this.isSwell()) return notes;
-        return notes.map(n => Object.assign({}, n, { durMs: this.swellLenMs(n, notes), swell: true }));
+        // a crescendo is the ORDINARY voice (his rule, 2026-09-10: "the crescendos are the ones we discussed, ord / senza vib vel"); the row's
+        // strike voice is for hits — so Hear routes a swell the way Insert writes it
+        const C = C_(); const ord = lane => { const t = C && C.ordinaryTech ? C.ordinaryTech(lane) : null; return t ? t.key : null; };
+        if (!CLASSIC && this.sw().anchor === 'end') return this.swellEndNotes(notes).map(n => Object.assign(n, { tech: ord(n.lane) || n.tech }));
+        return notes.map(n => Object.assign({}, n, { durMs: this.swellLenMs(n, notes), swell: true, tech: CLASSIC ? n.tech : (ord(n.lane) || n.tech) }));
+    },
+    // THE END ANCHOR (2026-09-10, his commission): each crescendo ENDS on its onset and began one gap × the percentage earlier — the gap
+    // BEFORE the onset, the first onset taking the gap after it (so the first reaches back before the pattern); never back into that
+    // player's own previous sound (its previous onset is the END of its previous crescendo + the 150 ms rest); the 0.30 s floor holds.
+    swellEndNotes(notes) {
+        const s = this.sw(), CRe = CR();
+        const minMs = ((CRe && CRe.DEFAULTS.minS) || 0.3) * 1000, restMs = 150;
+        const on = notes.map(x => x.onMs).sort((a, b) => a - b);
+        return notes.map(n => {
+            const earlier = on.filter(t => t < n.onMs - 1), later = on.filter(t => t > n.onMs + 1);
+            const gap = earlier.length ? n.onMs - earlier[earlier.length - 1] : (later.length ? later[0] - n.onMs : ((CRe && CRe.DEFAULTS.fallbackS) || 5) * 1000);
+            let want = s.lengthMode === 'typed' ? (+s.lengthS || 2) * 1000 : gap * (+s.lengthMul || 1);
+            const mine = notes.filter(x => x.lane === n.lane && x.onMs < n.onMs - 1).map(x => x.onMs).sort((a, b) => b - a);
+            if (mine.length) want = Math.min(want, Math.max(minMs, n.onMs - mine[0] - restMs));
+            const len = Math.round(Math.max(minMs, Math.min(60000, want)));
+            return Object.assign({}, n, { onMs: n.onMs - len, durMs: len, swell: true, endsAt: n.onMs });
+        });
     },
 
     // THE READOUT: what will actually sound, measured rather than predicted (§303 — the formula over-predicts once the ensemble saturates,
@@ -143,9 +168,9 @@ Object.assign(D, {
         const before = C.objects.length;
         C.objects = C.objects.filter(o => o.groupId !== group);
         const replaced = before - C.objects.length;
-        let maxEnd = t, made = 0;
+        let maxEnd = t, minStart = t, made = 0;   // an END-anchored pass begins before the playhead
         notes.forEach(n => {
-            const at = +(t + n.onMs / 1000).toFixed(3), dur = n.durMs / 1000;
+            const at = +(t + n.onMs / 1000).toFixed(3), dur = n.durMs / 1000; minStart = Math.min(minStart, at);
             const tech = (C.ordinaryTech && C.ordinaryTech(n.lane)) || {};
             const wc = CRe.make(at, n.midi, { lane: n.lane, tech: tech.key, label: (TRK()[n.lane] || {}).short }, [],
                 { durS: dur, dynLo: +s.dynLo, dynHi: +s.dynHi, secco: s.secco !== false });
@@ -154,7 +179,7 @@ Object.assign(D, {
             wc.groupId = group;
             wc.properties.cresc.end = 'swell';
             wc.properties.cresc.swell = { from: this.strike ? this.strike.id : null, mode: this.cfg.mode || 'notes',
-                                          lengthMode: s.lengthMode, lengthMul: +s.lengthMul, onMs: n.onMs };
+                                          lengthMode: s.lengthMode, lengthMul: +s.lengthMul, onMs: n.onMs, anchor: s.anchor === 'end' ? 'end' : 'start', endsAt: n.endsAt != null ? n.endsAt : null };
             wc.performanceNotes = 'cresc ' + wc.properties.cresc.shape + ' ' + wc.properties.cresc.ratio + '× '
                 + CRe.dynName(+s.dynLo) + '→' + CRe.dynName(+s.dynHi) + ' ' + dur.toFixed(2) + ' s (swell strike)';
             maxEnd = Math.max(maxEnd, at + dur);
@@ -162,7 +187,7 @@ Object.assign(D, {
             made++;
         });
         C.objects.push({ id: 'wc-' + (C.nextId++), type: 'waveCurve', layer: ML, groupId: group,
-            startSeconds: t, endSeconds: Math.round(maxEnd * 1000) / 1000,
+            startSeconds: Math.round(minStart * 1000) / 1000, endSeconds: Math.round(maxEnd * 1000) / 1000,
             nodes: [{ pos: 0, y: 7.8, smooth: 0 }, { pos: 1, y: 7.8, smooth: 0 }], segments: [{ model: 'power', slope: 0 }],
             color: '#C2410C', fillMode: 'bottom', opacity: 0.5, performanceNotes: 'swell strike (drag = move, box = stretch)', properties: {} });
         C.lastInsertGroup = group;
@@ -194,9 +219,10 @@ Object.assign(D, {
         sf.style.cssText = 'display:none;gap:6px;align-items:center;white-space:nowrap';
         sf.innerHTML = '<span style="color:#555">|</span><span style="color:#9a9">swell</span>'
             + '<select id="skSwMode" style="' + INP + '" title="the length of each swell: a multiple of the gap to the next onset (it follows an accelerando by itself), or one typed length for the whole pass">'
-            + '<option value="gap">× the gap</option><option value="typed">a typed length</option></select>'
-            + '<input id="skSwMul" type="number" step="0.1" min="0.2" style="' + INP + ';width:46px" title="the multiplier — and it IS the density dial: about 1 gives 2.5 voices sounding, 2 gives 4, 3 saturates">'
+            + '<option value="gap">% of the gap</option><option value="typed">a typed length</option></select>'
+            + '<input id="skSwMul" type="number" step="10" min="20" style="' + INP + ';width:50px" title="the length as a PERCENTAGE of the gap to the next onset: 100 = one onset to the next, more = they overlap, less = air between — and it is the density dial: 100 gives about 2.5 voices sounding, 200 about 4, 300 saturates"><span id="skSwPct" style="color:#8a8">%</span>'
             + '<input id="skSwLen" type="number" step="0.1" min="0.3" style="' + INP + ';width:46px" title="the typed length in seconds"><span style="color:#8a8">s</span>'
+            + (CLASSIC ? '' : '<select id="skSwAnchor" style="' + INP + '" title="what the pattern marks: the BEGINNING of each crescendo (it starts on its onset and runs a percentage of the gap to the next) or its END (it ends on its onset and began a percentage of the gap before it; the first reaches back before the pattern)"><option value="start">starts on the onset</option><option value="end">ends on the onset</option></select>')
             + '<select id="skSwLo" style="' + INP + ';width:50px" title="the dynamic each swell starts from"></select>'
             + '<span style="color:#8a8">→</span>'
             + '<select id="skSwHi" style="' + INP + ';width:50px" title="the dynamic each swell reaches"></select>'
@@ -208,11 +234,12 @@ Object.assign(D, {
         const opts = (CRe ? CRe.DYN : ['ppp', 'fff']).map(d => '<option value="' + d + '">' + d + '</option>').join('');
         sf.querySelector('#skSwLo').innerHTML = opts; sf.querySelector('#skSwHi').innerHTML = opts;
         sf.querySelector('#skSwIns').addEventListener('click', () => this.swellInsert());
-        ['skSwMode', 'skSwMul', 'skSwLen', 'skSwLo', 'skSwHi', 'skSwSecco'].forEach(id => {
+        ['skSwMode', 'skSwMul', 'skSwLen', 'skSwLo', 'skSwHi', 'skSwSecco'].concat(CLASSIC ? [] : ['skSwAnchor']).forEach(id => {
             sf.querySelector('#' + id).addEventListener('change', () => {
                 const s = this.sw(), q = i => sf.querySelector('#' + i);
                 s.lengthMode = q('skSwMode').value;
-                s.lengthMul = +q('skSwMul').value || 1.2;
+                s.lengthMul = Math.max(0.2, (+q('skSwMul').value || 100) / 100);   // the box is a percentage
+                if (q('skSwAnchor')) s.anchor = q('skSwAnchor').value === 'end' ? 'end' : 'start';
                 s.lengthS = +q('skSwLen').value || 2;
                 s.dynLo = CRe ? CRe.dynHeight(q('skSwLo').value) : 0;
                 s.dynHi = CRe ? CRe.dynHeight(q('skSwHi').value) : 10;
@@ -234,7 +261,9 @@ Object.assign(D, {
         sf.style.display = (on && !(this.isFill && this.isFill())) ? 'inline-flex' : 'none';
         const q = i => sf.querySelector('#' + i);
         q('skSwMode').value = s.lengthMode;
-        q('skSwMul').value = s.lengthMul; q('skSwMul').style.display = s.lengthMode === 'gap' ? '' : 'none';
+        q('skSwMul').value = Math.round((+s.lengthMul || 1) * 100); q('skSwMul').style.display = s.lengthMode === 'gap' ? '' : 'none';
+        { const pct = sf.querySelector('#skSwPct'); if (pct) pct.style.display = s.lengthMode === 'gap' ? '' : 'none'; }
+        if (q('skSwAnchor')) q('skSwAnchor').value = s.anchor === 'end' ? 'end' : 'start';
         q('skSwLen').value = s.lengthS; q('skSwLen').style.display = s.lengthMode === 'typed' ? '' : 'none';
         if (CRe) { q('skSwLo').value = CRe.dynName(s.dynLo); q('skSwHi').value = CRe.dynName(s.dynHi); }
         q('skSwSecco').checked = s.secco !== false;
@@ -271,6 +300,41 @@ if (D.chordSeq) {
 if (D.paintMode) {
     const _paintMode = D.paintMode;
     D.paintMode = function () { _paintMode.apply(this, arguments); if (this.paintSound) this.paintSound(); };
+}
+// 4 · Hear plays a swell AS a swell (2026-09-10 — the NIT of 2026-09-09 closed): the drawer's play() sends plain note-ons, so with the
+// switch on crescendo the audition is scheduled here instead — the same routes and timers, plus the CC7 ramp fill mode's Hear uses (§Y)
+// and the secco cut. The piano's Hear and fill mode keep their own paths.
+if (!CLASSIC) {
+    const _play = D.play;
+    D.play = async function (mode) {
+        if (!(this.isSwell && this.isSwell()) || (this.isFill && this.isFill()) || mode === 'piano') return _play.apply(this, arguments);
+        const e = E_(); if (!this.strike || !e) return;
+        e.panic();
+        if (!await e.ensureMidi()) { this.setStatus(e._midiError || 'MIDI unavailable', true); return; }
+        const notes = this.notesFor(mode);
+        if (!notes.length) { this.setStatus('nothing to play — shuffle or assign first', true); return; }
+        const routes = {}; let skipped = 0;
+        notes.forEach(n => { const k = n.lane + '|' + n.tech; if (!(k in routes)) routes[k] = e.routeFor(n.lane, n.tech) || null; if (!routes[k]) skipped++; });
+        if (skipped === notes.length) { this.setStatus('no MIDI port for these players', true); return; }
+        const t0 = Math.min.apply(null, notes.map(n => n.onMs));
+        const base = performance.now() + 260; this.base = base; e._playing = true;
+        const shape = Math.exp(4 * 0.40);   // the standard surge, as fill mode's Hear plays it (§Y)
+        notes.forEach(n => {
+            const r = routes[n.lane + '|' + n.tech]; if (!r) return;
+            const on = base + (n.onMs - t0), dur = n.durMs;
+            if (r.tech && r.tech.cc0 != null) e._timers.push(setTimeout(() => { try { r.out.send([0xB0 | r.ch, 0, r.tech.cc0]); } catch (x) {} }, Math.max(0, on - 30 - performance.now())));
+            if (n.swell) {
+                for (let i = 0; i <= 16; i++) { const u = i / 16, v = Math.round(65 + 62 * Math.pow(u, shape)); e._timers.push(setTimeout(() => { try { r.out.send([0xB0 | r.ch, 7, v]); } catch (x) {} }, Math.max(0, on - 5 + u * dur - performance.now()))); }
+                if (this.sw().secco !== false) e._timers.push(setTimeout(() => { try { r.out.send([0xB0 | r.ch, 7, 0]); } catch (x) {} }, Math.max(0, on + dur - 10 - performance.now())));
+            } else e._timers.push(setTimeout(() => { try { r.out.send([0xB0 | r.ch, 7, 127]); } catch (x) {} }, Math.max(0, on - 5 - performance.now())));
+            e._timers.push(setTimeout(() => e.noteOn(r, n.midi, n.vel), Math.max(0, on - performance.now())));
+            e._timers.push(setTimeout(() => e.noteOff(r, n.midi), Math.max(0, on + dur - performance.now())));
+        });
+        const span = Math.max.apply(null, notes.map(n => n.onMs + n.durMs)) - t0 + 400;
+        e._timers.push(setTimeout(() => e.panic(), span + 700));
+        this.startPlayhead(span);
+        this.setStatus('hearing the swells with their ramps · ' + (notes.length - skipped) + ' notes' + (skipped ? ' · ' + skipped + ' had no port' : ''));
+    };
 }
 
 if (D.el) D.injectSwellUI();
