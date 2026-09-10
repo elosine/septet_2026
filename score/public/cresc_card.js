@@ -87,8 +87,10 @@ const CARD = {
             + '<select id="ccAccAt" style="' + INP + ';width:70px"><option value="start">at start</option><option value="end">at end</option></select>'
             + '<select id="ccAccLane" style="' + INP + ';width:56px" title="who plays the accent"></select>'
             + '<input id="ccAccPitch" style="' + INP + ';width:44px" title="the accent\'s pitch — the crescendo\'s by default, folded into that player\'s range">'
+            + '<span id="ccAccMidi" style="color:#8a8;min-width:26px" title="§351: the MIDI number of the pitch in the box"></span>'
             + '<button id="ccAccAdd" style="' + BTN + '">+ add</button><button id="ccAccHear" style="' + BTN + '" title="hear the accent alone">&#9834;</button><button id="ccAccDel" style="' + BTN + '" title="remove the accent at this end">&#10005;</button></div>'
             + '<select id="ccAccTech" style="' + INP + ';width:100%;margin-top:3px" title="the accent\'s articulation — that player\'s strike voice by default"></select>'
+            + '<label id="ccAccHoldWrap" style="display:flex;gap:4px;align-items:center;margin-top:3px" title="§351: the accent is HELD, ending exactly when the crescendo ends, instead of a 140 ms strike. Only for an accent at the start."><input id="ccAccHold" type="checkbox"> hold to the crescendo end</label>'
             + '<div id="ccAccWho" style="color:#9a9"></div></div>'),
             // PLAN 1n step 4: the fill row, shown only for a long that belongs to a fill pass — its anchors and where they point
             '<div id="ccFill" style="display:none;border-top:1px solid #3a3a44;padding-top:5px">',
@@ -125,6 +127,8 @@ const CARD = {
             q('#ccAccLane').value = String((lane + 1) % Math.max(1, TRK().length));   // another player by default (CN-54: two players)
             this.accentLaneChanged(true); this.paintAccent();
             q('#ccAccAt').addEventListener('change', () => this.paintAccent());
+            // §351: the MIDI echo follows the box live, whichever way he types the pitch
+            ['input', 'change'].forEach(ev => q('#ccAccPitch').addEventListener(ev, () => this.accentMidiEcho()));
             q('#ccAccLane').addEventListener('change', () => this.accentLaneChanged(true));
             q('#ccAccAdd').addEventListener('click', () => this.accentAdd());
             q('#ccAccHear').addEventListener('click', () => this.accentHear());
@@ -187,7 +191,7 @@ const CARD = {
     paint() {
         const Cr = C_(), wc = this.wc; if (!wc || !this.el) return;
         const cr = wc.properties.cresc, T = TRK();
-        this.el.querySelector('#ccWho').textContent = ((T[wc.layer] || {}).short || '') + ' ' + Cr.nm(wc.sonifyNote) + ' · ' + wc.startSeconds.toFixed(2) + ' s';
+        this.el.querySelector('#ccWho').textContent = ((T[wc.layer] || {}).short || '') + ' ' + Cr.nm(wc.sonifyNote) + ' (' + wc.sonifyNote + ') · ' + wc.startSeconds.toFixed(2) + ' s';   // §351
         this.el.querySelector('#ccShape').textContent = cr.shape + (cr.shape === 'line' ? '' : ' ' + cr.ratio + '×');
         this.el.querySelector('#ccHow').textContent = cr.end === 'toNextNote' ? 'to the next note' : cr.end === 'fallback' ? 'no next note' : 'typed';
     },
@@ -313,9 +317,25 @@ const CARD = {
         const at = q('#ccAccAt').value, a = this.accentObj(at), other = this.accentObj(at === 'start' ? 'end' : 'start');
         if (a) { q('#ccAccLane').value = String(a.layer); this.accentLaneChanged(false); q('#ccAccTech').value = a.technique; q('#ccAccPitch').value = Cr.nm(a.sonifyNote); q('#ccAccAdd').textContent = 'update'; }
         else q('#ccAccAdd').textContent = '+ add';
+        // §351: the hold tick is only meaningful at the START — an accent AT the end has nothing left to be held through.
+        { const hw = q('#ccAccHoldWrap'), hb = q('#ccAccHold');
+          if (hw && hb) { const canHold = at === 'start'; hw.style.opacity = canHold ? '1' : '0.4'; hb.disabled = !canHold;
+                          hb.checked = canHold && !!(a && a.properties && a.properties.accent && a.properties.accent.hold); } }
+        this.accentMidiEcho();
         const T = TRK();
-        q('#ccAccWho').textContent = (a ? 'at ' + at + ': ' + (T[a.layer] || {}).short + ' ' + Cr.nm(a.sonifyNote) + ' (' + (this.accentTechs(a.layer).find(t => t.key === a.technique) || {}).label + ')' : 'no accent at the ' + at)
+        const held = !!(a && a.properties && a.properties.accent && a.properties.accent.hold);
+        q('#ccAccWho').textContent = (a ? 'at ' + at + ': ' + (T[a.layer] || {}).short + ' ' + Cr.nm(a.sonifyNote) + ' (' + a.sonifyNote + ') · ' + (this.accentTechs(a.layer).find(t => t.key === a.technique) || {}).label + (held ? ' · held to the crescendo end (' + (a.endSeconds - a.startSeconds).toFixed(2) + ' s)' : '') : 'no accent at the ' + at)
             + (other ? ' · the ' + (at === 'start' ? 'end' : 'start') + ' has one too' : '');
+    },
+    // §351, his: "it has f five, but I also wanna see the midi number" — the box takes a NAME or a NUMBER, and this echoes
+    // whichever it is as the other, live, so the two readings are never in doubt.
+    accentMidiEcho() {
+        const q = id => this.el.querySelector(id), Cr = C_(); const box = q('#ccAccPitch'), out = q('#ccAccMidi');
+        if (!box || !out || !Cr) return;
+        const v = String(box.value || '').trim();
+        const m = /^([A-Ga-g])(#|b)?(-?\d)$/.exec(v), base = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+        const midi = m ? base[m[1].toUpperCase()] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0) + (parseInt(m[3], 10) + 1) * 12 : (isFinite(+v) && v !== '' ? +v : NaN);
+        out.textContent = isFinite(midi) ? (m ? '= ' + midi : '= ' + Cr.nm(midi)) : '';
     },
     accentAdd() {
         const C = HOST(), Cr = C_(), wc = this.wc, q = id => this.el.querySelector(id); if (!C || !wc) return;
@@ -326,20 +346,23 @@ const CARD = {
         if (!isFinite(midi)) { this.status('a pitch, please — C4, F#3, Bb2 …', true); return; }
         const [lo, hi] = this.accentRange(lane, tech); const f = Cr.foldInto(midi, lo, hi); if (f) midi = f.pitch;
         const t = at === 'end' ? wc.endSeconds : wc.startSeconds;
+        // §351, his: "the accent duration, it will end at the same time the Crescendo does" — held, not a 140 ms strike.
+        const holdBox = q('#ccAccHold'), hold = at === 'start' && !!(holdBox && holdBox.checked && !holdBox.disabled);
+        const endT = hold ? Math.max(t + 0.05, wc.endSeconds) : t + ACCENT_MS / 1000;
         C.pushUndoState();
         let a = this.accentObj(at);
         const vel = 110, lv = Math.max(1, Math.round((vel / 127) * 100) / 10);
         if (!a) { a = { id: 'wc-' + (C.nextId++), type: 'waveCurve', properties: {} }; C.objects.push(a); }
-        Object.assign(a, { layer: lane, groupId: wc.groupId || null, startSeconds: +t.toFixed(3), endSeconds: +(t + ACCENT_MS / 1000).toFixed(3),
+        Object.assign(a, { layer: lane, groupId: wc.groupId || null, startSeconds: +t.toFixed(3), endSeconds: +endT.toFixed(3),
             nodes: [{ pos: 0, y: lv, smooth: 0.25 }, { pos: 1, y: lv, smooth: 0.25 }], segments: [{ model: 'power', slope: 0 }],
-            color: '#C9A05A', fillMode: 'bottom', opacity: 0.55, performanceNotes: 'accent at the ' + at + ' of a crescendo (' + Cr.nm(midi) + ')',
+            color: '#C9A05A', fillMode: 'bottom', opacity: 0.55, performanceNotes: 'accent at the ' + at + ' of a crescendo (' + Cr.nm(midi) + ' / ' + midi + ')' + (hold ? ', held to its end' : ''),
             srcKind: 'strike', sonifyNote: midi, technique: tech, sonifyMode: 'plain', recVel: vel });
-        a.properties.accent = { of: wc.id, at };
+        a.properties.accent = { of: wc.id, at, hold };
         wc.properties.cresc.accents = Object.assign({}, wc.properties.cresc.accents || {}, { [at]: a.id });
         const old = C.elementCache.get(a.id); if (old) old.remove(); C.elementCache.delete(a.id);
         if (C.renderWaveCurve) C.renderWaveCurve(a); else C.renderAll();
         C.curveDirty(); C.markDirty(); if (C.scheduleConflictRefresh) C.scheduleConflictRefresh();
-        this.paintAccent(); this.status('accent at the ' + at + ': ' + (TRK()[lane] || {}).short + ' ' + Cr.nm(midi) + (f && f.fold ? ' (folded)' : ''));
+        this.paintAccent(); this.status('accent at the ' + at + ': ' + (TRK()[lane] || {}).short + ' ' + Cr.nm(midi) + ' (' + midi + ')' + (hold ? ' · held to the crescendo end' : '') + (f && f.fold ? ' · folded' : ''));
     },
     accentHear() {
         const q = id => this.el.querySelector(id), D = root.StrikeDrawer; if (!D || !D.hearOne) { this.status('the strikes drawer is not loaded', true); return; }

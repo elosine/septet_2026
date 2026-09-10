@@ -9831,3 +9831,17 @@ strike_sounds.js:231  if (this.isChords && this.isChords()) return;
 **The pattern, once more:** the score guarded this and the drawer did not. Eighth time today that a rule lives in one path and not its sibling — §342 · §343 · §345 · §346 · §347 · §348 · §349 · and this. **The drawer's revision (PLAN 1q) should not be a list of features; the through-line of this whole day is that the audition and the write must be ONE implementation.**
 
 **Still open, logged not built:** `sonify_core` (the render path) has no secco handling at all — only `endSweep`. A rendered swell will ring past its end where the live one cuts. → NITS.
+
+## §351. The crescendo card: MIDI numbers beside every note name, and an accent HELD to the crescendo's end
+
+**His request** (2026-09-10): *"In the main score, if I select a crescendo, a card comes up. Can I see the crescendo's pitch in the card and by note name and MIDI number, and same with the accent pitch choices? It says, for example, at start in the instrument, and then it has f five, but I also wanna see the midi number. And then I want the option of the accent ending with the end of the crescendo too. So right now it has at start, at end, but I want it to be so it could… The accent duration, it will end at the same time the Crescendo does."*
+
+**Built, three things.**
+
+1. **The crescendo's own pitch now reads `F5 (77)`** in the card's head — the name and the MIDI number together.
+2. **The accent's pitch echoes live, both ways.** The box already accepted a note name OR a number; now a small readout beside it shows the other reading as he types (`F5` → `= 77`, `77` → `= F5`). Checked: F5/77 · C4/60 · A#3/58 · Bb2/46. The accent readout underneath also carries the number.
+3. **`hold to the crescendo end`** — a tick on the accent row. Off, an accent is the 140 ms strike it has always been. On, the accent STARTS on the crescendo's start and **ends exactly where the crescendo ends**, his *"the accent duration, it will end at the same time the Crescendo does"*. The tick is greyed and disabled when the placement is *at end* — an accent AT the end has nothing left to be held through. It is remembered on the accent (`properties.accent.hold`), restored when the card reopens, and named in the readout with its length (*"held to the crescendo end (2.10 s)"*).
+
+**Deliberately not changed:** the accent stays `sonifyMode: 'plain'` with its own recorded velocity, so a held accent is a steady note under the swell rather than a second crescendo — which is what an accent is. If he wants the held one to shape as well, that is a different request and a different control.
+
+**Verification:** syntax checked; the name↔number conversion checked in node both directions. Not walked in the app — his card, his eye.
