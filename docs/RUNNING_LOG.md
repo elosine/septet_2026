@@ -10229,3 +10229,30 @@ Two voices per plugin instance, each its own MIDI channel — so the level belon
 **Harmonics is a floor, not a figure.** Its pitch 49 at velocity 127 clipped at 0 dBFS in the recording, so −12.6 is understated and the true trim is larger. Suggested: set **−15 dB** to clear the clipping outright, then re-run and take the exact remainder from a clean reading. **Not guessed at further** — AI_METHODOLOGY: a clipped measurement is not a measurement.
 
 **Then: he saves the rack, and the probe is re-run to confirm.** The record in `sandbox/instruments.js` will be updated to carry the per-voice numbers **after** they are measured true, not from this prescription — the file should say what the rack does, not what was recommended.
+
+## §368. "I know kontakt was meant to be +7 but pp2 also?" — no: PP2 inherited a number measured on the Steinway, and it is probably what clipped
+
+*(2026-09-10, session 8, Claude Code / Opus 5. His question, and it is the right one. Corrects the plan in §367.)*
+
+**The answer is no, and the file says why.** The +7.00 dB comes from the 2026-09-04 ensemble run, where `bank/balance.json` measured **`piano` on `main` alone** — `techniques: {}` empty (§357). `main` is the 8Dio Steinway, which lives in **Kontakt**. There is **one trim per instrument** in this system, so when he typed it in, *both* piano tracks got it: Kontakt because it was measured, **PP2 because it is also called "piano"**. Nothing about UVI Workstation's output was ever measured. **+7 on PP2 is an inherited number, not a measured one.**
+
+**And it is very likely what clipped harmonics.** The track fader is applied before the REC bus, so the +7 is in the recording. Harmonics hit **0.0 dBFS** at pitch 49 velocity 127 (§366). Take the 7 back out and that peak drops 7 dB, which should clear it outright.
+
+**What the numbers become with PP2 at 0.00:**
+
+| voice | measured with +7 | at 0.00 | still over `main` |
+|---|---|---|---|
+| harmonics | −12.6 *(clipped)* | −19.6 | +6.2 dB *(at least)* |
+| muted | −16.1 | −23.1 | **+2.7 dB** |
+
+So **muted is nearly right on its own** once the unearned +7 goes — a 2.7 dB error rather than the 9.7 dB §367 prescribed. §367's numbers were correct arithmetic on top of a wrong premise; they are superseded.
+
+**REVISED SEQUENCE, and it deliberately measures before it prescribes:**
+
+1. **Piano PP2 track → 0.00 dB.** Nothing inside UVI touched yet.
+2. **Kontakt stays at +7.00** — that one *was* measured, and `main` depends on it.
+3. **Plucked → −8.7 dB** on the Plucked Piano instrument inside Kontakt. That figure is sound: plucked was measured through the same +7 as `main`, so the difference between them is real regardless.
+4. Save the rack, **re-run the probe**, and take harmonics and muted from a clean, unclipped reading.
+5. Only then write the per-voice numbers into `sandbox/instruments.js`.
+
+**The general point for the sweep:** one trim per instrument is wrong wherever an instrument's voices live in different plugins. The flute has the same shape (its pizzicato measured 36.8 dB below its ordinary and still takes the flute's single −21, landing at −64.2 — §357). The piano is where it finally bit.
