@@ -10067,3 +10067,28 @@ All 23 changed, all 23 still connected in the DOM, the channel cache cleared. **
 **A near-miss worth recording.** Stopping the test server: the two node processes' command lines were `node score/server.js` (PID 4732) and `"C:\Program Files\nodejs\node.exe" score/server.js` (PID 18164) — the first *looked* like the one launched from this session. `Get-NetTCPConnection` said the opposite: **18164 held 5399 and 4732 held his 5300.** Killing on the plausible-looking command line would have taken down the server he is composing on. **Match the process to the PORT, never to the command line.** → this is the standing rule for stopping anything here.
 
 **Cleanup:** the test scores and the test passage deleted; the collection is empty and ready. His `SeptetSec03-Materials-C` and `-D`, saved while this was building, left alone.
+
+## §362. "Can I capture a range?" — two boxes, a playhead stamp, and the boundary made a net rather than a ruler
+
+*(2026-09-10, session 8, Claude Code / Opus 5. Continues §361 and fixes a real fault in it.)*
+
+**His words:** *"Can I capture a range? in a score. It just says whole score for capture."* And, when offered a drag-select: *"Drag select isn't my preference. maybe just a capture start and a capture end box also where I can move my cursor to a point and click in the box or click a button, and that will capture the time for capture start and capture end. And then just make sure if I don't get the precise exact times for those two, that is just capturing the events within those boundaries. So it's not gonna paste in. If I start the capture start time at two seconds before the first event, it's not gonna insert two seconds of silence. . or also a whole score option."*
+
+**Rejected at his word: the drag-select.** The score has never had a freeform marquee and does not want one — its own comment at `composer.html:3654` says so for the A / SHIFT+A column select: *"Grid material wants 'this column', not a freeform marquee."* His two boxes are the same instinct.
+
+**HE CAUGHT A REAL FAULT, not a missing feature.** §361's build zeroed a passage to **the boundary** for a span and to **0** for the whole score. Both bake in leading silence: a capture from 3 s of a passage whose first event is at 5 s would have inserted two seconds of nothing, every time, for ever. **The zero of a passage is now always the FIRST EVENT IN IT** — never the boundary, never 0 — for all three paths (range · selection · whole score). The boundaries are a net for choosing which events come, not a ruler for where the passage begins.
+
+**Built:** `from` and `to` boxes in the top bar, each with a **⤓** that stamps the playhead time into it, and an **✕** that empties both. Empty means *not named*, not zero — so an empty `from` with a filled `to` means "from the start of the score", and a typed `from` of 0 is still a real boundary. Both empty is the whole-score option he asked for (or the selection, if he has one). The name prompt now says what will be taken **and where it will start** — *"24 objects — 24 between 3 s and 14 s · first event at 5.00 s; the passage will start there, not at the boundary"* — so a sloppy boundary is visibly harmless before he commits.
+
+**Walked in the running app** on a test server (5399; his 5300 never touched), against a score deliberately shifted so its first event is at **5 s**:
+
+| | boundary | caught | zeroes at | stored starts | span |
+|---|---|---|---|---|---|
+| the sloppy range | 3 → 14 s | 24 | **5.0** | **0** | 6.891 |
+| a narrower range | → 8 s | **7 of 24** | 5.0 | — | — |
+| the whole score | none | 24 | **5.0** | **0** | 6.891 |
+| a selection | none | 3 | 5.0 | — | — |
+
+Then inserted the sloppy one into an **empty** score at **30 s**: the first event landed at **exactly 30.000**, the last ended 36.891. **Silence before the first event: 0.000 s.** The ⤓ buttons stamped 3.00 and 14.00 from the playhead; ✕ emptied both. `tools/passage_roundtrip.js` still PASSES on every score, `piece-septet` included.
+
+**Cleanup:** test scores and test passages deleted, the collection empty. The test server was stopped **by port** (`Get-NetTCPConnection` → PID 14872), per §361's rule — not by the command line that would have named his.

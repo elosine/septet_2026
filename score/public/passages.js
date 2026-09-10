@@ -82,16 +82,40 @@
         // ---- CAPTURE ---------------------------------------------------------------------------
         // The span, in order of preference: the times he names · the objects he has selected · the whole score.
         // An object belongs to the passage when it STARTS inside the span, so a long shape reaching past the end still comes.
+        //
+        // THE BOUNDARIES ARE A NET, NOT A RULER (composer 2026-09-10: *"just make sure if I don't get the precise exact times for
+        // those two, that is just capturing the events within those boundaries. So it's not gonna paste in. If I start the capture
+        // start time at two seconds before the first event, it's not gonna insert two seconds of silence"*).
+        // So the ZERO of a passage is always the FIRST EVENT IN IT, never the boundary he typed and never 0. He can be as sloppy
+        // with the boxes as he likes and the passage still begins on its first sound. This was a real fault in the first build,
+        // which zeroed to the boundary for a span and to 0 for the whole score — both of which bake in leading silence.
         which(opts) {
             const Cp = C(), o = opts || {};
+            let objs, why;
             if (o.from != null || o.to != null) {
-                const a = o.from != null ? o.from : 0, b = o.to != null ? o.to : Infinity;
-                return { objs: Cp.objects.filter(x => t0of(x) >= a - EPS && t0of(x) < b + EPS), from: a, why: 'the span ' + a + '–' + b + ' s' };
+                const a = o.from != null ? o.from : -Infinity, b = o.to != null ? o.to : Infinity;
+                objs = Cp.objects.filter(x => t0of(x) >= a - EPS && t0of(x) < b + EPS);
+                why = objs.length + ' between ' + (o.from != null ? o.from + ' s' : 'the start')
+                    + ' and ' + (o.to != null ? o.to + ' s' : 'the end');
+            } else {
+                const sel = (Cp.selectedObjects && Cp.selectedObjects.length > 1) ? Cp.selectedObjects.slice()
+                          : (Cp.selectedObject ? [Cp.selectedObject] : []);
+                if (sel.length) { objs = sel; why = sel.length + ' selected'; }
+                else { objs = Cp.objects.slice(); why = 'the whole score'; }
             }
-            const sel = (Cp.selectedObjects && Cp.selectedObjects.length > 1) ? Cp.selectedObjects.slice()
-                      : (Cp.selectedObject ? [Cp.selectedObject] : []);
-            if (sel.length) return { objs: sel, from: Math.min.apply(null, sel.map(t0of)), why: sel.length + ' selected' };
-            return { objs: Cp.objects.slice(), from: 0, why: 'the whole score' };
+            const from = objs.length ? Math.min.apply(null, objs.map(t0of)) : 0;
+            return { objs: objs, from: from, why: why };
+        },
+
+        // what the two boxes say, as capture options. Empty means "not named" — NOT zero: an empty `from` with a filled `to`
+        // must mean "from the start of the score", and a `from` of 0 must stay a real boundary.
+        boxes() {
+            const f = document.getElementById('psgFrom'), t = document.getElementById('psgTo');
+            const num = el => (el && el.value !== '' && isFinite(+el.value)) ? +el.value : null;
+            const o = {};
+            if (num(f) != null) o.from = num(f);
+            if (num(t) != null) o.to = num(t);
+            return o;
         },
 
         async capture(name, opts) {
@@ -193,11 +217,20 @@
             if (!bar || document.getElementById('psgSelect')) return;
             const wrap = document.createElement('span');
             wrap.style.cssText = 'display:inline-flex;align-items:center;gap:4px';
+            const box = 'width:46px;background:#141419;color:#ddd;border:1px solid #444;padding:1px 2px;font-size:11px';
+            const stamp = 'padding:1px 3px;font-size:10px;line-height:1';
             wrap.innerHTML =
                 '<span style="opacity:.35">│</span>' +
                 '<select id="psgSelect" title="the passage collection — captured stretches of score, insertable at the playhead into any score"><option value="">-- Passages --</option></select>' +
                 '<button id="psgInsert" title="insert the chosen passage at the playhead; it arrives selected, so one drag moves the whole thing. CTRL+Z removes it.">insert @ playhead</button>' +
-                '<button id="psgCapture" title="capture the selected objects (or the whole score if nothing is selected) as a named passage in the collection">capture…</button>';
+                '<span style="color:#888;font-size:11px;margin-left:4px">from</span>' +
+                '<input id="psgFrom" type="number" step="0.01" placeholder="start" style="' + box + '" title="capture start, in seconds. Leave both boxes empty to capture the whole score. The boundary is a net, not a ruler — a passage always begins on its first event, never on the time you typed.">' +
+                '<button id="psgFromNow" style="' + stamp + '" title="take the playhead time as the capture start">⤓</button>' +
+                '<span style="color:#888;font-size:11px">to</span>' +
+                '<input id="psgTo" type="number" step="0.01" placeholder="end" style="' + box + '" title="capture end, in seconds. Leave empty for the end of the score.">' +
+                '<button id="psgToNow" style="' + stamp + '" title="take the playhead time as the capture end">⤓</button>' +
+                '<button id="psgClear" style="' + stamp + '" title="clear both boxes — back to the whole score (or the selection, if there is one)">✕</button>' +
+                '<button id="psgCapture" title="capture what the boxes describe — or the selection, or the whole score when the boxes are empty — as a named passage">capture…</button>';
             const anchor = document.getElementById('blastsBtn');
             if (anchor && anchor.parentNode === bar) bar.insertBefore(wrap, anchor); else bar.appendChild(wrap);
             document.getElementById('psgInsert').addEventListener('click', async () => {
@@ -205,11 +238,24 @@
                 if (!v) { console.log('choose a passage first'); return; }
                 await this.insert(v);
             });
+            // the playhead into a box, and the boxes back out again
+            const now = () => { const Cp = C(); return Cp.playheadTime != null ? Cp.playheadTime : (Cp.currentTime || 0); };
+            const put = id => { document.getElementById(id).value = (Math.round(now() * 100) / 100).toFixed(2); };
+            document.getElementById('psgFromNow').addEventListener('click', () => put('psgFrom'));
+            document.getElementById('psgToNow').addEventListener('click', () => put('psgTo'));
+            document.getElementById('psgClear').addEventListener('click', () => {
+                document.getElementById('psgFrom').value = '';
+                document.getElementById('psgTo').value = '';
+            });
             document.getElementById('psgCapture').addEventListener('click', async () => {
-                const pick = this.which({});
-                const n = prompt('Name this passage  (' + pick.objs.length + ' objects — ' + pick.why + ')', '');
+                const span = this.boxes();
+                const pick = this.which(span);
+                if (!pick.objs.length) { alert('Nothing in that range to capture.'); return; }
+                // say what will be taken AND where it will start, so a sloppy boundary is visibly harmless before he commits
+                const n = prompt('Name this passage\n\n' + pick.objs.length + ' objects — ' + pick.why +
+                    '\nfirst event at ' + pick.from.toFixed(2) + ' s; the passage will start there, not at the boundary.', '');
                 if (n == null || !n.trim()) return;
-                await this.capture(n.trim(), {});
+                await this.capture(n.trim(), span);
             });
             this.refresh();
         }
