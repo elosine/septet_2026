@@ -105,7 +105,7 @@ const D = {
     el: null, body: null, db: null, seq: null, strike: null,
     voices: [], slots: [], ph: null, base: 0, prev: null, pickerLane: null,
     cfg: { strikeId: null, show88: false, rowH: 0, full: true, heightPx: 0, voicing: 'original', vSeed: 1, clusterOct: 0,
-           timeX: 1, shape: 'played', amount: 1, jitterMs: 0, reverse: false, rotate: 0, rSeed: 1, dropRests: true, aFirst: 100, aRatio: 0.85, aFloor: 45, aMin: 250, aSeed: 1, aRedeal: true, ...ACCEL_DEFAULTS, order: 'played', oSeed: 1, simMs: 60,
+           timeX: 1, shape: 'played', amount: 1, jitterMs: 0, reverse: false, rotate: 0, rSeed: 1, dropRests: true, aFirst: 100, aRatio: 0.85, aFloor: 45, aMin: 250, aSeed: 1, aRedeal: true, ...ACCEL_DEFAULTS, order: 'played', oSeed: 1, simMs: 60, keepRhythm: false,
            durX: 1, dynX: 1, flatten: true, mayFold: false, topLock: -1, bottomLock: -1, oSeedShuffle: 1, zoomPxPerMs: 0, rhythmW: 480 },
 
     // ------------------------------------------------------------------ init / build
@@ -365,7 +365,17 @@ const D = {
         }));
         this.slotsPlayed = s.notes.map(n => n.dtMs);      // the onset pattern as played (voice order)
         if (this.applySource) this.applySource();          // harm_source_ui.js: the onsets (and the accents) of another strike — rhythm from · extra notes
-        this.cfg.voicing = 'original'; this.cfg.order = 'played'; this.resetRhythm();
+        // 2026-09-10: `keep rhythm` — a new pick (a harmony above all) no longer throws away the rhythm he built.
+        // Parked as a one-liner on 2026-09-09 (STRIKES_TOOL §AA, "on his word"); his word came with
+        // "I want to hear that same acceleration in a different harmony". OFF by default = the drawer exactly as it was.
+        if (this.cfg.keepRhythm) {
+            // the voicing still resets: a preset MOVES pitches, and carrying it onto a different harmony is not what he asked for.
+            this.cfg.voicing = 'original';
+            // a by-hand order was set slot-by-slot on the OLD note count and means nothing here; every rule-based order re-derives.
+            if (this.cfg.order === 'manual') this.cfg.order = 'played';
+        } else {
+            this.cfg.voicing = 'original'; this.cfg.order = 'played'; this.resetRhythm();
+        }
         this.asPlayedOrchestration();
         this.applyVoicing();
         this.save();
@@ -910,6 +920,7 @@ const D = {
                 '<label>jitter <input id="skJit" type="number" min="0" max="500" step="5" style="' + inp + '"> ms</label>' +
                 '<div><button id="skRev" style="' + btn + '">reverse</button> <button id="skRot" style="' + btn + '">rotate</button> <button id="skRRe" style="' + btn + '">reshuffle</button></div>' +
                 '<div><button id="skRhyReset" style="' + btn + '" title="the rhythm as played: shape as played · span × 1 · jitter 0 · reverse off · rotate 0 — order and orchestration untouched; back undoes it (U5)">reset rhythm</button></div>' +
+                '<div><label title="2026-09-10: keep the rhythm you built when you pick a NEW strike or harmony — the shape, the run and all its dials, span ×, jitter, reverse, rotate, and the order menu (a by-hand order falls back to as played, its slots belonged to the old note count). The VOICING still resets, and the players are always re-dealt: a new harmony has new notes. Off = the drawer as it always was."><input id="skKeepRhy" type="checkbox"> keep rhythm on a new pick</label></div>' +
                 '<div id="skSeedR"></div>' +
                 '<span style="color:#9a9;margin-top:4px">order</span>' +
                 '<label><select id="skOrder" style="' + inp + ';width:78px"><option value="played">as played</option><option value="manual">by hand</option><option value="lowhigh">low → high</option><option value="highlow">high → low</option><option value="outin">outside-in</option><option value="inout">inside-out</option><option value="random">random</option></select></label>' +
@@ -959,6 +970,7 @@ const D = {
             q('#skRev').addEventListener('click', () => { this.snapshot(); this.cfg.reverse = !this.cfg.reverse; this.render(); });
             q('#skRot').addEventListener('click', () => { this.snapshot(); this.cfg.rotate = (this.cfg.rotate || 0) + 1; this.render(); });
             q('#skRRe').addEventListener('click', () => { this.snapshot(); this.useSeed('rSeed', this.nextSeed('rSeed')); this.save(); this.render(); });
+            q('#skKeepRhy').addEventListener('change', e => { this.cfg.keepRhythm = !!e.target.checked; this.save(); this.render(); this.setStatus(this.cfg.keepRhythm ? 'keep rhythm ON — a new strike or harmony keeps the shape, the run and its dials, and the order; the voicing resets and the players are re-dealt' : 'keep rhythm OFF — a new pick resets the rhythm as it always did'); });
             q('#skRhyReset').addEventListener('click', () => { this.snapshot(); this.resetRhythm(); this.save(); this.render(); this.setStatus('rhythm reset to as played (span × 1 · jitter 0 · reverse off · rotate 0) — back undoes it'); });
             q('#skOrder').addEventListener('change', e => { this.snapshot(); this.cfg.order = e.target.value; this.save(); this.render(); });
             q('#skORe').addEventListener('click', () => { this.snapshot(); this.useSeed('oSeed', this.nextSeed('oSeed')); this.save(); this.render(); });
@@ -981,7 +993,7 @@ const D = {
             Q('#skADeal').value = c.aDeal === 'free' ? 'free' : 'robin'; Q('#skAPool').value = c.aPool === 'strike' ? 'strike' : 'cards'; Q('#skARedeal').disabled = c.aDeal === 'free'; }
           else { msBox.style.outline = ''; const pp = this.pat(); const m = pp.length, last = m ? pp[m - 1] : 0; msBox.value = Math.round(last); gapBox.value = m > 1 ? +(last / (m - 1)).toFixed(1) : 0; gapBox.title = 'the mean gap between the onsets that sound; type a gap and the duration follows: gap × (onsets − 1)'; }
           msBox.disabled = false; ctl.querySelector('#skDrop').checked = !!this.cfg.dropRests; }   // 1h: in accel the ms box is the run's duration, typed
-        ctl.querySelector('#skRhyW').value = this.cfg.rhythmW || 480; ctl.querySelector('#skTimeX').value = +(+this.cfg.timeX).toFixed(3); ctl.querySelector('#skShape').value = this.cfg.shape; ctl.querySelector('#skAmt').value = this.cfg.amount; ctl.querySelector('#skJit').value = this.cfg.jitterMs; ctl.querySelector('#skOrder').value = this.cfg.order;
+        ctl.querySelector('#skRhyW').value = this.cfg.rhythmW || 480; ctl.querySelector('#skTimeX').value = +(+this.cfg.timeX).toFixed(3); ctl.querySelector('#skShape').value = this.cfg.shape; ctl.querySelector('#skAmt').value = this.cfg.amount; ctl.querySelector('#skJit').value = this.cfg.jitterMs; ctl.querySelector('#skOrder').value = this.cfg.order; { const kr = ctl.querySelector('#skKeepRhy'); if (kr) kr.checked = !!this.cfg.keepRhythm; }
         // dots: click one, then another = swap their slots; a dot on the keyboard then a player row = assign
         svg.querySelectorAll('.skRDot').forEach(dd => dd.addEventListener('click', ev => {
             const i = +dd.dataset.i;

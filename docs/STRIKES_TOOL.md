@@ -879,7 +879,7 @@ in `tools/harm_source_check.js`) · `score/public/harm_source_ui.js` (the mixin)
 
 **Not here yet:** the rhythm COLLECTION — his own played scattered rhythms ingested as #46 … (the db already keeps a `rhythm` block per
 strike; the same ingest reads a new save) — waits until he has played them; the full 1d module (H-numbers, the re-scrape, one table) stays
-for the planning method; keeping the rhythm dials while browsing harmonies (a one-line addition, on his word).
+for the planning method; ~~keeping the rhythm dials while browsing harmonies (a one-line addition, on his word)~~ — **built 2026-09-10 as `keep rhythm on a new pick`** (RUNNING_LOG §340): his word came as *"I created an acceleration. I had one harmony chosen. I want to hear that same acceleration in a different harmony."* A checkbox beside `reset rhythm`, **off by default** (off = the drawer exactly as it was, the original line kept verbatim in the else branch). On: a new strike or harmony keeps the shape, the run and every accel dial, span ×, jitter, reverse, rotate and the order menu (a by-hand order falls back to *as played* — its slots belonged to the old note count). The **voicing still resets** (a preset MOVES pitches) and the **players are always re-dealt** (a new harmony has new notes) — carrying the orchestration across a harmony change is the second half, undecided.
 
 ## AB · Feature queue, second collection — `collected 2026-09-09 evening, NOT built` (his rule: "I don't want to implement them now, but let's collect up a few, and then maybe we'll put them in")
 

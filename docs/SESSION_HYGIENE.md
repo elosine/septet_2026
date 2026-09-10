@@ -178,6 +178,42 @@ needed. If the plan leaves those open, the implementing session will decide them
 ad hoc and the cost lands anyway. **Name the interaction model, the data model,
 and the failure modes in the plan**, not just the feature list.
 
+## Which analysis goes to which model — the diagnosis half (composer's question, 2026-09-10)
+
+> *"might I have gotten a different diagnosis using a different model, or is this current situation not
+> that complicated? And then how do I manage that? in the future what types of analysis to give to what
+> types of models?"*
+
+The axis is **not** "hard or easy". It is these three, asked before the work starts:
+
+1. **Is the search space bounded?** A named symptom with an obvious entry point is mechanical — any model.
+   *"Something is wrong somewhere in the drawer"* is a SEARCH, and search is where a stronger model pays.
+2. **Is there one answer, or a judgment?** Reading code has one answer. *"What should this do instead"* is
+   a judgment. Judgments are Fable.
+3. **What does a wrong answer cost?** Wrong and discovered in five seconds is cheap on any model. Wrong and
+   built on for a day is day 25's lesson, and that is what Fable is for.
+
+| The work | Model |
+|---|---|
+| Named symptom, bounded search, verifiable answer | **Opus**, medium effort |
+| Unknown cause, wide search, several plausible layers | **Fable** |
+| "What should this behave like" | **Fable** |
+| A wrong answer costs a day before anyone would notice | **Fable**, whatever the search looks like |
+
+**THE POINT THAT MATTERS MORE THAN THE TABLE.** A weaker model's failure mode on a bounded diagnosis is
+**not a different conclusion — it is answering without looking.** The plausible-sounding guess is the
+danger, not the reasoning. **That is guarded by PROCESS, not by model choice**, and the two rules already
+in `AI_METHODOLOGY.md` are the guard: *no clear evidence means no diagnosis*, and *a confidence claim must
+be verified in the running app*. **If an analysis came back with no evidence in it, the model was the wrong
+thing to worry about — send it back rather than upgrading it.**
+
+**State the two claims separately.** *"The mechanism is X, read at these lines"* and *"therefore the app
+behaves like Y"* are different claims with different confidence. Blurring them is how a good reading turns
+into a wrong promise. Say which one is verified.
+
+**And ask who can verify more cheaply.** Often the composer can settle a runtime question in five seconds
+at the keyboard where the AI needs a copy, a server and a walk. Offer him the five-second test first.
+
 ## Sandbox lessons (apply to every future sandbox)
 
 Earned across the blast and cluster sandboxes:
