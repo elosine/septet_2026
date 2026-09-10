@@ -908,6 +908,10 @@ for the planning method; keeping the rhythm dials while browsing harmonies (a on
   answer available now (notes = the card count → one cycle, in the menu's order). *(AI reading, marked as such; the re-attack rule would
   still have to hold, so the order could only be kept where the players' rests allow it, and flagged where they do not.)*
 
+> *"where is run even"* (2026-09-10 03:50, in chords mode, shape set to accel — and the block never appeared)
+
+- **AB4 · The run (accel · even) in CHORDS mode.** Chords mode takes its onsets from `pattern()` — the strike in play's slots under the shape menu — and never from the accel calculator: the accel block is drawn only by notes mode's `renderRhythm`, so `shape → accel` in chords mode shows nothing and changes nothing (the AI told him to use it; wrong). The onset COUNT in chords mode is the note count of the harmony on the keyboard. Wanted: the run (even · geometric · the rest) as a rhythm source for chords mode, with its own count — `notes 7 · gap 700` — independent of the harmony in play. *(AI reading, marked as such; the containers shape already feeds chords mode the whole roll, which is the pattern to copy.)*
+
 - *(he will continue to give feature requests — they land here, verbatim, as they come)*
 
 ## AC · The revision — a sketch to keep the thread, NOT a plan — `2026-09-10, 03:00 (RUNNING_LOG §328; CN-59; PLAN 1q)`
