@@ -10023,3 +10023,19 @@ All 23 changed, all 23 still connected in the DOM, the channel cache cleared. **
 **Said to him and not acted on:** f lowers the written dynamic, but plucked still rides the piano's **+7 dB** trim measured on the Steinway alone (§357). If it is still loud at f, that is the unprobed trim, not the dynamic.
 
 **Cleanup:** the test copies deleted; his files untouched.
+
+## §360. "capture this whole thing as a meta that's insertable into any score" — the read-back; full planning method put on hold at his word
+
+*(2026-09-10, session 8, Claude Code / Opus 5. A conversation turn — nothing built.)*
+
+**His ask:** *"in the safe score right now is a series of crescendos and accents. Can I capture this whole thing as a meta that's insertable into any score? So I actually like to collect a... or make a collection of these. and then have a menu where I can insert them at the playhead, but into any score I want."*
+
+**And, immediately after, the correction on HOW to answer it** — the AI had opened the planning method and he stopped it:
+
+> *"No need for the full planning process. just let's work more directly. You can put that on hold for now. I'll request it when I want it. ... all I need want as quick as you can, tell me back what I'm expecting and what you vision the implementation to be. Very practically, but very simply and top line. Something like, I'll collect the events between this time and this time. I'll create a meta shape to hold all them. I'll create a new menu item, and it'll be given a name there or whatever. ... First, I need to understand that you understand what I'm looking for."*
+
+**The rule this sets, and it is general** — the planning method is **his to invoke, not the AI's to enter on a smell.** CLAUDE.md says *"Do not wait for the command if the conversation is plainly a planning one"*; today says the opposite is also true: **when he asks for a read-back and a picture, that is the whole deliverable.** The three phases stay available and he will call for them. → this is a correction to CLAUDE.md's planning line, recorded as one; the file is not edited without his word.
+
+**The one fact worth having, found before he cut the research short:** the machinery for a shared collection **already exists and is empty** — `score/server.js:28` points `MOTIVES_DIR` at `sandbox/motives` (D8-E, "shared library"), with GET/POST `/api/motives` and a loader the composer calls at start-up (`composer.html:11415`). **Zero files in it.** So a collection of passages has a home, an API and a load path already; what it lacks is the capture, the insert-at-playhead, and the menu.
+
+**Held for his word:** the read-back was given in chat this turn. Nothing designed, nothing built, no plan item opened.
