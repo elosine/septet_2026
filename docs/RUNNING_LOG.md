@@ -9570,3 +9570,23 @@ and everything that touches that note calls it.**
 **THE STANDING ORDERING RULE, the part of this worth more than the panel:** *"as a general rule put my order at the top and everything else keeps its order just moves down below the order I want at top."* A named order is a **prefix**: everything he does not name keeps its existing relative order and slides down beneath it, never re-sorted. It is general — not this panel only — and it means a partial order from him is always executable without a second question. Written into §AE as AE5 and into PLAN 1s.
 
 **Left open, deliberately** *(AI reading, marked):* *"take the width from the right, the dots and rhythm zone display"* reads two ways — the controls grow rightward and the dots/zone strip narrows to pay for it, or the whole panel widens rightward and the strip travels with it. The first shrinks the rhythm strip, which he may not want. Not decided; it is one question at build time, and the strip's readable minimum should be measured before choosing.
+
+## §339. "accel slow and gradual settings?" — the calibration continued: slow and gradual are two different dials
+
+**What prompted it** (2026-09-10, straight after §338): *"accel slow and gradual settings?"*
+
+**The distinction, said plainly to him:** **slow** is where the gaps SIT (the absolute milliseconds); **gradual** is how little they CHANGE from one to the next. §337 covered gradual; this adds the slow end, where the gaps run near a second.
+
+**The three recipes given, all `run → geometric`, measured from `accel_calc`:**
+
+| | setting | gaps | notes / span |
+|---|---|---|---|
+| barely there | `1500 → 1200` · `steep .97` | `1500 1453 1407 1363 1320 1279 1239 1200` | 8 / 10.8 s |
+| **gentle (recommended)** | `1200 → 700` · `steep .95` | `1200 1137 1077 1021 967 917 868 823 780 739 700` | 12 / 10.2 s |
+| slow but arriving | `1200 → 600` · `steep .93` | `1200 1111 1029 952 882 816 756 700 648 600` | 11 / 8.7 s |
+
+**The one-dial adjustments, also measured:** slower overall = raise both numbers together (`1500 → 900` at `steep .95` is the middle recipe transposed down in tempo, 11 notes / 11.8 s) · more gradual at the same tempo = `steep` toward 0.99, or type `notes` and let steep follow (`1200 → 700` at `notes 20` = 17.6 s, each gap ~3 % under the last) · evenest = `linear ms` (`1200 → 700`, `notes 14` takes ~42 ms off every gap).
+
+**Two cautions flagged** *(AI reading, marked):* these gestures run **10–17 s** against a **12 min** limit — the span readout is worth a look before inserting; and at gaps near a second every player is free, so the re-attack rule never bites and the round robin holds clean (unlike §330's 160 ms case, where the 150 ms rest starved it).
+
+**Unheard by him.** The numbers are the arithmetic; his ear is the judge. This and §337 are the calibration §W left open.
