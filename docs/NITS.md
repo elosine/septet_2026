@@ -214,3 +214,13 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   model to copy when this is fixed.
 - **The strikes drawer's revision** is sketched in STRIKES_TOOL §AC (2026-09-10 03:00) and stands as PLAN 1q, `todo` — not a nit, a
   thread: his own verdict on the night, kept so it is not lost.
+
+## 2026-09-10 04:30 — chords mode's screen (RUNNING_LOG §330; the fixes belong to PLAN 1q or a small pass of their own)
+
+- **The run's controls are hidden in chords mode.** `chordOnsets()` takes the run when `shape = accel`, but the accel block is drawn only by
+  notes mode's `renderRhythm`. Fix: refresh the rhythm controls from `renderChordRhythm` too, and make the run chords mode's default source
+  with `notes` and `gap` visible. (This corrects STRIKES_TOOL §AB's AB4, which said the run was not wired to chords mode: wired, hidden.)
+- **The onset count is inferred** from the harmony's note count whenever the shape is not the run — a box of its own instead.
+- **No `clear` on the chord list** beside `add all`; and the foot's five piano buttons (none · one · top+bottom · rest · all) stay on screen
+  in chords mode where they set nothing — hide them there.
+- **The console lines (crescRun · chordRun) are the working path meanwhile.**

@@ -240,6 +240,7 @@ crescRun.presets = {
     pile:   { gap0: 2.5, gapN: 0.6, steep: 0.85, lenS: 4,  dyn: ['ppp', 'fff'] },   // long ones piling up while the onsets close in
 };
 crescRun.profiles = PROFILES; crescRun.DEFAULTS = DEFAULTS; crescRun.GROUP = GROUP;
+crescRun.takeOnsets = onsetsFromTake;   // chord_run.js borrows a take's rhythm through this
 crescRun.last = load(LAST_KEY);
 { const p = load(PROFILE_KEY); crescRun.profile = p === null ? 's3' : p; }   // never chosen = his section-3 settings
 root.crescRun = crescRun;

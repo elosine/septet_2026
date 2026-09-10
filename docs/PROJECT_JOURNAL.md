@@ -127,6 +127,10 @@ the morph's fade-in, and then the editing interface around the piano parts he re
   the power path. A sketch is written; the plan comes by the planning method when he says so. **crescRun now has: the rhythm from a take,
   the s3 profile (575 · his order · Bb3 up), a length ramp; his lines of the night are in §326–327.**
 
+- **chordRun (04:30; §330; PLAN 1r):** a series of chords dealt over the free players as one console line — 1k's engine, a take's rhythm or
+  an even row, `tech: 'staccato'`. Chords mode's screen failed him twice; the diagnosis and the fixes are in §330 and NITS. **Unheard by him.**
+  The piano-as-two-hands build (CN-60, §329) is next on his word, `one voice` staying the default.
+
 **Open at session end** *(written cold, 2026-09-09)*:
 
 - **Task and state:** the AI's work is done and pushed; **nothing is in flight.** He is composing and recording piano into
