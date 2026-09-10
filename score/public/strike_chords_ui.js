@@ -343,8 +343,14 @@ Object.assign(D, {
         const res = this.chordSeq(), c = this.ch();
         if (!res || !res.events.length) { svg.innerHTML = '<text x="12" y="20" font-size="11" fill="#777">' + esc((res && res.summary && res.summary.info) || 'no onsets') + '</text>'; return; }
         const pat = res.events.map(e => e.t), spanMs = Math.max(1, Math.max.apply(null, pat)), pad = 14;
-        const pxPerMs = (W - 2 * pad - 20) / Math.max(spanMs, 50);
-        const X = ms => pad + 10 + ms * pxPerMs;
+        // §347: chords mode reserved only 10 px on the left — but `#skRhyCtl`, the rhythm control panel, is absolutely
+        // positioned over the strip and STAYS IN THE DOM when the mode changes. With the run block open it is ~225 px wide,
+        // so in chords mode it sat on top of the first onsets: unclickable, and the earliest one hidden entirely. Reserve
+        // whatever the panel actually measures, exactly as notes mode now does.
+        const ctlEl = wrap.querySelector('#skRhyCtl');
+        const ctlW = (ctlEl && ctlEl.offsetParent !== null) ? Math.round(ctlEl.offsetWidth || 0) + 10 : 10;
+        const pxPerMs = Math.max(0.001, (W - 2 * pad - ctlW - 10) / Math.max(spanMs, 50));
+        const X = ms => pad + ctlW + ms * pxPerMs;
         const marked = new Set(c.span ? this.chordSpanIdx() : []);
         let s = '';
         const step = spanMs > 2000 ? 500 : spanMs > 600 ? 100 : 50;

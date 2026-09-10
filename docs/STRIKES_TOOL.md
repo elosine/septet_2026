@@ -1052,6 +1052,11 @@ name keeps its existing relative order and slides down beneath. No re-sorting of
 - **AE1's direction.** *"take the width from the right, the dots and rhythm zone display"* reads two ways: the controls grow
   rightward and the dots/zone strip gives up that space (it narrows), **or** the panel as a whole widens rightward into the score
   area and the strip comes with it. The first shrinks his rhythm strip, which he may not want. To be settled before building.
+- **Settled by evidence (§347, 2026-09-10):** the controls and the strip **already fight over the same pixels** — `#skRhyCtl` is
+  absolutely positioned OVER the strip's left margin, and the strip reserved a hard-coded 130 px (chords mode: 10) against a panel
+  that actually measures ~225 px with the run open. It covered his first onsets. Both now measure the panel. **So AE1 cannot simply
+  widen the controls:** without giving the strip its own space the overlap gets worse. The remodel should give the controls a real
+  column that the strip starts after, not a wider overlay.
 - **The strip's own minimum.** If the controls take 250 % from the strip's side, the strip needs a floor below which the dots stop
   being readable — measure it before choosing.
 - **What lands below the prefix** (AE5) in this panel: `= ms` / span · jitter % → % · hold · mirror · the level ramp · deal · pitches ·

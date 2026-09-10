@@ -886,8 +886,13 @@ const D = {
         const A = this.cfg.shape === 'accel' ? this.accelSeq() : null;
         const timed = this.timed(); const pat = A ? A.events.map(e => e.onMs) : this.pattern();
         const spanMs = Math.max(1, Math.max(...pat, 0)); const pad = 14;
-        const pxPerMs = (W - 2 * pad - 130) / Math.max(spanMs, 50);
-        const X = ms => pad + 130 + ms * pxPerMs;
+        // §347: the controls sit ABSOLUTE over the strip's left margin, and the margin used to be a hard-coded 130 px — but the
+        // run block's own rows ("→ last 180 ms", "jitter % 0 →", "hold 0 gaps", "vel curve") are far wider than the 132 px the
+        // panel asks for, so with the run open the panel spilled to ~225 px and SAT ON the first onsets: unclickable, and the
+        // earliest dot hidden altogether. Measure the panel instead of guessing at it.
+        const ctlW = Math.max(130, Math.round(this._rhyCtlW || 130)) + 10;
+        const pxPerMs = Math.max(0.001, (W - 2 * pad - ctlW) / Math.max(spanMs, 50));
+        const X = ms => pad + ctlW + ms * pxPerMs;
         let s = '';
         // the live bands
         this.bands().forEach(b => { s += '<rect x="' + X(b.t0) + '" y="0" width="' + Math.max(2, (b.t1 - b.t0) * pxPerMs) + '" height="' + H + '" fill="#C9A05A" opacity="0.13"/>'; });
@@ -1014,6 +1019,13 @@ const D = {
             Q('#skADeal').value = c.aDeal === 'free' ? 'free' : 'robin'; Q('#skAPool').value = c.aPool === 'strike' ? 'strike' : 'cards'; Q('#skARedeal').disabled = c.aDeal === 'free'; }
           else { msBox.style.outline = ''; const pp = this.pat(); const m = pp.length, last = m ? pp[m - 1] : 0; msBox.value = Math.round(last); gapBox.value = m > 1 ? +(last / (m - 1)).toFixed(1) : 0; gapBox.title = 'the mean gap between the onsets that sound; type a gap and the duration follows: gap × (onsets − 1)'; }
           msBox.disabled = false; ctl.querySelector('#skDrop').checked = !!this.cfg.dropRests; }   // 1h: in accel the ms box is the run's duration, typed
+        // §347: measure the panel now it is filled; if the strip was laid out against a different width, lay it out once more.
+        { const w = ctl.offsetWidth || ctl.getBoundingClientRect().width || 0;
+          if (w && Math.abs(w - (this._rhyCtlW || 130)) > 1 && !this._rhyReflow) {
+              this._rhyCtlW = w; this._rhyReflow = true;
+              try { this.renderRhythm(); } finally { this._rhyReflow = false; }
+              return;
+          } }
         ctl.querySelector('#skRhyW').value = this.cfg.rhythmW || 480; ctl.querySelector('#skTimeX').value = +(+this.cfg.timeX).toFixed(3); ctl.querySelector('#skShape').value = this.cfg.shape; ctl.querySelector('#skAmt').value = this.cfg.amount; ctl.querySelector('#skJit').value = this.cfg.jitterMs; ctl.querySelector('#skOrder').value = this.cfg.order; { const kr = ctl.querySelector('#skKeepRhy'); if (kr) kr.checked = !!this.cfg.keepRhythm; }
         // dots: click one, then another = swap their slots; a dot on the keyboard then a player row = assign
         svg.querySelectorAll('.skRDot').forEach(dd => dd.addEventListener('click', ev => {

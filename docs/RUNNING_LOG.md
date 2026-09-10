@@ -9739,3 +9739,22 @@ So live playback sends a ppp→fff crescendo as **CC7 88 → 127, about 10 dB** 
 **Scoped deliberately:** only crescendos written from the tool from now on. Crescendos already in the score carry no `cc7Abs` and are untouched, so nothing he has already judged by ear changes under him.
 
 **The session's shape, five for five** *(AI, marked):* §342 players the pick never supplied · §343 CN-34 in one path only · §345 two Inserts writing different kinds of object · and now two CC7 laws, one measured by me and the other actually played. **Every defect today has been a thing wired into one path and not its sibling.** That is the finding of the day, and it belongs in the drawer's revision (PLAN 1q) as a principle, not just a list of fixes.
+
+## §347. "the GUI leaks over into the Rhythm Section" — the control panel measured 225 px and the strip reserved 130 (chords mode: 10)
+
+**His report** (2026-09-10, with a screenshot): *"In cord mode. the GUI leaks over into the Rhythm Section So I can't really click on the first few impacts. and, actually, a whole one is missing. The one in the image is number four, and I only see three and two. but they are in the rhythm number boxes and text."*
+
+**Read, not guessed.** `#skRhyCtl` is built `position:absolute; left:4px; width:132px` and the comment beside it says so: *"controls (HTML, over the strip's left margin)"*. The strip then reserves that margin as a **hard-coded constant**:
+
+- **notes mode:** `const X = ms => pad + 130 + ms * pxPerMs`
+- **chords mode:** `const X = ms => pad + 10 + ms * pxPerMs` — **10 px.**
+
+The 132 px is what the panel ASKS for, not what it takes: with the run block open its rows are much wider than that (*"→ last 180 ms"*, *"jitter % 0 →"*, *"hold 0 gaps"*, *"vel curve"*), and it spills to roughly 225 px. So in notes mode the panel overhung the first onsets by ~95 px, and **in chords mode by over 200** — which is where he was. The dots were drawn at their right times underneath it, unclickable, the earliest one hidden altogether. **That is why the numbers and text were right while the dots were not there:** the data was never wrong, only covered.
+
+**And it stays covered across a mode change:** the panel is created by notes mode and left in the DOM when he switches, so chords mode inherits a panel it never drew and never accounted for.
+
+**Fixed in both, by measuring instead of guessing.** Notes mode measures `ctl.offsetWidth` once the panel is filled (so the run block is already shown or hidden), stores it, and lays the strip out again if the width moved — guarded by a reflow flag so it cannot loop. Chords mode reserves whatever `#skRhyCtl` actually measures when it is visible, and its old 10 px when it is not.
+
+**This is AE1's territory** (STRIKES_TOOL §AE, his remodel: *"250% the width it is now. take the width from the the right, the dots and rhythm zone display"*). Not the remodel — a blocker fixed in place. But it settles one of the open questions there by evidence: **the strip and the controls already fight over the same pixels**, so widening the controls without giving the strip its own space would make this worse, not better. → noted in §AE.
+
+**Verification:** syntax checked on both files; not run in the app — his reload and his eye. The test is his own screenshot: in chords mode the first onsets should now sit clear of the panel and all four be clickable.
