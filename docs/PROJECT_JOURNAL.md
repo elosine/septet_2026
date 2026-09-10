@@ -163,17 +163,25 @@ the piano's plucked/harmonics/muted **were never volume-probed** and ride a +7 d
 never deliver a paste (§358), and match a process to its PORT not its command line before killing it (§361).
 **Unheard/unseen by him:** all of it. A hard reload brings in the note duplicate, crescStrikes and the Passages menu at once.
 
+**Session 8 continued (2026-09-10 evening, Fable 5.1 → Opus 5) — THE DRAWER UNBLOCKED (RUNNING_LOG §376–378; STRIKES_TOOL §AG; CN-61).**
+His brief: *"rebuild/fix just so I can use it … instead of single notes, I want ensemble chords."* The reading: the chord-at-an-onset tool
+was always in NOTES mode; chords mode is the old path (now labelled `chords (old)`). Built and walked on a `zz-ai-` copy on :5301:
+the `percussive · spiccato · staccato` set buttons · shape first in the rhythm group · `transpose −8va −½ +½ +8va` in any voicing · the
+onset card's `max` · `deal` · `reshuffle` · ♪ · `rest` · `every onset: max` · **the piano takes the remainder, two hands, the middle
+dropped, its own ≥ 100 ms clock** · chords mode's card released on mouseup. **Insert = Hear: 76 of 76 notes, pitch, time and voice.**
+**Unheard by him.** Not built: the hand override per chord (medium). The rack: his −1.2 on `PianoPlucked` is saved; track 7's Kontakt
+still to be checked by him.
+
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md; restored 2026-09-10 after
 it was found missing from this repo's CLAUDE.md, which is why the advice had gone quiet. Keep current.)*
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| 1 | **Tell him the chord tool is in NOTES mode** (§348), then his verdicts on today's nine fixes after a hard reload | **Opus** | no |
-| 2 | Fix what he marks | **Opus** | no |
-| 3 | **The two articulation sets** — percussive / all-spiccato (§AB1-c) | **Opus** | no |
-| 4 | **The pinned player** that survives a shuffle (§AF2) | **Opus** | no |
-| 5 | **The rhythm drawer remodel** (§AE) — one decision from him first | **Opus** | **yes**, fresh context for a build |
-| 6 | PLAN 1q proper, on the 1q-PRINCIPLE — one Insert, one Hear, one law | **Fable** | **yes** — wrap on Opus, clear, switch |
+| 1 | ~~BUILD §377~~ — **done, walked, pushed (§378; STRIKES_TOOL §AG)** | — | — |
+| 2 | **His verdicts on the drawer after a hard reload (CTRL+SHIFT+R)** — the route is STRIKES_TOOL §AG; fix what he marks (or log to SWEEP_LIST) | **Opus** | no |
+| 3 | **The pinned player** that survives a shuffle (§AF2) · the hand override per chord (medium, §376) if he asks | **Opus** | no |
+| 4 | **The rhythm drawer remodel** (§AE) — one decision from him first | **Opus** | **yes**, fresh context for a build |
+| 5 | PLAN 1q proper, on the 1q-PRINCIPLE — one Insert, one Hear, one law | **Fable** | **yes** — wrap on Opus, clear, switch |
 
 **The standing rule:** Fable for the turns where a wrong reading costs a day; Opus for every turn where
 the plan is already on paper. Wrap on Opus, always.

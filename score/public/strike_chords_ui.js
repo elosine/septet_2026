@@ -123,7 +123,7 @@ Object.assign(D, {
         wrap.style.cssText = 'display:inline-flex;gap:3px;align-items:center;white-space:nowrap';
         wrap.title = 'PLAN 1k: notes = the drawer as it always was (one note per onset); chords = the same rhythm with a chord, or part of one, on every onset, dealt over the players by rule';
         wrap.innerHTML = '<span style="color:#9a9">mode</span>' +
-            '<button id="skModeNotes" style="' + BTN + '">notes</button><button id="skModeChords" style="' + BTN + '">chords</button>';
+            '<button id="skModeNotes" style="' + BTN + '">notes</button><button id="skModeChords" style="' + BTN + '" title="§377: the OLD chords tool (a chord list, dealt by rule). A chord on each onset of your rhythm lives in NOTES mode: double-click an onset dot, then click a harmony in the left column">chords (old)</button>';
         head.insertBefore(wrap, head.querySelector('#skSeqSel') ? head.querySelector('#skSeqSel').parentNode : head.querySelector('#skReload'));
         wrap.querySelector('#skModeNotes').addEventListener('click', () => this.setMode('notes'));
         wrap.querySelector('#skModeChords').addEventListener('click', () => this.setMode('chords'));
@@ -456,7 +456,9 @@ Object.assign(D, {
         let sx = 0, sy = 0, bx = 0, by = 0, on = false, drag = q('#skOcDrag');
         drag.addEventListener('mousedown', d => { if (d.target.id === 'skOcX') return; on = true; sx = d.clientX; sy = d.clientY; const r = box.getBoundingClientRect(); bx = r.left; by = r.top; d.preventDefault(); });
         document.addEventListener('mousemove', d => { if (!on) return; box.style.left = Math.max(0, bx + d.clientX - sx) + 'px'; box.style.top = Math.max(0, by + d.clientY - sy) + 'px'; });
-        document.addEventListener('mouseup', () => { on = false; });
+        // §377: the same stuck card §348 fixed in the sound card — line ~445 stops `mouseup` on the box, and a drag by the head always
+        // ends over the box, so `on` was never cleared. CAPTURE runs before the target and cannot be stopped.
+        document.addEventListener('mouseup', () => { on = false; }, true);
         box.focus();
     },
     setOnsetByHand(i, box) {

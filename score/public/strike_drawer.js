@@ -63,6 +63,13 @@ const PLAIN_PREF = ['ord', 'main', 'senza_vel', 'senza_mw', 'staccato'];
 // U2 (composer, 2026-09-04): the default articulation of a strike — flute pizzicato (the written tongue
 // ram), bass clarinet slap, violins Bartók, viola / cello gettato; the piano as it is; all at 127
 const STRIKE_DEFAULT = { flute: 'pizzicato', bass_clarinet: 'slap', violin1: 'bartok_vel', violin2: 'bartok_vel', viola: 'gettato_vel', cello: 'gettato_vel', piano: 'main' };
+// §377 (composer, 2026-09-10 — STRIKES_TOOL §AB1-b/-c): named sets for the seven rows, one click each. `percussive` IS STRIKE_DEFAULT
+// and stays the default; spiccato has no flute or bass-clarinet voice, so those two take their plain staccato.
+const ART_SETS = {
+    percussive: STRIKE_DEFAULT,
+    spiccato: { flute: 'staccato', bass_clarinet: 'stac_vel', violin1: 'spicc_vel', violin2: 'spicc_vel', viola: 'spicc_vel', cello: 'spicc_vel', piano: 'main' },
+    staccato: { flute: 'staccato', bass_clarinet: 'stac_vel', violin1: 'stac_vel', violin2: 'stac_vel', viola: 'stac_vel', cello: 'stac_vel', piano: 'main' },
+};
 
 function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function shuffled(arr, rnd) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -106,7 +113,7 @@ const D = {
     voices: [], slots: [], ph: null, base: 0, prev: null, pickerLane: null,
     cfg: { strikeId: null, show88: false, rowH: 0, full: true, heightPx: 0, voicing: 'original', vSeed: 1, clusterOct: 0,
            timeX: 1, shape: 'played', amount: 1, jitterMs: 0, reverse: false, rotate: 0, rSeed: 1, dropRests: true, aFirst: 100, aRatio: 0.85, aFloor: 45, aMin: 250, aSeed: 1, aRedeal: true, ...ACCEL_DEFAULTS, order: 'played', oSeed: 1, simMs: 60, keepRhythm: false,
-           durX: 1, dynX: 1, flatten: true, mayFold: false, topLock: -1, bottomLock: -1, oSeedShuffle: 1, zoomPxPerMs: 0, rhythmW: 480 },
+           durX: 1, dynX: 1, flatten: true, mayFold: false, topLock: -1, bottomLock: -1, oSeedShuffle: 1, zoomPxPerMs: 0, rhythmW: 480, artSet: 'percussive', transpose: 0 },
 
     // ------------------------------------------------------------------ init / build
     init() {
@@ -169,6 +176,9 @@ const D = {
               '<span style="color:#9a9">voicing</span>' +
               ['original', 'spread', 'cluster', 'low', 'high', 'highlow'].map(v => '<button class="skV" data-v="' + v + '" style="' + btn + '">' + ({ original: 'original', spread: 'spread out', cluster: 'cluster', low: 'cluster low', high: 'cluster high', highlow: 'high + low' })[v] + '</button>').join('') +
               '<label title="the tight cluster moved by octaves">oct <input id="skClOct" type="number" min="-3" max="3" step="1" style="width:40px;' + inp + '"></label>' +
+              '<span style="display:inline-flex;gap:2px;align-items:center" title="§377: move the WHOLE voicing — every voice, in any preset; the players re-fit their ranges (fold ↑↓ or ✕). A new strike sets it back to 0; back undoes">transpose ' +
+              [[-12, '&minus;8va'], [-1, '&minus;&frac12;'], [1, '+&frac12;'], [12, '+8va']].map(p => '<button class="skTr" data-d="' + p[0] + '" style="' + btn + ';padding:1px 4px">' + p[1] + '</button>').join('') +
+              ' <span id="skTrN" style="color:#e8cf9a;min-width:22px"></span></span>' +
               '<button id="skVRe" style="' + btn + '" title="a different realization of the same voicing preset">reshuffle voicing</button>' +
               '<span id="skSeedV"></span>' +
               '<span style="color:#555">|</span>' +
@@ -218,6 +228,7 @@ const D = {
         d.querySelectorAll('.skV').forEach(b => b.addEventListener('click', () => { this.snapshot(); this.cfg.voicing = b.dataset.v; this.applyVoicing(); this.save(); this.render(); }));
         q('#skClOct').addEventListener('change', e => { this.snapshot(); this.cfg.clusterOct = clamp(+e.target.value || 0, -3, 3); this.applyVoicing(); this.save(); this.render(); });
         q('#skVRe').addEventListener('click', () => { this.snapshot(); this.useSeed('vSeed', this.nextSeed('vSeed')); this.save(); this.render(); });
+        d.querySelectorAll('.skTr').forEach(b => b.addEventListener('click', () => { if (!this.strike) return; this.snapshot(); this.cfg.transpose = clamp((+this.cfg.transpose || 0) + (+b.dataset.d), -48, 48); this.applyVoicing(); this.save(); this.render(); this.setStatus('voicing transposed ' + (this.cfg.transpose > 0 ? '+' : '') + this.cfg.transpose + ' semitones — the players re-fitted'); }));
         q('#skHearP').addEventListener('click', () => this.play('piano'));
         q('#skHearO').addEventListener('click', () => this.play('orch'));
         q('#skStop').addEventListener('click', () => { const e = E_(); if (e) e.panic(); this.onStopped(); });
@@ -365,6 +376,7 @@ const D = {
         }));
         this.slotsPlayed = s.notes.map(n => n.dtMs);      // the onset pattern as played (voice order)
         if (this.applySource) this.applySource();          // harm_source_ui.js: the onsets (and the accents) of another strike — rhythm from · extra notes
+        this.cfg.transpose = 0;                             // §377: a transposition belongs to the voicing in play, and the voicing resets below
         // 2026-09-10: `keep rhythm` — a new pick (a harmony above all) no longer throws away the rhythm he built.
         // Parked as a one-liner on 2026-09-09 (STRIKES_TOOL §AA, "on his word"); his word came with
         // "I want to hear that same acceleration in a different harmony". OFF by default = the drawer exactly as it was.
@@ -446,6 +458,10 @@ const D = {
                 break;
             }
         }
+        // §377 (AB2, composer 2026-09-10: "way to shift the original voicing. Up or down Octaves"): the whole voicing moved, in ANY
+        // preset — `oct` above only ever served the cluster presets. Applied once, after the preset; a new strike sets it back to 0.
+        const tr = Math.round(+this.cfg.transpose || 0);
+        if (tr) vs.forEach(v => { v.pitch = clamp(v.pitch + tr, 21, 108); });
         // a voiced pitch may no longer fit its player: re-fold
         vs.forEach(v => { if (v.lane >= 0) this.fitVoice(v); (v.also || []).forEach(r => this.fitReal(v, r)); });
     },
@@ -453,9 +469,22 @@ const D = {
     // ------------------------------------------------------------------ orchestration (E, F)
     instOf(lane) { const T = TRK(); return lane >= 0 && T[lane] ? INST()[T[lane].instKey] : null; },
     // strike_sounds.js (2026-09-10): the voice a chord's note takes on a lane with no row voice — the strike voice he set (U2 revised), else the plain one
-    strikeTechOf(lane) { const inst = this.instOf(lane), T = TRK(); const key = STRIKE_DEFAULT[(T[lane] || {}).instKey]; return (inst && (inst.techniques || []).some(t => t.key === key)) ? key : plainTech(inst); },
-    // U2: the strike default for a player, if its roster has it; else the plain technique
-    defaultTech(lane) { const T = TRK(), inst = this.instOf(lane); if (!inst) return null; const want = T[lane] && STRIKE_DEFAULT[T[lane].instKey]; if (want && (inst.techniques || []).some(q => q.key === want)) return want; return plainTech(inst); },
+    strikeTechOf(lane) { return this.setTech(this.cfg.artSet, lane); },
+    // U2: the strike default for a player, if its roster has it; else the plain technique — §377: from the articulation set in force
+    defaultTech(lane) { return this.instOf(lane) ? this.setTech(this.cfg.artSet, lane) : null; },
+    // §377: the voice set `k` gives a lane (its roster's own key, else the plain voice)
+    setTech(k, lane) { const inst = this.instOf(lane), T = TRK(); const key = (ART_SETS[k] || STRIKE_DEFAULT)[(T[lane] || {}).instKey]; return (inst && (inst.techniques || []).some(t => t.key === key)) ? key : plainTech(inst); },
+    // §377: one click puts every row on the set — the notes the rows hold now, and every player the shuffle or a chord deals later
+    applyArtSet(k) {
+        if (!ART_SETS[k]) return;
+        this.snapshot(); this.cfg.artSet = k;
+        this.voices.forEach(v => this.reals(v).forEach(r => { r.tech = this.setTech(k, r.lane); r.standIn = null; this.fitReal(v, r); }));
+        if (this.chordDirty) this.chordDirty();
+        this.save(); this.render();
+        const T = TRK(); this.setStatus('articulations: ' + k + ' — ' + T.map((t, lane) => t.short + ' ' + ((this.instOf(lane) && (this.instOf(lane).techniques || []).find(q => q.key === this.setTech(k, lane))) || {}).label).join(' · '));
+    },
+    // the set every row equals right now (null once a row has been changed by hand)
+    artSetNow() { const k = this.cfg.artSet || 'percussive'; return this.voices.every(v => this.reals(v).every(r => r.tech === this.setTech(k, r.lane))) ? k : null; },
     techOf(v) { return this.techOfR(v); },
     techOfR(r) { const inst = this.instOf(r.lane); return inst ? ((inst.techniques || []).find(t => t.key === r.tech) || null) : null; },
     fitVoice(v) { return this.fitReal(v, v); },
@@ -744,6 +773,7 @@ const D = {
         if (this.isChords && this.isChords()) return this.renderChords();   // PLAN 1k: chords mode (strike_chords_ui.js) — notes mode below is untouched
         this.applyOrder();
         this.renderKeyboard(); this.renderOrch(); this.renderPicker(); this.renderRhythm(); this.renderSeeds();
+        { const tn = this.el.querySelector('#skTrN'), tr = Math.round(+this.cfg.transpose || 0); if (tn) tn.textContent = tr ? (tr > 0 ? '+' : '') + tr : ''; }   // §377
         requestAnimationFrame(() => this.renderLines());
     },
     pcColor(pc) { const pcs = [...new Set(this.voices.map(v => v.pc))].sort((a, b) => a - b); return PC_PALETTE[pcs.indexOf(pc) % PC_PALETTE.length]; },
@@ -790,6 +820,10 @@ const D = {
             '<label>top → <select id="skTop" style="' + inp + '">' + opts(this.cfg.topLock) + '</select></label>' +
             '<label>bottom → <select id="skBot" style="' + inp + '">' + opts(this.cfg.bottomLock) + '</select></label>' +
             '<button id="skAsPlayed" style="' + btn + '" title="back to the piano, as played">as played</button></div>';
+        // §377: the articulation sets — one click fills every row (and every player dealt later: the shuffle, a chord at an onset)
+        { const now = this.artSetNow(), lit = ';background:#4a3a12;color:#e8cf9a;border-color:#C9A05A';
+          s += '<div style="display:flex;gap:4px;align-items:center;padding:3px 6px;border-bottom:1px solid #333"><span style="color:#9a9" title="the articulation on every row at once; the lit one is what the rows hold now (none lit once a row is changed by hand)">set</span>' +
+              Object.keys(ART_SETS).map(k => '<button class="skArt" data-set="' + k + '" style="' + btn + (k === now ? lit : '') + '" title="' + k + ': ' + T.map((t, lane) => t.short + ' ' + this.setTech(k, lane)).join(' · ') + '">' + k + '</button>').join('') + '</div>'; }
         s += '<div id="skRows" style="flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-around">';
         T.forEach((t, lane) => {
             const inst = INST()[t.instKey]; const here = this.onLane(lane); const mine = here.map(h => h.v);
@@ -812,6 +846,7 @@ const D = {
         box.querySelector('#skTop').addEventListener('change', e => { this.cfg.topLock = +e.target.value; this.save(); });
         box.querySelector('#skBot').addEventListener('change', e => { this.cfg.bottomLock = +e.target.value; this.save(); });
         box.querySelector('#skAsPlayed').addEventListener('click', () => { this.snapshot(); this.asPlayedOrchestration(); this.render(); });
+        box.querySelectorAll('.skArt').forEach(b => b.addEventListener('click', () => this.applyArtSet(b.dataset.set)));
         box.querySelectorAll('.skTech').forEach(sel => sel.addEventListener('change', e => { const lane = +sel.dataset.lane; this.snapshot(); this.onLane(lane).forEach(({ v, r }) => { r.tech = e.target.value; r.standIn = null; this.fitReal(v, r); }); this.render(); }));
         box.querySelectorAll('.skRowName').forEach(el => el.addEventListener('click', () => { const lane = +el.parentNode.dataset.lane; this.pickerLane = this.pickerLane === lane ? null : lane; this.render(); }));
         box.querySelectorAll('.skSolo').forEach(el => el.addEventListener('click', ev => { ev.stopPropagation(); const lane = +el.dataset.lane; const mine = this.onLane(lane).map(h => h.v); if (!mine.length) return; this.snapshot(); const on = !mine.every(v => v.solo); mine.forEach(v => { v.solo = on; }); this.render(); }));
@@ -918,6 +953,8 @@ const D = {
             const inp = 'background:#111114;color:#ddd;border:1px solid #444;padding:0 2px;font-size:10px;width:52px';
             const btn = 'background:#2a2a30;color:#ddd;border:1px solid #555;border-radius:3px;padding:0 4px;font-size:10px;cursor:pointer';
             ctl.innerHTML = '<span style="color:#9a9">rhythm</span>' +
+                // §377 (composer, 2026-09-10: "put the shape selection at the top of the rhythm group")
+                '<label>shape <select id="skShape" style="' + inp + ';width:64px"><option value="played">as played</option><option value="even">even</option><option value="front">front-loaded</option><option value="back">back-loaded</option><option value="centre">centre</option><option value="edges">edges</option><option value="random">random</option><option value="accel">accel · round robin</option></select></label>' +
                 '<label>span × <input id="skTimeX" type="number" min="0.01" step="0.05" style="' + inp + '"></label>' +
                 '<label title="U11: first onset → last onset of the strike as shaped now; type a duration and span × follows">= <input id="skSpanMs" type="number" min="1" step="1" style="' + inp + '"> ms</label>' +
                 '<label title="U12: the mean gap between the onsets that sound; type a gap and the duration follows: gap × (onsets − 1)">gap <input id="skGapMs" type="number" min="0.1" step="0.1" style="' + inp + '"> ms</label>' +
@@ -941,7 +978,6 @@ const D = {
                 '<div id="skSeedA"></div>' +
                 '<div id="skAInfo" style="color:#9a9;white-space:normal;line-height:1.3"></div>' +
                 '</div>' +
-                '<label>shape <select id="skShape" style="' + inp + ';width:64px"><option value="played">as played</option><option value="even">even</option><option value="front">front-loaded</option><option value="back">back-loaded</option><option value="centre">centre</option><option value="edges">edges</option><option value="random">random</option><option value="accel">accel · round robin</option></select></label>' +
                 '<label>amount <input id="skAmt" type="range" min="0" max="1" step="0.05" style="width:64px"></label>' +
                 '<label>jitter <input id="skJit" type="number" min="0" max="500" step="5" style="' + inp + '"> ms</label>' +
                 '<div><button id="skRev" style="' + btn + '">reverse</button> <button id="skRot" style="' + btn + '">rotate</button> <button id="skRRe" style="' + btn + '">reshuffle</button></div>' +

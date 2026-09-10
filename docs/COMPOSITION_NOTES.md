@@ -1400,3 +1400,21 @@ on EVERY onset of a chord cycle, taking the notes the other players did not, as 
 like two instruments (each hand with its own 150 ms rest), a hand never reaching into the register the other hand is still holding,
 and octave transposition ("active transposition") to bring the remainder into a hand's reach. To be planned with the planning method —
 the restatement and his answers first, then the top line.
+
+## CN-61 — the piano in the chord deal, narrowed: the remainder or one note, in the hands, on its own clock — the two hands dropped (2026-09-10, session 8 continued)
+
+> "and then piano, Let's talk about this a bit, and let's scope it. Let's narrow the scope to something relatively logical and simple, but
+> can produce some variations or a variety of things that may be useful musically. So I can have, for example, the piano play all the rest
+> of the chords, all the rest of the notes in that chord are as many as They can play. Or I could have them play one note or somewhere in
+> between. depending on how soon the next court comes, they might have to skip one or may be able to play all the ones in a row. There was
+> the two hand idea, but I think that's over complicated now. So let's forget about that. Anyways, I... easy, straightforward, logical way
+> to decide if a piano is just playing one note or several notes and to make sure those notes fit in the hands of the pianist. And then
+> this may be too complicated or difficult, but piano players have a higher tolerance for speed. So maybe they have a different standard
+> for whether they are available to to play a given chord. If this is too troublesome, then never mind."
+
+*The AI's reading (marked as such):* CN-60 is withdrawn by him (*"let's forget about that"*). What stands, for the chord-at-an-onset tool
+of notes mode (RUNNING_LOG §334): the piano is one more player in the deal; its SHARE of a chord is one setting — none · one · up to n ·
+the rest (the notes no ensemble player took, never a doubling); the notes it takes must FIT TWO HANDS (a span per hand, a count per hand,
+what does not fit dropped by a rule that is his to choose); and it has ITS OWN re-attack clock, shorter than the ensemble's `min`, so it
+skips an onset only when the next chord truly comes too soon for a pianist. Not "different logic": the same busy rule with a different
+number, and the same deal with a hand-fit filter after it.

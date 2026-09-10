@@ -881,7 +881,7 @@ in `tools/harm_source_check.js`) · `score/public/harm_source_ui.js` (the mixin)
 strike; the same ingest reads a new save) — waits until he has played them; the full 1d module (H-numbers, the re-scrape, one table) stays
 for the planning method; ~~keeping the rhythm dials while browsing harmonies (a one-line addition, on his word)~~ — **built 2026-09-10 as `keep rhythm on a new pick`** (RUNNING_LOG §340): his word came as *"I created an acceleration. I had one harmony chosen. I want to hear that same acceleration in a different harmony."* A checkbox beside `reset rhythm`, **off by default** (off = the drawer exactly as it was, the original line kept verbatim in the else branch). On: a new strike or harmony keeps the shape, the run and every accel dial, span ×, jitter, reverse, rotate and the order menu (a by-hand order falls back to *as played* — its slots belonged to the old note count). The **voicing still resets** (a preset MOVES pitches) and the **players are always re-dealt** (a new harmony has new notes) — carrying the orchestration across a harmony change is the second half, undecided.
 
-## AB · Feature queue, second collection — `collected 2026-09-09 evening, NOT built` (his rule: "I don't want to implement them now, but let's collect up a few, and then maybe we'll put them in")
+## AB · Feature queue, second collection — `collected 2026-09-09 evening` · `AB1-b, AB1-c and AB2 BUILT 2026-09-10 (§AG; RUNNING_LOG §377–378)` · AB3 not built · AB4 moot (chords mode is now "old"; the run drives notes mode's chords) (his rule: "I don't want to implement them now, but let's collect up a few, and then maybe we'll put them in")
 
 > *"So one is the set of articulations. I'd like a a... some presets for that. So the current default would be one. I can have all of them be
 > ordinary. That would be another one, etcetera, etcetera."*
@@ -1096,6 +1096,43 @@ harmony. *(AI reading, marked — this is the one worth doing first.)*
 
 **Why they arrived together:** with `keep rhythm + orchestrate` on (§341), every new harmony re-deals every player, so anything he had
 placed by hand is gone. AF2 is the answer to that; AF1 is a separate wish about the harmony's contents, not its orchestration.
+
+## AG · The drawer unblocked: a chord on every onset of the rhythm, the articulation sets, the piano's share — `built 2026-09-10 (RUNNING_LOG §376–378; CN-61)`
+
+> *"rebuild/fix just so I can use it, I want to get back to work asap … the goal is to be able to create a series of strikes in the rhythms
+> I already can make strikes into, but instead of single notes, I want ensemble chords … I don't need to revise the whole drawer. I just
+> need it so these things aren't blocking anymore."* (composer, 2026-09-10)
+
+**The route — NOTES mode.** The chord at an onset (§AD) was always here; chords mode is the older 1k tool and is now labelled
+`chords (old)`. Pick a harmony in the left column → shuffle → a SET → build the rhythm as ever (e.g. shape `accel · round robin`, run
+`even`, gap 130, notes 9) → **double-click an onset dot** → the onset card → click any row of the left column: that harmony is the onset's
+chord, dealt over the players free there. `all onsets ← this harmony` / `← banner in turn` do the pattern at once. The chords are keyed
+by position in the run, so they hold through a change of gap, count or run shape; a take carries them (`cfg.sounds`).
+
+**The articulation sets** (AB1-b/-c) — a `set` row above the players: **`percussive`** (the default = the U2 strike voices: Fl pizzicato ·
+BCl slap · Vn Bartók · Va/Vc gettato · Pno main) · **`spiccato`** (strings #16 `spicc_vel`; flute and bass clarinet have no spiccato, so
+their plain staccato) · **`staccato`** (AB1-b). One click fills every row, and every player dealt later — the shuffle and the chords read
+the set in force (`cfg.artSet`). The lit button is the set the rows equal; none lit once a row is changed by hand.
+
+**Transpose** (AB2) — `−8va · −½ · +½ · +8va` in the foot beside `oct`: every voice, in ANY preset (`oct` only ever moved the clusters);
+the players re-fit their ranges; a new strike sets it back to 0. It moves the strike in play, not the chords set at onsets.
+
+**The onset card, per onset:** `max` (at most n ensemble players; blank = as many as are free) · `deal` by register (default) / random ·
+`reshuffle` (a fresh draw for this onset; it changes the players only under `random`, the notes only under `take: shuffle`) · **♪** (this
+onset alone). **For the pattern:** `rest` — the SAME number as the run's `re-attack ≥` (a player is free again this long after its note
+ends); **at 130 ms gaps use ~20–50**, at the old default 250 nobody is free after a big chord.
+
+**The piano (CN-61, his (a))** — never in the ensemble's deal; it takes the chord's REMAINDER, never a doubling. `none · one note · up to n
+· the rest` (default the rest). The notes must fit two hands: the left from the bottom up while within `reach` (14 semitones) and ≤ `/hand`
+(5), the right from the top down the same; **what neither hand can hold is the middle, and it is dropped**. Taken alternately LH, RH, LH …
+so `one` is the lowest note and `up to n` keeps the outer voices first. Its own clock, attack to attack: `≥ 100 ms` — it skips a chord
+that comes sooner, the ensemble's rest does not apply to it. Off under a crescendo (a piano cannot swell).
+
+**Not built:** the hand override per chord (a row per dealt note, pinned, the machine dealing around it — medium; say the word) · AB3.
+
+**Where it lives:** `strike_drawer.js` (ART_SETS · setTech · applyArtSet · transpose in applyVoicing · the shape at the top) ·
+`strike_sounds.js` (dealChordAt with max / deal / seed / the piano · handFit · the card's boxes · ♪ through a `_onlyAt` filter on notesFor) ·
+`strike_chords_ui.js` (the onset card's drag released in the capture phase — §348's fix, never carried here — and the `(old)` label).
 
 ## Open questions for the composer (only what blocks the next piece)
 
