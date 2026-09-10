@@ -9415,3 +9415,20 @@ and everything that touches that note calls it.**
 - line 3 (`len 2 · lenN 4`): the multiple ramps 2.00 → 3.75 over the eight gaps.
 
 **Still unheard by him** at the time of writing; the line to run is in the chat and in `crescRun.last` once run.
+
+## §327. The run takes its rhythm from a drawer TAKE; the standing order and pitches for the section-3 gesture — and a correction about "curve 0"
+
+**What prompted it.** *"Are you able to access the strike drawer takes, the saved ones?"* — yes: `bank/panel_snapshots.json`, the `strikes` bucket, 154 takes, the newest his `cresAccel01` of 02:15 (a chord shape cs-012, notes mode, shape accel). Then: *"So I want you to use these rhythms, please. And then I want the order, and you can save this order. I always want this order for this one. The last one you gave me was in the wrong order. It's gonna be base clarinet cello. Viola violin two violin one flute. And if they repeat, it'll wrap back around … start chromatically … b as in boy, flat three. But go ahead and make the Crescendos last longer than the next onset. So they'll overlap … they'll start a fair bit longer. and shortened in a similar way … Maybe, like, the last three will still be playing before the last one ends … So always five seventy five for this one. Always that order of instruments, always those pitches starting for b flat three going up. Pitch's continue to go up if the instruments rotate."*
+
+**Why the order was wrong:** not the line — the reload. `crescRun.last` lived in memory only, so after the hard reload I had asked for, a line without `players` fell back to the DEFAULT order (flute first) and the default stack. Fixed at the root: **the numbers of the last call now live in the browser** (`septet.crescRun.last.v1`) and survive a reload, and **his standing settings are a profile**, `crescRun.profiles.s3` = at 575 · bass clarinet, cello, viola, violin 2, violin 1, flute, wrapping · chromatic from Bb3 — the base of EVERY call, which a line can only override. A bare `crescRun({})` after a reload reproduces the run at 575 in his order.
+
+**Built, the rest:** `rhythm: 'take:NAME'` — the take's accel dials rebuilt into the calculator's spec exactly as the drawer builds it (`accelSpec` mirrored); `rhythm: [seconds]` for any list; a number for the run (`gap0 · gapN · steep · n · shape`) puts the take away again. `pitches: 'from Bb3'` — a climb that never runs out (`{ from, step }` for another interval). The readout names the rhythm's source, the players' order and the pitch rule.
+
+**Verified in the running app** on a `zz-ai-crun3` copy (deleted after; no console errors):
+- `crescRun({ rhythm: 'take:cresAccel01', len: 3, lenN: 3.5 })` → 9 crescendos at 575.00, onsets `0 · 0.700 · 1.165 · 1.550 · 1.880 · 2.168 · 2.423 · 2.653 · 2.853` — **identical to the drawer's own `accelSeq()` on the loaded take** (checked in the same page); lanes bcl vc va vn2 vn1 fl bcl vc va; pitches A#3 → F#4; lengths 2.10 → 0.70 s (3.0 → 3.44 × the gap); **three crescendos still sounding when the last one starts** — his picture; 2.7 voices sounding, peak 5.
+- `crescRun({ lenN: 4 })` keeps the take (a Promise, resolved with the run); `crescRun({ n: 9, gap0: 0.9, gapN: 0.4 })` puts it away.
+- After `location.reload()`: profile `s3`, the last numbers restored, `crescRun({})` at 575 in his order, A#3 … F#4.
+
+**A correction (new entry, not an edit — §324's rule):** in §325's evening I told him *"steep 1.000 · curve 0.00 = an even run, no acceleration"*. Wrong on the second half. In the calculator's `curve` shape the dial says WHERE the change happens (0 = evenly over time, below 0 early, above 0 late); the run still goes from the gap box to → last. His screenshot's run was even because → last equalled the gap (108 = 108), not because of the dial. His take `cresAccel01` — curve 0.00, 700 → 200 ms — accelerates exactly as he set it, and that is the rhythm the run now uses.
+
+**Still unheard by him.** The line: `crescRun({ rhythm: 'take:cresAccel01', len: 3, lenN: 3.5 })`.
