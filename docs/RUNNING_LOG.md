@@ -9845,3 +9845,88 @@ strike_sounds.js:231  if (this.isChords && this.isChords()) return;
 **Deliberately not changed:** the accent stays `sonifyMode: 'plain'` with its own recorded velocity, so a held accent is a steady note under the swell rather than a second crescendo — which is what an accent is. If he wants the held one to shape as well, that is a different request and a different control.
 
 **Verification:** syntax checked; the name↔number conversion checked in node both directions. Not walked in the app — his card, his eye.
+
+## §352. "these tools are failing me and just getting in the way" — the one-by-one loop named as the problem; a sweep proposed
+
+*(2026-09-10, session 8, Claude Code / Fable 5.1. A conversation turn — no code touched.)*
+
+**What prompted it.** He sat down with the overnight build (§333–334) and the nine fixes (§340–351) and hit blocking faults one after another. His words, verbatim:
+
+> *"I asked AI to build a couple tools overnight. And now when I sit down to use them, I am running into detailed problems one by one. but they are blocking enough to make the tools unusable. what I want to avoid is to run down a rabbit hole of fixing little problem by little problem. This is taking very long, too long. because each problem is a turnaround with AI, which takes a long time. And then oftentimes, they're not getting it right on the first go."*
+
+> *"So I'm wondering if there isn't a strategy to get AI to look and do an evaluation and see if they can't just pick up issues or problems. and then check back in with me and see if we can do a global fix."*
+
+His example, the crescendo card in the main score: *"if I tried to move the panel, it sticks to my mouse. And this was one of the issues earlier on another thing ... It would have been better if AI could have made this fix everywhere."* · *"I typed in a new pitch for the accent, and I hit enter, the panel closed, and then the entire curve changed its shape. And I don't know how to get its shape back."* · *"it's not super clear how if I put a accent in how then to delete it ... The section at the bottom says remove, but then it removed my whole curve."* · *"I have to spend all my time adjusting badly designed implementations."* · *"If not, that's okay too. But then I need to find hacks or workarounds so I can move forward."*
+
+**The reading.** Three distinct kinds of fault in his one example, and they need different handling:
+
+1. **A rule fixed in one sibling and not the other** — the sticky drag was fixed in the sound card (§347) and not in the crescendo card. The same shape as all nine of session 7 (the 1q-PRINCIPLE finding). Findable without him, by enumerating rules × cards.
+2. **A destructive default** — ENTER reshaping the curve; `remove` taking the whole crescendo when he meant the accent. Findable by driving the card the way he does and reading the events back. Not yet diagnosed — no evidence read this turn.
+3. **Unclear affordance** — how to commit a change, how to delete an accent. Not a bug; a design question only he can settle, from a list of what each control does today.
+
+**Proposed, not yet decided:** a sweep — the AI drives the cards in the running app, builds the rules × cards matrix, reports one list with the fault class of each, and proposes one global fix (the shared card behaviours — drag, close, ENTER, remove — into one module) before touching anything. He stops being the test harness while it runs. Scope is his call. Continued in the next entry.
+
+## §353. "the priority is to be able to move forward" — the hybrid, given a rule: log, don't fix · console, not card · fix once, in one place
+
+*(2026-09-10, session 8, Claude Code / Fable 5.1. Continues §352. A conversation turn.)*
+
+**His words:** *"I think the priority is to be able to move forward. So my options are little fixes... blocking fixes one at a time, which is very time consuming. I also tried just doing straight AI inserts ... but that's time consuming to the turnaround slow."* · *"Maybe find a way to press through and just hack my way through to get some stuff done. And then maybe if enough structural sort of fixes present themselves, then those can just be fixed all at once."* · *"or maybe there's some kind of back and forth hand off between fixing a feature and using console score."* · *"tell me what you think, and then I'll just push forward with some hybrid solution."*
+
+**The reading.** His instinct is the right one; what it lacks is the discipline that keeps it out of the rabbit hole. The AI's answer, as a rule of three:
+
+1. **Log, don't fix.** A fault met while composing is one line in the new `docs/SWEEP_LIST.md` (opened this turn, seeded with the four of §352) — twenty seconds, no AI turn. Only a fault that blocks the music he needs TODAY, with no route around it, gets an immediate fix — and that fix goes into the shared place, not the one card, so it counts toward the global fix.
+2. **Console, not card.** `crescRun` · `chordRun` · `goTo` (§325–332) are the power path and bypass the cards, where every fault of the week has lived. They need no AI round trip once he has the syntax in front of him — a one-page cheat sheet is the first Opus turn. Caveat, stated: crescRun's output is itself unheard by him (§325), and whether it carries an accent was not checked this turn.
+3. **The sweep runs beside him, not instead of him.** Opus, its own session, a copy score, the list + the rules × cards matrix → one report → his verdicts once → one global fix (the shared card module of §352). He composes in the main score meanwhile.
+
+**Rejected:** "whatever presents itself" with no rule — that is the loop of the last two days under a different name. **Rejected:** the sweep before he may compose — the two are not exclusive, and the priority is his.
+
+**Decided by him:** pending — he said he would push forward with a hybrid; the rule above is the AI's proposed shape of it.
+
+## §354. "how to duplicate a note in piano in main score ctrl drag isnt working" — it was never wired for notes; the console line instead
+
+*(2026-09-10, session 8, Claude Code / Opus 5. The first fault under §353's rule, and it went the way the rule says: routed around, logged, not fixed.)*
+
+**The finding, read not guessed.** CTRL+drag duplicate exists in the main score in exactly two places:
+
+- `composer.html:9042` — a **zone**: `if (e.ctrlKey) { const clone = this.duplicateZone(zone, { timeOffset: 0 }); ...` and the clone is handed straight to the drag.
+- `composer.html:11630` — a **motive/marker**: the same shape, `duplicateMotive` then `startMotiveBodyDrag(clone, e)`.
+
+A note in this score is neither. It is a `waveCurve` carrying a `sonifyNote` (that is exactly the test `selectObject` uses at :5393 to decide whether to open the note card). **No note path has any `ctrlKey` branch at all** — the only other `ctrlKey` sites in the file are a wheel guard (:4888) and the keyboard shortcuts. So the gesture is not broken; it was never built. Tenth of the same shape as session 7's nine: a rule wired into one sibling and not the other.
+
+**The route around it, given to him instead of a build** — paste once in the console, then `dupNote()` per copy:
+
+```js
+window.dupNote = function (offset) {
+    const s = Composer.selectedObject;
+    if (!s || s.type !== 'waveCurve' || s.sonifyNote == null) { console.log('select a note first'); return; }
+    Composer.pushUndoState();
+    const c = JSON.parse(JSON.stringify(s, (k, v) => k === '_els' ? undefined : v));
+    c.id = Composer.generateId('wc'); delete c._els;
+    const dur = c.endSeconds - c.startSeconds;
+    const off = offset != null ? offset : dur;
+    c.startSeconds += off; c.endSeconds += off;
+    Composer.objects.push(c); Composer.renderWaveCurve(c); Composer.selectObject(c); Composer.markDirty();
+    console.log('duplicated', s.id, '→', c.id, 'at', c.startSeconds.toFixed(2), 's  lane', c.layer);
+    return c;
+};
+```
+
+`dupNote()` places the copy one length later; `dupNote(0)` stacks it on the original; `dupNote(2.5)` puts it 2.5 s later. It is `duplicateZone`'s own recipe (:8908) with the note's fields: strip `_els`, new `generateId('wc')`, push to `Composer.objects`, `renderWaveCurve`, `selectObject`, `markDirty` — the identical five steps `createWaveCurve` (:3935) itself ends with, so the copy is a first-class note, carries its voice/technique/accents, and CTRL+Z undoes it. Syntax checked in node; **not run in the app** — his console, his eye.
+
+**Logged, not fixed:** SWEEP_LIST #5. The permanent fix is one line in the note's mousedown, and it belongs in the sweep's global pass with the other card behaviours, not in a turn of its own today.
+
+## §355. "let's try to make interactions simple and direct" — the duplicate built where his hand already was, not explained
+
+*(2026-09-10, session 8, Claude Code / Opus 5. Supersedes §354's console line, which was the wrong answer to the right question.)*
+
+**His words, and the correction in them:** *"Let's try to make interactions simple and direct. and problem focused. i need to duplicate a piano note too much reading and too much explaining on my part and too many unessary decisions."* The screenshot showed the NOTE card open on F#5, piano, MIDI ch 1 — **the card was already in front of him**, and §354's answer sent him to a browser console to paste sixteen lines. §353's rule ("console, not card") is a rule about not building new cards to route around broken ones; it is not a licence to hand him a console line when the card he is already looking at could carry a button. Read as a rule about HIS effort, not about which file the code lives in.
+
+**Built, three call sites, one function.**
+
+1. **`Composer.duplicateNote(wc, {timeOffset})`** (`composer.html`, beside `duplicateZone`) — the five steps `createWaveCurve` ends with: strip `_els`, `generateId('wc')`, push to `objects`, `renderWaveCurve`, `selectObject`, `markDirty`, plus a conflict refresh. Offset defaults to the note's own length. One undo state, so CTRL+Z takes the copy away.
+2. **CTRL+drag on a note duplicates it and drags the copy** — the gesture he reached for, now the same on a note as it has always been on a zone (`:9042`) and a marker (`:11630`). Wired on the note body and on the cue-line body, `timeOffset: 0` so the copy starts under the mouse. Respects the stack picker, so CTRL+drag on stacked notes copies the one a plain click would have picked.
+3. **`duplicate` beside `hear` in the NOTE card** — one click: a copy one length later, auditioned, and because `selectObject` reopens the card on the copy, **the card follows it**. A run of repeated notes is click, click, click without the hand leaving the card.
+
+**The lesson worth keeping, and it is a design rule not a fix:** the answer to "too much explaining on my part" is a control where his hand already is. §354 was correct about the code and wrong about him. Both the console line and the card button call the same function now, so nothing was wasted, but the console line is no longer the answer given.
+
+**Verification:** `note_card.js` parses; both inline script blocks of `composer.html` parse; `duplicateNote` present with 3 call sites. **Not walked in the app** — hard reload (CTRL+SHIFT+R) needed, then his eye. SWEEP_LIST #5 closed.

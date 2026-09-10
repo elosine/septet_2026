@@ -150,6 +150,12 @@ the morph's fade-in, and then the editing interface around the piano parts he re
   (CN-60, §329 — the top line agreed, no plan; `one voice` stays the default). PLAN 1q built · 1k step 7 planning · 1p/1r built.
 - **Pending decisions:** none. **Resume reads:** RUNNING_LOG §324–334 in order; STRIKES_TOOL §AA–§AD; NITS 2026-09-10.
 
+**Session 8 (2026-09-10, Claude Code / Fable 5.1) — a mode change, RUNNING_LOG §352–353:** he named the one-by-one fix loop as the problem
+(*"these tools are failing me and just getting in the way"*). Proposed and provisionally adopted: **`docs/SWEEP_LIST.md`** — faults met while composing
+are LOGGED, not fixed (four seeded); he composes by the **console lines** where a card blocks; **the sweep** (Opus, own session, copy score,
+rules × cards matrix + the list → one report → his verdicts once → one global fix: the cards' shared behaviours in one module) runs beside him.
+First Opus turn: a one-page cheat sheet of crescRun · chordRun · goTo from §325–332 / STRIKES_TOOL. The table below is superseded by this while it stands.
+
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md; restored 2026-09-10 after
 it was found missing from this repo's CLAUDE.md, which is why the advice had gone quiet. Keep current.)*
 

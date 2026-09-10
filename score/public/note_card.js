@@ -125,10 +125,11 @@
                   '<span style="color:#666">s</span></div>' +
                 '<div style="display:flex;align-items:center;gap:8px;margin:7px 0 3px">' +
                   '<button id="ncPlay" style="padding:2px 10px">&#9654; hear</button>' +
+                  '<button id="ncDup" style="padding:2px 10px" title="copy this note one length later (CTRL+drag the note does the same)">duplicate</button>' +
                   '<span id="ncWhere" style="font-size:11px;color:#8a9"></span></div>' +
                 '<div style="color:#666;font-size:10px;margin-top:5px;line-height:1.35">' +
                   '&uarr;&darr; in the pitch box moves by a semitone &middot; every change is heard at once<br>' +
-                  'notes stacked here: click the same spot again to cycle down</div>';
+                  'notes stacked here: click the same spot again to cycle down &middot; CTRL+drag a note copies it</div>';
             document.body.appendChild(d);
             this.el = d;
 
@@ -188,6 +189,13 @@
                 wc.endSeconds = wc.startSeconds + Math.max(0.02, +e.target.value || 0.02);
             }));
             d.querySelector('#ncPlay').addEventListener('click', () => this.wc && this.hear(this.wc));
+            // DUPLICATE (2026-09-10). One click: a copy one length later, selected, and the card follows it — so a run of
+            // repeated notes is click, click, click without ever leaving the card. The score's CTRL+drag is the same call.
+            d.querySelector('#ncDup').addEventListener('click', () => {
+                if (!this.wc) return;
+                const copy = C().duplicateNote(this.wc);   // selectObject reopens this card on the copy
+                if (copy) this.hear(copy);
+            });
             // typing in the card must never reach the score's keyboard shortcuts
             d.addEventListener('keydown', (e) => e.stopPropagation());
         },

@@ -4524,6 +4524,12 @@ const Composer = {
                 this.startGroupDrag(wc, e);
                 return;
             }
+            // CTRL+drag = duplicate the note and drag the copy — the same gesture a zone and a marker have always had (2026-09-10).
+            if (e.ctrlKey || e.metaKey) {
+                const copy = this.duplicateNote(this.pickFromStack(e, wc.layer) || wc, { timeOffset: 0 });
+                this.startWCBodyDrag(copy, e);
+                return;
+            }
             // META overlay (composer 2026-08-14): gesture shapes may cover each
             // other. ALT+click = pick from a list of everything stacked here;
             // plain clicks at the same spot cycle down through the stack.
@@ -4675,6 +4681,7 @@ const Composer = {
             this._cueDown = { x: e.clientX, y: e.clientY };
             if (e.shiftKey) { this.selectObject(wc, { additive: true }); return; }
             if (this.selectedObjects.length > 1 && this.selectedObjects.includes(wc)) { this.startGroupDrag(wc, e); return; }
+            if (e.ctrlKey || e.metaKey) { this.startWCBodyDrag(this.duplicateNote(wc, { timeOffset: 0 }), e); return; }
             this.selectObject(wc);
             this.startWCBodyDrag(wc, e);
         });
@@ -8925,6 +8932,27 @@ const Composer = {
         this.renderZone(clone);
         this.selectObject(clone);
         this.markDirty();
+        return clone;
+    },
+
+    // DUPLICATE A NOTE (composer 2026-09-10: *"i need to duplicate a piano note"*). CTRL+drag duplicated a zone and a marker and
+    // did nothing at all on a note — the tenth fault of session 7's one shape, a rule wired into one sibling and not the other.
+    // Same five steps `createWaveCurve` itself ends with, so the copy is a first-class note: strip the DOM, a new id, push, render,
+    // select, dirty. Offset defaults to the note's own length; 0 stacks the copy on the original.
+    duplicateNote(srcWc, opts) {
+        this.pushUndoState();
+        const clone = JSON.parse(JSON.stringify(srcWc, (k, v) => k === '_els' ? undefined : v));
+        clone.id = this.generateId('wc');
+        delete clone._els;
+        const dur = clone.endSeconds - clone.startSeconds;
+        const off = (opts && opts.timeOffset != null) ? opts.timeOffset : dur;
+        clone.startSeconds += off;
+        clone.endSeconds += off;
+        this.objects.push(clone);
+        this.renderWaveCurve(clone);
+        this.selectObject(clone);
+        this.markDirty();
+        if (this.scheduleConflictRefresh) this.scheduleConflictRefresh();
         return clone;
     },
 
