@@ -342,7 +342,16 @@ if (!CLASSIC) {
             if (r.tech && r.tech.cc0 != null) e._timers.push(setTimeout(() => { try { r.out.send([0xB0 | r.ch, 0, r.tech.cc0]); } catch (x) {} }, Math.max(0, on - 30 - performance.now())));
             if (n.swell) {
                 for (let i = 0; i <= 16; i++) { const u = i / 16, v = Math.round(65 + 62 * Math.pow(u, shape)); e._timers.push(setTimeout(() => { try { r.out.send([0xB0 | r.ch, 7, v]); } catch (x) {} }, Math.max(0, on - 5 + u * dur - performance.now()))); }
-                if (this.sw().secco !== false) e._timers.push(setTimeout(() => { try { r.out.send([0xB0 | r.ch, 7, 0]); } catch (x) {} }, Math.max(0, on + dur - 10 - performance.now())));
+                // §350 THE SECCO THAT NEVER CUT: it was scheduled at `on + dur - 10`, but the ramp's LAST point (u = 1) lands at
+                // `on - 5 + dur` — 5 ms LATER — and sends CC7 127 straight over the top of it. The cut also belongs AFTER the
+                // note-off, not before: secco kills the RELEASE TAIL (CN-49, "so nothing rings past it"), and a cut 10 ms before
+                // the end just ducks the last of the note. Now: after the last ramp point and after the note-off.
+                // §350b: and it must not silence a NEIGHBOUR. Overlapping swells on a round robin can share a route, and a blunt
+                // CC7 0 would cut whichever is still sounding — the score guards this (`seccoCut`, "a secco crescendo must not
+                // silence its neighbour"); the drawer's audition did not. Skip the cut while another note on this same route runs on.
+                const myEnd = n.onMs + n.durMs, rk = n.lane + '|' + n.tech;
+                const neighbour = notes.some(m => m !== n && (m.lane + '|' + m.tech) === rk && m.onMs < myEnd && (m.onMs + m.durMs) > myEnd + 1);
+                if (this.sw().secco !== false && !neighbour) e._timers.push(setTimeout(() => { try { r.out.send([0xB0 | r.ch, 7, 0]); } catch (x) {} }, Math.max(0, on + dur + 2 - performance.now())));
             } else e._timers.push(setTimeout(() => { try { r.out.send([0xB0 | r.ch, 7, 127]); } catch (x) {} }, Math.max(0, on - 5 - performance.now())));
             e._timers.push(setTimeout(() => e.noteOn(r, n.midi, n.vel), Math.max(0, on - performance.now())));
             e._timers.push(setTimeout(() => e.noteOff(r, n.midi), Math.max(0, on + dur - performance.now())));

@@ -272,3 +272,9 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 - The AI measured the export path in §344 and reported it as the live truth. That error is what the split makes easy.
 - **CLOSED 2026-09-10 (§349):** `sonify_core` now honours `cc7Abs`, so live and export share one law. `cc7Fade` is still not
   honoured there — a faded morph note renders without its fade. Still open.
+
+## 2026-09-10 — the render path has no secco (RUNNING_LOG §350)
+
+- Live playback cuts a secco crescendo at its end (`composer.html` → `seccoCut`, with a neighbour guard). **`sonify_core.js` has no
+  secco handling at all** — only the `endSweep` STOP cure. So a rendered or exported swell rings past its end where the live one cuts.
+- Same family as the `cc7Fade` gap already noted above: the render path keeps missing the crescendo's later features.

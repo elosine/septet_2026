@@ -9808,3 +9808,26 @@ strike_sounds.js:231  if (this.isChords && this.isChords()) return;
 **His question again — another model?** Still no, and this entry is the clearest evidence why. The failure was not that the problem was hard to reason about; it was that **I fixed one side of a pair without measuring the other**. Two ramps, never compared until he insisted they be. The cure is the comparison, and it took one node script.
 
 **The standing rule this earns** *(to PLAN 1q, and it is his own words):* **"insert at playhead means insert what I'm listening to at the playhead."** Wherever the drawer can audition something, the audition's OWN numbers are what the insert writes — never a second implementation that agrees today. → the drawer's revision.
+
+## §350. "the secco in the drawer isnt working" — the cut was overwritten 5 ms later by the ramp's own last point
+
+**His report** (2026-09-10): *"the secco in the drawer isnt working. So the hear orchestrated doesn't playback SECCO when the SECCO is checked."*
+
+**The collision, in numbers.** For a note at `on` lasting `dur`, Hear scheduled:
+
+| event | time |
+|---|---|
+| ramp first point (u = 0) | `on − 5` |
+| **secco cut, CC7 0** | `on + dur − 10` |
+| **ramp LAST point (u = 1), CC7 127** | `on − 5 + dur` = `on + dur − 5` |
+| note-off | `on + dur` |
+
+**The secco cut landed 5 ms before the ramp's final 127 and was wiped by it, every time.** The tick was doing exactly what it was told; the two schedules were written independently and never compared. (The same shape as §349, one turn later.)
+
+**And the time was wrong even without the collision.** Secco cuts the RELEASE TAIL — CN-49, *"so nothing rings past it"* — so it belongs AFTER the note-off. At `on + dur − 10` it would only have ducked the last 10 ms of the note itself. Now `on + dur + 2`: after the last ramp point, after the note-off, nothing left to overwrite it.
+
+**A second defect, found while fixing the first and NOT reported by him yet** — the cut had no neighbour guard. The score has one, and says why in its own comment: *"a secco crescendo must not silence its neighbour"* (`seccoCut`, same port and channel). His gesture is OVERLAPPING swells on a round robin, so two of them can share a route — and a blunt CC7 0 would have cut whichever was still sounding. The audition now skips the cut while another note on the same route runs past this one's end.
+
+**The pattern, once more:** the score guarded this and the drawer did not. Eighth time today that a rule lives in one path and not its sibling — §342 · §343 · §345 · §346 · §347 · §348 · §349 · and this. **The drawer's revision (PLAN 1q) should not be a list of features; the through-line of this whole day is that the audition and the write must be ONE implementation.**
+
+**Still open, logged not built:** `sonify_core` (the render path) has no secco handling at all — only `endSweep`. A rendered swell will ring past its end where the live one cuts. → NITS.
