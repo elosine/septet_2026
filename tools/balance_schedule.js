@@ -85,6 +85,12 @@ if (proof) { VelocityRemap = require(path.join(ROOT, 'score', 'public', 'velocit
 const SWEEP_VELS = opt('sweepvels', '127,112,96,80,64,48,32,20').split(',').map(Number);
 const SWEEP_CC7S = opt('sweepcc7', '127,112,96,80,64,48,32,16').split(',').map(Number);
 const cc7Vel = +opt('cc7vel', 100);
+// --nocc7 (composer 2026-09-10, RUNNING_LOG §373): send NO CC7 at all. CC7 is MIDI Volume, and Kontakt's instrument volume knob
+// and UVI Workstation's part volume are bound to it — so the probe's CC7 127 before every note SLAMS THEM TO FULL and wipes any
+// per-voice trim he has dialled in. He found it himself: *"anything I do even a shut reaper down reopen keeps the volume settings
+// but after your probe they reset."* Every measurement before this flag existed was taken with every volume knob forced to
+// maximum, which is why no trim ever showed in a re-run.
+const noCc7 = args.includes('--nocc7');
 
 const ORDER = ['flute', 'bass_clarinet', 'piano', 'violin1', 'violin2', 'viola', 'cello'];   // D10 score order
 const PLAIN_PREF = ['ord', 'main', 'senza_vel', 'senza_mw', 'staccato'];
@@ -117,7 +123,7 @@ const add = (inst, I, tech, role, velList, cc7List, repeat) => {
     for (const cc7 of (cc7List || [127])) for (const vel of (velList || vels)) for (const pitch of pitches) for (let rpt = 0; rpt < (repeat || 1); rpt++) {
         notes.push({ i: i++, inst, label: I.label, role, rpt, tech: tech.key, techLabel: tech.label, port: tech.port || I.port, ch: tech.channel || 1,
                      cc0: tech.cc0 != null ? tech.cc0 : null, ks: tech.ks != null ? tech.ks : null,
-                     pitch, vel, cc7, tPreMs: t - preMs, tOnMs: t, tOffMs: t + noteMs });
+                     pitch, vel, cc7: noCc7 ? null : cc7, tPreMs: t - preMs, tOnMs: t, tOffMs: t + noteMs });
         t += noteMs + gapMs;
     }
     t += instGapMs;

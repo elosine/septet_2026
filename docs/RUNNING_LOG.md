@@ -10358,3 +10358,25 @@ So **muted is nearly right on its own** once the unearned +7 goes — a 2.7 dB e
 **Written for him: `probes/ping_ch3.json` and `probes/ping_ch5.json`** — twelve notes on one channel, ~17 s, **no recording**, so he can watch UVI and see which part answers.
 
 **The lesson, and it belongs with the day's others:** §371 turned "three attempts produced no change" into "the controls are not in the path" — a claim about a system the AI cannot see, from evidence that only said "something between the knob and the meter is not what we think". **He had direct evidence to the contrary and it took his pushback to get the test run.** The test cost ninety seconds and was available the whole time. → **When a measurement contradicts the composer's own ears, the ears are evidence too; test the difference rather than restating the measurement.**
+
+## §373. "are you sending cc7 or something to effect volume" — YES, and it wiped every trim he set. He diagnosed it; the AI did not.
+
+*(2026-09-10, session 8, Claude Code / Opus 5. THE finding of the piano-balance work, and it supersedes §367, §369, §371 and §372.)*
+
+**His words:** *"plucked keeps reseting? something to do with probe? I set vol, closed and saved and reopened to check still kept volume adjust; are you sending cc7 or something to effect volume anything I do even a shut reaper down reopen keeps the volume settings but after your probe they reset."*
+
+**Yes.** `probes/balance_probe.ps1:72` sends **`CC7 = 127` on the note's channel 300 ms before every note**. CC7 is **MIDI Volume**, and both Kontakt's instrument volume knob and UVI Workstation's part volume are bound to it by default. So the probe **slams every voice's volume to full before each note** and leaves it there.
+
+**Everything is explained by this one line:**
+
+- His trims survived a full Reaper restart (saved plugin state) but vanished after a probe. Exactly what CC7 127 does.
+- **No re-run could ever show a trim**, because the trim was overwritten 300 ms before the note it was supposed to affect. §370's *"the trim did not take"*, §371's *"the knobs are not in the path"*, §372's *"you changed the wrong parts"* — **all three were wrong, and all three were the AI reasoning about a system it could not see instead of asking what the probe itself was sending.** The answer was in this repo the whole time.
+- The measurements are still **valid as measurements** — every voice read at CC7 full, which is the right way to compare raw library loudness. `main −25.8 · plucked −17.1 · harmonics −19.6 · muted −23.1` (PP2 at 0.00) stand.
+
+**AND THE CONSEQUENCE IS BIGGER THAN THE PROBE.** The composer app sends CC7 too — it is how dynamics are written (level 0 = CC7 88, §316) and how the fade works (§317). **So a trim set on a CC7-bound volume knob would be overwritten in ordinary playback as well, not only by the probe.** The plugin's volume knob is the wrong place for a per-voice trim in this system, for a reason that has nothing to do with the probe. §367 and §369 sent him there. That advice is withdrawn.
+
+**Where a per-voice trim actually survives CC7:** a **Reaper track fader**, which sits after the plugin and is untouched by MIDI. Proven already — PP2 from +7.00 to 0.00 moved harmonics and muted by exactly 7 dB (§370).
+
+**Built so this cannot happen again:** `--nocc7` on `tools/balance_schedule.js` writes `cc7: null` on every note, and `balance_probe.ps1` now sends nothing when it sees that — his knobs are left exactly where he put them. `probes/balance_schedule_piano_alt_nocc7.json` written and checked: 24 notes, no CC7.
+
+**The lesson, and it is the day's sharpest.** Three explanations were offered for "the trim didn't take", each about his plugins, none tested against the one thing fully visible from here — **what the probe transmits**. He got there by noticing the settings survived a Reaper restart but not a probe. **When a change vanishes, ask what wrote over it before theorising about what failed to write.**

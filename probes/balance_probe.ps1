@@ -68,8 +68,13 @@ try {
         $n = $e.n; $chz = $n.ch - 1
         switch ($e.kind) {
             'pre' {
-                $cc7 = 127; if ($n.cc7 -ne $null) { $cc7 = [int]$n.cc7 }   # the sweep's CC7 (2026-09-06); 127 = the residue guard as before
-                [BalanceMidi]::Send($n.port, (0xB0 -bor $chz), 7, $cc7)
+                # CC7 is MIDI VOLUME and the plugins bind their instrument/part volume to it, so sending it OVERWRITES any
+                # per-voice trim the composer has set (RUNNING_LOG §373). A schedule made with --nocc7 carries cc7 = null and
+                # nothing is sent, leaving his knobs exactly where he put them.
+                if ($n.PSObject.Properties['cc7'] -eq $null -or $n.cc7 -ne $null) {
+                    $cc7 = 127; if ($n.cc7 -ne $null) { $cc7 = [int]$n.cc7 }
+                    [BalanceMidi]::Send($n.port, (0xB0 -bor $chz), 7, $cc7)
+                }
                 if ($n.cc0 -ne $null) { [BalanceMidi]::Send($n.port, (0xB0 -bor $chz), 0, [int]$n.cc0) }
                 if ($n.ks -ne $null) { [BalanceMidi]::Send($n.port, (0x90 -bor $chz), [int]$n.ks, 100); Start-Sleep -Milliseconds 40; [BalanceMidi]::Send($n.port, (0x80 -bor $chz), [int]$n.ks, 0) }
                 # the bend probe (PLAN 1f step 1, 2026-09-07): RPN 0 = pitch-bend sensitivity (CC101 0 · CC100 0 · CC6 value · CC38 0),
