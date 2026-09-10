@@ -156,6 +156,13 @@ are LOGGED, not fixed (four seeded); he composes by the **console lines** where 
 rules × cards matrix + the list → one report → his verdicts once → one global fix: the cards' shared behaviours in one module) runs beside him.
 First Opus turn: a one-page cheat sheet of crescRun · chordRun · goTo from §325–332 / STRIKES_TOOL. The table below is superseded by this while it stands.
 
+**Session 8 (2026-09-10, Opus 5) — the passage collection is BUILT and pushed (RUNNING_LOG §356–361).** Also today: the note
+duplicate (CTRL+drag + a button in the note card, §355) · `crescStrikes()` and `.set({tech,dyn,ms})` (§356·358·359) · the finding that
+the piano's plucked/harmonics/muted **were never volume-probed** and ride a +7 dB trim measured on the Steinway alone (§357) ·
+`docs/SWEEP_LIST.md` opened (§352–353: log faults while composing, batch the fix). **Two standing rules came out of the day:**
+never deliver a paste (§358), and match a process to its PORT not its command line before killing it (§361).
+**Unheard/unseen by him:** all of it. A hard reload brings in the note duplicate, crescStrikes and the Passages menu at once.
+
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md; restored 2026-09-10 after
 it was found missing from this repo's CLAUDE.md, which is why the advice had gone quiet. Keep current.)*
 

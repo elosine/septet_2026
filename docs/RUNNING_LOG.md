@@ -10039,3 +10039,31 @@ All 23 changed, all 23 still connected in the DOM, the channel cache cleared. **
 **The one fact worth having, found before he cut the research short:** the machinery for a shared collection **already exists and is empty** — `score/server.js:28` points `MOTIVES_DIR` at `sandbox/motives` (D8-E, "shared library"), with GET/POST `/api/motives` and a loader the composer calls at start-up (`composer.html:11415`). **Zero files in it.** So a collection of passages has a home, an API and a load path already; what it lacks is the capture, the insert-at-playhead, and the menu.
 
 **Held for his word:** the read-back was given in chat this turn. Nothing designed, nothing built, no plan item opened.
+
+## §361. The passage collection — built, and the reliability proved the way he asked for it
+
+*(2026-09-10, session 8, Claude Code / Opus 5. Continues §360, which carries the read-back he approved.)*
+
+**His go, and the two conditions that shaped the whole thing:** *"Just please verify its reliability so that, one, it is portable and stored properly. So, like, once I put one that's committed, it's put into the committed files, and that make sure to test it so that when it's inserted, you're comparing it to the original and making sure that there's nothing just left behind or no changes were made. So make sure you test that. And then, yes, go ahead and build, please."*
+
+**WHERE IT LIVES — his first condition, answered by reading `.gitignore` rather than guessing.** `scores/*-work.json` and `scores/versions/` are excluded; **`bank/` is committed whole**. So passages go to **`bank/passages/`**, one JSON per passage, with a README. Not `sandbox/motives/` (§360's find): that store's POST demands an `events` array — it holds sampler note-lists, not score objects, and bending it would have been a worse fit than a store of its own.
+
+**WHAT IT LOOKS LIKE.** A select and two buttons in the top bar, **immediately before `Insertion`**, deliberately the same three-control shape as the score's own Load — `-- Passages --` · `insert @ playhead` · `capture…`. `capture…` prompts for a name and says what it is about to take (*"24 objects — the whole score"*). The insert arrives **selected**, so one drag moves it. No card, no panel, nothing to paste: the day's lesson twice over (§355, §358).
+
+**HOW IT STAYS PORTABLE.** Capture copies **every field verbatim** — no whitelist, so a field this file has never heard of survives — except `_els` (live DOM) and the two identifiers. `id` → `o<n>`, `groupId` → `g<n>`, times relative to the passage start. On insert the ids and groups are **re-issued fresh**, so a passage may be inserted into the score it came from, or twice into one score, without collision. A cross-reference to an object inside the passage is remapped; one pointing outside is **dropped**, because a dangling id carried into another score is exactly the "something left behind" he named.
+
+**THE TEST — `tools/passage_roundtrip.js`, his second condition.** It does not test that the code runs. It captures a real score, inserts it at a deliberately awkward offset into an empty one, and **diffs the result against the original field by field, at any depth**, allowing only `id`, `groupId` and one uniform time shift. Then it inserts a second copy and checks the two share no id and no group. **It loads the app's own `pack`/`unpack` out of `passages.js` under `vm`, so it can never drift from what the app does** — a test of a copy would have proved nothing.
+
+| score | objects | groups | result |
+|---|---|---|---|
+| SeptetSec03-Materials-B | 24 | 1 | PASS |
+| **piece-septet** | **1029** | **225** | **PASS** |
+| ScatteredStrikes01 · cres2strike · cresc-test | — | — | PASS |
+
+**WALKED IN THE RUNNING APP**, on a **second server on port 5399** so his own on 5300 was never restarted or touched: capture → the file appears in `bank/passages/` with local tokens and starting at 0 → load an **empty** score → insert from the menu at 22.35 s → **24 objects, zero field differences, all 24 rendered, all 24 selected**, ids all new, groups all renamed. Inserted a second time at 45.0 s: **48 objects, 0 id collisions, 0 group collisions**, the copies exactly 22.65 s apart. **Undo is one step per insert** (48 → 24 → 0).
+
+**One fault found by the walk and fixed:** every capture recorded `capturedFrom: null`. `Composer.sessionName` is a **string**, not the input element (that is `sessionNameInput`), so `.value` was undefined. Now reads the string, falling back to the DOM. Re-verified: `capturedFrom: "zz-ai-src-work"`.
+
+**A near-miss worth recording.** Stopping the test server: the two node processes' command lines were `node score/server.js` (PID 4732) and `"C:\Program Files\nodejs\node.exe" score/server.js` (PID 18164) — the first *looked* like the one launched from this session. `Get-NetTCPConnection` said the opposite: **18164 held 5399 and 4732 held his 5300.** Killing on the plausible-looking command line would have taken down the server he is composing on. **Match the process to the PORT, never to the command line.** → this is the standing rule for stopping anything here.
+
+**Cleanup:** the test scores and the test passage deleted; the collection is empty and ready. His `SeptetSec03-Materials-C` and `-D`, saved while this was building, left alone.
