@@ -10316,3 +10316,27 @@ So **muted is nearly right on its own** once the unearned +7 goes — a 2.7 dB e
 | plucked | −18.0 | **−7.8 dB** |
 | harmonics | −19.5 | **−6.3 dB** |
 | muted | −23.0 | **−2.8 dB** |
+
+## §371. The plugin volume knobs are not in the signal path — identical readings after a saved rack change
+
+*(2026-09-10, session 8, Claude Code / Opus 5. Third run of the piano alt probe.)*
+
+**The rack WAS saved** — `reaper/septet_rack.rpp` written 15:59:09, two minutes before the run. So this is not a "he forgot to save".
+
+**And nothing moved.** Per-note, run 2 → run 3:
+
+| voice | run 2 | run 3 |
+|---|---|---|
+| harmonics | 35:−18.7 49:−15.6 63:−24.3 | **35:−18.65 49:−15.63 63:−24.30** |
+| muted | 43:−18.4 65:−25.7 86:−25.0 | **43:−18.36 65:−25.69 86:−24.97** |
+
+**Identical to two decimal places on every note.** That is not variance, it is the same audio. He set harmonics +6 → −0.3 and muted +6 → +3.2 inside UVI Workstation and the output did not change by a hundredth of a dB. Plucked moved only where round robins move it (65: −16.1 → −14.4), same as before.
+
+**So the volume controls he is reaching — both in Kontakt and in UVI — are not in the path the probe measures.** Three attempts, three no-ops, across two different plugins. Why is not diagnosable from here: the AI cannot see either plugin's routing, and per AI_METHODOLOGY that is where the diagnosis stops. What is certain is that this route is not working and should be abandoned for now rather than tried a fourth time — he has spent three cycles on it.
+
+**The route that is known to work is Reaper's own fader**, which takes a typed value and is unambiguously in the path (the +7 → 0.00 change on PP2 moved harmonics and muted by exactly the predicted 7 dB, §370 — proof the fader works where the knobs do not).
+
+- **PP2 carries both voices**, and they want different trims (harmonics −6.3, muted −2.8, 3.5 dB apart). One fader cannot give both exactly. **−4.5 dB puts both within 1.8 dB** of `main` — from +6.3 and +2.8 wrong, to ±1.8. Good enough to compose against; the exact split needs the two voices on separate UVI outputs and separate tracks, which is the §369 pattern and a later job.
+- **Plucked shares its track with `main`**, so a fader cannot help it without the multi-out split of §369.
+
+**Recorded as the state of things, nothing changed.**
