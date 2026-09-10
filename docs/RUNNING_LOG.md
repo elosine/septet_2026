@@ -10092,3 +10092,37 @@ All 23 changed, all 23 still connected in the DOM, the channel cache cleared. **
 Then inserted the sloppy one into an **empty** score at **30 s**: the first event landed at **exactly 30.000**, the last ended 36.891. **Silence before the first event: 0.000 s.** The ⤓ buttons stamped 3.00 and 14.00 from the playhead; ✕ emptied both. `tools/passage_roundtrip.js` still PASSES on every score, `piece-septet` included.
 
 **Cleanup:** test scores and test passages deleted, the collection empty. The test server was stopped **by port** (`Get-NetTCPConnection` → PID 14872), per §361's rule — not by the command line that would have named his.
+
+## §363. "end doesn't registure new cursor point" / "neither does start" — the phantom playhead, found and fixed three weeks ago, reintroduced verbatim today
+
+*(2026-09-10, session 8, Claude Code / Opus 5. The worst fault of the day, and the most instructive.)*
+
+**What he reported:** *"end doesn't registure new cursor point"*, then *"neither does start"*. Both ⤓ buttons stamped 0.00 whatever he did.
+
+**The cause, and it is bigger than the buttons.** `passages.js` read the playhead as `Composer.playheadTime`, falling back to `Composer.currentTime`. **Neither property exists on `Composer`** — verified live: `typeof Composer.playheadTime` = `undefined`, `typeof Composer.currentTime` = `undefined`. The whole chain always yielded **0**. So it was never only the two boxes: **`insert @ playhead` was inserting at t=0**, silently, into the opening of whatever score he had open. He had not hit that yet.
+
+The app's real accessor is **`Composer.getTimeAtPlayhead()`** — `scrollOffset / pixelsPerSecond`. The playhead is a fixed centre line and **scrolling IS moving it**; there is no stored "current time" anywhere.
+
+**AND THIS BUG WAS ALREADY FOUND, DIAGNOSED AND FIXED — ON 2026-08-17, DAY 14 OF PIECE #4.** Both files carry the post-mortem in their own comments, still in this repo, in the copy-forward:
+
+- `morph_panel.js:27–41` — *"NEITHER PROPERTY HAS EVER EXISTED ON `Composer`, so the expression fell through to 0 every single time. Every morph insert since 2v landed at t=0 regardless of the view, which reads as 'the insert did nothing' … two groups stacked on DB1 while the composer watched 142 s, with only the conflict badge moving."*
+- `texture_panel.js:879–886` — *"SAME BUG, SAME LINE, FIXED THE SAME DAY."*
+
+Both are correct today: they call `getTimeAtPlayhead()` first and keep the old expression only as a dead tail. **Checked, not assumed** — with the playhead at 33.5 s, `getTimeAtPlayhead()` returns 33.5 while the old expression returns **0**, and both panels take the first branch.
+
+**So the AI read the dead fallback tail out of a sibling file and copied it as if it were the rule.** This is session 7's finding — *a rule wired into one code path and not its sibling* — running in the opposite direction: a rule **un**wired, copied out of a file that had already been fixed, past a fourteen-line comment saying exactly what would happen. → PLAN **1q-PRINCIPLE**'s companion: **when copying a line out of another file, copy the branch it actually takes, not the one it falls back to.**
+
+**AND THE TEST THAT SHOULD HAVE CAUGHT IT DIDN'T, BECAUSE THE TEST INVENTED THE THING IT WAS TESTING.** §361's and §362's walks both did `Composer.playheadTime = 30.0` and then read the value back — creating the property, then proving it worked. Every "verified in the running app" claim about the playhead in those two entries was worthless. **A verification must move the app's own state by the app's own means** — here, set `scrollOffset` and let `getTimeAtPlayhead()` report it — **never assign the property under test.** → this is a standing rule now, and it goes to the sweep's report beside "never deliver a paste".
+
+**Fixed and re-verified without injecting anything** — the score scrolled, the buttons clicked, the values read back:
+
+| scrolled to | app reports | `from` box | `to` box |
+|---|---|---|---|
+| 0 | 0 | 0.00 | 0.00 |
+| 2.5 | 2.5 | 2.50 | 2.50 |
+| 7.25 | 7.25 | 7.25 | 7.25 |
+| 41.0 | 41.0 | 41.00 | 41.00 |
+
+End to end, still nothing injected: stamped a range **1.00 → 5.00**, which caught **10 of 24** and zeroed at **1.786** (the first event in range, not the boundary); scrolled the empty destination to **18.75** and inserted from the menu — **the first event landed at exactly 18.750**. `tools/passage_roundtrip.js` still PASSES on `piece-septet`.
+
+**Cleanup:** test scores and passages deleted; the test server stopped by port (PID 18296), his 5300 untouched.

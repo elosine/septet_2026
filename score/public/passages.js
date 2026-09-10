@@ -22,6 +22,21 @@
     const C = () => (typeof Composer !== 'undefined' ? Composer : root.Composer);
     const EPS = 1e-6;
 
+    // WHERE THE PLAYHEAD IS. `Composer.getTimeAtPlayhead()` — the score scrolls under a fixed playhead line, so the time is
+    // `scrollOffset / pixelsPerSecond` and there is no stored "current time" at all.
+    //
+    // The first build of this file used `Composer.playheadTime`, falling back to `Composer.currentTime`. NEITHER PROPERTY EXISTS,
+    // so the whole chain always yielded 0: both ⤓ buttons stamped 0.00 and `insert @ playhead` inserted at 0 (composer 2026-09-10,
+    // *"end doesn't registure new cursor point"* and *"neither does start"*). The app walk missed it because the test SET
+    // `Composer.playheadTime` by hand before reading it back — a test that invents the thing it is testing proves nothing.
+    // → RUNNING_LOG §363. `morph_panel.js:47` and `texture_panel.js:889` carry the identical phantom.
+    const now = () => {
+        const Cp = C();
+        if (!Cp) return 0;
+        if (typeof Cp.getTimeAtPlayhead === 'function') return Math.max(0, Cp.getTimeAtPlayhead());
+        return 0;
+    };
+
     const round = v => Math.round(v * 1e6) / 1e6;
     const t0of = o => o.startSeconds != null ? o.startSeconds : (o.startTime != null ? o.startTime : 0);
     const t1of = o => o.endSeconds != null ? o.endSeconds : (o.endTime != null ? o.endTime : t0of(o));
@@ -153,7 +168,7 @@
             const r = await fetch('/api/passages/' + encodeURIComponent(file));
             if (!r.ok) { console.log('could not read ' + file); return null; }
             const psg = await r.json();
-            const at = o.at != null ? o.at : (Cp.playheadTime != null ? Cp.playheadTime : (Cp.currentTime || 0));
+            const at = o.at != null ? o.at : now();
             Cp.pushUndoState();
             const made = unpack(psg.objects || [], at, Cp);
             made.forEach(w => {
@@ -239,7 +254,6 @@
                 await this.insert(v);
             });
             // the playhead into a box, and the boxes back out again
-            const now = () => { const Cp = C(); return Cp.playheadTime != null ? Cp.playheadTime : (Cp.currentTime || 0); };
             const put = id => { document.getElementById(id).value = (Math.round(now() * 100) / 100).toFixed(2); };
             document.getElementById('psgFromNow').addEventListener('click', () => put('psgFrom'));
             document.getElementById('psgToNow').addEventListener('click', () => put('psgTo'));
