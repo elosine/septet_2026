@@ -881,6 +881,34 @@ in `tools/harm_source_check.js`) · `score/public/harm_source_ui.js` (the mixin)
 strike; the same ingest reads a new save) — waits until he has played them; the full 1d module (H-numbers, the re-scrape, one table) stays
 for the planning method; keeping the rhythm dials while browsing harmonies (a one-line addition, on his word).
 
+## AB · Feature queue, second collection — `collected 2026-09-09 evening, NOT built` (his rule: "I don't want to implement them now, but let's collect up a few, and then maybe we'll put them in")
+
+> *"So one is the set of articulations. I'd like a a... some presets for that. So the current default would be one. I can have all of them be
+> ordinary. That would be another one, etcetera, etcetera."*
+
+- **AB1 · Articulation presets.** Named sets for the seven articulation pull-downs: *default* (what the drawer opens with today) · *all ordinary*
+  (each player's `ordinary` voice — the recipe field 1o already reads) · more as he names them; his own sets keepable (a take carries the
+  articulations already, so a preset is a take of the rows alone). *(AI reading, marked as such.)*
+
+> *"Another feature is I'd like to be able to transpose the harmony in the keyboard step by step. There's seems to be an octave one. But, a,
+> the octave one only seems to work when I've chosen, like, one of the cluster, cluster low, etcetera. And if I can move the whole shape up by
+> semitone, that would be good."*
+
+- **AB2 · Transpose the whole shape by semitone.** A ± step on the keyboard that moves EVERY voice's pitch by a semitone (and by an octave),
+  in any voicing — the `oct` box today only serves the cluster presets (B: `clusterOct` is the tight cluster moved by octaves). The
+  transposition is a property of the shape in play, kept by takes, undone by back; ranges then re-fit by F's rule (fold ↑↓ or ✕).
+  *(AI reading. Where it touches: `applyVoicing` sets `v.pitch` from the preset — the transposition would be applied after it, once.)*
+
+> *"and then how to play the pitches in order from top to bottom"* (2026-09-09 evening, in the accel run with the free dealer)
+
+- **AB3 · An order that HOLDS through the run.** Today the `order` menu governs cycle 1 of the round robin only; every later cycle is a
+  shuffle of the cards under the re-attack rule (U13), the pitches re-dealt when the tick is on; the free dealer draws pitches at random.
+  Wanted: a way to keep `high → low` (or any order) on every cycle of a run — a descending ladder that accelerates — beyond the one-pass
+  answer available now (notes = the card count → one cycle, in the menu's order). *(AI reading, marked as such; the re-attack rule would
+  still have to hold, so the order could only be kept where the players' rests allow it, and flagged where they do not.)*
+
+- *(he will continue to give feature requests — they land here, verbatim, as they come)*
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the

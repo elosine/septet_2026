@@ -200,3 +200,12 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   the crescendo bar has the same dependency. Open the morph panel once and reopen the drawer.
 - **The Browser pane's "Return" is not ENTER** (RUNNING_LOG §324): it arrives as a keydown with an empty key; "Enter" is the real one. For the
   harness, not the app — noted so the next walk does not chase it again.
+- **Strikes drawer feature queue AB1–AB2 (2026-09-09 evening)** — articulation presets · transpose the whole shape by semitone — collected in
+  STRIKES_TOOL §AB at his word, not built: *"I don't want to implement them now."*
+
+## 2026-09-09 evening — the strikes drawer's Hear does not swell (RUNNING_LOG §325)
+
+- `StrikeDrawer.play()` sends a plain `noteOn(r, midi, vel)` per note (strike_drawer.js line 1056) — no CC7 ramp, no curve channel — so a
+  crescendo auditioned with `Hear piano` / `Hear orchestrated` in 1o's crescendo mode is a long flat tone. The swell exists once INSERTED
+  and the score plays it. His verdict came from this: *"the long tones aren't swelling at all. I have everything set."* Fix when the drawer's
+  swells matter again: route a swell's audition through the score's crescendo playback (the curve-channel CC7 ramp of 1l), not `noteOn`.

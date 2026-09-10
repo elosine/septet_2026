@@ -1475,6 +1475,8 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        `docs/CRESCENDO.md` §7's 1o line, PLAN 1o's statuses, PLANNER NOW, the journal §2, a title on every new control;
      - **then his first crescendo strikes**; his verdicts → the documents and NITS; then the crescendo suite is complete.
 
+- **1p — The crescendo run: overlapping, accelerating, shortening crescendos as ONE CONSOLE LINE** — `built 2026-09-09 evening (CN-59; RUNNING_LOG §325)` — `score/public/cresc_run.js` → `crescRun({ gap0, gapN, steep | n, shape, len | lenS, dyn, secco, players, pitches, at })`: the drawer's acceleration calculator for the onsets, 1l's crescendo on each, a round robin over the six bending players, the length × the gap (shortening with the rush) or typed, capped at the player's next sound, floored at 0.30 s; one group replaced by every call, `crescRun.keep()` to freeze one, `crescRun.last` so a call changes ONE number, three presets (push · rush · pile). Verified on a copy: 10 crescendos 2.0 → 0.5 s, lengths exactly 2 × the gap, the cap holding. *Why:* his own words — *"everything I want to set is so difficult to find … We could just do it in the save score, and you could perhaps give me a console script every time"*; the drawer's Hear never swelled (its play() sends plain note-ons — NITS), and the piece's third section opens with exactly this gesture. **Next:** his ear on the three presets; the pitches by hand after (his call); a card (B) only if the routine sticks.
+
 ## 2. Notate — `deferred` until the first real page exists
 
 - **2a — Engine adaptation** — the 0g list. Start with the page the opening needs.

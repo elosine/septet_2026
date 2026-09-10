@@ -118,6 +118,10 @@ the morph's fade-in, and then the editing interface around the piano parts he re
   (counts differ): stack OR repeat, both his — *"Can we have either"*; fewer notes leave the last onsets empty. **Rule 2:** the accents travel
   with the rhythm, the pitches with the harmony. Not built: the rhythm collection (his own played rhythms) — waits until he has played them.
 
+- **The crescendo run is a console line, not a panel (evening; §325; PLAN 1p):** `crescRun({...})` writes the gesture at the playhead,
+  SPACE plays it, the next call replaces it, `crescRun.keep()` freezes one. Rejected for now: a card (B), the drawer (its Hear never
+  swells — plain note-ons; NITS). **He has heard none of it yet.** The morning's feature queue AB1–AB3 (STRIKES_TOOL §AB) is collected, not built.
+
 **Open at session end** *(written cold, 2026-09-09)*:
 
 - **Task and state:** the AI's work is done and pushed; **nothing is in flight.** He is composing and recording piano into

@@ -1359,3 +1359,26 @@ as a recipe in chat; nothing built. **This suite has not yet been heard by him**
 lists) with the onsets given a second source. Built the same day as *rhythm from · extra notes* (RUNNING_LOG §324); the collection of
 his own played rhythms waits until he has played them — the db already keeps a `rhythm` block per strike, and the same ingest reads a
 new save.
+
+## CN-59 — the first gesture of the third section: overlapping crescendos, accelerating, shortening (2026-09-09, session 7, evening)
+
+> "The first gesture. in my third section for this piece will be a set of overlapping crescendos. They'll go from PPP to FFF, and their
+> onsets will accelerate. And the... their durations will shorten each new onset. The issue is I don't have the specs. I don't know what
+> those are yet. So I need to hear a few versions. When we were doing just strikes, it was easy, and I could just adjust the
+> Acceleration, make it tighter, make the curve more steep, etcetera. And then I can hear different versions and then settle on the one
+> I want."
+
+> (on the day, and the tool) "My day has been chasing down little details and spending a lot of time on them, and it's been challenging
+> to get AI to understand what I'm looking to do and to do it correctly. This tool is not working the way I need it to work. and it's
+> just too hard to make even the smallest settings sound the way I want. And then there's dozen of them. So I need to find a way to cut
+> more efficiently and quickly to what I need to do given the tools I have. … We could just do it in the save score, and you could
+> perhaps give me a console script every time. I wanna make some kind of adjustment, and you can make some suggestions about starting
+> settings and then how to adjust. … I can't hear the swells at all, and I don't wanna spend any more time trying to troubleshoot why
+> the long tones aren't swelling at all. I have everything set. So provide me some options, please, to be able to audition a set of
+> these overlapping crescendos. So I can hear the setting I want, and then I'll keep that one."
+
+*The AI's reading (marked as such):* the gesture has five numbers — the first gap, the last gap, the steepness (or curve), the
+crescendo's length as a multiple of its gap (so the durations shorten with the rush), the dynamics ppp → fff — plus who plays
+(round robin over the players) and a placeholder pitch pool; he wants to hear versions and keep one. **The drawer's Hear does not
+swell**: `play()` sends plain note-ons (strike_drawer.js line 1056); the crescendo's CC7 ramp exists only once the swells are INSERTED
+and the score plays them (1l's objects). What he heard was the tool, not his settings.
