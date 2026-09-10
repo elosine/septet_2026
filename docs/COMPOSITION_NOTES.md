@@ -1382,3 +1382,21 @@ crescendo's length as a multiple of its gap (so the durations shorten with the r
 (round robin over the players) and a placeholder pitch pool; he wants to hear versions and keep one. **The drawer's Hear does not
 swell**: `play()` sends plain note-ons (strike_drawer.js line 1056); the crescendo's CC7 ramp exists only once the swells are INSERTED
 and the score plays them (1l's objects). What he heard was the tool, not his settings.
+
+## CN-60 — the piano as two hands in the chord deal: every strike, the remainder, one hand's reach, alternating (2026-09-10, 03:30)
+
+> "so the piano, can we try to devise a mode that lets the piano be like 2 voices so it can play alternating rhythms that overlap even.
+> just one hand or one voice still has the point one five, I think, gap between the next thing for itself. So treating the two hands like
+> two instruments. But the other constraint is that they can only play the notes that will fit in in a hand. And the hands that alternate
+> can't necessarily play on top of each other. So I don't know. That's a bit complicated. I don't know if we can figure that out. So in
+> this case, I would like it to play, I guess, essentially, every strike then and to try to play as many of the remaining notes that
+> aren't assigned in those strikes to one of the hands. So I guess it'll be something like piano plays every strike, takes up any
+> nonassigned notes of that cord. that will fit in one hand. and doesn't overlap from the previous one. So it can only take up any of the
+> remaining notes that weren't in the range of the previous hand. But, also, we can use active transposition. So that's a lot of layers.
+> Let me know if this is something that could be automated. and how we can add it to the machine. Let's discuss the steps though before."
+
+*The AI's reading (marked as such):* this is PLAN 1k step 7 (CN-52 — the piano given the ensemble's REMAINDER) made precise: the piano
+on EVERY onset of a chord cycle, taking the notes the other players did not, as many as one hand can hold, the two hands alternating
+like two instruments (each hand with its own 150 ms rest), a hand never reaching into the register the other hand is still holding,
+and octave transposition ("active transposition") to bring the remainder into a hand's reach. To be planned with the planning method —
+the restatement and his answers first, then the top line.

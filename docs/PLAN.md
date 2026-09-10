@@ -1010,7 +1010,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
        insert; his verdicts → STRIKES_TOOL and NITS, the fixes he marks "fix now" built at once;
      - later, at 2a: the notation of a chord strike.
   7. **Later — the PIANO in the chord strikes** (it picks up what the ensemble could not take, or plays several notes of the sonority
-     itself) — `todo — noted 2026-09-08 (CN-52), to be planned when its turn comes` *(composer: "allowing piano to play a whole chord
+     itself) — `planning 2026-09-10 03:35 (CN-60; RUNNING_LOG §329): the restatement agreed — the piano on EVERY onset of a chord cycle, the REMAINDER, one hand's reach (M7, 4 notes), the two hands alternating L R L R with 150 ms each, crossing allowed, octave folds into reach and out of the other hand's held register, topped up from played notes when the remainder is thin; a second mode keeps the piano as one voice as now. The top line of six steps is in §329 — step 1 (the pure rule, `piano_hands.js`) next on his word. Long term, noted: a hand-shape / black-and-white-key algorithm` *(composer: "allowing piano to play a whole chord
      or multiple partials in a chord … if that strike is allowing 3 instruments to avoid collisions, the piano can have the option of
      picking up other partials not dealt in that strike, also, in any strike the piano can play multiple notes from the underlying
      sonority, and then figure out an easy way to generate either single notes or chords for the piano per strike")*. *Why:* the piano
