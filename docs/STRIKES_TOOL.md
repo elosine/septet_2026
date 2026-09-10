@@ -952,6 +952,58 @@ player, the rhythm to the strike, the sound to a switch in another band, and the
    at (a played strike on the keyboard, voiced and orchestrated by hand). Which — the planning method decides, with his walk-through in
    his own words first (HOW_WE_WORK, 2026-09-07: *the script is the unit, not the ticket*).
 
+## AD · The revision, commissioned — `2026-09-10 06:30: built overnight without a plan, at his word; the revert point is the git tag \`pre-revision-2026-09-10\` and the runtime flag below (RUNNING_LOG §333; PLAN 1q)`
+
+> *"I would like to ask for a revision of the things that were built earlier. and we can dispense with the plan. I did careful planning, and it
+> wasn't very fruitful. So I'm going to ask you to try to work independently and see if this makes things any better. If you could have some
+> sort of copy or revert point so that if the changes you make aren't successful or made things worse, I can come back to where things are
+> now. So fairly simply, I wanted the same functionality as the original strikes. Mostly the rhythmic functionality. So I could choose a
+> harmony, then it would orchestrate the notes. and then spread these out over a rhythm. So I wanna keep all of that that's still there now.
+> So, for example, I could create an acceleration with a single note on each onset or an even pattern over a certain amount of time or use
+> the original played rhythm for that selected strike. and I could stretch that out, do other things to it. In other words, no changes right
+> now to the rhythm part of the original strikes. All I really want to do too with the enhancements were to replace those individual notes
+> with different things. So one would be... instead of a single note, multiple notes. So more than one instrument playing that that rhythmic
+> position. A chord. And then another thing would be a crescendo. So at each rhythmic position, I could put a crescendo there. and we'll have
+> a mode where the strikes pattern can represent the end of the crescendo or the beginning of the crescendo. Now the chord version, let's
+> simplify that. Have some more simplified way of choosing the instruments for that particular chord. and the harmony for that particular
+> chord. maybe the best way is that I use the regular strikes to create the rhythm. And let's see. I generate thirteen onsets and maybe for
+> each onset, I could click it and then choose something from the drawer, a harmony. and then the algorithm will orchestrate it for me. so
+> that it knows the available musicians for that particular one. In any case, try to simplify it. And for the crescendos, the only addition
+> there would be the crescendos can actually overlap. they don't have to stop at the next onset. So maybe just a number box that will
+> increase or decrease the length of the crescendo by a percentage. So maybe the default, the initial insert will be crescendos that last
+> from one onset to the next. But then I can dial them longer or shorter. And then the accented crescendo is also a bit of a shambles too.
+> it's not working at all like I wanted to do too. So what I propose is a reverse method. So I'll use your update to generate a sequence of
+> crescendos based on the strikes rhythm. And then maybe just in the main score. we can do this. where I can select a Crescendo and then
+> either add a beginning accent or ending accent and then choose the instrument to play it. So it might be something like this. I use the
+> Strikes drawer to generate a series of crescendos in the rhythm I want. I insert that into the score. I select any given crescendo. And
+> whether it's a panel or button, I'm not sure, you can decide, but then I can add a accent at the beginning or accent at the end, and I
+> can choose the instrument that'll play that accent. because that I guess I'll need either once that accent is drawn in or part of this
+> panel, I'll need a way to assign that accent, a pitch, and an articulation. Okay. So what I'd like to do now is if you could process this
+> and give me a quick top line summary of your build. And then after that, let's document, commit, and push everything. You'll have the
+> revert possibility, and then go ahead and try to build this. and I'll check-in in the morning."* (2026-09-10, 06:30)
+
+**The reading, and the top line of the build** *(the AI's; the planning method dispensed with at his word — the record is here and in §333):*
+
+- **The rhythm part of notes mode is untouched.** A strike or a harmony on the keyboard, orchestrated; the onsets as played · even · accel
+  run · containers, stretched, jittered, reordered — everything of §J, §K, §W, §AA stays as it is.
+- **What sits on an onset becomes a choice — the SOUND at that position:** a note (as now — the default, so nothing changes until he
+  chooses), a CHORD, or a CRESCENDO.
+  1. **A chord at an onset:** click an onset on the rhythm strip → a small card; click a harmony in the left column while the card is open
+     → that harmony is dealt at that onset over the players FREE there (the re-attack rule against the real onsets, the notes by register,
+     folded into range — 1k's engine); *all onsets ← this harmony* and *all onsets ← this banner in turn* for the whole pattern at once.
+  2. **A crescendo at every onset** (1o's switch, kept): the length as a PERCENTAGE of the gap to the next onset — 100 % = one onset to the
+     next (the new default), dialled longer or shorter, so they overlap or leave air; and an **anchor**: the pattern marks the BEGINNING of
+     each crescendo (as now) or its END (each crescendo ends on its onset and starts one gap × the percentage earlier, the first reaching
+     back before the pattern). **Hear plays the swells with their ramps** (the NIT of 2026-09-09 closed: fill mode's hear path reused).
+  3. **Accents on crescendos, in the score:** click a crescendo → 1m's card gains an ACCENT row — *+ at the start* · *+ at the end* · the
+     instrument · the pitch (default the crescendo's, folded into that instrument's range) · the articulation (default that instrument's
+     strike voice: flute tongue ram / pizzicato, bass clarinet slap tongue, violins Bartók pizz, viola and cello gettato, the piano its
+     voice) · ♪. The accent is a short strike note in its own right (140 ms) on that lane, at the crescendo's start or at its end (the cliff
+     on the strike), in the crescendo's group.
+- **Chords mode and fill mode stay** as they are, untouched; the new sound choices live in notes mode. **The revert:** the tag, or in the
+  running app the flag `localStorage.setItem('septet.strikes.classic', '1')` + reload, which leaves the new files out.
+- **Built on a copy, walked with real clicks and keys, committed at the wrap; his ear in the morning.**
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the

@@ -131,6 +131,12 @@ the morph's fade-in, and then the editing interface around the piano parts he re
   an even row, `tech: 'staccato'`. Chords mode's screen failed him twice; the diagnosis and the fixes are in §330 and NITS. **Unheard by him.**
   The piano-as-two-hands build (CN-60, §329) is next on his word, `one voice` staying the default.
 
+- **THE OVERNIGHT BUILD (06:30, his commission; STRIKES_TOOL §AD; PLAN 1q doing; RUNNING_LOG §333):** the strikes drawer revised without a
+  plan, at his word — the sound at an onset (note · chord · crescendo with a begin/end anchor and a percentage length; Hear with the ramp)
+  and accents on crescendos in the score's card; the rhythm part untouched. **REVERT POINT: git tag `pre-revision-2026-09-10`** —
+  `git checkout pre-revision-2026-09-10 -- score/public` puts the drawer back as it was at 06:30; or, in the app, the console line
+  `localStorage.setItem('septet.strikes.classic', '1')` and a reload leaves the new files out. He checks in in the morning.
+
 **Open at session end** *(written cold, 2026-09-09)*:
 
 - **Task and state:** the AI's work is done and pushed; **nothing is in flight.** He is composing and recording piano into
