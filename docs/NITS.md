@@ -191,3 +191,12 @@ left, found when a fade could not be verified in the harness:
   ~7 queued at a time on a 200 ms lookahead. It also makes the stream testable — the Browser pane throttles rAF to nothing while hidden.
 
 Bend stays per frame either way: 14-bit and genuinely dense.
+
+## 2026-09-09 — the harmony banners (STRIKES_TOOL §AA)
+
+- **Two OPEN banners both stick.** Only open banners are sticky now (folded ones scroll away), but with STRIKES and BLASTS both open, both
+  headers stick at the top while BLASTS' rows scroll and the later one covers the earlier. Harmless; the beating drawer has the same idiom.
+- **The models' sets are absent from the banners until the morph panel has read its models** — the pitch menu's own rule (`this.models`),
+  the crescendo bar has the same dependency. Open the morph panel once and reopen the drawer.
+- **The Browser pane's "Return" is not ENTER** (RUNNING_LOG §324): it arrives as a keydown with an empty key; "Enter" is the real one. For the
+  harness, not the app — noted so the next walk does not chase it again.

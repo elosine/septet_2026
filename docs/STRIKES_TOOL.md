@@ -845,6 +845,42 @@ hooks in `strike_drawer.js`. 37 checks in `score/tools/check_containers.js`.
 - **The last swell of a pass had no next onset**, so it took the sanity bound and came out 60 s long. It now takes the gap BEHIND it — the
   local tempo where it sits.
 
+## AA · Every harmony in the column, and the rhythm as its own source — `built 2026-09-09 (PLAN 1d, the drawer's step; RUNNING_LOG §324; CN-57 · CN-58)`
+
+His words: *"essentially, the way the strikes drawer is, but with all the other harmonies and have the same behavior. So I click, say, a blast or a
+chord shape from that same strikes menu … and it has the collapsible banners. and then everything else behaves the same."* — and: *"can we
+separate out the … strikes rhythms? … another pull down where I have zero through forty five for the strikes rhythms?"*
+
+**The column** — banners, the beating drawer's idiom (CN-36), one scroll: **STRIKES** (the db's rows exactly as before) · **STARTERS** ·
+**THE MODELS' SETS** · **STACKS** and **MESSIAEN'S MODES from the root** (a root box in the banner; ENTER applies, ESC restores) ·
+**BLASTS · the tuba piece** · **CHORD SHAPES · 2 pianos 2 percussion** · **KEPT** · **RECALLED from an ACTUAL** — every group of the morph
+panel's own pitch menu (`MorphPanel.pitchOptionGroups` / `sonorityOf`, CN-53's one list, the crescendo bar's too), so the three can never
+disagree. Every banner but STRIKES starts folded; the fold state is remembered; only an OPEN banner sticks while its rows scroll.
+
+**The model (agreed 2026-09-09):** a harmony clicked becomes the strike in play — its notes as one simultaneity, all at 0 ms, the drawer's
+default velocity and length — and is a strike from there on: the keyboard, the voicings, the shuffle, the orchestration rows, articulations,
+hear, the rhythm column, the run, chords / fill, the sound switch, takes, insert. **A harmony click behaves exactly like a strike click.**
+The three time buttons (Insert @ original time · after previous · ⌖ original) grey out: a harmony has no time. An insert writes an ordinary
+`grp-strike-<id>-…` group (`grp-strike-S001-…`), so fill mode reads it as a pattern like any other. "As played" for a harmony = together;
+the shapes spread it over a nominal second (`spanFallback`), and the `= ms` box lands it.
+
+**Rhythm from · extra notes** — under the rhythm column's controls. §L's three lists (pitches · onsets · players) with the onsets given a
+second source: `own` (default — a strike clicked with `own` is byte-for-byte the drawer as it was) or any strike #0 … #45. Laid IN PLACE:
+lanes, voicing, order and hand assignments untouched; only each voice's onset, velocity and length move. Two rules, his:
+- **rule 1 — counts differ:** the notes go on the onsets in order and wrap. `stack`: note n+1 lands ON onset 1, sounding with note 1 (the
+  gesture keeps its length). `repeat`: a second pass, one LAST GAP (the last non-zero one) after the last onset. Fewer notes than onsets: the
+  last onsets stay empty. The readout says which: *9 notes on 6 onsets · 3 stacked* · *2 passes, +8 ms between* · *25 onsets empty*.
+- **rule 2 — the accents:** velocities and lengths travel WITH THE RHYTHM; the pitches come from the harmony.
+Takes carry the harmony's id and the source; a take from before this loads as `own`. Chords mode's bank menu gained the same groups.
+
+**Where it lives.** `score/public/harm_source.js` (pure — `makeStrike` · `layOnTicks` · `lay` · `rhythmOf` · `describe` · `groupsFor`; 45 checks
+in `tools/harm_source_check.js`) · `score/public/harm_source_ui.js` (the mixin) · four dispatch lines in `strike_drawer.js` (`strikeById` ·
+`applySource` · `spanFallback` · `applyState`'s lookup).
+
+**Not here yet:** the rhythm COLLECTION — his own played scattered rhythms ingested as #46 … (the db already keeps a `rhythm` block per
+strike; the same ingest reads a new save) — waits until he has played them; the full 1d module (H-numbers, the re-scrape, one table) stays
+for the planning method; keeping the rhythm dials while browsing harmonies (a one-line addition, on his word).
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the
@@ -884,3 +920,4 @@ Start: `cd C:\Users\jwloy\GitHub\septet_2026` → `node score\server.js` (restar
 - 2026-09-04, evening — **U1–U4 built** in one update (composer: "then build all 4 pls"): a gap column between keyboard and players with the lines landing on a marker per row and the hovered row's lines brightened (U1); the strike defaults flute pizzicato · bcl slap · violins Bartók · viola/cello gettato · piano main, and `flat 127` on by default (U2); solo — shift-click a dot (keyboard or rhythm), `S` per player row, `solo off` in the footer; while anything is soloed only the soloed voices sound (U3); the rhythm strip at 480 px by default with a width slider 320–1400, the saved space to the gap (U4). Verified in the running app, no console errors. RUNNING_LOG §64.
 - 2026-09-04, session 3 — **O v2 + the SPACE bug** (composer: "yes lets keep those save files as well, also I've saved 2 already lets try to preserve them" · "I hit space to play, that was working But then at some point, it started playing the main score"): takes moved from the browser to `bank/panel_snapshots.json` through the panels' snapshot route (bucket `strikes`), with a one-time migration of the v1 localStorage takes, the server's name rule checked in the drawer, and a `×` delete; SPACE re-routed — a window capture-phase listener owns SPACE while the drawer is open, because the score's blur-every-select-on-change rule dropped the focus to the page body and the score's own SPACE handler took over. Reproduced, fixed and verified in the running app (RUNNING_LOG §65). Also answered: an instrument left out by the shuffle is hooked back in by hand — double-click the dot, click the player's row; the note folds by octave into range (↓ / ↑); nothing else moves (F, the two-click assign).
 - 2026-09-04, session 3 — **Q v2** (composer: "have the time code carry with the strike … whatever save file's open, it can insert at that time code … rename the button, like, insert in original time"): `Replace in place` → `Insert @ 0.61 s (original)` — the label carries the strike's t0; it writes at t0 into whatever score is open, removing originals only where they truly exist (id + layer + pitch + onset within 25 ms), so the source guard is gone. Verified: into an empty score → 7 notes + META at 0.608 s, "no originals in this score"; into a copy of the committed ScatteredStrikes01 → "replaced 9 original notes". RUNNING_LOG §68. Built alongside D17 (the save system).
+- 2026-09-09, session 7 — **§AA built:** the harmony banners and *rhythm from · extra notes* (composer: "update the strikes side panel there with everything" · "Can we have either" · "yes to rule 2, go"); walked with real clicks on a `zz-ai-harm` copy — RUNNING_LOG §324.

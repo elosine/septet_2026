@@ -111,6 +111,13 @@ the morph's fade-in, and then the editing interface around the piano parts he re
 4. Then the three tails: 1k step 7 (the piano's chord remainder, CN-52) · 1i item 2 (the harmonics' CC21 shift) · 0c.7 (a) (trills and
    beatings still on MAIN).
 
+**Session 7 (2026-09-09, Claude Code / Fable 5.1) — mid-session, decided and built (RUNNING_LOG §324; promote to §4 at the wrap):**
+- **The strikes column holds every harmony** of the morph menu as collapsible banners; **a harmony clicked IS a strike** (one simultaneity, the
+  defaults) and behaves exactly like a strike click. Rejected: keeping the rhythm dials across a harmony click (a minutia — one line if wanted).
+- **The rhythm is its own source** — *rhythm from* `own` (default; byte-identical to before) or any strike #0…#45; laid in place. **Rule 1**
+  (counts differ): stack OR repeat, both his — *"Can we have either"*; fewer notes leave the last onsets empty. **Rule 2:** the accents travel
+  with the rhythm, the pitches with the harmony. Not built: the rhythm collection (his own played rhythms) — waits until he has played them.
+
 **Open at session end** *(written cold, 2026-09-09)*:
 
 - **Task and state:** the AI's work is done and pushed; **nothing is in flight.** He is composing and recording piano into

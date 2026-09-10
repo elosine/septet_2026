@@ -355,7 +355,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
   eat by mute-rule · one availability model shared with the accel dealer · the weave later · notation as `tr` + span.
   Phases 0–6 there; step 0 is a listening exercise with today's zones. *Why:* CN-1 / CN-6's tremolos on curves are
   the piece's second material, and the composer wants them to grow out of the strikes (CN-19).
-- **1d — The harmony database, gathered from all the pieces** — `todo` *(composer, same
+- **1d — The harmony database, gathered from all the pieces** — `doing 2026-09-09: the DRAWER's step built — every harmony of the morph menu in the strikes column as banners, and the rhythm as its own source (rhythm from · extra notes); STRIKES_TOOL §AA, RUNNING_LOG §324; the MODULE (H-numbers, the re-scrape, one table) still to be planned with the planning method; the rhythm collection when he has played more` *(composer, same
   breath: "collect up a harmony database from all my pieces … the two piano two percussion
   piece where I have things called chord shapes, and then in the tuba piece … blasts … gather
   up all the harmonies into a single database")* — after 1c. Sources: #2's chord shapes (its

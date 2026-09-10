@@ -350,8 +350,10 @@ const D = {
     },
 
     // ------------------------------------------------------------------ the strike → voices
+    // harm_source_ui.js (PLAN 1d, 2026-09-09): a strike is the db's — or a harmony of the banners made into one on demand
+    strikeById(id) { return (this.db && this.db.strikes && this.db.strikes[id]) || (this.harmStrike ? this.harmStrike(id) : null) || null; },
     select(id) {
-        const s = this.db.strikes[id]; if (!s) return;
+        const s = this.strikeById(id); if (!s) return;
         this.strike = s; this.cfg.strikeId = id; this.prev = null;
         this.el.querySelectorAll('.skSeqRow').forEach(r => { r.style.background = r.dataset.id === id ? 'rgba(201,160,90,.25)' : ''; });
         // voices as played; the as-played pairing: voice i ↔ its own onset
@@ -362,6 +364,7 @@ const D = {
             dt0: n.dtMs, slot: i,
         }));
         this.slotsPlayed = s.notes.map(n => n.dtMs);      // the onset pattern as played (voice order)
+        if (this.applySource) this.applySource();          // harm_source_ui.js: the onsets (and the accents) of another strike — rhythm from · extra notes
         this.cfg.voicing = 'original'; this.cfg.order = 'played'; this.resetRhythm();
         this.asPlayedOrchestration();
         this.applyVoicing();
@@ -641,7 +644,7 @@ const D = {
     // S is the recorded span either way, so the strike keeps its length until the ms / gap box says otherwise.
     pattern(keep) {
         const all = this.slotsPlayed.slice().sort((a, b) => a - b);
-        const S = all.length ? (all[all.length - 1] - all[0] || 0) : 0;
+        const S = all.length ? ((all[all.length - 1] - all[0]) || (this.spanFallback ? this.spanFallback() : 0)) : 0;   // harm_source_ui.js: a harmony has no played span — a nominal one lets the shapes spread it
         const base = keep ? keep.map(k => all[k]).filter(x => x != null) : all;
         const n = base.length; if (!n) return [];
         const rnd = mulberry32(this.cfg.rSeed * 48611 + 5);
@@ -1153,7 +1156,7 @@ const D = {
     // ------------------------------------------------------------------ back / takes (O)
     state() { return JSON.parse(JSON.stringify({ strikeId: this.cfg.strikeId, cfg: this.cfg, voices: this.voices.map(v => ({ i: v.i, pitch: v.pitch, lane: v.lane, fold: v.fold, tech: v.tech, standIn: v.standIn, piano: v.piano, solo: !!v.solo, slot: v.slot, skip: !!v.skip, also: (v.also || []).map(r => ({ lane: r.lane, tech: r.tech, fold: r.fold, standIn: r.standIn, skip: !!r.skip })) })) })); },
     applyState(st) {
-        if (!st || !this.strike || st.strikeId !== this.strike.id) { if (st && st.strikeId && this.db && this.db.strikes[st.strikeId]) { this.select(st.strikeId); } if (!st || st.strikeId !== (this.strike && this.strike.id)) return; }
+        if (!st || !this.strike || st.strikeId !== this.strike.id) { if (st && st.strikeId && this.strikeById(st.strikeId)) { this.select(st.strikeId); } if (!st || st.strikeId !== (this.strike && this.strike.id)) return; }
         Object.assign(this.cfg, ACCEL_DEFAULTS, st.cfg); this.cfg.strikeId = this.strike.id;   // 1h: a take from before the run's dials gets their defaults, not the last strike's
         st.voices.forEach(sv => { const v = this.voices[sv.i]; if (!v) return; Object.assign(v, { pitch: sv.pitch, lane: sv.lane, fold: sv.fold, tech: sv.tech, standIn: sv.standIn, piano: sv.piano, solo: !!sv.solo, slot: sv.slot, skip: sv.skip, also: (sv.also || []).map(r => ({ lane: r.lane, tech: r.tech, fold: r.fold, standIn: r.standIn, skip: !!r.skip })) }); });
         this.writeFields(); this.render();

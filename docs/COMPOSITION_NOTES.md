@@ -1334,3 +1334,28 @@ segment 8 · bias 0.3 · spread 0.35 · depth 1 · dyn 0.42 swell · seed 33), t
 *The AI's note:* what a screenshot cannot carry is the render itself. **`Save as ACTUAL`** captures the resolved parameters, the engine
 constants and every object, and puts it one click from RECALL — worth pressing whenever a setting is one to come back to. The pairs
 below the third, and anything under SHAPE · release, were off the bottom of the screenshots and are not in the record.
+
+## CN-57 — an accelerating sequence of crescendos (2026-09-09, session 7)
+
+> "I want to create an accelerating sequence of crescendos. How do I use the strikes drawer to do that?"
+
+*The AI's reading (marked as such):* the first stated use of 1o (CN-56's crescendo strikes) — the drawer's `accel · round robin` shape
+for the timing, the `sound → crescendo` switch for the sound, `× the gap` so each crescendo shortens with the rush. Walked back to him
+as a recipe in chat; nothing built. **This suite has not yet been heard by him** (CRESCENDO §7) — his verdict goes to RUNNING_LOG.
+
+## CN-58 — the strikes' rhythms as their own collection, separate from the harmonies (2026-09-09, session 7)
+
+> "So can we separate out the blasts... sorry, the strikes rhythms? So can we maybe have a place where I select a strike and its rhythm
+> gets stored somewhere, or I have another pull down where I have zero through forty five for the strikes rhythms? And then we don't
+> necessarily have to build this part now, but eventually, I would like to play some more scattered strike kind of rhythms like that and
+> then make a collection of those. So let's again talk about the feasibility of this and if it will risk to change anything as it
+> exists now."
+
+> (on wrapping, when the notes outnumber the onsets) "let's say there are five ticks, eight notes, one through five assigned to the
+> ticks, and then six comes back around to tick number one. And then what... how to figure out the gap between five and one? Or is
+> that... do I have the modeling correct?" — and, offered stack or repeat: "Can we have either" — "yes to rule 2, go"
+
+*The AI's reading (marked as such):* the drawer's own model of 2026-09-03 (STRIKES_TOOL §L — pitches, onsets, players as three free
+lists) with the onsets given a second source. Built the same day as *rhythm from · extra notes* (RUNNING_LOG §324); the collection of
+his own played rhythms waits until he has played them — the db already keeps a `rhythm` block per strike, and the same ingest reads a
+new save.
