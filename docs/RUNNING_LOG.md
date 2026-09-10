@@ -9930,3 +9930,21 @@ window.dupNote = function (offset) {
 **The lesson worth keeping, and it is a design rule not a fix:** the answer to "too much explaining on my part" is a control where his hand already is. §354 was correct about the code and wrong about him. Both the console line and the card button call the same function now, so nothing was wasted, but the console line is no longer the answer given.
 
 **Verification:** `note_card.js` parses; both inline script blocks of `composer.html` parse; `duplicateNote` present with 3 call sites. **Not walked in the app** — hard reload (CTRL+SHIFT+R) needed, then his eye. SWEEP_LIST #5 closed.
+
+## §356. "a piano strike at the end of each of those Crescendos" — 23 of them, one console line, dry-run against the file first
+
+*(2026-09-10, session 8, Claude Code / Opus 5.)*
+
+**His ask, verbatim:** *"SeptetSec03-Materials-B has a series of Crescendos. I'd like a piano strike at the end of each of those Crescendos using the Crescendos pitch, but in the the five six octave. So for example, I have a f sharp five there and a c sharp six. And each of these should be one f. Actually, make that two f's and eighty five milliseconds. Whatever the quickest way to this is, probably console score."*
+
+**Read from the file before writing a line of it** — `scores/SeptetSec03-Materials-B.json`: 24 objects, **23 crescendos**, on lanes 0·1·3·4·5·6 (flute · bass clarinet · violin 1 · violin 2 · viola · cello). **The piano lane 2 is empty**, which is why it is free for this — the piano was dropped from crescendo passes in §343. Pitches: F5 77 · C#5 73 · D6 86 · **D4 62** · D#6 87 · D#5 75. He named "f sharp five and c sharp six" from the screen; the file says F5 and C#5. Immaterial — the rule takes each crescendo's own pitch, so his approximation and the file agree on the method.
+
+**"in the five six octave"** read as a band, not a transposition: **C5 (72) … B6 (95)**, and a pitch is raised by octaves until it lands inside. A no-op for 22 of the 23; the bass clarinet's **D4 62 → D5 74** is the only one that moves. Both readings of his sentence (they are already there / put them there) come out the same, which is why it was written that way rather than asking him.
+
+**Dry-run before it was offered** — 23 strikes, 8 of them octave dyads where two crescendos end together (viola D6 + bass clarinet D5; violin 2 D#6 + flute D#5). Deduped on `time:pitch`, so nothing doubles itself. **ff → level 8.6 → velocity 109** (`Cresc.dynHeight('ff')` at run time, so the card and the line cannot drift apart). 85 ms, starting **on** the crescendo's end.
+
+**Schema-checked, not assumed:** the emitted note was diffed key-for-key against a real strike in `piece-septet.json` (`wc-595`) — `srcKind:'strike'`, `technique:'main'`, `sonifyMode:'plain'`, `recVel`, the two flat nodes at the level, `groupId`. **Nothing missing.**
+
+**Given as `crescStrikes()`** (saved at `score/public/cresc_strikes_console.js`, pasted not loaded — no reload, so nothing of his in flight is lost). One `pushUndoState`, so CTRL+Z takes all 23. **`crescStrikes.clear()`** removes exactly its own (they carry `groupId: 'grp-cresc-strike'`) — written because "how do I delete what I just put in" was SWEEP_LIST #3's complaint, and a batch tool that cannot be undone in one move would have earned the same one.
+
+**Not run in the app.** His console, his ear.
