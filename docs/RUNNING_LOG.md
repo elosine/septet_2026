@@ -9644,3 +9644,20 @@ The answer given: **this one was not model-sensitive** — he named the symptom 
 **The lesson, worth more than the fix** *(AI, marked):* a silent zero is the worst failure shape in this drawer. The run did exactly what it was written to do and reported it to a readout he was not looking at, so a missing precondition read as "the tool broke". **Where a stage can legitimately produce nothing, it has to say so on the status line, not only in its own block.**
 
 **Verification:** syntax checked on both files; not run in the app — his reload and his eye, by the §340 rule. The status line is now the evidence: pick mode 3 and it will say how many voices got players.
+
+## §343. "i took out the piano but the piano is still playing in the preview" — CN-34 was honoured in the chord deal and nowhere else
+
+**What prompted it** (2026-09-10, hearing the run as crescendos for the first time): *"i took out the piano but the piano is still playing in the preview"*.
+
+**Two separate reasons, both real.**
+
+1. **The crescendo pass never dropped the piano.** `swellNotes()` takes `_notesForPlain(mode)` and reshapes every note into a swell; nothing filtered the piano out. `swell_ui.js` says in its own header that *"the piano stays out of the dealing as it always has (CN-34): a piano cannot swell"* — and that was true of the CHORD deal only. In notes mode a voice sitting on the piano lane (or doubled onto it by `v.piano`) came through the swell pass as a long **flat** note in the middle of the crescendos. Which is precisely what "the piano is still playing" sounds like.
+2. **"Taking out the piano" does not mean what the buttons suggest.** The foot's `none` runs `pianoQuick('none')`, which sets `v.piano = own(v)` — it removes the DOUBLING but deliberately keeps any voice whose lane IS the piano. So a voice dealt to the piano survives every one of those five buttons. **And §341's auto-orchestration made this worse:** `shuffleOrch()` treats the piano as a player like any other, so every new harmony pick could deal it a voice again, undoing what he had just done by hand.
+
+**Fixed at both levels.**
+- `swellNotes()` now **drops every piano note outright** whenever the switch is on crescendo — Hear and Insert both pass through it, so what he hears and what gets written agree.
+- `shuffleOrch()` **removes the piano lane from the candidates while the switch is on crescendo**, so neither the automatic deal nor his own reshuffle spends a player on an instrument that cannot swell. It returns the moment he clicks `attack`.
+
+**The pattern, third time this session** *(AI, marked):* §342 was a rule enforced in one place and not another (players required by the run, not supplied by the pick); this is the same shape — CN-34 enforced in the chord deal and not in the swell pass. **A rule stated in a file header is not a rule; it holds only where it is written into the code path.** Worth a sweep at some point for the other standing rules (the re-attack rest, the range fit, the piano's one voice) to see where else they are honoured in one path only. → NITS.
+
+**Verification:** syntax checked on both files; not run in the app — his reload and his ear.

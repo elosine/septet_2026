@@ -233,3 +233,14 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 - **The sound card has no harmony menu of its own** — the left column is the menu (his "choose something from the drawer"); if he wants a
   menu in the card, it is the banners' groups (harm_source_ui's `harmGroups()`), one line.
 - **Hear with the ramp** could not be heard in the pane (Web MIDI blocked); the path is fill mode's, which he has heard — his ear first.
+
+## 2026-09-10 — standing rules honoured in one code path only (RUNNING_LOG §342–343)
+
+- **The pattern:** twice in one hour a rule that is stated plainly in a file header turned out to hold in one path and not another — the run
+  requiring players that the pick never supplied (§342), and CN-34's *a piano cannot swell* enforced in the chord deal but not in the swell
+  pass (§343). **A rule in a comment is not a rule.**
+- **Worth a sweep when there is time:** the re-attack rest (150 ms) · the range fit / fold rule (F) · the piano's one voice · the secco cut —
+  check each is enforced in every path that can write or sound notes (Hear, Insert, the chord deal, the swell pass, the console lines
+  crescRun / chordRun), not only in the one it was written for.
+- **And the silent-zero rule from §342:** where a stage can legitimately produce nothing, it must say so on the STATUS line, not only in
+  its own readout.

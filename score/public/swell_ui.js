@@ -96,8 +96,13 @@ Object.assign(D, {
 
     // the dealt notes with swell lengths on them — used by Hear and by Insert alike
     swellNotes(mode) {
-        const notes = this._notesForPlain(mode);
+        let notes = this._notesForPlain(mode);
         if (!this.isSwell()) return notes;
+        // §343: the piano is dropped from a crescendo pass outright. CN-34 — a piano cannot swell — was honoured in the CHORD
+        // deal but never here, so a voice sitting on the piano lane (or doubled onto it) came through as a long FLAT note and
+        // sounded exactly like "the piano is still playing" after he had taken it out. Hear and Insert both go through here.
+        { const T = TRK(); notes = notes.filter(n => !(T[n.lane] && T[n.lane].instKey === 'piano')); }
+        if (!notes.length) return notes;
         // a crescendo is the ORDINARY voice (his rule, 2026-09-10: "the crescendos are the ones we discussed, ord / senza vib vel"); the row's
         // strike voice is for hits — so Hear routes a swell the way Insert writes it
         const C = C_(); const ord = lane => { const t = C && C.ordinaryTech ? C.ordinaryTech(lane) : null; return t ? t.key : null; };

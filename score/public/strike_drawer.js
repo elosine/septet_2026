@@ -498,6 +498,9 @@ const D = {
         const vs = [...this.voices].sort((a, b) => a.pitch - b.pitch);
         vs.forEach(v => { v.lane = -1; v.also = []; v.fold = 0; v.standIn = null; v.skip = false; v.piano = false; });
         const free = new Set([...Array(n).keys()]);
+        // §343: while the sound switch is on crescendo, the piano is not a candidate — a piano cannot swell (CN-34), so dealing
+        // it a voice both wastes a player and puts a flat note in the middle of the swells. It comes straight back on `attack`.
+        if (this.isSwell && this.isSwell()) { const pl = T.findIndex(t => t.instKey === 'piano'); if (pl >= 0) free.delete(pl); }
         const give = (v, lane) => { v.lane = lane; v.tech = this.defaultTech(lane); this.fitVoice(v); free.delete(lane); };
         const fits = (v, lane) => { const inst = this.instOf(lane); if (!inst) return false; const tk = this.defaultTech(lane); const [lo, hi] = techRange(inst, (inst.techniques || []).find(t => t.key === tk)); return this.cfg.mayFold ? !!foldInto(v.pitch, lo, hi) : (v.pitch >= lo && v.pitch <= hi); };
         // locks first: the highest and the lowest voice
