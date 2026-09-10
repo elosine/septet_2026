@@ -182,6 +182,14 @@ Object.assign(D, {
             if (!wc) return;
             wc.id = 'wc-' + (C.nextId++);
             wc.groupId = group;
+            // §346: WITHOUT THIS A SWELL BARELY SWELLS. Live playback takes a drawn curve's CC7 through the held-note law
+            // (`heldCc7` → VelocityRemap), which §316 MEASURED yesterday: the drawn 0–10 scale is anchor velocities 65…127,
+            // **9.96 dB end to end, and drawn 0 already sends CC7 88** — right for a written note, useless for a crescendo, and
+            // the note-on velocity is the curve's TOP besides. So ppp→fff played as ~10 dB under an fff attack: his
+            // "same dynamic whole shape plays at fff". `cc7Abs` (built §317 for the morph's fade, for this same reason) maps the
+            // drawn height straight onto a CC7 range and bypasses the anchor scale. The dynamics drive it, so 2→9 spans less.
+            wc.cc7Abs = { lo: Math.round(Math.max(0, Math.min(10, +s.dynLo)) / 10 * 127),
+                          hi: Math.round(Math.max(0, Math.min(10, +s.dynHi)) / 10 * 127) };
             wc.properties.cresc.end = 'swell';
             wc.properties.cresc.swell = { from: this.strike ? this.strike.id : null, mode: this.cfg.mode || 'notes',
                                           lengthMode: s.lengthMode, lengthMul: +s.lengthMul, onMs: n.onMs, anchor: s.anchor === 'end' ? 'end' : 'start', endsAt: n.endsAt != null ? n.endsAt : null };

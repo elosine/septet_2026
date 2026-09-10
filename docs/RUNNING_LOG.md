@@ -9711,3 +9711,31 @@ The real crescendo objects only ever came from the swell foot's separate **`Inse
 **Fixed, on his own principle.** §AC item 2, his: *"Hear plays what Insert writes."* The converse had never held. **`Insert @ playhead` now writes what Hear is playing** — in crescendo mode it delegates to `swellInsert()`. `Insert @ original time` and `@ after previous` say plainly that swells are written at the playhead rather than writing bricks silently.
 
 **The pattern, FOURTH time in one session** — §342 (the run needs players the pick never supplied), §343 (CN-34 enforced in the chord deal only), the NITS sweep, and now this. **A behaviour wired into one path and not its sibling.** Here it was worse than a missing rule: two buttons that look interchangeable, one of which silently produces a different KIND of object. → NITS: the two inserts should not have been separate buttons at all; the sound switch already says what to write.
+
+## §346. "looks like swells but plays back as just long tones … whole shape plays at fff" — the same wall as the morph fade, and the same cure
+
+**His words** (2026-09-10, after §345 made the tool write real crescendo objects): *"looks like swells but plays back as just long tones with same dynamic whole shape plays at fff"*.
+
+**"Looks like swells" is the important half** — it says §345 worked: the objects are now genuine crescendos, drawn as ramps. So the remaining fault is entirely in **how a drawn curve is SOUNDED**, and that is a wall this project already hit yesterday.
+
+**The mechanism, and it is quoted from our own code** (`composer.html`, the comment above `heldCc7`, written 2026-09-09 as §316):
+
+> *"The held-note law above is a scale of ANCHOR VELOCITIES, 65 to 127, which on the measured remap is −39.18 to −29.22 dB: the drawn 0-10 spans **9.96 dB**, and drawn 0 sends **CC7 88**. That is right for ordinary music — a written note should not fall below the ensemble's floor — and it makes a fade FROM SILENCE impossible, because the bottom of the curve is already two thirds of the way up."*
+
+So live playback sends a ppp→fff crescendo as **CC7 88 → 127, about 10 dB** — and `heldVel` takes the note-on velocity from **the curve's TOP** (1g item 5), so the attack is already fff on a velocity-layered patch. **A 10 dB trim under an fff attack is exactly "same dynamic, whole shape plays at fff".**
+
+**Why §344's measurement looked fine and was not the live truth** *(a correction, new entry not an edit)*: I measured `curveValToCC` in `sonify_core.js` and got a full `0 → 127`. **The live tick does not use that function.** It uses `heldCc7` → `VelocityRemap.cc7ForHeight`, the anchor-velocity law. Two CC7 paths, and I measured the one he was not listening to. The export path and the live path disagree — → NITS.
+
+**The cure already existed, built yesterday for this exact wall.** §317's `cc7Abs: {lo, hi}` — *"maps the drawn height straight onto a CC7 range, bypassing the anchor scale. Absent, nothing changes."* It was built so the morph could fade from true silence. A crescendo needs the same thing for the same reason.
+
+**Built:** every swell the tool inserts now carries `cc7Abs`, driven by the dynamics he sets, so the range follows them:
+
+| the swell's dynamics | CC7 now | CC7 before |
+|---|---|---|
+| **ppp → fff (0 → 10)** | **0 → 127** | 88 → 127 |
+| pp → ff (2 → 9) | 25 → 114 | ″ |
+| mf → fff (4 → 10) | 51 → 127 | ″ |
+
+**Scoped deliberately:** only crescendos written from the tool from now on. Crescendos already in the score carry no `cc7Abs` and are untouched, so nothing he has already judged by ear changes under him.
+
+**The session's shape, five for five** *(AI, marked):* §342 players the pick never supplied · §343 CN-34 in one path only · §345 two Inserts writing different kinds of object · and now two CC7 laws, one measured by me and the other actually played. **Every defect today has been a thing wired into one path and not its sibling.** That is the finding of the day, and it belongs in the drawer's revision (PLAN 1q) as a principle, not just a list of fixes.

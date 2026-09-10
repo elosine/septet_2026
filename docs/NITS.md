@@ -260,3 +260,13 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 - **The real fix is fewer buttons.** The sound switch already says what to write (note · chord · crescendo), so there should be ONE
   insert that honours it. `Insert swells` is then redundant. Belongs with PLAN 1q's revision.
 - Same for Hear: one Hear that plays what that one Insert would write.
+
+## 2026-09-10 — two CC7 laws: the live tick and the export path disagree (RUNNING_LOG §346)
+
+- **Live playback** takes a drawn curve's CC7 through `heldCc7` → `VelocityRemap.cc7ForHeight` (the anchor-velocity law: drawn 0–10
+  spans 9.96 dB, drawn 0 = CC7 88), and honours `cc7Abs` / `cc7Fade`.
+- **`sonify_core.js`** (the file/export path) takes it through `curveValToCC` (0 → 127 across the same curve) and **honours neither
+  `cc7Abs` nor `cc7Fade`.**
+- So a swell now written with `cc7Abs` sounds one way live and another when rendered, and the morph's fade has the same exposure.
+  **Fix: give `sonify_core` the same two overrides**, or make both call one function. Until then the rendered score is not what he heard.
+- The AI measured the export path in §344 and reported it as the live truth. That error is what the split makes easy.
