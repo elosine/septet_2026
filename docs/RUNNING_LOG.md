@@ -9661,3 +9661,29 @@ The answer given: **this one was not model-sensitive** — he named the symptom 
 **The pattern, third time this session** *(AI, marked):* §342 was a rule enforced in one place and not another (players required by the run, not supplied by the pick); this is the same shape — CN-34 enforced in the chord deal and not in the swell pass. **A rule stated in a file header is not a rule; it holds only where it is written into the code path.** Worth a sweep at some point for the other standing rules (the re-attack rest, the range fit, the piano's one voice) to see where else they are honoured in one path only. → NITS.
 
 **Verification:** syntax checked on both files; not run in the app — his reload and his ear.
+
+## §344. "they come in as long tones. no swell to them" — the ramp measured (it is real), and the slot pool nothing has ever called
+
+**What prompted it** (2026-09-10): *"when I insert a series of crescendos into the main score, they come in as long tones. no swell to them."*
+
+**Ruled OUT first, by reading the playback path.** `sonify_core.js` sends the CC7 stream only when `!ksMode`, where `ksMode = (sonifyMode === 'ks' && ksNote != null) || sonifyMode === 'plain'`. `Cresc.make()` sets neither — `sonifyMode` is `undefined` on an inserted swell — so **the ramp branch IS taken.** "No CC7 is being sent" is not the explanation.
+
+**MEASURED, through the app's own map** (`probes/cc7_map.json`, 33 points, `levelSpanDb 40`), the CC7 a ppp→fff swell actually emits across its length:
+
+| swell | CC7 at pos 0.0 → 1.0 |
+|---|---|
+| **0 → 10 (ppp→fff, the default)** | `0 28 35 44 56 71 91 115 127 127 127` |
+| 2 → 9 | `35 41 49 58 68 81 95 112 127 127 127` |
+| 5 → 10 | `71 81 91 102 115 127 127 127 127 127 127` |
+
+**Two things fall out of that table.**
+1. **The ramp is real and it is the full range** — 0 to 127. A single crescendo, alone, should be plainly audible. So the object and the score are both doing their job.
+2. **A defect worth its own note: every swell SATURATES early.** ppp→fff reaches 127 at **80 %** of its length and sits flat for the last fifth; 5→10 is flat for the last **half**. The curve is drawn in level space and the level→CC7 map is logarithmic, so the top of every crescendo is a plateau. Not his symptom, but it means the peak of every swell is blunted. → NITS.
+
+**THE STRONG SUSPECT, and it is documented in the code's own comments.** `cresc.js` (the header above `assignSlots`): *"This rack pins CC7 = 127 before every event on one slot per instrument (REAPER_CONTROL §3, D11) … The cure is the string quartet's: the crescendos rotate through a pool of slots … EMPTY means no rotation — the ordinary voice's own channel, as today."* And **`assignSlots` is defined, exported, and called by NOTHING** — not the insert, not `crescRun`, not the card (grepped). So every crescendo sits on its instrument's ordinary channel with no rotation.
+
+**Why that fits his report exactly:** his gesture is *overlapping* crescendos on a rotating round robin (§326–327: *"the last three will still be playing before the last one ends"*). Overlapping swells on one instrument share one channel, and **each new onset re-pins CC7 = 127**, flattening every crescendo already sounding into a long loud tone. The more they overlap — which is the whole point of the gesture — the more completely they flatten.
+
+**The five-second test that discriminates** (his, not the AI's — the §340 rule): **insert ONE crescendo, alone, nothing overlapping it, and play it.** If that one swells, the cause is the shared channel and the cure is the slot pool. If it is still flat, the cause is upstream in the rack and no amount of rotation will help.
+
+**Not fixed tonight, deliberately.** The cure (`assignSlots` + `applySlots`, both already written) needs `pool[instKey]` — extra Kontakt slots on free channels in HIS rack — which is a decision about his REAPER setup, not a code change. **This is the first thing today that is genuinely his to answer before anything can be built.**

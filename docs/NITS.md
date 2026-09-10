@@ -244,3 +244,11 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   crescRun / chordRun), not only in the one it was written for.
 - **And the silent-zero rule from §342:** where a stage can legitimately produce nothing, it must say so on the STATUS line, not only in
   its own readout.
+
+## 2026-09-10 — every crescendo saturates before its end (RUNNING_LOG §344, measured)
+
+- The curve is drawn in LEVEL space and the level→CC7 map is logarithmic, so the top of every swell is a plateau: **ppp→fff reaches
+  CC7 127 at 80 % of its length** and is flat for the last fifth; **5→10 is flat for the last half**. Measured through the app's own
+  `probes/cc7_map.json`.
+- Not the cause of "they come in as long tones" (§344's suspect is the shared channel and the un-called slot pool), but it blunts the
+  peak of every crescendo in the piece. Worth a look when the crescendos are being tuned by ear.
