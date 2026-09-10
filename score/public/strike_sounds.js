@@ -199,8 +199,11 @@ Object.assign(D, {
         head.addEventListener('mousedown', e => { drag = { dx: e.clientX - box.offsetLeft, dy: e.clientY - box.offsetTop }; e.preventDefault(); });
         const mv = e => { if (!drag) return; box.style.left = (e.clientX - drag.dx) + 'px'; box.style.top = (e.clientY - drag.dy) + 'px'; };
         const up = () => { drag = null; };
-        document.addEventListener('mousemove', mv); document.addEventListener('mouseup', up);
-        this._sndCard.off = () => { document.removeEventListener('mousemove', mv); document.removeEventListener('mouseup', up); };
+        // §348 THE CARD STUCK TO THE MOUSE: line ~182 stops `mouseup` from propagating off the box, and a drag by the head
+        // ALWAYS ends with the cursor over the box — so this listener never fired, `drag` was never cleared, and the card
+        // followed the mouse for ever. CAPTURE runs before the target, so stopPropagation cannot eat it.
+        document.addEventListener('mousemove', mv); document.addEventListener('mouseup', up, true);
+        this._sndCard.off = () => { document.removeEventListener('mousemove', mv); document.removeEventListener('mouseup', up, true); };
         this.paintSoundCard();
     },
     closeSoundCard() {

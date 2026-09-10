@@ -889,6 +889,15 @@ for the planning method; ~~keeping the rhythm dials while browsing harmonies (a 
 - **AB1 · Articulation presets.** Named sets for the seven articulation pull-downs: *default* (what the drawer opens with today) · *all ordinary*
   (each player's `ordinary` voice — the recipe field 1o already reads) · more as he names them; his own sets keepable (a take carries the
   articulations already, so a preset is a take of the rows alone). *(AI reading, marked as such.)*
+  **AB1-c · THE TWO SETS HE ACTUALLY WANTS** (composer, 2026-09-10, twice in one message): *"the sets for the articulations for the
+  players. We're meant to be have two sets available, the original percussive one that I've been using for the notes, and then
+  spiccato. and then I should be able to choose the full set easily"* · *"And then I want those two sets of players, the original
+  with bar top pits and Chatato, etcetera. And then one where everyone's playing spiccato."* — **set 1 · PERCUSSIVE (his default,
+  set 2026-09-04):** Fl tongue ram / pizzicato · BCl slap tongue · Vn1 · Vn2 Bartók pizz · Va · Vc gettato · Pno its one voice.
+  **set 2 · SPICCATO:** every bowed player #16 Spiccato; the flute and the bass clarinet have none, so their ordinary voice (or a
+  named stand-in — his call). **One click per set, on the articulation rows.** This is the first thing AB1 is actually FOR, and it
+  is now a request, not a wish. *(He also has AB1-b's all-staccato set; three presets in all.)*
+
   **AB1-b · the "all staccato" preset** (composer, 2026-09-10 03:20, from his screenshot: *"lets have this as one of the presets, add to features list"*): Fl **Staccato** · BCl **Staccato Velocity (#19)** · Pno **8Dio 1969 Legacy Piano (Steinway 1969)** (its one voice) · Vn1 · Vn2 · Va · Vc **Staccato Velocity (#19)**. The first named set of AB1, exactly as the rows stood.
 
 > *"Another feature is I'd like to be able to transpose the harmony in the keyboard step by step. There's seems to be an octave one. But, a,

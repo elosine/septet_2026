@@ -9758,3 +9758,26 @@ The 132 px is what the panel ASKS for, not what it takes: with the run block ope
 **This is AE1's territory** (STRIKES_TOOL §AE, his remodel: *"250% the width it is now. take the width from the the right, the dots and rhythm zone display"*). Not the remodel — a blocker fixed in place. But it settles one of the open questions there by evidence: **the strip and the controls already fight over the same pixels**, so widening the controls without giving the strip its own space would make this worse, not better. → noted in §AE.
 
 **Verification:** syntax checked on both files; not run in the app — his reload and his eye. The test is his own screenshot: in chords mode the first onsets should now sit clear of the panel and all four be clickable.
+
+## §348. "could we just get it working?" — the chord feature he asked for RETURNS EARLY in the mode he is using
+
+**His words** (2026-09-10, the message that matters most today): *"a bunch of other things are going wrong. Like, I choose one of the cords, and I reset it in the dialogue box, but nothing changes. And when I go to move the little card that pulls up, it gets stuck to my mouse. So I'd really rather not just troubleshoot all these little tiny detailed changes. What can be done so I can have a working version? without having to just spend my whole day troubleshooting little things that weren't implemented correctly. Should I use a more advanced model here, or what should I do? … the agreement when this was built … was that I would have a sequence of cords in the same rhythms as the notes mode … Instead of just single notes at that rhythmic displacement, there would be cords. And then I would be able to select the cord and change what's included in that particular cord or select the cord and draw from the set the set of harmonies … And then you would figure out a way to just distribute for that cord so it's not interfering. just nothing is working."*
+
+**THE FINDING, and it is probably most of "nothing is working".** What he describes IS what §334 built — `strike_sounds.js`, the sound at an onset: double-click a dot, click a harmony in the left column, the notes dealt over the players free at that moment. But it was built **notes mode only**, and it says so in code, twice:
+
+```
+strike_sounds.js:97   if (!keys.length || mode === 'piano' || (this.isChords && this.isChords()) || …) return notes;
+strike_sounds.js:231  if (this.isChords && this.isChords()) return;
+```
+
+**He has been in CHORDS mode** (his own words last message: *"In cord mode"*). In chords mode the feature returns early and does nothing. Chords mode is the OLDER 1k path — the one §330 already documented as broken on screen (the run's controls hidden, the onset count inferred, no `clear`, inert piano buttons) and §347 found the panel sitting on top of its onsets. **He is fighting the wrong mode**, and the name of the mode is exactly what invites it: he wants chords, so he chose "chords".
+
+**That is a design failure, not his mistake.** The mode is called *chords*; the chord feature he specified lives in *notes*. Nothing on screen says so.
+
+**Second finding, certain and fixed: the card stuck to the mouse.** The card stops `mouseup` from propagating off its own box (`['mousedown','click','dblclick','mouseup','wheel'].forEach(t => box.addEventListener(t, x => x.stopPropagation()))`), and a drag by the head ALWAYS ends with the cursor over the box — so the document-level `mouseup` that clears `drag` never fired and the card followed the mouse for ever. Fixed by listening in the **capture** phase, which runs before the target and cannot be stopped.
+
+**His question, answered honestly — should he use a more advanced model?** No. **Not one of today's defects was a reasoning failure.** §342 players the pick never supplied · §343 CN-34 honoured in one deal only · §345 two Inserts writing different KINDS of object · §346 two CC7 laws · §347 a hard-coded margin against a panel that measures wider · and now a feature that returns early in the mode named after it. **Every one was found by READING, and every one is the same shape: wired into one path and not its sibling.** A stronger model does not read more paths; it reasons better about the one it is shown. What prevents this class is **walking the composer's real route in the running app before handing it over** — which is what "verified on a copy" has NOT been doing: it walked the happy path of the thing just built, in the mode it was built for.
+
+**So the answer to "could we just get it working" is a change of method, not of model:** one pass that drives HIS workflow end to end in the app — pick a rhythm, put chords on the onsets, choose each chord's harmony, deal to free players, hear it, insert it — fixing whatever breaks on that route, in that order, and not stopping at the first symptom. Proposed to him; his call.
+
+**Also collected this message (STRIKES_TOOL §AB1-c):** the two articulation sets he wants one click apart — the percussive set he has used since 2026-09-04, and one where every bowed player is on spiccato.
