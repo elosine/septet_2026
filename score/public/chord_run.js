@@ -27,7 +27,7 @@
 //
 // goTo(575) — parks the playhead at a time in the score (seconds), the way ⌖ does for a strike; SPACE then plays from there.
 //
-// One group `grp-chrun`, replaced by every call; `chordRun.keep('name')` freezes the one he likes; the numbers of a call are remembered
+// One group `grp-strike-chrun` (a strike pattern to fill mode), replaced by every call; `chordRun.remove()` deletes it; `chordRun.keep('name')` freezes the one he likes; the numbers of a call are remembered
 // (in the browser, across reloads), so the next call can change ONE: chordRun({ gap: 0.5 }). chordRun.fresh() forgets them.
 (function (root) {
 'use strict';
@@ -35,7 +35,8 @@ const C_ = () => (typeof Composer !== 'undefined' ? Composer : (root.Composer ||
 const SC = () => root.StrikeChords || null;
 const CR = () => root.Cresc || null;
 const AC = () => root.AccelCalc || null;
-const GROUP = 'grp-chrun';
+const GROUP = 'grp-strike-chrun';   // a grp-strike- id, so fill mode (1n) sees the run as a PATTERN it can lay crescendos on (2026-09-10 06:00)
+const OLD_GROUP = 'grp-chrun';          // the id before that, replaced on the next write
 const LAST_KEY = 'septet.chordRun.last.v1';
 const DEFAULTS = { chords: 9, gap: 0.7, perChord: [2, 4], players: null, piano: false, tech: null, order: 'turn', advance: 'each', times: [2, 4],
                    selection: 'shuffle', rest: 0.15, dealer: 'free', seed: 1, soundMs: 140, vel: 100 };
@@ -167,7 +168,7 @@ async function chordRun(opts) {
         const remap = (lane, midi, a) => (D && typeof D.remapVel === 'function') ? D.remapVel(lane, midi, a) : a;
         C.pushUndoState();
         const before = C.objects.length;
-        C.objects = C.objects.filter(x => x.groupId !== GROUP);
+        C.objects = C.objects.filter(x => x.groupId !== GROUP && x.groupId !== OLD_GROUP);
         const replaced = before - C.objects.length;
         const dur = Math.max(0.03, (+o.soundMs || 140) / 1000);
         let maxEnd = t0, written = 0; const rows = [];
@@ -206,12 +207,18 @@ async function chordRun(opts) {
 }
 chordRun.keep = function (name) {
     const C = C_(); if (!C) return null;
-    const tag = 'grp-chrun-kept-' + (name ? String(name).replace(/[^A-Za-z0-9_-]+/g, '-') : Date.now().toString(36));
-    let n = 0; C.objects.forEach(x => { if (x.groupId === GROUP) { x.groupId = tag; n++; } });
+    const tag = 'grp-strike-chrun-kept-' + (name ? String(name).replace(/[^A-Za-z0-9_-]+/g, '-') : Date.now().toString(36));
+    let n = 0; C.objects.forEach(x => { if (x.groupId === GROUP || x.groupId === OLD_GROUP) { x.groupId = tag; n++; } });
     if (!n) { console.warn('[chordRun] nothing to keep — write a run first'); return null; }
     C.markDirty(); C.renderAll();
     console.log('%c[chordRun] kept ' + n + ' objects as ' + tag + ' — the next call starts a new run', 'color:#e8cf9a');
     return tag;
+};
+chordRun.remove = function (name) {   // the working run, or a kept one by name — CTRL+Z brings it back
+    const C = C_(); if (!C) return 0;
+    const ids = name ? ['grp-strike-chrun-kept-' + String(name).replace(/[^A-Za-z0-9_-]+/g, '-')] : [GROUP, OLD_GROUP];
+    C.pushUndoState(); const n = C.objects.length; C.objects = C.objects.filter(x => !ids.includes(x.groupId)); C.renderAll(); C.markDirty();
+    console.log('[chordRun] removed ' + (n - C.objects.length) + ' objects (' + ids.join(', ') + ') — CTRL+Z brings them back'); return n - C.objects.length;
 };
 chordRun.fresh = function () { chordRun.last = null; save(LAST_KEY, null); console.log('[chordRun] forgot the last settings — the defaults apply'); };
 chordRun.DEFAULTS = DEFAULTS; chordRun.GROUP = GROUP; chordRun.last = load(LAST_KEY);

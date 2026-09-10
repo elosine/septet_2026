@@ -229,6 +229,12 @@ crescRun.keep = function (name) {
     console.log('%c[crescRun] kept ' + n + ' objects as ' + tag + ' — the next call starts a new run', 'color:#e8a06a');
     return tag;
 };
+crescRun.remove = function (name) {   // the working run, or a kept one by name — CTRL+Z brings it back
+    const C = C_(); if (!C) return 0;
+    const id = name ? 'grp-crun-kept-' + String(name).replace(/[^A-Za-z0-9_-]+/g, '-') : GROUP;
+    C.pushUndoState(); const n = C.objects.length; C.objects = C.objects.filter(x => x.groupId !== id); C.renderAll(); C.markDirty();
+    console.log('[crescRun] removed ' + (n - C.objects.length) + ' objects (' + id + ') — CTRL+Z brings them back'); return n - C.objects.length;
+};
 crescRun.fresh = function () { crescRun.last = null; save(LAST_KEY, null); console.log('[crescRun] forgot the last settings — the profile and the defaults apply'); };
 crescRun.use = function (name) {   // choose the standing profile (null = none); remembered in the browser
     if (name != null && !PROFILES[name]) { console.warn('[crescRun] no profile "' + name + '" — ' + Object.keys(PROFILES).join(', ')); return; }
