@@ -10000,3 +10000,26 @@ Nothing ties any of their output levels to the Steinway's. **+7 dB does not corr
 **THE LESSON, and it is §355's for the second time in one day:** an answer that requires him to paste is an answer with a failure mode he has to debug — and debugging is the exact thing he said he is trying to avoid. §355 put the control where his hand was and got it right; §356 knew the code and got the delivery wrong. **The test is not "is the code correct", it is "can this fail in his hands".** → design rule, and it goes to the sweep's report.
 
 **Cleanup:** `zz-ai-cs` and its working copy deleted. His three files untouched throughout.
+
+## §359. "can I do global changes to the strikes?" — crescStrikes.set(), and a voice change is a channel change
+
+*(2026-09-10, session 8, Claude Code / Opus 5.)*
+
+**His ask:** *"can I do global changes to the strikes? change all to plucked and lower dynamic to f"*. Yes — every strike carries `groupId: 'grp-cresc-strike'`, which is exactly the handle for it, and reaches the strikes and **nothing else of his in the score**.
+
+**Built: `crescStrikes.set({tech, dyn, ms})`** — any subset; what is not named is left alone. His two: `crescStrikes.set({ tech: 'plucked', dyn: 'f' })`. `run()` also takes `tech` now, so a fresh set can be laid plucked from the start.
+
+**THE THING THAT WOULD HAVE MADE IT SILENTLY WRONG.** The piano's voices are four MIDI channels into two plugins — **main ch 1 (8Dio Steinway) · plucked ch 2 (Spitfire, same Kontakt instance) · harmonics ch 3 · muted ch 5 (IRCAM PP2)** — and `Composer` **caches the channel map** (`_curveCh`, dropped by `curveDirty()`). Setting `wc.technique` alone would have left every strike still being written to the Steinway's channel: the score would say plucked and the rack would play main. The note card already does this on its own voice change; `set()` now does the same. **Proved, not assumed** — `routeForNote` on a changed strike returns **ch 1** (0-indexed = MIDI 2, plucked) where the same note on `main` returns **ch 0** (MIDI 1).
+
+**Verified in the running app**, on a copy `zz-ai-cs2` of his score, after a reload:
+
+| | voice | velocity | node level |
+|---|---|---|---|
+| after `crescStrikes()` | main | 109 | 8.6 |
+| after `set({tech:'plucked', dyn:'f'})` | **plucked** | **90** | **7.1** |
+
+All 23 changed, all 23 still connected in the DOM, the channel cache cleared. **The guards refuse and change nothing:** `tech:'banjo'` → *"this lane has: main · plucked · harmonics · muted"*; `dyn:'mfff'` → *"one of ppp pp p mp mf f ff fff"*. **Undo is one step per call** — one CTRL+Z put the voice back to main with all 23 intact, a second removed all 23.
+
+**Said to him and not acted on:** f lowers the written dynamic, but plucked still rides the piano's **+7 dB** trim measured on the Steinway alone (§357). If it is still loud at f, that is the unprobed trim, not the dynamic.
+
+**Cleanup:** the test copies deleted; his files untouched.

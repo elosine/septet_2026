@@ -26,6 +26,7 @@
         const lenS = (o.ms != null ? o.ms : 85) / 1000;
         const lo = o.lo != null ? o.lo : 72, hi = o.hi != null ? o.hi : 95;   // the 5–6 octave band: C5 … B6
         const lane = o.lane != null ? o.lane : Cp.cueLane();
+        const tech = o.tech || 'main';
         const lvl = (CR() && CR().dynHeight && CR().dynHeight(dyn) != null) ? CR().dynHeight(dyn) : 8.6;
         const vel = Math.max(1, Math.min(127, Math.round(lvl / 10 * 127)));
         const fold = p => { p = +p; while (p < lo) p += 12; while (p > hi) p -= 12; return p; };
@@ -48,7 +49,7 @@
                 segments: [{ model: 'power', slope: 0 }],
                 color: '#C9A05A', fillMode: 'bottom', opacity: 0.55,
                 performanceNotes: 'strike at the end of ' + c.id, properties: {},
-                srcKind: 'strike', sonifyNote: p, technique: 'main', sonifyMode: 'plain', recVel: vel
+                srcKind: 'strike', sonifyNote: p, technique: tech, sonifyMode: 'plain', recVel: vel
             };
             Cp.objects.push(wc);
             Cp.renderWaveCurve(wc);
@@ -56,10 +57,51 @@
         });
         Cp.markDirty();
         if (Cp.scheduleConflictRefresh) Cp.scheduleConflictRefresh();
-        console.log(rows.length + ' piano strikes on lane ' + lane + '  ·  ' + dyn + ' (level ' + lvl + ', velocity ' + vel + ')  ·  ' + Math.round(lenS * 1000) + ' ms');
+        console.log(rows.length + ' piano strikes on lane ' + lane + '  ·  ' + tech + '  ·  ' + dyn + ' (level ' + lvl + ', velocity ' + vel + ')  ·  ' + Math.round(lenS * 1000) + ' ms');
         if (console.table) console.table(rows);
         return rows.length;
     }
+
+    // CHANGE THEM ALL AT ONCE (composer 2026-09-10: *"can I do global changes to the strikes? change all to plucked and lower
+    // dynamic to f"*). They all carry the group tag, so this reaches exactly the strikes and nothing else of his in the score.
+    // Any subset of `tech` / `dyn` / `ms` — what is not named is left alone.
+    //
+    // A VOICE CHANGE IS ALSO A CHANNEL CHANGE — piano main is MIDI ch 1, plucked ch 2 (a different library in the same Kontakt
+    // instance) — and the channel map is CACHED. `curveDirty()` drops it, exactly as the note card does on its own voice change;
+    // without it the new voice would be written to the old voice's channel and the strike would come out of the Steinway still.
+    run.set = function (opts) {
+        const o = opts || {}, Cp = C();
+        const list = Cp.objects.filter(x => x.groupId === TAG);
+        if (!list.length) { console.log('no crescendo strikes in this score — crescStrikes() first'); return 0; }
+
+        let lvl = null, vel = null;
+        if (o.dyn) {
+            lvl = CR() && CR().dynHeight ? CR().dynHeight(o.dyn) : null;
+            if (lvl == null) { console.log('unknown dynamic "' + o.dyn + '" — one of ppp pp p mp mf f ff fff'); return 0; }
+            vel = Math.max(1, Math.min(127, Math.round(lvl / 10 * 127)));
+        }
+        if (o.tech) {
+            const techs = (Cp.trackTechniques(list[0].layer) || []).map(t => t.key);
+            if (techs.indexOf(o.tech) < 0) { console.log('unknown voice "' + o.tech + '" — this lane has: ' + techs.join(' · ')); return 0; }
+        }
+
+        Cp.pushUndoState();
+        list.forEach(wc => {
+            if (o.tech) wc.technique = o.tech;
+            if (lvl != null) { (wc.nodes || []).forEach(nd => { nd.y = lvl; }); wc.recVel = vel; }
+            if (o.ms != null) wc.endSeconds = wc.startSeconds + Math.max(0.02, o.ms / 1000);
+            Cp.renderWaveCurve(wc);
+        });
+        if (o.tech && Cp.curveDirty) Cp.curveDirty();   // the channel map is cached; a voice change must re-derive it
+        Cp.markDirty();
+        if (Cp.scheduleConflictRefresh) Cp.scheduleConflictRefresh();
+        const said = [];
+        if (o.tech) said.push('voice ' + o.tech);
+        if (lvl != null) said.push(o.dyn + ' (level ' + lvl + ', velocity ' + vel + ')');
+        if (o.ms != null) said.push(Math.round(o.ms) + ' ms');
+        console.log(list.length + ' strikes changed  ·  ' + (said.join('  ·  ') || 'nothing named'));
+        return list.length;
+    };
 
     // "how do I take out what I just put in" was SWEEP_LIST #3's complaint. Every strike carries the group tag, so this removes
     // exactly its own and nothing of his. CTRL+Z does it too — the whole run is one undo state.
