@@ -10380,3 +10380,17 @@ So **muted is nearly right on its own** once the unearned +7 goes — a 2.7 dB e
 **Built so this cannot happen again:** `--nocc7` on `tools/balance_schedule.js` writes `cc7: null` on every note, and `balance_probe.ps1` now sends nothing when it sees that — his knobs are left exactly where he put them. `probes/balance_schedule_piano_alt_nocc7.json` written and checked: 24 notes, no CC7.
 
 **The lesson, and it is the day's sharpest.** Three explanations were offered for "the trim didn't take", each about his plugins, none tested against the one thing fully visible from here — **what the probe transmits**. He got there by noticing the settings survived a Reaper restart but not a probe. **When a change vanishes, ask what wrote over it before theorising about what failed to write.**
+
+## §374. His settings are right and on the right parts — but MIDI volume will still wipe them, so the trims move to the faders
+
+*(2026-09-10, session 8, Claude Code / Opus 5.)*
+
+**From his screenshots, and they answer §372's open question:** UVI Workstation holds **A3 "11 Harmonics" · A4 "11 Harmonics" · A5 "06 Mutes"** — so channel 3 IS harmonics and channel 5 IS mutes, exactly as `sandbox/instruments.js` says, and A4 is a second harmonics on channel 4 that nothing plays. **The parts he changed were the right ones all along.** §372's guess ("you changed the wrong parts") was wrong too. Set: plucked **−7.7** in Kontakt, A3 **−0.30**, A5 **+3.20** — all three correct against the numbers given.
+
+**But they cannot survive.** `composer.html` computes a CC7 per note (`heldCc7`, and `cc7For` off the measured `probes/cc7_map.json`) and sends it on the voice's channel. CC7 is MIDI volume; these knobs answer to it — his own observation, that a probe resets them and a Reaper restart does not. **So ordinary playback overwrites all three, exactly as the probe did.** Not a probe problem: a wrong-place-for-the-trim problem.
+
+**His question "why split?" answered:** a **Reaper track fader is after the plugin and MIDI cannot reach it** — the only CC7-proof place. `Piano PP2` has its own fader, so harmonics and muted are solved by it immediately. **Plucked shares `Piano Kontakt` with the Steinway**, so trimming that fader would drag `main` down with it; plucked needs to arrive on its own track before it can have its own fader. That is the whole reason for the split, and it is the same pattern the rack already uses for `Flute strikes` and `BassCl strikes`.
+
+**And "will it effect ports?" — no.** The split is **audio only**: Kontakt's plucked instrument output changed from Out 1 to Out 2, the Reaper track widened to 4 channels, a new track receiving channels 3/4. **The MIDI port stays `Piano` and the MIDI channel stays 2.** Nothing in `instruments.js`, nothing in the app, no loopMIDI change.
+
+**Given his "this is getting way too complicated and taking way too much time", the shortest complete path was given as two steps, not a menu:** `Piano PP2` fader to **−4.5** (five seconds, both PP2 voices inside 1.8 dB of `main`), and the split for plucked with **−7.8** on the new track. The rejected alternative — baking the trim into the CC7 the app already sends — is genuinely "per voice in the app" and needs no rack work at all, but CC7 is a 58 dB curve, so a fixed dB trim is not a fixed CC7 offset and it eats headroom at fff. **Right idea, wrong day.** → NITS, as the proper fix later.

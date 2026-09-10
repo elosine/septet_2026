@@ -280,3 +280,4 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 - Same family as the `cc7Fade` gap already noted above: the render path keeps missing the crescendo's later features.
 
 - **2026-09-10 — can Kontakt 8's instrument volume be typed?** SHIFT+drag gives fine resolution for certain; whether the header volume knob takes a typed dB value is unverified (a plugin UI, not in this repo). One look in Kontakt settles it. Moot if the plucked voice is split to its own Reaper track, where the fader types (RUNNING_LOG §369).
+- **2026-09-10 — per-voice trims belong in the app's CC7, eventually.** The app already sends a measured CC7 per note (`probes/cc7_map.json`, 58 dB span). A per-voice dB trim baked into that value would be a true "per voice in the app" and need no rack work — but a fixed dB trim is not a fixed CC7 offset on a curve, and it costs headroom at fff. Done with Reaper faders for now (RUNNING_LOG §374).
