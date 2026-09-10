@@ -152,9 +152,26 @@
                 objects: pack(pick.objs, from),
                 overwrite: !!o.overwrite
             };
-            const r = await fetch('/api/passages', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-            const j = await r.json();
-            if (!r.ok) { console.log('capture failed: ' + (j.error || r.status)); return null; }
+            // A CAPTURE THAT FAILS MUST SAY SO WHERE HE CAN SEE IT (composer 2026-09-10: *"capture didnt show up in passages"*).
+            // It failed silently: the POST returned 404 and the only report was a console.log. `passages.js` is a static file and
+            // reloads with the page, but `/api/passages` lives in `server.js`, which is loaded ONCE when node starts — so after a
+            // page reload the menu and the buttons are new while the routes are not, and 404 is the expected answer until the
+            // server itself is restarted. That case is named on screen now rather than left to be diagnosed. → RUNNING_LOG §364.
+            let r, j;
+            try {
+                r = await fetch('/api/passages', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                j = await r.json().catch(() => ({}));
+            } catch (e) {
+                alert('Capture failed — the score server is not answering.\n\n' + e.message);
+                return null;
+            }
+            if (r.status === 404) {
+                alert('Capture failed: this server does not have the passages API yet.\n\n' +
+                      'The page reloaded but the SERVER did not — it has been running since before this feature existed.\n\n' +
+                      'Stop it and start it again:   node score/server.js\n\nNothing was lost; nothing was written.');
+                return null;
+            }
+            if (!r.ok) { alert('Capture failed: ' + (j.error || ('HTTP ' + r.status))); return null; }
             console.log('captured "' + name + '" — ' + body.objects.length + ' objects (' + pick.why + '), ' + span.toFixed(3) + ' s, lanes ' + body.lanes.join(',') + ' → bank/passages/' + j.file);
             await this.refresh();
             return j;
@@ -190,7 +207,10 @@
 
         // ---- the collection --------------------------------------------------------------------
         async list() {
-            const r = await fetch('/api/passages');
+            let r;
+            try { r = await fetch('/api/passages'); } catch (e) { this._apiMissing = true; return []; }
+            // the same 404 the capture path names: the routes are in server.js, which needs a restart, not a page reload
+            this._apiMissing = (r.status === 404);
             const l = r.ok ? await r.json() : [];
             this._list = l;
             if (console.table && l.length) console.table(l.map(x => ({ name: x.name, objects: x.objects, seconds: x.span, lanes: (x.lanes || []).join(','), from: x.capturedFrom })));
@@ -223,7 +243,7 @@
             const keep = sel.value;
             this._list = null;
             const l = await this.list();
-            sel.innerHTML = '<option value="">-- Passages --</option>' +
+            sel.innerHTML = (this._apiMissing ? '<option value="">-- restart the server --</option>' : '<option value="">-- Passages --</option>') +
                 l.map(x => '<option value="' + x.file + '">' + x.name + '  (' + x.objects + ' obj · ' + (x.span != null ? x.span.toFixed(1) : '?') + 's)</option>').join('');
             if (keep && l.some(x => x.file === keep)) sel.value = keep;
         },

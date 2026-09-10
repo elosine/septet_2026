@@ -10126,3 +10126,27 @@ Both are correct today: they call `getTimeAtPlayhead()` first and keep the old e
 End to end, still nothing injected: stamped a range **1.00 → 5.00**, which caught **10 of 24** and zeroed at **1.786** (the first event in range, not the boundary); scrolled the empty destination to **18.75** and inserted from the menu — **the first event landed at exactly 18.750**. `tools/passage_roundtrip.js` still PASSES on `piece-septet`.
 
 **Cleanup:** test scores and passages deleted; the test server stopped by port (PID 18296), his 5300 untouched.
+
+## §364. "capture didnt show up in passages" — a page reload is not a server restart, and the failure said nothing
+
+*(2026-09-10, session 8, Claude Code / Opus 5.)*
+
+**Diagnosed on his own running server, not guessed:**
+
+| on his 5300 | result |
+|---|---|
+| `GET /passages.js` | **200** — the client file is served fresh on every request |
+| `GET /api/passages` | **404 Not found** |
+
+**So the menu and the buttons were new and the routes were not.** `passages.js` is a static file and arrives new with every page load; `/api/passages` lives in `server.js`, which node reads **once, at process start**. His server (PID 4732) has been up since before that route existed. His capture POSTed, got a 404, and **the only report was a `console.log`** — so he clicked, was asked for a name, typed one, and nothing happened anywhere he could see.
+
+**The instruction was mine and it was wrong.** Every hand-off today said *"hard reload"*. That is correct for `note_card.js`, `cresc_strikes.js` and `passages.js` — and insufficient the moment the change touched `server.js`, which this one did and the others did not. **A change to `server.js` needs the node process restarted; nothing in the browser can do it.**
+
+**Fixed, two things, neither of them the API:**
+
+1. **The failure is now visible and names its own cause.** A 404 from the capture raises a dialog: *"this server does not have the passages API yet. The page reloaded but the SERVER did not… Stop it and start it again: `node score/server.js`. Nothing was lost; nothing was written."* Other failures alert with the error; a dead server alerts too, instead of throwing into the console.
+2. **The menu says it as well** — with the API missing it reads `-- restart the server --` rather than `-- Passages --`, so the state is legible before he even tries.
+
+**Nothing of his was lost:** `bank/passages/` holds only its README, so no capture was half-written. The whole exchange cost him a click and a typed name.
+
+**The rule this adds, and it is the third of the day's delivery rules** (after *never deliver a paste*, §358, and *never verify by assigning the property under test*, §363): **say which layer changed.** Static file → reload the page. `server.js` → restart node. A hand-off that does not distinguish them will fail exactly this way, silently, and look like the feature is broken.
