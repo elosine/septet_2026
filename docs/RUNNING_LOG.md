@@ -10340,3 +10340,21 @@ So **muted is nearly right on its own** once the unearned +7 goes — a 2.7 dB e
 - **Plucked shares its track with `main`**, so a fader cannot help it without the multi-out split of §369.
 
 **Recorded as the state of things, nothing changed.**
+
+## §372. He was right — the sliders do work; Kontakt is not doubling, and the parts he changed are probably not the ones the probe drives
+
+*(2026-09-10, session 8, Claude Code / Opus 5. Corrects §371's conclusion.)*
+
+**His pushback, and it was correct:** *"no there is definitely a volume change if I play the virtual keyboard, then turn down volume, volume changes … something wrong with your probe or playback settings"*. §371 concluded *"the volume controls he is reaching are not in the path"*. **That conclusion was too broad and it was wrong.**
+
+**Checked, in order.**
+
+1. **Was run 3 reading a stale recording?** No. `bank/balance_piano_alt.json` names `01-REC-260910_1559.wav`, written **16:00:37** — after his rack save at **15:59:09**. A fresh take.
+2. **Do both plugins hear every channel?** **Yes** — `Piano Kontakt` and `Piano PP2` both take MIDI device 41 on **channel ALL (omni)**, so every probe note reaches both. That looked like the answer: Kontakt doubling ch3/ch5 would swamp any UVI trim.
+3. **So test it — mute PP2 and re-run.** **Harmonics and muted went to silence** (−180 dB, "not found" on every note). **Kontakt answers neither channel.** So the omni routing is harmless here, and the sound on ch3/ch5 is UVI's alone.
+
+**Which means his sliders DO control what the probe measures — so the parts he moved are not the parts on MIDI channels 3 and 5.** He said *"all 3 uvi volumes were at +6"*: there are **three** parts in UVI Workstation and only two voices in `instruments.js` (harmonics ch 3, muted ch 5). If the part-to-channel mapping is not what the app assumes, he changed two parts that never sound in the probe — which is exactly a reading identical to two decimals.
+
+**Written for him: `probes/ping_ch3.json` and `probes/ping_ch5.json`** — twelve notes on one channel, ~17 s, **no recording**, so he can watch UVI and see which part answers.
+
+**The lesson, and it belongs with the day's others:** §371 turned "three attempts produced no change" into "the controls are not in the path" — a claim about a system the AI cannot see, from evidence that only said "something between the knob and the meter is not what we think". **He had direct evidence to the contrary and it took his pushback to get the test run.** The test cost ninety seconds and was available the whole time. → **When a measurement contradicts the composer's own ears, the ears are evidence too; test the difference rather than restating the measurement.**
