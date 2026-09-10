@@ -10256,3 +10256,28 @@ So **muted is nearly right on its own** once the unearned +7 goes — a 2.7 dB e
 5. Only then write the per-voice numbers into `sandbox/instruments.js`.
 
 **The general point for the sweep:** one trim per instrument is wrong wherever an instrument's voices live in different plugins. The flute has the same shape (its pizzicato measured 36.8 dB below its ordinary and still takes the flute's single −21, landing at −64.2 — §357). The piano is where it finally bit.
+
+## §369. "is there a way inside kontakt to type the volume" — the rack already has the answer, and it is not a knob
+
+*(2026-09-10, session 8, Claude Code / Opus 5.)*
+
+**First, read the rack again and he had already acted:** `Piano PP2` is now **0.00 dB** (was +7.00 three messages earlier). §368 done. `Piano Kontakt` stays **+7.00**, correctly.
+
+**On Kontakt's own controls, and the limit of what the AI knows:** **SHIFT + drag gives fine resolution** on a Kontakt knob — that is standard and reliable. Whether Kontakt 8's *instrument header* volume knob accepts a **typed dB value** the AI does not know and did not verify; it is a plugin UI, not something in this repo, so it is stated as unknown rather than guessed. → NITS, for him to check in one look.
+
+**But the rack already answers it a better way, and it is the house pattern.** Read from `reaper/septet_rack.rpp`:
+
+| track | channels | fader | receives |
+|---|---|---|---|
+| `Flute SI2` | **NCHAN 4** | −21.00 dB | — |
+| `Flute strikes` | 2 | 0.00 dB | **`AUXRECV 1 3 1`** — from Flute SI2, source channel 3 |
+| `Bass Clarinet XS` | NCHAN 4 | −9.00 dB | — |
+| `BassCl strikes` | 2 | 0.00 dB | `AUXRECV 4 3 1` · `AUXRECV 5 3 1` |
+
+**The second voice is routed to a different plugin output and lands on its own Reaper track with its own fader — and a Reaper fader takes a typed dB.** That is exactly why `Flute strikes` and `BassCl strikes` exist: they were built to escape the one-trim-per-instrument limit. Nobody has calibrated them yet (both sit at 0.00 while the flute's pizzicato is 36.8 dB below its ordinary), but the mechanism is there.
+
+**So for the piano, the same shape:** send Plucked Piano to Kontakt outputs 3/4, set `Piano Kontakt` to NCHAN 4, add a `Piano plucked` track with `AUXRECV` from it on channel 3, and type the number into that fader.
+
+**And the number changes when it moves.** Split out, plucked no longer passes the `Piano Kontakt` fader, so it leaves the **+7 behind**: the new track wants **7 − 8.7 = −1.7 dB**, not −8.7. Recorded here because getting that wrong would be silent and would look exactly like the trim not working.
+
+**Nothing was changed.** The rack is his.
