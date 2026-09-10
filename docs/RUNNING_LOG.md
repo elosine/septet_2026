@@ -10202,3 +10202,30 @@ End to end, still nothing injected: stamped a range **1.00 → 5.00**, which cau
 **Harmonics CLIPPED** — pitch 49 at velocity 127 hit sample peak 0.0 dBFS, so **−12.6 is an understatement**; its true level is higher. That voice needs the PP2 track lowered and a re-run before its number can be trusted. Recorded as a known-uncertain reading rather than a measurement.
 
 **The awkward part, which is structural and his to decide.** One trim per instrument in `sandbox/instruments.js` (`piano: { balanceDb: 7 }`), and in the rack the voices are paired **the wrong way for a fader fix**: `Piano Kontakt` carries **main + plucked**, `Piano PP2` carries **harmonics + muted**. So a track fader cannot separate plucked from main — they are one Kontakt instance. It *can* address harmonics and muted together, though they differ from each other by 3.5 dB. **Nothing was changed:** the rack is his, and which of the three routes to take (Kontakt's own per-instrument output, a per-voice trim in the app, or written velocity) is a decision, not a fix.
+
+## §367. The per-voice trims — where they go, and why it is inside the plugins rather than the app
+
+*(2026-09-10, session 8, Claude Code / Opus 5. Follows §366. His word: "we can do per voice in the app, tell me the settings, then save the rack?")*
+
+**Checked before answering: `balanceDb` is a RECORD, not a control.** The only thing in the whole repo that reads it is `tools/balance_schedule.js`, which copies it into the schedule so the probe report can print it. **Nothing in the app applies it to MIDI.** The trims have always lived in Reaper, typed by hand — the probe's own closing line says so: *"type each TRIM into the track's volume field"*. So "per voice in the app" is not a thing that exists; it would be a build (a per-technique trim turned into a CC7 offset per channel), and CC7 already carries the dynamics and the fade (§316–317), so it is not a small one.
+
+**And it is not needed, because the plugins already have per-voice controls.** Read from `reaper/septet_rack.rpp`:
+
+| track | fader | plugin | voices inside |
+|---|---|---|---|
+| **Piano Kontakt** | **+7.00 dB** | Kontakt 8 | `main` ch 1 (8Dio Steinway) · `plucked` ch 2 (Spitfire) |
+| **Piano PP2** | **+7.00 dB** | UVI Workstation | `harmonics` ch 3 · `muted` ch 5 |
+
+Two voices per plugin instance, each its own MIDI channel — so the level belongs on **the instrument's own volume inside Kontakt** and **the part's own volume inside UVI Workstation**, leaving both track faders at +7.00 where the ensemble balance put them.
+
+**The settings, each one what it takes to match `main` at −25.8 dB:**
+
+| voice | measured | **set** | where |
+|---|---|---|---|
+| plucked | −17.1 | **−8.7 dB** | the Plucked Piano instrument's volume, inside Kontakt |
+| muted | −16.1 | **−9.7 dB** | the muted part's volume, inside UVI Workstation |
+| harmonics | −12.6 | **−13.2 dB, at least** | the harmonics part's volume, inside UVI Workstation |
+
+**Harmonics is a floor, not a figure.** Its pitch 49 at velocity 127 clipped at 0 dBFS in the recording, so −12.6 is understated and the true trim is larger. Suggested: set **−15 dB** to clear the clipping outright, then re-run and take the exact remainder from a clean reading. **Not guessed at further** — AI_METHODOLOGY: a clipped measurement is not a measurement.
+
+**Then: he saves the rack, and the probe is re-run to confirm.** The record in `sandbox/instruments.js` will be updated to carry the per-voice numbers **after** they are measured true, not from this prescription — the file should say what the rack does, not what was recommended.
