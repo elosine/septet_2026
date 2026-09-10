@@ -19,6 +19,7 @@
 //   hold           extra onsets at the last gap after the ramp
 //   len            each crescendo's length as a MULTIPLE of the gap to the next onset (2 = twice the gap: they shorten with the rush)
 //   lenS           OR one fixed length in seconds for all of them
+//   lenN · lenSN   the same two, at the END of the run — a ramp: len 2 → lenN 4 makes the overlap grow; lenS 2.2 → lenSN 1.4 in seconds
 //   dyn            ['ppp', 'fff'] — from → to (ppp pp p mp mf f ff fff)
 //   secco          true (the cut at the end) · false (let it ring)
 //   players        the lanes, in the order of the round robin — default the six bending players, no piano: [0, 1, 3, 4, 5, 6]
@@ -58,8 +59,10 @@ function crescRun(opts) {
     const o = Object.assign({}, DEFAULTS, last, opts);
     // n and steep are two ways of saying one thing: the one given in THIS call wins; else the one the last call used
     if ('n' in opts) { delete o.steep; } else if ('steep' in opts) { delete o.n; }
-    if ('lenS' in opts) { delete o.len; } else if ('len' in opts) { delete o.lenS; }
+    if ('lenS' in opts || 'lenSN' in opts) { delete o.len; delete o.lenN; if (o.lenS == null) o.lenS = o.lenSN; }
+    else if ('len' in opts || 'lenN' in opts) { delete o.lenS; delete o.lenSN; if (o.len == null) o.len = DEFAULTS.len; }
     if (o.steep == null && o.n == null) o.steep = DEFAULTS.steep;
+    if (o.n != null && !('steep' in opts)) delete o.steep;   // a remembered count keeps ruling; the default steepness must not creep back beside it
     if (o.len == null && o.lenS == null) o.len = DEFAULTS.len;
     crescRun.last = Object.assign({}, o);
 
@@ -96,7 +99,12 @@ function crescRun(opts) {
     plan.forEach(p => {
         const later = C.objects.filter(x => x.layer === p.lane && x.sonifyNote != null && x.layer !== ML)
             .concat(plan.filter(q => q.lane === p.lane && q.at > p.at + 1e-6).map(q => ({ startSeconds: q.at })));
-        const want = o.lenS != null ? +o.lenS : (o.len * p.gap);
+        // the length, and its ramp along the run (his "make each one overlap more and more", 2026-09-09 late): a multiple of the gap, len → lenN,
+        // or seconds, lenS → lenSN — linear over the onsets; one number = the same throughout
+        const p01 = N > 1 ? p.i / (N - 1) : 0;
+        const want = o.lenS != null
+            ? (o.lenSN != null ? +o.lenS + (+o.lenSN - +o.lenS) * p01 : +o.lenS)
+            : ((o.lenN != null ? +o.len + (+o.lenN - +o.len) * p01 : +o.len) * p.gap);
         const e = CRe.endFor(p.at, later, {});
         let dur = want;
         if (e.how === 'toNextNote' && e.end - p.at < want) { dur = e.end - p.at; capped.push(p.i); }

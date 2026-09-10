@@ -209,3 +209,6 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   crescendo auditioned with `Hear piano` / `Hear orchestrated` in 1o's crescendo mode is a long flat tone. The swell exists once INSERTED
   and the score plays it. His verdict came from this: *"the long tones aren't swelling at all. I have everything set."* Fix when the drawer's
   swells matter again: route a swell's audition through the score's crescendo playback (the curve-channel CC7 ramp of 1l), not `noteOn`.
+- *Refinement (same evening):* **fill mode's own Hear DOES ramp** (STRIKES_TOOL §Y: "the crescendos get a CC7 ramp and their secco cut") —
+  it is the sound switch's Hear (1o, notes and chords modes through `play()`) that sends plain note-ons. Fill mode's hear path is the
+  model to copy when this is fixed.

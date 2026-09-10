@@ -9402,3 +9402,16 @@ and everything that touches that note calls it.**
 - Hearing, as always in this pane, not verifiable — Web MIDI is blocked; the objects are 1l's own, which §283 measured.
 
 **Not built:** the card (B) — A is its engine if it is ever wanted; the free dealer and an order menu (the round robin is fixed in the `players` order — he said the pitches are his to adjust after); the drawer's Hear rendering the swell's ramp.
+
+## §326. The run at 575 s: his first settings, and the length RAMP (lenN · lenSN)
+
+**His lines, in order, as he gave them.** *"it'll be at five seventy five"* · the harmony *"starting at B flat three … base clarinet, cello, viola, violin two, violin one, and then flute. and … go up chromatically"* — checked against the ordinary voices' ranges before answering: Bb3 · B3 · C4 · C#4 · D4 · Eb4 all sit inside (the bass clarinet's ordinary voice tops at F4, so only a third lap would fold), no octave folds. The rush re-shaped: *"the ending ones … longer … at least fifty percent. a little bit more overlap. or, like, a quicker buildup"* → `gap0 1.2 · gapN 0.4 · steep 0.75 · len 1.8` (the last 0.72 s, was 0.45). Then: *"The last one should be twice as long as the current last one. And then Let's do nine and just round robin. Go back to the base clarinet. and then make each one overlap more and more. So the overlap between the first two is still not enough. So shorten the onset time and then accelerate from there. But as each one will be longer, there'll be more overlap as well."*
+
+**What that needed, and was added:** a length that does not simply follow the gap — a RAMP. `lenN` (the multiple at the end of the run) and `lenSN` (seconds at the end), linear over the onsets. With seconds from 2.2 → 1.44 while the gaps close from 0.9 → 0.4, the overlap grows from 1.4 gaps to 2.8 — *"more and more"* — while the first two overlap by 1.3 s (they overlapped by 0.96 s before). One cosmetic defect found by the numbers: a remembered `n` let the default `steep` creep back beside it in `crescRun.last`; the count still ruled, but the record lied — fixed.
+
+**Verified in the running app** on a `zz-ai-crun2` copy (deleted after; no console errors), his three lines run in sequence:
+- line 1 (`at 575 · players [1 6 5 4 3 0] · Bb3 … · 1.2 → 0.4 · steep 0.75 · len 1.8`): 5 crescendos, lanes bcl vc va vn2 vn1, A#3 B3 C4 C#4 D4, lengths 2.16 1.50 1.04 0.72 0.72.
+- line 2 (`n 9 · gap0 0.9 · gapN 0.4 · lenS 2.2 · lenSN 1.44`): 9 crescendos over 6.41 s at 575.00, gaps `0.900 0.802 0.713 0.636 0.566 0.505 0.449 0.400`, lengths `2.20 → 1.44` in nine even steps, overlap with the next `1.30 1.30 1.30 1.28 1.25 1.22 1.18 1.13` s, lanes bcl vc va vn2 vn1 fl **bcl vc va** (the round robin comes back to the bass clarinet at the seventh), pitches A#3 → F#4 chromatic, 2.5 voices sounding, peak 4.
+- line 3 (`len 2 · lenN 4`): the multiple ramps 2.00 → 3.75 over the eight gaps.
+
+**Still unheard by him** at the time of writing; the line to run is in the chat and in `crescRun.last` once run.
