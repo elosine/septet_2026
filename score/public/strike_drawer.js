@@ -381,12 +381,26 @@ const D = {
         // 2026-09-10: with `keep rhythm` on, the new harmony arrives ORCHESTRATED, not with empty lanes — his
         // "I can just choose a new harmony and then hear/orchestrate it". The existing seeded shuffle does it
         // (respects the top/bottom locks, never a misfit, the piano flagged); `reshuffle` gives another.
-        if (this.cfg.keepRhythm) this.shuffleOrch();
+        if (this.cfg.keepRhythm) {
+            // §342: the run only sounds voices that HAVE PLAYERS (accelUnits filters on them), so an unorchestrated
+            // pick makes the whole rhythm vanish with no message. A harmony's pitches come from sonorityOf, not from a
+            // real instrument's recording, so they miss ranges far more often than a played strike's do — which is why
+            // strikes kept the rhythm and harmonies did not. Retry once with folding, then SAY what was placed.
+            const placed = () => this.voices.filter(v => v.lane >= 0 && !v.skip).length;
+            this.shuffleOrch();
+            if (!placed() && this.voices.length && !this.cfg.mayFold) {
+                const was = this.cfg.mayFold; this.cfg.mayFold = true; this.shuffleOrch(); this.cfg.mayFold = was;
+                this._keepOrchFolded = placed() > 0;
+            } else this._keepOrchFolded = false;
+            this._keepOrchInfo = placed() + ' of ' + this.voices.length + ' voices orchestrated'
+                + (this._keepOrchFolded ? ' (folded by octave to fit)' : '')
+                + (placed() < this.voices.length ? ' — ' + (this.voices.length - placed()) + ' had no player that fits; reshuffle, or allow folding' : '');
+        } else this._keepOrchInfo = '';
         this.save();
         // the pick leaves the playhead where the composer put it (2026-09-06: it used to park on the strike's original time, so a
         // "scroll, then pick, then Insert @ playhead" landed back at the original — the ⌖ button parks it on request; RUNNING_LOG §113)
         this.render();
-        this.setStatus('strike #' + s.index + ' · ' + s.t0.toFixed(2) + ' s · ' + s.stats.noteCount + ' notes · span ' + Math.round(s.spanMs) + ' ms · ' + s.source);
+        this.setStatus('strike #' + s.index + ' · ' + s.t0.toFixed(2) + ' s · ' + s.stats.noteCount + ' notes · span ' + Math.round(s.spanMs) + ' ms · ' + s.source + (this._keepOrchInfo ? ' · ' + this._keepOrchInfo : ''));
     },
     asPlayedOrchestration() {
         // as played: every voice on its recorded lane (the piano), no player assignment yet

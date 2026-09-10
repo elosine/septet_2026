@@ -9628,3 +9628,19 @@ The answer given: **this one was not model-sensitive** — he named the symptom 
 **The loop he now has:** dial the acceleration once · tick the box · click a harmony · Hear. Reshuffle for another orchestration of the same harmony and rhythm.
 
 **Verification:** syntax checked; the off-path unchanged. **Not verified in the running app** — his reload and his ear, by the §340 rule.
+
+## §342. "selected messiaen mode 3 and all the orch/rhythm went away" — "only strikes keep rhythm": the run sounds only voices that have PLAYERS
+
+**What prompted it** (2026-09-10, minutes after §341 shipped): *"selected messiaen mode 3 and all the orch/rhythm went away"* — and, when asked to separate a missed reload from an unticked box from a real defect: **"only strikes keep rhythm"**. That one line was the whole diagnosis: the toggle WAS on and the page WAS reloaded, and the two paths behaved differently.
+
+**The mechanism, read.** `accelSeq()` opens with `const units = this.accelUnits(); const n = units.length;` and `accelUnits()` only builds a unit for a voice with players: `if (players.length) units.push(...)`. With no players, `n = 0` and the run returns early with `no sounding notes — assign players first` — **no events at all.** So an unorchestrated pick does not merely lose its orchestration; **the entire rhythm disappears with it**, which is exactly what he saw.
+
+**Why strikes and harmonies differed.** §341's auto-orchestration is `shuffleOrch()`, which refuses a misfit: `fits()` requires the voice's pitch inside the technique's range (or foldable, when `mayFold` is on). **A played strike's pitches were recorded BY an instrument, so they fit by construction.** A harmony's pitches come from `MorphPanel.sonorityOf` — a Messiaen mode built from a root is an abstract set with no instrument behind it, and its notes miss ranges freely. Mode 3 is nine pitch classes against seven players besides. So the shuffle placed nothing, `accelUnits()` returned nothing, and the run vanished — **for harmonies only**. §341's decision (the seeded shuffle as the automatic orchestration) was right; what it lacked was a fallback and a voice.
+
+**Fixed, two parts.**
+1. **A fold retry.** If the shuffle places nothing and `mayFold` is off, it runs once more with folding allowed and then restores the setting — so an abstract harmony lands in the players' registers instead of nowhere.
+2. **It says what happened.** The status now carries *"N of M voices orchestrated"*, plus *"(folded by octave to fit)"* when the retry did it, plus *"K had no player that fits; reshuffle, or allow folding"* when some are still unplaced. Appended in `hsStatus()` too, which runs after `select()` for a synthetic harmony and would otherwise hide it.
+
+**The lesson, worth more than the fix** *(AI, marked):* a silent zero is the worst failure shape in this drawer. The run did exactly what it was written to do and reported it to a readout he was not looking at, so a missing precondition read as "the tool broke". **Where a stage can legitimately produce nothing, it has to say so on the status line, not only in its own block.**
+
+**Verification:** syntax checked on both files; not run in the app — his reload and his eye, by the §340 rule. The status line is now the evidence: pick mode 3 and it will say how many voices got players.

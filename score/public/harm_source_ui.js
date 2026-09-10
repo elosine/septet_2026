@@ -161,8 +161,9 @@ Object.assign(D, {
     },
     hsStatus() {
         const s = this.strike; if (!s) return;
-        const H = HS(), rs = this._hsRhythm, extra = rs ? ' · rhythm #' + rs.index + ' · ' + H.describe(this._hsInfo) : '';
-        if (s.synthetic) this.setStatus(s.harm.id + ' · ' + s.harm.name + ' · ' + s.stats.noteCount + ' notes · ' + s.stats.midi.min + '–' + s.stats.midi.max + ' (' + nm(s.stats.midi.min) + '–' + nm(s.stats.midi.max) + ') · ' + (s.harm.group || 'harmony') + (rs ? extra : ' · rhythm: own (together)'));
+        const H = HS(), rs = this._hsRhythm, extra = (rs ? ' · rhythm #' + rs.index + ' · ' + H.describe(this._hsInfo) : '')
+            + (this._keepOrchInfo ? ' · ' + this._keepOrchInfo : '');   // §342: hsStatus runs after select() and would otherwise hide what keep-rhythm orchestrated
+        if (s.synthetic) this.setStatus(s.harm.id + ' · ' + s.harm.name + ' · ' + s.stats.noteCount + ' notes · ' + s.stats.midi.min + '–' + s.stats.midi.max + ' (' + nm(s.stats.midi.min) + '–' + nm(s.stats.midi.max) + ') · ' + (s.harm.group || 'harmony') + (rs ? extra : ' · rhythm: own (together)' + (this._keepOrchInfo ? ' · ' + this._keepOrchInfo : '')));
         else if (rs) this.setStatus('strike #' + s.index + ' · ' + s.t0.toFixed(2) + ' s · ' + s.stats.noteCount + ' notes' + extra);
     },
     paintSourceButtons() {
