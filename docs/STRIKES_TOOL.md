@@ -1016,6 +1016,49 @@ player, the rhythm to the strike, the sound to a switch in another band, and the
 5. **If anything is worse:** console `localStorage.setItem('septet.strikes.classic', '1')` + reload = the drawer as it was; or the git tag.
 
 
+## AE · The rhythm drawer remodel — `collected 2026-09-10, NOT built` (his rule again: collect the requests, update later)
+
+> *"rhythm Drawer Remodel: Please collect these features feature requests, and then I'll have you do an update later.
+> rhythm drawer or rhythm panel. 250% the width it is now. take the width from the the right, the dots and rhythm zone
+> display. and then bump the fonts. So if I'm looking at ten, that should be around thirteen point. run pulldown at the
+> top. then in vert order, gap, new label, like initial gap? if this is accurate, last, notes and steep, I'll give you
+> more order later, but as a general rule put my order at the top and everything else keeps its order just moves down
+> below the order I want at top"* (2026-09-10)
+
+**AE1 · Width — 250 % of what it is now**, the extra taken from the right, where the dots and the rhythm-zone display are.
+
+**AE2 · Fonts bumped ~×1.3** — his calibration: *"if I'm looking at ten, that should be around thirteen point."* Applies to the
+panel's controls; the strip's own labels follow unless he says otherwise.
+
+**AE3 · The control order, his, top-down:**
+
+| | control | today's label |
+|---|---|---|
+| 1 | the **run** pulldown | `run` (`#skAShape`) |
+| 2 | the first gap | the gap box (`#skAFirst`) |
+| 3 | the landing | `→ last` (`#skAFloor`) |
+| 4 | the count | `notes` (`#skACount`) |
+| 5 | the steepness | `steep` (`#skASteep`) |
+
+**AE4 · Relabel the gap box — and yes, "initial gap" is accurate.** Verified in §337 against `accel_calc`: the box IS the run's
+FIRST gap, and every later gap is derived from it down to `→ last`. *(AI note, marked: if the first gap is renamed, `→ last`
+reads oddly beside it — `initial gap` / `final gap` is the matching pair, his call.)*
+
+**AE5 · THE STANDING ORDERING RULE (his, general — not only this panel):** *"as a general rule put my order at the top and
+everything else keeps its order just moves down below the order I want at top."* A named order is a PREFIX. Everything he does not
+name keeps its existing relative order and slides down beneath. No re-sorting of the remainder, ever. He will name more order later.
+
+**Open, for him or for the build** *(AI reading, marked as such):*
+- **AE1's direction.** *"take the width from the right, the dots and rhythm zone display"* reads two ways: the controls grow
+  rightward and the dots/zone strip gives up that space (it narrows), **or** the panel as a whole widens rightward into the score
+  area and the strip comes with it. The first shrinks his rhythm strip, which he may not want. To be settled before building.
+- **The strip's own minimum.** If the controls take 250 % from the strip's side, the strip needs a floor below which the dots stop
+  being readable — measure it before choosing.
+- **What lands below the prefix** (AE5) in this panel: `= ms` / span · jitter % → % · hold · mirror · the level ramp · deal · pitches ·
+  the shape's own dial (curve / ease / knee / gamma) — in the order they stand today.
+- **`notes` and `steep` are two ways of typing one thing** (the run's length — §337): whichever is typed takes charge and the other
+  follows. His order puts them adjacent, which suits that; the outline that marks the one in charge should survive the remodel.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the

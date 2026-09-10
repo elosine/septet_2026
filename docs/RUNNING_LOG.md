@@ -9556,3 +9556,17 @@ and everything that touches that note calls it.**
 - **The other shapes, on 800→400 / notes 12:** `linear ms` takes the same ms off every gap (`800 760 720 … 400`) — the evenest available · `late rush` is gradual for most of its length then falls (`800 794 778 752 …`) · `S-curve` ease 2 sits still, accelerates, then lands (`800 793 768 718 646 566 495 445 417 403 400`) · `two-phase` knee .5 holds 800 for six gaps then rushes · **`curve` with the dial below zero spends the whole change on the first gap** (dial −3: `800 423 408 403 401 400 …`) — worth avoiding unless that lurch is wanted.
 
 **Why this is an entry and not a chat answer:** §W closed with *"the calibration of words to numbers waits for his go."* This is the first of it — one word (*gradual*) mapped to the dials with measured series behind it. Nothing here was heard; the numbers are the arithmetic and his ear is the judge.
+
+## §338. "rhythm Drawer Remodel" — collected, not built: the width, the fonts, his control order, and a standing ordering rule
+
+**His words, whole** (2026-09-10, straight after §337's calibration): *"rhythm Drawer Remodel: Please collect these features feature requests, and then I'll have you do an update later. rhythm drawer or rhythm panel. 250% the width it is now. take the width from the the right, the dots and rhythm zone display. and then bump the fonts. So if I'm looking at ten, that should be around thirteen point. run pulldown at the top. then in vert order, gap, new label, like initial gap? if this is accurate, last, notes and steep, I'll give you more order later, but as a general rule put my order at the top and everything else keeps its order just moves down below the order I want at top"*
+
+**Collected, nothing built** — his standing habit (§AB: *"I don't want to implement them now, but let's collect up a few"*). Written to **STRIKES_TOOL §AE** (his words verbatim first, then the items) and **PLAN 1s**.
+
+**The items:** the panel at **250 % of its width**, taken from the right where the dots and the rhythm-zone display are · **fonts ×~1.3**, his own calibration being 10 pt → 13 pt · the controls in his order top-down: **run · the first gap · `→ last` · notes · steep**.
+
+**His question answered:** *"new label, like initial gap? if this is accurate"* — **it is accurate.** §337 measured it an hour earlier: the gap box IS the run's first gap, every later gap derived from it down to `→ last`. Noted for the build (the AI's reading, marked): if the first gap is renamed, `→ last` reads oddly beside it — `initial gap` / `final gap` is the matching pair, his call.
+
+**THE STANDING ORDERING RULE, the part of this worth more than the panel:** *"as a general rule put my order at the top and everything else keeps its order just moves down below the order I want at top."* A named order is a **prefix**: everything he does not name keeps its existing relative order and slides down beneath it, never re-sorted. It is general — not this panel only — and it means a partial order from him is always executable without a second question. Written into §AE as AE5 and into PLAN 1s.
+
+**Left open, deliberately** *(AI reading, marked):* *"take the width from the right, the dots and rhythm zone display"* reads two ways — the controls grow rightward and the dots/zone strip narrows to pay for it, or the whole panel widens rightward and the strip travels with it. The first shrinks the rhythm strip, which he may not want. Not decided; it is one question at build time, and the strip's readable minimum should be measured before choosing.
