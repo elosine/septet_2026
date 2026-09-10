@@ -9979,3 +9979,24 @@ Nothing ties any of their output levels to the Steinway's. **+7 dB does not corr
 **What a probe would cost, read from the tool:** `--strike inst=tech` takes **one** extra technique per instrument (`STRIKE_TECHS[k] = v`, line 104 — last one wins). Three piano voices is therefore three runs of `tools/probe_run.sh`, or a small change to let the flag take a list. Six notes per voice (3 pitches × vel 127/64), same as every probe so far.
 
 **Not diagnosed, deliberately:** how much louder plucked is. There is no measurement, and AI_METHODOLOGY's rule is that no clear evidence means no diagnosis. **Nothing changed. His call on what follows.**
+
+## §358. "the console script not working" — the code was right, the PASTE was the failure mode; it is a loaded file now
+
+*(2026-09-10, session 8, Claude Code / Opus 5. Corrects §356 — the entry stands, its delivery does not.)*
+
+**His words:** *"the console script not working; pls try to give me non-buggy code, I'm trying to advance the composition work and avoid troubleshooting."*
+
+**Verified in the running app rather than guessed at** (AI_METHODOLOGY: a confidence claim must be verified in the running app). A copy `zz-ai-cs` was made from his score, loaded through the app's own Load control, and **the exact one-liner he was given was run**:
+
+- `Composer` resolves (a lexical `const`, reachable from the console) · `Cresc.dynHeight('ff')` = **8.6** · `Composer.cueLane()` = **2**.
+- It threw **nothing**. It made **23** notes, **23 of 23 connected in the DOM**.
+- The emitted note diffed key-for-key against a real strike (`wc-595` in `piece-septet`): **no missing field, no extra** but `_els`, which the renderer adds.
+- Fields as asked: `startSeconds` on the crescendo's end · **0.085 s** · **velocity 109** · `technique: 'main'` · `sonifyMode: 'plain'`.
+
+**So the code never was the bug.** The failure is the delivery: **Chrome's DevTools refuses pasted code** until the words `allow pasting` are typed into the console, and a long one-liner pasted into a fresh console does nothing at all with only a small notice to say why. A second, quieter candidate: the piano lane sits low in the score and 23 flat 85 ms notes on it are easy to miss if the view is not on lane 2.
+
+**The fix is to remove the paste, not to rewrite the script.** `score/public/cresc_strikes.js` is now a real file with a `<script>` tag in `composer.html`, so after one reload **`crescStrikes()` simply exists**. Verified after a reload of the app: `typeof crescStrikes` = `function`, `crescStrikes.clear()` removed 23 and left lane 2 empty, `crescStrikes()` remade 23, all rendered — and **a second call returns without doubling** (a guard added on the strength of this walk: it counts the existing tagged strikes and says `crescStrikes.clear() first` instead of laying a second set on top).
+
+**THE LESSON, and it is §355's for the second time in one day:** an answer that requires him to paste is an answer with a failure mode he has to debug — and debugging is the exact thing he said he is trying to avoid. §355 put the control where his hand was and got it right; §356 knew the code and got the delivery wrong. **The test is not "is the code correct", it is "can this fail in his hands".** → design rule, and it goes to the sweep's report.
+
+**Cleanup:** `zz-ai-cs` and its working copy deleted. His three files untouched throughout.
