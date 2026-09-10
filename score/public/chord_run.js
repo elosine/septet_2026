@@ -237,4 +237,39 @@ root.goTo = function (seconds) {
     if (C.saveStatus) C.saveStatus.textContent = 'playhead at ' + now.toFixed(2) + ' s';
     return now;
 };
+// … and in the score itself (his 2026-09-10 09:40: "I thought we were adding something to the main score like maybe double click the main
+// time display?"): DOUBLE-CLICK the floating time readout → type a time (575 · 9:35 · 9:35.5) → ENTER goes there; ESC or a click away cancels
+function installGoToBox() {
+    const ft = document.getElementById('floatingTime'); if (!ft || ft.dataset.goto) return;
+    ft.dataset.goto = '1';
+    ft.title = (ft.title ? ft.title + ' · ' : '') + 'double-click: go to a time (575, or 9:35)';
+    ft.addEventListener('dblclick', ev => {
+        ev.preventDefault(); ev.stopPropagation();
+        const C = C_(); if (!C) return;
+        if (C.isPlaying) { if (C.saveStatus) C.saveStatus.textContent = 'stop first'; return; }
+        const old = document.getElementById('goToBox'); if (old) old.remove();
+        const r = ft.getBoundingClientRect();
+        const inp = document.createElement('input');
+        inp.id = 'goToBox'; inp.value = (+C.getTimeAtPlayhead()).toFixed(2);
+        inp.title = 'seconds (575) or minutes:seconds (9:35) — ENTER goes there, ESC cancels';
+        inp.style.cssText = 'position:fixed;z-index:10000;left:' + Math.round(r.left) + 'px;top:' + Math.round(r.top) + 'px;width:' + Math.max(90, Math.round(r.width)) + 'px;height:' + Math.max(28, Math.round(r.height)) + 'px;background:#1b1b20;color:#e8cf9a;border:2px solid #e8cf9a;border-radius:4px;font:bold 16px/1.2 monospace;text-align:center;outline:none';
+        ['mousedown', 'mouseup', 'click', 'dblclick', 'keydown', 'keyup', 'keypress'].forEach(t => inp.addEventListener(t, e => e.stopPropagation()));
+        const parse = s => { s = String(s || '').trim(); const m = /^(\d+):(\d+(?:\.\d+)?)$/.exec(s); if (m) return (+m[1]) * 60 + (+m[2]); const n = parseFloat(s); return isFinite(n) ? n : null; };
+        // removing the box fires its own blur, and the blur handler must not remove it again (found on the walk: a real ENTER threw and never went)
+        let closed = false;
+        const done = go => {
+            if (closed) return; closed = true;
+            const v = inp.value; inp.removeEventListener('blur', onBlur); inp.remove();
+            if (!go) return;
+            const t = parse(v);
+            if (t == null) { if (C.saveStatus) C.saveStatus.textContent = 'not a time: "' + v + '" — 575, or 9:35'; return; }
+            root.goTo(t);
+        };
+        const onBlur = () => done(false);
+        inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); done(true); } else if (e.key === 'Escape') { e.preventDefault(); done(false); } });
+        inp.addEventListener('blur', onBlur);
+        document.body.appendChild(inp); inp.focus(); inp.select();
+    });
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', installGoToBox); else installGoToBox();
 }(typeof self !== 'undefined' ? self : this));

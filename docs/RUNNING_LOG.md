@@ -9519,3 +9519,9 @@ and everything that touches that note calls it.**
 - Hearing itself is not verifiable in this pane (Web MIDI blocked); the ramp path is fill mode's, which he has heard.
 
 **Left for his ear and for later:** the sound card's harmony must be chosen from the left column (no menu inside the card — the column IS the menu); chords mode and fill mode are untouched and still there; the piano still becomes a swell in 1o when it holds a note of the pattern (pre-existing; NITS).
+
+## §335. "double click the main time display" — a go-to box in the score, and the blur that ate the ENTER
+
+**His words** (09:40): *"I thought we were adding something to the main score like maybe double click the main time display?"* — right; `goTo()` had only reached the console. Built: **double-click the floating time readout** → a box over it with the current time → type `575`, or `9:35`, or `9:35.5` → ENTER goes there (and, as `goTo` does, tells chordRun and crescRun that this is the place); ESC or a click away cancels. In `chord_run.js` beside `goTo`.
+
+**Found on the walk, by a real ENTER:** the first build removed the box on ENTER, which fired the box's own `blur`, whose handler removed it again — a `NotFoundError` thrown inside the ENTER path before `goTo` ran, so the playhead never moved. Now a `closed` flag and the blur listener detached before the remove; the value read first. Verified on a `zz-ai-goto` copy with real events (the pane had opened his `cres2strike-work` by itself after the deleted copies — moved off it before touching anything): `9:35` → 575.00 and both tools' `last.at` 575; `600.5` → 600.50; ESC leaves it; the box gone each time.
