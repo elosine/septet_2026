@@ -378,6 +378,10 @@ const D = {
         }
         this.asPlayedOrchestration();
         this.applyVoicing();
+        // 2026-09-10: with `keep rhythm` on, the new harmony arrives ORCHESTRATED, not with empty lanes — his
+        // "I can just choose a new harmony and then hear/orchestrate it". The existing seeded shuffle does it
+        // (respects the top/bottom locks, never a misfit, the piano flagged); `reshuffle` gives another.
+        if (this.cfg.keepRhythm) this.shuffleOrch();
         this.save();
         // the pick leaves the playhead where the composer put it (2026-09-06: it used to park on the strike's original time, so a
         // "scroll, then pick, then Insert @ playhead" landed back at the original — the ⌖ button parks it on request; RUNNING_LOG §113)
@@ -920,7 +924,7 @@ const D = {
                 '<label>jitter <input id="skJit" type="number" min="0" max="500" step="5" style="' + inp + '"> ms</label>' +
                 '<div><button id="skRev" style="' + btn + '">reverse</button> <button id="skRot" style="' + btn + '">rotate</button> <button id="skRRe" style="' + btn + '">reshuffle</button></div>' +
                 '<div><button id="skRhyReset" style="' + btn + '" title="the rhythm as played: shape as played · span × 1 · jitter 0 · reverse off · rotate 0 — order and orchestration untouched; back undoes it (U5)">reset rhythm</button></div>' +
-                '<div><label title="2026-09-10: keep the rhythm you built when you pick a NEW strike or harmony — the shape, the run and all its dials, span ×, jitter, reverse, rotate, and the order menu (a by-hand order falls back to as played, its slots belonged to the old note count). The VOICING still resets, and the players are always re-dealt: a new harmony has new notes. Off = the drawer as it always was."><input id="skKeepRhy" type="checkbox"> keep rhythm on a new pick</label></div>' +
+                '<div><label title="2026-09-10: keep the rhythm you built when you pick a NEW strike or harmony, AND orchestrate the new notes automatically (the seeded shuffle — reshuffle for another) — the shape, the run and all its dials, span ×, jitter, reverse, rotate, and the order menu (a by-hand order falls back to as played, its slots belonged to the old note count). The VOICING still resets, and the players are always re-dealt: a new harmony has new notes. Off = the drawer as it always was."><input id="skKeepRhy" type="checkbox"> keep rhythm + orchestrate on a new pick</label></div>' +
                 '<div id="skSeedR"></div>' +
                 '<span style="color:#9a9;margin-top:4px">order</span>' +
                 '<label><select id="skOrder" style="' + inp + ';width:78px"><option value="played">as played</option><option value="manual">by hand</option><option value="lowhigh">low → high</option><option value="highlow">high → low</option><option value="outin">outside-in</option><option value="inout">inside-out</option><option value="random">random</option></select></label>' +
@@ -970,7 +974,7 @@ const D = {
             q('#skRev').addEventListener('click', () => { this.snapshot(); this.cfg.reverse = !this.cfg.reverse; this.render(); });
             q('#skRot').addEventListener('click', () => { this.snapshot(); this.cfg.rotate = (this.cfg.rotate || 0) + 1; this.render(); });
             q('#skRRe').addEventListener('click', () => { this.snapshot(); this.useSeed('rSeed', this.nextSeed('rSeed')); this.save(); this.render(); });
-            q('#skKeepRhy').addEventListener('change', e => { this.cfg.keepRhythm = !!e.target.checked; this.save(); this.render(); this.setStatus(this.cfg.keepRhythm ? 'keep rhythm ON — a new strike or harmony keeps the shape, the run and its dials, and the order; the voicing resets and the players are re-dealt' : 'keep rhythm OFF — a new pick resets the rhythm as it always did'); });
+            q('#skKeepRhy').addEventListener('change', e => { this.cfg.keepRhythm = !!e.target.checked; this.save(); this.render(); this.setStatus(this.cfg.keepRhythm ? 'keep rhythm ON — a new strike or harmony keeps the shape, the run and every dial, and arrives orchestrated by the seeded shuffle (reshuffle for another); the voicing resets' : 'keep rhythm OFF — a new pick resets the rhythm as it always did'); });
             q('#skRhyReset').addEventListener('click', () => { this.snapshot(); this.resetRhythm(); this.save(); this.render(); this.setStatus('rhythm reset to as played (span × 1 · jitter 0 · reverse off · rotate 0) — back undoes it'); });
             q('#skOrder').addEventListener('change', e => { this.snapshot(); this.cfg.order = e.target.value; this.save(); this.render(); });
             q('#skORe').addEventListener('click', () => { this.snapshot(); this.useSeed('oSeed', this.nextSeed('oSeed')); this.save(); this.render(); });

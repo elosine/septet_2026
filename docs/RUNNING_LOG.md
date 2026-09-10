@@ -9612,3 +9612,19 @@ and everything that touches that note calls it.**
 The answer given: **this one was not model-sensitive** — he named the symptom precisely, the search space was one function, and the answer is what the code does, not a judgment. **The risk was never that a weaker model reaches a different conclusion; it is that any model answers from plausibility without looking** (*"selecting a new harmony probably resets the panel state"* sounds right and is half wrong — the dials survive). That failure mode is guarded by PROCESS, not by model choice, and `AI_METHODOLOGY.md` already holds the guard: no clear evidence means no diagnosis; a confidence claim must be verified in the running app.
 
 **Written into `docs/SESSION_HYGIENE.md` § Which analysis goes to which model** — the diagnosis half that § Model strategy did not have. Three questions before the work starts, not "hard or easy": **is the search space bounded** (a named symptom with an obvious entry point is mechanical; *"something is wrong somewhere"* is a search, and search is where a stronger model pays) · **is there one answer or a judgment** · **what does a wrong answer cost** (wrong and found in five seconds is cheap anywhere; wrong and built on for a day is day 25). Plus two rules: **state the mechanism claim and the behaviour claim separately** (they carry different confidence, and blurring them turns a good reading into a wrong promise), and **ask who can verify more cheaply** — often the composer, in five seconds.
+
+## §341. "very, very simply, what has been done and what needs to be done" — the loop closed: keep rhythm AND orchestrate
+
+**His words** (2026-09-10): *"What I want quite simply is to resume where I was having dialed in an acceleration and then change that… the feeder harmony. So very, very simply, what has been done and what needs to be done left to achieve this. I want simple lines and to quick completion. I don't wanna have to analyze every single step. … I can just choose a new harmony and then play here orchestrate it. And it'll play the rhythm in the new harmony at some new orchestration that we need to figure out. But quickly, please."*
+
+**Read as an instruction about HOW to work, not only what to build:** stop laying out analysis, name the one decision, take the obvious default, ship. Done that way — the decision was taken rather than put to him, and named so he can overturn it in one line.
+
+**The gap that was left after §340.** `keep rhythm` kept the rhythm, but `asPlayedOrchestration()` still cleared every lane, so a new harmony landed with no players and he had to orchestrate by hand — which was half his complaint. **`shuffleOrch()` already existed** and does exactly the wanted job: seeded, honours the top/bottom locks, never a misfit, folds by octave when `mayFold`, flags the piano. So the fix is one call.
+
+**Built:** with `keep rhythm` on, `select()` now calls `shuffleOrch()` after `applyVoicing()` — the new harmony **arrives orchestrated**. The checkbox is relabelled **`keep rhythm + orchestrate on a new pick`**. Still off by default; off is still the original line verbatim.
+
+**The decision taken, not asked** *(AI, marked — his to overturn):* the automatic orchestration is **the seeded shuffle**, not "the same players as before". Reason: the old lanes belonged to the old voices, and with a different note count there is no honest mapping; the shuffle is already built, already repeatable by seed, and `reshuffle` gives another realization in one click. That is his *"some new orchestration that we need to figure out"* — figured out as the cheapest thing that already works.
+
+**The loop he now has:** dial the acceleration once · tick the box · click a harmony · Hear. Reshuffle for another orchestration of the same harmony and rhythm.
+
+**Verification:** syntax checked; the off-path unchanged. **Not verified in the running app** — his reload and his ear, by the §340 rule.
