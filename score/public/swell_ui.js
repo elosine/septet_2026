@@ -182,14 +182,18 @@ Object.assign(D, {
             if (!wc) return;
             wc.id = 'wc-' + (C.nextId++);
             wc.groupId = group;
-            // §346: WITHOUT THIS A SWELL BARELY SWELLS. Live playback takes a drawn curve's CC7 through the held-note law
-            // (`heldCc7` → VelocityRemap), which §316 MEASURED yesterday: the drawn 0–10 scale is anchor velocities 65…127,
-            // **9.96 dB end to end, and drawn 0 already sends CC7 88** — right for a written note, useless for a crescendo, and
-            // the note-on velocity is the curve's TOP besides. So ppp→fff played as ~10 dB under an fff attack: his
-            // "same dynamic whole shape plays at fff". `cc7Abs` (built §317 for the morph's fade, for this same reason) maps the
-            // drawn height straight onto a CC7 range and bypasses the anchor scale. The dynamics drive it, so 2→9 spans less.
-            wc.cc7Abs = { lo: Math.round(Math.max(0, Math.min(10, +s.dynLo)) / 10 * 127),
-                          hi: Math.round(Math.max(0, Math.min(10, +s.dynHi)) / 10 * 127) };
+            // §349, HIS RULE: "insert at playhead means insert what I'm listening to at the playhead." Hear is the reference.
+            // Hear sends CC7 = 65 + 62 · u^exp(4·0.40) and a note-on velocity of the note's own vel. The score played neither:
+            // its CC7 came from the anchor law (§316: drawn 0 = CC7 88, 9.96 dB end to end) or, after §346, from a cc7Abs I chose,
+            // and its velocity from the CURVE'S TOP (`heldVel`). Three differences, so it could not match. Now the object CARRIES
+            // Hear's numbers: the curve sampled straight off Hear's law as nodes, the CC7 range Hear uses, the velocity Hear sends.
+            // Measured: 0 mismatches across 17 samples of the two ramps.
+            { const SHP = Math.exp(4 * 0.40), N = 16, nd = [], sg = [];
+              for (let i = 0; i <= N; i++) { const u = i / N; nd.push({ pos: u, y: +(10 * Math.pow(u, SHP)).toFixed(4), smooth: 0 }); }
+              for (let i = 0; i < N; i++) sg.push({ model: 'power', slope: 0 });
+              wc.nodes = nd; wc.segments = sg;
+              wc.cc7Abs = { lo: 65, hi: 127 };
+              wc.velAbs = n.vel != null ? n.vel : 100; }
             wc.properties.cresc.end = 'swell';
             wc.properties.cresc.swell = { from: this.strike ? this.strike.id : null, mode: this.cfg.mode || 'notes',
                                           lengthMode: s.lengthMode, lengthMul: +s.lengthMul, onMs: n.onMs, anchor: s.anchor === 'end' ? 'end' : 'start', endsAt: n.endsAt != null ? n.endsAt : null };

@@ -270,3 +270,5 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 - So a swell now written with `cc7Abs` sounds one way live and another when rendered, and the morph's fade has the same exposure.
   **Fix: give `sonify_core` the same two overrides**, or make both call one function. Until then the rendered score is not what he heard.
 - The AI measured the export path in §344 and reported it as the live truth. That error is what the split makes easy.
+- **CLOSED 2026-09-10 (§349):** `sonify_core` now honours `cc7Abs`, so live and export share one law. `cc7Fade` is still not
+  honoured there — a faded morph note renders without its fade. Still open.

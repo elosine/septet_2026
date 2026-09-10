@@ -11123,7 +11123,7 @@ const Composer = {
             const lateSwitch = this.trillSoundingOnSlot(portKey, ch, wc.startSeconds - PREARM_S, wc.startSeconds);
             preArm(Math.max(nowPerf, onAt - (lateSwitch ? TRILL_SWITCH_LEAD_MS : PREARM_S * 1000)));
             output.send([0x90 | ch, wc.sonifyNote,
-                (wc.sonifyMode === 'plain' && wc.recVel != null) ? wc.recVel : (ksMode ? 100 : this.heldVel(wc))], onAt);   // 1g item 5: the velocity for the curve's top
+                wc.velAbs != null ? wc.velAbs : ((wc.sonifyMode === 'plain' && wc.recVel != null) ? wc.recVel : (ksMode ? 100 : this.heldVel(wc)))], onAt);   // 1g item 5: the velocity for the curve's top — §349: `velAbs` pins it (a swell sends the velocity its audition sent)
             // `ccNext` is where the queue has been filled to, in score seconds; `lastCC` starts at what the pre-arm just sent, so the
             // first streamed value is only sent if it actually differs
             const rec = { note: wc.sonifyNote, onAt, lastCC: ksMode ? null : this.heldCc7(wc, this.evalWaveCurve(wc, 0)),

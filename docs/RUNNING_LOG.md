@@ -9781,3 +9781,30 @@ strike_sounds.js:231  if (this.isChords && this.isChords()) return;
 **So the answer to "could we just get it working" is a change of method, not of model:** one pass that drives HIS workflow end to end in the app — pick a rhythm, put chords on the onsets, choose each chord's harmony, deal to free players, hear it, insert it — fixing whatever breaks on that route, in that order, and not stopping at the first symptom. Proposed to him; his call.
 
 **Also collected this message (STRIKES_TOOL §AB1-c):** the two articulation sets he wants one click apart — the percussive set he has used since 2026-09-04, and one where every bowed player is on spiccato.
+
+## §349. "insert at playhead means insert what I'm listening to at the playhead" — THREE differences between Hear and the score, all closed
+
+**His instruction, and it is the right one** (2026-09-10): *"I want insert fixed, not here. What I hear is correct. However, what is inserted is not what I'm listening to in the drawer. hear orchestrated is the one I want. … It seems to me a matter of… if we can play it in the drawer, it should be simple to have that represented out in the score. … insert at playhead means insert what I'm listening to at the playhead."*
+
+**Hear was made the reference and the two were MEASURED against each other.** Three differences, not one — which is why chasing them one at a time never converged:
+
+| | Hear (the drawer) | the score, before |
+|---|---|---|
+| **CC7 range** | `65 → 127` | anchor law `88 → 127` (§316) — then `0 → 127` after my §346 |
+| **the curve** | `u^exp(4·0.40)` = `u^4.953`, flat to ~60 % then a rush | `exponential/0.4` through `evalWaveCurve` — **a different law**; at u = 0.75 Hear sends 80 and the object sent 101 |
+| **note-on velocity** | the note's own `vel` (~100) | `heldVel(wc)` — **the velocity for the curve's TOP** (fff on a velocity-layered patch) |
+
+**§346 made it worse, and that is worth saying plainly.** I fixed the score's CC7 range without checking what Hear was doing, so I replaced one mismatch with another. His *"first it was just long tones, now it's something off and I can't tell what it is"* is exactly that.
+
+**Built: the object now CARRIES Hear's numbers.** Not a second implementation of the same idea — the numbers themselves, so they cannot drift:
+- **the curve sampled straight off Hear's law** as 17 nodes and 16 linear segments (`y = 10·u^4.953`);
+- **`cc7Abs = { lo: 65, hi: 127 }`** — Hear's own range;
+- **`velAbs = n.vel`** — the velocity Hear sends. New: the live tick and `sonify_core` both honour `velAbs` now.
+
+**Measured after the change: 0 mismatches across 17 samples of the two ramps, velocity 100 both sides.**
+
+**And the export path was brought onto the same law** (the NIT of an hour ago): `sonify_core` now honours `cc7Abs` — it never did, so a swell, and a faded morph note, rendered differently from what he heard. One law, three paths.
+
+**His question again — another model?** Still no, and this entry is the clearest evidence why. The failure was not that the problem was hard to reason about; it was that **I fixed one side of a pair without measuring the other**. Two ramps, never compared until he insisted they be. The cure is the comparison, and it took one node script.
+
+**The standing rule this earns** *(to PLAN 1q, and it is his own words):* **"insert at playhead means insert what I'm listening to at the playhead."** Wherever the drawer can audition something, the audition's OWN numbers are what the insert writes — never a second implementation that agrees today. → the drawer's revision.

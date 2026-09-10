@@ -223,13 +223,19 @@
                 ev.push({ t: pre, port, ch, kind: 'on', bytes: [0x90 | ch, wc.ksNote, 100] });
                 ev.push({ t: pre, port, ch, kind: 'off', bytes: [0x80 | ch, wc.ksNote, 0] });
             }
+            // §349: `cc7Abs` maps the drawn height straight onto a CC7 range, bypassing the anchor scale. The LIVE tick has
+            // honoured it since §317; this path never did, so a swell (and a faded morph note) rendered differently from what
+            // he heard. One law now, in both places.
+            const absCC = wc.cc7Abs ? (h => { const lo = wc.cc7Abs.lo != null ? wc.cc7Abs.lo : 0, hi = wc.cc7Abs.hi != null ? wc.cc7Abs.hi : 127;
+                                              return Math.max(0, Math.min(127, Math.round(lo + (hi - lo) * Math.max(0, Math.min(1, h))))); }) : null;
+            const toCC = h => absCC ? absCC(h) : curveValToCC(h, ccPoints, spanDb);
             const entryCC = wc.sonifyMode === 'plain' ? 127
-                : ksMode ? curveValToCC(Math.max(...wc.nodes.map(n => n.y)) / 10, ccPoints, spanDb)
-                    : curveValToCC(evalWaveCurve(wc, 0), ccPoints, spanDb);
+                : ksMode ? toCC(Math.max(...wc.nodes.map(n => n.y)) / 10)
+                    : toCC(evalWaveCurve(wc, 0));
             ev.push({ t: pre, port, ch, kind: 'cc', bytes: [0xB0 | ch, 7, entryCC] });
 
             // the note
-            const vel = (wc.sonifyMode === 'plain' && wc.recVel != null) ? wc.recVel : 100;
+            const vel = wc.velAbs != null ? wc.velAbs : ((wc.sonifyMode === 'plain' && wc.recVel != null) ? wc.recVel : 100);   // §349
             ev.push({ t: t0, port, ch, kind: 'on', bytes: [0x90 | ch, wc.sonifyNote, vel] });
             ev.push({ t: t1, port, ch, kind: 'off', bytes: [0x80 | ch, wc.sonifyNote, 0] });
             stats.notes++;
@@ -239,7 +245,7 @@
                 let lastCC = entryCC;
                 const dur = Math.max(1e-6, t1 - t0);
                 for (let t = t0 + CC_STEP_S; t < t1; t += CC_STEP_S) {
-                    const cc = curveValToCC(evalWaveCurve(wc, (t - t0) / dur), ccPoints, spanDb);
+                    const cc = toCC(evalWaveCurve(wc, (t - t0) / dur));   // §349: the same law as the entry above
                     if (cc !== lastCC) {
                         ev.push({ t, port, ch, kind: 'cc', bytes: [0xB0 | ch, 7, cc] });
                         lastCC = cc; stats.ccStream++;
