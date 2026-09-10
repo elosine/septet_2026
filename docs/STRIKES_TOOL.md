@@ -1059,6 +1059,30 @@ name keeps its existing relative order and slides down beneath. No re-sorting of
 - **`notes` and `steep` are two ways of typing one thing** (the run's length — §337): whichever is typed takes charge and the other
   follows. His order puts them adjacent, which suits that; the outline that marks the one in charge should survive the remodel.
 
+## AF · Notes outside the harmony, and a player assignment that survives a shuffle — `collected 2026-09-10, NOT built`
+
+> *"and can I assign non chord notes from the keyboard to instruments and have them survive shuffle etc"* (2026-09-10)
+
+**Two requests, very different sizes. Neither exists today** — checked, not assumed:
+
+**AF1 · Add a note that is NOT in the harmony, from the keyboard.** Today the keyboard shows only the notes the strike or harmony
+holds; a click on a key toggles `v.piano` for the voices AT that pitch, and a key with no voice behind it does nothing. There is no path
+to a pitch the harmony does not contain. (`extra` in the rhythm column is unrelated — it is *stack* vs *repeat* for notes beyond the
+rhythm's ONSETS, not extra pitches.) **Size: real.** `this.voices` is derived from `s.notes` and every voice carries `v.i`, an index back
+into the strike — takes, `state()`/`applyState`, `relay()` and `accelUnits()` all assume that. An added note means a synthetic voice with
+no note behind it, so the honest build is a small "added notes" list on the strike in play, carried in cfg like the harmony's own id, and
+folded in wherever `s.notes[v.i]` is read. *(AI reading, marked.)*
+
+**AF2 · A player assignment that survives the shuffle.** Today only TWO assignments survive: `top →` and `bottom →`, which pin the
+highest and lowest voice to a chosen lane. Everything else is cleared — `shuffleOrch()` opens by setting `v.lane = -1` on every voice.
+**Size: small.** A per-voice `pin` flag, toggled where `solo` already is (a modifier-click on the dot), honoured in `shuffleOrch()` exactly
+as the two locks are, kept by `state()`/`applyState` alongside `solo` and `skip`, and drawn on the dot so it is visible. It would also
+make §341's automatic re-orchestration far more usable: pin the two or three placements that matter, let the rest re-deal on every new
+harmony. *(AI reading, marked — this is the one worth doing first.)*
+
+**Why they arrived together:** with `keep rhythm + orchestrate` on (§341), every new harmony re-deals every player, so anything he had
+placed by hand is gone. AF2 is the answer to that; AF1 is a separate wish about the harmony's contents, not its orchestration.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the
