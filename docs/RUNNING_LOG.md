@@ -10394,3 +10394,24 @@ So **muted is nearly right on its own** once the unearned +7 goes — a 2.7 dB e
 **And "will it effect ports?" — no.** The split is **audio only**: Kontakt's plucked instrument output changed from Out 1 to Out 2, the Reaper track widened to 4 channels, a new track receiving channels 3/4. **The MIDI port stays `Piano` and the MIDI channel stays 2.** Nothing in `instruments.js`, nothing in the app, no loopMIDI change.
 
 **Given his "this is getting way too complicated and taking way too much time", the shortest complete path was given as two steps, not a menu:** `Piano PP2` fader to **−4.5** (five seconds, both PP2 voices inside 1.8 dB of `main`), and the split for plucked with **−7.8** on the new track. The rejected alternative — baking the trim into the CC7 the app already sends — is genuinely "per voice in the app" and needs no rack work at all, but CC7 is a 58 dB curve, so a fixed dB trim is not a fixed CC7 offset and it eats headroom at fff. **Right idea, wrong day.** → NITS, as the proper fix later.
+
+## §375. The split is built — and the plucked fader carries the +7 error §369 predicted
+
+*(2026-09-10, session 8, Claude Code / Opus 5.)*
+
+**Read from the running Reaper, not from the screenshots:**
+
+| # | track | fader | plugin |
+|---|---|---|---|
+| 7 | `Piano Kontakt` | +7.00 | Kontakt (the Steinway) |
+| 8 | `PianoPlucked Kontakt` | **−7.80** | Kontakt (Plucked Piano, MIDI ch 2) |
+| 9 | `PianoMute PP2` | −2.80 | UVI (A5 Mutes, ch 5) |
+| 10 | `PianoHarm PP2` | −6.30 | UVI (A3/A4 Harmonics, ch 3) |
+
+**The old `Piano PP2` track is gone**, so harmonics and muted cannot double. **Both PP2 faders are correct** — those voices were measured with `Piano PP2` already at 0.00, so the trims are already 0-referenced and −6.30 / −2.80 land them on `main`.
+
+**Plucked is 6.6 dB too quiet, and it is the exact error §369 warned about.** Plucked was measured at **−17.1 / −18.0 / −17.7** (mean −17.6) **while passing the +7.00 `Piano Kontakt` fader**. On its own track it no longer passes that fader, so its raw level is **−24.6**, and the trim to reach `main` at −25.8 is **−1.2 dB**, not −7.8. The −7.8 figure was the correction *relative to where it sat inside the +7 track*; carrying it onto a 0-reference track applies the correction twice.
+
+**Still to check, and it cannot be seen from here:** whether track 7's Kontakt still has **Plucked Piano** loaded alongside the Steinway. Both tracks take `Piano` omni, so if it is still there, channel 2 sounds from both instances and doubles.
+
+**No probe run to confirm — at his word, and the session is wrapping.** The −1.2 is arithmetic on three measured runs, not a fresh measurement; if plucked still sounds off next time he listens, one no-CC7 probe settles it in ninety seconds.
