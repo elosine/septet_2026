@@ -9476,3 +9476,11 @@ and everything that touches that note calls it.**
 - One defect found by the numbers: `'staccato'` matched the bass clarinet's `stac_vel_mwshape` (a key-prefix rule fired first); the plain velocity voice now wins.
 
 **Still unheard by him.** The line is in the chat.
+
+## §331. chordRun: the piano in, an onset without a player, and goTo — "can I get a go to time in the main score or does it exist"
+
+**His words** (05:00): *"please include piano and the first strike can't include viola and can I get a go to time in the main score or does it exsist."* It did not exist as a typed time: the score has Home (time 0), the drag, and the drawer's ⌖ (a strike's original time — `scrollOffset = t × pixelsPerSecond; applyScroll()`). **`goTo(575)`** is that, for any time, in the console.
+
+**Built:** `piano: true` (the piano one more player, one note in its turn — its one voice, as the readout says); `exclude: { 1: ['va'] }` — onset 1 dealt without the viola: a pinned onset for the engine (1k's own manual path — *pinned and flagged, never lowered*), its count drawn inside `perChord` and its players drawn, seeded, from the rest; lanes by number or name (fl · bcl · pno · vn1 · vn2 · va · vc). The readout says *onset 1 without Va*.
+
+**Verified in the running app** on a `zz-ai-chrun2` copy (deleted after; no console errors): `goTo(575)` → the playhead at 575.000 and the run written there without `at`; onset 1 = BCl Fl Vn2 Vn1 (4, not flagged, no viola), the piano dealt 6 notes over the nine chords, counts `4 6 6 6 5 4 6 5 5`; another seed keeps the viola out of onset 1 (Vc Pno Vn1 Vn2); `exclude: null` lets it back (BCl Vc Va Vn1 Fl Vn2).

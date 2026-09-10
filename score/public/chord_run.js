@@ -22,6 +22,10 @@
 //   selection    which notes of a chord an onset takes: 'shuffle' · 'played' · 'high' · 'low' · 'spread' (1k's vocabulary)
 //   rest         seconds a player is free after its last sound ENDS (0.15)      dealer   'free' · 'robin'      seed   the shuffle
 //   soundMs      one hit's length (140)      vel  the level, 1–127, translated per instrument through 1g's remap      at   seconds
+//   exclude      { 1: ['va'] } — onset 1 (counting from 1) is dealt WITHOUT those players (lanes, or fl · bcl · pno · vn1 · vn2 · va · vc);
+//                the count is still drawn inside perChord, the players drawn from the rest (seeded), the chord's notes by register as always
+//
+// goTo(575) — parks the playhead at a time in the score (seconds), the way ⌖ does for a strike; SPACE then plays from there.
 //
 // One group `grp-chrun`, replaced by every call; `chordRun.keep('name')` freezes the one he likes; the numbers of a call are remembered
 // (in the browser, across reloads), so the next call can change ONE: chordRun({ gap: 0.5 }). chordRun.fresh() forgets them.
@@ -38,6 +42,19 @@ const DEFAULTS = { chords: 9, gap: 0.7, perChord: [2, 4], players: null, piano: 
 const r3 = x => Math.round(x * 1000) / 1000;
 const NAMES = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 function noteNum(x) { if (typeof x === 'number') return x; const m = /^([A-Ga-g])(#|b)?(-?\d)$/.exec(String(x).trim()); if (!m) return NaN; return NAMES[m[1].toUpperCase()] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0) + (parseInt(m[3], 10) + 1) * 12; }
+const T0 = () => (typeof TRACKS !== 'undefined' ? TRACKS : root.TRACKS || []);
+// lanes from numbers or names: fl · flute · bcl · bass · pno · piano · vn1 · violin1 · vn2 · violin2 · va · viola · vc · cello
+function laneList(v) {
+    const T = T0(); const list = Array.isArray(v) ? v : String(v).split(/[\s,]+/);
+    return list.map(x => {
+        if (typeof x === 'number' || /^\d+$/.test(String(x))) return +x;
+        const w = String(x).toLowerCase().replace(/[^a-z0-9]/g, '');
+        const i = T.findIndex(t => [String(t.short || ''), String(t.instKey || ''), String(t.id || ''), String(t.label || '')].some(s => s.toLowerCase().replace(/[^a-z0-9]/g, '') === w));
+        if (i >= 0) return i;
+        const alias = { bcl: 'bass_clarinet', bass: 'bass_clarinet', bassclarinet: 'bass_clarinet', pno: 'piano', vn1: 'violin1', vn2: 'violin2', va: 'viola', vc: 'cello', fl: 'flute' }[w];
+        return alias ? T.findIndex(t => t.instKey === alias) : -1;
+    }).filter(i => i >= 0);
+}
 function load(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
 function save(key, v) { try { if (v == null) localStorage.removeItem(key); else localStorage.setItem(key, JSON.stringify(v)); } catch (e) {} }
 
@@ -121,11 +138,24 @@ async function chordRun(opts) {
         const players = playersFor(o);
         if (!players.length) { console.error('[chordRun] no players'); return null; }
         const realize = (pitch, p) => { const f = CRe.foldInto(pitch, p.lo, p.hi); return f ? { midi: f.pitch, fold: f.fold || 0, standIn: false } : null; };
+        // exclude: an onset dealt without some players — a pinned onset for the engine (1k's manual path), its players drawn here, seeded,
+        // from the rest, its count drawn inside perChord; the engine then gives them the chord's notes by register and marks them busy
+        const manual = {}; const excluded = [];
+        if (o.exclude && typeof o.exclude === 'object') {
+            const rnd = S.mulberry32((+o.seed || 1) * 131 + 7), mn = +(o.perChord || [2, 4])[0], mx = +(o.perChord || [2, 4])[1];
+            Object.keys(o.exclude).forEach(k => {
+                const i = Math.max(0, Math.round(+k) - 1); const ex = laneList(o.exclude[k]);
+                const allowed = players.filter(p => !ex.includes(p.lane)); if (!allowed.length) return;
+                const want = Math.min(mx, Math.max(mn, mn + Math.floor(rnd() * (mx - mn + 1)))), n = Math.min(want, allowed.length);
+                manual[i] = { count: n, players: S.shuffled(allowed, rnd).slice(0, n).map(p => p.lane) };
+                excluded.push('onset ' + (i + 1) + ' without ' + ex.map(l => (T0()[l] || {}).short || l).join(' '));
+            });
+        }
         const res = S.deal(onsetsMs, chords, players, {
             order: o.order, advance: o.advance, timesMin: +(o.times || [2, 4])[0], timesMax: +(o.times || [2, 4])[1], selection: o.selection,
             countMin: +(o.perChord || [2, 4])[0], countMax: +(o.perChord || [2, 4])[1], reattackMs: Math.round((+o.rest || 0.15) * 1000), dealer: o.dealer, seed: +o.seed || 1,
             soundMs: +o.soundMs || 140,
-        }, realize, null);
+        }, realize, Object.keys(manual).length ? manual : null);
         // ---- write, as the drawer's insert writes a strike
         const t0 = o.at != null ? +o.at : +C.getTimeAtPlayhead().toFixed(3);
         const T = (typeof TRACKS !== 'undefined' ? TRACKS : root.TRACKS || []);
@@ -164,7 +194,7 @@ async function chordRun(opts) {
         const techs = players.map(p => p.label + ' ' + p.techLabel + (o.tech && !p.asked ? ' (no such voice — its ordinary one)' : '')).join(' · ');
         const text = res.events.length + ' chords at ' + t0.toFixed(2) + ' s · ' + R.label + ' · ' + written + ' notes · ' + S.describe(res)
             + ' · chords ' + chords.map(c => c.name).join(' ') + ' in ' + (o.order === 'shuffled' ? 'shuffled order' : 'turn')
-            + ' · ' + techs + (replaced ? ' · replaced the previous run' : '') + ' — SPACE plays from the playhead · CTRL+Z undoes';
+            + ' · ' + techs + (excluded.length ? ' · ' + excluded.join(', ') : '') + (replaced ? ' · replaced the previous run' : '') + ' — SPACE plays from the playhead · CTRL+Z undoes';
         console.log('%c[chordRun] ' + text, 'color:#e8cf9a');
         console.table(rows);
         if (C.saveStatus) C.saveStatus.textContent = text;
@@ -183,4 +213,15 @@ chordRun.keep = function (name) {
 chordRun.fresh = function () { chordRun.last = null; save(LAST_KEY, null); console.log('[chordRun] forgot the last settings — the defaults apply'); };
 chordRun.DEFAULTS = DEFAULTS; chordRun.GROUP = GROUP; chordRun.last = load(LAST_KEY);
 root.chordRun = chordRun;
+// goTo(575): the playhead parked at a time, as the drawer's ⌖ parks it on a strike's original time (the score scrolls; the playhead is the fixed line)
+root.goTo = function (seconds) {
+    const C = C_(); if (!C) return null;
+    if (C.isPlaying) { console.warn('[goTo] stop first'); return null; }
+    const t = Math.max(0, +seconds || 0);
+    C.scrollOffset = t * C.pixelsPerSecond; if (typeof C.applyScroll === 'function') C.applyScroll();
+    const now = +C.getTimeAtPlayhead().toFixed(3);
+    console.log('%c[goTo] playhead at ' + now.toFixed(2) + ' s — SPACE plays from here', 'color:#e8cf9a');
+    if (C.saveStatus) C.saveStatus.textContent = 'playhead at ' + now.toFixed(2) + ' s';
+    return now;
+};
 }(typeof self !== 'undefined' ? self : this));
