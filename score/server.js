@@ -26,6 +26,10 @@ const PUBLIC_DIR = path.join(ROOT, 'public');
 const DOCS_DIR = path.join(ROOT, '..', 'docs');           // serves /docs/instrument_map.json
 const SCORES_DIR = path.join(ROOT, '..', 'scores');
 const MOTIVES_DIR = path.join(ROOT, '..', 'sandbox', 'motives');   // shared library (D8-E)
+// PASSAGES (composer 2026-09-10, RUNNING_LOG §361): a captured stretch of score, insertable at the playhead into any
+// score. Under bank/ deliberately — his requirement was *"once I put one that's committed, it's put into the committed
+// files"*, and bank/ is committed while scores/*-work.json and scores/versions/ are gitignored.
+const PASSAGES_DIR = path.join(ROOT, '..', 'bank', 'passages');
 const VERSIONS_DIR = path.join(SCORES_DIR, 'versions');
 const VERSION_CAP = 20;
 
@@ -947,6 +951,52 @@ const server = http.createServer((req, res) => {
         } catch (e) { return R.status(500).json({ success: false, error: e.message }); }
     }
     // ---- motive library (same files the sandbox reads/writes) ----
+    // ---- PASSAGES: list / read / write / delete -------------------------------------------------
+    if (req.method === 'GET' && url === '/api/passages') {
+        try {
+            if (!fs.existsSync(PASSAGES_DIR)) fs.mkdirSync(PASSAGES_DIR, { recursive: true });
+            const list = fs.readdirSync(PASSAGES_DIR).filter(f => f.endsWith('.json')).map(f => {
+                try {
+                    const m = JSON.parse(fs.readFileSync(path.join(PASSAGES_DIR, f), 'utf8'));
+                    return { file: f, name: m.name || f.replace(/\.json$/, ''), objects: (m.objects || []).length,
+                             span: m.span != null ? m.span : null, lanes: m.lanes || [], capturedAt: m.capturedAt || null,
+                             capturedFrom: m.capturedFrom || null };
+                } catch (e) { return { file: f, name: f.replace(/\.json$/, ''), objects: 0, span: null, lanes: [], broken: true }; }
+            }).sort((a, b) => a.name.localeCompare(b.name));
+            return R.json(list);
+        } catch (e) { return R.status(500).json({ error: e.message }); }
+    }
+    if (req.method === 'POST' && url === '/api/passages') {
+        return readBody(req, (err, m) => {
+            if (err || !m || !m.name || !Array.isArray(m.objects) || !m.objects.length) {
+                return R.status(400).json({ error: 'name and a non-empty objects array are required' });
+            }
+            if (!fs.existsSync(PASSAGES_DIR)) fs.mkdirSync(PASSAGES_DIR, { recursive: true });
+            const slug = String(m.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'passage';
+            let file = slug + '.json', n = 2;
+            // a re-capture under the SAME name overwrites that passage; a new name never collides with an existing file
+            if (!m.overwrite) { while (fs.existsSync(path.join(PASSAGES_DIR, file))) file = slug + '-' + (n++) + '.json'; }
+            fs.writeFileSync(path.join(PASSAGES_DIR, file), JSON.stringify(m, null, 2));
+            console.log('Passage saved: ' + file + ' (' + m.objects.length + ' objects)');
+            R.json({ file: file, name: m.name, objects: m.objects.length });
+        });
+    }
+    if (url.startsWith('/api/passages/')) {
+        const file = path.basename(url.slice('/api/passages/'.length));
+        if (!file.endsWith('.json')) return R.status(400).json({ error: 'bad file' });
+        const filepath = path.join(PASSAGES_DIR, file);
+        if (req.method === 'GET') {
+            if (!fs.existsSync(filepath)) return R.status(404).json({ error: 'not found' });
+            try { return R.json(JSON.parse(fs.readFileSync(filepath, 'utf8'))); }
+            catch (e) { return R.status(500).json({ error: e.message }); }
+        }
+        if (req.method === 'DELETE') {
+            if (!fs.existsSync(filepath)) return R.status(404).json({ error: 'not found' });
+            fs.unlinkSync(filepath);
+            console.log('Passage deleted: ' + file);
+            return R.json({ deleted: file });
+        }
+    }
     if (req.method === 'GET' && url === '/api/motives') {
         try {
             const list = fs.readdirSync(MOTIVES_DIR).filter(f => f.endsWith('.json')).map(f => {
