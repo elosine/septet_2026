@@ -214,7 +214,7 @@ the plan is already on paper. Wrap on Opus, always.
 - **Resume reads: nothing beyond §2.** (If he raises a crescendo/audition question, RUNNING_LOG §349–350 carry the measured numbers; if he
   raises chords mode, §348. Do not read them pre-emptively.)
 
-**CHECKPOINT (mid-session checkpoint, 2026-09-10 evening — session 8, Claude Code / Opus 5). RUNNING_LOG §352–375.**
+**CHECKPOINT (mid-session checkpoint, 2026-09-10 evening — session 8, Claude Code / Opus 5). RUNNING_LOG §352–375.** *(Superseded by the LATE checkpoint below. Its rack line is done: `PianoPlucked Kontakt` is saved at −1.2 dB.)*
 
 - **THE MODE CHANGE, and it is his:** he named the one-fault-at-a-time loop as the problem — *"these tools are failing me and just getting in the way ... I need to find a way to move forward."* **`docs/SWEEP_LIST.md` is now open: a fault met while composing is LOGGED, not fixed.** Nine entries, most closed the same day. He also asked, repeatedly and rightly, for **short answers** — no analysis dumps.
 - **Task and state:** nothing in flight. Everything below is built, verified and **pushed**; **none of it has been heard or judged by him.**
@@ -228,6 +228,21 @@ the plan is already on paper. Wrap on Opus, always.
 - **Pending decisions from him:** whether to commit his two passages (`bank/passages/accentedcres01*.json`) — the store is a committed directory by design, but they are his work.
 - **Deliberately uncommitted** — all his, none the AI's: `bank/panel_snapshots.json` (his takes) · `reaper/septet_rack.rpp` (**the piano split he built this evening** — his to save) · `bank/passages/accentedcres01.json` + `-2.json` (his captures) · `scores/SeptetSec03-Materials-B/-C/-D/-a.json` (his working scores).
 - **Resume reads: nothing beyond §2.** (If he raises the piano balance, RUNNING_LOG §373 and §375 carry the numbers; if he raises a tool fault, `docs/SWEEP_LIST.md`. Do not read them pre-emptively.)
+
+**CHECKPOINT — LATE (mid-session checkpoint, 2026-09-10 late → 09-11 — session 8 continued, Claude Code / Opus 5). RUNNING_LOG §376–378. THIS IS THE ONE TO RESUME FROM.**
+
+- **Task and state:** the strikes drawer, unblocked at his brief (*"rebuild/fix just so I can use it … instead of single notes, I want ensemble chords"*). **Built, walked in the running app on a `zz-ai-` copy (deleted), committed and pushed `a1a5bff`. Nothing in flight. He has heard NONE of it.**
+- **Latest deliverable:** `score/public/strike_drawer.js` (the `set` row: percussive · spiccato · staccato; shape first in the rhythm group; `transpose −8va −½ +½ +8va`) · `score/public/strike_sounds.js` (the onset card: `max` · `every onset: max` · `deal` · `reshuffle` · ♪ · `rest`; the piano's share — CN-61) · `score/public/strike_chords_ui.js` (the card released on mouseup; `chords (old)`). The route and the design: **STRIKES_TOOL §AG**.
+- **NEXT CONCRETE STEP:** tell him to press CTRL+SHIFT+R in the score (page reload only, no server restart) and walk the route in STRIKES_TOOL §AG. At 130 ms gaps: `re-attack ≥` 30 and `every onset: max` 3. **Take his verdicts; fix what he marks "fix now", log the rest to `docs/SWEEP_LIST.md`.** Journal every exchange (RUNNING_LOG §379 on).
+- **Things he may trip on, said to him already:** a chord needs a DOUBLE-click on the dot (a single click marks a span) · the piano's clock is attack to attack, ≥ 100 ms — not the "60 ms rest" first proposed (§378 says why) · `reshuffle` changes players only under `deal: random`.
+- **Pending decisions from him:** the hand override per chord (medium, offered, not asked for) · whether to commit his two passages (`bank/passages/accentedcres01*.json`) · whether track 7's Kontakt still has Plucked Piano loaded (his check, inside Kontakt).
+- **Deliberately uncommitted** — all his, none the AI's:
+  - `bank/panel_snapshots.json` — his drawer takes (the walk did NOT write here; it proved the take round trip through `state()`)
+  - `reaper/septet_rack.rpp` — his piano split, with plucked at −1.2
+  - `bank/passages/accentedcres01.json` + `-2.json` — his captures, commit on his word
+  - `scores/SeptetSec03-Materials-B/-C/-D/-a.json` — his working scores
+- **Model:** resume on **Opus** — verdicts and fixes on a written build.
+- **Resume reads: nothing beyond §2.** (If he raises a drawer question, STRIKES_TOOL §AG; for the numbers, RUNNING_LOG §378. Do not read them pre-emptively.)
 
 **Open at session end** *(written cold, 2026-09-09)*:
 
