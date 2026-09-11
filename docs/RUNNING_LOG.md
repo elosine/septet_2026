@@ -10862,3 +10862,30 @@ bisect (the script is in the session scratchpad; it is small enough to rewrite f
 
 **Next:** the rest of N3 — trills into the IR (new vocabulary: his decisions on the written look come first) and the exporters onto
 the app's lane code (2b).
+
+## §398. Notating section 1 in earnest — the planning conversation opens; and a standing rule for /postclear (2026-09-11, Opus 5)
+
+**What prompted it:** his question — *"in the notation score I want to start notating in earnest, how do I start a new blank presentation
+score and help manage the saving, file names etc"* — then, after the AI explained that the page is derived (D9) and nothing on it is saved
+by hand: *"this shows (image) as save file but the notation that is there was just the test notation ai added when porting the notation
+layer/presentation score; I want to notate sec 1 from the composer score in earnest now; so the presentation score should be blank"* —
+then, offered (a) auto-drawn-and-refined / (b) empty-and-hand-built: *"neither, I'm going to have ai notate section 1 from ir, but we
+haven't decided which notation to use yet. the notation that is in there now is incorrect and was just used for the p1 test. I want to
+start fresh and tell ai how all the notes from ir and the composer score are supposed to look in sec 1"*.
+
+**Facts given him, measured:** no choices file exists for piece-septet (the AI added no notation to it); the picker's "piece-septet ·
+2a proof (all parts, 0-580 s, bricks)" is the IR built 2026-09-11 from his Save of that morning in BRICKS MODE — the engine's draft look
+with 2a's provisional choices (NITS 2026-09-11), none of them his; R rebuilds it and renames it "whole score (bricks)"; choices save
+themselves to `notation/choices/piece-septet.choices.json`, one per score, never named by him; that file is not gitignored.
+
+**The AI's reading of his intention (NOT yet confirmed by him):** the AI notates section 1 from the IR and the composer score, by rules
+he dictates; the notation vocabulary is undecided; the present look binds nothing ("start fresh"). This is PLAN §2's top-line step 2
+(*first page from piece-septet*), entered by the planning method, phase 1.
+
+**Data, read only:** piece-septet's markers — 183.0 s `MORPH M1 — BEATING BLOOM ·dialled` · 314.0 s `MORPH M3 — BEATING CONVERGE` ·
+445.0 s `MORPH M2 — SPECTRAL DRIFT`; 899 notes, the last ending at 578.8 s. No marker is named "section 1" — 0–183 s is the likely span;
+his to say.
+
+**A standing rule, his (at the checkpoint):** *"when I clear and postclear, I dont want the model doing anything, i want them to check in
+with me first"*. Written into `.claude/commands/postclear.md` step 5 and the AI's memory: after `/postclear`, play back, then stop and
+ask; start only on his word.

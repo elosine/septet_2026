@@ -177,6 +177,7 @@ it was found missing from this repo's CLAUDE.md, which is why the advice had gon
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
+| **N5** | **► NOTATE SECTION 1 IN EARNEST — planning method, phase 1 (RUNNING_LOG §398):** his notation vocabulary for sec 1, kind by kind; the AI then notates sec 1 from the IR. **After /postclear: check in with him first — do nothing.** | **Fable** | yes — clear, switch, `/postclear` |
 | 1 | ~~BUILD §377~~ — **done, walked, pushed (§378; STRIKES_TOOL §AG)** | — | — |
 | **N1** | ~~BUILD PLAN 2a.1–2a.6~~ — **built 2026-09-11 in the same context (RUNNING_LOG §384–386)**: 70-check battery GREEN, tuba suite unchanged, the page seen on :5301 | — | — |
 | **N2** | **His eye on the seven-lane page** — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → the picker "piece-septet · 2a proof" → video and zoom (Z). The provisional looks to judge are listed in NITS 2026-09-11 | **Fable** for the verdict | yes — wrap on Opus, clear, switch |
@@ -368,7 +369,7 @@ the plan is already on paper. Wrap on Opus, always.
 - **Model:** Opus — 2d.5 is written in the plan.
 - **Resume reads:** PLAN **2d.5** (~20 lines, under `## 2. Notate` → 2d) · `docs/NOTATION_IDENTITY.md`. Nothing else pre-emptively.
 
-**STATE — 2d BUILT (2026-09-11 evening — session 8 continued, Claude Code / Opus 5; his word: *"continue thru as much as you can independantly, I'll look when finished"*). RUNNING_LOG §395–396. THIS IS THE ONE TO RESUME FROM.**
+**STATE — 2d BUILT (2026-09-11 evening — session 8 continued, Claude Code / Opus 5; his word: *"continue thru as much as you can independantly, I'll look when finished"*). RUNNING_LOG §395–396.** *(Superseded by the checkpoint below: a planning conversation on section 1 has opened. Its walk for him still stands.)*
 
 - **Task and state:** PLAN 2d (notate while composing) is **built, proven on copies, committed and pushed; nothing in flight.** He looks next.
 - **His walk, in order** (nothing here has been seen by him):
@@ -393,6 +394,36 @@ the plan is already on paper. Wrap on Opus, always.
   trills' written look · the drawer verdicts (STRIKES_TOOL §AG).
 - **Next:** N2 his eye on the page and 2d (**Fable**, wrap on Opus first) · then plan 2b with him (**Fable**, fresh context).
 - **Resume reads:** this block · PLAN §2 head + the 2b line (to plan it). Nothing else pre-emptively.
+
+**CHECKPOINT (mid-session checkpoint, 2026-09-11 late — session 8 continued, Claude Code / Opus 5). RUNNING_LOG §398. THIS IS THE ONE TO RESUME FROM.**
+
+- **FIRST — HIS STANDING RULE (2026-09-11):** *"when I clear and postclear, I dont want the model doing anything, i want them to check in
+  with me first."* After `/postclear`: play back, then **STOP and ask**. No edits, no builds, no tool calls beyond the reads. Start only on his word.
+- **Task and state:** a planning conversation has just opened — **notating section 1 in earnest** (PLAN §2 top-line step 2, *first page
+  from piece-septet*), planning method phase 1 (state and restate). **Nothing built, nothing in flight.** Before it: 2d built and pushed
+  (§391–396, `c6b7729`); N3's resvg panic not reproduced (§397, `7897805`).
+- **His words (§398):** *"I'm going to have ai notate section 1 from ir, but we haven't decided which notation to use yet. the notation that
+  is in there now is incorrect and was just used for the p1 test. I want to start fresh and tell ai how all the notes from ir and the
+  composer score are supposed to look in sec 1."*
+- **The AI's reading, NOT yet confirmed by him:** the AI notates sec 1 from the IR + composer score by rules he dictates; the vocabulary is
+  undecided; the present look (the "2a proof" IR: bricks mode + 2a's provisional choices, NITS 2026-09-11) binds nothing.
+- **Said to him already:** the picker entry is a derived IR, never saved by hand; R rebuilds it; choices save themselves to
+  `notation/choices/piece-septet.choices.json`; **no choices file exists for piece-septet** — the AI added no notation.
+- **Data:** piece-septet's markers 183.0 s MORPH M1 (BEATING BLOOM) · 314.0 s MORPH M3 (BEATING CONVERGE) · 445.0 s MORPH M2 (SPECTRAL
+  DRIFT); 899 notes, last end 578.8 s. No "section 1" marker — 0–183 s is likely; **ask**.
+- **NEXT CONCRETE STEP (only after his go):** continue phase 1 — (1) confirm section 1's span; (2) read his intention back to him in two or
+  three lines and get his yes; (3) then, data first, offer a **section-1 inventory** from the IR/score (0–183 s if confirmed): the kinds of
+  material present — parts, techniques, lengths, chords, crescendos, trills/zones, morph groups — so he can say how each kind should look,
+  **one kind at a time**. Do not build. Do not propose a whole vocabulary at once. The engine's current defaults are a menu, not a default.
+- **Pending decisions from him:** section 1's span · the sec-1 vocabulary (the subject) · still open: his eye on 2a/2d (the walk in the
+  2d state block above) · the drawer verdicts (STRIKES_TOOL §AG) · his two passages · track 7's Kontakt · whether the user-level
+  `~/.claude/skills/postclear` should carry the check-in rule too (offered; the project's command already does).
+- **Deliberately uncommitted — all his:** `bank/panel_snapshots.json` (his drawer takes) · `reaper/septet_rack.rpp` (his piano split) ·
+  `bank/passages/accentedcres01.json` + `-2.json` (his captures; commit on his word) · `scores/SeptetSec03-Materials-B/-C/-D/-a.json` (his
+  working scores; **`-D` also has an unsaved working copy from 15:32** — D17, his to Save or Reload).
+- **Model:** resume on **Fable** — this is a judgment conversation (SESSION_HYGIENE § Model strategy).
+- **Resume reads: nothing beyond §2.** (If he asks what the engine can draw: `notation/registry/techniques.json` and #4's notation
+  standards — only then.)
 
 **Open at session end** *(written cold, 2026-09-09)*:
 

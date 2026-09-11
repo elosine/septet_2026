@@ -31,5 +31,8 @@ last-session playback, no agenda, no "what would you like to work on today?".
    deliberately-uncommitted list. Say so if it drifted — the composer may have saved
    scores or a rack in between, which is normal and is not yours to commit without asking.
 
-5. **Start the next concrete step.** Narrate briefly so the composer can interrupt. Do not
-   ask what to work on and do not propose an agenda. Keep the lab journal as you go.
+5. **Check in, then wait.** *(Composer, 2026-09-11: "when I clear and postclear, I dont want
+   the model doing anything, i want them to check in with me first.")* After the playback,
+   STOP — no edits, no builds, no tool calls beyond the reads in step 1. Name the next
+   concrete step and ask whether to go on. Start only on his word. Do not propose an agenda.
+   Keep the lab journal as you go.
