@@ -2431,7 +2431,9 @@ const Composer = {
         if (!this.databases.chordShapes) this.databases.chordShapes = [];
         if (!this.databases.sets) this.databases.sets = [];
         if (!this.databases.cells) this.databases.cells = [];
-        this.nextId = data.nextId || 1;
+        // ids are assigned once and never reused (NAMING.md §1 rule 4; docs/NOTATION_IDENTITY.md): the counter never starts
+        // below an id the score already holds, even when a save's nextId is missing or behind
+        this.nextId = Math.max(data.nextId || 1, this.maxIdNumber() + 1);
         this.selectedObject = null;
         this.selectedObjects = [];
         this.selectedNodeIdx = -1;
@@ -3514,6 +3516,16 @@ const Composer = {
         return `${prefix}-${this.nextId++}`;
     },
 
+    // the highest counter-made id in the score (wc-N · mk-N · zn-N …) — the floor under nextId (docs/NOTATION_IDENTITY.md)
+    maxIdNumber() {
+        let max = 0;
+        for (const o of (this.objects || []).concat(this.markers || [])) {
+            const m = o && typeof o.id === 'string' && /^[a-z]{2}-(\d+)$/.exec(o.id);
+            if (m) max = Math.max(max, +m[1]);
+        }
+        return max;
+    },
+
     // Convert time in seconds to X pixel position
     timeToPx(seconds) {
         return seconds * this.pixelsPerSecond;
@@ -3815,7 +3827,7 @@ const Composer = {
         const prev = JSON.parse(this.undoStack.pop());
         this.objects = prev.objects;
         this.markers = prev.markers;
-        this.nextId = prev.nextId;
+        this.nextId = Math.max(this.nextId, prev.nextId);   // never back: an undone note's id is never handed to a new one (docs/NOTATION_IDENTITY.md)
         this._restoreMotives(prev.motives);
         this.selectedObject = null;
         this.selectedNodeIdx = -1;
@@ -3834,7 +3846,7 @@ const Composer = {
         const next = JSON.parse(this.redoStack.pop());
         this.objects = next.objects;
         this.markers = next.markers;
-        this.nextId = next.nextId;
+        this.nextId = Math.max(this.nextId, next.nextId);
         this._restoreMotives(next.motives);
         this.selectedObject = null;
         this.selectedNodeIdx = -1;

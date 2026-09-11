@@ -64,7 +64,8 @@ or not at all.**
    not sit on a sounding layer.
 4. **Ids are stable and never reused:** `wc-N` / `mk-N` from the app's `nextId`, which only
    grows. The IR's derived ids are functions of these (`ev-wc-N`, `ch-<part>-wc-N`), so a
-   regenerated page re-attaches the composer's authored overlays by id.
+   regenerated page re-attaches the composer's authored overlays by id. The contract and its test:
+   `docs/NOTATION_IDENTITY.md` · `tools/test_identity.js` (PLAN 2d.1 — undo/redo and load were found re-issuing ids, fixed 2026-09-11).
 5. **Gestures carry `groupId`** on every member note, and the gesture's META shape carries
    the same `groupId` on the META layer — the app's insert-time shape.
 6. **Markers live in `objects` as `{ type: 'marker', layer, time, label, … }`.** The

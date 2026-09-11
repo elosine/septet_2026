@@ -1525,7 +1525,7 @@ player would touch parts, solo, crop and print.
   as #4's PHASE 5). **Deadline-bound: 2026-10-15.**
 - **2c — Parts** — only if selected; due ~2026-10-29.
 
-- **2d — Notate while composing** — `planned 2026-09-11, all six steps — next to build, Opus, after a clear` (RUNNING_LOG §389–390) — **Result when done:** he
+- **2d — Notate while composing** — `building — 2d.1 built 2026-09-11 (RUNNING_LOG §391); next 2d.2` (planned RUNNING_LOG §389–390) — **Result when done:** he
   notates sections 1–2 while section 3 is still being written. `piece-septet.json` stays the only file anyone edits (D9); the IR is
   rebuilt from it at one keystroke; the notation layer's own choices (ink, not music — beams, forced clefs, breaks) live in a sidecar
   the notation app owns and **survive every rebuild**, keyed to the notes' ids. A choice whose notes vanished is listed, never dropped.
@@ -1539,7 +1539,9 @@ player would touch parts, solo, crop and print.
   choice in it; ids are automatic and invisible; the only time it speaks is one advisory line when a note that carried a choice is
   deleted or redrawn — never blocking, never asking. It stores what, which notes, what value — never how a thing is drawn; new graphics
   and experimental notation are engine work, untouched by it.
-  - **2d.1 — ⚠ The identity contract** — **Result when done:** a note's id is proven stable — from the moment it is drawn, through
+  - **2d.1 — ⚠ The identity contract** — `built 2026-09-11 (RUNNING_LOG §391): docs/NOTATION_IDENTITY.md · tools/test_identity.js
+    20/20 on piece-septet (0.5 s) and the tuba score (1.2 s) · the card walked in the running app · undo and load no longer
+    re-issue ids` — **Result when done:** a note's id is proven stable — from the moment it is drawn, through
     every edit in the composer, into the IR as `ev-wc-N`, across any number of re-extracts. A test says so in seconds. Every edit path
     that DOES change an id is named in writing. **Decided (B):** a choice targets the **set of note ids** it applies to, never the IR
     chunk id (a chunk is named after its earliest note; move that note and the chunk renames, orphaning a beam whose other three notes
@@ -1620,6 +1622,9 @@ player would touch parts, solo, crop and print.
     - 2d.5.8 **the one-writer rule, written where the AI looks:** the working copy lives in the open page (D17); a second tab of the
       same score clobbers it on Save. *One open composer tab per score — the AI drives HIS tab, or he closes it first.* Into
       `CLAUDE.md` § Apps (one line) · `docs/NAMING.md` §1 beside D17 · the header comment of `note_card.js` above `moveNote`.
+      **Also (found in 2d.1's walk, §391):** working copies are server-side (`scores/<name>-work.json`), so a throwaway :5301
+      tab opens on its origin's last score — which can be HIS. Check the tab's open score before touching anything; open the
+      `zz-ai-` copy first.
   - **2d.6 — The proof: beams** — **Result when done:** the first real choice he can make in the notation app, and the whole loop shown
     end to end on `piece-septet`: beam four · change to 2+2 · compose in section 3 · Save · R · the 2+2 holds. That is 2d done.
     *Why beams:* his example, and the apt one — a choice over a SET of notes is the hardest case (decision B and the partial orphan in

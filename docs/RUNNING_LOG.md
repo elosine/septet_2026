@@ -10689,3 +10689,24 @@ vertically can you center them on the appropriate staff, so centered on the midd
 **The binding goal, his words, into 2d's head:** *"I don't want to create another layer of work for myself with this system"* — the sidecar is a memory, not a form; ids are automatic and invisible; it speaks once, advisory, when a note that carried a choice is deleted or redrawn; never blocking, never asking.
 
 **Rejected on the way:** (b) storing ink choices in the composer score (the notation app as a second writer of his composing file) · auto-refresh on Save · a beam panel · dropping unresolved choices · a multi-selection move for now (easy add). **Nothing built.** Next: 2d.1 on Opus after a clear; 2d.1.2 and 2d.5.1 are the two places code is read broadly, and they are named as such.
+
+## §391. PLAN 2d.1 built — the identity contract (2026-09-11, Opus 5)
+
+**What prompted it:** the plan — 2d.1, flagged ⚠ foundational at his ask (*"if there is some more risky or foundational elements can you flag them for me to pay a little more attention too pls"*, §390). Resumed by `/postclear` from journal §2's N4.
+
+**What was done, in order:**
+1. **2d.1.2, the read.** One counter mints every id, once, at creation: `nextId`, through `generateId` or `nextId++` at some forty sites across the generators. The note card changes `this.wc` in place — every field goes through `commit(fn)` (`note_card.js`); a lane drag sets `layer` on the same object; the extractor maps 1:1 (`extract_core.js` `id: 'ev-' + o.id`, and `ir_validate` refuses anything else). A chord is several events in one chunk, each note its own event; the chunk is named after its earliest note — which is decision B's reason, now shown by the test.
+2. **Found: two ways an id could be handed out twice.** Undo and redo restored the counter from the snapshot (`nextId = prev.nextId`): draw, undo, draw — the second note took the first one's id, so a choice saved on the first would land on the second, silently. And a load trusted `nextId || 1`. Both break a rule already written (NAMING.md §1 rule 4: *"stable and never reused … `nextId`, which only grows"*). **Measured before fixing:** no score in `scores/` held a duplicate id or a counter behind its ids — both latent.
+3. **Fixed** (`composer.html`): undo/redo `Math.max(this.nextId, snapshot.nextId)`; the load floored at the highest id in the score + 1 (`maxIdNumber`, new). A gap in the numbers is harmless.
+4. **2d.1.1** `docs/NOTATION_IDENTITY.md` — the four rules · which edits keep the id, which make one · the fix.
+5. **2d.1.3** `tools/test_identity.js` — lifts the composer's own methods (generateId · maxIdNumber · pushUndoState · undo · redo · restoreData · duplicateNote) out of `composer.html` by name and runs them on a stub; makes the card's six edits in place; extracts three times. **piece-septet: 20 of 20 in 0.5 s** (899 events). **The check bites:** with the pre-2d.1 undo line put back into the lifted source, the undone id is handed out again (wc-2052 → wc-2052).
+6. **2d.1.4** the tuba score `piece-s25-finished01`, read where it lies (`--file`; nothing staged): **20 of 20 in 1.2 s** (4401 events). It carries imported ids (`wc-ta4-986`) the counter never makes; the floor ignores them, correctly.
+7. **In the running app** (:5301, `zz-ai-identity` = a copy of piece-septet, deleted after): wc-1162 through the card's own controls — pitch +2 · ▲ · voice slap → senza_mw · dyn pp · start +0.25 · length 0.3 — the same object and the same id after each, 1029 objects throughout. Duplicate → wc-2052; CTRL+Z → gone, the counter stays at 2053; duplicate again → **wc-2053**; no id held twice.
+
+**A near-miss, recorded for the method.** The :5301 tab opened on the last score remembered by that origin — **his** `SeptetSec03-Materials-D`, with its unsaved working copy — because working copies are server-side files (`scores/<name>-work.json`) shared by every server on this tree. Nothing was written: the work file's time was checked before and after (2026-09-10 15:32:38); `openScore` only reads and autosave only follows an edit. **The rule for every walk:** check which score the tab opened before touching anything, and open the `zz-ai-` copy first. This is 2d.5.8's one-writer rule met from the other side; added to that sub-step.
+
+**Decided, and why that rather than the alternative:** the counter never goes back, rather than refusing undo past a creation — undo works exactly as he knows it, and the gap costs nothing · a floor at load, rather than a repair tool — measured, there is nothing to repair, and it closes the case for good · the card's path proven in the real page, rather than a DOM harness — no DOM library in the repo, and one walk in the real page is stronger evidence than a mock.
+
+**Rejected:** jsdom for the card test (a new dependency for one check) · renumbering ids on load (it would break every choice — the opposite of the contract).
+
+**Next:** 2d.2, the sidecar (⚠).
