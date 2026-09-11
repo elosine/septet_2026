@@ -292,6 +292,11 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 - **resvg panics on the septet page on this machine** (`geom.rs:27 unwrap on None`) — trivial SVGs render; the failure did not move
   when the new brackets/brace, the text or the new clefs were removed, nor with the repo's own fonts. Both exporters rasterize with
   resvg. **Must be diagnosed before 2b's first render.**
+  **2026-09-11 evening — NOT REPRODUCED (RUNNING_LOG §397):** the septet page through resvg 2.6.2 the exporters' way (repo fonts, no
+  system fonts, in a child process): **49 of 49 pages render**; the video exporter's own path (`--probe 5,30,120`, `--dumpPage 0`) exits 0.
+  The SVG that panicked was not kept, so there is nothing to diagnose. **Correction:** only the VIDEO exporter rasterizes with resvg — the
+  print exporter makes its PDF with headless Chrome. If it returns: save the SVG that panics, then
+  `node <scratch>/resvg_bisect.js force <ir> <page>` bisects frame → system → item kind → item.
 - **An ottava inside a chord** is decided per note, so a chord that needs 8va draws one bracket per member. Rare (piano extremes).
 - **Clef changes do not exist.** The cello's high notes (to E5 in piece-septet) take bass clef + 8va, not tenor/treble; the bass
   clarinet's lowest written notes (below written F3) take 8vb under the house three-ledger rule (a bass clarinettist reads ledgers).

@@ -181,7 +181,7 @@ it was found missing from this repo's CLAUDE.md, which is why the advice had gon
 | **N1** | ~~BUILD PLAN 2a.1–2a.6~~ — **built 2026-09-11 in the same context (RUNNING_LOG §384–386)**: 70-check battery GREEN, tuba suite unchanged, the page seen on :5301 | — | — |
 | **N2** | **His eye on the seven-lane page** — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → the picker "piece-septet · 2a proof" → video and zoom (Z). The provisional looks to judge are listed in NITS 2026-09-11 | **Fable** for the verdict | yes — wrap on Opus, clear, switch |
 | **N4** | **BUILD PLAN 2d.1 → 2d.6 in order** — **2d BUILT 2026-09-11 (RUNNING_LOG §391–396): identity · sidecar · R · orphans · move to part · G beams — proven on copies. His :5300 needs ONE restart, then his live walk (the 2d state block below). Done as an AI step.** Notate while composing: the identity contract · the sidecar · R refresh · orphans · move-to-part · G beams. **Planned in full 2026-09-11 (RUNNING_LOG §389–390; PLAN 2d).** The ⚠ steps (1 · 2 · 4) are the ones he asked to watch. 2d.1.2 and 2d.5.1 are the two sanctioned broad code reads | **Opus** | **yes** — fresh context; `/postclear` then PLAN 2d |
-| **N3** | **Before 2b's first render: the resvg panic** (NITS 2026-09-11) — then trills into the IR, and the exporters onto the app's lane code | **Opus** | yes, fresh context for a build |
+| **N3** | ~~the resvg panic~~ — **NOT REPRODUCED 2026-09-11 (RUNNING_LOG §397): 49/49 pages + the exporter's probe path render; only the video exporter uses resvg.** Left: trills into the IR (his decisions on the written look first) · the exporters onto the app's lane code — **2b is one line in PLAN: plan it with him first (the planning method)** | **Fable** to plan 2b, then **Opus** | yes — a new phase |
 | 2 | **His verdicts on the drawer after a hard reload (CTRL+SHIFT+R)** — the route is STRIKES_TOOL §AG; fix what he marks (or log to SWEEP_LIST) — *waits beside N1, on his word* | **Opus** | no |
 | 3 | **The pinned player** that survives a shuffle (§AF2) · the hand override per chord (medium, §376) if he asks | **Opus** | no |
 | 4 | **The rhythm drawer remodel** (§AE) — one decision from him first | **Opus** | **yes**, fresh context for a build |
@@ -388,8 +388,11 @@ the plan is already on paper. Wrap on Opus, always.
   tab opened it by memory during the 2d.5 walk and wrote nothing (times checked before and after); Save or Reload is his (D17).
 - **Tests:** `node tools/test_septet_notation.js` (86) · `node tools/test_identity.js` (20) · the tuba battery (`notation/ir/README.md`;
   9 GREEN / 6 RED, notate_block 62/3).
-- **Next:** N2 his eye on the page and 2d (**Fable**, wrap on Opus first) · N3 the resvg panic before 2b (**Opus, after a clear**).
-- **Resume reads (for N3):** NITS 2026-09-11 (the 2a entry's resvg line) · `tools/export_print.js` header. Nothing else pre-emptively.
+- **Also done after 2d, same context:** N3 — the resvg panic **does not reproduce** (RUNNING_LOG §397; NITS corrected: print uses Chrome).
+- **The AI's independent queue is empty** — everything left needs him: his eye on 2a + 2d (N2) · 2b planned by the planning method ·
+  trills' written look · the drawer verdicts (STRIKES_TOOL §AG).
+- **Next:** N2 his eye on the page and 2d (**Fable**, wrap on Opus first) · then plan 2b with him (**Fable**, fresh context).
+- **Resume reads:** this block · PLAN §2 head + the 2b line (to plan it). Nothing else pre-emptively.
 
 **Open at session end** *(written cold, 2026-09-09)*:
 

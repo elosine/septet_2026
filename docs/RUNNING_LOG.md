@@ -10838,3 +10838,27 @@ vertically can you center them on the appropriate staff, so centered on the midd
 **Decided, and why that rather than the alternative:** a click selects AND seeks rather than a separate select mode — nothing he already does changes, and a seek to a note he clicked is harmless · a new beam takes its notes from older beams rather than stacking two beams on one note — one note, one beam, and it is the only reading of "change to 2+2" that needs no extra key · G on the same notes removes rather than asks — the app's habit (Z · B · T · R · O): one key, no dialog.
 
 **2d is built.** Next in the running thread: his eye on the page (N2, Fable) · before 2b, the resvg panic (N3, Opus, after a clear).
+
+## §397. N3 — the resvg panic: not reproduced (2026-09-11, Opus 5)
+
+**What prompted it:** the running thread's next AI step after 2d, on his *"continue thru as much as you can independantly"* — taken
+without the recommended clear (a clear would have stopped the session; noted, not hidden).
+
+**What was tried, in order:**
+1. **The page as 2a's battery builds it** (the app's lane math, the ensemble, the committed `piece-septet` IR, read only), rasterized
+   the exporters' way — resvg-js 2.6.2 (win32-x64-msvc), `fitTo: original`, the repo's two Crimson Pro files, no system fonts — in a
+   CHILD process, so a Rust panic could not take the harness down. A bisect was ready behind it (frame alone → system → item kind →
+   item). **Page 1: renders, 1920 × 1080.** Then **all 49 pages: 49 render, 0 fail.**
+2. **The video exporter's own path**, ten-lane and without the ensemble as it still is: `--probe 5,30,120` → three PNGs, exit 0;
+   `--dumpPage 0` → the page SVG, exit 0.
+
+**Found on the way:** *"both exporters rasterize with resvg"* (NITS 2026-09-11) is wrong — `export_print.js` makes its PDF with
+headless Chrome (`--print-to-pdf`, day 37); only `export_video.js` uses resvg. And the exporter's septet page is small (12.9 KB
+against the app's) because it is still the tuba's ten lanes with no ensemble — the known 2b item, not a raster fault.
+
+**Decided:** closed as NOT REPRODUCED rather than "fixed" or "diagnosed" — the SVG that panicked on the day was not kept, and
+*no clear evidence means no diagnosis* (AI_METHODOLOGY). What would catch it if it returns is written in NITS: keep the SVG, run the
+bisect (the script is in the session scratchpad; it is small enough to rewrite from this entry if lost).
+
+**Next:** the rest of N3 — trills into the IR (new vocabulary: his decisions on the written look come first) and the exporters onto
+the app's lane code (2b).
