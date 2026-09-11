@@ -178,8 +178,9 @@ it was found missing from this repo's CLAUDE.md, which is why the advice had gon
 | # | Step | Model | Clear first? |
 |---|---|---|---|
 | 1 | ~~BUILD §377~~ — **done, walked, pushed (§378; STRIKES_TOOL §AG)** | — | — |
-| **N1** | **BUILD PLAN 2a.1–2a.6 — the notation engine → seven parts** (PLAN §2; the checkpoint of 2026-09-11 below). Phase 2 opened at his word, §379–383 | **Opus** | **yes** — done (checkpoint 09-11) |
-| **N2** | His eye on the first seven-lane page (2a.6's screenshot) → then 2b step 2 (`piece-septet` as the real page) | **Fable** for the verdict | yes, after the build |
+| **N1** | ~~BUILD PLAN 2a.1–2a.6~~ — **built 2026-09-11 in the same context (RUNNING_LOG §384–386)**: 70-check battery GREEN, tuba suite unchanged, the page seen on :5301 | — | — |
+| **N2** | **His eye on the seven-lane page** — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → the picker "piece-septet · 2a proof" → video and zoom (Z). The provisional looks to judge are listed in NITS 2026-09-11 | **Fable** for the verdict | yes — wrap on Opus, clear, switch |
+| **N3** | **Before 2b's first render: the resvg panic** (NITS 2026-09-11) — then trills into the IR, and the exporters onto the app's lane code | **Opus** | yes, fresh context for a build |
 | 2 | **His verdicts on the drawer after a hard reload (CTRL+SHIFT+R)** — the route is STRIKES_TOOL §AG; fix what he marks (or log to SWEEP_LIST) — *waits beside N1, on his word* | **Opus** | no |
 | 3 | **The pinned player** that survives a shuffle (§AF2) · the hand override per chord (medium, §376) if he asks | **Opus** | no |
 | 4 | **The rhythm drawer remodel** (§AE) — one decision from him first | **Opus** | **yes**, fresh context for a build |
@@ -272,6 +273,25 @@ the plan is already on paper. Wrap on Opus, always.
 - **Model:** resume on **Opus** — a build from a written plan. Back to Fable for his verdict on the first page.
 - **Resume reads:** `docs/PLAN.md` §2 (the head + 2a, ~40 lines from `## 2. Notate`) · PLAN **0g** (its adaptation list and "Found by
   RUNNING the copy", ~30 lines) · journal §4 **D9** and **D10** · at 2a.4 only: #2's `docs/CHORD_SPACING_RULES.md`. Nothing else pre-emptively.
+
+**STATE — 2026-09-11, after the 2a build (session 8 continued, Opus 5; he said "I won't clear, you can build"). RUNNING_LOG §384–386. THIS SUPERSEDES THE CHECKPOINT ABOVE.**
+
+- **Task and state:** PLAN 2a (engine → seven parts) is **built, committed and pushed; nothing in flight.** His eye on the page is next (N2).
+- **What exists now:** `notation/registry/ensemble.json` (parts, clefs, B♭ transposition, the piano's two staves, D10 groups) ·
+  `notation/registry/techniques.json` (148 keys, family + notate) · `notation/lib/chord_column.js` (#2's locked chord rules) ·
+  treble/alto clefs, brackets, brace from LilyPond (`tools/glyph_emmentaler.py`) · the IR page `notation/ir/piece-septet.ir.json`
+  ("piece-septet · 2a proof", --bricks, 49 pages) · `tools/test_septet_notation.js` (70 checks GREEN). Every engine change defaults to the
+  tuba page — the tuba batteries (staged, run, removed again) held at 9 GREEN / 6 pre-existing RED throughout.
+- **How he sees it:** his own server (:5300) serves the same files — **page reload only (CTRL+SHIFT+R), no server restart**; open
+  `/notation/app/notation.html`, pick "piece-septet · 2a proof", Z for zoom.
+- **For his eye, provisional (NITS 2026-09-11):** gutter 72 px · the piano lane weight 2 (the air between its staves) · the technique look
+  (head + brick only) · bass clarinet low notes 8vb, cello high 8va (no clef changes yet) · chords by LilyPond's rules (an altered unison
+  puts two notes a step apart in one column — LP's own result).
+- **Before 2b:** the resvg panic (the exporters' rasterizer, on the septet page) · trills (zones) are not in the IR yet · the exporters
+  are still ten-lane.
+- **Deliberately uncommitted — all his:** `bank/panel_snapshots.json` · `reaper/septet_rack.rpp` · `bank/passages/accentedcres01*.json`
+  · `scores/SeptetSec03-Materials-B/-C/-D/-a.json`.
+- **Resume reads:** PLAN §2 (head + 2a) · NITS 2026-09-11 (the 2a entry) · RUNNING_LOG §386. Nothing else pre-emptively.
 
 **Open at session end** *(written cold, 2026-09-09)*:
 

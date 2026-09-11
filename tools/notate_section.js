@@ -178,18 +178,50 @@ if (!scoreName || isNaN(w0) || isNaN(w1)) {
     '       notate_section.js --prune <id>');
   process.exit(2);
 }
-const partsArg = arg('parts', '0-9');
+const score = JSON.parse(fs.readFileSync(path.join(ROOT, 'scores', scoreName + '.json'), 'utf8'));
+// [2a, the septet — 2026-09-11] the score's own tracks decide the default
+// parts and the META layer: parts 0..tracks.length-1, META = tracks.length
+// (composer.html META_LAYER). A save without tracks (the tuba piece's) keeps
+// the old defaults, 0-9 and META on layer 10. The septet's layers 8-10 are
+// the curve windows, which the old default swept in as sounding objects
+// (RUNNING_LOG §13, run C).
+const TRACKS = Array.isArray(score.tracks) ? score.tracks : null;
+const partsArg = arg('parts', TRACKS ? '0-' + (TRACKS.length - 1) : '0-9');
 const parts = partsArg.includes('-') && !partsArg.includes(',')
   ? (([a, b]) => Array.from({ length: b - a + 1 }, (_, i) => a + i))(partsArg.split('-').map(Number))
   : partsArg.split(',').map(Number);
+const metaLayer = TRACKS ? TRACKS.length : 10;
 const profile = arg('profile', 'trance');
 const id = arg('id', (scoreName + '-' + w0 + '-' + w1).replace(/[^a-zA-Z0-9-]/g, '-'));
 const label = arg('label', id + ' (' + profile + ')');
 const outRel = 'notation/ir/' + id + '.ir.json';
 
-const score = JSON.parse(fs.readFileSync(path.join(ROOT, 'scores', scoreName + '.json'), 'utf8'));
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'registry', 'classes.json'), 'utf8'));
 const sampleLengths = JSON.parse(fs.readFileSync(path.join(ROOT, 'bank', 'sample_lengths.json'), 'utf8'));
+// the piece's technique table (2a.5) — every recipe key's family + notation
+const TECH_PATH = path.join(ROOT, 'notation', 'registry', 'techniques.json');
+const techniques = fs.existsSync(TECH_PATH) ? JSON.parse(fs.readFileSync(TECH_PATH, 'utf8')).techniques : null;
+// the ensemble registry may not drift from the score: every part's id and
+// short name must be the score's own tracks[part]
+const ENS_PATH = path.join(ROOT, 'notation', 'registry', 'ensemble.json');
+const ENS = (TRACKS && fs.existsSync(ENS_PATH)) ? JSON.parse(fs.readFileSync(ENS_PATH, 'utf8')) : null;
+// a save with a DIFFERENT instrumentation (the staged tuba fixtures, ten
+// tracks) is not this ensemble's score — nothing to check it against, and
+// it extracts by the tuba rules exactly
+const ENS_APPLIES = !!(ENS && TRACKS.length === (ENS.parts || []).length);
+{
+  const ens = ENS;
+  if (ENS_APPLIES) {
+    for (const p of ens.parts || []) {
+      const tr = TRACKS[p.part];
+      if (!tr || tr.id !== p.id || tr.short !== p.short) {
+        console.error('ensemble drift: notation/registry/ensemble.json part ' + p.part + ' is ' + p.id + '/' + p.short +
+          ' but ' + scoreName + ' tracks[' + p.part + '] is ' + (tr ? tr.id + '/' + tr.short : 'missing') + ' — fix the registry');
+        process.exit(2);
+      }
+    }
+  }
+}
 // THE FIGURE STANDARDS (day 24): every --cluster / --beam overlay is built
 // from registry data, so the rules survive a cleared chat. Edit the registry,
 // not this file, to change how a figure is drawn.
@@ -197,7 +229,8 @@ const FIG = (JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'registry', 
 const FIG_CL = FIG.cluster || {}, FIG_BM = FIG.beam || {};
 
 const { doc, warnings } = Extract.extract(score, {
-  scoreName, window: [w0, w1], parts, id, registry, sampleLengths, profile, options: {},
+  // chords (2a.4): the ensemble's players may sound several notes at one onset
+  scoreName, window: [w0, w1], parts, id, registry, sampleLengths, profile, options: ENS_APPLIES ? { chords: true } : {}, metaLayer, techniques,
   date: new Date().toISOString().slice(0, 10),
   toolName: 'tools/notate_section.js (profile ' + profile + ')' + (flag('bricks') ? ' --bricks' : ''),
 });

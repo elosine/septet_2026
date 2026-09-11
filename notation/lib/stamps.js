@@ -90,6 +90,28 @@
       return box('clefBass', g.wSs, g.hSs, g.anchors, [pathPrim(g.path)]);
     }
 
+    // [2a.2, 2026-09-11] any clef the registry holds — 'bass' (fLine),
+    // 'treble' (gLine), 'alto' (cLine); the anchor is the line it names
+    function clef(kind) {
+      const g = G.clef && G.clef[kind];
+      if (!g) throw new Error('stamps: no clef "' + kind + '"');
+      return box('clef-' + kind, g.wSs, g.hSs, g.anchors, [pathPrim(g.path)]);
+    }
+
+    // [2a.1] the system-start furniture (LilyPond's own glyphs): a bracket
+    // tip ('up' | 'down', anchored at the end of the bracket's line) and a
+    // brace glyph at its native size (render scales it to the span)
+    function bracketTip(dir) {
+      const g = G.bracketTip && G.bracketTip[dir];
+      if (!g) throw new Error('stamps: no bracket tip "' + dir + '"');
+      return box('bracketTip-' + dir, g.wSs, g.hSs, g.anchors, [pathPrim(g.path)]);
+    }
+    function brace(key) {
+      const g = G.brace && G.brace[key];
+      if (!g || !g.path) throw new Error('stamps: no brace "' + key + '"');
+      return box('brace', g.wSs, g.hSs, { topLeft: { x: 0, y: 0 } }, [pathPrim(g.path)]);
+    }
+
     function accidental(kind) {
       const g = G.accidental[kind];
       if (!g) throw new Error('stamps: no accidental "' + kind + '"');
@@ -136,7 +158,7 @@
       ]);
     }
 
-    return { notehead, noteheadOpen, ottavaText, dynamic, stem, flag8, flagN, rest, articulation, clefBass, accidental, staccatoDot, staffLines, ledgerLine, beamSeg };
+    return { notehead, noteheadOpen, ottavaText, dynamic, stem, flag8, flagN, rest, articulation, clefBass, clef, bracketTip, brace, accidental, staccatoDot, staffLines, ledgerLine, beamSeg };
   }
 
   // Render one placed box to an SVG fragment. Placement: the box's LOCAL

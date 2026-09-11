@@ -1496,7 +1496,7 @@ V-TOP/V-BOT; V-CUT from his cut list when the piece is done) · 5 print (A3 land
 one-lane-per-part model). *Why the model is kept:* seven lanes with one taller is the container's own rule bent once; two lanes for one
 player would touch parts, solo, crop and print.
 
-- **2a — Engine → seven parts** — `todo` — **Result when done:** `piece-septet` extracts to an IR and renders as a seven-lane page in the
+- **2a — Engine → seven parts** — `built 2026-09-11 — 70-check battery GREEN, tuba suite unchanged; his eye on the page pending (RUNNING_LOG §384–386; NITS 2026-09-11)` — **Result when done:** `piece-septet` extracts to an IR and renders as a seven-lane page in the
   notation app: each part on its own clef (treble · treble · grand staff · treble · treble · alto · bass), the bass clarinet in written
   pitch, the piano on a grand staff with its chords spaced by #2's rules, every septet technique mapped to a notation class or explicitly
   "no mark yet", the parts in D10 order with the brackets. Nothing animated, no video, no print — the page, correct. **Build on Opus,

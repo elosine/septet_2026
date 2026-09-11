@@ -66,6 +66,10 @@
       throw new Error('render: unknown glyph item "' + g + '"');
     };
     const stds = glyphs.standards;
+    // [2a, the septet] the ensemble registry (notation/registry/ensemble.json)
+    // — labels, brackets, the brace. Absent = the tuba page exactly.
+    const ENS = (opts && opts.ensemble) || null;
+    const CLEF_AT = { bass: { line: 1, anchor: 'fLine' }, treble: { line: -1, anchor: 'gLine' }, alto: { line: 0, anchor: 'cLine' } };
     const parts = [];
     parts.push('<svg xmlns="http://www.w3.org/2000/svg" width="' + view.widthPx + '" height="' + view.heightPx +
       '" viewBox="0 0 ' + view.widthPx + ' ' + view.heightPx + '" style="background:' + o.paper + '">');
@@ -81,7 +85,8 @@
 
     for (const sysModel of model.systems) {
       let sys;
-      try { sys = view.system(sysModel.part); } catch (e) { continue; } // part not in this view
+      // [2a.1] a staff of a multi-staff part is its own system ('<part>:<i>')
+      try { sys = view.system(sysModel.key !== undefined ? sysModel.key : sysModel.part); } catch (e) { continue; } // part not in this view
       const ssPx = sys.ssPx;
       const X = (t, dxSs) => view.xOfSeconds(t) + (dxSs || 0) * ssPx;
       const Y = ss => sys.yOfSs(ss);
@@ -89,9 +94,13 @@
       // re-render — the per-part solo dim (day 24). Presentation-neutral:
       // a class attribute adds no ink and no geometry.
       parts.push('<g class="sys sys-p' + sysModel.part + '" fill="' + o.ink + '">');
-      // part label at the left edge (inside the gutter when one exists)
-      parts.push('<text x="' + E.partLabel.xPx + '" y="' + (sys.yTopPx + E.partLabel.yOffsetSs * ssPx).toFixed(1) + '" font-size="' + (E.partLabel.sizeSs * ssPx).toFixed(1) +
-        '"' + fontAttr + ' fill="' + o.muted + '">T' + (sysModel.part + 1) + '</text>');
+      // part label at the left edge (inside the gutter when one exists) —
+      // [2a.1] the ensemble's short name (the score's tracks[].short), once
+      // per part: a grand staff is labelled on its top staff only
+      const pcfg = ENS && ENS.parts && ENS.parts.find(p => p.part === sysModel.part);
+      if (!(sysModel.staff > 0))
+        parts.push('<text x="' + E.partLabel.xPx + '" y="' + (sys.yTopPx + E.partLabel.yOffsetSs * ssPx).toFixed(1) + '" font-size="' + (E.partLabel.sizeSs * ssPx).toFixed(1) +
+          '"' + fontAttr + ' fill="' + o.muted + '">' + (pcfg ? esc(pcfg.short) : 'T' + (sysModel.part + 1)) + '</text>');
       // page-edge rule: a chunk continuing across the cut re-shows its tempo
       // label at the page start (splice.js planPages -> page.reshow)
       for (const rs of (opts && opts.reshow) || []) {
@@ -128,16 +137,21 @@
           // right-aligned toward the music start (A21c — it must never sit
           // over the first notes); without one it pins to the view's left
           // edge as before (staff furniture, always shown)
+          // [2a.2] the system's own clef, sat on the line it names: bass on
+          // F3 (+1 ss), treble on G4 (−1), alto on C4 (the middle line)
+          const ck = sysModel.clef || 'bass';
+          const CL = CLEF_AT[ck] || CLEF_AT.bass;
+          const cStamp = ck === 'bass' ? S.clefBass() : S.clef(ck);
           if (view.gutterPx > 0) {
             // clamp at the left edge: a clef too big for the gutter pokes
             // VISIBLY into the music (protrusion-detector territory) rather
             // than vanishing off-screen — invisible failure is worse
-            const cw = glyphs.clef.bass.wSs * ssPx;
+            const cw = glyphs.clef[ck].wSs * ssPx;
             const cx = Math.max(2, view.gutterPx - cw - E.clefGutterGapSs * ssPx);
-            parts.push(Stamps.toSvg(S.clefBass(), { xPx: cx, yPx: Y(1), ssPx, align: 'fLine' }));
+            parts.push(Stamps.toSvg(cStamp, { xPx: cx, yPx: Y(CL.line), ssPx, align: CL.anchor }));
           } else {
             const cx = Math.max(view.xOfSeconds(it.t), 0);
-            parts.push(Stamps.toSvg(S.clefBass(), { xPx: cx + E.clefInsetSs * ssPx, yPx: Y(1), ssPx, align: 'fLine' }));
+            parts.push(Stamps.toSvg(cStamp, { xPx: cx + E.clefInsetSs * ssPx, yPx: Y(CL.line), ssPx, align: CL.anchor }));
           }
         } else if (it.k === 'glyph') {
           if (!inWin(it.t)) continue;
@@ -478,6 +492,55 @@
         }
       }
       parts.push('</g>');
+    }
+
+    // [2a.1] THE SYSTEM-START GROUPS (D10: winds bracket · piano brace ·
+    // strings bracket), in the gutter left of the clefs. LilyPond's own
+    // glyphs: a bracket is a thick line from the first staff's top line to
+    // the last staff's bottom line, a brackettip at each end; the brace is
+    // the emmentaler-brace glyph nearest the span, scaled the last few
+    // percent to fit it exactly. Geometry: engraving.render.systemStart.
+    if (ENS && ENS.groups && view.gutterPx > 0) {
+      const SS = Object.assign({ bracketThickSs: 0.45, gapSs: 0.5, braceGapSs: 0.3 }, E.systemStart || {});
+      const keysOf = p => {
+        const pc = ENS.parts.find(q => q.part === p);
+        const n = (pc && pc.staves && pc.staves.length) || 1;
+        return n > 1 ? [p + ':0', p + ':' + (n - 1)] : [p, p];
+      };
+      // the clef column: its left edge is the widest clef's, so every group
+      // sits clear of every clef whatever the parts
+      const clefW = Math.max(...Object.keys(CLEF_AT).map(k => (glyphs.clef[k] || { wSs: 0 }).wSs));
+      for (const g of ENS.groups) {
+        let top, bot;
+        try { top = view.system(keysOf(g.parts[0])[0]); bot = view.system(keysOf(g.parts[g.parts.length - 1])[1]); }
+        catch (e) { continue; }   // a group whose parts are not all in this view
+        const ss = top.ssPx;
+        const yT = top.yOfSs(2), yB = bot.yOfSs(-2);
+        const clefLeft = view.gutterPx - (clefW + E.clefGutterGapSs) * ss;
+        const tipW = ((glyphs.bracketTip && glyphs.bracketTip.up) || { wSs: 0 }).wSs;
+        const xL = clefLeft - (SS.gapSs + tipW) * ss;       // the bracket line's left edge
+        const cls = ' class="sysgrp sysgrp-' + g.kind + '"';
+        if (g.kind === 'bracket') {
+          const th = SS.bracketThickSs * ss;
+          parts.push('<g' + cls + ' fill="' + o.ink + '">');
+          parts.push('<rect x="' + xL.toFixed(2) + '" y="' + yT.toFixed(2) + '" width="' + th.toFixed(2) + '" height="' + (yB - yT).toFixed(2) + '"/>');
+          if (glyphs.bracketTip) {
+            parts.push(Stamps.toSvg(S.bracketTip('up'), { xPx: xL, yPx: yT, ssPx: ss, align: 'origin' }));
+            parts.push(Stamps.toSvg(S.bracketTip('down'), { xPx: xL, yPx: yB, ssPx: ss, align: 'origin' }));
+          }
+          parts.push('</g>');
+        } else if (g.kind === 'brace' && glyphs.brace) {
+          const spanSs = (yB - yT) / ss;
+          const keys = Object.keys(glyphs.brace).filter(k => k[0] !== '_');
+          const key = keys.reduce((a, b) => Math.abs(glyphs.brace[b].hSs - spanSs) < Math.abs(glyphs.brace[a].hSs - spanSs) ? b : a);
+          const bg = glyphs.brace[key], k = spanSs / bg.hSs;
+          // right edge a small gap left of the clef column, like the
+          // bracket's tips
+          const xR = clefLeft - SS.braceGapSs * ss;
+          parts.push('<g' + cls + ' fill="' + o.ink + '">' +
+            Stamps.toSvg(Stamps.scaled(S.brace(key), k, k), { xPx: xR - bg.wSs * k * ss, yPx: yT, ssPx: ss, align: 'topLeft' }) + '</g>');
+        }
+      }
     }
 
     // read-through marker labels along the top (S1, not IR — passed in opts)

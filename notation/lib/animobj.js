@@ -104,8 +104,11 @@
   // SOUNDING pitch height while the morph plays (0.25 ss/semitone approx).
   register('curveFollower', (inst, view, t, st) => {
     if (t < inst.t0 || t > inst.t1) return [];
-    const s = view.system(inst.part);
-    const ySs = staffPosOfMidi(inst.midi) + bendAt(inst.morphBend, inst.t0, t) * 0.25;
+    // [2a] inst.pos = the layout's positionResolver (collect's
+    // opts.posOfMidi): the pitch's own system and staff position in its
+    // part's clef. Absent = the tuba's bass-clef lane, as before.
+    const s = view.system(inst.pos ? inst.pos.key : inst.part);
+    const ySs = (inst.pos ? inst.pos.ySs : staffPosOfMidi(inst.midi)) + bendAt(inst.morphBend, inst.t0, t) * 0.25;
     return ['<circle cx="' + view.xOfSeconds(t).toFixed(1) + '" cy="' + s.yOfSs(ySs).toFixed(1) +
       '" r="' + (st.radiusSs * s.ssPx).toFixed(1) + '" fill="' + st.color + '" opacity="' + st.opacity + '"/>'];
   });
@@ -250,6 +253,8 @@
     const allowed = partList ? new Set(partList) : null;   // null = unscoped
     const has = l => !allowed || allowed.has(l);
     const metaOn = O.meta !== false;
+    // [2a] the score's META layer (the septet's is 7; absent = the tuba's 10)
+    const ML = O.metaLayer != null ? O.metaLayer : 10;
     const out = [];
     const evById = new Map(((ir && ir.events) || []).map(e => [e.id, e]));
     // per-NOTE GC (day 23, wc-29): the engraving device may put a ball on a
@@ -337,9 +342,10 @@
       for (const o of score.objects) {
         if (o.type !== 'waveCurve') continue;
         if (o.morphBend && o.layer <= 9 && has(o.layer)) {
-          out.push({ kind: 'curveFollower', part: o.layer, t0: o.startSeconds, t1: o.endSeconds, midi: o.sonifyNote, morphBend: o.morphBend, _src: 's1-morph' });
+          out.push(Object.assign({ kind: 'curveFollower', part: o.layer, t0: o.startSeconds, t1: o.endSeconds, midi: o.sonifyNote, morphBend: o.morphBend, _src: 's1-morph' },
+            O.posOfMidi ? { pos: O.posOfMidi(o.layer, o.sonifyNote) } : {}));
         }
-        if (metaOn && o.layer === 10 && o.nodes && o.nodes.length) {
+        if (metaOn && o.layer === ML && o.nodes && o.nodes.length) {
           out.push({
             kind: 'envFollower', t0: o.startSeconds, t1: o.endSeconds, color: o.color,
             nodes: o.nodes.map(n => ({ pos: n.pos, lvl: Math.min(10, Math.max(0, n.y)) / 10 })), _src: 's1-meta',

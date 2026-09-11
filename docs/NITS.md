@@ -281,3 +281,23 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 
 - **2026-09-10 — can Kontakt 8's instrument volume be typed?** SHIFT+drag gives fine resolution for certain; whether the header volume knob takes a typed dB value is unverified (a plugin UI, not in this repo). One look in Kontakt settles it. Moot if the plucked voice is split to its own Reaper track, where the fader types (RUNNING_LOG §369).
 - **2026-09-10 — per-voice trims belong in the app's CC7, eventually.** The app already sends a measured CC7 per note (`probes/cc7_map.json`, 58 dB span). A per-voice dB trim baked into that value would be a true "per voice in the app" and need no rack work — but a fixed dB trim is not a fixed CC7 offset on a curve, and it costs headroom at fff. Done with Reaper faders for now (RUNNING_LOG §374).
+
+## 2026-09-11 — PLAN 2a, the notation engine for seven parts: what it found and left (RUNNING_LOG §384–389)
+
+- **Trills are not in the IR.** The extractor reads `waveCurve` objects only; piece-septet's trills are `zone` objects (70 of them on
+  2026-09-11) and are skipped silently. Trill notation is new vocabulary (D20's zone → a written trill), not a 2a port. **Before 2b.**
+- **The exports are still the tuba's.** `tools/export_print.js` and `export_video.js` call layout/render without the ensemble —
+  ten T-lanes, bass clef, no weights, no grand staff (their lane math is a copy of the app's). 2b steps 4–5 give them the app's lane
+  code (weights · `Coords.withStaves` · `ensemble` to layout and render). One shared function would end the three copies.
+- **resvg panics on the septet page on this machine** (`geom.rs:27 unwrap on None`) — trivial SVGs render; the failure did not move
+  when the new brackets/brace, the text or the new clefs were removed, nor with the repo's own fonts. Both exporters rasterize with
+  resvg. **Must be diagnosed before 2b's first render.**
+- **An ottava inside a chord** is decided per note, so a chord that needs 8va draws one bracket per member. Rare (piano extremes).
+- **Clef changes do not exist.** The cello's high notes (to E5 in piece-septet) take bass clef + 8va, not tenor/treble; the bass
+  clarinet's lowest written notes (below written F3) take 8vb under the house three-ledger rule (a bass clarinettist reads ledgers).
+  Both his to call; a clef change is new vocabulary.
+- **The piano's staff split is the plain rule** (middle C and up on the upper staff), per note: no per-note override, no cross-staff
+  chord, and a notated run stays whole on the staff most of its notes use.
+- **Provisional data for his eye:** the gutter 48 → 72 px (label · bracket · clef column); the piano lane weight 2 (≈12 ss between its
+  staves, the same air as between players); the technique look (`techniques.json familyDevice`: head + brick, no go line / GC /
+  dynamics); every technique's `notate` is null except the flute's tongue ram.

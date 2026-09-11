@@ -24,16 +24,68 @@
 //   wins; review finding: silence was the failure mode).
 // · unresolved / unfittable chunks render as PARACHUTE BRICKS.
 (function (root, factory) {
-  if (typeof module === 'object' && module.exports) module.exports = factory();
-  else root.NotationLayout = factory();
-})(typeof self !== 'undefined' ? self : this, function () {
+  // [2a.4] chord_column.js — the chord rules (optional in the browser: a page
+  // that has not loaded it draws each chord note on its own, as before)
+  if (typeof module === 'object' && module.exports) module.exports = factory(require('./chord_column.js'));
+  else root.NotationLayout = factory(root.NotationChordColumn);
+})(typeof self !== 'undefined' ? self : this, function (ChordColumn) {
 
   const STEP_IDX = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, B: 6 };
   const MIDDLE_BASS = 3 * 7 + 1; // D3 — the bass staff's middle line
+  // [2a.2, the septet — 2026-09-11] EVERY CLEF, as the diatonic index of its
+  // middle line: bass D3 (the tuba piece's only clef), treble B4, alto C4.
+  // A staff position is the steps from that line × ½ ss, whatever the clef.
+  const MIDDLE = { bass: MIDDLE_BASS, treble: 4 * 7 + 6, alto: 4 * 7 + 0 };
 
-  function staffPosBass(spelled) {
+  function staffPos(spelled, clef) {
     const idx = spelled.octave * 7 + STEP_IDX[spelled.step];
-    return (idx - MIDDLE_BASS) * 0.5;
+    return (idx - (MIDDLE[clef] !== undefined ? MIDDLE[clef] : MIDDLE_BASS)) * 0.5;
+  }
+  function staffPosBass(spelled) { return staffPos(spelled, 'bass'); }
+
+  // the extractor's naive spelling (sharps; extract_core.naiveSpell), used
+  // for WRITTEN pitch — a transposing part is spelled from its written note
+  const PC_SPELL = [['C', 0], ['C', 1], ['D', 0], ['D', 1], ['E', 0], ['F', 0], ['F', 1], ['G', 0], ['G', 1], ['A', 0], ['A', 1], ['B', 0]];
+  function spellMidi(midi) {
+    const [step, alter] = PC_SPELL[((midi % 12) + 12) % 12];
+    return { step, alter, octave: Math.floor(midi / 12) - 1 };
+  }
+
+  // [2a.1–2a.3] THE ENSEMBLE (notation/registry/ensemble.json), passed as
+  // opts.ensemble. Absent = the tuba piece exactly: one bass-clef staff per
+  // part, sounding pitch. Present: each part's clef, its transposition
+  // (written = sounding + transpose semitones; the IR stays sounding, D9)
+  // and its staves — the piano's grand staff is ONE part with two staves,
+  // a note on the upper staff at or above splitMidi, on the lower below it.
+  function partCfgOf(ens, part) {
+    return (ens && ens.parts && ens.parts.find(p => p.part === part)) || null;
+  }
+  function nStavesOf(pc) { return (pc && pc.staves && pc.staves.length) || 1; }
+  function staffIdxOf(pc, midi) {
+    if (nStavesOf(pc) < 2) return 0;
+    return midi >= (pc.splitMidi != null ? pc.splitMidi : 60) ? 0 : 1;
+  }
+  function clefOf(pc, staff) {
+    if (!pc) return 'bass';
+    if (nStavesOf(pc) > 1) return (pc.staves[staff] && pc.staves[staff].clef) || 'bass';
+    return pc.clef || 'bass';
+  }
+  function writtenOf(pc, midi, spelled) {
+    const tr = (pc && pc.transpose) || 0;
+    return tr ? spellMidi(midi + tr) : spelled;
+  }
+  // For consumers that place a pitch without the layout (animobj's
+  // followers): (part, sounding midi) -> { key, ySs } — the system key the
+  // pitch lands in and its staff position there. One copy of the rules.
+  function positionResolver(ens) {
+    return (part, midi) => {
+      const pc = partCfgOf(ens, part);
+      const st = staffIdxOf(pc, midi);
+      return {
+        key: nStavesOf(pc) > 1 ? part + ':' + st : part,
+        ySs: staffPos(writtenOf(pc, midi, spellMidi(midi)), clefOf(pc, st)),
+      };
+    };
   }
 
   function ledgersFor(ySs) {
@@ -51,9 +103,25 @@
   // override. layoutSection uses it internally; deviceResolver exposes the
   // same function to other modules (animobj's per-note GC) so the rules are
   // never re-implemented next door.
-  function makeDeviceOf(DEV, engOf) {
+  // [2a.5] the piece's technique table (notation/registry/techniques.json,
+  // opts.techniques) supplies the device of a technique the registry does
+  // not name: familyDevice[family] plus the technique's `notate` text. The
+  // registry's own byTechnique entry still wins; no table = no fallback.
+  function familyDeviceOf(T) {
+    if (!T || !T.techniques) return () => null;
+    return t => {
+      const x = T.techniques[t];
+      if (!x) return null;
+      const d = Object.assign({}, (T.familyDevice || {})[x.family] || {});
+      delete d._doc;
+      if (x.notate) d.techText = x.notate;
+      return d;
+    };
+  }
+
+  function makeDeviceOf(DEV, engOf, famOf) {
     return e => Object.assign({},
-      (DEV.byTechnique || {})[e.technique] || {},
+      (DEV.byTechnique || {})[e.technique] || (famOf && famOf(e.technique)) || {},
       (e.env && (DEV.byEnv || {})[e.env]) || {},
       (engOf(e.id) || {}).device || {});
   }
@@ -77,7 +145,7 @@
       if (ov.kind === 'engraving' && ov.target && ov.target.event)
         engrave.set(ov.target.event, Object.assign({}, engrave.get(ov.target.event), ov.value));
     }
-    return makeDeviceOf(DEV, id => engrave.get(id) || {});
+    return makeDeviceOf(DEV, id => engrave.get(id) || {}, familyDeviceOf(o.techniques));
   }
 
   // Engraving: a stem outside the staff extends to the middle line.
@@ -233,9 +301,20 @@
         staccato: { goLine: true, gc: true, nhUnit: true, nhHead: 'filled', nhHeadScale: 0.844, nhStem: 'flag16', nhStemRule: 'flagClear', nhDot: true, nhDotGapSs: 0.15, nhGapSs: 0.6, dynMark: 'band', dynBesideStem: true },
       },
     }, o.devices || {});
-    const deviceOf = makeDeviceOf(DEV, engOf);
+    const deviceOf = makeDeviceOf(DEV, engOf, familyDeviceOf(o.techniques));
 
-    const spelledOf = e => respell.get(e.id) || e.pitch.spelled;
+    // [2a.1–2a.3] the ensemble: which part an event is in (off the chunks,
+    // the only place the extraction records it), that part's registry entry,
+    // the staff the note sits on. The authored respelling is of the WRITTEN
+    // note, so it wins over the transposition; otherwise a transposing part
+    // is spelled from its written pitch.
+    const ENS = o.ensemble || null;
+    const partOfEv = new Map();
+    for (const c of ir.chunks) for (const id of c.events || []) partOfEv.set(id, c.part);
+    const pcOfEv = e => partCfgOf(ENS, partOfEv.get(e.id));
+    const staffOfEv = e => staffIdxOf(pcOfEv(e), e.pitch.midi);
+    const spelledOf = e => respell.get(e.id) || writtenOf(pcOfEv(e), e.pitch.midi, e.pitch.spelled);
+    const posOfEv = e => staffPos(spelledOf(e), clefOf(pcOfEv(e), staffOfEv(e)));
 
     // BEAM GROUP DIRECTION (day 24): ONE direction per group, decided by the
     // member FURTHEST from the middle line (Gould), ties up — this vocabulary
@@ -263,7 +342,7 @@
         if (!d.beamGroup || d.nhStem !== 'beam') continue;
         const gk = d.clusterId || d.beamGroup;
         gkOf.set(d.beamGroup, gk);
-        let y = staffPosBass(spelledOf(e));
+        let y = posOfEv(e);
         while (y > th) y -= 3.5;
         while (y < -th) y += 3.5;
         const cur = far.get(gk);
@@ -276,7 +355,87 @@
     // a system — lanes the IR doesn't cover render as empty staves (the
     // composer's "I should still see empty other tracks"). Default = the
     // IR's own parts (proofing views, tests, exports unchanged).
-    const systems = (o.frameParts || ir.source.parts).map(part => {
+    // [2a.1] ONE SYSTEM PER STAFF: a part is one system, the grand staff's
+    // part one per staff (keyed '<part>:<i>', the key coords.withStaves
+    // gives the view). Each system carries its clef; part-level furniture
+    // (curves, headers, dynamics, instructions, the tempo text) rides the
+    // part's TOP staff only.
+    const frame = o.frameParts || ir.source.parts;
+    const specs = [];
+    for (const part of frame) {
+      const pc = partCfgOf(ENS, part), n = nStavesOf(pc);
+      for (let i = 0; i < n; i++) specs.push({ part, staff: i, multi: n > 1, key: n > 1 ? part + ':' + i : part, clef: clefOf(pc, i) });
+    }
+    const systems = specs.map(spec => {
+      const part = spec.part;
+      const first = spec.staff === 0;
+      const posOf = sp => staffPos(sp, spec.clef);
+      // a stream (notated metric chunk) stays WHOLE on the staff most of its
+      // notes belong to — a run is not split mid-beam; a single note goes on
+      // its own staff
+      const streamStaff = evs => {
+        const n0 = evs.filter(e => staffOfEv(e) === 0).length;
+        return n0 * 2 >= evs.length ? 0 : 1;
+      };
+      // [2a.4] A CHORD — several notes of one chunk at one onset, on this
+      // staff — is ONE COLUMN, by piece #2's locked rules (chord_column.js,
+      // numbers in engraving.layout.chordColumn): a note a step or less from
+      // the previous one steps aside by a head width; the column's rightmost
+      // ink hangs the unit gap before the attack, as a single note's does; the
+      // accidentals pack right to left beside the heads, clear of the ledgers.
+      // Only the plain notehead unit is columned (no anchor, stem or GC
+      // device — those keep their own per-note layout until a chord needs
+      // them). Returns eventId -> { t, headDx, accDxRel, top }.
+      const CC = Object.assign({ displaceThresholdSteps: 1, minLateralGap: 0.1, verticalCollisionTolerance: 0.05, chordTolSeconds: 0.04 }, o.chordColumn || {});
+      const ACC_OF = { '1': 'sharp', '-1': 'flat', '2': 'sharp', '-2': 'flat', '0.5': 'quarterSharp', '-0.5': 'quarterFlat', '1.5': 'threeQuarterSharp', '-1.5': 'threeQuarterFlat' };
+      const chordGeometry = evs => {
+        const out = new Map();
+        if (evs.length < 2 || !ChordColumn) return out;
+        const tChord = Math.min(...evs.map(e => e.onset));
+        if (evs.some(e => e.onset - tChord > CC.chordTolSeconds + 1e-9)) return out;   // not one simultaneity
+        const stds = glyphs.standards;
+        const th = 2 + ((stds.ottava && stds.ottava.ledgerLineThreshold) || 3);
+        const lf = (stds.ledgerLine && stds.ledgerLine.lengthFraction) || 0.25;
+        const m = [];
+        for (const e of evs) {
+          const dev = deviceOf(e);
+          if (!dev.nhUnit || dev.nhAnchor || dev.nhStem || dev.gc) return new Map();
+          const g = glyphs.notehead[dev.nhHead === 'filled' ? 'filled' : 'open'];
+          const k = dev.nhHeadScale > 0 ? dev.nhHeadScale : 1;
+          const sp = spelledOf(e);
+          let y = posOf(sp);
+          while (y > th) y -= 3.5;
+          while (y < -th) y += 3.5;
+          const L = ledgersFor(y);
+          m.push({ e, dev, sp, y, L, w: g.wSs * k, h: g.hSs * k, lext: L.length ? g.wSs * k * lf : 0 });
+        }
+        const W = Math.max(...m.map(x => x.w));
+        const col = ChordColumn.noteColumn(m.map(x => ({ ySs: x.y })), 'up', W, CC.displaceThresholdSteps);
+        const gapSs = m[0].dev.nhGapSs != null ? m[0].dev.nhGapSs : (o.nhGapSs != null ? o.nhGapSs : 0.25);
+        const base = -(gapSs + Math.max(...m.map((x, i) => col[i].xOffsetSs + x.w / 2 + x.lext)));
+        m.forEach((x, i) => { x.headDx = base + col[i].xOffsetSs; });
+        const withAcc = m.filter(x => x.sp.alter && glyphs.accidental[ACC_OF[String(x.sp.alter)]]);
+        const accs = withAcc.map(x => {
+          const a = glyphs.accidental[ACC_OF[String(x.sp.alter)]];
+          const noteY = a.anchors && a.anchors.noteY;
+          const top = noteY ? noteY.y : a.hSs / 2;
+          return { w: a.wSs, topExt: top, botExt: a.hSs - top, ySs: x.y, ax: noteY ? noteY.x : a.wSs / 2 };
+        });
+        const heads = m.map(x => ({ xLeft: x.headDx - x.w / 2, ySs: x.y, hSs: x.h }));
+        const ledg = [];
+        for (const x of m) for (const Ly of x.L) ledg.push({ ySs: Ly, xLeft: x.headDx - x.w / 2 - x.lext });
+        const packed = ChordColumn.accidentalColumn(accs, heads, ledg, {
+          gapToNotehead: (stds.accidental && stds.accidental.gapToNotehead) || 0.1,
+          minLateralGap: CC.minLateralGap, yTol: CC.verticalCollisionTolerance,
+        });
+        const accDx = new Map();
+        // the item is placed by its anchor: right edge − (width − anchor x),
+        // relative to the note's own head centre (the unit's accRel.dx frame)
+        withAcc.forEach((x, i) => accDx.set(x.e.id, packed[i].rightEdge - (accs[i].w - accs[i].ax) - x.headDx));
+        const top = m.reduce((a, b) => (b.y > a.y ? b : a));
+        for (const x of m) out.set(x.e.id, { t: tChord, headDx: x.headDx, accDxRel: accDx.has(x.e.id) ? accDx.get(x.e.id) : null, top: x === top });
+        return out;
+      };
       const items = [];
       // BEAMED CLUSTER (day 23, composer): notes carrying the same
       // device.beamGroup are drawn as small heads + stems reaching ONE beam
@@ -297,9 +456,9 @@
       }
       if (cur < w1) items.push({ k: 'staff', t0: cur, t1: w1 });
       items.push({ k: 'clef', t: w0 });
-      for (const g of glissCurves) if (g.part === part)
+      for (const g of glissCurves) if (g.part === part && first)
         items.push({ k: 'glisscurve', t0: g.span[0], t1: g.span[1], samples: g.samples });
-      for (const cc of crescCurves) if (cc.part === part)
+      for (const cc of crescCurves) if (cc.part === part && first)
         items.push({ k: 'cresccurve', t0: cc.span[0], t1: cc.span[1], samples: cc.samples, full: cc.full });
       // the bar line sits a MEDIUM space to the LEFT of the bar's leftmost ink
       // (ledger, accidental or notehead — whichever comes first), so it never
@@ -319,10 +478,10 @@
           ? -(o.stackGapSs != null ? o.stackGapSs : 0.45)
           : -(o.gapMediumSs || 0.3);
         items.push({ k: 'barline', t: tp.t, dxSs: dx, autoClear: auto });
-        if (auto || part === (o.frameParts || ir.source.parts)[0])
+        if (first && (auto || part === (o.frameParts || ir.source.parts)[0]))
           items.push({ k: 'tempotext', t: tp.t, dxSs: dx, bpm: tp.bpm, autoClear: auto });
       }
-      for (const h of headers) if (h.part === part) {
+      for (const h of headers) if (h.part === part && first) {
         // THE SECTION FIGURE (day 35, composer): niente circle · arrow · fff,
         // sitting UNDER the staff where any other dynamic goes, and ENDING
         // just before the go line. Ordinary items — the mark is drawn by the
@@ -358,7 +517,7 @@
         const accR = lowSide ? h2L : h2L - (o.accGap || 0.25), accL = lowSide ? h2L : accR - acc.wSs;
         const glR = accL - A.gapSs, glL = glR - glissLen;
         const h1R = glL - A.gapSs, h1L = h1R - hw;
-        const yP = staffPosBass(h.spelled);
+        const yP = posOf(h.spelled);
         // ONE head where the section has no glissando (BALANCE): a second head
         // and a gliss line would assert a motion that does not happen (day 35)
         if (!h.oneHead) {
@@ -377,15 +536,19 @@
         items.push({ k: 'dynarrow', t: h.t, dx0Ss: arrL, dx1Ss: arrR, ySs: y, headSs: A.headSs, thickSs: A.thickSs });
         items.push({ k: 'glyph', g: 'dyn-' + h.endMark, t: h.t, dxSs: markC, ySs: y, align: 'center' });
       }
-      for (const d of dynTexts) if (d.part === part) items.push({ k: 'text', t: d.t, dxSs: 0, ySs: o.dynY, text: d.text, size: TS.dynamic });
-      for (const ins of instrTexts) if (ins.parts.includes(part)) items.push({ k: 'text', t: ins.t, dxSs: 0, ySs: o.tempoY + 1.4, text: ins.text, size: TS.instruction });
+      for (const d of dynTexts) if (d.part === part && first) items.push({ k: 'text', t: d.t, dxSs: 0, ySs: o.dynY, text: d.text, size: TS.dynamic });
+      for (const ins of instrTexts) if (ins.parts.includes(part) && first) items.push({ k: 'text', t: ins.t, dxSs: 0, ySs: o.tempoY + 1.4, text: ins.text, size: TS.instruction });
 
       const chunks = ir.chunks.filter(c => c.part === part).sort((a, b) => a.span[0] - b.span[0]);
       let prevTempoLabel = null;
       for (const c of chunks) {
-        const evs = c.events.map(id => evById.get(id));
         const NOTATED = c.class === 'trance-stream' || c.class === 'density-cloud-note';
         const isStream = NOTATED && c.strategy !== 'unresolved';
+        const evsAll = c.events.map(id => evById.get(id));
+        const evs = !spec.multi ? evsAll
+          : isStream ? (streamStaff(evsAll) === spec.staff ? evsAll : [])
+          : evsAll.filter(e => staffOfEv(e) === spec.staff);
+        if (!evs.length) continue;
         const metric = isStream && c.strategy === 'simple-bar';
         // THE CHUNK GC'S TICK — moved out of the stream branch, day 36. The
         // day-23 rule is "a ball without an arc is a bug" (tools/notate_section
@@ -398,8 +561,14 @@
         if (!isStream)
           for (const d of c.devices || []) if (d.kind === 'gc') items.push({ k: 'tick', t: d.at, ySs: o.tickY });
         if (!isStream) {
+          const chordGeo = chordGeometry(evs);   // [2a.4] empty unless this is a chord
           for (const e of evs) {
-            const ySs = staffPosBass(spelledOf(e));
+            const CG = chordGeo.get(e.id);
+            // [2a.4] a chord is drawn at ONE time, its first onset: heads, ledgers,
+            // accidentals, go line and marks all at tU. The brick (and the ring
+            // bar) keep each note's own sounding onset. No chord: tU = the onset.
+            const tU = CG ? CG.t : e.onset;
+            const ySs = posOf(spelledOf(e));
             // hover identity (day 22): what this un-notated material IS —
             // pitch · technique · envelope · mode · span · class/strategy ·
             // source object. Rendered as a native SVG <title> tooltip.
@@ -438,7 +607,7 @@
               // source, drawn by render and ridden by the meters alike.
               items.push({ k: 'envcurve', t0: e.onset, t1: e.onset + e.duration, samples: drawnLevelSamples(e, dev), ev: e.id, cut: !!dev.cut });
             }
-            if (dev.goLine) items.push({ k: 'goline', t: e.onset, ev: e.id });
+            if (dev.goLine) items.push({ k: 'goline', t: tU, ev: e.id });
             // THE ONSET HEAD (day 35, the morph section): a small black
             // notehead LEFT-ALIGNED to the go line — the same rule the
             // clusters use, "every partial's notehead left edge sits on its
@@ -450,7 +619,7 @@
             if (dev.onsetHead) {
               const ohs = (o.figures && o.figures.cluster && o.figures.cluster.nhHeadScale) || 0.844;
               const ohw = glyphs.notehead.filled.wSs * ohs;
-              const oy = staffPosBass(spelledOf(e));
+              const oy = posOf(spelledOf(e));
               if (dev.onsetAcc) {
                 const ag = glyphs.accidental[dev.onsetAcc];
                 if (ag) items.push({ k: 'glyph', g: 'accidental-' + dev.onsetAcc, t: e.onset,
@@ -470,7 +639,7 @@
             // ledger lines (|ySs| <= 5); one octave = 3.5 staff steps
             const stds = glyphs.standards;
             const spN = spelledOf(e);
-            let yDraw = staffPosBass(spN);
+            let yDraw = posOf(spN);
             const th = 2 + ((stds.ottava && stds.ottava.ledgerLineThreshold) || 3);
             let octShift = 0;
             while (yDraw > th) { yDraw -= 3.5; octShift++; }
@@ -650,6 +819,8 @@
                 } else if (spN.alter) {
                   warnings.push('nh-unit ' + e.id + ': no accidental glyph for alter ' + spN.alter);
                 }
+                // [2a.4] in a chord the accidental takes its packed slot
+                if (CG && accRel && CG.accDxRel != null) accRel.dx = CG.accDxRel;
                 const leftRel = Math.min(-(nhO.wSs / 2 + (ledgers.length ? ledgerExt : 0)),
                   accRel ? accRel.dx - accRel.anchorX : Infinity);
                 // THE ANCHOR (day 23, composer on wc-29: "everything centered
@@ -665,19 +836,20 @@
                 // pair: "move the first black note head in so that it's
                 // centered on the go line"): the HEAD's own centre on the go
                 // time, accidental and ledgers hanging off it as they fall.
-                const headDx = dev.nhAnchor === 'leftEdge'
+                // [2a.4] in a chord the head sits where the column puts it
+                const headDx = CG ? CG.headDx : dev.nhAnchor === 'leftEdge'
                   ? nhO.wSs / 2
                   : dev.nhAnchor === 'headCenter'
                     ? 0
                   : dev.nhAnchor === 'center'
                     ? -(leftRel + rightExt) / 2
                     : -(gapSs + rightExt);
-                items.push(Object.assign({ k: 'glyph', g: headGlyph, t: e.onset, dxSs: headDx, ySs: yDraw, align: 'center' }, headK !== 1 ? { scale: headK } : {}));
-                for (const L of ledgers) items.push({ k: 'ledger', t: e.onset, dxSs: headDx, ySs: L, wSs: nhO.wSs });
+                items.push(Object.assign({ k: 'glyph', g: headGlyph, t: tU, dxSs: headDx, ySs: yDraw, align: 'center' }, headK !== 1 ? { scale: headK } : {}));
+                for (const L of ledgers) items.push({ k: 'ledger', t: tU, dxSs: headDx, ySs: L, wSs: nhO.wSs });
                 // cuivré (day 30) — see the techText comment above the nh-unit.
                 // The em estimate mirrors engraving.render.textScale (1.3): the
                 // rendered height is size × textScale, and layout stays in ss.
-                if (dev.techText) {
+                if (dev.techText && (!CG || CG.top)) {   // [2a.4] once per chord, over its top note
                   const gapM = o.gapMediumSs != null ? o.gapMediumSs : 0.3;   // day 39: MEDIUM, was tightGapSs 0.15 (NITS day 30/31 — the composer said go)
                   const laneHalf = (o.chainSide && o.chainSide.laneHalfSs) || 6.51;
                   const em = TS.technique * (o.textEmScale != null ? o.textEmScale : 1.3);
@@ -686,9 +858,9 @@
                   // medium gap — at 0.01 ss of daylight (T8's G4) it reads as
                   // touching, which is the composer's "can't go above" case
                   if (base + em + gapM <= laneHalf + 1e-9)
-                    items.push({ k: 'text', t: e.onset, dxSs: headDx - nhO.wSs / 2, ySs: base, text: dev.techText, size: TS.technique, color: '#000' });
+                    items.push({ k: 'text', t: tU, dxSs: headDx - nhO.wSs / 2, ySs: base, text: dev.techText, size: TS.technique, color: '#000' });
                   else
-                    items.push({ k: 'text', t: e.onset, dxSs: 0, ySs: o.tagY != null ? o.tagY : 3.5, text: dev.techText, size: TS.technique, color: '#000' });
+                    items.push({ k: 'text', t: tU, dxSs: 0, ySs: o.tagY != null ? o.tagY : 3.5, text: dev.techText, size: TS.technique, color: '#000' });
                 }
                 // THE RING BAR STARTS AFTER THE UNIT, NOT AT THE GO LINE (day 24,
                 // composer: "you have to shorten the duration bar from the left. It
@@ -962,16 +1134,16 @@
                       }
                     }
                   }
-                  items.push({ k: 'stem', t: e.onset, dxSs: headDx + att.dx, yA: yStart, yB: yEnd, attach: stemDir, ev: e.id });
+                  items.push({ k: 'stem', t: tU, dxSs: headDx + att.dx, yA: yStart, yB: yEnd, attach: stemDir, ev: e.id });
                   if (beamTip) beamTip.stem = items[items.length - 1];
-                  if (flagG) items.push(Object.assign({ k: 'glyph', g: 'flag-' + (stemDir === 'up' ? 'up' : 'down') + flagDur, t: e.onset, dxSs: headDx + att.dx, ySs: yEnd, align: 'stemTip' },
+                  if (flagG) items.push(Object.assign({ k: 'glyph', g: 'flag-' + (stemDir === 'up' ? 'up' : 'down') + flagDur, t: tU, dxSs: headDx + att.dx, ySs: yEnd, align: 'stemTip' },
                     flagKy !== 1 ? { scaleY: flagKy } : {}));
                   // the stem tip is the unit's outer ink on its side (a flag
                   // hangs back toward the head, never past the tip)
                   if (stemDir === 'up') inkTopY = Math.max(inkTopY, yEnd); else inkBotY = Math.min(inkBotY, yEnd);
                 }
                 if (yDot != null) {
-                  items.push({ k: 'dot', t: e.onset, dxSs: headDx, ySs: yDot });
+                  items.push({ k: 'dot', t: tU, dxSs: headDx, ySs: yDot });
                   inkTopY = Math.max(inkTopY, yDot + rDot); inkBotY = Math.min(inkBotY, yDot - rDot);
                 }
                 // day 31: the head-side dyn row (stem-down groups) needs each
@@ -990,7 +1162,7 @@
                   }
                 }
                 if (accRel) {
-                  items.push({ k: 'glyph', g: 'accidental-' + accRel.kind, t: e.onset, dxSs: headDx + accRel.dx, ySs: yDraw, align: accRel.align });
+                  items.push({ k: 'glyph', g: 'accidental-' + accRel.kind, t: tU, dxSs: headDx + accRel.dx, ySs: yDraw, align: accRel.align });
                   leftEdgeDx = Math.min(leftEdgeDx, headDx + accRel.dx - accRel.anchorX);
                   inkTopY = Math.max(inkTopY, yDraw + accRel.accTopExt);
                   inkBotY = Math.min(inkBotY, yDraw - accRel.accBotExt);
@@ -1033,10 +1205,10 @@
                   const A = Object.assign({ lenSs: 2.0, headSs: 0.45, gapSs: 0.45, thickSs: 0.13 }, o.dynArrow || {});
                   const [m1, m2] = pairG.pr, g1 = pairG.a, g2 = pairG.b;
                   const yDyn = placeChain(pairG.h);
-                  items.push({ k: 'glyph', g: 'dyn-' + m1, t: e.onset, dxSs: headDx, ySs: yDyn, align: 'center' });
+                  items.push({ k: 'glyph', g: 'dyn-' + m1, t: tU, dxSs: headDx, ySs: yDyn, align: 'center' });
                   const x0 = headDx + g1.wSs / 2 + A.gapSs;
-                  items.push({ k: 'dynarrow', t: e.onset, dx0Ss: x0, dx1Ss: x0 + A.lenSs, ySs: yDyn, headSs: A.headSs, thickSs: A.thickSs });
-                  items.push({ k: 'glyph', g: 'dyn-' + m2, t: e.onset, dxSs: x0 + A.lenSs + A.gapSs + g2.wSs / 2, ySs: yDyn, align: 'center' });
+                  items.push({ k: 'dynarrow', t: tU, dx0Ss: x0, dx1Ss: x0 + A.lenSs, ySs: yDyn, headSs: A.headSs, thickSs: A.thickSs });
+                  items.push({ k: 'glyph', g: 'dyn-' + m2, t: tU, dxSs: x0 + A.lenSs + A.gapSs + g2.wSs / 2, ySs: yDyn, align: 'center' });
                 }
 
                 // SINGLE DYNAMIC MARK (wc-23, day 22 — composer: "let's go with
@@ -1056,7 +1228,7 @@
                     const stemLeft = headDx + att.dx - ((stds.stem && stds.stem.thickness) || 0.13) / 2;
                     dxMark = stemLeft - gapStem - markG.wSs / 2;
                   }
-                  items.push({ k: 'glyph', g: 'dyn-' + markKey, t: e.onset, dxSs: dxMark, ySs: yDyn, align: 'center' });
+                  items.push({ k: 'glyph', g: 'dyn-' + markKey, t: tU, dxSs: dxMark, ySs: yDyn, align: 'center' });
                 }
 
                 if (octShift !== 0) {
@@ -1075,7 +1247,7 @@
                   const ref = above ? chainTopY : chainBotY;
                   const lineY = above ? ref + std + hook : ref - std - hook;
                   items.push({
-                    k: 'ottava', t: e.onset, dx0Ss: leftEdgeDx,
+                    k: 'ottava', t: tU, dx0Ss: leftEdgeDx,
                     dx1Ss: headDx + nhO.wSs / 2 + ((O.endPadSs != null) ? O.endPadSs : 0),
                     ySs: lineY, dir: above ? 'above' : 'below', label, ev: e.id,
                   });
@@ -1100,7 +1272,7 @@
         // ball is Phase E runtime). Opt-in via opts.m4AttackLines.
         if (o.m4AttackLines && c.strategy === 'proportional') {
           for (const e of evs) {
-            const ySs = staffPosBass(spelledOf(e));
+            const ySs = posOf(spelledOf(e));
             items.push({ k: 'attackline', t: e.onset, ySs });
             for (const L of ledgersFor(ySs)) items.push({ k: 'ledger', t: e.onset, dxSs: 0, ySs: L });
           }
@@ -1117,7 +1289,7 @@
         for (const e of evs) {
           const sp = spelledOf(e);
           const eng = engOf(e.id), edx = eng.dxSs || 0, edy = eng.dySs || 0;
-          const yPitch = staffPosBass(sp);
+          const yPitch = posOf(sp);
           const ySs = yPitch + edy;
           placed.set(e.id, {
             e, ySs, dx: edx,
@@ -1951,7 +2123,9 @@
           }
         }
       }
-      return { part, items };
+      // key/staff/clef only with an ensemble: without one the model is
+      // byte-identical to the tuba piece's (the snapshot batteries)
+      return ENS ? { part, key: spec.key, staff: spec.staff, clef: spec.clef, items } : { part, items };
     });
 
     // day 35: a page may declare that the score's working marks are not part of
@@ -1985,5 +2159,5 @@
     return smp;
   }
 
-  return { layoutSection, deviceResolver, drawnLevelSamples, staffPosBass, ledgersFor, dotYFor, stemLenFor };
+  return { layoutSection, deviceResolver, drawnLevelSamples, staffPosBass, staffPos, spellMidi, positionResolver, ledgersFor, dotYFor, stemLenFor };
 });

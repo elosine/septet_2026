@@ -10,6 +10,16 @@
    ],
    "profile": "trance",
    "exp": true
+  },
+  {
+   "id": "piece-septet",
+   "label": "piece-septet · 2a proof (all parts, 0-580 s, bricks)",
+   "score": "piece-septet",
+   "window": [
+    0,
+    580
+   ],
+   "profile": "trance"
   }
  ]
 }

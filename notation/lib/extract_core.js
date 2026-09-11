@@ -34,6 +34,13 @@
     MINRUN: 6,         // a group below this is residue, not a bar (D43: "a chunk of 3 notes is useless")
     EPS: 0.02,         // s — per-onset tolerance for a metric fit (THE open ε dial, A1 §8 row 3)
     UNIT_MAX: 1.0,     // s — no pulse slower than this inside a fitted bar
+    // [2a.4, the septet] with options.chords: notes of one player within this
+    // of a group's FIRST onset are one chord. Its own number, not TOL (the
+    // tuba's grid tolerance): a played chord spreads 10-30 ms — measured on
+    // piece-septet's piano, a triad at 432.337 / .345 / .353 s (16 ms), whose
+    // third note a 15 ms window split off into a collision a step away
+    // (RUNNING_LOG §384) — while the fastest written rhythm here is 130 ms.
+    CHORD_TOL: 0.04,
   };
 
   const PC = { 0: ['C', 0], 1: ['C', 1], 2: ['D', 0], 3: ['D', 1], 4: ['E', 0], 5: ['F', 0], 6: ['F', 1], 7: ['G', 0], 8: ['G', 1], 9: ['A', 0], 10: ['A', 1], 11: ['B', 0] };
@@ -130,6 +137,23 @@
     }
     flush();
     return { runs, splitters };
+  }
+
+  // [2a.4] collapse one part's time-sorted items into simultaneities: a run of
+  // items whose onsets fall within tol of the group's FIRST onset. A group of
+  // one passes through; a group of two or more becomes one item of class
+  // 'chord' (never stream-joinable, so segment()/segmentPlayed() treat it as
+  // a splitter) carrying its members in `chord`.
+  function groupChords(items, tol) {
+    const out = [];
+    for (let i = 0; i < items.length;) {
+      let j = i + 1;
+      while (j < items.length && items[j].ev.onset - items[i].ev.onset <= tol) j++;
+      if (j - i === 1) out.push(items[i]);
+      else out.push({ ev: items[i].ev, cls: 'chord', chord: items.slice(i, j) });
+      i = j;
+    }
+    return out;
   }
 
   // ---- 'section1' profile: played material (Phase D, slice 2) ----
@@ -234,7 +258,9 @@
     const events = [];
     const perPart = new Map(parts.map(p => [p, []]));
     for (const o of objs) {
-      const cls = Classify.classify(o);
+      // [2a] the piece's META layer and technique table (both optional;
+      // absent = the tuba rules — classify.js)
+      const cls = Classify.classify(o, { metaLayer: params.metaLayer, techniques: params.techniques });
       if (cls === 'meta-shape' || cls === 'marker-label') continue; // S1 read-through
       if (o.sonifyNote === undefined) throw new Error('extract: ' + o.id + ' (' + cls + ') has no sonifyNote');
       let duration;
@@ -289,7 +315,17 @@
       if (!list.length) continue;
       const partChunks = []; // {firstOnset, make(spanEnd) -> chunk}
       const clsOf = new Map(list.map(x => [x.ev.id, x.cls]));
-      const items = list.map(x => ({ ev: x.ev, cls: x.cls }));
+      let items = list.map(x => ({ ev: x.ev, cls: x.cls }));
+      // [2a.4, the septet — 2026-09-11] CHORDS (opt.chords): a player may
+      // sound several notes at ONE onset — the piano's chords, a string's
+      // double stop. Notes within CHORD_TOL of a group's first onset are one
+      // SIMULTANEITY: one chunk holding all of them, which ends any run it
+      // meets. Without this the tuba rule ("a stacked dyad is sidelined, the
+      // run survives") let a run's span be cut at the chord's onset while the
+      // run went on — events outside their own chunk's span, measured on
+      // piece-septet's piano (9 validator findings, RUNNING_LOG §384). Opt-in,
+      // so the tuba pages extract exactly as before.
+      if (opt.chords) items = groupChords(items, opt.CHORD_TOL);
 
       if (profile === 'section1') {
         // played material: perceptual groups, playable fits, honest residue
@@ -355,8 +391,8 @@
             firstOnset: x.ev.onset,
             make: end => ({
               id: 'ch-' + part + '-' + x.ev.source.objectId, part, span: [x.ev.onset, end],
-              class: x.cls, strategy: 'unresolved',
-              events: [x.ev.id], provenance: 'derived',
+              class: x.chord ? x.chord[0].cls : x.cls, strategy: 'unresolved',
+              events: x.chord ? x.chord.map(m => m.ev.id) : [x.ev.id], provenance: 'derived',
             }),
           });
         }
@@ -416,8 +452,8 @@
           firstOnset: x.ev.onset,
           make: end => ({
             id: 'ch-' + part + '-' + x.ev.source.objectId, part, span: [x.ev.onset, end],
-            class: x.cls, strategy: 'unresolved',
-            events: [x.ev.id], provenance: 'derived',
+            class: x.chord ? x.chord[0].cls : x.cls, strategy: 'unresolved',
+            events: x.chord ? x.chord.map(m => m.ev.id) : [x.ev.id], provenance: 'derived',
           }),
         });
       }

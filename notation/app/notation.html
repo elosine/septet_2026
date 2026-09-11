@@ -93,7 +93,7 @@
   <label id="irWrap">ir <select id="ir"></select></label>
   <label id="m4Wrap" title="M4: proportional residue as vertical attack lines"><input type="checkbox" id="m4"> M4 lines</label>
   <label id="partsWrap">parts <select id="parts">
-    <option value="all">all (T1–T10)</option>
+    <option value="all">all parts</option>
   </select></label>
   <label id="modeWrap">mode <select id="mode">
     <option value="window">window</option>
@@ -116,6 +116,7 @@
 
 <script src="/notation/lib/coords.js"></script>
 <script src="/notation/lib/stamps.js"></script>
+<script src="/notation/lib/chord_column.js"></script>
 <script src="/notation/lib/layout.js"></script>
 <script src="/notation/lib/gc.js"></script>
 <script src="/notation/lib/render.js"></script>
@@ -140,7 +141,15 @@
   // THE FRAME (day 22, the collapse): the presentation score always shows
   // every lane (PP-2); a save covering fewer parts leaves the rest as
   // empty staves. One place to change if the ensemble ever isn't ten.
-  const FRAME_PARTS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  // [2a.1, the septet — 2026-09-11] the ENSEMBLE REGISTRY
+  // (notation/registry/ensemble.json) names the frame's parts and their
+  // labels, clefs, staves, lane weights and brackets; filled at init. A
+  // repo without one keeps the tuba's ten T-lanes.
+  let FRAME_PARTS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const ensPart = p => (state.ensemble && state.ensemble.parts.find(q => q.part === p)) || null;
+  const partName = p => { const e = ensPart(p); return e ? e.short : 'T' + (p + 1); };
+  const stavesOf = p => { const e = ensPart(p); return (e && e.staves && e.staves.length) || 1; };
+  const weightOf = p => { const e = ensPart(p); return (e && e.weight) || 1; };
   // hoisted: a RESTORED container view (UI persistence) runs the whole
   // transport/anim/MIDI path during the INITIAL render, which the old
   // top-to-bottom declaration order never had to survive
@@ -166,9 +175,9 @@
     // button, the ten-part section gets ten
     for (const p of (state.ir && state.ir.source.parts) || []) {
       const b = document.createElement('button');
-      b.textContent = 'T' + (p + 1);
+      b.textContent = partName(p);
       b.dataset.part = String(p);
-      b.title = 'solo T' + (p + 1) + ' (ALT+click = exclusive)';
+      b.title = 'solo ' + partName(p) + ' (ALT+click = exclusive)';
       b.addEventListener('click', (e) => {
         e.stopPropagation();
         if (e.altKey) {
@@ -225,7 +234,7 @@
       state.markers = (s.objects || []).filter(o => o.type === 'marker').map(o => ({ time: o.time, label: o.label }));
     } catch (e) { state.markers = []; }
     state.model = NotationLayout.layoutSection(state.ir, state.glyphs, Object.assign(
-      { m4AttackLines: $('m4').checked, frameParts: FRAME_PARTS },
+      { m4AttackLines: $('m4').checked, frameParts: FRAME_PARTS, ensemble: state.ensemble, techniques: state.techniques },
       (state.container && state.container.engraving && state.container.engraving.layout) || {}));
     // a new save = a new part list; drop a solo that no longer applies
     for (const p of [...state.solo]) if (!(state.ir.source.parts || []).includes(p)) state.solo.delete(p);
@@ -263,12 +272,17 @@
     return state.scores[name];
   }
   try {
-    const [glyphs, pageRules, container] = await Promise.all([
+    const [glyphs, pageRules, container, ensemble, techniques] = await Promise.all([
       fetch('/notation/lib/glyphs.json').then(r => { if (!r.ok) throw new Error('glyphs fetch ' + r.status); return r.json(); }),
       fetch('/notation/registry/page_rules.json').then(r => { if (!r.ok) throw new Error('page rules fetch ' + r.status); return r.json(); }),
       fetch('/notation/registry/container.json').then(r => { if (!r.ok) throw new Error('container fetch ' + r.status); return r.json(); }),
+      // [2a] the piece's registries — optional: absent = the tuba page
+      fetch('/notation/registry/ensemble.json').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('/notation/registry/techniques.json').then(r => r.ok ? r.json() : null).catch(() => null),
     ]);
     state.glyphs = glyphs; state.pageRules = pageRules; state.container = container;
+    state.ensemble = ensemble; state.techniques = techniques;
+    if (ensemble) FRAME_PARTS = ensemble.parts.map(p => p.part);
     // V3: extracted sections register themselves in the manifest
     // (tools/notate_section.js) — merge into the picker, no duplicates.
     // Experiments (exp:true — the version files of the notation workflow)
@@ -278,9 +292,9 @@
       const man = await fetch('/notation/ir/index.json').then(r => r.ok ? r.json() : null);
       if (man) mergeManifest(man);
     } catch (e) { /* manifest optional */ }
-    for (const p of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+    for (const p of FRAME_PARTS) {
       const opt = document.createElement('option');
-      opt.value = p; opt.textContent = 'T' + (p + 1);
+      opt.value = p; opt.textContent = partName(p);
       $('parts').appendChild(opt);
     }
     restoreUi();                 // day 22: controls survive a reload
@@ -377,13 +391,18 @@
       const sel = $('parts').value;
       const parts = sel === 'all' ? state.ir.source.parts : [parseInt(sel, 10)];
       const perSystem = sel === 'all' ? 110 : 260;
-      const heightPx = parts.length * perSystem + 30;
+      // [2a.1] a part's lane weight (the piano's grand staff = 2) and its
+      // staves — the staff size stays one size across the frame
+      const wts = parts.map(weightOf);
+      const heightPx = wts.reduce((a, b) => a + b, 0) * perSystem + 30;
       const widthPx = Math.max(600, $('sheet').clientWidth - 2);
+      const sysList = NotationCoords.systemsForParts(parts, { topPad: 24 / heightPx, botPad: 10 / heightPx, gap: 8 / heightPx, weights: state.ensemble ? wts : undefined });
+      if (state.ensemble) sysList.forEach((s, i) => { s.ssPerSystem = NotationCoords.DEFAULTS.ssPerSystem * wts[i]; });
       const view = NotationCoords.makeView({
         widthPx, heightPx, window: [t0, t1],
-        systems: NotationCoords.systemsForParts(parts, { topPad: 24 / heightPx, botPad: 10 / heightPx, gap: 8 / heightPx }),
+        systems: NotationCoords.withStaves(sysList, stavesOf),
       });
-      $('sheet').innerHTML = NotationRender.renderSection(state.model, view, state.glyphs, { markers: state.markers, reshow, ownsEnd, hideBricks: !$('bricks').checked, staffFull: !paged });
+      $('sheet').innerHTML = NotationRender.renderSection(state.model, view, state.glyphs, { markers: state.markers, reshow, ownsEnd, hideBricks: !$('bricks').checked, staffFull: !paged, ensemble: state.ensemble });
       applySolo();   // innerHTML replaced the lanes - re-assert the dim
       state.lastView = view;
       $('meta').textContent = state.ir.id + ' · ' + state.ir.events.length + ' events · ' + state.ir.chunks.length +
@@ -424,18 +443,28 @@
       }
       let topPad = lanes.padTopPx / H, botPad = lanes.padBotPx / H;
       const gap = lanes.gapPx / H;
-      let lanePx = ((1 - topPad - botPad - gap * (parts.length - 1)) / parts.length) * H;
+      // [2a.1] with the ensemble, lanes are WEIGHTED (the piano's grand staff
+      // = 2) and lanePx is one weight unit — a player's lane; every lane's
+      // staff scale follows its weight, so the staff is one size across the
+      // frame. Without it: the registry's weights and equal-lane math, as before.
+      const weights = state.ensemble ? parts.map(weightOf) : lanes.weights;
+      const units = state.ensemble ? weights.reduce((a, b) => a + b, 0) : parts.length;
+      let lanePx = ((1 - topPad - botPad - gap * (parts.length - 1)) / units) * H;
       // fix B (day 22): sparse-part IRs — cap the lane and center the band,
       // so a 1-part experiment stops inflating one lane to the whole frame.
       // Registry data (lanes.sparseCapPx); full material stays below the cap
       // and renders exactly as before.
       if (lanes.sparseCapPx && lanePx > lanes.sparseCapPx) {
         lanePx = lanes.sparseCapPx;
-        const content = (lanePx * parts.length + lanes.gapPx * (parts.length - 1)) / H;
+        const content = (lanePx * units + lanes.gapPx * (parts.length - 1)) / H;
         topPad = botPad = Math.max(0, (1 - content) / 2);
       }
-      const systems = NotationCoords.systemsForParts(parts, { topPad, botPad, gap, weights: lanes.weights });
+      let systems = NotationCoords.systemsForParts(parts, { topPad, botPad, gap, weights });
       const ssPerSystem = lanePx / (((C.staff && C.staff.staffHeightPx) || 31.6) / 4);
+      if (state.ensemble) {
+        systems.forEach((s, i) => { s.ssPerSystem = ssPerSystem * weights[i]; });
+        systems = NotationCoords.withStaves(systems, stavesOf);
+      }
       const p = state.vPages[state.pageIdx];
       // CONSTANT TIME SCALE (day 22, second note — composer: "in page two
       // the cursor speeds up significantly"): every page's window is
@@ -460,7 +489,7 @@
       const ownsEnd = state.pageIdx === state.vPages.length - 1;
       let svg = NotationRender.renderSection(state.model, view, state.glyphs, {
         reshow: p.reshow, ownsEnd, engraving: (C.engraving && C.engraving.render) || {},
-        hideBricks: !$('bricks').checked,
+        hideBricks: !$('bricks').checked, ensemble: state.ensemble,
       });
       // system TERMINAL barline at the right edge — the visible statement
       // that the system ENDS here by design (composer, G1: staff lines
@@ -489,6 +518,10 @@
       const _dev = NotationLayout.deviceResolver(state.ir, (C.engraving || {}).layout || {});
       state.animInstances = NotationAnimObj.collect(state.ir, score, C.animated,
         { parts: state.ir.source.parts, meta: $('metaov').checked,
+          // [2a] the score's META layer, and the followers placed in their
+          // part's clef and staff (layout's rules, not a second copy)
+          metaLayer: state.ensemble ? state.ensemble.metaLayer : undefined,
+          posOfMidi: state.ensemble ? NotationLayout.positionResolver(state.ensemble) : null,
           // per-note GCs come from the SAME device rules the engraving uses
           // (D50) — one resolver, built by layout, handed to animobj
           deviceOf: _dev,
@@ -547,8 +580,9 @@
       const yTop = sys[0].yTopPx, yBot = sys[sys.length - 1].yBotPx;
       const X = t => view.xOfSeconds(Math.min(w1, Math.max(w0, t)));
       const out = [];
+      const ML = state.ensemble && state.ensemble.metaLayer != null ? state.ensemble.metaLayer : 10;   // [2a] the septet's META is layer 7
       for (const o of score.objects || []) {
-        if (o.type !== 'waveCurve' || o.layer !== 10) continue;
+        if (o.type !== 'waveCurve' || o.layer !== ML) continue;
         if (o.startSeconds >= w1 || o.endSeconds <= w0) continue;
         const nodes = (o.nodes || []).map(n => ({ pos: n.pos, lvl: Math.min(10, Math.max(0, n.y)) / 10 }));
         if (!nodes.length) continue;
@@ -571,8 +605,8 @@
       const score = await loadScore(name);
       const t0 = parseFloat($('t0').value) || 0;
       const w = Math.max(2, parseFloat($('w').value) || 16);
-      const parts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].filter(p => score.objects.some(o => o.layer === p));
-      const g = NotationGraphic.layoutGraphic(score, { window: [t0, t0 + w], parts });
+      const parts = FRAME_PARTS.filter(p => score.objects.some(o => o.layer === p));
+      const g = NotationGraphic.layoutGraphic(score, { window: [t0, t0 + w], parts, metaLayer: state.ensemble ? state.ensemble.metaLayer : undefined });
       const bandParts = g.beating.length ? parts.concat(['beat']) : parts;
       const heightPx = bandParts.length * 90 + 30;
       const widthPx = Math.max(600, $('sheet').clientWidth - 2);

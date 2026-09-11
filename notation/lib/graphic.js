@@ -62,10 +62,12 @@
 
   function layoutGraphic(score, cfg) {
     const { window: [w0, w1], parts } = cfg;
+    // [2a] the score's META layer (the septet's is 7; absent = the tuba's 10)
+    const ML = cfg.metaLayer != null ? cfg.metaLayer : 10;
     const inWin = o => o.startSeconds < w1 && o.endSeconds > w0;
     const bricks = [];
     for (const o of score.objects) {
-      if (o.type !== 'waveCurve' || o.layer === 10 || !parts.includes(o.layer)) continue;
+      if (o.type !== 'waveCurve' || o.layer === ML || !parts.includes(o.layer)) continue;
       if (!inWin(o)) continue;
       const frac = 1 - Math.min(1, Math.max(0, (o.sonifyNote - MIDI_LO) / (MIDI_HI - MIDI_LO)));
       bricks.push({ part: o.layer, t0: o.startSeconds, t1: o.endSeconds, frac, color: o.color || '#607D8B', morph: !!o.morphBend, id: o.id });
@@ -73,7 +75,7 @@
     // META overlay: layer-10 waveCurves, their level envelope (y 0..10) as a shape
     const meta = [];
     for (const o of score.objects) {
-      if (o.type !== 'waveCurve' || o.layer !== 10 || !inWin(o)) continue;
+      if (o.type !== 'waveCurve' || o.layer !== ML || !inWin(o)) continue;
       meta.push({
         t0: o.startSeconds, t1: o.endSeconds, color: o.color || '#2E8B57',
         nodes: (o.nodes || []).map(n => ({ pos: n.pos, lvl: Math.min(10, Math.max(0, n.y)) / 10 })),

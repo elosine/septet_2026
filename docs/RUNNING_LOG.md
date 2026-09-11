@@ -10540,3 +10540,92 @@ code that plugs in; the clefs are drawn by this engine, from its own glyph regis
 PLAN §2 is `doing`, the top line of §380–381 at its head with the four decisions of the day; 2a carries the goal and six sub-steps verbatim
 from the reply he approved. The timeline gains a line (2 opened early, 09-11). PLAN's one-liner and §2's open questions updated (Q1, Q5
 closed). **Next: checkpoint on Opus, clear, Opus builds 2a.1–2a.6.** The strikes drawer's verdicts (§378) remain pending beside it.
+
+## §384. "I won't clear, you can build" — PLAN 2a.1–2a.3 and 2a.5 built: seven parts, three clefs, written pitch, the grand staff (2026-09-11, Opus 5)
+
+**Prompted by** (composer, after the checkpoint of §383): *"I won't clear you can build"* — the build of PLAN 2a in the same context.
+
+**The baseline first (the tuba goldens staged, per `notation/ir/README.md`, 26 files copied only where absent and logged for removal):**
+9 batteries GREEN (layout · render · coords · stamps · animobj · graphic · splice · pattern_fit · ir_validate), 6 RED before any edit
+(extract_played 1 · notate_block 62/3 · midiplayer · playability · sonify_core · extract_golden) — the 0g note of "11 green, 4 red" had
+drifted since, for reasons in the septet's own tables. **The standard for every change: those 9 stay green, those 6 fail no worse.**
+Held at every run below.
+
+**The design, in one rule: every change defaults to the tuba page.** A caller with no ensemble registry gets ten bass-clef T-lanes,
+byte-identical (the snapshot batteries are the proof). With one:
+- **`notation/registry/ensemble.json`** (new) — the seven parts by LAYER: id, short (= the score's `tracks[].short`), clef, `transpose`
+  (bass clarinet 14 = a major ninth), the piano's `staves` (treble + bass, `splitMidi` 60, `weight` 2), META layer 7, the D10 groups.
+  `notate_section` refuses to extract on drift between it and the score's tracks — but only for a score with the ensemble's track
+  count: the first version refused the staged tuba fixtures (ten tracks) and took notate_block from 62 to 35 passes; caught by the
+  battery, fixed the same hour.
+- **Clefs (2a.2):** `layout.staffPos(spelled, clef)` — the middle line's diatonic index per clef (bass D3, treble B4, alto C4);
+  `staffPosBass` is its bass case. The glyphs are **LilyPond's own**: `tools/glyph_emmentaler.py` reads emmentaler-20.otf with
+  fonttools at 250 font units = 1 ss and **stops unless** clefs.F reproduces the engine's bass clef (2.688 × 3.104, fLine 0.052/1.052)
+  and clefs.G reproduces #2's treble (2.572 × 7.319) — both did, to the thousandth. Then the alto (2.72 × 4.0, cLine at 2.0), the
+  bracket tips and 17 sizes of LilyPond's brace ladder. glyphs.json +341 lines, 0 changed.
+- **Written pitch (2a.3):** the IR stays sounding (D9); layout spells a transposing part from its WRITTEN midi (the extractor's naive
+  sharps); an authored respelling is of the written note and wins.
+- **The grand staff (2a.1):** one lane of weight 2, holding one SYSTEM PER STAFF — `coords.withStaves` adds `'2:0'`/`'2:1'` sub-systems
+  and keeps the lane (solo, label, the GC's landing keep finding part 2). Staff size one across the frame: 31.6 px on all eight staves.
+  A single note goes on its staff by pitch; a notated run stays whole on the staff most of its notes use.
+- **Brackets and brace (D10):** `render` draws them in the gutter from the registry — LilyPond's bracket (0.45 ss line + tips) and the
+  brace glyph nearest the span, scaled the last few percent. The gutter 48 → 72 px (label · bracket · clef column), provisional.
+- **Techniques (2a.5):** `notation/registry/techniques.json` — all 148 recipe keys of sandbox/instruments.js, each `oneshot` (47) or
+  `sustained` (101) by one stated rule (a measured sample length, or a strike/short name), `notate` null — *no mark yet* — except the
+  flute pizzicato's **tongue ram** (§44). classify reads the family; an unlisted key still throws (CL-5). `familyDevice` gives an
+  unnamed technique a provisional LOOK: the notehead unit (head, accidental, ledgers, ottava) + the brick, filled head for a one-shot,
+  open for a sustained note, the notate text above; no go line, GC or dynamics — his, per technique.
+- **The META layer** is the score's (`tracks.length` = 7) in classify, animobj, graphic and the app's overlay; the extractor's default
+  parts are 0..tracks.length−1 — the curve windows on layers 8–10 no longer sweep in (§13's run C).
+- **The app** (`notation.html`) loads both registries: the frame's parts, the labels on the solo buttons and the parts menu, weighted
+  lanes with the staves, the followers placed in their part's clef (`layout.positionResolver`, one copy of the rules).
+
+**Hand-checked in the dry run, 14 notes:** flute C#5 +0.5 · BCl sounding G3 → written A4 −0.5 · piano B5 on '2:0' +3.5 · Vn G3 −4.5 ·
+Va E3 −2.5 (alto) · Vc G2 −2 — every one where the clef puts it.
+
+**Rejected:** two lanes for the piano (he chose one taller lane, §382; two would have touched parts, solo, crop and print) · adding
+track ids to the IR (its schema forbids extra `source` fields; the registry is the place) · a device entry per technique in
+container.json (148 entries; the family default is one rule).
+
+## §385. The piano's chords: the extractor was monophonic, and a triad 16 ms wide collided — PLAN 2a.4 (2026-09-11, Opus 5)
+
+**Found by running it, not reading it.** The first extraction of piece-septet FAILED validation (9 findings, all the piano): the tuba
+rule sidelines a note stacked on a run's note into a chunk of its own *and lets the run go on*, so the run's span ended at the chord
+while its events went past it. The tuba's lines were single; the piano's are not.
+
+**Built:** `extract_core` option `chords` (on for an ensemble score, off for the tuba — the fixtures extract exactly as before): notes
+of one player within **CHORD_TOL** of a group's first onset are ONE chunk, which ends any run. **`notation/lib/chord_column.js`** —
+piece #2's LOCKED chord rules ported in logic, not its superseded constants (its CHORD_SPACING_RULES §0 says so): the note column
+(D.8.1 — walk from the stem end, a note a step or less from the previous one flips sides, one head width) and the accidental column
+(D.8.2 + D.9.x + H.4c.3 — right to left, a colliding accidental takes the next full slot, a clear one sits against its own head, ledger
+clearance). The numbers ride in `container.json engraving.layout.chordColumn` with #2's provenance. Layout columns a chord of plain
+notehead units only; the technique text goes over the top note once.
+
+**The collision, and why 40 ms.** A no-collision invariant added to the new battery (every close pair of heads on one staff at one time,
+on opposite sides) failed at once on the piano at **432.337 / .345 / .353 s** (F#3 · F3 · G3 — a triad spread over 16 ms, his own
+take). With the extractor's 15 ms TOL the G3 fell out of the chord, stood alone 16 ms right, and landed in the displaced F3's x one step
+away. **CHORD_TOL = 40 ms, its own number** (not the tuba's grid TOL): a played chord spreads 10–30 ms; the fastest written rhythm here
+is 130 ms. And a chord is now **drawn at ONE time**, its first onset — heads, ledgers, accidentals, go line, marks at `tU`; the bricks
+and ring bars keep each note's sounding onset. Without a chord `tU` is the onset, so no tuba page moves (all 9 still green).
+
+**Then the invariant was itself too strict, and LilyPond said so:** F3/F#3/G3 puts F and G in one column a step apart, F# aside — exactly
+#2's measured LilyPond chord 9 ("C4 and D4 share X; C#4 shifts right"): an altered unison forces the sides to alternate. The port is
+faithful; the check now allows that case and no other. **Rejected:** respelling F# as Gb to dodge it (#2 §5b's tool — worked on paper,
+F/Gb/G lands the same way) · a wider grouping for the tuba (not asked, and its goldens would move).
+
+## §386. 2a verified — the batteries, the page, and what is left for his eye (2026-09-11, Opus 5)
+
+- **`tools/test_septet_notation.js`** (new, 70 checks, GREEN): clefs · written pitch · the resolver · `withStaves` · D10 order and groups ·
+  the registry against the score's tracks · #2's LilyPond chord cases 6/7/9/10 and the stem-down walk · accidental packing and ledger
+  clearance · the simultaneities (a 16 ms triad is one chord; off by default) · every technique the score uses is listed, an unlisted
+  one throws · piece-septet extracted, laid out (eight systems, each its clef), rendered (labels, 2 brackets, 1 brace, one staff size,
+  no NaN) · no chord collisions. **Invariants only** — piece-septet is his live score, read and never written.
+- **The tuba suite:** the same 9 GREEN, the same 6 RED, notate_block back at 62/3 — at every run.
+- **The IR page:** `notation/ir/piece-septet.ir.json` — 899 events, 673 chunks, all 7 parts, VALID against source, in the picker as
+  "piece-septet · 2a proof (all parts, 0-580 s, bricks)" (`--bricks`: every chunk unresolved, so every note shows its unit; the metric
+  apparatus is later work). 49 pages at 12 s.
+- **Seen in the running app** (a second server on :5301; his :5300 untouched): the seven parts, treble/treble/grand/treble/treble/alto/
+  bass, the winds and strings brackets with their tips, the brace, the short names on the lanes and the solo buttons, staff 31.6 px in
+  the video view and 63.2 px in zoom ×2, no console errors.
+- **Left, in NITS (2026-09-11):** trills (zones) are not extracted · the exporters are still ten-lane · **resvg panics on the septet page
+  on this machine** — before 2b · ottava per chord member · no clef changes (cello high, bass clarinet low 8vb) · the plain piano split.

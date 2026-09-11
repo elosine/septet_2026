@@ -19,10 +19,18 @@
     'ord-sustained', 'fixed-oneshot',
   ];
 
-  function classify(obj) {
+  // ctx (2a, the septet — 2026-09-11), both optional; absent = the tuba
+  // piece's rules exactly:
+  //   metaLayer  — the score's META layer (the tuba's was 10; the septet's
+  //                is 7 = tracks.length, and ITS layer 10 is a curve window)
+  //   techniques — the piece's technique table (notation/registry/
+  //                techniques.json): key -> { family: 'oneshot'|'sustained' }.
+  //                A key it does not list still THROWS (CL-5).
+  function classify(obj, ctx) {
+    const c = ctx || {};
     if (obj.type === 'marker') return 'marker-label';
     if (obj.type === 'waveCurve') {
-      if (obj.layer === 10) return 'meta-shape';
+      if (obj.layer === (c.metaLayer != null ? c.metaLayer : 10)) return 'meta-shape';
       if ('morphBend' in obj) return 'morph-note';
       const t = obj.technique;
       if (t === 'ord') {
@@ -31,6 +39,11 @@
         return (obj.nodes && obj.nodes.length > 2) ? 'drawn-crescendo-curve' : 'ord-sustained';
       }
       if (t === 'staccato' || t === 'cuivre' || t === 'fortepiano') return 'fixed-oneshot';
+      // the same two behaviours, named by the piece's own table: a one-shot
+      // carries its sample-true length (D9), a sustained note its drawn one
+      const fam = c.techniques && c.techniques[t] && c.techniques[t].family;
+      if (fam === 'oneshot') return 'fixed-oneshot';
+      if (fam === 'sustained') return (obj.nodes && obj.nodes.length > 2) ? 'drawn-crescendo-curve' : 'ord-sustained';
     }
     const feat = {
       type: obj.type, layer: obj.layer, technique: obj.technique,

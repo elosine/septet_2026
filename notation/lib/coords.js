@@ -48,6 +48,31 @@
     });
   }
 
+  // [2a.1, the septet — 2026-09-11] A part of TWO OR MORE STAVES (the
+  // piano's grand staff) is ONE lane: one label, one solo, one brace. The
+  // lane entry stays as it is (whole-lane consumers — the GC's landing,
+  // the followers, the solo dim — keep finding it by its part number), and
+  // each staff is added as a sub-system keyed '<part>:<i>', an equal slice
+  // of the lane from the top, with its share of the lane's staff scale, so
+  // every staff in the frame is the same size. stavesOf(part) -> count.
+  function withStaves(systems, stavesOf) {
+    const out = [];
+    for (const s of systems) {
+      out.push(s);
+      const n = (typeof s.part === 'number' && stavesOf(s.part)) || 1;
+      if (n < 2) continue;
+      const h = (s.laneFrac1 - s.laneFrac0) / n;
+      for (let i = 0; i < n; i++) {
+        out.push(Object.assign({}, s, {
+          part: s.part + ':' + i, lane: s.part, staff: i,
+          laneFrac0: s.laneFrac0 + i * h, laneFrac1: s.laneFrac0 + (i + 1) * h,
+          ssPerSystem: s.ssPerSystem ? s.ssPerSystem / n : undefined,
+        }));
+      }
+    }
+    return out;
+  }
+
   // A View binds the persistent layers to one viewport. All px appear here
   // and only here.
   //   cfg: { widthPx, heightPx, window: [t0, t1], systems, ssPerSystem?,
@@ -124,5 +149,5 @@
     });
   }
 
-  return { makeView, systemsForParts, zoomCfg, DEFAULTS };
+  return { makeView, systemsForParts, withStaves, zoomCfg, DEFAULTS };
 });
