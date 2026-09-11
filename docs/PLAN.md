@@ -1525,7 +1525,7 @@ player would touch parts, solo, crop and print.
   as #4's PHASE 5). **Deadline-bound: 2026-10-15.**
 - **2c — Parts** — only if selected; due ~2026-10-29.
 
-- **2d — Notate while composing** — `building — 2d.1 · 2d.2 · 2d.3 built 2026-09-11 (RUNNING_LOG §391–393); next 2d.4, after a clear` (planned RUNNING_LOG §389–390) — **Result when done:** he
+- **2d — Notate while composing** — `building — 2d.1 · 2d.2 · 2d.3 · 2d.4 built 2026-09-11 (RUNNING_LOG §391–394); next 2d.5, after a clear` (planned RUNNING_LOG §389–390) — **Result when done:** he
   notates sections 1–2 while section 3 is still being written. `piece-septet.json` stays the only file anyone edits (D9); the IR is
   rebuilt from it at one keystroke; the notation layer's own choices (ink, not music — beams, forced clefs, breaks) live in a sidecar
   the notation app owns and **survive every rebuild**, keyed to the notes' ids. A choice whose notes vanished is listed, never dropped.
@@ -1592,7 +1592,7 @@ player would touch parts, solo, crop and print.
       failure: the error text, the old page stays.
     - 2d.3.5 the hover strip's tooltip lists R.
     - 2d.3.6 prove on a copy: edit in the composer → Save → stale → R → the edit shows. Twice.
-  - **2d.4 — ⚠ Orphans** — **Result when done:** after every refresh each choice is checked against the new IR: all notes present →
+  - **2d.4 — ⚠ Orphans** — `built 2026-09-11 (RUNNING_LOG §394); proven in the running app on a copy, the mirror included` — **Result when done:** after every refresh each choice is checked against the new IR: all notes present →
     applies silently · some missing → applies to the notes that remain, marked `partial` · none left → `orphaned: true`, kept in the
     file, listed. **The machine never deletes a choice; nothing ever blocks the page.** *Why flagged:* the shortcut "drop what does not
     resolve" turns a loud loss into a quiet one; #4's rule stands — flag, never drop. **Decided:** (i) a panel hidden when empty; a

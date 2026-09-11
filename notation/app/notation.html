@@ -64,6 +64,18 @@
   #tbar { font: 13px/1 monospace; opacity: 0.9; display: none; }
   body.cmode #stale { position: fixed; left: 8px; bottom: 34px; z-index: 10;
                       background: #fff8; border-radius: 4px; padding: 4px 8px; }
+  /* [PLAN 2d.4] choices that did not draw as chosen: the count in the bar (absent at zero; a click or O opens the list) and
+     the list itself, hidden when empty. DOM only, never in the SVG, so exports stay clean. */
+  #orph { font-size: 12px; color: #ffcc80; cursor: pointer; border: 1px solid #8d6e3f; border-radius: 3px; padding: 2px 6px; }
+  #orph:empty { display: none; }
+  #orphans { position: fixed; right: 10px; bottom: 44px; z-index: 11; max-width: 560px; max-height: 50vh; overflow-y: auto;
+             background: #2b2b2bf2; color: #ddd; font: 12px/1.5 monospace; border-radius: 4px; padding: 8px 10px;
+             box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+  #orphans .hd { opacity: 0.75; margin-bottom: 4px; white-space: pre-wrap; }
+  #orphans .ln { display: flex; gap: 8px; align-items: center; padding: 2px 0; }
+  #orphans .ln span.what { flex: 1; }
+  #orphans button { font: 11px monospace; padding: 1px 6px; cursor: pointer; }
+  #orphans .err { color: #ff8a80; white-space: pre-wrap; }
 </style>
 </head>
 <body>
@@ -106,12 +118,14 @@
   <label id="engWrap" title="engineering controls: the slice-1 proofing views (notation/graphic) and their window/parts overrides — off = the presentation score alone"><input type="checkbox" id="eng"> ⚙</label>
   <label id="tshowWrap" style="display:none" title="show the playhead time pill on the score (T)"><input type="checkbox" id="tshow" checked> t</label>
   <span id="tbar" title="playhead time — click the score to seek"></span>
+  <span id="orph" title="page choices that did not draw as chosen — click or O for the list"></span>
   <span id="meta"></span>
 </div>
-<div id="hoverzone" title="controls — B pins the bar open / hides it · Z video ↔ zoom · T time pill · SPACE play · ←/→ pages · R refresh from the score (last Save) · ESC frees the keys"></div>
+<div id="hoverzone" title="controls — B pins the bar open / hides it · Z video ↔ zoom · T time pill · SPACE play · ←/→ pages · R refresh from the score (last Save) · O the choices that did not draw · ESC frees the keys"></div>
 <div id="sheet"></div>
 <div id="err"></div>
 <div id="stale" title="the extracted snapshot no longer matches the composer score"></div>
+<div id="orphans" hidden></div>
 <div id="tnow" title="playhead time"></div>
 
 <script src="/notation/lib/coords.js"></script>
@@ -235,12 +249,16 @@
       const s = await loadScore(state.ir.source.score);
       state.markers = (s.objects || []).filter(o => o.type === 'marker').map(o => ({ time: o.time, label: o.label }));
     } catch (e) { state.markers = []; }
-    state.model = NotationLayout.layoutSection(state.ir, state.glyphs, Object.assign(
-      { m4AttackLines: $('m4').checked, frameParts: FRAME_PARTS, ensemble: state.ensemble, techniques: state.techniques },
-      (state.container && state.container.engraving && state.container.engraving.layout) || {}));
+    layoutIr();
     // a new save = a new part list; drop a solo that no longer applies
     for (const p of [...state.solo]) if (!(state.ir.source.parts || []).includes(p)) state.solo.delete(p);
     buildSoloButtons();
+  }
+  // the layout of the IR the page holds — also re-run in place when a choice is discarded (2d.4.5), page and zoom kept
+  function layoutIr() {
+    state.model = NotationLayout.layoutSection(state.ir, state.glyphs, Object.assign(
+      { m4AttackLines: $('m4').checked, frameParts: FRAME_PARTS, ensemble: state.ensemble, techniques: state.techniques },
+      (state.container && state.container.engraving && state.container.engraving.layout) || {}));
   }
   // [PLAN 2d.2] THE CHOICES SIDECAR — notation/choices/<score>.choices.json (IR_SCHEMA_v0 §6b): the page's own ink choices,
   // keyed to the composer's note ids, applied on top of the fresh IR IN MEMORY — never written into it. A missing file is
@@ -249,30 +267,150 @@
   async function loadChoices() {
     state.choices = null; state.choiceReport = [];
     const score = state.ir && state.ir.source && state.ir.source.score;
-    if (!score || typeof BeamChoice === 'undefined') return;
+    if (!score || typeof BeamChoice === 'undefined') { updateOrphanUi(); return; }
     let doc = null;
     try {
       const r = await fetch('/notation/choices/' + encodeURIComponent(score) + '.choices.json');
       if (r.ok) doc = await r.json();
     } catch (e) { doc = null; }
-    if (!doc) return;
     state.choices = doc;
-    const figs = (((state.container || {}).engraving || {}).layout || {}).figures || {};
-    const { overlays, report } = BeamChoice.applyChoices(doc, state.ir, figs.beam);
-    state.ir.overlays = (state.ir.overlays || []).concat(overlays);
-    state.choiceReport = report;
-    const off = report.filter(x => x.status !== 'applied');
-    if (off.length) console.warn('[choices] ' + score + ': ' + off.map(x => x.id + ' ' + x.status).join(' · '));
+    applyLoadedChoices();
   }
-  // saved through the server, atomically (POST /api/notation/choices/<score>); the callers come with 2d.4 (discard) and 2d.6 (G)
-  async function saveChoices() {
+  // the choices held → overlays on the IR held (earlier choice overlays stripped first, so this can re-run in place — 2d.4.5)
+  // + the report + the count. The IR's own overlays are never touched.
+  function applyLoadedChoices() {
+    state.ir.overlays = (state.ir.overlays || []).filter(o => !String(o.id).startsWith('ov-choice-'));
+    state.choiceReport = [];
+    if (state.choices && typeof BeamChoice !== 'undefined') {
+      const figs = (((state.container || {}).engraving || {}).layout || {}).figures || {};
+      const { overlays, report } = BeamChoice.applyChoices(state.choices, state.ir, figs.beam);
+      state.ir.overlays = state.ir.overlays.concat(overlays);
+      state.choiceReport = report;
+      const off = report.filter(x => x.status !== 'applied');
+      if (off.length) console.warn('[choices] ' + state.choices.score + ': ' + off.map(x => x.id + ' ' + x.status).join(' · '));
+    }
+    updateOrphanUi();
+  }
+  // saved through the server, atomically (POST /api/notation/choices/<score>) → { success, error? }; never throws. Callers:
+  // the flags after R (2d.4.1) · discard (2d.4.5) · G (2d.6).
+  async function saveChoices(doc) {
+    doc = doc || state.choices;
     const score = state.ir && state.ir.source && state.ir.source.score;
-    if (!score || !state.choices) return null;
-    const r = await fetch('/api/notation/choices/' + encodeURIComponent(score), {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(state.choices) });
-    return r.json();
+    if (!score || !doc) return { success: false, error: 'no choices file is loaded' };
+    try {
+      const r = await fetch('/api/notation/choices/' + encodeURIComponent(score), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(doc) });
+      try { return await r.json(); }
+      catch (e) { return { success: false, error: r.status === 404 ? 'this server cannot save choices yet — restart it (node score/server.js)' : 'HTTP ' + r.status }; }
+    } catch (e) { return { success: false, error: e.message }; }
   }
   window.notationChoices = () => ({ file: state.choices, report: state.choiceReport });   // read-only, for the console
+
+  // [PLAN 2d.4] ⚠ ORPHANS — LISTED, NEVER DROPPED. The machine never deletes a choice and nothing ever blocks the page. The
+  // report of every load says what became of each choice; the count sits in the bar (absent at zero); O or a click on it opens
+  // the list; each line offers only discard and go there — he never touches ids.
+  const isWholeIr = () => /(^|\s)--all(\s|$)/.test((state.ir && state.ir.provenance && state.ir.provenance.build) || '');
+  const orphUi = { open: false, err: '' };
+  const offChoices = () => (state.choiceReport || []).filter(r => r.status !== 'applied');
+  // 2d.4.1 — after R (a whole-score IR, so a missing note is really gone): the report → the file's `orphaned` flags; saved only
+  // when one changed. A choice whose notes are back has its flag cleared by the same pass.
+  async function writeBackFlags() {
+    if (!state.choices || typeof BeamChoice === 'undefined' || !isWholeIr()) return null;
+    const changed = BeamChoice.resolveFlags(state.choices, state.choiceReport);
+    if (!changed.length) return { success: true, changed };
+    const res = await saveChoices();
+    orphUi.err = res.success ? '' : '⚠ the orphan flags could not be written: ' + (res.error || 'no reason given');
+    if (res.success) console.log('[choices] flags written after R: ' + changed.join(', '));
+    renderOrphanPanel();
+    return Object.assign(res, { changed });
+  }
+  function updateOrphanUi() {
+    $('orph').textContent = typeof BeamChoice === 'undefined' ? '' : BeamChoice.reportCounts(state.choiceReport);
+    renderOrphanPanel();
+  }
+  function toggleOrphans() { orphUi.open = !orphUi.open && offChoices().length > 0; renderOrphanPanel(); }
+  $('orph').addEventListener('click', toggleOrphans);
+  // 2d.4.4 — kind · notes remaining of how many · the part · the time · go there · discard. Hidden when empty.
+  function renderOrphanPanel() {
+    const P = $('orphans'), off = offChoices();
+    if (!off.length) orphUi.open = false;
+    P.innerHTML = '';
+    P.hidden = !orphUi.open;
+    if (!orphUi.open) return;
+    const btn = (label, fn) => { const b = document.createElement('button'); b.textContent = label; b.addEventListener('click', fn); return b; };
+    const partName = p => { const e = state.ensemble && state.ensemble.parts && state.ensemble.parts.find(x => x.part === p); return e ? e.short : p == null ? '—' : 'part ' + p; };
+    const hd = document.createElement('div'); hd.className = 'hd';
+    hd.textContent = 'choices that did not draw as chosen — ' + state.ir.source.score +
+      (isWholeIr() ? '' : '\n(a window IR: notes outside it read as missing — R rebuilds the whole score)');
+    P.append(hd);
+    for (const r of off) {
+      const ln = document.createElement('div'); ln.className = 'ln';
+      const what = document.createElement('span'); what.className = 'what';
+      what.textContent = r.id + ' · ' + r.kind + ' · ' + r.status + ' · ' + r.present + ' of ' + r.notes + ' notes · ' + partName(r.part) +
+        ' · ' + (r.t == null ? '—' : r.t.toFixed(2) + ' s') + (r.why ? ' — ' + r.why : '');
+      if (r.missing && r.missing.length) what.title = 'missing: ' + r.missing.join(', ');
+      ln.append(what);
+      if (r.present) ln.append(btn('go there', () => goToChoice(r.id)));
+      ln.append(btn('discard', () => discardChoice(r.id)));
+      P.append(ln);
+    }
+    if (orphUi.err) { const e = document.createElement('div'); e.className = 'err'; e.textContent = orphUi.err; P.append(e); }
+  }
+  // 2d.4.5 — discard = the choice out of the file, saved; only after the save succeeds is it dropped from the page, which then
+  // re-applies and re-lays out in place (page and zoom kept). A failed save changes nothing and says why.
+  async function discardChoice(id) {
+    if (!state.choices) return;
+    const next = Object.assign({}, state.choices, { choices: state.choices.choices.filter(c => c.id !== id) });
+    const res = await saveChoices(next);
+    if (!res.success) { orphUi.err = '⚠ discard failed — nothing changed: ' + (res.error || 'no reason given'); renderOrphanPanel(); return; }
+    orphUi.err = ''; state.choices = next;
+    applyLoadedChoices(); layoutIr(); render();
+  }
+  // 2d.4.5 — go there = the page to the choice's first surviving note, the playhead on it, the survivors ringed for a moment
+  async function goToChoice(id) {
+    const r = (state.choiceReport || []).find(x => x.id === id);
+    if (!r || r.t == null) return;
+    const vv = $('view').value, t = r.t;
+    const pageOf = pages => (pages || []).findIndex(pg => t >= pg.t0 - 1e-9 && t < pg.t1);
+    if (vv === 'video') { const i = pageOf(state.vPages); if (i >= 0) state.pageIdx = i; }
+    else if (vv === 'zoom') {
+      const [s0, s1] = state.ir.source.window, span = state.zoomSpan || 6;
+      state.zoomT0 = Math.min(Math.max(s0, t - 1), Math.max(s0, s1 - span));
+    }
+    else if ($('mode').value === 'pages') { const i = pageOf(state.pages); if (i >= 0) state.pageIdx = i; }
+    else $('t0').value = Math.max(0, Math.floor(t - 1));
+    if ((vv === 'video' || vv === 'zoom') && state.transport && !state.transport.isPlaying()) { state.transport.seek(t); ensureLoop(); }
+    await render();
+    return lightNotes(r.surviving);
+  }
+  // rings over the given IR events on the page as drawn, gone after 4 s — DOM only, never exported
+  function lightNotes(evIds) {
+    const view = state.animView, svg = $('sheet').querySelector('svg');
+    if (!view || !svg || !state.model || !evIds || !evIds.length) return 0;
+    const want = new Set(evIds), done = new Set(), NS = 'http://www.w3.org/2000/svg';
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'choice-light'); g.setAttribute('pointer-events', 'none');
+    for (const sm of state.model.systems) {
+      let sys; try { sys = view.system(sm.key !== undefined ? sm.key : sm.part); } catch (e) { continue; }
+      for (const it of sm.items || []) {
+        if (!want.has(it.ev) || done.has(it.ev) || typeof it.ySs !== 'number') continue;
+        const t = it.t0 != null ? it.t0 : it.t;
+        if (t == null) continue;
+        done.add(it.ev);
+        const c = document.createElementNS(NS, 'circle');
+        c.setAttribute('cx', view.xOfSeconds(t).toFixed(2)); c.setAttribute('cy', sys.yOfSs(it.ySs).toFixed(2));
+        c.setAttribute('r', (1.6 * sys.ssPx).toFixed(2));
+        c.setAttribute('fill', 'none'); c.setAttribute('stroke', '#f9a825'); c.setAttribute('stroke-width', '3');
+        g.append(c);
+      }
+    }
+    svg.append(g);
+    setTimeout(() => g.remove(), 4000);
+    return done.size;
+  }
+  // read-only, for the console: the count, the lines, whether the list is open
+  window.notationOrphans = () => ({ count: $('orph').textContent, open: orphUi.open, err: orphUi.err,
+    lines: offChoices().map(r => ({ id: r.id, status: r.status, present: r.present, notes: r.notes, t: r.t })) });
   // read-only, for the console (2d.3): the IR the page holds, and where the page is — or one event by id
   window.notationIr = id => !state.ir ? null : id ? (state.ir.events.find(e => e.id === id) || null)
     : { id: state.ir.id, window: state.ir.source.window, events: state.ir.events.length, build: state.ir.provenance && state.ir.provenance.build,
@@ -763,6 +901,10 @@
       refreshFromScore();
       ev.preventDefault();
     }
+    else if ((ev.key === 'o' || ev.key === 'O') && !ev.ctrlKey && !ev.altKey && !ev.metaKey) {   // [2d.4] the choices that did not draw
+      toggleOrphans();
+      ev.preventDefault();
+    }
   });
 
   // ---- V2: transport + the animation loop ----
@@ -1125,6 +1267,7 @@
       if (!j.success) { $('stale').textContent = '⚠ refresh failed — the page is unchanged:\n' + (j.error || 'no reason given'); return; }
       await pollChanges(); await pollChanges();   // the second is a fresh poll if the first was already in flight
       state.src.stale = []; $('stale').textContent = '';
+      await writeBackFlags();                     // [2d.4.1] the file's orphan flags follow the fresh whole-score IR
     } catch (e) { $('stale').textContent = '⚠ refresh failed — the page is unchanged: ' + e.message; }
     finally { refreshing = false; }
   }

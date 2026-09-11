@@ -277,6 +277,10 @@ owned by the notation app. The extractor never reads or writes it; the composer 
   validator and drawn as nothing, never differently.
 - **Resolution** (each time the IR is loaded): all notes present → applied · some → applied to those that remain (partial) ·
   none → orphaned: kept, listed, never dropped (#4's rule, §6) · a beam whose notes sit in two parts → refused, with the reason.
+- **The `orphaned` flag** (septet PLAN 2d.4) is written by the app after R — a whole-score IR, so a missing note is really gone:
+  set when none of the choice's notes is left, cleared when one is back (`BeamChoice.resolveFlags`); never at a plain load, where
+  a window IR would read the notes outside it as lost. The bar's count and the O list read the report of every load; each line
+  offers discard (the choice out of the file) and go there — never an id edit.
 - **Validated by** `node tools/ir_validate.js notation/choices/<score>.choices.json [--against <file.ir.json>]`.
 
 ## 7. What v0 deliberately leaves out (A3–A5 decide if they force entry)

@@ -244,6 +244,21 @@ ok(JSON.stringify(ens.groups.map(g => g.kind + ':' + g.parts.join(','))) === JSO
     const d = BC.beamDevices(four, FIG, 'k').devices;
     ok(d.map(x => x.device.beamPos).join() === '0,1,2,3' && d.filter(x => x.device.gc).length === (FIG && FIG.gc === false ? 0 : 1),
       'choices: one device per note, in order, one GC');
+
+    // [PLAN 2d.4] THE MAINTENANCE PASS and the count: after R the report sets and clears the file's orphaned flags — a stale flag
+    // cleared, a lost choice flagged, nothing else touched, nothing dropped; run twice it changes nothing.
+    const stale = JSON.parse(JSON.stringify(choices));
+    stale.choices.find(c => c.id === 'c-1').orphaned = true;    // stale: all four notes are there
+    stale.choices.find(c => c.id === 'c-3').orphaned = false;   // lost and unflagged
+    const rep2 = BC.applyChoices(stale, doc, FIG).report;
+    const changed = BC.resolveFlags(stale, rep2);
+    ok(changed.join() === 'c-1,c-3' && stale.choices.map(c => c.orphaned).join() === 'false,false,true,false,false' && stale.choices.length === 5,
+      'orphans: the pass after R clears a stale flag, sets a lost one, touches nothing else, drops nothing (' + changed.join() + ')');
+    ok(BC.resolveFlags(stale, rep2).length === 0, 'orphans: the pass is idempotent — a second run changes nothing');
+    ok(BC.reportCounts(report) === '1 orphan · 1 partial · 1 refused · 1 unknown kind' && BC.reportCounts(report.filter(r => r.status === 'applied')) === '',
+      'orphans: the bar count "' + BC.reportCounts(report) + '"; absent when every choice applied');
+    ok(report.find(r => r.id === 'c-4').present === 4 && report.find(r => r.id === 'c-2').surviving.length === 2 && report.find(r => r.id === 'c-3').surviving.length === 0,
+      'orphans: presence counted for every kind (as the validator counts it); the survivors listed for go there');
   }
 }
 

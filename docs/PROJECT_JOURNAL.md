@@ -180,7 +180,7 @@ it was found missing from this repo's CLAUDE.md, which is why the advice had gon
 | 1 | ~~BUILD §377~~ — **done, walked, pushed (§378; STRIKES_TOOL §AG)** | — | — |
 | **N1** | ~~BUILD PLAN 2a.1–2a.6~~ — **built 2026-09-11 in the same context (RUNNING_LOG §384–386)**: 70-check battery GREEN, tuba suite unchanged, the page seen on :5301 | — | — |
 | **N2** | **His eye on the seven-lane page** — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → the picker "piece-septet · 2a proof" → video and zoom (Z). The provisional looks to judge are listed in NITS 2026-09-11 | **Fable** for the verdict | yes — wrap on Opus, clear, switch |
-| **N4** | **BUILD PLAN 2d.1 → 2d.6 in order** — **2d.1 · 2d.2 · 2d.3 BUILT 2026-09-11 (RUNNING_LOG §391–393: the identity contract + test · the choices sidecar · R refresh, and the stale notice now sees pitch, voice and new notes). His :5300 needs ONE restart for R and the save route. Next 2d.4 orphans (⚠) — clear first; resume reads: PLAN 2d.4 + RUNNING_LOG §392–393.** Notate while composing: the identity contract · the sidecar · R refresh · orphans · move-to-part · G beams. **Planned in full 2026-09-11 (RUNNING_LOG §389–390; PLAN 2d).** The ⚠ steps (1 · 2 · 4) are the ones he asked to watch. 2d.1.2 and 2d.5.1 are the two sanctioned broad code reads | **Opus** | **yes** — fresh context; `/postclear` then PLAN 2d |
+| **N4** | **BUILD PLAN 2d.1 → 2d.6 in order** — **2d.1 · 2d.2 · 2d.3 · 2d.4 BUILT 2026-09-11 (RUNNING_LOG §391–394: the identity contract + test · the choices sidecar · R refresh · orphans flagged after R, the count, the O list, go there / discard). His :5300 needs ONE restart for R, discard and the flags. Next 2d.5 move-to-part — clear first; resume reads: PLAN 2d.5 + `docs/NOTATION_IDENTITY.md`.** Notate while composing: the identity contract · the sidecar · R refresh · orphans · move-to-part · G beams. **Planned in full 2026-09-11 (RUNNING_LOG §389–390; PLAN 2d).** The ⚠ steps (1 · 2 · 4) are the ones he asked to watch. 2d.1.2 and 2d.5.1 are the two sanctioned broad code reads | **Opus** | **yes** — fresh context; `/postclear` then PLAN 2d |
 | **N3** | **Before 2b's first render: the resvg panic** (NITS 2026-09-11) — then trills into the IR, and the exporters onto the app's lane code | **Opus** | yes, fresh context for a build |
 | 2 | **His verdicts on the drawer after a hard reload (CTRL+SHIFT+R)** — the route is STRIKES_TOOL §AG; fix what he marks (or log to SWEEP_LIST) — *waits beside N1, on his word* | **Opus** | no |
 | 3 | **The pinned player** that survives a shuffle (§AF2) · the hand override per chord (medium, §376) if he asks | **Opus** | no |
@@ -321,7 +321,7 @@ the plan is already on paper. Wrap on Opus, always.
 - **Resume reads: nothing beyond §2.** (If he raises a look detail, `docs/NITS.md` 2026-09-11 lists every provisional choice with its
   number; for how a piece of 2a was built, RUNNING_LOG §384–388. Do not read them pre-emptively.)
 
-**CHECKPOINT — 2d (mid-session, 2026-09-11 midday — session 8 continued, Claude Code / Opus 5). RUNNING_LOG §391–393. THIS IS THE ONE TO RESUME FROM.**
+**CHECKPOINT — 2d (mid-session, 2026-09-11 midday — session 8 continued, Claude Code / Opus 5). RUNNING_LOG §391–393.** *(Superseded by the 2d.4 state below: 2d.4 built.)*
 
 - **Task and state:** PLAN 2d (notate while composing), built in order. **2d.1 · 2d.2 · 2d.3 are built, proven, committed and
   pushed; nothing in flight.** Next: **2d.4 — ⚠ orphans listed, never dropped.**
@@ -349,6 +349,24 @@ the plan is already on paper. Wrap on Opus, always.
 - **Resume reads:** PLAN **2d.4** (~15 lines, under `## 2. Notate` → 2d) · RUNNING_LOG **§392** (the sidecar as built) ·
   `notation/lib/beam_choice.js` `applyChoices` and `notation/app/notation.html` `loadChoices` / `saveChoices` (the code 2d.4
   extends). Nothing else pre-emptively.
+
+**STATE — 2d.4 built (2026-09-11 afternoon — session 8 continued, Claude Code / Opus 5, resumed by /postclear). RUNNING_LOG §394. THIS IS THE ONE TO RESUME FROM.**
+
+- **Task and state:** PLAN 2d, built in order. **2d.1–2d.4 built, proven, committed and pushed; nothing in flight.** Next: **2d.5 — "move to part"
+  in the composer's note card** (its 2d.5.1 is one of the two sanctioned broad code reads).
+- **What 2d.4 added:** `BeamChoice.resolveFlags` / `reportCounts` (pure, tested) · in `notation/app/notation.html`: the flags written after R
+  (whole-score IR only) · the count `#orph` in the bar · the **O** list `#orphans` · discard (saves first) · go there (page + playhead +
+  rings) · `window.notationOrphans()` for the console · `layoutIr()` split out of `loadIr`.
+- **For 2d.6 (NITS 2026-09-11):** a discarded highest id must not be re-issued — G needs a counter in the file.
+- **For him:** his :5300 needs ONE restart (`node score/server.js`) before R, discard and the flag write-back work there; then CTRL+SHIFT+R.
+- **Pending decisions from him:** none for 2d. Still open: his verdict on the 2a page · the drawer verdicts (STRIKES_TOOL §AG) · whether to
+  commit his two passages · whether track 7's Kontakt still holds Plucked Piano.
+- **Deliberately uncommitted — all his:** `bank/panel_snapshots.json` · `reaper/septet_rack.rpp` · `bank/passages/accentedcres01*.json`
+  · `scores/SeptetSec03-Materials-B/-C/-D/-a.json`.
+- **Tests:** `node tools/test_septet_notation.js` (79) · `node tools/test_identity.js` (20). The walk rule (§391, §393) stands for 2d.5's proof,
+  which DOES open the composer: read `Composer.sessionName` first, open the `zz-ai-` copy, delete it and its snapshots and IR after.
+- **Model:** Opus — 2d.5 is written in the plan.
+- **Resume reads:** PLAN **2d.5** (~20 lines, under `## 2. Notate` → 2d) · `docs/NOTATION_IDENTITY.md`. Nothing else pre-emptively.
 
 **Open at session end** *(written cold, 2026-09-09)*:
 

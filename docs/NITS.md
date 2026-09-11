@@ -301,3 +301,13 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 - **Provisional data for his eye:** the gutter 48 → 72 px (label · bracket · clef column); the piano lane weight 2 (≈12 ss between its
   staves, the same air as between players); the technique look (`techniques.json familyDevice`: head + brick, no go line / GC /
   dynamics); every technique's `notate` is null except the flute's tongue ram.
+
+## 2026-09-11 — PLAN 2d.4, orphans: what it left (RUNNING_LOG §394)
+
+- **A discarded id can come back — for 2d.6.** §6b says a choice id is *"never reused in this file"*, but once the HIGHEST id is
+  discarded, G's obvious "max + 1" re-issues it. G needs a counter the file keeps (e.g. `nextId`, by amendment to §6b) — decide at
+  2d.6.1, before the first real choice is written.
+- **An orphan has no "go there".** The file carries no time for a choice, so when every note is gone the line shows "—". If he wants
+  to find where it was, the choice would need its last-known time stored at the refresh that orphaned it. Not asked for.
+- **A window IR lists false orphans.** On an IR built with `--w0/--w1`, notes outside the window read as missing; the list says so
+  in its header, and the file's flag is written only after R (whole score). No septet IR is a window build after its first R.

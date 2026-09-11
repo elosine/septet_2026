@@ -10758,3 +10758,33 @@ vertically can you center them on the appropriate staff, so centered on the midd
 **Next:** 2d.4, orphans (⚠) — a good clear point before it.
 
 **At the commit:** septet battery 75/75 · `test_identity` ALL PASS · the tuba battery once more after the `notate_section` edits — the same 9 GREEN / 6 RED, notate_block 62/3 · the copy removed whole (its IR and picker entry by `--prune`, its score, and the two Save snapshots it left in `scores/versions/`). Journal §2 carries a fresh checkpoint for the clear before 2d.4.
+
+## §394. PLAN 2d.4 built — orphans listed, never dropped (2026-09-11, Opus 5)
+
+**What prompted it:** the plan — 2d.4, one of the three ⚠ steps he asked to watch — resumed by `/postclear` from the 2d checkpoint. The rule it carries is #4's: *flag, never drop*; the machine never deletes a choice and nothing ever blocks the page.
+
+**What was done, in order:**
+1. **The library** (`notation/lib/beam_choice.js`, still pure): `applyChoices` now counts a choice's notes for EVERY kind, not only beams — the validator checks the flag for any choice that names notes, so the page must count the same way (the 2026-09-10 lesson: one rule, one path). Each report line also carries `surviving` (the IR ids still there). Two new functions: **`resolveFlags(doc, report)`** — 2d.4.1's maintenance pass: no note left → `orphaned: true`; a note back → cleared; nothing removed; returns what it changed · **`reportCounts(report)`** — the bar's text.
+2. **2d.4.1 in the page:** `writeBackFlags()` runs at the end of R, after the poll has re-applied the choices to the fresh IR — and only when that IR is a whole-score build (`--all`), which R's always is. Saved only when a flag changed. On a failed save the list says so.
+3. **2d.4.3** the count in the bar, beside the time: "1 orphan · 1 partial" — absent at zero (`#orph:empty`).
+4. **2d.4.4** the list: **O** (in video/zoom, like every page key) or a click on the count. One line per choice that did not draw as chosen: id · kind · status · *N of M notes* · the part's short name · the time; hover shows the missing ids. Hidden when empty — it closes itself when the last line goes.
+5. **2d.4.5** **discard** — the file without the choice is POSTed first; only when the server confirms is the choice dropped from the page, which then re-applies and re-lays out IN PLACE (page and zoom kept — `layoutIr()` split out of `loadIr` for this). A failed save changes nothing and says why. **go there** — the page (video) or zoom window to the first surviving note, the playhead on it, amber rings on the survivors for 4 s (DOM only, never in an export). `saveChoices` never throws now: `{ success, error }`, and a server without the route says "restart it".
+6. **The battery:** four checks on the real save — the pass clears a stale flag and sets a lost one, touches nothing else, drops nothing · idempotent · the count text, absent when all applied · presence for every kind, survivors listed. **79 of 79 GREEN**; `test_identity` ALL PASS.
+7. **2d.4.6, the proof, in the running app** (:5301, `zz-ai-orph` = piece-septet copied, its IR built by piece-septet's own recorded build with `--all`; c-1 = a beam over Vn1 wc-600 · 607 · 614 · 626):
+   - load: applied, drawn, no count.
+   - one note out → R → **898 events · "1 partial" · the beam on the three · flag false · VALID**.
+   - the other three out → R → **895 · "1 orphan" · the file's flag written TRUE by the page · VALID** · O → the line, *0 of 4 notes · — · —*, **discard only** (nowhere to go).
+   - **the mirror:** all four back → R → **899 · applied · the flag cleared by itself on disk · VALID** · the count gone, the list closed.
+   - one note out again, the page moved to page 4 → R → O → **go there → page 1, three rings at x 358 · 574 · 787 px** (= 1.86 · 3.26 · 4.64 s at this page's scale) → **discard → the count gone, the list hidden, the file `choices: []`, VALID**, the page kept.
+   - No JS exception in the console. The copy removed whole: its IR and picker entry by `--prune`, its score, its choices file; `index.json` restored from git (line endings only).
+   - **What the proof stood in for, said plainly:** "delete in the composer → Save" was done by taking the note objects out of the copy's file on disk (and out of any list naming them). That is what a Save leaves on disk, and R reads the disk; the composer's own delete is not 2d.4's code and was not exercised.
+
+**Decided, and why that rather than the alternative:**
+- **The flag is written only after R**, never at a plain load — a window IR would read every note outside its window as lost. The list says so in its header when a window IR is open.
+- **The count also names `refused` and `unknown kind`**, not only orphans and partials as the plan's example had it — a choice that draws nothing is exactly the quiet loss the rule forbids.
+- **Discard saves first, then drops** — never the other way, so a page and its file cannot disagree after a failure.
+- **An orphan gets no go there** — the file carries no time for it; the line shows "—".
+
+**Noted for later (NITS):** ids are *"never reused in this file"* (§6b), but after a discard of the HIGHEST id, "max + 1" would reuse it — 2d.6's G needs a counter (e.g. `nextId` in the file, by amendment). · His :5300 still needs its one restart before R, discard or the flag write-back work there.
+
+**Next:** 2d.5, "move to part" in the composer's note card — its first sub-step (2d.5.1) is one of the two sanctioned broad code reads. A good clear point before it.

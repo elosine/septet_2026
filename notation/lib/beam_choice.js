@@ -68,16 +68,18 @@
     for (const ch of (choicesDoc && choicesDoc.choices) || []) {
       const rec = { id: ch.id, kind: ch.kind, drawn: false };
       report.push(rec);
-      if (ch.kind !== 'beam') { rec.status = 'unknown-kind'; continue; }
+      // presence is counted for EVERY choice that names notes, whatever its kind — the validator checks the flag the same way
       const ids = (ch.target && ch.target.notes) || [];
       const present = ids.filter(id => evById.has('ev-' + id));
       rec.notes = ids.length; rec.present = present.length;
       rec.missing = ids.filter(id => !evById.has('ev-' + id));
-      rec.status = present.length === 0 ? 'orphaned' : present.length < ids.length ? 'partial' : 'applied';
       const members = present.map(id => evById.get('ev-' + id)).sort((a, b) => a.onset - b.onset || (a.id < b.id ? -1 : 1));
       rec.t = members.length ? members[0].onset : null;
+      rec.surviving = members.map(e => e.id);                           // the IR ids still there — 2d.4.5's "go there" lights them
       const parts = new Set(members.map(e => partOf.get(e.id)));
       rec.part = parts.size === 1 ? [...parts][0] : null;
+      if (ch.kind !== 'beam') { rec.status = 'unknown-kind'; continue; }
+      rec.status = present.length === 0 ? 'orphaned' : present.length < ids.length ? 'partial' : 'applied';
       if (members.length < 2) continue;                                  // one note is not a beam; the choice stays, listed
       if (parts.size > 1) { rec.status = 'refused'; rec.why = 'a beam joins notes of one part — these are in parts ' + [...parts].join(', '); continue; }
       // the beamGroup is the CHOICE's own name — never a chunk's, which renames when its earliest note moves (decision B)
@@ -89,5 +91,32 @@
     return { overlays, report };
   }
 
-  return { beamDevices, applyChoices, RINGS_DEFAULT };
+  // [PLAN 2d.4.1] THE MAINTENANCE PASS — the report of a load → the file's `orphaned` flags. A choice none of whose notes is left
+  // is flagged; a flagged choice whose notes are back has the flag cleared. Nothing is ever removed. Run only after R, whose IR is
+  // the whole score — on a window IR, notes outside the window would read as lost. Mutates choicesDoc; → the ids it changed.
+  function resolveFlags(choicesDoc, report) {
+    const byId = new Map((report || []).map(r => [r.id, r]));
+    const changed = [];
+    for (const ch of (choicesDoc && choicesDoc.choices) || []) {
+      const r = byId.get(ch.id);
+      if (!r || typeof r.present !== 'number' || !r.notes) continue;     // a span target has no notes to lose
+      const flag = r.present === 0;
+      if (ch.orphaned !== flag) { ch.orphaned = flag; changed.push(ch.id); }
+    }
+    return changed;
+  }
+
+  // [PLAN 2d.4.3] the bottom bar's count — "2 orphans · 1 partial"; '' when every choice applied (the count is then absent).
+  function reportCounts(report) {
+    const n = s => (report || []).filter(r => r.status === s).length;
+    const bits = [];
+    const o = n('orphaned'), p = n('partial'), f = n('refused'), u = n('unknown-kind');
+    if (o) bits.push(o + (o === 1 ? ' orphan' : ' orphans'));
+    if (p) bits.push(p + ' partial');
+    if (f) bits.push(f + ' refused');
+    if (u) bits.push(u + ' unknown kind');
+    return bits.join(' · ');
+  }
+
+  return { beamDevices, applyChoices, resolveFlags, reportCounts, RINGS_DEFAULT };
 }));
