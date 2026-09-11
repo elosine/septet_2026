@@ -1088,6 +1088,40 @@ const server = http.createServer((req, res) => {
         });
     }
 
+    // [PLAN 2d.3] REFRESH an IR from its composer score — the notation app's R key. Re-runs the IR's OWN recorded build
+    // (provenance.build, amendment 6: "the decisions ARE the argv") over the whole score: --w0/--w1 become --all, and --label is
+    // dropped so the whole-score label replaces one that named the old window. Reads the disk file = the last Save. No shell:
+    // the argv goes to node as a list. Returns done, or the tool's own error text; nothing else.
+    if (req.method === 'POST' && url.startsWith('/api/notation/refresh/')) {
+        const irId = safe(decodeURIComponent(url.slice('/api/notation/refresh/'.length)));
+        const irPath = path.join(__dirname, '..', 'notation', 'ir', irId + '.ir.json');
+        try {
+            if (!fs.existsSync(irPath)) return R.status(404).json({ success: false, error: 'no IR named ' + irId });
+            const ir = JSON.parse(fs.readFileSync(irPath, 'utf8'));
+            const build = ir.provenance && ir.provenance.build;
+            // notate_section writes an argument with a space or a quote as a JSON string — read it back the same way
+            const argv = build ? (build.match(/"(?:[^"\\]|\\.)*"|\S+/g) || []).map(a => a[0] === '"' ? JSON.parse(a) : a) : [];
+            if (argv[0] !== 'node' || !/(^|[\\/])tools[\\/]notate_section\.js$/.test(argv[1] || ''))
+                return R.status(400).json({ success: false, error: irId + ' has no recorded notate_section build to re-run (provenance.build: ' + (build || 'none') + ')' });
+            const out = [];
+            for (let i = 2; i < argv.length; i++) {
+                if (['--w0', '--w1', '--label', '--id'].includes(argv[i])) { i++; continue; }
+                if (argv[i] !== '--all') out.push(argv[i]);
+            }
+            const si = out.indexOf('--score');
+            if (si < 0 || out[si + 1] !== ir.source.score)
+                return R.status(400).json({ success: false, error: 'the recorded build of ' + irId + ' does not name its score (' + ir.source.score + ')' });
+            out.push('--id', irId, '--all');
+            const t0 = Date.now();
+            const r = spawnSync(process.execPath, [path.join(__dirname, '..', 'tools', 'notate_section.js'), ...out],
+                { cwd: path.join(__dirname, '..'), encoding: 'utf8', timeout: 120000 });
+            const text = String(r.stdout || '') + String(r.stderr || '');
+            if (r.status !== 0) return R.status(500).json({ success: false, error: text.trim().split('\n').slice(-12).join('\n') || ('exit ' + r.status) });
+            console.log(`Refreshed ${irId} from ${ir.source.score} in ${Date.now() - t0} ms`);
+            return R.json({ success: true, ms: Date.now() - t0, ready: (text.match(/READY:.*$/m) || [''])[0] });
+        } catch (e) { return R.status(500).json({ success: false, error: e.message }); }
+    }
+
     // notation workflow: list available audio renders (notation/audio/) so
     // the page can offer one-click attach without a HEAD-probe dance
     if (req.method === 'GET' && url === '/api/notation/renders') {

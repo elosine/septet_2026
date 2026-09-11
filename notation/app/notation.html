@@ -108,7 +108,7 @@
   <span id="tbar" title="playhead time — click the score to seek"></span>
   <span id="meta"></span>
 </div>
-<div id="hoverzone" title="controls — B pins the bar open / hides it · Z video ↔ zoom · T time pill · SPACE play · ←/→ pages · ESC frees the keys"></div>
+<div id="hoverzone" title="controls — B pins the bar open / hides it · Z video ↔ zoom · T time pill · SPACE play · ←/→ pages · R refresh from the score (last Save) · ESC frees the keys"></div>
 <div id="sheet"></div>
 <div id="err"></div>
 <div id="stale" title="the extracted snapshot no longer matches the composer score"></div>
@@ -273,6 +273,10 @@
     return r.json();
   }
   window.notationChoices = () => ({ file: state.choices, report: state.choiceReport });   // read-only, for the console
+  // read-only, for the console (2d.3): the IR the page holds, and where the page is — or one event by id
+  window.notationIr = id => !state.ir ? null : id ? (state.ir.events.find(e => e.id === id) || null)
+    : { id: state.ir.id, window: state.ir.source.window, events: state.ir.events.length, build: state.ir.provenance && state.ir.provenance.build,
+        view: $('view').value, pageIdx: state.pageIdx, zoomT0: state.zoomT0 };
   function mergeManifest(man) {
     const sel = $('ir');
     const have = new Set([...sel.querySelectorAll('option')].map(o => o.value));
@@ -755,6 +759,10 @@
       $('tshow').dispatchEvent(new Event('change'));
       ev.preventDefault();
     }
+    else if ((ev.key === 'r' || ev.key === 'R') && !ev.ctrlKey && !ev.altKey && !ev.metaKey) {   // [2d.3] refresh from the score
+      refreshFromScore();
+      ev.preventDefault();
+    }
   });
 
   // ---- V2: transport + the animation loop ----
@@ -998,7 +1006,12 @@
   // (No document.hidden gate: the pane/browser throttles hidden-tab timers
   // itself, and a gate makes the page stale the moment it is next seen.)
   const watch = { sig: {}, irName: null };
-  async function pollChanges() {
+  // one poll at a time: R (2d.3) calls this directly, and the 1 s timer must not run a second reload beside it
+  function pollChanges() {
+    if (!watch.busy) watch.busy = pollOnce().finally(() => { watch.busy = null; });
+    return watch.busy;
+  }
+  async function pollOnce() {
     const cur = $('ir').value;
     const urls = {
       container: '/notation/registry/container.json',
@@ -1061,6 +1074,10 @@
       const o = (score.objects || []).find(x => x.id === oid);
       if (!o) { stale.push((oid || e.id) + ' (removed)'); continue; }
       if (Math.abs(o.startSeconds - e.onset) > 1e-3) stale.push(oid + ' (moved)');
+      // [2d.3] a pitch or a voice changed in the composer is stale too — the notice is R's prompt, so it must see every edit
+      // that the page would draw differently
+      if (o.sonifyNote != null && o.sonifyNote !== e.pitch.midi) stale.push(oid + ' (pitch)');
+      if (o.technique && e.technique && o.technique !== e.technique) stale.push(oid + ' (voice)');
       if (e.level && e.level.samples && o.nodes && o.nodes.length >= 2 && Array.isArray(o.segments)) {
         const n = e.level.samples.length;
         let maxd = 0;
@@ -1071,12 +1088,45 @@
         if (maxd > 0.002) stale.push(oid + ' (curve)');
       }
     }
+    // [2d.3] NEW notes: a sounding note on this IR's parts that the IR does not hold — inside its window, or anywhere when the
+    // IR is the whole score (built with --all). Composing on is the case R exists for, so it must raise the notice.
+    {
+      const have = new Set((state.ir.events || []).map(e => e.id));
+      const [w0, w1] = state.ir.source.window, parts = state.ir.source.parts || [];
+      const whole = /(^|\s)--all(\s|$)/.test((state.ir.provenance && state.ir.provenance.build) || '');
+      for (const o of score.objects || []) {
+        if (o.type !== 'waveCurve' || o.sonifyNote == null || !parts.includes(o.layer) || have.has('ev-' + o.id)) continue;
+        if (whole ? o.startSeconds >= w0 : (o.startSeconds >= w0 && o.startSeconds < w1)) stale.push(o.id + ' (new)');
+      }
+    }
     state.src.stale = [...new Set(stale)];
+    const shown = state.src.stale.slice(0, 8).join(', ') + (state.src.stale.length > 8 ? ' … and ' + (state.src.stale.length - 8) + ' more' : '');
     $('stale').textContent = state.src.stale.length
-      ? '⚠ changed in composer score since extract: ' + state.src.stale.join(', ') +
-        ' — ask the AI to refresh ' + state.ir.id
+      ? '⚠ changed in composer score since extract: ' + shown + ' — press R to refresh from the last Save'
       : '';
     render();   // the META overlay + markers read the fresh score
+  }
+
+  // [PLAN 2d.3] R — REFRESH FROM THE COMPOSER SCORE. The server re-runs this IR's own recorded build over the WHOLE score, from
+  // the last Save (the disk file; unsaved composer edits do not show). The page then reloads through the same path as any IR
+  // change (pollChanges): the choices re-applied, the same page, the same zoom, the stale notice cleared. Only on the key, never
+  // automatically — the page never changes under him (2d.3, decision a). A failure leaves the old page and says why.
+  let refreshing = false;
+  async function refreshFromScore() {
+    if (refreshing || !state.ir) return;
+    refreshing = true;
+    const id = $('ir').value;
+    $('stale').textContent = 'refreshing ' + id + ' from ' + state.ir.source.score + ' (last Save)…';
+    try {
+      const r = await fetch('/api/notation/refresh/' + encodeURIComponent(id), { method: 'POST' });
+      let j;
+      try { j = await r.json(); }
+      catch (e) { j = { success: false, error: r.status === 404 ? 'this server does not know R yet — restart it (node score/server.js)' : 'HTTP ' + r.status }; }
+      if (!j.success) { $('stale').textContent = '⚠ refresh failed — the page is unchanged:\n' + (j.error || 'no reason given'); return; }
+      await pollChanges(); await pollChanges();   // the second is a fresh poll if the first was already in flight
+      state.src.stale = []; $('stale').textContent = '';
+    } catch (e) { $('stale').textContent = '⚠ refresh failed — the page is unchanged: ' + e.message; }
+    finally { refreshing = false; }
   }
 
   // ---- render auto-detect: notation/audio/<scoreName>.wav|.mp3 ----

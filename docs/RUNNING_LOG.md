@@ -10731,3 +10731,30 @@ vertically can you center them on the appropriate staff, so centered on the midd
 **Next:** 2d.3, refresh on R.
 
 **Added before the commit (same session):** a beam whose notes sit in two parts now reports `refused`, with the reason (it had said `applied` while drawing nothing — wrong for 2d.4's list). The checks that stay: `tools/test_septet_notation.js` gains five on the real save — every outcome reported (applied · partial · orphaned · unknown kind · refused) · 4 + 2 overlays and none for the three that do not draw · nothing dropped · **laid out, ONE beam over exactly the four chosen onsets, none without the choice** · one device per note, one GC. **75 of 75 GREEN**; `test_identity` ALL PASS.
+
+## §393. PLAN 2d.3 built — refresh on R (2026-09-11, Opus 5)
+
+**What prompted it:** the plan — 2d.3, straight after 2d.2. Decision (a) of §390: refresh only on the key, never automatically; the stale notice is the prompt.
+
+**What was done, in order:**
+1. **2d.3.1, measured:** `notate_section` over the whole piece-septet (0–580 s, bricks: extract + validate against source + write) — **222 ms**. No progress line beyond "refreshing…".
+2. **The shape of it, from the reading.** The page already reloads itself when its IR file changes — a 1 s poll that keeps page and zoom, clears the stale notice, and runs `loadIr`, which since 2d.2 re-applies the choices. And every IR records the command that made it (`provenance.build`, amendment 6). So **R = the server re-runs the IR's own build with `--all`, then the page runs that same poll at once** — one reload path, not a second.
+3. **2d.3.2** `notate_section --all`: w0 0, w1 = the end of the score's last sounding note (rounded up); the id defaults to the score's name, the label to "<score> · whole score (bricks)". The window form stays — the tests and every older build use it.
+4. **2d.3.3** `POST /api/notation/refresh/<ir id>` on `score/server.js`: reads the IR's `provenance.build`, drops `--w0 --w1 --label --id`, adds `--id <ir> --all`, runs node on it — no shell, the argv as a list, JSON-quoted arguments read back as JSON; refuses an IR with no notate_section build, or one whose build names another score; returns done (ms, the READY line) or the tool's own error text. **Keyed by IR id, not by score** (the plan wrote `/notation/refresh/<score>`): the page knows which IR is on screen, and a score may later have several; `/api/` because GET `/notation/` is the static route.
+5. **2d.3.4–5** the R key (not with CTRL/ALT/META — CTRL+R and CTRL+SHIFT+R stay the browser's) → "refreshing <ir> from <score> (last Save)…" → the endpoint → the poll, now one at a time (a busy guard, so R and the 1 s timer never reload twice) → the notice cleared. A failure leaves the old page and says why; a server that predates the route says "restart it". The tooltip lists R. The stale notice now ends "— press R to refresh from the last Save" (it said "ask the AI to refresh").
+6. **Found while proving it, and fixed — the notice missed most edits.** It flagged only a note *moved*, *removed*, or its *curve* changed. A **pitch** change, a **voice** change and — the case R exists for — a **new note** raised nothing, so after composing on and saving, the page never prompted R. All three are flagged now (a new note = a sounding note on the IR's parts that the IR does not hold: inside its window, or anywhere when the IR was built `--all`); the list shows eight names, then "… and N more".
+7. `window.notationIr(id)` — read-only, for the console: the IR the page holds (id · window · events · build · view · page · zoom), or one event.
+8. **2d.3.6, the proof, on a copy** (`zz-ai-refresh` = piece-septet, its IR built the OLD way, `--w0 0 --w1 580`, so R's rewrite was exercised; :5301; the composer tab's score checked first):
+   - **R before Save:** wc-1162 pitch 56 → 59 in the card, unsaved → R → the build became `--all`, the window 0–579 (the whole score; 580 had been a hand-chosen bound), **the event still 56** — R reads the last Save, as decided. Page 2 kept.
+   - **Round 1:** Save → R → **ev-wc-1162 = 59**, page 2 kept. (Here the notice did NOT appear after the Save — the gap in 6.)
+   - **Round 2, after the fix:** the card's duplicate → wc-2052 (bass clarinet, 143.569 s) → Save → **"⚠ changed in composer score since extract: wc-2052 (new) — press R to refresh from the last Save"** → R → **900 events, ev-wc-2052 present**, page 4 kept, the notice cleared.
+
+**Another reason for the walk rule (§391):** with no remembered session, the composer opens the NEWEST score on disk — which, while he composes, is his. The :5301 tab opened the zz copy only because the copy was the newest file. The rule stands: check the tab's score before touching anything.
+
+**Decided, and why that rather than the alternative:** R re-runs the IR's own recorded build rather than a fixed command — his flags (bricks, parts, profile) carry over and nothing is typed · R uses the same poll as any IR change — one reload path (the 2026-09-10 lesson) · the stale notice extended rather than a second detector built — it is R's prompt, so it must see what R would change.
+
+**For him:** his :5300 server needs ONE restart (`node score/server.js`) before R — and 2d.2's save route — work there; then CTRL+SHIFT+R on the notation page. After that, a notice on piece-septet's page is expected if he has composed since the 2a extraction: it is the prompt, and R answers it.
+
+**Next:** 2d.4, orphans (⚠) — a good clear point before it.
+
+**At the commit:** septet battery 75/75 · `test_identity` ALL PASS · the tuba battery once more after the `notate_section` edits — the same 9 GREEN / 6 RED, notate_block 62/3 · the copy removed whole (its IR and picker entry by `--prune`, its score, and the two Save snapshots it left in `scores/versions/`). Journal §2 carries a fresh checkpoint for the clear before 2d.4.

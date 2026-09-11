@@ -180,7 +180,7 @@ it was found missing from this repo's CLAUDE.md, which is why the advice had gon
 | 1 | ~~BUILD §377~~ — **done, walked, pushed (§378; STRIKES_TOOL §AG)** | — | — |
 | **N1** | ~~BUILD PLAN 2a.1–2a.6~~ — **built 2026-09-11 in the same context (RUNNING_LOG §384–386)**: 70-check battery GREEN, tuba suite unchanged, the page seen on :5301 | — | — |
 | **N2** | **His eye on the seven-lane page** — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → the picker "piece-septet · 2a proof" → video and zoom (Z). The provisional looks to judge are listed in NITS 2026-09-11 | **Fable** for the verdict | yes — wrap on Opus, clear, switch |
-| **N4** | **BUILD PLAN 2d.1 → 2d.6 in order** — **2d.1 + 2d.2 BUILT 2026-09-11 (RUNNING_LOG §391–392: the identity contract + test; the choices sidecar — schema §6b, validator, load/apply as in-memory overlays, POST save; his :5300 needs a restart before 2d.4's save callers); next 2d.3 refresh on R.** Notate while composing: the identity contract · the sidecar · R refresh · orphans · move-to-part · G beams. **Planned in full 2026-09-11 (RUNNING_LOG §389–390; PLAN 2d).** The ⚠ steps (1 · 2 · 4) are the ones he asked to watch. 2d.1.2 and 2d.5.1 are the two sanctioned broad code reads | **Opus** | **yes** — fresh context; `/postclear` then PLAN 2d |
+| **N4** | **BUILD PLAN 2d.1 → 2d.6 in order** — **2d.1 · 2d.2 · 2d.3 BUILT 2026-09-11 (RUNNING_LOG §391–393: the identity contract + test · the choices sidecar · R refresh, and the stale notice now sees pitch, voice and new notes). His :5300 needs ONE restart for R and the save route. Next 2d.4 orphans (⚠) — clear first; resume reads: PLAN 2d.4 + RUNNING_LOG §392–393.** Notate while composing: the identity contract · the sidecar · R refresh · orphans · move-to-part · G beams. **Planned in full 2026-09-11 (RUNNING_LOG §389–390; PLAN 2d).** The ⚠ steps (1 · 2 · 4) are the ones he asked to watch. 2d.1.2 and 2d.5.1 are the two sanctioned broad code reads | **Opus** | **yes** — fresh context; `/postclear` then PLAN 2d |
 | **N3** | **Before 2b's first render: the resvg panic** (NITS 2026-09-11) — then trills into the IR, and the exporters onto the app's lane code | **Opus** | yes, fresh context for a build |
 | 2 | **His verdicts on the drawer after a hard reload (CTRL+SHIFT+R)** — the route is STRIKES_TOOL §AG; fix what he marks (or log to SWEEP_LIST) — *waits beside N1, on his word* | **Opus** | no |
 | 3 | **The pinned player** that survives a shuffle (§AF2) · the hand override per chord (medium, §376) if he asks | **Opus** | no |
@@ -294,7 +294,7 @@ the plan is already on paper. Wrap on Opus, always.
   · `scores/SeptetSec03-Materials-B/-C/-D/-a.json`.
 - **Resume reads:** PLAN §2 (head + 2a) · NITS 2026-09-11 (the 2a entry) · RUNNING_LOG §386. Nothing else pre-emptively.
 
-**CHECKPOINT (mid-session checkpoint, 2026-09-11 evening — session 8 continued, Claude Code / Opus 5). RUNNING_LOG §384–388. THIS IS THE ONE TO RESUME FROM.**
+**CHECKPOINT (mid-session checkpoint, 2026-09-11 evening — session 8 continued, Claude Code / Opus 5). RUNNING_LOG §384–388.** *(Superseded by the 2d checkpoint below: 2d.1–2d.3 built. His verdict on the 2a page is still open.)*
 
 - **Task and state:** phase 2 (Notate) — **PLAN 2a is built, pushed, and in front of him.** Since the build, two small asks of his, both
   built, measured in the running app and pushed: **B pins/hides the presentation score's bottom bar** (Z was already video ↔ zoom;
@@ -320,6 +320,35 @@ the plan is already on paper. Wrap on Opus, always.
 - **Model:** resume on **Fable** for his verdicts (judgment); switch to Opus for any build that follows.
 - **Resume reads: nothing beyond §2.** (If he raises a look detail, `docs/NITS.md` 2026-09-11 lists every provisional choice with its
   number; for how a piece of 2a was built, RUNNING_LOG §384–388. Do not read them pre-emptively.)
+
+**CHECKPOINT — 2d (mid-session, 2026-09-11 midday — session 8 continued, Claude Code / Opus 5). RUNNING_LOG §391–393. THIS IS THE ONE TO RESUME FROM.**
+
+- **Task and state:** PLAN 2d (notate while composing), built in order. **2d.1 · 2d.2 · 2d.3 are built, proven, committed and
+  pushed; nothing in flight.** Next: **2d.4 — ⚠ orphans listed, never dropped.**
+- **What exists now:** `docs/NOTATION_IDENTITY.md` + `tools/test_identity.js` (ids never re-issued; undo and load fixed) ·
+  `notation/choices/<score>.choices.json` (IR_SCHEMA_v0 §6b) — validated by `ir_validate`, applied in memory by
+  `notation/lib/beam_choice.js` (the `--beam` rules, one code path), saved by `POST /api/notation/choices/<score>` · **R** in the
+  notation app → `POST /api/notation/refresh/<ir id>` re-runs the IR's recorded build with `--all`; the page reloads in place;
+  the stale notice now sees pitch · voice · new notes. Console: `notationChoices()` · `notationIr(id)`.
+- **What 2d.4 already has:** `applyChoices` reports every choice as applied / partial / orphaned / refused (`state.choiceReport`);
+  `ir_validate --against` checks the orphaned flag both ways (= 2d.4.2, done). **Left:** 2d.4.1's write-back of the flag after a
+  refresh (the report → the file through `saveChoices`) · 2d.4.3 the count in the bottom bar · 2d.4.4 the O panel · 2d.4.5
+  discard / go there · 2d.4.6 the proof.
+- **For him (said in chat):** his :5300 server needs ONE restart for R and the save route, then CTRL+SHIFT+R on the notation
+  page. A stale notice on piece-septet's page afterwards is the prompt; R answers it.
+- **The walk rule (§391, §393):** working copies are server-side files; a :5301 composer tab opens the remembered score or the
+  NEWEST on disk — read `Composer.sessionName` before touching anything, open the `zz-ai-` copy first, and afterwards delete the
+  copy, its `scores/versions/` snapshots, and its IR (`notate_section --prune`).
+- **Pending decisions from him:** none for 2d. Still open: his verdict on the 2a page · the drawer verdicts (STRIKES_TOOL §AG) ·
+  whether to commit his two passages · whether track 7's Kontakt still holds Plucked Piano.
+- **Deliberately uncommitted — all his:** `bank/panel_snapshots.json` · `reaper/septet_rack.rpp` · `bank/passages/accentedcres01*.json`
+  · `scores/SeptetSec03-Materials-B/-C/-D/-a.json`.
+- **Tests:** `node tools/test_septet_notation.js` (75) · `node tools/test_identity.js` (20) · the tuba battery per
+  `notation/ir/README.md` (the standard: 9 GREEN / 6 RED, notate_block 62/3).
+- **Model:** Opus — 2d.4 is written in the plan.
+- **Resume reads:** PLAN **2d.4** (~15 lines, under `## 2. Notate` → 2d) · RUNNING_LOG **§392** (the sidecar as built) ·
+  `notation/lib/beam_choice.js` `applyChoices` and `notation/app/notation.html` `loadChoices` / `saveChoices` (the code 2d.4
+  extends). Nothing else pre-emptively.
 
 **Open at session end** *(written cold, 2026-09-09)*:
 

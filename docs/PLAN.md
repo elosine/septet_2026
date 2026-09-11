@@ -1525,7 +1525,7 @@ player would touch parts, solo, crop and print.
   as #4's PHASE 5). **Deadline-bound: 2026-10-15.**
 - **2c — Parts** — only if selected; due ~2026-10-29.
 
-- **2d — Notate while composing** — `building — 2d.1 · 2d.2 built 2026-09-11 (RUNNING_LOG §391–392); next 2d.3` (planned RUNNING_LOG §389–390) — **Result when done:** he
+- **2d — Notate while composing** — `building — 2d.1 · 2d.2 · 2d.3 built 2026-09-11 (RUNNING_LOG §391–393); next 2d.4, after a clear` (planned RUNNING_LOG §389–390) — **Result when done:** he
   notates sections 1–2 while section 3 is still being written. `piece-septet.json` stays the only file anyone edits (D9); the IR is
   rebuilt from it at one keystroke; the notation layer's own choices (ink, not music — beams, forced clefs, breaks) live in a sidecar
   the notation app owns and **survive every rebuild**, keyed to the notes' ids. A choice whose notes vanished is listed, never dropped.
@@ -1577,7 +1577,10 @@ player would touch parts, solo, crop and print.
     - 2d.2.5 save: through the server, the score-save pattern, atomically (temp + rename).
     - 2d.2.6 prove on a copy: one hand-written beam choice on four `piece-septet` notes → the page follows it → delete the file → the
       engine's beam returns. Tuba battery once after.
-  - **2d.3 — Refresh from the app** — **Result when done:** one key (**R**) re-extracts the WHOLE score from the last Save, reloads
+  - **2d.3 — Refresh from the app** — `built 2026-09-11 (RUNNING_LOG §393): whole score 222 ms · notate_section --all · POST
+    /api/notation/refresh/<ir id> re-runs the IR's own recorded build · R = that + the page's existing reload poll · the stale
+    notice now also flags pitch, voice and NEW notes (it missed them) · proven twice on a copy, page kept · his :5300 needs one
+    restart` — **Result when done:** one key (**R**) re-extracts the WHOLE score from the last Save, reloads
     the page, re-applies the sidecar, clears the stale notice; same page, same zoom; nothing typed. **Decided (a):** refresh only on
     the key, never automatically — the page never changes under him; the stale notice is the prompt. Reads the disk file = the last
     Save; unsaved composer edits do not show. The extraction runs on `score/server.js` behind one endpoint.

@@ -171,14 +171,21 @@ if (fromId) {
 
 // ---- normal extract mode ----
 const scoreName = arg('score');
-const w0 = parseFloat(arg('w0')), w1 = parseFloat(arg('w1'));
-if (!scoreName || isNaN(w0) || isNaN(w1)) {
-  console.error('usage: notate_section.js --score <name> --w0 <s> --w1 <s> [--parts 0-9] [--profile trance|section1] [--id slug] [--label text] [--exp]\n' +
+// --all (PLAN 2d.3, 2026-09-11): the WHOLE score — w0 0, w1 the end of its last sounding note (set once the score is read).
+// The notation app's R key re-runs an IR's own recorded build with --all, so material past the old window comes in.
+const ALL = flag('all');
+let w0 = parseFloat(arg('w0')), w1 = parseFloat(arg('w1'));
+if (!scoreName || (!ALL && (isNaN(w0) || isNaN(w1)))) {
+  console.error('usage: notate_section.js --score <name> (--w0 <s> --w1 <s> | --all) [--parts 0-9] [--profile trance|section1] [--id slug] [--label text] [--exp]\n' +
     '       notate_section.js --from <id> --id <new> [--label text] [--exp]\n' +
     '       notate_section.js --prune <id>');
   process.exit(2);
 }
 const score = JSON.parse(fs.readFileSync(path.join(ROOT, 'scores', scoreName + '.json'), 'utf8'));
+if (ALL) {
+  const ends = (score.objects || []).filter(o => o.type === 'waveCurve' && o.sonifyNote != null && o.endSeconds != null).map(o => o.endSeconds);
+  w0 = 0; w1 = Math.ceil(ends.length ? Math.max(...ends) : 1);
+}
 // [2a, the septet — 2026-09-11] the score's own tracks decide the default
 // parts and the META layer: parts 0..tracks.length-1, META = tracks.length
 // (composer.html META_LAYER). A save without tracks (the tuba piece's) keeps
@@ -192,8 +199,8 @@ const parts = partsArg.includes('-') && !partsArg.includes(',')
   : partsArg.split(',').map(Number);
 const metaLayer = TRACKS ? TRACKS.length : 10;
 const profile = arg('profile', 'trance');
-const id = arg('id', (scoreName + '-' + w0 + '-' + w1).replace(/[^a-zA-Z0-9-]/g, '-'));
-const label = arg('label', id + ' (' + profile + ')');
+const id = arg('id', ALL ? scoreName : (scoreName + '-' + w0 + '-' + w1).replace(/[^a-zA-Z0-9-]/g, '-'));
+const label = arg('label', ALL ? scoreName + ' · whole score' + (flag('bricks') ? ' (bricks)' : '') : id + ' (' + profile + ')');
 const outRel = 'notation/ir/' + id + '.ir.json';
 
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'registry', 'classes.json'), 'utf8'));
