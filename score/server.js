@@ -1067,6 +1067,27 @@ const server = http.createServer((req, res) => {
         catch (e) { res.statusCode = 404; return res.end('{}'); }
     }
 
+    // [PLAN 2d.2] the notation app's choices sidecar — notation/choices/<score>.choices.json, one per score, owned by the
+    // notation app (IR_SCHEMA_v0 §6b). GET is the static /notation/ route below; a missing file is a plain 404, which the app
+    // reads as "no choices". POST writes it atomically — a temp file, then a rename — so a half-written file is never read.
+    if (req.method === 'POST' && url.startsWith('/api/notation/choices/')) {
+        return readBody(req, (err, body) => {
+            if (err) return R.status(400).json({ success: false, error: 'Bad JSON' });
+            const score = safe(decodeURIComponent(url.slice('/api/notation/choices/'.length)));
+            if (!score || !body || body.score !== score || !Array.isArray(body.choices))
+                return R.status(400).json({ success: false, error: 'a choices file needs { score: "' + score + '", choices: [] }' });
+            try {
+                const dir = path.join(__dirname, '..', 'notation', 'choices');
+                if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+                const file = path.join(dir, score + '.choices.json'), tmp = file + '.tmp';
+                fs.writeFileSync(tmp, JSON.stringify(body, null, 2) + '\n');
+                fs.renameSync(tmp, file);
+                console.log(`Choices saved: notation/choices/${score}.choices.json (${body.choices.length})`);
+                return R.json({ success: true, file: 'notation/choices/' + score + '.choices.json', choices: body.choices.length });
+            } catch (e) { return R.status(500).json({ success: false, error: e.message }); }
+        });
+    }
+
     // notation workflow: list available audio renders (notation/audio/) so
     // the page can offer one-click attach without a HEAD-probe dance
     if (req.method === 'GET' && url === '/api/notation/renders') {

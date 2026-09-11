@@ -956,7 +956,9 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
   }
   const partOfEvent = new Map();
   for (const c of doc.chunks) for (const evId of c.events) partOfEvent.set(evId, c.part);
-  const RINGS = new Set(FIG_BM.ringTechniques || ['fortepiano', 'cuivre', 'ord']);   // long notes: primary beam only
+  // [2d.2] the devices are built in notation/lib/beam_choice.js — one code path with the app's beam choices
+  const BeamChoice = require(path.join(ROOT, 'notation', 'lib', 'beam_choice.js'));
+  const RINGS = new Set(FIG_BM.ringTechniques || BeamChoice.RINGS_DEFAULT);   // long notes: primary beam only (for the log below)
   spans.forEach((sp, k) => {
     const key = 'bm-' + (k + 1);
     const label = sp[0] + '-' + sp[1] + (sp[2] === null ? '' : '@' + sp[2]);
@@ -970,38 +972,13 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
     console.log('  beam ' + key + ': ' + members.length + ' notes ' + label + ' s, part ' + partOfEvent.get(members[0].id) +
       ' (' + members.map(e => e.source.objectId + ':' + e.technique).join(' ') + ')');
     console.log('    beam levels: ' + members.map(e => e.source.objectId + '=' + (RINGS.has(e.technique) ? '1 (primary only, it rings)' : '2 (a 16th)')).join(' · '));
-    // WHO CARRIES THE GC (registry figures.beam.gc): 'ring' = the first
-    // member that rings (the long note — composer, day 24: "let's shift the
-    // GC to the half note"), 'first' = member 1, false = none. A group with
-    // no ringing member falls back to the first, so the cue never vanishes.
-    const ringIdx = members.findIndex(e => RINGS.has(e.technique));
-    const gcRule = FIG_BM.gc != null ? FIG_BM.gc : 'first';
-    const gcIdx = gcRule === 'ring' ? (ringIdx >= 0 ? ringIdx : 0) : gcRule === 'first' ? 0 : -1;
-    if (gcRule === 'ring' && ringIdx < 0) console.log('    note: no ringing member — GC falls back to the first note');
-    console.log('    GC on ' + (gcIdx >= 0 ? members[gcIdx].source.objectId + ' (' + gcRule + ')' : 'none'));
-    members.forEach((e, i) => {
-      const firstOnly = v => v === 'first' ? i === 0 : !!v;
-      const dev = {
-        nhStem: 'beam', beamGroup: key,
-        noteBeams: RINGS.has(e.technique) ? 1 : 2,
-        beamPos: i, noteUnits: 1,
-        // the standards (registry engraving.layout.figures.beam): no go
-        // lines, GC on the ringing note, every head centred on its go time,
-        // dynamics together above the beam
-        // THE GO LINE MARKS DISPLACEMENT (D58): in a beam only the GC-bearing
-        // member is displaced — pushed clear of the impact disc — so only it
-        // carries a go line. Every other head sits with its LEFT EDGE on its own
-        // go time (D59) and needs none.
-        goLine: FIG_BM.goLine === 'gc' ? (i === gcIdx) : firstOnly(FIG_BM.goLine != null ? FIG_BM.goLine : false),
-        gc: i === gcIdx,
-        dynAboveBeam: FIG_BM.dynAboveBeam != null ? !!FIG_BM.dynAboveBeam : true,
-      };
-      // 'before' is the layout default (the unit hangs ahead of the go time to
-      // clear the disc), so it is expressed by NOT setting an anchor.
-      const anch = i === gcIdx ? (FIG_BM.gcAnchor || 'before') : (FIG_BM.anchor || (i === 0 ? FIG_BM.firstAnchor : null));
-      if (anch && anch !== 'before') dev.nhAnchor = anch;
-      doc.overlays.push({ id: 'ov-' + key + '-' + e.id, kind: 'engraving', target: { event: e.id }, value: { device: dev }, provenance: 'authored' });
-    });
+    // who carries the GC, the beam levels, the go lines and the anchors: beam_choice.js beamDevices (the day-24 rules, moved
+    // there whole in 2d.2 so the app's beam choices draw by the same numbers)
+    const B = BeamChoice.beamDevices(members, FIG_BM, key);
+    if (B.gcRule === 'ring' && B.ringIdx < 0) console.log('    note: no ringing member — GC falls back to the first note');
+    console.log('    GC on ' + (B.gcIdx >= 0 ? members[B.gcIdx].source.objectId + ' (' + B.gcRule + ')' : 'none'));
+    for (const d of B.devices)
+      doc.overlays.push({ id: 'ov-' + key + '-' + d.event, kind: 'engraving', target: { event: d.event }, value: { device: d.device }, provenance: 'authored' });
   });
 }
 // --noGc wc-98 (day 24): a per-note device override that removes the GC —

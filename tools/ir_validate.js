@@ -274,10 +274,67 @@ function completeness(doc, errs) {
   }
 }
 
+// ---------- the choices sidecar (IR_SCHEMA_v0 §6b, amendment 7 — septet PLAN 2d.2) ----------
+// `node tools/ir_validate.js notation/choices/<score>.choices.json [--against <file.ir.json>]`. The file names the composer's
+// NOTE ids (wc-N), never IR ids (docs/NOTATION_IDENTITY.md). `orphaned` is set and cleared by the app's refresh (2d.4), never by
+// hand — so with --against, a flag that disagrees with the IR is an error either way (a stale flag, or a lost choice left
+// unflagged), exactly as §6 has it for overlays. An unknown kind is refused, never drawn differently.
+const CHOICE_KINDS = ['beam'];
+function validateChoices(doc, errs, irFile) {
+  if (!doc || typeof doc !== 'object' || Array.isArray(doc)) { errs.push('$: a choices file is an object'); return; }
+  if (typeof doc.score !== 'string' || !doc.score) errs.push('$.score: the score name is required');
+  if (doc.version !== 1) errs.push('$.version: expected 1');
+  if (!Array.isArray(doc.choices)) { errs.push('$.choices: expected an array'); return; }
+  const ir = irFile ? JSON.parse(fs.readFileSync(irFile, 'utf8')) : null;
+  if (ir && ir.source.score !== doc.score) errs.push(`--against: ${irFile} is derived from ${ir.source.score}, not ${doc.score}`);
+  const evIds = ir ? new Set(ir.events.map(e => e.id)) : null;
+  const seen = new Set();
+  doc.choices.forEach((c, i) => {
+    const p = `$.choices[${i}]` + (c && c.id ? ' (' + c.id + ')' : '');
+    if (!c || typeof c !== 'object') { errs.push(p + ': expected an object'); return; }
+    if (typeof c.id !== 'string' || !c.id) errs.push(p + ': id required');
+    else if (seen.has(c.id)) errs.push(p + ': id used twice'); else seen.add(c.id);
+    if (!CHOICE_KINDS.includes(c.kind)) errs.push(`${p}: unknown kind ${JSON.stringify(c.kind)} — known: ${CHOICE_KINDS.join(', ')} (a new kind comes by amendment)`);
+    if (typeof c.orphaned !== 'boolean') errs.push(p + ': orphaned must be true or false');
+    const t = c.target;
+    if (!t || typeof t !== 'object' || ['notes', 'span'].filter(k => k in t).length !== 1) {
+      errs.push(p + ': target is ONE of { notes: [...] } · { part, span } · { span }'); return;
+    }
+    if ('notes' in t) {
+      if (!Array.isArray(t.notes) || !t.notes.length) errs.push(p + ': target.notes must be a non-empty list');
+      else {
+        for (const id of t.notes) if (typeof id !== 'string' || !/^wc-[\w-]+$/.test(id)) errs.push(`${p}: target note ${JSON.stringify(id)} is not a note id (wc-N)`);
+        if (new Set(t.notes).size !== t.notes.length) errs.push(p + ': a note is named twice');
+      }
+    }
+    if ('span' in t && !(Array.isArray(t.span) && t.span.length === 2 && t.span[1] > t.span[0])) errs.push(p + ': target.span must be [t0, t1], increasing');
+    if (t.part !== undefined && !Number.isInteger(t.part)) errs.push(p + ': target.part must be an integer');
+    if (c.kind === 'beam' && !(Array.isArray(t.notes) && t.notes.length >= 2)) errs.push(p + ': a beam targets at least two notes');
+    if (ir && Array.isArray(t.notes)) {
+      const present = t.notes.filter(id => evIds.has('ev-' + id)).length;
+      if (present === 0 && !c.orphaned) errs.push(`${p}: none of its notes is in ${irFile} — the refresh sets "orphaned": true; never drop silently`);
+      if (present > 0 && c.orphaned) errs.push(`${p}: stale orphaned flag — ${present} of its notes are in ${irFile}; clear the flag`);
+    }
+  });
+}
+
 // ---------- main ----------
 const args = process.argv.slice(2);
 const file = args.find(a => !a.startsWith('--'));
-if (!file) { console.error('usage: node tools/ir_validate.js <file.ir.json> [--against-source] [--complete]'); process.exit(2); }
+if (!file) { console.error('usage: node tools/ir_validate.js <file.ir.json> [--against-source] [--complete]\n       node tools/ir_validate.js <score>.choices.json [--against <file.ir.json>]'); process.exit(2); }
+if (file.endsWith('.choices.json')) {
+  const ai = args.indexOf('--against'), against = ai >= 0 ? args[ai + 1] : null;
+  const chDoc = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const cErrs = [];
+  validateChoices(chDoc, cErrs, against);
+  if (cErrs.length) {
+    console.error(`INVALID — ${cErrs.length} finding(s) in ${file}:`);
+    for (const e of cErrs) console.error('  · ' + e);
+    process.exit(1);
+  }
+  console.log(`VALID: ${file} (${chDoc.choices.length} choice(s)${against ? '; against ' + against : ''})`);
+  process.exit(0);
+}
 const doc = JSON.parse(fs.readFileSync(file, 'utf8'));
 const errs = [];
 validate(SCHEMA, doc, '$', errs);

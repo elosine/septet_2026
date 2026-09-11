@@ -10710,3 +10710,24 @@ vertically can you center them on the appropriate staff, so centered on the midd
 **Rejected:** jsdom for the card test (a new dependency for one check) · renumbering ids on load (it would break every choice — the opposite of the contract).
 
 **Next:** 2d.2, the sidecar (⚠).
+
+## §392. PLAN 2d.2 built — the sidecar (2026-09-11, Opus 5)
+
+**What prompted it:** the plan — 2d.2, flagged ⚠ because it is *hard to change once choices exist* (§390) — straight after 2d.1.
+
+**What was done, in order:**
+1. **The reading that shaped it.** The engine already beams from data: `notate_section --beam` writes one `engraving` overlay per note (`device: { nhStem: 'beam', beamGroup, noteBeams, … }`), and `layout.js` draws whatever those say, one value per note, last one wins. So a beam choice needs no drawing code at all: at load it becomes those same overlays, appended IN MEMORY to the IR the app fetched — never written into the IR file. **This departs from the plan's wording** (2d.2.4: *"the choices reach the beam-grouping function as overrides … the one place the data layer touches drawing code"*) **in the safe direction: the drawing code is not touched at all.**
+2. **One code path for a beam.** The device rules moved whole from `notate_section.js` into `notation/lib/beam_choice.js` (`beamDevices`), and the tool now calls it. **Guard: the `--beam` IR before and after the move is byte-identical** (piece-septet 118–126 s, `--beam 120.9-123.0@3`; the log lines word for word too). The `zz-ai-beam` IR and its picker entry were removed after (`index.json` restored from git; it was clean).
+3. **2d.2.1** IR_SCHEMA_v0 **§6b, amendment 7** — the file: `{ score, version: 1, choices: [ { id, kind, target, value, orphaned, note } ] }`. The target stays an OBJECT, so #4's forms carry over with one widening: `{ notes: [wc-N…] }` · `{ part, span }` · `{ span }`. Kinds: `beam` only.
+4. **2d.2.2** `tools/ir_validate.js <score>.choices.json [--against <ir>]`: shape · unique ids · unknown kind refused · a target note must be a `wc-` id (an IR id is refused) · a beam needs two notes · with `--against`, the orphaned flag must agree with the IR both ways — this is 2d.4.2, done now because it cost a few lines. Refusals proven on two bad files: an unknown kind + an `ev-` id (2 findings) · a stale flag + an unflagged loss (2 findings).
+5. **2d.2.3–4** `notation/app/notation.html`: `loadChoices()` inside `loadIr` — fetch `/notation/choices/<score>.choices.json`; a 404 is silent; `BeamChoice.applyChoices` → overlays appended + a report per choice (applied · partial · orphaned · unknown-kind, and whether it was `drawn`). `window.notationChoices()` reads it from the console.
+6. **2d.2.5** `POST /api/notation/choices/<score>` on `score/server.js` — the body's `score` must match the URL; written to a temp file, then renamed. `saveChoices()` in the page; its callers come with 2d.4 (discard) and 2d.6 (G).
+7. **2d.2.6, the proof** (:5301, the throwaway server; its tab checked first — `untitled`, bound to nothing): the choice POSTed — c-1 on wc-1066 · 1070 · 1074 · 1080, Vn1 bartók pizz, 120.98–122.96 s → VALID against piece-septet's IR → the page reports it applied, 4 of 4, part 3 → **and draws it: one double beam over the four, the GC on the first** (one screenshot) → the file deleted → reload → no choices, the engine's own unbeamed bricks. **The tuba battery once:** 26 goldens staged where absent, removed after; **the same 9 GREEN, the same 6 RED, notate_block 62/3.**
+
+**Decided, and why that rather than the alternative:** choices as in-memory overlays rather than an edit to layout's grouping — the drawing code stays the tuba piece's, and 2b's exporters, which already read IR overlays, will draw choices the same way once they load the file · the lib rather than a copy of the rules — one rule, one path · `partial` and `orphaned` computed at every load; the file's `orphaned` flag is written only by 2d.4's refresh · the beam group named after the CHOICE (`bmc-c-1`), never after a chunk (decision B).
+
+**Noted for later, nothing to fix now:** his :5300 server gets the save route only when it is next restarted. No caller needs it before 2d.4 — say so when 2d.4 lands.
+
+**Next:** 2d.3, refresh on R.
+
+**Added before the commit (same session):** a beam whose notes sit in two parts now reports `refused`, with the reason (it had said `applied` while drawing nothing — wrong for 2d.4's list). The checks that stay: `tools/test_septet_notation.js` gains five on the real save — every outcome reported (applied · partial · orphaned · unknown kind · refused) · 4 + 2 overlays and none for the three that do not draw · nothing dropped · **laid out, ONE beam over exactly the four chosen onsets, none without the choice** · one device per note, one GC. **75 of 75 GREEN**; `test_identity` ALL PASS.

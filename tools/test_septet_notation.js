@@ -207,6 +207,44 @@ ok(JSON.stringify(ens.groups.map(g => g.kind + ':' + g.parts.join(','))) === JSO
   ok(ens.parts.every(p => svg.includes('>' + p.short + '<')), 'render: every part labelled by its short name');
   ok((svg.match(/sysgrp-bracket/g) || []).length === 2 && (svg.match(/sysgrp-brace/g) || []).length === 1, 'render: two brackets and one brace');
   ok(!/NaN|Infinity/.test(svg), 'render: no NaN or Infinity in the page');
+
+  // [PLAN 2d.2] THE CHOICES SIDECAR on the real save: a beam chosen over four notes of one part is drawn as ONE beam over exactly
+  // those four; a partial choice still draws on what remains; an orphan, an unknown kind and a two-part beam draw nothing and are
+  // all still reported — never dropped. The notes are taken from the save itself, never hard-coded (his next edit changes them).
+  {
+    const BC = require('../notation/lib/beam_choice.js');
+    const partOf = new Map(); for (const c of doc.chunks) for (const id of c.events) partOf.set(id, c.part);
+    const lanes = [3, 0, 1, 4, 5, 6].map(p => { const seen = new Set();
+      return doc.events.filter(e => partOf.get(e.id) === p).sort((a, b) => a.onset - b.onset).filter(e => !seen.has(e.onset) && seen.add(e.onset)); });
+    const lane = lanes.find(l => l.length >= 6), four = lane.slice(1, 5), wc = e => e.source.objectId;
+    const other = doc.events.find(e => partOf.get(e.id) !== partOf.get(four[0].id));
+    const FIG = C.engraving.layout.figures && C.engraving.layout.figures.beam;
+    const choices = { score: 'piece-septet', version: 1, choices: [
+      { id: 'c-1', kind: 'beam', target: { notes: four.map(wc) }, value: {}, orphaned: false },
+      { id: 'c-2', kind: 'beam', target: { notes: [wc(lane[0]), wc(lane[5]), 'wc-999999'] }, value: {}, orphaned: false },
+      { id: 'c-3', kind: 'beam', target: { notes: ['wc-999998', 'wc-999997'] }, value: {}, orphaned: true },
+      { id: 'c-4', kind: 'slur', target: { notes: four.map(wc) }, value: {}, orphaned: false },
+      { id: 'c-5', kind: 'beam', target: { notes: [wc(four[0]), wc(other)] }, value: {}, orphaned: false },
+    ] };
+    const { overlays, report } = BC.applyChoices(choices, doc, FIG);
+    const st = Object.fromEntries(report.map(r => [r.id, r.status + (r.drawn ? '+drawn' : '')]));
+    ok(JSON.stringify(st) === JSON.stringify({ 'c-1': 'applied+drawn', 'c-2': 'partial+drawn', 'c-3': 'orphaned', 'c-4': 'unknown-kind', 'c-5': 'refused' }),
+      'choices: every choice reported — applied · partial · orphaned · unknown kind · a two-part beam refused (' + JSON.stringify(st) + ')');
+    ok(overlays.length === 6 && overlays.every(o => o.kind === 'engraving' && o.value.device.nhStem === 'beam'),
+      'choices: 4 + 2 engraving overlays, none for the three that do not draw (' + overlays.length + ')');
+    ok(report.length === 5 && !!report.find(r => r.id === 'c-5').why, 'choices: nothing dropped — the refused beam says why');
+    const withC = JSON.parse(JSON.stringify(doc));
+    withC.overlays = withC.overlays.concat(overlays.filter(o => o.id.startsWith('ov-choice-c-1-')));
+    const m2 = Layout.layoutSection(withC, glyphs, Object.assign({ frameParts: parts, ensemble: ens, techniques: tech }, C.engraving.layout));
+    const beamsOf = mdl => mdl.systems.flatMap(s => s.items.filter(i => i.k === 'beam' && /^bmc-c-1(-|$)/.test(i.group || '')));
+    const prim = beamsOf(m2).filter(b => b.group === 'bmc-c-1');
+    ok(beamsOf(model).length === 0 && prim.length === 1 && (prim[0].tips || []).length === 4 &&
+      prim[0].tips.map(t => t.t).join() === four.map(e => e.onset).join(),
+      'choices: laid out, ONE beam over exactly those four onsets (' + prim.length + ' beam, ' + (prim[0] && prim[0].tips ? prim[0].tips.length : 0) + ' tips); without the choice, none');
+    const d = BC.beamDevices(four, FIG, 'k').devices;
+    ok(d.map(x => x.device.beamPos).join() === '0,1,2,3' && d.filter(x => x.device.gc).length === (FIG && FIG.gc === false ? 0 : 1),
+      'choices: one device per note, in order, one GC');
+  }
 }
 
 console.log(pass + ' passed, ' + fail + ' failed');

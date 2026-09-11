@@ -118,6 +118,7 @@
 <script src="/notation/lib/stamps.js"></script>
 <script src="/notation/lib/chord_column.js"></script>
 <script src="/notation/lib/layout.js"></script>
+<script src="/notation/lib/beam_choice.js"></script>
 <script src="/notation/lib/gc.js"></script>
 <script src="/notation/lib/render.js"></script>
 <script src="/notation/lib/splice.js"></script>
@@ -228,6 +229,7 @@
     const r = await fetch('/notation/ir/' + name + '.ir.json');
     if (!r.ok) throw new Error('IR fetch ' + name + ' ' + r.status);
     state.ir = await r.json();
+    await loadChoices();
     state.pages = null; state.pageIdx = 0; state.vPages = null; state.zoomT0 = undefined;
     try {
       const s = await loadScore(state.ir.source.score);
@@ -240,6 +242,37 @@
     for (const p of [...state.solo]) if (!(state.ir.source.parts || []).includes(p)) state.solo.delete(p);
     buildSoloButtons();
   }
+  // [PLAN 2d.2] THE CHOICES SIDECAR — notation/choices/<score>.choices.json (IR_SCHEMA_v0 §6b): the page's own ink choices,
+  // keyed to the composer's note ids, applied on top of the fresh IR IN MEMORY — never written into it. A missing file is
+  // normal and silent; where no choice exists the engine's own result stands. The report keeps every choice, whatever became
+  // of it (applied · partial · orphaned) — 2d.4 shows it.
+  async function loadChoices() {
+    state.choices = null; state.choiceReport = [];
+    const score = state.ir && state.ir.source && state.ir.source.score;
+    if (!score || typeof BeamChoice === 'undefined') return;
+    let doc = null;
+    try {
+      const r = await fetch('/notation/choices/' + encodeURIComponent(score) + '.choices.json');
+      if (r.ok) doc = await r.json();
+    } catch (e) { doc = null; }
+    if (!doc) return;
+    state.choices = doc;
+    const figs = (((state.container || {}).engraving || {}).layout || {}).figures || {};
+    const { overlays, report } = BeamChoice.applyChoices(doc, state.ir, figs.beam);
+    state.ir.overlays = (state.ir.overlays || []).concat(overlays);
+    state.choiceReport = report;
+    const off = report.filter(x => x.status !== 'applied');
+    if (off.length) console.warn('[choices] ' + score + ': ' + off.map(x => x.id + ' ' + x.status).join(' · '));
+  }
+  // saved through the server, atomically (POST /api/notation/choices/<score>); the callers come with 2d.4 (discard) and 2d.6 (G)
+  async function saveChoices() {
+    const score = state.ir && state.ir.source && state.ir.source.score;
+    if (!score || !state.choices) return null;
+    const r = await fetch('/api/notation/choices/' + encodeURIComponent(score), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(state.choices) });
+    return r.json();
+  }
+  window.notationChoices = () => ({ file: state.choices, report: state.choiceReport });   // read-only, for the console
   function mergeManifest(man) {
     const sel = $('ir');
     const have = new Set([...sel.querySelectorAll('option')].map(o => o.value));

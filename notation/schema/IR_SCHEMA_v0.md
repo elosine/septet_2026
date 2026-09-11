@@ -242,6 +242,43 @@ are not foldable.
   (validator-enforced; "vocabulary is per-material" covers marks, not
   strategies).
 
+## 6b. Choices — the notation app's sidecar (amendment 7; septet PLAN 2d.2, 2026-09-11)
+
+The IR is derived and rebuilt at will (D9). A choice made ON THE PAGE — ink, not music: a beam, a forced clef, a break — must
+survive every rebuild, so it lives beside the IR, not in it: `notation/choices/<score>.choices.json`, one file per score,
+owned by the notation app. The extractor never reads or writes it; the composer score never holds it.
+
+```jsonc
+{
+  "score": "piece-septet",                      // scores/<score>.json — the save the IR is derived from
+  "version": 1,
+  "choices": [
+    {
+      "id": "c-1",                              // assigned by the app; never reused in this file
+      "kind": "beam",                           // beam — the only kind so far; others by amendment
+      "target": { "notes": ["wc-1066", "wc-1070", "wc-1074", "wc-1080"] },
+                                                // or { "part": 3, "span": [t0, t1] }
+                                                // or { "span": [t0, t1] }
+      "value": {},                              // per kind; beam: {} — the figure is the registry's
+      "orphaned": false,                        // set/cleared by the refresh (2d.4), never by hand
+      "note": ""                                // free text
+    }
+  ]
+}
+```
+
+- **The target names the composer's NOTE ids (`wc-N`), not IR ids** — the one identity that survives a rebuild
+  (`docs/NOTATION_IDENTITY.md`). A list of notes, never a chunk: a chunk is named after its earliest note and renames when it moves.
+- **Three target forms, fixed now so the file never changes shape:** a list of notes — a set (beam · slur · tuplet bracket ·
+  cluster grouping) or one note (spelling · stem direction · symbol variant · ottava) · `{part, span}` — a span in a part (clef
+  change · ottava line · text) · `{span}` — a page place (system break · spacing).
+- **Applied in memory, never merged into the IR file:** each choice becomes ordinary §6 `engraving` overlays on the IR the app
+  loaded (`notation/lib/beam_choice.js`). Where no choice exists the engine's own result stands; an unknown kind is refused by the
+  validator and drawn as nothing, never differently.
+- **Resolution** (each time the IR is loaded): all notes present → applied · some → applied to those that remain (partial) ·
+  none → orphaned: kept, listed, never dropped (#4's rule, §6) · a beam whose notes sit in two parts → refused, with the reason.
+- **Validated by** `node tools/ir_validate.js notation/choices/<score>.choices.json [--against <file.ir.json>]`.
+
 ## 7. What v0 deliberately leaves out (A3–A5 decide if they force entry)
 
 Ties/slurs across events · rests as first-class nodes (v0: rests are gaps —

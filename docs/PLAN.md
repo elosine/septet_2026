@@ -1525,7 +1525,7 @@ player would touch parts, solo, crop and print.
   as #4's PHASE 5). **Deadline-bound: 2026-10-15.**
 - **2c — Parts** — only if selected; due ~2026-10-29.
 
-- **2d — Notate while composing** — `building — 2d.1 built 2026-09-11 (RUNNING_LOG §391); next 2d.2` (planned RUNNING_LOG §389–390) — **Result when done:** he
+- **2d — Notate while composing** — `building — 2d.1 · 2d.2 built 2026-09-11 (RUNNING_LOG §391–392); next 2d.3` (planned RUNNING_LOG §389–390) — **Result when done:** he
   notates sections 1–2 while section 3 is still being written. `piece-septet.json` stays the only file anyone edits (D9); the IR is
   rebuilt from it at one keystroke; the notation layer's own choices (ink, not music — beams, forced clefs, breaks) live in a sidecar
   the notation app owns and **survive every rebuild**, keyed to the notes' ids. A choice whose notes vanished is listed, never dropped.
@@ -1555,7 +1555,10 @@ player would touch parts, solo, crop and print.
       every `ev-wc-N` still present and on the same note; then one *creates* edit → exactly one new id.
     - 2d.1.4 run it once on the tuba goldens (shared engine code).
     - 2d.1.5 journal; fix anything 2d.1.2 found that should keep an id and doesn't.
-  - **2d.2 — ⚠ The sidecar** — **Result when done:** `notation/choices/<score>.choices.json`, one per score, owned by the notation app;
+  - **2d.2 — ⚠ The sidecar** — `built 2026-09-11 (RUNNING_LOG §392): IR_SCHEMA_v0 §6b · ir_validate learns the file ·
+    choices applied as in-memory engraving overlays by notation/lib/beam_choice.js, so the drawing code is untouched (safer than
+    2d.2.4's wording) · --beam byte-identical after the move · POST save, temp + rename · proven on :5301 · tuba 9 GREEN / 6 RED
+    unchanged` — **Result when done:** `notation/choices/<score>.choices.json`, one per score, owned by the notation app;
     the extractor never reads or writes it. Every choice = kind · the note ids it applies to · value. The app loads it, applies it on top
     of any fresh IR, saves it back. **Decided:** one file per score (sections are pages of one piece) · #4's overlay shape reused
     (`kind · target · value · orphaned`, IR_SCHEMA_v0 §6) with the target widened to a LIST of note ids, so its validator and the
