@@ -108,7 +108,7 @@
   <span id="tbar" title="playhead time — click the score to seek"></span>
   <span id="meta"></span>
 </div>
-<div id="hoverzone" title="controls"></div>
+<div id="hoverzone" title="controls — B pins the bar open / hides it · Z video ↔ zoom · T time pill · SPACE play · ←/→ pages · ESC frees the keys"></div>
 <div id="sheet"></div>
 <div id="err"></div>
 <div id="stale" title="the extracted snapshot no longer matches the composer score"></div>
@@ -655,7 +655,16 @@
     } else if (!on) $('bar').classList.remove('shown');
   }
   $('hoverzone').addEventListener('mouseenter', () => $('bar').classList.add('shown'));
-  $('bar').addEventListener('mouseleave', () => { if (document.body.classList.contains('cmode')) $('bar').classList.remove('shown'); });
+  // B PINS THE BAR (2026-09-11, composer: the 14 px hover strip competes with
+  // the Windows taskbar's own show/hide and is "sometimes hard to show when
+  // hidden"). B = pinned open; B again = hidden. A pinned bar ignores
+  // mouseleave. Plain B: no Chrome or Windows shortcut uses an unmodified letter.
+  const setBarPinned = on => {
+    $('bar').classList.toggle('pinned', on);
+    $('bar').classList.toggle('shown', on);
+    clearTimeout(barTimer);
+  };
+  $('bar').addEventListener('mouseleave', () => { if (document.body.classList.contains('cmode') && !$('bar').classList.contains('pinned')) $('bar').classList.remove('shown'); });
   // ARROWS BELONG TO THE PAGE (day 29, composer: "my arrow keys are getting
   // trapped"). After a dropdown or checkbox choice is COMMITTED, focus stayed
   // on the control, so arrow keys cycled the dropdown instead of paging — the
@@ -704,6 +713,10 @@
     if (ev.key === 'ArrowRight') { $('next').click(); ev.preventDefault(); }
     else if (ev.key === 'ArrowLeft') { $('prev').click(); ev.preventDefault(); }
     else if (ev.key === 'z' || ev.key === 'Z') { $('zx').click(); ev.preventDefault(); }
+    else if ((ev.key === 'b' || ev.key === 'B') && !ev.ctrlKey && !ev.altKey && !ev.metaKey) {   // the bar: pin / hide
+      setBarPinned(!$('bar').classList.contains('pinned'));
+      ev.preventDefault();
+    }
     else if (ev.key === 't' || ev.key === 'T') {   // playhead pill on/off
       $('tshow').checked = !$('tshow').checked;
       $('tshow').dispatchEvent(new Event('change'));

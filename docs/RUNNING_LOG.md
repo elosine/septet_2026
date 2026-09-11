@@ -10629,3 +10629,17 @@ F/Gb/G lands the same way) · a wider grouping for the tuba (not asked, and its 
   the video view and 63.2 px in zoom ×2, no console errors.
 - **Left, in NITS (2026-09-11):** trills (zones) are not extracted · the exporters are still ten-lane · **resvg panics on the septet page
   on this machine** — before 2b · ottava per chord member · no clef changes (cello high, bass clarinet low 8vb) · the plain piano split.
+
+## §387. "a keyboard cmd to show/hide the bottom panel ... also can zoom be on a key toggle" — B pins the bar; Z was already zoom (2026-09-11, Opus 5)
+
+**His words:** *"for the presentation score, can I get a keyboard cmd to show/hide the bottom panel? it is competing with the windows
+toolbar show hide and sometimes hard to show when hidden, make sure it is a key that isn't already used by the score/chrome/windows
+also can zoom be on a key toggle also, same stipulation"*
+
+- **Keys the app already used** (notation.html keydown): SPACE play · ESC free the keys · ←/→ pages · SHIFT+←/→ zoom pan · HOME zoom
+  to page start · **Z video ↔ zoom (already there — told him)** · T the time pill.
+- **Built: B** — pins the bottom bar open; B again hides it. A pinned bar ignores mouseleave (the 14 px hover strip at the screen's
+  bottom edge is where the Windows taskbar's own auto-hide lives — the conflict he meant). Unmodified only: CTRL/ALT/⊞+B pass through.
+- **Why B is safe:** Chrome's and Windows' shortcuts all carry CTRL, ALT, the Windows key or an F-key; an unmodified letter reaches
+  the page. The hover strip's tooltip now lists every key.
+- Like every page key, it needs the page to hold focus: after using a menu, ESC first (the day-29 rule).
