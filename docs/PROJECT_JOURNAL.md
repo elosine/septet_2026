@@ -274,7 +274,7 @@ the plan is already on paper. Wrap on Opus, always.
 - **Resume reads:** `docs/PLAN.md` §2 (the head + 2a, ~40 lines from `## 2. Notate`) · PLAN **0g** (its adaptation list and "Found by
   RUNNING the copy", ~30 lines) · journal §4 **D9** and **D10** · at 2a.4 only: #2's `docs/CHORD_SPACING_RULES.md`. Nothing else pre-emptively.
 
-**STATE — 2026-09-11, after the 2a build (session 8 continued, Opus 5; he said "I won't clear, you can build"). RUNNING_LOG §384–386. THIS SUPERSEDES THE CHECKPOINT ABOVE.**
+**STATE — 2026-09-11, after the 2a build (session 8 continued, Opus 5; he said "I won't clear, you can build"). RUNNING_LOG §384–386.** *(Superseded by the checkpoint below, which adds §387–388.)*
 
 - **Task and state:** PLAN 2a (engine → seven parts) is **built, committed and pushed; nothing in flight.** His eye on the page is next (N2).
 - **What exists now:** `notation/registry/ensemble.json` (parts, clefs, B♭ transposition, the piano's two staves, D10 groups) ·
@@ -292,6 +292,33 @@ the plan is already on paper. Wrap on Opus, always.
 - **Deliberately uncommitted — all his:** `bank/panel_snapshots.json` · `reaper/septet_rack.rpp` · `bank/passages/accentedcres01*.json`
   · `scores/SeptetSec03-Materials-B/-C/-D/-a.json`.
 - **Resume reads:** PLAN §2 (head + 2a) · NITS 2026-09-11 (the 2a entry) · RUNNING_LOG §386. Nothing else pre-emptively.
+
+**CHECKPOINT (mid-session checkpoint, 2026-09-11 evening — session 8 continued, Claude Code / Opus 5). RUNNING_LOG §384–388. THIS IS THE ONE TO RESUME FROM.**
+
+- **Task and state:** phase 2 (Notate) — **PLAN 2a is built, pushed, and in front of him.** Since the build, two small asks of his, both
+  built, measured in the running app and pushed: **B pins/hides the presentation score's bottom bar** (Z was already video ↔ zoom;
+  §387) and **the part labels are centred on their staff's middle line**, the piano's between its two staves (§388). Nothing in flight.
+- **Latest deliverables:** `notation/app/notation.html` (the B key; the hover strip's tooltip lists every key) · `notation/lib/render.js`
+  + `container.json partLabel.baselineBelowEm` (the labels). Commits `d46d662` (2a) · `853d4d7` (B) · `d7b8a93` (labels).
+- **He views it on his own server:** `http://localhost:5300/notation/app/notation.html` → CTRL+SHIFT+R (page reload only) → picker
+  "piece-septet · 2a proof" → Z zoom · B bar · T time pill · ESC frees the keys. The notation app is served by `score/server.js`, the
+  same server as the composer score.
+- **NEXT CONCRETE STEP:** take his verdicts on the seven-lane page and fix what he marks "fix now" (small look fixes are data in
+  `notation/registry/container.json` / `ensemble.json`); log the rest to `docs/NITS.md`. The provisional choices he may raise: gutter 72 px ·
+  the piano lane weight 2 (air between its staves) · the technique look (head + brick only, `techniques.json familyDevice`) · bass
+  clarinet low notes 8vb, cello high notes 8va (no clef changes yet) · chords by LilyPond's rules (an altered unison puts two notes a
+  step apart in one column — LP's own result). **Then, on his word, 2b:** first the resvg panic, then trills into the IR, then the
+  exporters onto the app's lane code (NITS 2026-09-11, in that order).
+- **Pending decisions from him:** his verdict on the page · still open from before: the drawer verdicts (STRIKES_TOOL §AG) · whether to
+  commit his two passages · whether track 7's Kontakt still holds Plucked Piano.
+- **Deliberately uncommitted — all his, none the AI's:** `bank/panel_snapshots.json` (his drawer takes) · `reaper/septet_rack.rpp` (his
+  piano split) · `bank/passages/accentedcres01.json` + `-2.json` (his captures; commit on his word) · `scores/SeptetSec03-Materials-B/-C/-D/-a.json`
+  (his working scores).
+- **Tests:** `node tools/test_septet_notation.js` (70 checks, no staging needed). The tuba batteries need the goldens staged per
+  `notation/ir/README.md` — copy only files that are absent, log them, delete exactly those after (done that way on 09-11).
+- **Model:** resume on **Fable** for his verdicts (judgment); switch to Opus for any build that follows.
+- **Resume reads: nothing beyond §2.** (If he raises a look detail, `docs/NITS.md` 2026-09-11 lists every provisional choice with its
+  number; for how a piece of 2a was built, RUNNING_LOG §384–388. Do not read them pre-emptively.)
 
 **Open at session end** *(written cold, 2026-09-09)*:
 
