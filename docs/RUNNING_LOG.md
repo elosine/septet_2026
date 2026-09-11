@@ -10473,3 +10473,70 @@ So **muted is nearly right on its own** once the unearned +7 goes — a 2.7 dB e
 **Rejected:** fixing chords mode's `automatic` (his A — the wrong path); the hand override per chord (medium; offered, not asked for); a pattern-wide `deal` (per onset is what he asked about). **No console errors** after a reload with every change in.
 
 **Unheard by him — all of it.**
+
+## §379. "I'd like to start building the notation layer for the septet" — a mode change: the drawer's verdicts are parked, phase 2 opens early (2026-09-11, Fable 5.1)
+
+**Prompted by** (composer, 2026-09-11, first words after `/postclear`): *"like to start building the notation layer for the septet. And you can port over
+the presentation score from the tuba piece. So pretty much just use the same thing. This would also include the video production facility and
+the PDF making facility. So if you could have a look at the tuba piece presentation score, then can you give me just a top line rundown of its
+features and what the port slash implementation will look like for the septet?"*
+
+**What changed:** the postclear resumed on the strikes drawer (§378, unheard); he moved instead to PLAN phase 2 (2a engine adaptation · 2b
+presentation score), which PLAN's calendar had at ~10-05 → 10-13. The drawer's verdicts stay pending; nothing there is in flight.
+
+**What was read** (one batch, Fable): #4's `VIDEO_BUILD_PLAN.md` (phases 0–5), `PRINT_AND_COVER.md` §3–5, RUNNING_LOG day 37 (the
+re-render gap and `build.sh`), PLAN §8's closing line; this repo's PLAN 0g / 2a / 2b and D2 / D3. **Not read:** any code.
+
+**The reading given him (the top line, by the planning method — phase 1):** everything is ALREADY IN THIS REPO by 0g (97 files byte-exact,
+11 batteries green, `tools/export_video.js` + `export_print.js` + `print/` present). So the port is ADAPTATION, not copying:
+(1) the engine for seven parts — the 0g/2a list (META layer = 7, clefs per part, written pitch, the piano's grand staff, the technique →
+notation classes that all throw today by design, the flute's instrument changes, D10 order and bracketing); (2) the first real page from a
+real save; (3) audio — MIDI export in the 0e port order → Reaper at 60 BPM → WAV → the PCM sync proof; (4) video — `export_video.js` on
+seven lanes, the Z=2 top/bottom crop re-measured (ten lanes split 5/5 at y=1080; seven do not); (5) print — A3 landscape not Tabloid,
+seven lanes, septet section marks and cover, `build.sh` defaults; (6) the authored pages (cover text, performance notes, format entry).
+
+**Asked of him, phase 1:** the questions only he can answer — recorded in the reply; his answers go here as §380.
+
+## §380. His answers to §379's four questions — the videos, A3, piece-septet, no flute doubling (2026-09-11, Fable 5.1)
+
+**His words:** *"the video will need all four. Actually, which all four do you mean? I only count the main mode and zoom mode? Print mode will
+be the European version of a three, or that may already be the European version. It's the European version of eleven by seventeen. The first
+real page will be in or at least the composer part will be in peace-septet no flu doubling"*
+
+- **(a) Videos.** He counts two because there ARE two renders: V-MAIN (all parts) and the ×2 zoom master. #4 made four FILES from them:
+  V-TOP and V-BOT are the zoom master cropped (top half / bottom half), and V-CUT is V-MAIN with the close-ups cut in at times from a cut
+  list. Put back to him: two renders always; whether he wants the cut version (it needs his cut times) is the one choice.
+- **(b) Print: A3 landscape** — the call says ≤ DIN A3. A3 = 297 × 420 mm; 11 × 17 in (Tabloid) = 279 × 432 mm; close, not identical —
+  A3 is 18 mm taller and 12 mm narrower. Q5 closes: A3 landscape.
+- **(c) The first real page: `piece-septet`.**
+- **(d) No flute doubling** — CN-62. Q1 closes; instrument-change marks drop from the 2a list.
+
+## §381. "look in my other pieces" for the clefs — what #1, #2, #3 actually hold; the top line stands (2026-09-11, Fable 5.1)
+
+**His words:** *"If you are already using notation like clefs, etcetera, you can look in my other pieces, the string quartet, the two piano,
+two percussion, and the bass clarinet harp. I'm not sure if anything is in there yet. And then all is good."* — the top line of §380 stands;
+the videos: all four (his first words, §380), the cut list when the piece is done.
+
+**Measured (one grep per repo, `clef`):** #3 — nothing (0 hits). #1 — 485 hits, LilyPond prompt guides and a fragment database: the
+quartet's notation was LilyPond-rendered. #2 — 1648 hits: `CHORD_SPACING_RULES.md`, `GLYPH_REGISTRY.md`, `COORDS.md`,
+`NOTATION_SYSTEM_PLAN.md`, `LILYPOND_SETTINGS_REGISTRY.md`, and `svg_assembly/` — LilyPond fragments assembled into SVG. This repo's engine
+(#4's) is its own SVG renderer (`glyphs.json`, `render.js`, `stamps.js`; 21 `clef` hits in 7 files — the bass clef only).
+
+**The reading:** #1 and #2 give RULES and glyph geometry (piano chord spacing, accidental stacks, ottava — already cited by PLAN 0g), not
+code that plugs in; the clefs are drawn by this engine, from its own glyph registry. So step 1 reads #2's rules docs and #1's nothing.
+
+## §382. Step 1's two questions answered: bass clarinet in treble clef, the piano a taller lane (2026-09-11, Fable 5.1)
+
+**His words:** *"A Yes. Use the treble clef standard b flat. b... yes. Piano becomes taller lane."*
+
+- **Bass clarinet: treble clef, standard B♭ transposition** — written a major ninth above sounding. The IR keeps sounding pitch (D9); the
+  transposition is layout data per part.
+- **Piano: one lane, taller** — a grand staff inside the one-lane-per-part model, not two lanes. Keeps the container's model intact: seven
+  lanes, one with two staves and a brace.
+- Step 1's goal accepted as stated (§381 reply). The sub-steps follow; written into PLAN 2a on his word.
+
+## §383. "Good." — step 1 written into PLAN 2a as 2a.1–2a.6; phase 2 opened (2026-09-11, Fable 5.1)
+
+PLAN §2 is `doing`, the top line of §380–381 at its head with the four decisions of the day; 2a carries the goal and six sub-steps verbatim
+from the reply he approved. The timeline gains a line (2 opened early, 09-11). PLAN's one-liner and §2's open questions updated (Q1, Q5
+closed). **Next: checkpoint on Opus, clear, Opus builds 2a.1–2a.6.** The strikes drawer's verdicts (§378) remain pending beside it.

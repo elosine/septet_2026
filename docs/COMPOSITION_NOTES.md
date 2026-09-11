@@ -1418,3 +1418,10 @@ the rest (the notes no ensemble player took, never a doubling); the notes it tak
 what does not fit dropped by a rule that is his to choose); and it has ITS OWN re-attack clock, shorter than the ensemble's `min`, so it
 skips an onset only when the next chord truly comes too soon for a pianist. Not "different logic": the same busy rule with a different
 number, and the same deal with a hand-fit filter after it.
+
+## CN-62 — no flute doubling (2026-09-11)
+
+> *"no flu doubling"* (composer, 2026-09-11, answering Q1 in the notation-layer talk)
+
+**AI reading, marked as such:** the flute part is flute alone — no piccolo, no bass flute. Q1 (open since 2026-09-03) closes; the
+instrument-change marks drop off the 2a adaptation list; the flute's clef is treble throughout.

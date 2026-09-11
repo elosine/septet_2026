@@ -6,7 +6,7 @@
 
 ## The piece in one line
 
-Flute (picc/bass fl) · bass clarinet · piano · 2 vn · va · vc, ≤ 12 min, for TEMPUS LAB
+Flute (no doubling — CN-62) · bass clarinet · piano · 2 vn · va · vc, ≤ 12 min, for TEMPUS LAB
 2026 (deadline 2026-10-15). Animated score, the tuba piece's format; a PDF + video for the
 submission; parts + performance score only if selected (concerts 26–28 Nov 2026).
 
@@ -17,6 +17,7 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 | 2026-09-03 | project opened, kit installed (0a) |
 | ~2026-09-10 | **0 closed:** first sound from every instrument through the score app |
 | 2026-09-10 → 10-05 | **1 compose** (notation work interleaved from the first real page) |
+| **2026-09-11 →** | **2 notate, opened early** (his word, RUNNING_LOG §379): 2a engine → seven parts, then 2b beside the composing |
 | ~2026-10-05 → 10-13 | **2b presentation score:** print PDF (A3) + video |
 | 2026-10-15 | **4 submission** (deadline 23:59 CET) |
 | early Nov | selection announced; if selected → **2a/2c parts** + **3 performance score** by ~10-29 |
@@ -1485,9 +1486,32 @@ submission; parts + performance score only if selected (concerts 26–28 Nov 202
 
 - **1s — The rhythm drawer remodel: width, fonts, and his control order** — `collected 2026-09-10, NOT built — more order to come from him (STRIKES_TOOL §AE)` — the rhythm panel at **250 % of its width** (taken from the right, where the dots and the rhythm-zone display are), **fonts ×~1.3** (his calibration: 10 pt → 13 pt), and the controls in **his** top-down order: run · the first gap (relabelled, "initial gap" — accurate, §337 verified it against `accel_calc`) · `→ last` · notes · steep. **The standing ordering rule that came with it:** a named order is a PREFIX — everything unnamed keeps its existing relative order and moves down beneath, never re-sorted. *Why:* his words — *"250% the width it is now … bump the fonts … run pulldown at the top"* — and §328's verdict that the controls are *"too unintuitive and hard to use"*, of which the geometry is the part he can name from the screen. **Open before building:** whether the 250 % narrows the dots/zone strip or widens the whole panel rightward (§AE).
 
-## 2. Notate — `deferred` until the first real page exists
+## 2. Notate — `doing 2026-09-11` (opened early at his word — RUNNING_LOG §379; the top line agreed §380–381)
 
-- **2a — Engine adaptation** — the 0g list. Start with the page the opening needs.
+**The top line (composer, 2026-09-11 — "Good."):** 1 engine → seven parts (2a) · 2 the first real page from `piece-septet` · 3 audio
+(MIDI export in the 0e order → Reaper 60 BPM → WAV → the PCM sync proof) · 4 video (two renders: V-MAIN + the ×2 zoom master cropped to
+V-TOP/V-BOT; V-CUT from his cut list when the piece is done) · 5 print (A3 landscape, seven lanes, section marks, cover) · 6 authoring
+(cover text · performance notes · format entry). Steps 3–6 are 2b. **Decided on the way:** A3 landscape (Q5 closed) · no flute doubling
+(CN-62, Q1 closed) · bass clarinet in treble clef, standard B♭ (+M9 written) · the piano ONE lane, taller (a grand staff in the
+one-lane-per-part model). *Why the model is kept:* seven lanes with one taller is the container's own rule bent once; two lanes for one
+player would touch parts, solo, crop and print.
+
+- **2a — Engine → seven parts** — `todo` — **Result when done:** `piece-septet` extracts to an IR and renders as a seven-lane page in the
+  notation app: each part on its own clef (treble · treble · grand staff · treble · treble · alto · bass), the bass clarinet in written
+  pitch, the piano on a grand staff with its chords spaced by #2's rules, every septet technique mapped to a notation class or explicitly
+  "no mark yet", the parts in D10 order with the brackets. Nothing animated, no video, no print — the page, correct. **Build on Opus,
+  after a clear.**
+  - **2a.1 The container.** Seven lanes read from the score's `tracks`, not a literal 10; META layer = `tracks.length`; labels from
+    `tracks[].short`; D10 order and brackets (winds bracket · piano brace · strings bracket).
+  - **2a.2 Clefs as registry data.** Treble and alto glyphs beside the bass; one clef per part in the registry; the piano lane taller —
+    two staves, one brace.
+  - **2a.3 Written pitch as registry data.** Bass clarinet +M9. The IR stays sounding (D9); the shift is applied at layout only.
+  - **2a.4 Piano chords.** Columns, accidental stacks, ottava — the rules in #2's `CHORD_SPACING_RULES.md` and `dimensions_table.json`.
+  - **2a.5 Technique → notation classes.** A rule for every septet key from the recipes' `notate` field (flute pizzicato → tongue ram);
+    a "no mark yet" class so nothing throws.
+  - **2a.6 Prove it.** Batteries green on a septet golden · `piece-septet` extracted and rendered in the app · one screenshot for his eye.
+
+  *The earlier notes, kept:* the 0g list. Start with the page the opening needs.
   *Technique → notation mappings to honour (from the recipe's `notate` field): flute `pizzicato`
   sample → written **tongue ram** (composer, 2026-09-04, RUNNING_LOG §44).*
   **First lines, from 0i (RUNNING_LOG §13):** technique → notation class as registry data

@@ -178,7 +178,9 @@ it was found missing from this repo's CLAUDE.md, which is why the advice had gon
 | # | Step | Model | Clear first? |
 |---|---|---|---|
 | 1 | ~~BUILD §377~~ — **done, walked, pushed (§378; STRIKES_TOOL §AG)** | — | — |
-| 2 | **His verdicts on the drawer after a hard reload (CTRL+SHIFT+R)** — the route is STRIKES_TOOL §AG; fix what he marks (or log to SWEEP_LIST) | **Opus** | no |
+| **N1** | **BUILD PLAN 2a.1–2a.6 — the notation engine → seven parts** (PLAN §2; the checkpoint of 2026-09-11 below). Phase 2 opened at his word, §379–383 | **Opus** | **yes** — done (checkpoint 09-11) |
+| **N2** | His eye on the first seven-lane page (2a.6's screenshot) → then 2b step 2 (`piece-septet` as the real page) | **Fable** for the verdict | yes, after the build |
+| 2 | **His verdicts on the drawer after a hard reload (CTRL+SHIFT+R)** — the route is STRIKES_TOOL §AG; fix what he marks (or log to SWEEP_LIST) — *waits beside N1, on his word* | **Opus** | no |
 | 3 | **The pinned player** that survives a shuffle (§AF2) · the hand override per chord (medium, §376) if he asks | **Opus** | no |
 | 4 | **The rhythm drawer remodel** (§AE) — one decision from him first | **Opus** | **yes**, fresh context for a build |
 | 5 | PLAN 1q proper, on the 1q-PRINCIPLE — one Insert, one Hear, one law | **Fable** | **yes** — wrap on Opus, clear, switch |
@@ -229,7 +231,7 @@ the plan is already on paper. Wrap on Opus, always.
 - **Deliberately uncommitted** — all his, none the AI's: `bank/panel_snapshots.json` (his takes) · `reaper/septet_rack.rpp` (**the piano split he built this evening** — his to save) · `bank/passages/accentedcres01.json` + `-2.json` (his captures) · `scores/SeptetSec03-Materials-B/-C/-D/-a.json` (his working scores).
 - **Resume reads: nothing beyond §2.** (If he raises the piano balance, RUNNING_LOG §373 and §375 carry the numbers; if he raises a tool fault, `docs/SWEEP_LIST.md`. Do not read them pre-emptively.)
 
-**CHECKPOINT — LATE (mid-session checkpoint, 2026-09-10 late → 09-11 — session 8 continued, Claude Code / Opus 5). RUNNING_LOG §376–378. THIS IS THE ONE TO RESUME FROM.**
+**CHECKPOINT — LATE (mid-session checkpoint, 2026-09-10 late → 09-11 — session 8 continued, Claude Code / Opus 5). RUNNING_LOG §376–378.** *(Superseded by the 2026-09-11 checkpoint below: he moved to the notation layer. Its drawer verdicts still stand as pending.)*
 
 - **Task and state:** the strikes drawer, unblocked at his brief (*"rebuild/fix just so I can use it … instead of single notes, I want ensemble chords"*). **Built, walked in the running app on a `zz-ai-` copy (deleted), committed and pushed `a1a5bff`. Nothing in flight. He has heard NONE of it.**
 - **Latest deliverable:** `score/public/strike_drawer.js` (the `set` row: percussive · spiccato · staccato; shape first in the rhythm group; `transpose −8va −½ +½ +8va`) · `score/public/strike_sounds.js` (the onset card: `max` · `every onset: max` · `deal` · `reshuffle` · ♪ · `rest`; the piano's share — CN-61) · `score/public/strike_chords_ui.js` (the card released on mouseup; `chords (old)`). The route and the design: **STRIKES_TOOL §AG**.
@@ -243,6 +245,33 @@ the plan is already on paper. Wrap on Opus, always.
   - `scores/SeptetSec03-Materials-B/-C/-D/-a.json` — his working scores
 - **Model:** resume on **Opus** — verdicts and fixes on a written build.
 - **Resume reads: nothing beyond §2.** (If he raises a drawer question, STRIKES_TOOL §AG; for the numbers, RUNNING_LOG §378. Do not read them pre-emptively.)
+
+**CHECKPOINT — 2026-09-11 (mid-session checkpoint — session 8 continued, Fable 5.1 planning → Opus 5 wrap). RUNNING_LOG §379–383. THIS IS THE ONE TO RESUME FROM.**
+
+- **Task and state:** **phase 2 (Notate) is open**, at his word: *"I'd like to start building the notation layer … port over the presentation
+  score from the tuba piece … the video production facility and the PDF making facility."* He asked for a **faithful, all-inclusive port** —
+  every notation-app toolbar feature (view · ⇆ video/zoom · play · ♪ render · MIDI · META · bricks · M4 · solo · score/ir · parts · mode ·
+  from/width · ◀ ▶ · ⚙ · t pill · stale notice) kept as is. All of it is already in this repo, byte-exact, by PLAN 0g; the work is adaptation.
+  The top line and step 1 were agreed by the planning method and **written into PLAN §2 / 2a**. **Nothing built yet. Nothing in flight.**
+- **Decided today (all in PLAN §2's head and RUNNING_LOG §380–382):** A3 landscape (Q5 closed) · **no flute doubling** (CN-62, Q1 closed) ·
+  bass clarinet in **treble clef, standard B♭** (written +M9; IR stays sounding, D9) · the piano **one lane, taller** (grand staff inside the
+  one-lane-per-part model) · videos: V-MAIN + the ×2 zoom master cropped to V-TOP/V-BOT; V-CUT from his cut list when the piece is done.
+- **Measured today:** the other repos give RULES, not code — #3 has no clef anything; #1 and #2 were LilyPond-rendered. #2's
+  `docs/CHORD_SPACING_RULES.md` (+ `dimensions_table.json`) is the source for 2a.4. This engine draws its own glyphs; it knows the bass clef only.
+- **NEXT CONCRETE STEP — build PLAN 2a.1 → 2a.6 in order:** the container to seven lanes from `tracks` (META = `tracks.length`, labels from
+  `tracks[].short`, D10 order + brackets) → treble/alto clefs as registry data, the piano lane taller with two staves and a brace → bass
+  clarinet +M9 at layout → piano chords by #2's rules → a notation class for every septet technique key (the recipes' `notate` field; a
+  "no mark yet" class so nothing throws) → prove it: batteries green on a septet golden, `piece-septet` extracted and rendered in the app,
+  **one screenshot for his eye** (the screenshot IS the proof here). **`piece-septet.json` is his live score — read it, never write it**; the
+  IR is derived (D9). Journal each sub-step in RUNNING_LOG from §384.
+- **Pending decisions from him:** none for 2a. Still open from before: the drawer's verdicts (STRIKES_TOOL §AG) · whether to commit his two
+  passages · whether track 7's Kontakt still holds Plucked Piano.
+- **Deliberately uncommitted — all his, none the AI's:** `bank/panel_snapshots.json` (his drawer takes) · `reaper/septet_rack.rpp` (his piano
+  split, plucked at −1.2) · `bank/passages/accentedcres01.json` + `-2.json` (his captures; commit on his word) ·
+  `scores/SeptetSec03-Materials-B/-C/-D/-a.json` (his working scores).
+- **Model:** resume on **Opus** — a build from a written plan. Back to Fable for his verdict on the first page.
+- **Resume reads:** `docs/PLAN.md` §2 (the head + 2a, ~40 lines from `## 2. Notate`) · PLAN **0g** (its adaptation list and "Found by
+  RUNNING the copy", ~30 lines) · journal §4 **D9** and **D10** · at 2a.4 only: #2's `docs/CHORD_SPACING_RULES.md`. Nothing else pre-emptively.
 
 **Open at session end** *(written cold, 2026-09-09)*:
 
@@ -267,7 +296,7 @@ morph panel the tuba way + the pitch source, three piano/strike tools (1i · 1j 
 channels wired — §111–310. **3** (2026-09-04 → 06) the piece to #31 / 72 s, the drawer U5–U13b, the trill module phases 0–3, the curve
 windows (D18–D21), timestamped playback — §65–110. **2** the strikes drawer and the sandbox. **1** the port from the tuba piece.
 
-**Open questions:** Q1 the flute doubling (piccolo vs bass flute) · Q5 print format (A3 landscape) · Q7 the bass clarinet's bottom B♭1.
+**Open questions:** Q7 the bass clarinet's bottom B♭1. *(Q1 closed 2026-09-11: no flute doubling, CN-62. Q5 closed 2026-09-11: A3 landscape. RUNNING_LOG §380.)*
 
 **Blockers:** none.
 
