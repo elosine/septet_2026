@@ -1525,6 +1525,118 @@ player would touch parts, solo, crop and print.
   as #4's PHASE 5). **Deadline-bound: 2026-10-15.**
 - **2c — Parts** — only if selected; due ~2026-10-29.
 
+- **2d — Notate while composing** — `planned 2026-09-11, all six steps — next to build, Opus, after a clear` (RUNNING_LOG §389–390) — **Result when done:** he
+  notates sections 1–2 while section 3 is still being written. `piece-septet.json` stays the only file anyone edits (D9); the IR is
+  rebuilt from it at one keystroke; the notation layer's own choices (ink, not music — beams, forced clefs, breaks) live in a sidecar
+  the notation app owns and **survive every rebuild**, keyed to the notes' ids. A choice whose notes vanished is listed, never dropped.
+  *Why (a) a sidecar and not the composer score:* one file per app — the notation app never becomes a second writer of his composing
+  file. *#4's state:* the overlay design existed (IR_SCHEMA_v0 §6) but the re-attachment across a re-extract was named "future" and
+  never built; it never bit because the score was frozen before extraction.
+  **Top line:** 1 ⚠ the identity contract · 2 ⚠ the sidecar · 3 refresh from the app · 4 ⚠ orphans listed, never dropped ·
+  5 "move to part" in the note card · 6 the proof — beams. (⚠ = foundational: 1 is what everything stands on; 2 is hard to change once
+  choices exist; 4 is the line between loudly lost and quietly wrong.) **The binding goal (composer, 2026-09-11):** *"I don't want to
+  create another layer of work for myself with this system"* — the sidecar is a **memory, not a form.** Most of the page never has a
+  choice in it; ids are automatic and invisible; the only time it speaks is one advisory line when a note that carried a choice is
+  deleted or redrawn — never blocking, never asking. It stores what, which notes, what value — never how a thing is drawn; new graphics
+  and experimental notation are engine work, untouched by it.
+  - **2d.1 — ⚠ The identity contract** — **Result when done:** a note's id is proven stable — from the moment it is drawn, through
+    every edit in the composer, into the IR as `ev-wc-N`, across any number of re-extracts. A test says so in seconds. Every edit path
+    that DOES change an id is named in writing. **Decided (B):** a choice targets the **set of note ids** it applies to, never the IR
+    chunk id (a chunk is named after its earliest note; move that note and the chunk renames, orphaning a beam whose other three notes
+    are still there).
+    - 2d.1.1 `docs/NOTATION_IDENTITY.md`, one page: id assigned once, never reassigned · IR event id = `ev-` + note id · choices target
+      sets of note ids · the actions that create new ids, listed.
+    - 2d.1.2 read `composer.html` + `note_card.js` for every place an object's id is set or an object is rebuilt; name each *keeps* or
+      *creates*; the list goes into 2d.1.1. (Expected keeps: note card voice · pitch · start · length; lane drag; transpose. Expected
+      creates: duplicate CTRL+drag · delete + redraw · passage insert.)
+    - 2d.1.3 `tools/test_identity.js`: a copy of `piece-septet` → record ids → each *keeps* edit by the UI's own code path → re-extract →
+      every `ev-wc-N` still present and on the same note; then one *creates* edit → exactly one new id.
+    - 2d.1.4 run it once on the tuba goldens (shared engine code).
+    - 2d.1.5 journal; fix anything 2d.1.2 found that should keep an id and doesn't.
+  - **2d.2 — ⚠ The sidecar** — **Result when done:** `notation/choices/<score>.choices.json`, one per score, owned by the notation app;
+    the extractor never reads or writes it. Every choice = kind · the note ids it applies to · value. The app loads it, applies it on top
+    of any fresh IR, saves it back. **Decided:** one file per score (sections are pages of one piece) · #4's overlay shape reused
+    (`kind · target · value · orphaned`, IR_SCHEMA_v0 §6) with the target widened to a LIST of note ids, so its validator and the
+    never-dropped rule come with it and the 2b exporters already understand it. It is a data layer only: where no choice exists the
+    engine's own result stands; an unknown kind is refused by the validator, never drawn differently (§3 P3).
+    - 2d.2.1 the shape, as an amendment to the IR schema doc: `{ score, version, choices: [ { id, kind, targets: [wc-N…], value,
+      orphaned, note } ] }`. Kinds at first: `beam` only; others by amendment when a page needs them. **The target keeps all three of
+      #4's forms** — a list of note ids · `{part, span}` · `{span}` — checked now against the kinds to come so the file never changes
+      shape: set-of-notes (beam · slur · tuplet bracket · cluster grouping) · one note (spelling · stem direction · symbol variant ·
+      ottava) · a span in a part (clef change · ottava line · text) · a page place (system break · spacing).
+    - 2d.2.2 the validator learns the file: every target `wc-N` · unknown kind → error · `orphaned` is set/cleared by the refresh
+      (2d.4), never by hand.
+    - 2d.2.3 load: the app reads `notation/choices/<score>.choices.json` when a score opens; a missing file is normal and silent.
+    - 2d.2.4 apply: after layout, the choices reach the beam-grouping function as overrides — the engine's grouping yields to a choice
+      covering the same notes. **The one place the data layer touches drawing code; kept to that function.**
+    - 2d.2.5 save: through the server, the score-save pattern, atomically (temp + rename).
+    - 2d.2.6 prove on a copy: one hand-written beam choice on four `piece-septet` notes → the page follows it → delete the file → the
+      engine's beam returns. Tuba battery once after.
+  - **2d.3 — Refresh from the app** — **Result when done:** one key (**R**) re-extracts the WHOLE score from the last Save, reloads
+    the page, re-applies the sidecar, clears the stale notice; same page, same zoom; nothing typed. **Decided (a):** refresh only on
+    the key, never automatically — the page never changes under him; the stale notice is the prompt. Reads the disk file = the last
+    Save; unsaved composer edits do not show. The extraction runs on `score/server.js` behind one endpoint.
+    - 2d.3.1 measure: today's extractor over the whole `piece-septet`, timed; a progress line only if the number says so.
+    - 2d.3.2 whole-score mode: `--score piece-septet --all` → `notation/ir/piece-septet.ir.json`, parts from the score's tracks; the
+      window form stays for the tests.
+    - 2d.3.3 `POST /notation/refresh/<score>`: runs the extractor; returns done or the error text; nothing else.
+    - 2d.3.4 the R key: endpoint → reload IR → re-apply choices (2d.2.3) → keep page and zoom → clear stale. Running: "refreshing…";
+      failure: the error text, the old page stays.
+    - 2d.3.5 the hover strip's tooltip lists R.
+    - 2d.3.6 prove on a copy: edit in the composer → Save → stale → R → the edit shows. Twice.
+  - **2d.4 — ⚠ Orphans** — **Result when done:** after every refresh each choice is checked against the new IR: all notes present →
+    applies silently · some missing → applies to the notes that remain, marked `partial` · none left → `orphaned: true`, kept in the
+    file, listed. **The machine never deletes a choice; nothing ever blocks the page.** *Why flagged:* the shortcut "drop what does not
+    resolve" turns a loud loss into a quiet one; #4's rule stands — flag, never drop. **Decided:** (i) a panel hidden when empty; a
+    count in the bottom bar ("2 orphans · 1 partial") and the **O** key open it · (ii) two actions per line only — **discard** and
+    **go there**; never "reassign ids" — he never touches ids.
+    - 2d.4.1 the resolve pass in the loader: look up each choice's ids in the fresh IR → apply / partial (missing ids recorded) /
+      orphaned; a formerly orphaned choice that resolves again has its flag cleared. This is the "maintenance pass" IR_SCHEMA_v0
+      named and #4 never built.
+    - 2d.4.2 the validator: `orphaned` must agree with the IR when both are present (a stale flag is an error, as #4 specified).
+    - 2d.4.3 the count in the bottom bar; absent at zero.
+    - 2d.4.4 the O panel: kind · notes remaining of how many · the time · discard · go there. Hidden when empty.
+    - 2d.4.5 discard = delete the choice + save (2d.2.5); go there = move the page to that time, highlight the surviving notes.
+    - 2d.4.6 prove on a copy: beam four → delete one in the composer → Save → R → beam holds on three, "1 partial" → delete the other
+      three → R → "1 orphan", listed → discard → count gone, file clean. The mirror: restore a note → R → the flag clears by itself.
+  - **2d.5 — "Move to part" in the composer's note card** — **Result when done:** a **part** selector beside **voice**; pick *flute*
+    and the note moves to the flute lane IN PLACE — same id, time, length, dynamic — and sounds at once on the new channel. So the swap
+    in his loop is always the id-keeping kind, never delete-and-redraw. Pitch is already a card field (id kept); ±8va is its fast
+    form. **Decided (a):** the selected note only; a multi-selection move is an easy add if he finds himself moving chords. **He will
+    also enlist the AI to do swaps** — hence 2d.5.7–8.
+    - 2d.5.1 find what a note's part IS in the score object (`layer`, as read so far) and everything keyed to it — channel map, D11
+      curve channels, per-part caches. One list, written before anything moves. *(The only code reading in this step: `composer.html`
+      + `note_card.js`.)*
+    - 2d.5.2 the **part** selector in the card, the seven from `tracks[].short`.
+    - 2d.5.3 the move, one function: set the part in place → voice = the target's MAIN → the voice list re-fills for the target → every
+      item from 2d.5.1 re-derived → redrawn on the new lane → auditioned on the new channel. The id is never touched.
+    - 2d.5.4 the range marker: pitch against the target's range from the registry — an indicator, never a block — plus −8va / +8va
+      beside pitch.
+    - 2d.5.5 Save as any card edit today (D17).
+    - 2d.5.6 prove on a copy: cello → flute: same id, new lane, MAIN, sounds on the flute's channel → Save → R → in the flute lane
+      in the notation app; a beam that included it still holds.
+    - 2d.5.7 `moveNote({at, from, to, pitch})` as a named console function — the `crescRun` / `goTo` pattern — one line, whoever
+      runs it, the same code path.
+    - 2d.5.8 **the one-writer rule, written where the AI looks:** the working copy lives in the open page (D17); a second tab of the
+      same score clobbers it on Save. *One open composer tab per score — the AI drives HIS tab, or he closes it first.* Into
+      `CLAUDE.md` § Apps (one line) · `docs/NAMING.md` §1 beside D17 · the header comment of `note_card.js` above `moveNote`.
+  - **2d.6 — The proof: beams** — **Result when done:** the first real choice he can make in the notation app, and the whole loop shown
+    end to end on `piece-septet`: beam four · change to 2+2 · compose in section 3 · Save · R · the 2+2 holds. That is 2d done.
+    *Why beams:* his example, and the apt one — a choice over a SET of notes is the hardest case (decision B and the partial orphan in
+    one test); pure ink; the engine's grouping step already exists. **The scope is not beams**: the shape carries all three of #4's
+    target forms (note ids · part + span · span) so every later kind is one schema line and its own small tool. **Decided (a):** select
+    notes, press **G** — one key, no panel, the app's habit (Z · B · T).
+    - 2d.6.1 note selection on the page: click · shift-click adds · ESC clears · highlight. (Small if 2a's page already hit-tests
+      noteheads; the bulk of the step if not.)
+    - 2d.6.2 **G**: the selection → one `beam` choice → saved → redrawn through 2d.2.4. G on a selection that IS a choice removes it.
+    - 2d.6.3 the engine's grouping yields where a choice covers notes; the rest beams as before; a choice across two engine groups
+      joins them, one inside a group splits it.
+    - 2d.6.4 the tooltip lists G.
+    - 2d.6.5 the end-to-end proof on the live score, journaled: beam four in section 1 → 2+2 → add notes in section 3 → Save → R →
+      holds. The swap loop: `moveNote` cello → flute → Save → R → flute lane, beam intact. The orphan: delete one of the four → R →
+      partial, listed.
+    - 2d.6.6 tuba battery once · septet battery green · RUNNING_LOG · 2d marked built.
+
 ## 3. Performance score — `deferred` — port #4's modules when they exist there (D2).
 
 ## 4. Submission package — `todo` — form (PDF), bio (½ page), work description (optional

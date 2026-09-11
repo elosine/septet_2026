@@ -180,6 +180,7 @@ it was found missing from this repo's CLAUDE.md, which is why the advice had gon
 | 1 | ~~BUILD §377~~ — **done, walked, pushed (§378; STRIKES_TOOL §AG)** | — | — |
 | **N1** | ~~BUILD PLAN 2a.1–2a.6~~ — **built 2026-09-11 in the same context (RUNNING_LOG §384–386)**: 70-check battery GREEN, tuba suite unchanged, the page seen on :5301 | — | — |
 | **N2** | **His eye on the seven-lane page** — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → the picker "piece-septet · 2a proof" → video and zoom (Z). The provisional looks to judge are listed in NITS 2026-09-11 | **Fable** for the verdict | yes — wrap on Opus, clear, switch |
+| **N4** | **BUILD PLAN 2d.1 → 2d.6 in order** — notate while composing: the identity contract · the sidecar · R refresh · orphans · move-to-part · G beams. **Planned in full 2026-09-11 (RUNNING_LOG §389–390; PLAN 2d).** The ⚠ steps (1 · 2 · 4) are the ones he asked to watch. 2d.1.2 and 2d.5.1 are the two sanctioned broad code reads | **Opus** | **yes** — fresh context; `/postclear` then PLAN 2d |
 | **N3** | **Before 2b's first render: the resvg panic** (NITS 2026-09-11) — then trills into the IR, and the exporters onto the app's lane code | **Opus** | yes, fresh context for a build |
 | 2 | **His verdicts on the drawer after a hard reload (CTRL+SHIFT+R)** — the route is STRIKES_TOOL §AG; fix what he marks (or log to SWEEP_LIST) — *waits beside N1, on his word* | **Opus** | no |
 | 3 | **The pinned player** that survives a shuffle (§AF2) · the hand override per chord (medium, §376) if he asks | **Opus** | no |
