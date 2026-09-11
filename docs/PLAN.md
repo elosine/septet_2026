@@ -1525,7 +1525,7 @@ player would touch parts, solo, crop and print.
   as #4's PHASE 5). **Deadline-bound: 2026-10-15.**
 - **2c — Parts** — only if selected; due ~2026-10-29.
 
-- **2d — Notate while composing** — `building — 2d.1 · 2d.2 · 2d.3 · 2d.4 built 2026-09-11 (RUNNING_LOG §391–394); next 2d.5, after a clear` (planned RUNNING_LOG §389–390) — **Result when done:** he
+- **2d — Notate while composing** — `built 2026-09-11 (RUNNING_LOG §391–396) — proven on copies; the live walk on piece-septet is his (journal §2)` (planned RUNNING_LOG §389–390) — **Result when done:** he
   notates sections 1–2 while section 3 is still being written. `piece-septet.json` stays the only file anyone edits (D9); the IR is
   rebuilt from it at one keystroke; the notation layer's own choices (ink, not music — beams, forced clefs, breaks) live in a sidecar
   the notation app owns and **survive every rebuild**, keyed to the notes' ids. A choice whose notes vanished is listed, never dropped.
@@ -1607,7 +1607,9 @@ player would touch parts, solo, crop and print.
     - 2d.4.5 discard = delete the choice + save (2d.2.5); go there = move the page to that time, highlight the surviving notes.
     - 2d.4.6 prove on a copy: beam four → delete one in the composer → Save → R → beam holds on three, "1 partial" → delete the other
       three → R → "1 orphan", listed → discard → count gone, file clean. The mirror: restore a note → R → the flag clears by itself.
-  - **2d.5 — "Move to part" in the composer's note card** — **Result when done:** a **part** selector beside **voice**; pick *flute*
+  - **2d.5 — "Move to part" in the composer's note card** — `built 2026-09-11 (RUNNING_LOG §395): the part row · moveToPart ·
+    ±8va · the range indicator · moveNote · the one-writer rule in three places; found and fixed — the card refused every note (the
+    grain rule), card edits were never undo steps; the walk rule caught his open score, nothing written` — **Result when done:** a **part** selector beside **voice**; pick *flute*
     and the note moves to the flute lane IN PLACE — same id, time, length, dynamic — and sounds at once on the new channel. So the swap
     in his loop is always the id-keeping kind, never delete-and-redraw. Pitch is already a card field (id kept); ±8va is its fast
     form. **Decided (a):** the selected note only; a multi-selection move is an easy add if he finds himself moving chords. **He will
@@ -1631,7 +1633,9 @@ player would touch parts, solo, crop and print.
       **Also (found in 2d.1's walk, §391):** working copies are server-side (`scores/<name>-work.json`), so a throwaway :5301
       tab opens on its origin's last score — which can be HIS. Check the tab's open score before touching anything; open the
       `zz-ai-` copy first.
-  - **2d.6 — The proof: beams** — **Result when done:** the first real choice he can make in the notation app, and the whole loop shown
+  - **2d.6 — The proof: beams** — `built 2026-09-11 (RUNNING_LOG §396): nextId (§6b) · toggleBeam · click / SHIFT+click / ESC ·
+    G · the engine yields (split + join proven) · septet 86/86 · tuba 9 GREEN / 6 RED unchanged · the loop proven on a copy by real
+    clicks; the live walk is his` — **Result when done:** the first real choice he can make in the notation app, and the whole loop shown
     end to end on `piece-septet`: beam four · change to 2+2 · compose in section 3 · Save · R · the 2+2 holds. That is 2d done.
     *Why beams:* his example, and the apt one — a choice over a SET of notes is the hardest case (decision B and the partial orphan in
     one test); pure ink; the engine's grouping step already exists. **The scope is not beams**: the shape carries all three of #4's

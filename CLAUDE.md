@@ -114,6 +114,8 @@ routing advice is also credit advice, and these bind every Fable turn:
 
 - **Composer score:** `node score/server.js` → http://localhost:5300/composer.html
   (7 instrument-keyed tracks + META; saving per D17 — working copy · Save · Name version · Reload; `docs/NAMING.md` §1)
+  **One open composer tab per score** (PLAN 2d.5.8): a second tab clobbers the working copy on Save — the AI drives HIS tab, or
+  he closes it first; a :5301 tab opens its origin's last score, so read `Composer.sessionName` first and open the `zz-ai-` copy.
 - **Sandbox:** `node sandbox/serve.js` → http://localhost:4800
 - **Notation workshop:** carried over with the port, NOT adapted until phase 2 (PLAN 0g / 2a).
 - **Ports** (loopMIDI, case-sensitive) — decided in PLAN 0e; 5300/4800 are distinct from

@@ -311,3 +311,15 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   to find where it was, the choice would need its last-known time stored at the refresh that orphaned it. Not asked for.
 - **A window IR lists false orphans.** On an IR built with `--w0/--w1`, notes outside the window read as missing; the list says so
   in its header, and the file's flag is written only after R (whole score). No septet IR is a window build after its first R.
+
+## 2026-09-11 — PLAN 2d.5–2d.6, move to part and G: what it left (RUNNING_LOG §395–396)
+
+- **The live walk is his.** 2d.6.5 says "on the live score"; every step was proven on a copy by real clicks, but `piece-septet` is
+  never the AI's to write. The walk is in journal §2.
+- **The id-reuse item above is answered:** `nextId` in the choices file (IR_SCHEMA_v0 §6b); the validator checks it.
+- **Seen once, not diagnosed:** after the card's `duplicate`, the card held no note (`NoteCard.wc` null) — its comment says
+  `selectObject` reopens it on the copy. The copy itself was right (wc-2052). If he sees the card vanish after duplicate, this is it.
+- **Not heard:** the AI's preview browser opens no MIDI ports, so a moved note's audition is proven by the route the card prints,
+  not by ear.
+- **Selection is video/zoom only** (the page keys and the click handler live there, as Z · B · T · R · O do). The ⚙ proofing views
+  have no selection; nothing asks for one.

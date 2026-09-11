@@ -259,6 +259,40 @@ ok(JSON.stringify(ens.groups.map(g => g.kind + ':' + g.parts.join(','))) === JSO
       'orphans: the bar count "' + BC.reportCounts(report) + '"; absent when every choice applied');
     ok(report.find(r => r.id === 'c-4').present === 4 && report.find(r => r.id === 'c-2').surviving.length === 2 && report.find(r => r.id === 'c-3').surviving.length === 0,
       'orphans: presence counted for every kind (as the validator counts it); the survivors listed for go there');
+
+    // [PLAN 2d.6] G — the rule, pure: four → one beam; the first two again → 2+2 (the old beam gives them up); G on the same two →
+    // removed; the counter never goes back; a two-part selection and a single note are refused and write nothing.
+    const pOf = new Map(doc.events.map(e => [e.source.objectId, partOf.get(e.id)]));
+    const P = id => pOf.get(id), W = four.map(wc);
+    let g1 = BC.toggleBeam(null, 'piece-septet', W, P);
+    ok(g1.action === 'added' && g1.id === 'c-1' && g1.doc.nextId === 2 && g1.doc.choices.length === 1, 'G: four notes → beam c-1, nextId 2');
+    const g2 = BC.toggleBeam(g1.doc, 'piece-septet', W.slice(0, 2), P);
+    ok(g2.action === 'added' && g2.id === 'c-2' && g2.trimmed.join() === 'c-1' &&
+      JSON.stringify(g2.doc.choices.map(c => c.target.notes)) === JSON.stringify([W.slice(2), W.slice(0, 2)]),
+      'G: the first two again → 2+2 (c-1 keeps the last two, c-2 the first two)');
+    const g3 = BC.toggleBeam(g2.doc, 'piece-septet', W.slice(0, 2), P);
+    const g4 = BC.toggleBeam(g3.doc, 'piece-septet', W.slice(0, 2), P);
+    ok(g3.action === 'removed' && g3.id === 'c-2' && g3.doc.choices.length === 1 && g4.id === 'c-3',
+      'G: G on a beam\'s own notes removes it; the next beam is c-3, never c-2 again');
+    const g5 = BC.toggleBeam(g2.doc, 'piece-septet', W.slice(1, 3), P);   // across both halves: each keeps one note → both removed
+    ok(g5.action === 'added' && g5.dropped.join() === 'c-1,c-2' && g5.doc.choices.length === 1, 'G: a beam across 2+2 takes one note from each — both left with one, both removed');
+    const g6 = BC.toggleBeam(g1.doc, 'piece-septet', [W[0], wc(other)], P), g7 = BC.toggleBeam(g1.doc, 'piece-septet', [W[0]], P);
+    ok(g6.action === 'refused' && /one part/.test(g6.why) && g6.doc === g1.doc && g7.action === 'refused', 'G: two parts or one note → refused with the reason, nothing written');
+
+    // [PLAN 2d.6.3] THE ENGINE YIELDS: an engine beam over the four (the --beam overlays), then a choice over the first two SPLITS
+    // it — the choice's two beam as one, the engine's other two as another; a choice over all four JOINS two engine pairs into one.
+    const lay = ovs => { const d2 = JSON.parse(JSON.stringify(doc)); d2.overlays = d2.overlays.concat(ovs);
+      return Layout.layoutSection(d2, glyphs, Object.assign({ frameParts: parts, ensemble: ens, techniques: tech }, C.engraving.layout)); };
+    const asOv = (devs, tag) => devs.map(x => ({ id: 'ov-' + tag + '-' + x.event, kind: 'engraving', target: { event: x.event }, value: { device: x.device }, provenance: 'authored' }));
+    const groupsOf = mdl => { const m = {}; mdl.systems.forEach(s => s.items.filter(i => i.k === 'beam' && i.tips && !/-L\d|-s\d/.test(i.group || '')).forEach(i => { m[i.group] = (m[i.group] || 0) + i.tips.length; })); return m; };
+    const engine4 = asOv(BC.beamDevices(four, FIG, 'eng-A').devices, 'eng');
+    const choice2 = BC.applyChoices({ choices: [{ id: 'c-9', kind: 'beam', target: { notes: W.slice(0, 2) } }] }, doc, FIG).overlays;
+    const split = groupsOf(lay(engine4.concat(choice2)));
+    ok(split['bmc-c-9'] === 2 && split['eng-A'] === 2, 'yields: a choice inside an engine beam splits it — ' + JSON.stringify(split));
+    const pairs = asOv(BC.beamDevices(four.slice(0, 2), FIG, 'eng-A').devices, 'ea').concat(asOv(BC.beamDevices(four.slice(2), FIG, 'eng-B').devices, 'eb'));
+    const choice4 = BC.applyChoices({ choices: [{ id: 'c-8', kind: 'beam', target: { notes: W } }] }, doc, FIG).overlays;
+    const joined = groupsOf(lay(pairs.concat(choice4)));
+    ok(joined['bmc-c-8'] === 4 && !joined['eng-A'] && !joined['eng-B'], 'yields: a choice across two engine beams joins them — ' + JSON.stringify(joined));
   }
 }
 

@@ -25,6 +25,9 @@
   changes only on Save) · **Save / CTRL+S** when it's good · **Name version** when a chunk is done
   (saves the file AND freezes `<name>-v<label>`; the next label is suggested: 1.1, 1.2 … — a name with a suffix, `v1.10-preAccelNear105`, counts as its number, RUNNING_LOG §139; the AI's snapshots carry the current number with a suffix, never a new one) · **Reload**
   if it went wrong (drops the unsaved edits; asks once). The `?` button shows this line in the app.
+  **One open composer tab per score** (PLAN 2d.5.8): the working copy lives in the open page, so a second tab of the same score
+  clobbers it on Save. The AI drives HIS tab (the console lines — `moveNote`, `crescRun`, `chordRun`, `goTo`) or he closes it first.
+  A throwaway :5301 tab opens its origin's last score, which can be his: check `Composer.sessionName` before touching anything.
   Piece #4's "Save as next" / "Variant" / "Restore" are gone; the Save snapshots in `scores/versions/`
   (cap 20, gitignored) remain as a silent net the AI can dig into on request.
 - **Restore (D27, composer 2026-09-07 late — "be able to go back to the first try or the second try or the third try or back to nothing";

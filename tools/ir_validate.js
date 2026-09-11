@@ -285,6 +285,11 @@ function validateChoices(doc, errs, irFile) {
   if (typeof doc.score !== 'string' || !doc.score) errs.push('$.score: the score name is required');
   if (doc.version !== 1) errs.push('$.version: expected 1');
   if (!Array.isArray(doc.choices)) { errs.push('$.choices: expected an array'); return; }
+  // nextId (amendment 7, septet 2d.6): the counter only grows, so every c-N already in the file is below it — a discarded id never returns
+  if (doc.nextId !== undefined) {
+    if (!Number.isInteger(doc.nextId) || doc.nextId < 1) errs.push('$.nextId: a positive integer');
+    else for (const c of doc.choices) { const m = /^c-(\d+)$/.exec((c && c.id) || ''); if (m && +m[1] >= doc.nextId) errs.push(`$.nextId: ${doc.nextId} is not above ${c.id} — the counter only grows`); }
+  }
   const ir = irFile ? JSON.parse(fs.readFileSync(irFile, 'utf8')) : null;
   if (ir && ir.source.score !== doc.score) errs.push(`--against: ${irFile} is derived from ${ir.source.score}, not ${doc.score}`);
   const evIds = ir ? new Set(ir.events.map(e => e.id)) : null;

@@ -180,7 +180,7 @@ it was found missing from this repo's CLAUDE.md, which is why the advice had gon
 | 1 | ~~BUILD §377~~ — **done, walked, pushed (§378; STRIKES_TOOL §AG)** | — | — |
 | **N1** | ~~BUILD PLAN 2a.1–2a.6~~ — **built 2026-09-11 in the same context (RUNNING_LOG §384–386)**: 70-check battery GREEN, tuba suite unchanged, the page seen on :5301 | — | — |
 | **N2** | **His eye on the seven-lane page** — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → the picker "piece-septet · 2a proof" → video and zoom (Z). The provisional looks to judge are listed in NITS 2026-09-11 | **Fable** for the verdict | yes — wrap on Opus, clear, switch |
-| **N4** | **BUILD PLAN 2d.1 → 2d.6 in order** — **2d.1 · 2d.2 · 2d.3 · 2d.4 BUILT 2026-09-11 (RUNNING_LOG §391–394: the identity contract + test · the choices sidecar · R refresh · orphans flagged after R, the count, the O list, go there / discard). His :5300 needs ONE restart for R, discard and the flags. Next 2d.5 move-to-part — clear first; resume reads: PLAN 2d.5 + `docs/NOTATION_IDENTITY.md`.** Notate while composing: the identity contract · the sidecar · R refresh · orphans · move-to-part · G beams. **Planned in full 2026-09-11 (RUNNING_LOG §389–390; PLAN 2d).** The ⚠ steps (1 · 2 · 4) are the ones he asked to watch. 2d.1.2 and 2d.5.1 are the two sanctioned broad code reads | **Opus** | **yes** — fresh context; `/postclear` then PLAN 2d |
+| **N4** | **BUILD PLAN 2d.1 → 2d.6 in order** — **2d BUILT 2026-09-11 (RUNNING_LOG §391–396): identity · sidecar · R · orphans · move to part · G beams — proven on copies. His :5300 needs ONE restart, then his live walk (the 2d state block below). Done as an AI step.** Notate while composing: the identity contract · the sidecar · R refresh · orphans · move-to-part · G beams. **Planned in full 2026-09-11 (RUNNING_LOG §389–390; PLAN 2d).** The ⚠ steps (1 · 2 · 4) are the ones he asked to watch. 2d.1.2 and 2d.5.1 are the two sanctioned broad code reads | **Opus** | **yes** — fresh context; `/postclear` then PLAN 2d |
 | **N3** | **Before 2b's first render: the resvg panic** (NITS 2026-09-11) — then trills into the IR, and the exporters onto the app's lane code | **Opus** | yes, fresh context for a build |
 | 2 | **His verdicts on the drawer after a hard reload (CTRL+SHIFT+R)** — the route is STRIKES_TOOL §AG; fix what he marks (or log to SWEEP_LIST) — *waits beside N1, on his word* | **Opus** | no |
 | 3 | **The pinned player** that survives a shuffle (§AF2) · the hand override per chord (medium, §376) if he asks | **Opus** | no |
@@ -350,7 +350,7 @@ the plan is already on paper. Wrap on Opus, always.
   `notation/lib/beam_choice.js` `applyChoices` and `notation/app/notation.html` `loadChoices` / `saveChoices` (the code 2d.4
   extends). Nothing else pre-emptively.
 
-**STATE — 2d.4 built (2026-09-11 afternoon — session 8 continued, Claude Code / Opus 5, resumed by /postclear). RUNNING_LOG §394. THIS IS THE ONE TO RESUME FROM.**
+**STATE — 2d.4 built (2026-09-11 afternoon — session 8 continued, Claude Code / Opus 5, resumed by /postclear). RUNNING_LOG §394.** *(Superseded by the 2d state below: 2d.5 and 2d.6 built in the same context, at his word.)*
 
 - **Task and state:** PLAN 2d, built in order. **2d.1–2d.4 built, proven, committed and pushed; nothing in flight.** Next: **2d.5 — "move to part"
   in the composer's note card** (its 2d.5.1 is one of the two sanctioned broad code reads).
@@ -367,6 +367,29 @@ the plan is already on paper. Wrap on Opus, always.
   which DOES open the composer: read `Composer.sessionName` first, open the `zz-ai-` copy, delete it and its snapshots and IR after.
 - **Model:** Opus — 2d.5 is written in the plan.
 - **Resume reads:** PLAN **2d.5** (~20 lines, under `## 2. Notate` → 2d) · `docs/NOTATION_IDENTITY.md`. Nothing else pre-emptively.
+
+**STATE — 2d BUILT (2026-09-11 evening — session 8 continued, Claude Code / Opus 5; his word: *"continue thru as much as you can independantly, I'll look when finished"*). RUNNING_LOG §395–396. THIS IS THE ONE TO RESUME FROM.**
+
+- **Task and state:** PLAN 2d (notate while composing) is **built, proven on copies, committed and pushed; nothing in flight.** He looks next.
+- **His walk, in order** (nothing here has been seen by him):
+  1. Restart his :5300 once (`node score/server.js`) — R, discard, the flags and G all need the server's new routes.
+  2. CTRL+SHIFT+R on **both** pages (composer and `/notation/app/notation.html`).
+  3. **Composer:** select a note → the card's new **part** row → pick another part: the note jumps lanes, keeps everything, speaks on
+     the new channel; ±8va; the range line turns red when out of range. CTRL+Z now undoes card edits one at a time.
+  4. **Notation page, piece-septet:** R (whole score) → click a note, SHIFT+click three more → **G** (a beam) → the first two again →
+     **G** (2+2) → compose on in the composer → Save → R → the 2+2 holds. Delete one beamed note → Save → R → the bar's count and **O**.
+- **Found and fixed on the way:** card edits were never undo steps (older than 2d) · the card refused every note (a copied rule).
+- **Standing in NITS 2026-09-11 (2d.5–2d.6):** the live walk · the duplicate button's card behaviour (seen once, not diagnosed) · MIDI
+  not heard in the AI's browser.
+- **Pending decisions from him:** none for 2d. Still open: his verdict on the 2a page · the drawer verdicts (STRIKES_TOOL §AG) · whether to
+  commit his two passages · whether track 7's Kontakt still holds Plucked Piano.
+- **Deliberately uncommitted — all his:** `bank/panel_snapshots.json` · `reaper/septet_rack.rpp` · `bank/passages/accentedcres01*.json`
+  · `scores/SeptetSec03-Materials-B/-C/-D/-a.json`. **`SeptetSec03-Materials-D` has an unsaved working copy (15:32)** — the AI's :5301
+  tab opened it by memory during the 2d.5 walk and wrote nothing (times checked before and after); Save or Reload is his (D17).
+- **Tests:** `node tools/test_septet_notation.js` (86) · `node tools/test_identity.js` (20) · the tuba battery (`notation/ir/README.md`;
+  9 GREEN / 6 RED, notate_block 62/3).
+- **Next:** N2 his eye on the page and 2d (**Fable**, wrap on Opus first) · N3 the resvg panic before 2b (**Opus, after a clear**).
+- **Resume reads (for N3):** NITS 2026-09-11 (the 2a entry's resvg line) · `tools/export_print.js` header. Nothing else pre-emptively.
 
 **Open at session end** *(written cold, 2026-09-09)*:
 

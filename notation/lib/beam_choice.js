@@ -118,5 +118,38 @@
     return bits.join(' · ');
   }
 
-  return { beamDevices, applyChoices, resolveFlags, reportCounts, RINGS_DEFAULT };
+  // [PLAN 2d.6.2] G — the selection → a beam choice, or the beam removed. Pure: returns a NEW doc (the caller saves it).
+  //   noteIds: the composer's note ids (wc-N) selected, in onset order · partOf: wc-N → part (from the IR on screen).
+  //   · fewer than two notes, or notes in two parts → refused, with the reason, nothing written
+  //   · exactly the notes of an existing beam choice → that choice removed (G again undoes G)
+  //   · otherwise a new beam `c-<nextId>`; any older beam choice holding some of these notes gives them up — a note is in one beam —
+  //     and one left with fewer than two notes is removed (it beams nothing). This is HIS act, not the machine's: the resolve pass
+  //     (resolveFlags) still never removes anything. "Beam four, then 2+2" = G on four, then G on the first two.
+  //   nextId only grows (§6b, amendment 7): a discarded or removed id never returns.
+  function toggleBeam(choicesDoc, score, noteIds, partOf) {
+    const doc = choicesDoc ? JSON.parse(JSON.stringify(choicesDoc)) : { score, version: 1, nextId: 1, choices: [] };
+    const ids = [...new Set(noteIds || [])];
+    if (ids.length < 2) return { doc: choicesDoc, action: 'refused', why: 'select two or more notes of one part, then G' };
+    const parts = [...new Set(ids.map(id => partOf(id)))];
+    if (parts.length > 1) return { doc: choicesDoc, action: 'refused', why: 'a beam joins notes of one part — the selection is in parts ' + parts.join(', ') };
+    const same = (a, b) => a.length === b.length && a.every(x => b.includes(x));
+    const hit = doc.choices.find(c => c.kind === 'beam' && c.target && same(c.target.notes || [], ids));
+    if (hit) { doc.choices = doc.choices.filter(c => c !== hit); return { doc, action: 'removed', id: hit.id, dropped: [] }; }
+    const maxN = doc.choices.reduce((m, c) => { const r = /^c-(\d+)$/.exec(c.id || ''); return r ? Math.max(m, +r[1]) : m; }, 0);
+    const n = Math.max(doc.nextId || 1, maxN + 1);
+    const dropped = [], trimmed = [];
+    doc.choices = doc.choices.filter(c => {
+      if (c.kind !== 'beam' || !c.target || !Array.isArray(c.target.notes)) return true;
+      const keep = c.target.notes.filter(x => !ids.includes(x));
+      if (keep.length === c.target.notes.length) return true;
+      if (keep.length < 2) { dropped.push(c.id); return false; }
+      c.target.notes = keep; trimmed.push(c.id); return true;
+    });
+    const id = 'c-' + n;
+    doc.choices.push({ id, kind: 'beam', target: { notes: ids }, value: {}, orphaned: false, note: '' });
+    doc.nextId = n + 1;
+    return { doc, action: 'added', id, trimmed, dropped };
+  }
+
+  return { beamDevices, applyChoices, resolveFlags, reportCounts, toggleBeam, RINGS_DEFAULT };
 }));

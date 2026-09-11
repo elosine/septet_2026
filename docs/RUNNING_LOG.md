@@ -10788,3 +10788,53 @@ vertically can you center them on the appropriate staff, so centered on the midd
 **Noted for later (NITS):** ids are *"never reused in this file"* (§6b), but after a discard of the HIGHEST id, "max + 1" would reuse it — 2d.6's G needs a counter (e.g. `nextId` in the file, by amendment). · His :5300 still needs its one restart before R, discard or the flag write-back work there.
 
 **Next:** 2d.5, "move to part" in the composer's note card — its first sub-step (2d.5.1) is one of the two sanctioned broad code reads. A good clear point before it.
+
+## §395. PLAN 2d.5 built — move to part, the same note (2026-09-11, Opus 5)
+
+**What prompted it:** his word after 2d.4 — *"go ahead and continue thru as much as you can independantly, I'll look when finished"* — so no clear; 2d.5 then 2d.6 in the same context.
+
+**What was done, in order:**
+1. **2d.5.1, the list** (the sanctioned read of `composer.html` + `note_card.js`). A note's part IS `wc.layer`, the lane index = `TRACKS` order = the notation part. Keyed to it: the instrument and its voices (`TRACKS[layer].instKey` → `INSTRUMENTS`) · the lane it is drawn in (`contentGroups[layer]`) · the D11 curve-channel map (`_curveCh`, cached — `curveDirty()`) · the conflict marks. Self-invalidating: `heldDyn`'s cache (it keys on layer) · lane solo/mute. Carried as they are: `groupId` · a trill on the new lane eats a note starting inside it at playback. **MAIN = the instrument's `ordinary` voice** (sandbox/instruments.js — flute `ord`, bass clarinet `senza_vel`, piano `main`), not the first in its list: the flute's first is `aeolian_and_ord`.
+2. **2d.5.2–5** `note_card.js`: a **part** row above voice (the seven `TRACKS` shorts) · **`moveToPart(wc, to)`**, the one function — undo step · old element dropped · `layer` set · voice = the target's `ordinary` · curve map re-derived · redrawn · `markDirty` (Save as any card edit, D17); the id, time, length, pitch and dynamic untouched · **−8va / +8va** beside pitch · the part's range as an indicator — grey `range B3–C7`, red `out of range …`, never a block.
+3. **2d.5.7** `moveNote({ at, from, to, pitch })` · `moveNote({ id, to, toPitch })` — a part by short name, id or index; never guesses (two notes stacked there and no pitch → it lists them and moves nothing); calls the same `moveToPart`.
+4. **2d.5.8** the one-writer rule, written three places: `CLAUDE.md` § Apps · `docs/NAMING.md` §1 beside D17 · `note_card.js` above `moveNote`.
+
+**Found while proving it, all three fixed:**
+- **The card refused every note.** I had copied the lane drag's refusal of "grains" — and `isGrain` is EVERY sonified note on a part lane (the lane drag's refusal is a gesture rule: a grab of a grain is a retime). Removed. The same reading corrects `docs/NOTATION_IDENTITY.md`: **the lane drag never moves a note between lanes**; the properties panel's `layer` field was the one way, the card is the second.
+- **Card edits were never undo steps** — older than 2d.5, found by it. The card's `commit` pushed no undo state, so the next CTRL+Z went back past every card edit and took them with it. Measured before: +8va twice (43 → 67), then one CTRL+Z of an EARLIER move → 43. After: +8va → 55 with one undo step; CTRL+Z → 43, the earlier move kept. Every card edit is now its own step.
+- On a refused move, the card wrote the reason and then `paint()` overwrote it — the order is fixed.
+
+**The walk rule caught his score.** The :5301 composer tab opened **`SeptetSec03-Materials-D-work` — his unsaved edits from 15:32**, not the copy (the browser remembered it). Nothing was touched: the autosave timer cleared, the tab moved to the copy through the app's own `openScore`, and **his two files' write times were read before and after — unchanged** (`-work` 15:32:38.494, the file 14:09:36.627). The rule stands exactly as written; it is why the first line of every walk reads `Composer.sessionName`.
+
+**2d.5.6, the proof** (:5301, `zz-ai-move` = piece-septet copied, its whole-score IR, c-1 = a beam over cello wc-590 · 599 · 611 · 619):
+- the card's part → Flute, a real change event: **wc-590 — one object, the same id, pitch 43, start 0.608, length 0.132, level 10 unchanged; voice `gettato_vel` → `ord`; drawn in the flute lane, gone from the cello's; one undo step; routed flute ch 12**; the marker red, *out of range B3–C7* (G2).
+- Save → R: **"1 refused — a beam joins notes of one part — these are in parts 0, 6"** — a half-moved beam is loud, listed, never quietly wrong.
+- `moveNote` for the other three (two by `at`, one by `id`) → Save → R: **c-1 applied in part 0, drawn; all four `ord` in the IR.** The beam followed the notes.
+- Refusals, each moving nothing: a note no longer there · a part called `nope` · two piano notes stacked at 372.419 s without a pitch. +8va twice → 67, the marker grey. CTRL+Z → wc-619 back on the cello, the same id.
+- **Not heard:** the preview browser opens no MIDI ports, so "sounds on the flute's channel" is proven as the route the card prints (port `flute`, ch 12), not by ear. His rack is the ear.
+
+**Decided, and why:** the voice becomes `ordinary` rather than kept or matched by name — a key from the old instrument means nothing on the new, and `ordinary` is already the instrument's declared default (trills use it) · range is an indicator, never a clamp — his swaps may be deliberately extreme · `moveNote` refuses rather than guesses — a wrong note moved silently is the failure 2d exists to prevent.
+
+## §396. PLAN 2d.6 built — G: the first choice he makes on the page; 2d done (2026-09-11, Opus 5)
+
+**What was done, in order:**
+1. **The counter first** (the NITS item from §394): `nextId` in the choices file — **IR_SCHEMA_v0 §6b, amendment 7 extended**; `ir_validate` checks every `c-N` is below it. A removed or discarded id never returns.
+2. **The rule, pure** — `BeamChoice.toggleBeam(doc, score, noteIds, partOf)`: under two notes, or notes in two parts → refused with the reason, nothing written · exactly the notes of an existing beam → that beam removed · otherwise a new `c-<nextId>`; any older beam holding some of these notes gives them up (a note is in one beam), and one left with under two notes is removed. **This is HIS act — the resolve pass still never removes anything.** "Beam four, then 2+2" = G on four, then G on the first two.
+3. **2d.6.1 selection** in `notation.html`: a click on a note selects it — **and still seeks**, as every click on the page always has · SHIFT+click adds or takes away · ESC clears (and still frees the keys) · blue rings, redrawn after every render, never in an export. The hit test: the nearest drawn item carrying an event and a height, within 1.5 staff spaces of its head-to-tail span.
+4. **2d.6.2 G**: the selection → `toggleBeam` → saved (saves first, as discard does) → re-applied and re-laid out in place → one line of feedback. **2d.6.4** the tooltip lists click · SHIFT+click · G · ESC.
+5. **2d.6.3, the engine yields** — true by construction since 2d.2 (a choice's overlays come after the IR's own; layout keeps the last per note) and now proven in the battery: **a choice inside an engine beam of four splits it (2 + 2); a choice across two engine pairs joins them (4).** Septet IRs are built without `--beam`, so today the engine draws no beams of its own; the rule is there for when one is.
+6. Read-only console helpers: `notationSelection()` · `notationWhere(evId)` (where a head sits on screen — so the AI drives the page by real clicks).
+7. **Batteries:** septet **86 of 86** (seven new: G's rule, the split, the join) · `test_identity` ALL PASS · **the tuba battery: 26 staged where absent, the same 9 GREEN / 6 RED, notate_block 62/3, the 26 removed.**
+
+**2d.6.5, the proof — on a copy, by real clicks** (the page at 1920 × 1080 so a head is a real target; `zz-ai-move` after 2d.5's proof):
+- four Vn1 notes (wc-596 · 600 · 607 · 614) clicked, SHIFT-clicked → **four blue rings** → G → **"beam c-2 over 4 notes"**, nextId 3.
+- the first two → G → **"beam c-3 over 2 notes · taken from c-2"** — the 2+2; c-2 keeps the last two; all drawn.
+- **compose on:** the composer's `duplicate` on the score's last note → **wc-2052**, viola, 578.753 s → Save → **R → 900 events, the new note in, c-1 (the flute, after the swap) · c-2 · c-3 applied and drawn, the page kept.** The loop 2d exists for, end to end.
+- G on c-3's two → **"beam c-3 removed"** → G again → **"beam c-4"** — never c-3 again; nextId 5 · ESC → one note → G → **"select two or more notes of one part, then G"**, nothing written.
+- The file VALID at every read. No JS exception. The copy removed whole — IR and picker entry pruned, score, choices file, three Save snapshots; it never left a working copy; `index.json` restored (line endings only).
+
+**Not done by the AI, and why:** 2d.6.5 as written says *"on the live score"*. `piece-septet.json` is his and is never the AI's to write, and the loop's steps are his to judge — the live walk is listed for him in journal §2.
+
+**Decided, and why that rather than the alternative:** a click selects AND seeks rather than a separate select mode — nothing he already does changes, and a seek to a note he clicked is harmless · a new beam takes its notes from older beams rather than stacking two beams on one note — one note, one beam, and it is the only reading of "change to 2+2" that needs no extra key · G on the same notes removes rather than asks — the app's habit (Z · B · T · R · O): one key, no dialog.
+
+**2d is built.** Next in the running thread: his eye on the page (N2, Fable) · before 2b, the resvg panic (N3, Opus, after a clear).

@@ -76,6 +76,10 @@
   #orphans .ln span.what { flex: 1; }
   #orphans button { font: 11px monospace; padding: 1px 6px; cursor: pointer; }
   #orphans .err { color: #ff8a80; white-space: pre-wrap; }
+  /* [PLAN 2d.6] one line of feedback for G and the selection — DOM only, gone after a few seconds */
+  #flash { position: fixed; left: 8px; bottom: 64px; z-index: 12; background: #2b2b2bf2; color: #ffcc80;
+           font: 12px/1.4 monospace; padding: 4px 8px; border-radius: 4px; pointer-events: none; }
+  #flash:empty { display: none; }
 </style>
 </head>
 <body>
@@ -121,11 +125,12 @@
   <span id="orph" title="page choices that did not draw as chosen — click or O for the list"></span>
   <span id="meta"></span>
 </div>
-<div id="hoverzone" title="controls — B pins the bar open / hides it · Z video ↔ zoom · T time pill · SPACE play · ←/→ pages · R refresh from the score (last Save) · O the choices that did not draw · ESC frees the keys"></div>
+<div id="hoverzone" title="controls — B pins the bar open / hides it · Z video ↔ zoom · T time pill · SPACE play · ←/→ pages · R refresh from the score (last Save) · O the choices that did not draw · click a note selects it, SHIFT+click adds · G beams the selection (G again removes it) · ESC clears the selection and frees the keys"></div>
 <div id="sheet"></div>
 <div id="err"></div>
 <div id="stale" title="the extracted snapshot no longer matches the composer score"></div>
 <div id="orphans" hidden></div>
+<div id="flash"></div>
 <div id="tnow" title="playhead time"></div>
 
 <script src="/notation/lib/coords.js"></script>
@@ -383,13 +388,13 @@
     await render();
     return lightNotes(r.surviving);
   }
-  // rings over the given IR events on the page as drawn, gone after 4 s — DOM only, never exported
-  function lightNotes(evIds) {
+  // rings over IR events on the page as drawn — DOM only, never exported. One per event, on its first item that has a height.
+  function ringNotes(evIds, cls, color) {
     const view = state.animView, svg = $('sheet').querySelector('svg');
-    if (!view || !svg || !state.model || !evIds || !evIds.length) return 0;
+    if (!view || !svg || !state.model || !evIds || !evIds.length) return { g: null, n: 0 };
     const want = new Set(evIds), done = new Set(), NS = 'http://www.w3.org/2000/svg';
     const g = document.createElementNS(NS, 'g');
-    g.setAttribute('class', 'choice-light'); g.setAttribute('pointer-events', 'none');
+    g.setAttribute('class', cls); g.setAttribute('pointer-events', 'none');
     for (const sm of state.model.systems) {
       let sys; try { sys = view.system(sm.key !== undefined ? sm.key : sm.part); } catch (e) { continue; }
       for (const it of sm.items || []) {
@@ -400,14 +405,107 @@
         const c = document.createElementNS(NS, 'circle');
         c.setAttribute('cx', view.xOfSeconds(t).toFixed(2)); c.setAttribute('cy', sys.yOfSs(it.ySs).toFixed(2));
         c.setAttribute('r', (1.6 * sys.ssPx).toFixed(2));
-        c.setAttribute('fill', 'none'); c.setAttribute('stroke', '#f9a825'); c.setAttribute('stroke-width', '3');
+        c.setAttribute('fill', 'none'); c.setAttribute('stroke', color); c.setAttribute('stroke-width', '3');
         g.append(c);
       }
     }
     svg.append(g);
-    setTimeout(() => g.remove(), 4000);
-    return done.size;
+    return { g, n: done.size };
   }
+  // 2d.4.5's go there: amber, gone after 4 s
+  function lightNotes(evIds) {
+    const { g, n } = ringNotes(evIds, 'choice-light', '#f9a825');
+    if (g) setTimeout(() => g.remove(), 4000);
+    return n;
+  }
+
+  // [PLAN 2d.6] SELECTION + G — the first choice he makes on the page. A click on a note selects it (and still seeks, as every click
+  // on the page always has); SHIFT+click adds or takes away; ESC clears. G beams the selection — one key, no panel, the app's habit
+  // (Z · B · T · R · O). G on notes that already ARE a beam removes it. The selection is a set of IR event ids; it survives a render
+  // and a refresh (ids are stable, docs/NOTATION_IDENTITY.md) and is drawn as blue rings, never in an export.
+  const sel = new Set();
+  function drawSelection() {
+    const old = $('sheet').querySelector('g.choice-sel'); if (old) old.remove();
+    if (state.ir) for (const id of [...sel]) if (!state.ir.events.some(e => e.id === id)) sel.delete(id);   // a note gone since
+    return sel.size ? ringNotes([...sel], 'choice-sel', '#1e88e5').n : 0;
+  }
+  let flashTimer = null;
+  function flash(msg) {
+    $('flash').textContent = msg; clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => { $('flash').textContent = ''; }, 4000);
+  }
+  // the note under a click: nearest drawn item that carries an event and a height, within 1.5 staff spaces of its head-to-tail span
+  function hitNote(clientX, clientY) {
+    const view = state.animView, svg = $('sheet').querySelector('svg');
+    if (!view || !svg || !state.model) return null;
+    const rect = svg.getBoundingClientRect();
+    const x = (clientX - rect.left) * (+svg.getAttribute('width') / rect.width);
+    const y = (clientY - rect.top) * (+svg.getAttribute('height') / rect.height);
+    const [w0, w1] = view.window;
+    let best = null, bestD = Infinity;
+    for (const sm of state.model.systems) {
+      let sys; try { sys = view.system(sm.key !== undefined ? sm.key : sm.part); } catch (e) { continue; }
+      for (const it of sm.items || []) {
+        if (!it.ev || typeof it.ySs !== 'number') continue;
+        const t0 = it.t0 != null ? it.t0 : it.t; if (t0 == null || t0 < w0 - 1e-9 || t0 > w1) continue;
+        const t1 = it.t1 != null ? Math.min(it.t1, w1) : t0;
+        const x0 = view.xOfSeconds(t0), x1 = view.xOfSeconds(t1);
+        const dx = x < x0 ? x0 - x : x > x1 ? x - x1 : 0, dy = y - sys.yOfSs(it.ySs);
+        const d = Math.hypot(dx, dy);
+        if (d < 1.5 * sys.ssPx && d < bestD) { bestD = d; best = it.ev; }
+      }
+    }
+    return best;
+  }
+  function selectAt(ev) {
+    const id = hitNote(ev.clientX, ev.clientY);
+    if (!id) return false;
+    if (ev.shiftKey) { if (sel.has(id)) sel.delete(id); else sel.add(id); }
+    else { sel.clear(); sel.add(id); }
+    drawSelection();
+    return true;
+  }
+  function clearSelection() { if (!sel.size) return false; sel.clear(); drawSelection(); return true; }
+  // 2d.6.2 — G
+  async function beamSelection() {
+    if (!state.ir || typeof BeamChoice === 'undefined') return;
+    const score = state.ir.source.score;
+    const onset = new Map(state.ir.events.map(e => [e.id, e.onset]));
+    const partOfEv = new Map(); for (const c of state.ir.chunks || []) for (const id of c.events || []) partOfEv.set(id, c.part);
+    const evs = [...sel].filter(id => onset.has(id)).sort((a, b) => onset.get(a) - onset.get(b) || (a < b ? -1 : 1));
+    const r = BeamChoice.toggleBeam(state.choices, score, evs.map(id => id.replace(/^ev-/, '')), wc => partOfEv.get('ev-' + wc));
+    if (r.action === 'refused') { flash(r.why); return r; }
+    const res = await saveChoices(r.doc);
+    if (!res.success) { flash('⚠ not saved — nothing changed: ' + (res.error || 'no reason given')); return Object.assign(r, { saved: false }); }
+    state.choices = r.doc;
+    applyLoadedChoices(); layoutIr(); await render();
+    if (r.action === 'added') sel.clear();
+    drawSelection();
+    flash(r.action === 'added'
+      ? 'beam ' + r.id + ' over ' + evs.length + ' notes' + (r.trimmed.length ? ' · taken from ' + r.trimmed.join(', ') : '') + (r.dropped.length ? ' · ' + r.dropped.join(', ') + ' removed (fewer than two notes left)' : '')
+      : 'beam ' + r.id + ' removed');
+    return Object.assign(r, { saved: true, doc: undefined });
+  }
+  // read-only, for the console: the selection as IR event ids
+  window.notationSelection = () => [...sel];
+  // read-only, for the console: where an event's head sits on the screen now (client px) — null when it is not on this page.
+  // Lets the AI drive the page by real clicks, as he would.
+  window.notationWhere = evId => {
+    const view = state.animView, svg = $('sheet').querySelector('svg');
+    if (!view || !svg || !state.model) return null;
+    const rect = svg.getBoundingClientRect(), kx = rect.width / +svg.getAttribute('width'), ky = rect.height / +svg.getAttribute('height');
+    const [w0, w1] = view.window;
+    for (const sm of state.model.systems) {
+      let sys; try { sys = view.system(sm.key !== undefined ? sm.key : sm.part); } catch (e) { continue; }
+      for (const it of sm.items || []) {
+        if (it.ev !== evId || typeof it.ySs !== 'number') continue;
+        const t = it.t0 != null ? it.t0 : it.t;
+        if (t == null || t < w0 - 1e-9 || t > w1) continue;
+        return { x: rect.left + view.xOfSeconds(t) * kx, y: rect.top + sys.yOfSs(it.ySs) * ky, t, part: sm.part };
+      }
+    }
+    return null;
+  };
   // read-only, for the console: the count, the lines, whether the list is open
   window.notationOrphans = () => ({ count: $('orph').textContent, open: orphUi.open, err: orphUi.err,
     lines: offChoices().map(r => ({ id: r.id, status: r.status, present: r.present, notes: r.notes, t: r.t })) });
@@ -707,6 +805,7 @@
       state.animStyle = C.animated;
       state.lastView = view;
       applySolo();   // fresh page + fresh instances: re-assert dim and split
+      drawSelection();   // [2d.6] the page was replaced — the selection's rings come back on it
       // FIT-TO-WINDOW (day 22): the frame stays 1920×1080 internally (jury
       // geometry untouched) but DISPLAYS scaled to the window — Score fits
       // whole; Zoom fits width and scrolls height by design. F11 on a
@@ -860,7 +959,7 @@
     // ESC = release focus, always (day 29, composer: "arrows still trapped,
     // what is a quick escape") — works even in typing fields, so a captured
     // arrow key is one keypress from freedom.
-    if (ev.key === 'Escape') { if (ev.target && ev.target.blur) ev.target.blur(); return; }
+    if (ev.key === 'Escape') { if (ev.target && ev.target.blur) ev.target.blur(); clearSelection(); return; }   // [2d.6] and the selection
     if (ev.key === ' ' && !typing) {
       ev.preventDefault();
       if (ev.target && ev.target.blur) ev.target.blur();
@@ -903,6 +1002,10 @@
     }
     else if ((ev.key === 'o' || ev.key === 'O') && !ev.ctrlKey && !ev.altKey && !ev.metaKey) {   // [2d.4] the choices that did not draw
       toggleOrphans();
+      ev.preventDefault();
+    }
+    else if ((ev.key === 'g' || ev.key === 'G') && !ev.ctrlKey && !ev.altKey && !ev.metaKey) {   // [2d.6] beam the selection
+      beamSelection();
       ev.preventDefault();
     }
   });
@@ -1091,6 +1194,7 @@
     const rect = svg.getBoundingClientRect();
     const t = view.secondsOfX((ev.clientX - rect.left) * (view.widthPx / rect.width));
     const [w0, w1] = view.window;
+    selectAt(ev);   // [2d.6] a click on a note also selects it (SHIFT adds); the seek below is unchanged
     if (t >= w0 && t <= w1) { state.transport.seek(t); ensureLoop(); }
   });
   // audio attach: the clock slaves to the Reaper render (sync by construction)

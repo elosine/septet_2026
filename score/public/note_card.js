@@ -21,6 +21,7 @@
     // is undefined. Documented in the journal and walked into anyway; named here so the next file does not.
     const C = () => (typeof Composer !== 'undefined' ? Composer : root.Composer);
     const CR = () => (typeof Cresc !== 'undefined' ? Cresc : root.Cresc);
+    const TRACKS_ = () => (typeof TRACKS !== 'undefined' ? TRACKS : []);   // composer.html's lexical const, same story as Composer
 
     const CARD = {
         el: null,
@@ -99,6 +100,9 @@
                 '<div id="ncHead" style="display:flex;justify-content:space-between;align-items:center;cursor:move;margin:-2px 0 6px">' +
                   '<b style="color:#8fb3a5">NOTE</b><span id="ncClose" style="cursor:pointer;color:#888;padding:0 3px">&times;</span></div>' +
                 '<div id="ncStack" style="color:#c08a3e;font-size:11px;margin:0 0 5px;display:none"></div>' +
+                // MOVE TO PART (PLAN 2d.5): the note goes to another player IN PLACE — the same id, so a notation choice on it holds
+                '<div style="display:flex;align-items:center;gap:6px;margin:3px 0">' +
+                  '<span style="color:#9a9;width:52px">part</span><select id="ncPart" title="move this note to another part — same note, same id; the voice becomes that part\'s ordinary one" style="flex:1;min-width:0;background:#141419;color:#ddd;border:1px solid #444;padding:2px"></select></div>' +
                 '<div style="display:flex;align-items:center;gap:6px;margin:3px 0">' +
                   '<span style="color:#9a9;width:52px">voice</span><select id="ncTech" style="flex:1;min-width:0;background:#141419;color:#ddd;border:1px solid #444;padding:2px"></select></div>' +
                 '<div style="display:flex;align-items:center;gap:6px;margin:3px 0">' +
@@ -107,6 +111,12 @@
                   '<input id="ncPitch" type="number" min="0" max="127" style="width:56px;background:#141419;color:#ddd;border:1px solid #444;padding:2px">' +
                   '<button id="ncUp" style="width:22px">+</button>' +
                   '<b id="ncName" style="color:#8fb3a5;margin-left:2px"></b></div>' +
+                // ±8va, and the part's range as an INDICATOR — never a block (2d.5.4)
+                '<div style="display:flex;align-items:center;gap:6px;margin:3px 0">' +
+                  '<span style="width:52px"></span>' +
+                  '<button id="ncOctDn" style="padding:0 5px;font-size:11px">&minus;8va</button>' +
+                  '<button id="ncOctUp" style="padding:0 5px;font-size:11px">+8va</button>' +
+                  '<span id="ncRange" style="font-size:11px;color:#777"></span></div>' +
                 // THE DYNAMIC (2026-09-09, his *"also no ability to change dynamic in panel"*). One value underneath, the drawn
                 // height 0-10, shown three ways because each is what he wants at a different moment: the ensemble's own ppp…fff
                 // scale (Cresc.DYN, so the card cannot drift from the crescendos), the height the tile is drawn at, and the MIDI
@@ -147,8 +157,11 @@
 
             const commit = (fn) => {
                 if (!this.wc) return;
-                fn(this.wc);
                 const Cp = C();
+                // every card edit is its own undo step (found in 2d.5.6, 2026-09-11: the card never pushed one, so the next CTRL+Z
+                // went back to the snapshot BEFORE the card edits and took them with it — a pitch set in the card silently undone)
+                Cp.pushUndoState();
+                fn(this.wc);
                 Cp._curveCh = null;                 // the channel map is cached; a voice change must re-derive it
                 Cp.renderWaveCurve(this.wc);
                 Cp.markDirty();
@@ -168,6 +181,15 @@
             });
             d.querySelector('#ncUp').addEventListener('click', () => setPitch((this.wc ? this.wc.sonifyNote : 60) + 1));
             d.querySelector('#ncDn').addEventListener('click', () => setPitch((this.wc ? this.wc.sonifyNote : 60) - 1));
+            d.querySelector('#ncOctUp').addEventListener('click', () => setPitch((this.wc ? this.wc.sonifyNote : 60) + 12));
+            d.querySelector('#ncOctDn').addEventListener('click', () => setPitch((this.wc ? this.wc.sonifyNote : 60) - 12));
+            d.querySelector('#ncPart').addEventListener('change', (e) => {
+                if (!this.wc) return;
+                const r = this.moveToPart(this.wc, +e.target.value);
+                if (!r.ok) { this.paint(); const s = this.el.querySelector('#ncWhere'); s.textContent = r.why; s.style.color = '#e06666'; return; }
+                this.paint();
+                this.hear(this.wc);
+            });
             // one setter for all three faces of the dynamic: the tile's drawn height IS the value, and a captured note's replay
             // velocity is kept in step with it so what is seen and what is heard cannot disagree
             const setLevel = (l) => commit(wc => {
@@ -200,9 +222,56 @@
             d.addEventListener('keydown', (e) => e.stopPropagation());
         },
 
+        // ---- MOVE TO PART (PLAN 2d.5.3) — the one function the card's selector and moveNote() both call ----------------------
+        // The note stays the same object: its id, time, length, pitch and dynamic are untouched, so a notation choice keyed to the
+        // id follows it (docs/NOTATION_IDENTITY.md). What a note's PART is: `wc.layer`, the lane index = TRACKS order = the notation
+        // part. Keyed to it, and re-derived here (2d.5.1): the instrument and its voices (TRACKS → INSTRUMENTS) — the voice becomes
+        // the target's `ordinary` one, since a key from the old instrument means nothing on the new · the lane the note is drawn in
+        // (its element is dropped and redrawn) · the D11 curve-channel map (cached, curveDirty) · the conflict marks (markDirty
+        // schedules them) · undo (one step). Self-invalidating, nothing to do: heldDyn's cache (keys on layer) · lane solo/mute.
+        // Carried as they are: groupId (a morph re-apply regenerates its notes anyway) · a trill on the new lane eats a note that
+        // starts inside it at playback. Refused: containers, cue lines (a line stays on the piano lane, PLAN 1j), the META / curve
+        // layers. A NOTE has no drag path to another lane (the lane drag moves grains — every sonified note — in time only); the
+        // properties panel's `layer` field was the one way, and this is the second.
+        moveToPart(wc, to) {
+            const Cp = C(), T = TRACKS_();
+            if (!wc || wc.type !== 'waveCurve' || wc.sonifyNote == null) return { ok: false, why: 'not a note' };
+            if (!Number.isInteger(to) || to < 0 || to >= T.length) return { ok: false, why: 'no part ' + to + ' — the parts are 0–' + (T.length - 1) };
+            if (wc.layer < 0 || wc.layer >= T.length) return { ok: false, why: 'this note is on a META / curve layer, not a part' };
+            // NOT refused: a "grain" — composer.html's isGrain is EVERY sonified note on a part lane; the lane drag's refusal of
+            // grains is a gesture rule (a grab of a grain is a retime), and copying it here refused every note (found in 2d.5.6)
+            if (wc.isContainer || (Cp.isCueLine && Cp.isCueLine(wc))) return { ok: false, why: 'containers and cue lines stay on their lane' };
+            const from = wc.layer;
+            if (from === to) return { ok: true, id: wc.id, from, to, technique: wc.technique, same: true };
+            Cp.pushUndoState();
+            if (wc._els && wc._els.group) wc._els.group.remove();
+            const old = Cp.elementCache.get(wc.id); if (old) old.remove();
+            Cp.elementCache.delete(wc.id);
+            wc.layer = to;
+            const inst = Cp.trackInstrument(to), techs = Cp.trackTechniques(to) || [];
+            wc.technique = inst && inst.ordinary && techs.some(t => t.key === inst.ordinary) ? inst.ordinary : (techs[0] ? techs[0].key : '');
+            if (Cp.curveDirty) Cp.curveDirty(); else Cp._curveCh = null;
+            Cp.renderWaveCurve(wc);
+            Cp.markDirty();
+            return { ok: true, id: wc.id, from, to, technique: wc.technique };
+        },
+        inRange(wc) {
+            const [lo, hi] = C().trackRange(wc.layer);
+            return { lo, hi, ok: wc.sonifyNote >= lo && wc.sonifyNote <= hi };
+        },
+
         paint() {
             const wc = this.wc, Cp = C();
             if (!wc || !this.el) return;
+            const psel = this.el.querySelector('#ncPart'), T = TRACKS_();
+            if (psel.options.length !== T.length) {
+                psel.innerHTML = '';
+                T.forEach((t, i) => { const o = document.createElement('option'); o.value = i; o.textContent = t.short + ' — ' + t.label; psel.appendChild(o); });
+            }
+            psel.value = wc.layer;
+            const rg = this.inRange(wc), rs = this.el.querySelector('#ncRange');
+            rs.textContent = (rg.ok ? 'range ' : 'out of range ') + nm(rg.lo) + '–' + nm(rg.hi);
+            rs.style.color = rg.ok ? '#777' : '#e06666';
             const techs = Cp.trackTechniques(wc.layer) || [];
             const sel = this.el.querySelector('#ncTech');
             // the CHANNEL is shown against every voice, because that is the fact that explains a silent one
@@ -245,4 +314,62 @@
     };
 
     root.NoteCard = CARD;
+
+    // ---- moveNote — the swap as one console line (PLAN 2d.5.7), the crescRun / goTo pattern ------------------------------------
+    //   moveNote({ at: 143.57, from: 'Vc', to: 'Fl' })            the cello note starting at (or sounding at) 143.57 s → the flute
+    //   moveNote({ at: 143.57, from: 'Vc', to: 'Fl', pitch: 48 })  … the one at pitch 48, when notes are stacked there
+    //   moveNote({ id: 'wc-2052', to: 'Fl', toPitch: 72 })         by id, and a new pitch in the same undo step
+    // A part is its short name (Fl BCl Pno Vn1 Vn2 Va Vc), its id, or its index. Never guesses: two candidates and no pitch → it lists
+    // them and moves nothing. The same moveToPart the card's selector calls — whoever runs it, one code path.
+    //
+    // THE ONE-WRITER RULE (2d.5.8): the working copy lives in the OPEN PAGE (D17) and a second tab of the same score clobbers it on
+    // Save. One open composer tab per score — the AI drives HIS tab, or he closes it first. A throwaway :5301 tab opens its origin's
+    // last score, which can be his: read Composer.sessionName before touching anything; open the zz-ai- copy first.
+    const partIndex = (p) => {
+        const T = TRACKS_();
+        if (typeof p === 'number') return Number.isInteger(p) && p >= 0 && p < T.length ? p : -1;
+        const s = String(p == null ? '' : p).toLowerCase();
+        return T.findIndex(t => t.short.toLowerCase() === s || t.id.toLowerCase() === s || t.label.toLowerCase() === s);
+    };
+    root.moveNote = function (o) {
+        o = o || {};
+        const Cp = C(), T = TRACKS_();
+        if (!Cp) return null;
+        const names = T.map(t => t.short).join(' · ');
+        const to = partIndex(o.to);
+        if (to < 0) { console.warn('[moveNote] to: one of ' + names); return null; }
+        let wc = null;
+        if (o.id) {
+            wc = Cp.objects.find(x => x.id === o.id);
+            if (!wc) { console.warn('[moveNote] no note ' + o.id); return null; }
+        } else {
+            const from = partIndex(o.from);
+            if (from < 0 || o.at == null) { console.warn('[moveNote] needs { at, from, to } or { id, to } — parts: ' + names); return null; }
+            const at = +o.at;
+            const notes = Cp.objects.filter(x => x.type === 'waveCurve' && x.sonifyNote != null && x.layer === from);
+            let hits = notes.filter(x => Math.abs(x.startSeconds - at) < 0.05);
+            if (!hits.length) hits = notes.filter(x => x.startSeconds <= at && at < x.endSeconds);
+            if (o.pitch != null) hits = hits.filter(x => x.sonifyNote === +o.pitch);
+            if (hits.length !== 1) {
+                console.warn('[moveNote] ' + (hits.length
+                    ? hits.length + ' notes there — name one with pitch: ' + hits.map(x => x.id + ' pitch ' + x.sonifyNote + ' @ ' + x.startSeconds.toFixed(3)).join(' · ')
+                    : 'no ' + T[from].short + ' note at ' + at + ' s'));
+                return null;
+            }
+            wc = hits[0];
+        }
+        const r = CARD.moveToPart(wc, to);
+        if (!r.ok) { console.warn('[moveNote] ' + wc.id + ': ' + r.why); return null; }
+        if (o.toPitch != null) {
+            wc.sonifyNote = Math.max(0, Math.min(127, Math.round(+o.toPitch)));
+            Cp.renderWaveCurve(wc);
+            Cp.markDirty();
+        }
+        if (CARD.wc === wc) CARD.paint();
+        const rg = CARD.inRange(wc);
+        const out = { id: wc.id, from: T[r.from].short, to: T[r.to].short, technique: wc.technique, pitch: wc.sonifyNote, inRange: rg.ok };
+        console.log('%c[moveNote] ' + out.id + ' ' + out.from + ' → ' + out.to + ' · voice ' + out.technique + ' · pitch ' + out.pitch +
+            (rg.ok ? '' : ' — OUT OF RANGE ' + rg.lo + '–' + rg.hi) + ' · unsaved until Save', 'color:#e8cf9a');
+        return out;
+    };
 })(typeof window !== 'undefined' ? window : this);

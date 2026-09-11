@@ -252,9 +252,10 @@ owned by the notation app. The extractor never reads or writes it; the composer 
 {
   "score": "piece-septet",                      // scores/<score>.json — the save the IR is derived from
   "version": 1,
+  "nextId": 2,                                  // the next choice number (septet 2d.6): grows only, so a discarded id never returns
   "choices": [
     {
-      "id": "c-1",                              // assigned by the app; never reused in this file
+      "id": "c-1",                              // assigned by the app as "c-" + nextId; never reused in this file
       "kind": "beam",                           // beam — the only kind so far; others by amendment
       "target": { "notes": ["wc-1066", "wc-1070", "wc-1074", "wc-1080"] },
                                                 // or { "part": 3, "span": [t0, t1] }

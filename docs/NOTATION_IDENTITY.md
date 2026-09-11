@@ -26,7 +26,8 @@ The same object, changed in place. Read from the code 2026-09-11 (2d.1.2).
 | Edit | Where |
 |---|---|
 | note card: voice · pitch (and ▲▼) · dynamic / level · start · length | `note_card.js` `commit(fn)` — every field goes through it, on `this.wc` |
-| lane drag — a note moved to another lane | `composer.html` `wc.layer = …` / `obj.layer = newLayer` |
+| a note moved to another part — the note card's **part** (PLAN 2d.5), `moveNote()`, the properties panel's `layer` field | `note_card.js` `moveToPart` · `composer.html` `obj.layer = newLayer` |
+| *(correction, 2d.5.1, 2026-09-11: the lane DRAG does not move a note between lanes — every sonified note is a "grain", and grains move in time only)* | `composer.html` `startWCBodyDrag` |
 | undo / redo | the notes come back from the snapshot with their own ids |
 | Save · Name version · Reload · the working copy (D17) | objects are written and read as they are |
 
