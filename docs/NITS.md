@@ -328,3 +328,11 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   not by ear.
 - **Selection is video/zoom only** (the page keys and the click handler live there, as Z · B · T · R · O do). The ⚙ proofing views
   have no selection; nothing asks for one.
+
+## 2026-09-11 late — strike 1 (RUNNING_LOG §401)
+
+- **Three text baselines spill past the lane edge** on strike 1: BCl "(slap)" −7.12, Va "jeté" −7.31, Vc "jeté" −6.81 vs −6.51 (0.3–0.8 ss into the 4 px gap). No ink meets a neighbour's at those x (GEOMETRY clean). Strike 1 is the worst case (every part's first note: accent + fff + text). If it annoys: the fix ladder in container.json verticalBudget — a per-page lane weight, or the C-switch (staff 28).
+- **Two flag tips over the lane top:** Pno B5 7.11 (the piano lane is taller — likely harmless; the room test uses the global laneHalfSs 6.51, not the piano lane's real half) · Vn1 A♯5 6.61. Stems up is the house side (§401); a very high strike note may want 8va or a stem-down exception.
+- **`positionResolver` (animobj's followers) ignores the technique transposition** — a follower placed at the flute's tongue-ram pitch would sit a M7 below the written head. Only matters if a follower ever rides a flute strike; the GC ball lands on the lane edge, unaffected.
+- **The long piano `main` note has no strike look by design** (byEnv.strike); a long `main` still draws the family look (open head + brick). Its real notation is a section-2 question.
+- **`foldFlute()` is unrun in a browser** — proven on a file copy only (61 of 70). It uses the same calls as `moveNote` (pushUndoState · renderWaveCurve · markDirty); his first run is the proof.

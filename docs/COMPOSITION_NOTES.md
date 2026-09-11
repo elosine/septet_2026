@@ -1425,3 +1425,15 @@ number, and the same deal with a hand-fit filter after it.
 
 **AI reading, marked as such:** the flute part is flute alone — no piccolo, no bass flute. Q1 (open since 2026-09-03) closes; the
 instrument-change marks drop off the 2a adaptation list; the flute's clef is treble throughout.
+
+## CN-63 — 2026-09-11: how section 1's strikes are written (verbatim)
+
+> *"for section 1 I want to use the stacatto notation from the tuba sec 1 with the gcs"*
+
+> *"no this is meant to be as time accurate as possible, most players should have a different go time so as millisecond/pixel accurate as possible."*
+
+> *"bartok pizz symbol, jette text, tongue ram for flute is new, lets research, is it just text or is there a symbol , same with tongueslap bcl, also fff dynamic, and >accent for each along with the staccato dot but may revise for flute/bcl if there is an accent symbol associated with technique, also, please carefully manage the vert column, I think we have standards for order, but if not lets establish"*
+
+> *"bartok pizz is in str qtr, you can find glyph there I think and for future many string glyphs might be there; tongue ram transposition, notate fingered pitch and alert when it is out of range; slap +; 3 above"* — (3 = technique symbols above the note)
+
+**AI's reading (marked):** the page is time-proportional and each player's strike is its own event with its own GC — the roll is composed, not noise. The decisions and the research are in RUNNING_LOG §399.

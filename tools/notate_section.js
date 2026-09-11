@@ -241,6 +241,28 @@ const { doc, warnings } = Extract.extract(score, {
   date: new Date().toISOString().slice(0, 10),
   toolName: 'tools/notate_section.js (profile ' + profile + ')' + (flag('bricks') ? ' --bricks' : ''),
 });
+// [§400] THE RANGE ALERT AT BUILD TIME: a technique whose registry `written`
+// entry carries a range (the flute's tongue ram: written = sounding + 11,
+// playable only at B3–C♯5) is checked here as well as in the layout, so the
+// build output names every note that cannot be played as written.
+if (techniques) {
+  const partOf = new Map();
+  for (const c of doc.chunks || []) for (const id of c.events || []) partOf.set(id, c.part);
+  const NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  let n = 0;
+  for (const e of doc.events || []) {
+    const tw = techniques[e.technique] && techniques[e.technique].written;
+    if (!tw || !tw.range || !e.pitch) continue;
+    const pc = ENS_APPLIES ? (ENS.parts || []).find(p => p.part === partOf.get(e.id)) : null;
+    const wm = e.pitch.midi + ((pc && pc.transpose) || 0) + (tw.transpose || 0);
+    if (wm < tw.range[0] || wm > tw.range[1]) {
+      n++;
+      console.warn('range: ' + e.id + ' @ ' + e.onset.toFixed(3) + ' s ' + e.technique + ' sounding ' + NAMES[e.pitch.midi % 12] + (Math.floor(e.pitch.midi / 12) - 1) +
+        ' → written ' + NAMES[((wm % 12) + 12) % 12] + (Math.floor(wm / 12) - 1) + ' is outside ' + (tw.label || tw.range.join('–')));
+    }
+  }
+  if (n) console.warn('range: ' + n + ' note(s) cannot be played as written — the page marks each in red');
+}
 // --bracketsAbove (day 33, the composer's verdict "b"): every tuplet bracket
 // sits ABOVE its own staff, always — ownership on the page reads as "a
 // bracket belongs to the staff directly below it". Per-IR

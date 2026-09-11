@@ -372,4 +372,32 @@
             (rg.ok ? '' : ' — OUT OF RANGE ' + rg.lo + '–' + rg.hi) + ' · unsaved until Save', 'color:#e8cf9a');
         return out;
     };
+
+    // foldFlute (RUNNING_LOG §400, 2026-09-11 — the composer: "ok tongue ram, drop them all into C3-D4"): the flute's tongue rams
+    // (technique `pizzicato`) only sound C3–D4, so every one in the window is moved into that span by the SMALLEST drop, ONE undo
+    // step (CTRL+Z puts all of them back). A change to the MUSIC — it runs in HIS tab (the one-writer rule above); the notation
+    // then writes fingered = sounding + M7 and marks anything still outside.
+    //   foldFlute()                                                    0–183 s · Fl · pizzicato · into 48..62 (C3–D4)
+    //   foldFlute({ from: 0, to: 183, lo: 48, hi: 62, part: 'Fl', technique: 'pizzicato' })
+    root.foldMidi = function (p, lo, hi) { let q = p; while (q > hi) q -= 12; while (q < lo) q += 12; return q >= lo && q <= hi ? q : null; };
+    root.foldFlute = function (o) {
+        o = o || {};
+        const Cp = C(), T = TRACKS_();
+        if (!Cp) return null;
+        const part = partIndex(o.part != null ? o.part : 'Fl');
+        if (part < 0) { console.warn('[foldFlute] part: one of ' + T.map(t => t.short).join(' · ')); return null; }
+        const from = o.from != null ? +o.from : 0, to = o.to != null ? +o.to : 183;
+        const lo = o.lo != null ? +o.lo : 48, hi = o.hi != null ? +o.hi : 62, tech = o.technique || 'pizzicato';
+        const notes = Cp.objects.filter(x => x.type === 'waveCurve' && x.sonifyNote != null && x.layer === part && x.technique === tech && x.startSeconds >= from && x.startSeconds < to);
+        const moves = notes.map(x => ({ x, q: root.foldMidi(x.sonifyNote, lo, hi) })).filter(m => m.q != null && m.q !== m.x.sonifyNote);
+        const stuck = notes.filter(x => root.foldMidi(x.sonifyNote, lo, hi) == null).length;
+        if (!moves.length) { console.log('[foldFlute] nothing to move — ' + notes.length + ' ' + T[part].short + ' ' + tech + ' notes, all inside ' + lo + '..' + hi); return { moved: 0, of: notes.length, stuck }; }
+        Cp.pushUndoState();
+        for (const m of moves) { m.x.sonifyNote = m.q; Cp.renderWaveCurve(m.x); }
+        Cp.markDirty();
+        if (CARD.wc && moves.some(m => m.x === CARD.wc)) CARD.paint();
+        console.log('%c[foldFlute] ' + moves.length + ' of ' + notes.length + ' ' + T[part].short + ' ' + tech + ' notes moved into ' + lo + '..' + hi +
+            (stuck ? ' · ' + stuck + ' cannot fold' : '') + ' · one undo step · unsaved until Save', 'color:#e8cf9a');
+        return { moved: moves.length, of: notes.length, stuck, ids: moves.map(m => m.x.id) };
+    };
 })(typeof window !== 'undefined' ? window : this);

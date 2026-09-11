@@ -186,6 +186,12 @@
   "pizzicato": {
    "family": "oneshot",
    "notate": "tongue ram",
+   "written": {
+    "_doc": "RUNNING_LOG §400 (2026-09-11): a tongue ram sounds a MAJOR 7TH BELOW the fingered note (no air, the tube's lowest mode only), so the page writes the FINGERING: written = sounding + 11. It only speaks for fingerings B3–C♯5 (F5 with the trill keys) = sounding C3–D4; outside `range` (written MIDI) the layout and the extractor both warn and the page marks the note. The score stays sounding (D9); foldFlute() in the composer moves the notes into the window first.",
+    "transpose": 11,
+    "range": [59, 73],
+    "label": "tongue ram B3–C♯5"
+   },
    "label": "Pizzicato",
    "players": [
     "flute"

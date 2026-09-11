@@ -286,6 +286,12 @@
       // mode ('plain' = captured note, 'ks' = keyswitched sample; curve
       // mode = omitted default). Notation devices + tooltips consume these.
       if (o.envShape) ev.env = o.envShape;
+      // [§400, 2026-09-11] a note the STRIKES tool wrote (composer.html srcKind
+      // 'strike') is a strike whatever its technique — the piano's `main` is
+      // a strike here and a long note elsewhere. The registry's byEnv.strike
+      // gives every strike the section's strike look; a long `main` keeps its
+      // family look. Tuba saves carry no srcKind: nothing changes there.
+      else if (o.srcKind === 'strike') ev.env = 'strike';
       if (o.sonifyMode === 'plain' || o.sonifyMode === 'ks') ev.mode = o.sonifyMode;
       // the captured velocity (day 23, amendment 5): plain-mode notes play at
       // recVel (sonify_core), so the one-shot dynamic derives from it

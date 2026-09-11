@@ -177,7 +177,9 @@ it was found missing from this repo's CLAUDE.md, which is why the advice had gon
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N5** | **► NOTATE SECTION 1 IN EARNEST — planning method, phase 1 (RUNNING_LOG §398):** his notation vocabulary for sec 1, kind by kind; the AI then notates sec 1 from the IR. **After /postclear: check in with him first — do nothing.** | **Fable** | yes — clear, switch, `/postclear` |
+| **N6** | **► HIS EYE ON STRIKE 1** (RUNNING_LOG §399–401): :5300 notation page → picker "piece-septet · strike 1 (§400)" → Z. Fix what he marks (registry data mostly). Then, in HIS composer tab after CTRL+SHIFT+R: `foldFlute()` → Save → the IR rebuilt from piece-septet, the copy pruned. **After /postclear: check in first — do nothing.** | **Fable** for the verdict | no |
+| **N7** | **Plan the rest of section 1** by the planning method (his word: "once approved we'll see if plan is necessary") — the strike rule now covers every `env: strike` note; what else section 1 holds is the inventory question | **Fable** to plan, **Opus** to build | **yes** — wrap on Opus, clear, switch |
+| **N5** | ~~NOTATE SECTION 1 IN EARNEST — planning method, phase 1~~ — **the vocabulary for the strikes decided and strike 1 built 2026-09-11 (§399–401)** | — | — |
 | 1 | ~~BUILD §377~~ — **done, walked, pushed (§378; STRIKES_TOOL §AG)** | — | — |
 | **N1** | ~~BUILD PLAN 2a.1–2a.6~~ — **built 2026-09-11 in the same context (RUNNING_LOG §384–386)**: 70-check battery GREEN, tuba suite unchanged, the page seen on :5301 | — | — |
 | **N2** | **His eye on the seven-lane page** — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → the picker "piece-septet · 2a proof" → video and zoom (Z). The provisional looks to judge are listed in NITS 2026-09-11 | **Fable** for the verdict | yes — wrap on Opus, clear, switch |
@@ -395,7 +397,19 @@ the plan is already on paper. Wrap on Opus, always.
 - **Next:** N2 his eye on the page and 2d (**Fable**, wrap on Opus first) · then plan 2b with him (**Fable**, fresh context).
 - **Resume reads:** this block · PLAN §2 head + the 2b line (to plan it). Nothing else pre-emptively.
 
-**CHECKPOINT (mid-session checkpoint, 2026-09-11 late — session 8 continued, Claude Code / Opus 5). RUNNING_LOG §398. THIS IS THE ONE TO RESUME FROM.**
+**STATE — STRIKE 1 BUILT (2026-09-11 late — session 8 continued, Claude Code / Fable 5.1; his word: build here, no clear). RUNNING_LOG §399–401. THIS IS THE ONE TO RESUME FROM.**
+
+- **FIRST — HIS STANDING RULE:** after `/postclear`: play back, then **STOP and ask**. No edits, no builds. Start only on his word.
+- **Task and state:** section 1's strikes are written the tuba staccato way, every note at its own onset with its own GC — decided point by point (§399–400) and **strike 1 built, tested, committed and pushed** (§401). **Unseen by him.** Nothing in flight.
+- **What exists:** the strike look as registry data (`container.json` byEnv.strike + byTechnique for the four one-shot keys) · the tongue ram written +M7 with a range alert (`techniques.json` `written`) · two new glyphs (snap pizz, +) · layout: accent + instruction text in the chain, the symbol above when it fits, fff and text on change only, stems up for strikes, the flip-above rule now checks the fit · `foldFlute()` in the note card · the IR `strike1` from the copy `scores/zz-ai-strike1.json` (uncommitted, as is the IR and the picker entry).
+- **NEXT CONCRETE STEP (after his go):** his eye — :5300 `/notation/app/notation.html` → picker "piece-septet · strike 1 (§400)" → Z. Take his verdicts; fix what he marks (look = data). Then the fold in HIS tab (CTRL+SHIFT+R → console `foldFlute()` → Save), rebuild `--score piece-septet --w0 0 --w1 1 --bricks --id strike1 …`, delete the copy and prune nothing else. Then N7: plan the rest of section 1 (the planning method; Fable), build on Opus after a clear.
+- **Pending decisions from him:** his verdict on strike 1 · the three text spills and two flag tips (NITS 2026-09-11 late) · the accent on fl/bcl now that the symbol is there · still open: his eye on 2a/2d · the drawer verdicts (STRIKES_TOOL §AG) · his two passages · track 7's Kontakt.
+- **Deliberately uncommitted — all his:** `scores/piece-septet.json` (**his editing of today, 14:31** — 11 removed, 4 re-pitched, 14 moved, 69 edited; never the AI's) · `bank/panel_snapshots.json` · `reaper/septet_rack.rpp` · `bank/passages/accentedcres01*.json` · `scores/SeptetSec03-Materials-B/-C/-D/-a.json`. **The AI's, uncommitted on purpose until the fold lands:** `scores/zz-ai-strike1.json` · `notation/ir/strike1.ir.json` · the `strike1` entry in `notation/ir/index.json`.
+- **Tests:** `node tools/test_septet_notation.js` (86) · `test_identity` (20) · the tuba battery staged per `notation/ir/README.md`: 8 GREEN / 5 RED (the standing REDs).
+- **Model:** **Fable** for his verdict; Opus for the section-1 build after the plan.
+- **Resume reads:** RUNNING_LOG **§400–401** (the spec and the build). Nothing else pre-emptively.
+
+**CHECKPOINT (mid-session checkpoint, 2026-09-11 late — session 8 continued, Claude Code / Opus 5). RUNNING_LOG §398.** *(Superseded by the STATE block above: the vocabulary for the strikes is decided and strike 1 is built.)*
 
 - **FIRST — HIS STANDING RULE (2026-09-11):** *"when I clear and postclear, I dont want the model doing anything, i want them to check in
   with me first."* After `/postclear`: play back, then **STOP and ask**. No edits, no builds, no tool calls beyond the reads. Start only on his word.

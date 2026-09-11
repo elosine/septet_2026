@@ -70,9 +70,15 @@
     if (nStavesOf(pc) > 1) return (pc.staves[staff] && pc.staves[staff].clef) || 'bass';
     return pc.clef || 'bass';
   }
-  function writtenOf(pc, midi, spelled) {
-    const tr = (pc && pc.transpose) || 0;
+  // [§400] a TECHNIQUE may transpose too (techniques.json `written`: the
+  // flute's tongue ram is written at the FINGERING, a M7 above the sound);
+  // it adds to the part's transposition, the IR staying sounding (D9)
+  function writtenOf(pc, midi, spelled, tw) {
+    const tr = ((pc && pc.transpose) || 0) + ((tw && tw.transpose) || 0);
     return tr ? spellMidi(midi + tr) : spelled;
+  }
+  function techWrittenOf(T) {
+    return t => (T && T.techniques && T.techniques[t] && T.techniques[t].written) || null;
   }
   // For consumers that place a pitch without the layout (animobj's
   // followers): (part, sounding midi) -> { key, ySs } — the system key the
@@ -313,8 +319,54 @@
     for (const c of ir.chunks) for (const id of c.events || []) partOfEv.set(id, c.part);
     const pcOfEv = e => partCfgOf(ENS, partOfEv.get(e.id));
     const staffOfEv = e => staffIdxOf(pcOfEv(e), e.pitch.midi);
-    const spelledOf = e => respell.get(e.id) || writtenOf(pcOfEv(e), e.pitch.midi, e.pitch.spelled);
+    const TW = techWrittenOf(o.techniques);
+    const spelledOf = e => respell.get(e.id) || writtenOf(pcOfEv(e), e.pitch.midi, e.pitch.spelled, TW(e.technique));
     const posOfEv = e => staffPos(spelledOf(e), clefOf(pcOfEv(e), staffOfEv(e)));
+    // [§400] THE ONE-SHOT DYNAMIC BANDS, one table for the mark and for the
+    // on-change rule below (was inline at the mark)
+    const BANDS = o.dynamicBands || [{ max: 45, mark: 'ppp' }, { max: 75, mark: 'p' }, { max: 100, mark: 'mf' }, { max: 118, mark: 'f' }, { max: 127, mark: 'fff' }];
+    const bandOf = vel => (BANDS.find(b => vel <= b.max) || BANDS[BANDS.length - 1]).mark;
+    // [§400] fff AT A PART'S FIRST STRIKE, THEN NOTHING UNTIL IT CHANGES
+    // (the composer, 2026-09-11: "fff dynamic on first one and no more until
+    // dynamic changes in the part"): a device with dynMark 'band' AND
+    // dynOnChange draws its mark only where the band differs from the last
+    // band-marked note of the SAME PART, in onset order. Decided once here,
+    // before any unit is placed, so chunk order cannot change the answer.
+    const dynShown = new Set();
+    {
+      const byPart = new Map();
+      for (const e of ir.events || []) {
+        const d = deviceOf(e);
+        if (d.dynMark !== 'band' || !d.dynOnChange || !Number.isFinite(e.vel)) continue;
+        const p = partOfEv.get(e.id);
+        if (!byPart.has(p)) byPart.set(p, []);
+        byPart.get(p).push(e);
+      }
+      for (const list of byPart.values()) {
+        list.sort((a, b) => a.onset - b.onset);
+        let last = null;
+        for (const e of list) { const m = bandOf(e.vel); if (m !== last) { dynShown.add(e.id); last = m; } }
+      }
+    }
+    // [§400] instruction text ON CHANGE (Gould: a technique instruction is
+    // written once and holds until another cancels it): instrFirst is drawn
+    // at the part's first note and wherever the part's technique changes;
+    // instrText, when a device carries it, is drawn on every note. Decided
+    // once here, per part in onset order, like the dynamic above.
+    const instrShown = new Set();
+    {
+      const byPart = new Map();
+      for (const e of ir.events || []) {
+        const p = partOfEv.get(e.id);
+        if (!byPart.has(p)) byPart.set(p, []);
+        byPart.get(p).push(e);
+      }
+      for (const list of byPart.values()) {
+        list.sort((a, b) => a.onset - b.onset);
+        let last = null;
+        for (const e of list) { if (e.technique !== last) instrShown.add(e.id); last = e.technique; }
+      }
+    }
 
     // BEAM GROUP DIRECTION (day 24): ONE direction per group, decided by the
     // member FURTHEST from the middle line (Gould), ties up — this vocabulary
@@ -640,6 +692,22 @@
             const stds = glyphs.standards;
             const spN = spelledOf(e);
             let yDraw = posOf(spN);
+            // [§400] THE RANGE ALERT: a technique whose `written` carries a
+            // range (the tongue ram, B3–C♯5 fingered) flags a written note
+            // outside it — a warning here, a red mark on the page below, and
+            // the same check at extraction (notate_section). Never silent.
+            let writtenOut = null;
+            {
+              const twN = TW(e.technique);
+              if (twN && twN.range) {
+                const pcN = pcOfEv(e);
+                const wm = e.pitch.midi + ((pcN && pcN.transpose) || 0) + (twN.transpose || 0);
+                if (wm < twN.range[0] || wm > twN.range[1]) {
+                  writtenOut = 'out of range';
+                  warnings.push('nh-unit ' + e.id + ': ' + e.technique + ' written ' + pname + ' (' + wm + ') is outside ' + (twN.label || (twN.range[0] + '–' + twN.range[1])) + ' — cannot be played as written');
+                }
+              }
+            }
             const th = 2 + ((stds.ottava && stds.ottava.ledgerLineThreshold) || 3);
             let octShift = 0;
             while (yDraw > th) { yDraw -= 3.5; octShift++; }
@@ -767,8 +835,14 @@
                 const stemKind = /^flag\d+$/.test(dev.nhStem || '') || dev.nhStem === 'plain' || dev.nhStem === 'beam' ? dev.nhStem : null;
                 const flagDur = /^flag(\d+)$/.test(stemKind || '') ? +RegExp.$1 : null;
                 const engS = engOf(e.id);
+                // [§400] nhStemDir: a device may fix the direction — the strike
+                // look keeps stems UP as the house side (the tuba's "up is the
+                // house side": GC and chain under the staff, the flag above),
+                // so a high note on a treble staff does not hang its chain
+                // below its own flag. An engraving override still wins.
                 const stemDir = engS.stemDir === 'up' || engS.stemDir === 'down' ? engS.stemDir
                   : (dev.beamGroup && groupDir.has(dev.beamGroup)) ? groupDir.get(dev.beamGroup)
+                  : (dev.nhStemDir === 'up' || dev.nhStemDir === 'down') ? dev.nhStemDir
                   : (yDraw >= 0 ? 'down' : 'up');
                 const attA = stemDir === 'up' ? nhO.anchors.stemAttachUp : nhO.anchors.stemAttachDown;
                 const att = { dx: attA.x - nhO.anchors.center.x, dy: attA.y - nhO.anchors.center.y };
@@ -895,10 +969,9 @@
                 // mark with no velocity is a warning, never a silent default.
                 let markKey = null;
                 if (dev.dynMark === 'band') {
-                  const bands = o.dynamicBands || [{ max: 45, mark: 'ppp' }, { max: 75, mark: 'p' }, { max: 100, mark: 'mf' }, { max: 118, mark: 'f' }, { max: 127, mark: 'fff' }];
                   if (Number.isFinite(e.vel)) {
-                    const b = bands.find(b => e.vel <= b.max) || bands[bands.length - 1];
-                    markKey = b.mark;
+                    markKey = bandOf(e.vel);
+                    if (dev.dynOnChange && !dynShown.has(e.id)) markKey = null;   // [§400] same band as the part's last mark: nothing drawn
                   } else if (e.mode === 'plain') warnings.push('nh-unit ' + e.id + ': plain-mode event carries no vel (pre-amendment-5 extraction — re-extract) — no mark drawn');
                   // no mode = not a captured note: nothing to band, no mark, no noise
                 } else if (dev.dynMark) markKey = dev.dynMark;
@@ -922,15 +995,47 @@
                 // mark on one row above the beam and lowers the beam to make the
                 // room. The mark then plays no part in the chain.
                 const markAboveBeam = !!(markG && dev.dynAboveBeam && dev.nhStem === 'beam');
-                const chainH = (pairG ? pairG.h : 0) + (markG && !markAboveBeam ? markG.hSs : 0);
-                const chainN = (pairG ? 1 : 0) + (markG && !markAboveBeam ? 1 : 0);
+                // [§400] THE ARTICULATION SLOT ON A LONE UNIT: nhArtic on a
+                // flagged/plain unit (a beam member hands its accent to the
+                // group row, as before) is the chain's FIRST element — the
+                // dot stays on the head, the accent sits outside it, the
+                // dynamic outside that (stackBelow: articulation · dynamic ·
+                // instruction · ottava). Then the INSTRUCTION SLOT: text after
+                // the dynamic, at the technique size, left-justified with the
+                // head like the cuivré mark.
+                const articG = dev.nhArtic && stemKind !== 'beam' ? (glyphs.articulation && glyphs.articulation[dev.nhArtic]) || null : null;
+                if (dev.nhArtic && stemKind !== 'beam' && !articG) warnings.push('nh-unit ' + e.id + ': articulation glyph "' + dev.nhArtic + '" missing — not drawn');
+                const instrTxt = (dev.instrFirst && instrShown.has(e.id)) ? dev.instrFirst : (dev.instrText || null);
+                const instrEm = instrTxt ? TS.technique * (o.textEmScale != null ? o.textEmScale : 1.3) : 0;
+                // [§400] THE TECHNIQUE SYMBOL goes above the unit when the lane
+                // has room above the stem tip (a flagged stem-up unit already
+                // reaches the lane top: 2 + 0.38 + a 16th flag = 5.88 of 6.51);
+                // otherwise it joins the head-side chain after the accent — the
+                // composer's "above" where above exists. Decided here so the
+                // chain's room test counts it.
+                // the flag, possibly compressed vertically (day 23) — nhFlagScaleY /
+                // registry flagScaleY; anisotropic, only the height changes (hoisted, §400)
+                const flagKy = flagG ? (dev.nhFlagScaleY > 0 ? dev.nhFlagScaleY : (o.flagScaleY > 0 ? o.flagScaleY : 1)) : 1;
+                const flagH = flagG ? flagG.hSs * flagKy : 0;
+                const symG = dev.techSymbol ? (glyphs.articulation && glyphs.articulation[dev.techSymbol]) || null : null;
+                if (dev.techSymbol && !symG) warnings.push('nh-unit ' + e.id + ': technique symbol glyph "' + dev.techSymbol + '" missing — not drawn');
+                const symK = dev.techSymbolScale > 0 ? dev.techSymbolScale : 1;
+                const symH = symG ? symG.hSs * symK : 0;
+                const laneHalfU = ((o.chainSide && o.chainSide.laneHalfSs) || 6.51);
+                const STAFF_EDGE = 2;   // the outer staff line (was declared at the chain-side rule below; hoisted here, §400)
+                const clrF = o.flagClearanceSs != null ? o.flagClearanceSs : 0.38;
+                // the stem tip a flagged stem-up unit will reach at least (the flag-clear rule)
+                const tipUpMin = flagG && stemDir === 'up' ? STAFF_EDGE + clrF + flagH : null;
+                const symAbove = !!symG && (stemDir === 'down' || tipUpMin == null || tipUpMin + stackGap + symH <= laneHalfU + 1e-9);
+                const symInChain = !!symG && !symAbove;
+                const chainH = (pairG ? pairG.h : 0) + (markG && !markAboveBeam ? markG.hSs : 0) + (articG ? articG.hSs : 0) + instrEm + (symInChain ? symH : 0);
+                const chainN = (pairG ? 1 : 0) + (markG && !markAboveBeam ? 1 : 0) + (articG ? 1 : 0) + (instrTxt ? 1 : 0) + (symInChain ? 1 : 0);
 
                 // the flag, possibly compressed vertically (day 23, composer:
                 // "if we can adjust it so it's not so tall") — device
                 // nhFlagScaleY / registry flagScaleY; anisotropic, so only the
                 // height changes; the stem attach and the flag's x are untouched
-                const flagKy = flagG ? (dev.nhFlagScaleY > 0 ? dev.nhFlagScaleY : (o.flagScaleY > 0 ? o.flagScaleY : 1)) : 1;
-                const flagH = flagG ? flagG.hSs * flagKy : 0;
+                // (flagKy / flagH are declared above, at the technique-symbol decision — §400)
 
                 // THE SIDE-WITH-ROOM RULE (day 23, composer, after the ledger
                 // measurement — without ottava the lowest notes end at the
@@ -947,7 +1052,7 @@
                 // AND THE FLAG (composer: "the dynamic above the staff and
                 // below the bottom of the flag"), the stem clearing it.
                 const CS = Object.assign({ rule: 'sideWithRoom', laneHalfSs: 6.51 }, o.chainSide || {});
-                const STAFF_EDGE = 2;
+                // (STAFF_EDGE is declared above, at the technique-symbol decision — §400)
                 const rDot = ((stds.staccatoDot && stds.staccatoDot.diameter) || 0.4) / 2;
                 // STACCATO DOT (day 23, composer: "always on the notehead, so
                 // below in this case"; then "reduce the vertical space between
@@ -975,10 +1080,22 @@
                 // overrides the room test — the test cannot see the
                 // neighbouring part's ink (THE CROSS-LANE BLIND SPOT, day 32),
                 // and the composer's placement is a verdict (T6's fff @46.18).
+                // [§400] ...AND ONLY WHEN IT FITS THERE. Under a flag the only
+                // element with a place of its own is the mark BESIDE the stem;
+                // everything else stacks in the column and the stem must be
+                // lengthened over it. With one mark (the tuba's chains) that is
+                // exactly the old rule; with an accent and a text as well the
+                // flip put the chain INTO the flag (strike 1: Vc, Va). So the
+                // column part of the chain plus the clearance and the flag must
+                // fit above the staff, else the chain stays below and overflows
+                // the lane edge — the tuba's accepted case (verticalBudget).
+                const besideMark = !!(markG && !markAboveBeam && dev.dynBesideStem && stemKind && stemDir === 'up');
+                const needAboveCol = needAbove - (besideMark ? gapAbove + markG.hSs : 0);
+                const fitsAbove = !underFlag || (refTop0 + needAboveCol + clrF + flagH <= CS.laneHalfSs + 1e-9);
                 const chainAbove = dev.chainSide
                   ? dev.chainSide === 'above'
                   : CS.rule === 'sideWithRoom' && octShift === 0 && chainN > 0
-                    && needBelow > roomBelow + 1e-9 && roomAbove > roomBelow + 1e-9;
+                    && needBelow > roomBelow + 1e-9 && roomAbove > roomBelow + 1e-9 && fitsAbove;
                 // A BEAMED NOTE WHOSE CHAIN FLIPS ABOVE HANDS ITS MARK TO THE GROUP
                 // (day 24, composer, on T5 32.18). There were two independent placers
                 // above the beam — the group's accent row, at one height for the whole
@@ -1017,8 +1134,11 @@
                   // is already longer.
                   if (flagG && dev.nhStemRule === 'flagClear') {
                     const clr = o.flagClearanceSs != null ? o.flagClearanceSs : 0.38;
-                    const beside = !!dev.dynBesideStem;
-                    const clearTop = STAFF_EDGE + (chainAbove && underFlag && !beside ? needAbove : 0);
+                    // [§400] the stem clears the COLUMN part of an above-chain
+                    // (the beside-stem mark needs no clearing) — one mark beside
+                    // the stem = 0, the tuba's number; an accent or a text in
+                    // the column lifts the flag over it
+                    const clearTop = STAFF_EDGE + (chainAbove && underFlag ? Math.max(0, needAboveCol) : 0);
                     const need = stemDir === 'up'
                       ? (clearTop + clr + flagH) - yStart      // flag hangs down from the tip
                       : yStart - (-STAFF_EDGE - clr - flagH);  // flag rises from the tip
@@ -1191,6 +1311,17 @@
                   const y = chainBotY - stackGap - h / 2; chainBotY = y - h / 2; return y;
                 };
 
+                // [§400] the accent, first in the chain (the dot is already on the head)
+                if (articG) {
+                  const yA = placeChain(articG.hSs);
+                  items.push({ k: 'glyph', g: 'artic-' + dev.nhArtic, t: tU, dxSs: headDx, ySs: yA, align: 'center' });
+                }
+                // [§400] the technique symbol on the head side when above has no room
+                if (symInChain) {
+                  const yS = placeChain(symH);
+                  items.push(Object.assign({ k: 'glyph', g: 'artic-' + dev.techSymbol, t: tU, dxSs: headDx, ySs: yS, align: 'center' }, symK !== 1 ? { scale: symK } : {}));
+                }
+
                 // DYNAMIC PAIR + ARROW (the surge's hairpin replacement):
                 // start mark centered on the NOTE COLUMN (the head), then
                 // gap · short arrow · gap · end mark, all on one band.
@@ -1229,6 +1360,29 @@
                     dxMark = stemLeft - gapStem - markG.wSs / 2;
                   }
                   items.push({ k: 'glyph', g: 'dyn-' + markKey, t: tU, dxSs: dxMark, ySs: yDyn, align: 'center' });
+                }
+
+                // [§400] the instruction text, after the dynamic (the chain's
+                // instruction slot); ySs is the BASELINE, the em box sits on it
+                if (instrTxt) {
+                  const yT = placeChain(instrEm);
+                  items.push({ k: 'text', t: tU, dxSs: headDx - nhO.wSs / 2, ySs: yT - instrEm / 2 + instrEm * 0.2, text: instrTxt, size: TS.technique, color: '#000' });
+                }
+                // [§400] THE TECHNIQUE SYMBOL — ABOVE THE UNIT (the composer,
+                // 2026-09-11: "3 above" — Gould's side for snap pizz and the
+                // slap's +), outside the stem tip and any chain that flipped
+                // up, the house gap; the ottava, when above, stays outermost
+                if (symAbove) {
+                  const yS = Math.max(chainTopY, inkTopY) + stackGap + symH / 2;
+                  chainTopY = yS + symH / 2;
+                  items.push(Object.assign({ k: 'glyph', g: 'artic-' + dev.techSymbol, t: tU, dxSs: headDx, ySs: yS, align: 'center' }, symK !== 1 ? { scale: symK } : {}));
+                }
+                // [§400] the range alert on the page: red, above everything
+                if (writtenOut) {
+                  const emA = TS.technique * (o.textEmScale != null ? o.textEmScale : 1.3);
+                  const yB = Math.max(chainTopY, inkTopY) + stackGap;
+                  chainTopY = yB + emA;
+                  items.push({ k: 'text', t: tU, dxSs: headDx - nhO.wSs / 2, ySs: yB, text: writtenOut, size: TS.technique, color: '#c00' });
                 }
 
                 if (octShift !== 0) {
