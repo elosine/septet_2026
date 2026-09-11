@@ -283,7 +283,9 @@
    "partLabel": {
     "xPx": 4,
     "yOffsetSs": 0.9,
-    "sizeSs": 1.1
+    "sizeSs": 1.1,
+    "baselineBelowEm": 0.32,
+    "_septetNote": "2026-09-11 (composer: \"center them on the appropriate staff, so centered on the middle staff line\"): with the ensemble registry the label is centred on its staff's middle line (the grand staff: between its staves); the baseline sits baselineBelowEm × font size below the line, so the text's visual middle (Crimson's caps and figures, ~0.64 em tall) is on it. yOffsetSs is the tuba's top-of-lane placement, used without an ensemble."
    },
    "textScale": 1.3,
    "clefInsetSs": 0.6,

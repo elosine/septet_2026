@@ -10643,3 +10643,15 @@ also can zoom be on a key toggle also, same stipulation"*
 - **Why B is safe:** Chrome's and Windows' shortcuts all carry CTRL, ALT, the Windows key or an F-key; an unmodified letter reaches
   the page. The hover strip's tooltip now lists every key.
 - Like every page key, it needs the page to hold focus: after using a menu, ESC first (the day-29 rule).
+
+## §388. "center them on the appropriate staff, so centered on the middle staff line" — the part labels (2026-09-11, Opus 5)
+
+**His words** (with a screenshot of the strings' gutter): *"in the presentation score, the instrument labels are horizontally fine, but
+vertically can you center them on the appropriate staff, so centered on the middle staff line"*
+
+- **Built** (render.js, septet only — with the ensemble registry; the tuba's top-of-lane label is untouched): each label's visual middle
+  on its staff's middle line; the piano's on the grand staff's middle, between its two staves (the engraver's convention for a braced
+  part). The baseline is placed by an explicit number, `partLabel.baselineBelowEm` 0.32 × the font size (container.json), not by SVG
+  `dominant-baseline`, so the app and the export rasterizer cannot disagree.
+- **Measured in the running app** (zoom ×2, staff 63.2 px): all seven labels' box centres within **0.83 px** of their target line
+  (≈0.4 px in the video frame); Pno exactly between its staves. Battery 70/70.

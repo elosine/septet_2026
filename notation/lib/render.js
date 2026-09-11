@@ -98,9 +98,24 @@
       // [2a.1] the ensemble's short name (the score's tracks[].short), once
       // per part: a grand staff is labelled on its top staff only
       const pcfg = ENS && ENS.parts && ENS.parts.find(p => p.part === sysModel.part);
-      if (!(sysModel.staff > 0))
-        parts.push('<text x="' + E.partLabel.xPx + '" y="' + (sys.yTopPx + E.partLabel.yOffsetSs * ssPx).toFixed(1) + '" font-size="' + (E.partLabel.sizeSs * ssPx).toFixed(1) +
+      // VERTICALLY (composer, 2026-09-11: "center them on the appropriate
+      // staff, so centered on the middle staff line"): with the ensemble the
+      // label's visual middle sits ON the staff's middle line — for a grand
+      // staff on the lane's middle, between its two staves. baselineBelowEm
+      // (registry partLabel) is where the baseline goes below that line, as a
+      // fraction of the font size: an explicit number, so Chrome and the
+      // export rasterizer agree (no dominant-baseline). Without the ensemble:
+      // the tuba's top-of-lane label, unchanged.
+      if (!(sysModel.staff > 0)) {
+        let ly = sys.yTopPx + E.partLabel.yOffsetSs * ssPx;
+        if (ENS) {
+          let lane = sys;
+          try { lane = view.system(sysModel.part); } catch (e) { /* no lane entry: the staff itself */ }
+          ly = lane.yMidPx + (E.partLabel.baselineBelowEm != null ? E.partLabel.baselineBelowEm : 0.32) * E.partLabel.sizeSs * ssPx;
+        }
+        parts.push('<text x="' + E.partLabel.xPx + '" y="' + ly.toFixed(1) + '" font-size="' + (E.partLabel.sizeSs * ssPx).toFixed(1) +
           '"' + fontAttr + ' fill="' + o.muted + '">' + (pcfg ? esc(pcfg.short) : 'T' + (sysModel.part + 1)) + '</text>');
+      }
       // page-edge rule: a chunk continuing across the cut re-shows its tempo
       // label at the page start (splice.js planPages -> page.reshow)
       for (const rs of (opts && opts.reshow) || []) {
