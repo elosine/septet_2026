@@ -444,8 +444,9 @@ Object.assign(D, {
         let s = '';
         (this._sndReport || rep).forEach(rp => {
             const x = dotX(rp.key); if (x == null) return;
-            rp.notes.forEach(n => { if (n.midi < R.lo || n.midi > R.hi) return; const cy = this.keyY(n.midi) + h / 2; s += '<circle class="skSndMark" cx="' + x + '" cy="' + cy + '" r="' + (r + 1) + '" fill="none" stroke="#e8cf9a" stroke-width="1.5" stroke-dasharray="2 2"><title>' + esc((TRK()[n.lane] || {}).label + ' ' + nm(n.midi)) + '</title></circle>'; });
-            s += '<text class="skSndMark" x="' + (x + 4) + '" y="' + (H_(svg) - 4) + '" font-size="9" fill="#e8cf9a">' + esc(String(rp.taken)) + '</text>';
+            const pl = this.pianoLane();   // 2026-09-12, his ask: the piano's notes told apart — solid blue rings; the ensemble's stay dashed gold
+            rp.notes.forEach(n => { if (n.midi < R.lo || n.midi > R.hi) return; const cy = this.keyY(n.midi) + h / 2; const isP = n.lane === pl; s += '<circle class="skSndMark" cx="' + x + '" cy="' + cy + '" r="' + (r + 1) + '" fill="none" stroke="' + (isP ? '#8fc8ff' : '#e8cf9a') + '" stroke-width="1.5"' + (isP ? '' : ' stroke-dasharray="2 2"') + '><title>' + esc((TRK()[n.lane] || {}).label + ' ' + nm(n.midi)) + '</title></circle>'; });
+            s += '<text class="skSndMark" x="' + (x + 4) + '" y="' + (H_(svg) - 4) + '" font-size="9" fill="#e8cf9a">' + esc(String(rp.taken) + (rp.pno ? '+' + rp.pno : '')) + '</text>';
         });
         if (this._sndCard) { const x = dotX(this._sndCard.key); if (x != null) s += '<line class="skSndMark" x1="' + x + '" y1="0" x2="' + x + '" y2="' + H_(svg) + '" stroke="#e8cf9a" stroke-width="1" stroke-dasharray="3 3" opacity="0.8"/>'; }
         svg.insertAdjacentHTML('beforeend', s);
