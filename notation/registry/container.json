@@ -239,6 +239,8 @@
     "instruction",
     "ottava"
    ],
+   "ottavaLedgerThreshold": 3,
+   "_ottavaNote": "RUNNING_LOG §401j (2026-09-11, the composer, on the piano's A♯1 on its 4th ledger line: 'last pno strike missed ottava'): the smallest ottava that brings a written note within THIS many ledger lines — 3, piece #2's staff-router rule and Gould's; the shared glyph standard (glyphs.json standards.ottava.ledgerLineThreshold) says 4, the tuba's choice, and keeps it for the tuba pages. Every part, both piano staves.",
    "stackGapSs": 0.45,
    "dynamicBands": [
     {

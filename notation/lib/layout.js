@@ -446,7 +446,7 @@
         const tChord = Math.min(...evs.map(e => e.onset));
         if (evs.some(e => e.onset - tChord > CC.chordTolSeconds + 1e-9)) return out;   // not one simultaneity
         const stds = glyphs.standards;
-        const th = 2 + ((stds.ottava && stds.ottava.ledgerLineThreshold) || 3);
+        const th = 2 + (o.ottavaLedgerThreshold != null ? o.ottavaLedgerThreshold : ((stds.ottava && stds.ottava.ledgerLineThreshold) || 3));
         const lf = (stds.ledgerLine && stds.ledgerLine.lengthFraction) || 0.25;
         const m = [];
         for (const e of evs) {
@@ -708,7 +708,7 @@
                 }
               }
             }
-            const th = 2 + ((stds.ottava && stds.ottava.ledgerLineThreshold) || 3);
+            const th = 2 + (o.ottavaLedgerThreshold != null ? o.ottavaLedgerThreshold : ((stds.ottava && stds.ottava.ledgerLineThreshold) || 3));
             let octShift = 0;
             while (yDraw > th) { yDraw -= 3.5; octShift++; }
             while (yDraw < -th) { yDraw += 3.5; octShift--; }

@@ -11028,3 +11028,9 @@ Not decided, not needed for strike 1: the accent on fl/bcl he may revise once he
 - **The page that did not fit (§401h):** measured in the AI's pane, both apps at his window's shape in video view — identical (sheet 1333×750, bar 43 px). The difference was Chrome's PER-ORIGIN zoom on localhost:5300 (the composer's origin, where CTRL+wheel had been tried over remote desktop); **CTRL+0 fixed it** — *"ok reset zoom works"*. The "missing controls" were the ⚙ engineering checkbox, off in that tab. Nothing in the app.
 - **The piano's go line:** *"too short on bottom make it the same amount below bottom staff as currently above top staff"* — registry `goLine.multiStaffBottomMirrorsTop: true` (the 36 px trim retired): the line ends below the bass staff's bottom line by the distance its top sits above the treble's top line.
 - **A full page:** the IR rebuilt for 0–12 s (one video page; every note in 0–183 s is a strike) — picker "piece-septet · strikes, page 1 (0–12 s, §400)".
+
+## §401j. The ottava threshold — 3 ledger lines, registry data for this piece (2026-09-11 late, Fable 5.1)
+
+**His words** (with a crop of the last piano strike, A♯1 on its 4th ledger line below the bass staff, no ottava): *"last pno strike missed ottava in bottom staff, make sure fix picks up future ottava, top staff seems to be working"*
+
+Measured first: the rule engages past `glyphs.standards.ottava.ledgerLineThreshold` ledger lines, which the tuba set to **4** (layout's comment still says 3); that head sits at y −6 = the 4th ledger, inside the tuba's rule. The piano's upper staff "worked" because its two ottavas were beyond 4. Decided: `engraving.layout.ottavaLedgerThreshold: 3` in the septet's container (piece #2's staff-router rule, Gould's) — read by layout ahead of the shared glyph standard, so the tuba pages keep their 4 (staged layout battery GREEN) and every septet part, both piano staves, gets the ottava from the 4th ledger line on. Not a per-note fix.
