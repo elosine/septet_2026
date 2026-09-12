@@ -172,57 +172,139 @@ Object.assign(D, {
         // keyboard's ends); the two-hand guard runs after, unchanged.
         const P = this.pnoCfg();
         const perOnset = (sound.pno === '' || sound.pno == null || !isFinite(+sound.pno)) ? null : Math.max(0, Math.round(+sound.pno));
-        const oct = Math.max(-4, Math.min(4, Math.round(+sound.pno8va || 0)));
-        if (pl >= 0 && perOnset === 0) out.pnoWhy = 'off here';
-        else if (pl >= 0 && (perOnset > 0 || P.share !== 'none') && !(this.isSwell && this.isSwell())) {
-            const left = pitches.slice(); chosen.forEach(c => { const i = left.indexOf(c); if (i >= 0) left.splice(i, 1); });
-            const pBusy = others.some(n => n.lane === pl && Math.abs(n.onMs - t) < P.ms);
-            let set = left.slice(), doubled = 0, why = '';
-            if (perOnset > 0) {
-                if (set.length < perOnset && chosen.length) {           // the top-up, drawn in this onset's own shuffle
-                    const bag = chosen.slice();
-                    for (let i = bag.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [bag[i], bag[j]] = [bag[j], bag[i]]; }
-                    while (set.length < perOnset && bag.length) { set.push(bag.shift()); doubled++; }
-                }
-                why = Math.min(left.length, perOnset) + ' left over' + (doubled ? ' + ' + doubled + ' doubled' : '')
-                    + (set.length < perOnset ? ' — ' + perOnset + ' asked, the harmony has ' + pitches.length : '');
-            }
-            const hand = (sound.pnoHand === 'one' || sound.pnoHand === 'two') ? sound.pnoHand : P.hands;
-            if (hand === 'one' && !pBusy && (left.length || chosen.length)) {   // CN-67
-                const n0 = perOnset > 0 ? perOnset : P.share === 'one' ? 1 : P.share === 'n' ? P.n : left.length;
-                if (!n0) { out.pnoWhy = 'nothing left'; return out; }
-                const n = Math.min(n0, P.perHand);
+        const blk = this.pianoBlock({
+            lane: pl, pitches, chosen, perOnset, oct: +sound.pno8va || 0,
+            hand: (sound.pnoHand === 'one' || sound.pnoHand === 'two') ? sound.pnoHand : null,
+            prev: this._pnoPrev || null,
+            pBusy: pl >= 0 && others.some(n => n.lane === pl && Math.abs(n.onMs - t) < P.ms),
+            noSwell: !!(this.isSwell && this.isSwell()),
+            tech: this.sndTechOf(pl, notes), t, durMs, vel, rnd,
+        });
+        blk.notes.forEach(n => out.notes.push(n));
+        out.pno = blk.pno; out.pnoWhy = blk.pnoWhy; if (blk.pnoWin) out.pnoWin = blk.pnoWin;
+        return out;
+    },
+
+    // ---------------------------------------------------------------- THE PIANO BLOCK, once (PLAN 1t step 5)
+    // (pitches, chosen, count, 8va, hands, prev) -> the piano's notes + the readout. Lifted out of `dealChordAt` unchanged, so that
+    // the CHORD deal (§405 · §409, its behaviour untouched) and the PLAIN deal at the piano's own shuffled onset call the SAME rule.
+    // PLAN 1q-PRINCIPLE: the defect history of this drawer is one rule wired into one path and not its sibling.
+    //   a.pitches   the harmony as it stands · a.chosen what the ensemble takes (the top-up's bag, CN-66)
+    //   a.perOnset  null = the pattern's setting · 0 = the piano sits this one out · n = a TARGET of n notes
+    //   a.oct       `piano 8va`, ±4 · a.hand 'one' | 'two' | null = the pattern's · a.prev the last piano chord's window (CN-67)
+    //   a.seed      a pitch that LEADS the leftovers — the plain deal's own note, which the piano is already holding
+    pianoBlock(a) {
+        const out = { notes: [], pno: 0, pnoWin: null, pnoWhy: '' };
+        const P = this.pnoCfg(), pl = a.lane;
+        const oct = Math.max(-4, Math.min(4, Math.round(+a.oct || 0)));
+        const perOnset = (a.perOnset === '' || a.perOnset == null || !isFinite(+a.perOnset)) ? null : Math.max(0, Math.round(+a.perOnset));
+        const rnd = a.rnd || Math.random, tech = a.tech, t = a.t, durMs = a.durMs, vel = a.vel;
+        const pitches = (a.pitches || []).slice(), chosen = (a.chosen || []).slice();
+        if (pl < 0) return out;
+        if (perOnset === 0) { out.pnoWhy = 'off here'; return out; }
+        if (!(perOnset > 0 || P.share !== 'none') || a.noSwell) return out;   // CN-34: a piano cannot swell (§343)
+        const left = pitches.slice(); chosen.forEach(c => { const i = left.indexOf(c); if (i >= 0) left.splice(i, 1); });
+        if (a.seed != null) { const i = left.indexOf(a.seed); if (i >= 0) left.splice(i, 1); left.unshift(a.seed); }
+        const pBusy = !!a.pBusy;
+        let set = left.slice(), doubled = 0, why = '';
+        if (perOnset > 0) {
+            if (set.length < perOnset && chosen.length) {           // the top-up, drawn in this onset's own shuffle
                 const bag = chosen.slice();
                 for (let i = bag.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [bag[i], bag[j]] = [bag[j], bag[i]]; }
-                const pool = left.slice().sort((a, b) => a - b).map(p => ({ p, src: 'left' })).concat(bag.map(p => ({ p, src: 'dbl' })));
-                const fit = this.oneHandFit(pool, n, P, oct, this._pnoPrev || null);
-                const tech = this.sndTechOf(pl, notes);
-                fit.set.forEach(p => { const rz = this.realize(p, { lane: pl, tech }); if (!rz) return; out.notes.push({ lane: pl, tech, midi: rz.midi, standIn: !!rz.standIn, pitch: p, onMs: t, durMs, vel }); out.pno++; });
-                out.pnoWin = { lo: fit.lo, hi: fit.hi, dir: fit.dir };
-                const bits = ['one hand' + (fit.dir > 0 ? ' \u2191' : fit.dir < 0 ? ' \u2193' : '')];
-                bits.push(fit.fromLeft + ' left over' + (fit.fromChosen ? ' + ' + fit.fromChosen + ' doubled' : '') + (fit.dup ? ' + ' + fit.dup + ' at the 8ve' : ''));
-                if (fit.short) bits.push(fit.short + ' short of ' + n);
-                if (n < n0) bits.push(P.perHand + '/hand caps ' + n0);
-                if (fit.noRoom) bits.push('no room beside the last chord');
-                if (oct) bits.push((oct > 0 ? '+' : '') + oct + ' 8va');
-                out.pnoWhy = bits.join(' \u00b7 ');
-                return out;
+                while (set.length < perOnset && bag.length) { set.push(bag.shift()); doubled++; }
             }
-            const want = perOnset > 0 ? Math.min(set.length, perOnset) : set.length;
-            if (!want) out.pnoWhy = perOnset > 0 ? 'nothing to take' : 'nothing left';
-            else if (pBusy) out.pnoWhy = 'too soon';
-            else {
-                const tech = this.sndTechOf(pl, notes);
-                const lim = perOnset > 0 ? { share: 'n', n: perOnset, reach: P.reach, perHand: P.perHand, ms: P.ms } : P;
-                this.handFit(set.map(p => p + 12 * oct), lim).forEach(p => { const rz = this.realize(p, { lane: pl, tech }); if (!rz) return; out.notes.push({ lane: pl, tech, midi: rz.midi, standIn: !!rz.standIn, pitch: p, onMs: t, durMs, vel }); out.pno++; });
-                if (out.pno) { const ps = out.notes.filter(n => n.lane === pl).map(n => n.midi); out.pnoWin = { lo: Math.min.apply(null, ps), hi: Math.max.apply(null, ps), dir: 0 }; }
-                const drop = want - out.pno;
-                const bits = []; if (why) bits.push(why); if (drop > 0) bits.push(drop + ' dropped'); if (oct) bits.push((oct > 0 ? '+' : '') + oct + ' 8va');
-                out.pnoWhy = bits.join(' · ');
-            }
+            why = Math.min(left.length, perOnset) + ' left over' + (doubled ? ' + ' + doubled + ' doubled' : '')
+                + (set.length < perOnset ? ' — ' + perOnset + ' asked, the harmony has ' + pitches.length : '');
+        }
+        const hand = (a.hand === 'one' || a.hand === 'two') ? a.hand : P.hands;
+        if (hand === 'one' && !pBusy && (left.length || chosen.length)) {   // CN-67
+            const n0 = perOnset > 0 ? perOnset : P.share === 'one' ? 1 : P.share === 'n' ? P.n : left.length;
+            if (!n0) { out.pnoWhy = 'nothing left'; return out; }
+            const n = Math.min(n0, P.perHand);
+            const bag = chosen.slice();
+            for (let i = bag.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [bag[i], bag[j]] = [bag[j], bag[i]]; }
+            const pool = left.slice().sort((a, b) => a - b).map(p => ({ p, src: 'left' })).concat(bag.map(p => ({ p, src: 'dbl' })));
+            const fit = this.oneHandFit(pool, n, P, oct, a.prev || null);
+            fit.set.forEach(p => { const rz = this.realize(p, { lane: pl, tech }); if (!rz) return; out.notes.push({ lane: pl, tech, midi: rz.midi, standIn: !!rz.standIn, pitch: p, onMs: t, durMs, vel }); out.pno++; });
+            out.pnoWin = { lo: fit.lo, hi: fit.hi, dir: fit.dir };
+            const bits = ['one hand' + (fit.dir > 0 ? ' \u2191' : fit.dir < 0 ? ' \u2193' : '')];
+            bits.push(fit.fromLeft + ' left over' + (fit.fromChosen ? ' + ' + fit.fromChosen + ' doubled' : '') + (fit.dup ? ' + ' + fit.dup + ' at the 8ve' : ''));
+            if (fit.short) bits.push(fit.short + ' short of ' + n);
+            if (n < n0) bits.push(P.perHand + '/hand caps ' + n0);
+            if (fit.noRoom) bits.push('no room beside the last chord');
+            if (oct) bits.push((oct > 0 ? '+' : '') + oct + ' 8va');
+            out.pnoWhy = bits.join(' \u00b7 ');
+            return out;
+        }
+        const want = perOnset > 0 ? Math.min(set.length, perOnset) : set.length;
+        if (!want) out.pnoWhy = perOnset > 0 ? 'nothing to take' : 'nothing left';
+        else if (pBusy) out.pnoWhy = 'too soon';
+        else {
+            const lim = perOnset > 0 ? { share: 'n', n: perOnset, reach: P.reach, perHand: P.perHand, ms: P.ms } : P;
+            this.handFit(set.map(p => p + 12 * oct), lim).forEach(p => { const rz = this.realize(p, { lane: pl, tech }); if (!rz) return; out.notes.push({ lane: pl, tech, midi: rz.midi, standIn: !!rz.standIn, pitch: p, onMs: t, durMs, vel }); out.pno++; });
+            if (out.pno) { const ps = out.notes.map(n => n.midi); out.pnoWin = { lo: Math.min.apply(null, ps), hi: Math.max.apply(null, ps), dir: 0 }; }
+            const drop = want - out.pno;
+            const bits = []; if (why) bits.push(why); if (drop > 0) bits.push(drop + ' dropped'); if (oct) bits.push((oct > 0 ? '+' : '') + oct + ' 8va');
+            out.pnoWhy = bits.join(' · ');
         }
         return out;
     },
+    // ---------------------------------------------------------------- PLAN 1t step 5: the block on the PLAIN strike
+    // The piano row's own three controls, read once. Blank count = today exactly: the piano's ONE note at its own shuffled onset.
+    plainPnoCfg() {
+        const c = this.cfg, blank = v => v === '' || v == null || !isFinite(+v);
+        return { count: blank(c.pnoRowN) ? null : Math.max(0, Math.round(+c.pnoRowN)),
+                 oct: blank(c.pnoRow8va) ? 0 : Math.max(-4, Math.min(4, Math.round(+c.pnoRow8va))),
+                 hands: c.pnoRowHands === 'one' ? 'one' : c.pnoRowHands === 'two' ? 'two' : null };
+    },
+    // the piano's one note becomes a chord of `count` — the SAME `pianoBlock` the chord deal calls, so CN-61 · CN-66 · CN-67 and the
+    // ±4 8va hold on both paths. An onset the CHORD deal already handled keeps its own piano chord: one rule per onset, never both.
+    applyPlainPiano(notes, mode) {
+        const R = this.plainPnoCfg();
+        if (mode === 'piano' || !(R.count > 0)) { this._pnoRowWhy = ''; return notes; }
+        if ((this.isChords && this.isChords()) || (this.isFill && this.isFill())) return notes;
+        const pl = this.pianoLane(); if (pl < 0) return notes;
+        const S = SC();
+        const map = this.snd();
+        const chordT = new Set();
+        this.onsetList().forEach(o => { if (map[o.key] && map[o.key].kind === 'chord') chordT.add(Math.round(o.onMs)); });
+        // the harmony as it stands, and what the ensemble plays (the top-up's bag) — from the VOICES, so neither is a folded pitch
+        const all = [...new Set(this.voices.map(v => v.pitch))].sort((a, b) => a - b);
+        const ens = [...new Set(this.voices.filter(v => this.reals(v).some(r => !r.skip && r.lane !== pl)).map(v => v.pitch))].sort((a, b) => a - b);
+        const byKey = {}; this.timed().forEach(q => { byKey[Math.round(q.onMs) + ':' + q.v.pitch] = q.v; });
+        const report = (this._sndReport || []).slice();
+        const out = []; const why = []; let prev = null;
+        notes.slice().sort((a, b) => a.onMs - b.onMs).forEach(n => {
+            if (n.lane !== pl || chordT.has(Math.round(n.onMs))) { out.push(n); return; }
+            const rnd = (S && S.mulberry32) ? S.mulberry32(((+this.cfg.vSeed || 1) * 977) + Math.round(n.onMs) * 31 + 5) : Math.random;
+            const blk = this.pianoBlock({ lane: pl, pitches: all, chosen: ens, perOnset: R.count, oct: R.oct, hand: R.hands,
+                prev, pBusy: false, noSwell: !!(this.isSwell && this.isSwell()),
+                tech: n.tech, t: n.onMs, durMs: n.durMs, vel: n.vel, rnd, seed: n.midi });
+            if (!blk.notes.length) { out.push(n); if (blk.pnoWhy) why.push(blk.pnoWhy); return; }
+            blk.notes.forEach(x => out.push(x));
+            if (blk.pnoWin) prev = blk.pnoWin;
+            if (blk.pnoWhy) why.push(blk.pnoWhy);
+            const v = byKey[Math.round(n.onMs) + ':' + n.midi];
+            if (v) report.push({ key: 'v' + v.i, taken: 0, wanted: R.count, free: 0, folds: 0, skipped: 0,
+                                 pno: blk.pno, pnoWhy: blk.pnoWhy, notes: blk.notes });
+        });
+        this._sndReport = report;
+        this._pnoRowWhy = why.length ? (R.count + ' per onset · ' + why[0]) : '';
+        return out;
+    },
+
+    // the piano row's three boxes and their readout, refreshed with the strip (PLAN 1t step 5)
+    paintPnoRow() {
+        const el = this.el; if (!el) return;
+        const R = this.plainPnoCfg();
+        const set = (id, v) => { const b = el.querySelector(id); if (b && document.activeElement !== b) b.value = v; };
+        set('#skPnoRowN', this.cfg.pnoRowN == null ? '' : this.cfg.pnoRowN);
+        set('#skPnoRow8va', R.oct || 0);
+        set('#skPnoRowHands', this.cfg.pnoRowHands || '');
+        const why = el.querySelector('#skPnoRowWhy');
+        if (why) why.textContent = (R.count > 0 && this._pnoRowWhy) ? this._pnoRowWhy : '';
+    },
+
     // the pattern's notes with the chords in: the onset's own note(s) replaced by the deal — the hook under notesFor (Hear and Insert)
     applySounds(notes, mode) {
         const map = this.snd(); const keys = Object.keys(map).filter(k => map[k] && map[k].kind === 'chord');
@@ -433,9 +515,9 @@ Object.assign(D, {
         svg.querySelectorAll('.skSndMark').forEach(x => x.remove());
         if (this.isChords && this.isChords()) return;
         const map = this.snd(); const keys = Object.keys(map).filter(k => map[k] && map[k].kind === 'chord');
+        try { this.notesFor('orch'); } catch (e) { }   // refreshes _sndReport — before the guard, so PLAN 1t's plain piano paints too
         const rep = this._sndReport || [];
-        if (!keys.length && !this._sndCard) return;
-        try { this.notesFor('orch'); } catch (e) { }   // refreshes _sndReport
+        if (!keys.length && !this._sndCard && !rep.length) return;
         const h = this.rh(), R = this.range(), r = Math.max(2.5, h * 0.42);
         const dotX = key => {
             if (key[0] === 'a') { const dots = svg.querySelectorAll('.skADot'); const d = dots[+key.slice(1)]; return d ? +d.getAttribute('cx') : null; }
@@ -457,7 +539,12 @@ function H_(svg) { return +svg.getAttribute('height') || 0; }
 // ---------------------------------------------------------------- the hooks
 // 1 · the plain notes gain the chords (under swell_ui's own hook, so a chord's notes become swells when the switch is on)
 const _plain = D._notesForPlain || D.notesFor;
-const plainHook = function (mode) { const notes = _plain.apply(this, arguments); return this.applySounds ? this.applySounds(notes, mode) : notes; };
+const plainHook = function (mode) {
+    let notes = _plain.apply(this, arguments);
+    if (this.applySounds) notes = this.applySounds(notes, mode);
+    if (this.applyPlainPiano) notes = this.applyPlainPiano(notes, mode);   // PLAN 1t step 5: the piano row's count on the plain strike
+    return notes;
+};
 if (D._notesForPlain) D._notesForPlain = plainHook; else D.notesFor = plainHook;
 // 1b · §377: ♪ on the card — while `_onlyAt` is set, notesFor answers with that onset alone, moved to time 0 (Hear's own path plays it)
 const _nfOuter = D.notesFor;
@@ -483,7 +570,7 @@ D.renderRhythm = function () {
             });
             svg.title = (svg.title || '');
         }
-        this.paintSoundMarks(); this.paintSoundCard();
+        this.paintSoundMarks(); this.paintSoundCard(); this.paintPnoRow();
     } catch (e) { console.warn('[strike_sounds] strip hooks:', e); }
     return r;
 };

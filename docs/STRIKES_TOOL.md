@@ -1143,7 +1143,6 @@ that comes sooner, the ensemble's rest does not apply to it. Off under a crescen
 > on, for example, the rest of the notes, but if they aren't enough, then some additional notes. Can I dial that in? So let's say I want
 > the piano to take on five pitches. There's only two left over. So it takes those two plus three more random from the cord. And then what
 > do I do when I'm done? Just close the panel and it's set, or do I have to set it somehow?"* (composer, 2026-09-12)
-
 **What the drawer does today** *(read from `strike_sounds.js` `dealChordAt`, 2026-09-12):* the COUNT per onset is dialable (`max` on the
 onset card); WHO is by register (the k lowest-register free players, pitches low→high onto players low→high) or `random`; a player is
 free when no other note of theirs lies inside t ± (140 ms + `rest`). Nobody remembers who played the onset before. The piano's share is
@@ -1192,7 +1191,48 @@ ONE setting for the pattern (`pnoCfg`), never per onset; `up to n` is a cap, nev
   reach, the window wholly above or below the previous piano chord and the side alternating; leftovers → doubles → the same pitch
   again at the octave (his word) when the reach allows. Readout `one hand ↑ · …`. Unwalked in the app at the build.
 
-## AI · Strikes alternating with crescendos — a chain of links, the roles rotating, the piano on the strikes only — `collected 2026-09-12 (CN-68, verbatim there) — NOT built; the planning conversation is in RUNNING_LOG §411`
+## AI · Strikes alternating with crescendos — a chain of links, the roles rotating, the piano on the strikes only — `collected 2026-09-12 (CN-68, verbatim there); planned RUNNING_LOG §411–§418; BUILT 2026-09-12 as PLAN 1t — RUNNING_LOG §419. How to use it is the first block below.`
+
+### AI · HOW TO USE IT — built 2026-09-12 (PLAN 1t; RUNNING_LOG §419)
+
+**The shape, his (CN-69 → CN-72): the drawer makes only the STRIKES; every crescendo is made in the SCORE, from the strike that
+launches it, by selection.** Nothing is added to every note; the placements are clicks, not numbers.
+
+**The loop, as walked:**
+
+1. **A strike.** The drawer as always. Two new helps: the **tick per player row** in the orchestration panel (a row sounding at the
+   playhead in the open score is dimmed and says `busy → t s`; `shuffle` deals onto the ticked rows only, so one ticked row gives a
+   single-note strike) and **`unison`** in the rhythm column (every onset at the first; span × · = ms · gap grey out and say why).
+   `Insert @ playhead`.
+2. **Select the strike notes the crescendos launch from. SHIFT+C.** The panel:
+   - **who** — a tick per player. Pre-ticked = not in the selection AND free at every selected onset. The piano is `✕` and disabled
+     (CN-34: it cannot swell); a player in the selection shows `·`. Untick for a subset.
+   - **the mode** — `one per onset` (the onsets in time order, each taking the first free ticked player not yet used; the onsets left
+     over are named) · `all others from each onset` (every free ticked player launched from each onset — one onset selected = his
+     "the other three begin a crescendo").
+   - **ends** — `even` (typed seconds) · `together` (every one stops at one time: the last onset + the seconds) · `next strike` (the
+     first strike group after the selection; its onsets dealt in order, so each crescendo ends ON one of them, and one with no onset
+     left is named). Every end is still capped 0.17 s before that player's next sound and floored at 0.3 s; the readout says which.
+   - **harmony** — `these notes` (each takes its launching strike's pitch) · `next strike` (that group's pitches in order) · `the
+     drawer` (the keyboard's pitches as they stand, dealt low → high onto the players low → high). Every pitch folded into the
+     player's ordinary voice; one that no octave reaches is named, never silently moved.
+   - **dynamics · shape · secco** — ppp → fff and surge 5× by default, the crescendo card's own defaults; `preview` shows what `[go]`
+     would write; **`[go]` is ONE undo step** — CTRL+Z removes the whole go. ESC closes. Each crescendo's own card edits it after.
+3. **END** puts the playhead at the END of what is selected — the latest end among them — so `Insert @ playhead` lands the next strike
+   exactly there. Nothing selected: it says so and does not move.
+4. **The piano on a plain strike.** The orchestration panel's footer, beside the piano flags: `count` · `8va` · `hands`. Blank = as
+   always, the piano's one note at its own shuffled onset. With a count that note becomes a chord of `count` — the harmony's leftovers
+   first, then doubles of pitches the ensemble plays (CN-66), `hands: two` (CN-61) or `one, alt` (CN-67), the ±4 `8va`; the readout
+   says `4 left over + 1 doubled · 5/hand caps 6`. Hear and Insert carry it; the strip rings the piano's notes in solid blue and the
+   count reads `ensemble+piano`.
+
+**Open, his call (RUNNING_LOG §419):** after `[go]` the selection stays on the STRIKE, so END goes to the strike's end and he must
+click the crescendo before pressing it. Leaving the new crescendos selected would make the eight steps flow without that click — it
+changes selection behaviour he did not ask for, so it was not done.
+
+**Still deprecated (§413):** chords mode and fill mode. Nothing above is built on either; `sounding.js` is the lift of fill's read of
+"what is sounding over a time", not a call into it.
+
 
 **What the drawer does today** *(read 2026-09-12 from `strike_sounds.js` `dealChordAt`, `swell_ui.js`, `cresc_card.js`):*
 

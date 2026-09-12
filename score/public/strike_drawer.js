@@ -190,6 +190,12 @@ const D = {
               '<span style="color:#555">|</span>' +
               '<span style="color:#9a9">piano</span>' +
               ['none', 'one', 'topbot', 'rest', 'all'].map(k => '<button class="skPno" data-k="' + k + '" style="' + btn + '">' + ({ none: 'none', one: 'one', topbot: 'top+bottom', rest: 'rest', all: 'all' })[k] + '</button>').join('') +
+              // PLAN 1t step 5: the piano's block on the PLAIN strike — blank = today (one note); with a count its one note at its own
+              // shuffled onset becomes a chord of `count`, the harmony's leftovers first, then doubles of what the ensemble plays
+              '<label title="PLAN 1t: blank = the piano&#39;s one note, as always. With a count, that note becomes a chord of this many — the harmony&#39;s leftovers first, then doubles of pitches the ensemble plays (CN-66), fitted to the hands">count <input id="skPnoRowN" type="number" min="0" max="10" step="1" placeholder="1" style="' + inp + ';width:34px"></label>' +
+              '<label title="PLAN 1t: the piano&#39;s chord moved by octaves before it is fitted, ±4 (CN-65)">8va <input id="skPnoRow8va" type="number" min="-4" max="4" step="1" style="' + inp + ';width:34px"></label>' +
+              '<label title="PLAN 1t: two hands (CN-61) or ONE hand per onset with the hands alternating (CN-67); blank = the pattern&#39;s own setting">hands <select id="skPnoRowHands" style="' + inp + ';width:58px"><option value="">pattern</option><option value="two">two</option><option value="one">one, alt</option></select></label>' +
+              '<span id="skPnoRowWhy" style="color:#9a9"></span>' +
               '<span style="color:#555">|</span>' +
               '<button id="skGoto" style="' + btn + '" title="park the playhead on the original time of this strike (picking a strike no longer moves the playhead)">&#8982; original</button>' +
               '<button id="skInsert" style="' + btn + '" title="write the strike at the playhead as a gesture (groupId + META shape) — a COPY: an earlier insert of this strike is replaced only if it sits at this same time">Insert @ playhead</button>' +
@@ -237,6 +243,9 @@ const D = {
         q('#skFlat').addEventListener('change', e => { this.cfg.flatten = e.target.checked; this.save(); });
         q('#skSoloOff').addEventListener('click', () => { this.snapshot(); this.voices.forEach(v => { v.solo = false; }); this.render(); });
         d.querySelectorAll('.skPno').forEach(b => b.addEventListener('click', () => { this.snapshot(); this.pianoQuick(b.dataset.k); this.render(); }));
+        // PLAN 1t step 5: the piano row's block on the plain strike
+        { const bind = (id, key) => { const el = d.querySelector(id); if (el) el.addEventListener('change', e => { this.snapshot(); this.cfg[key] = e.target.value; this.save(); this.render(); e.target.blur(); }); };
+          bind('#skPnoRowN', 'pnoRowN'); bind('#skPnoRow8va', 'pnoRow8va'); bind('#skPnoRowHands', 'pnoRowHands'); }
         q('#skGoto').addEventListener('click', () => this.gotoOriginal());
         q('#skInsert').addEventListener('click', () => this.insert(false));
         q('#skAtTime').addEventListener('click', () => this.insert(true));
@@ -522,6 +531,45 @@ const D = {
         else { v.lane = -1; v.fold = 0; v.standIn = null; v.skip = false; }
     },
 
+    // ---- PLAN 1t step 4: FREE / BUSY AT THE PLAYHEAD -------------------------------------------------------------------
+    // A player busy in the open score where the strike is going cannot take one of its notes. The read is sounding.js's — the
+    // SAME function the crescendo panel's `who` ticks use (1q-PRINCIPLE), and an end exactly at the playhead counts as free.
+    // The tick is what the shuffle deals onto: free here AND not unticked by hand. `laneOff` is session state, never saved into
+    // a take — it belongs to where the playhead is standing, not to the strike.
+    laneOff: {},
+    busyLanes() {
+        const C = C_(), S = root.Sounding, Sp = root.Spacing, T = TRK();
+        if (!C || !S || !Sp || !C.objects) return { busy: [], until: {} };
+        const ML = (typeof META_LAYER !== 'undefined') ? META_LAYER : T.length;
+        const t = +C.getTimeAtPlayhead();
+        const ev = Sp.eventsOf(C.objects.filter(o => {
+            if (!o || o.layer == null || o.layer >= ML) return false;
+            if (o.type === 'zone') return o.midiModel === 'trill' || o.midiModel === 'beating';
+            return o.type === 'waveCurve' && o.sonifyNote != null;
+        }));
+        const r = S.atIn(ev, t, T.map((x, i) => i).filter(i => i < ML));
+        return { busy: r.busy, until: r.until, t };
+    },
+    laneTicked(lane, B) {
+        const b = B || this.busyLanes();
+        if (b.busy.indexOf(lane) >= 0) return false;
+        return !this.laneOff[lane];
+    },
+    // the playhead moved, or the score changed: the ticks are stale. Only the orchestration panel is redrawn.
+    orchStale() {
+        if (!this.el || this.el.style.display === 'none') return;
+        if (this._orchRaf) return;
+        this._orchRaf = requestAnimationFrame(() => { this._orchRaf = null; if (this.el && this.el.style.display !== 'none' && this.strike) this.renderOrch(); });
+    },
+    watchPlayhead() {
+        const C = C_(); if (!C || this._watching) return;
+        this._watching = true;
+        ['applyScroll', 'markDirty'].forEach(k => {
+            const prev = C[k]; if (typeof prev !== 'function') return;
+            C[k] = function (...a) { const r = prev.apply(this, a); try { D.orchStale(); } catch (e) {} return r; };
+        });
+    },
+
     shuffleOrch() {
         const T = TRK(); const n = T.length; const rnd = mulberry32(this.cfg.oSeedShuffle * 104729 + 3);
         const vs = [...this.voices].sort((a, b) => a.pitch - b.pitch);
@@ -530,6 +578,10 @@ const D = {
         // §343: while the sound switch is on crescendo, the piano is not a candidate — a piano cannot swell (CN-34), so dealing
         // it a voice both wastes a player and puts a flat note in the middle of the swells. It comes straight back on `attack`.
         if (this.isSwell && this.isSwell()) { const pl = T.findIndex(t => t.instKey === 'piano'); if (pl >= 0) free.delete(pl); }
+        // PLAN 1t step 4: the shuffle deals onto TICKED rows only — a row busy at the playhead, or unticked by hand, is not a
+        // candidate. §AF's "an assignment that survives a shuffle", in its small form.
+        { const B = this.busyLanes();
+          [...free].forEach(l => { if (!this.laneTicked(l, B)) free.delete(l); }); }
         const give = (v, lane) => { v.lane = lane; v.tech = this.defaultTech(lane); this.fitVoice(v); free.delete(lane); };
         const fits = (v, lane) => { const inst = this.instOf(lane); if (!inst) return false; const tk = this.defaultTech(lane); const [lo, hi] = techRange(inst, (inst.techniques || []).find(t => t.key === tk)); return this.cfg.mayFold ? !!foldInto(v.pitch, lo, hi) : (v.pitch >= lo && v.pitch <= hi); };
         // locks first: the highest and the lowest voice
@@ -713,6 +765,10 @@ const D = {
         let shaped;
         const u = i => n > 1 ? i / (n - 1) : 0;
         switch (this.cfg.shape) {
+            // UNISON (PLAN 1t step 3, CN-72): every onset at the first. ONE path — the shape's own case here, so `timed()`, `pat()`,
+            // `bands()`, Hear, the strip and Insert all read it from the same place; there is deliberately no second way through a
+            // `= ms` of 0 (that box already refuses a span of 0 and says so).
+            case 'unison': shaped = base.map(() => 0); break;
             case 'even': shaped = base.map((_, i) => S * u(i)); break;
             case 'front': shaped = base.map((_, i) => S * Math.pow(u(i), 2)); break;
             case 'back': shaped = base.map((_, i) => S * Math.sqrt(u(i))); break;
@@ -811,6 +867,9 @@ const D = {
     },
     renderOrch() {
         const T = TRK(), box = this.el.querySelector('#skOrch');
+        this.watchPlayhead();                      // PLAN 1t step 4: the ticks follow the playhead and the score
+        const B = this.busyLanes();                // ONE read for the whole panel
+        const nFree = T.map((t, i) => i).filter(i => this.laneTicked(i, B)).length;
         const inp = 'background:#111114;color:#ddd;border:1px solid #444;padding:0 2px;font-size:11px;max-width:150px';
         const btn = 'background:#2a2a30;color:#ddd;border:1px solid #555;border-radius:3px;padding:1px 6px;font-size:11px;cursor:pointer';
         const opts = sel => '<option value="-1">—</option>' + T.map((t, i) => '<option value="' + i + '"' + (i === sel ? ' selected' : '') + '>' + t.label + '</option>').join('');
@@ -819,7 +878,10 @@ const D = {
             '<label title="off: played registers only; on: the shuffle may fold a pitch class by octave into any player"><input id="skFold" type="checkbox"' + (this.cfg.mayFold ? ' checked' : '') + '> may fold</label>' +
             '<label>top → <select id="skTop" style="' + inp + '">' + opts(this.cfg.topLock) + '</select></label>' +
             '<label>bottom → <select id="skBot" style="' + inp + '">' + opts(this.cfg.bottomLock) + '</select></label>' +
-            '<button id="skAsPlayed" style="' + btn + '" title="back to the piano, as played">as played</button></div>';
+            '<button id="skAsPlayed" style="' + btn + '" title="back to the piano, as played">as played</button>' +
+            // PLAN 1t step 4: the count, so the tick row can be read at a glance
+            '<span id="skFreeCount" style="color:#9a9;margin-left:auto" title="free / busy AT THE PLAYHEAD in the open score (an end exactly there counts as free); the shuffle deals onto the ticked rows only">'
+            + nFree + ' free · ' + B.busy.length + ' busy</span></div>';
         // §377: the articulation sets — one click fills every row (and every player dealt later: the shuffle, a chord at an onset)
         { const now = this.artSetNow(), lit = ';background:#4a3a12;color:#e8cf9a;border-color:#C9A05A';
           s += '<div style="display:flex;gap:4px;align-items:center;padding:3px 6px;border-bottom:1px solid #333"><span style="color:#9a9" title="the articulation on every row at once; the lit one is what the rows hold now (none lit once a row is changed by hand)">set</span>' +
@@ -833,11 +895,20 @@ const D = {
             const menu = '<select class="skTech" data-lane="' + lane + '" style="' + inp + '">' + ['pitched', 'fixed', 'noise', 'multiphonic'].filter(k => groups[k]).map(k => '<optgroup label="' + k + '">' + groups[k].map(tq => '<option value="' + tq.key + '"' + (tq.key === cur ? ' selected' : '') + '>' + tq.label + '</option>').join('') + '</optgroup>').join('') + '</select>';
             const notes = here.map(({ v, r }) => '<span class="skChip" data-i="' + v.i + '" data-r="' + (r === v ? 'p' : v.also.indexOf(r)) + '" title="click: take ' + nm(v.pitch) + ' off this player" style="cursor:pointer;color:' + this.pcColor(v.pc) + '">' + nm(this.soundingPitchR(v, r)) + (r.fold ? (r.fold > 0 ? '↑' : '↓') : '') + (r.standIn != null ? '*' : '') + (r.skip ? ' ✕' : '') + '</span>').join(' ');
             const soloed = mine.length > 0 && mine.every(v => v.solo);
-            s += '<div class="skRow" data-lane="' + lane + '" style="display:flex;gap:6px;align-items:center;padding:1px 6px;' + (this.pickerLane === lane ? 'background:rgba(201,160,90,.15)' : '') + '">' +
+            // PLAN 1t step 4: the tick at the row's left edge, before the landing dot. A row BUSY at the playhead is dimmed, its
+            // tick cleared and disabled, and says until when; a free row is ticked unless he unticked it.
+            const busy = B.busy.indexOf(lane) >= 0, ticked = this.laneTicked(lane, B);
+            s += '<div class="skRow" data-lane="' + lane + '" style="display:flex;gap:6px;align-items:center;padding:1px 6px;'
+                + (busy ? 'opacity:.45;' : '') + (this.pickerLane === lane ? 'background:rgba(201,160,90,.15)' : '') + '">' +
+                '<input class="skTick" type="checkbox" data-lane="' + lane + '"' + (ticked ? ' checked' : '') + (busy ? ' disabled' : '') +
+                    ' style="flex:none;margin:0" title="' + (busy ? 'busy at the playhead until ' + (B.until[lane] != null ? B.until[lane].toFixed(2) : '?') + ' s'
+                    : 'ticked: the shuffle may deal onto this player') + '">' +
                 '<span class="skLand" style="flex:none;width:8px;height:8px;border-radius:50%;background:' + (mine.length ? '#e8cf9a' : '#444') + '" title="the lines land here"></span>' +
                 '<span class="skRowName" style="width:64px;cursor:pointer;color:#e8cf9a" title="click: the full articulation list">' + t.label + '</span>' +
                 '<button class="skSolo" data-lane="' + lane + '" style="' + btn + ';padding:0 4px;' + (soloed ? 'background:#e8cf9a;color:#222' : '') + '" title="solo this player\'s voices">S</button>' +
-                '<span style="width:88px;overflow:hidden;white-space:nowrap">' + (notes || '<span style="color:#555">·</span>') + '</span>' + menu + '</div>';
+                '<span style="width:88px;overflow:hidden;white-space:nowrap">' + (notes || '<span style="color:#555">·</span>')
+                + (busy ? ' <span style="color:#777">busy &rarr; ' + (B.until[lane] != null ? B.until[lane].toFixed(2) : '?') + ' s</span>' : '')
+                + '</span>' + menu + '</div>';
         });
         s += '</div>';
         box.innerHTML = s;
@@ -847,6 +918,13 @@ const D = {
         box.querySelector('#skBot').addEventListener('change', e => { this.cfg.bottomLock = +e.target.value; this.save(); });
         box.querySelector('#skAsPlayed').addEventListener('click', () => { this.snapshot(); this.asPlayedOrchestration(); this.render(); });
         box.querySelectorAll('.skArt').forEach(b => b.addEventListener('click', () => this.applyArtSet(b.dataset.set)));
+        // PLAN 1t step 4: unticking is by hand and sticks until he ticks it back; a busy row's tick is not his to set
+        box.querySelectorAll('.skTick').forEach(cb => cb.addEventListener('click', ev => {
+            ev.stopPropagation();
+            const lane = +cb.dataset.lane;
+            if (cb.checked) delete this.laneOff[lane]; else this.laneOff[lane] = true;
+            this.renderOrch();
+        }));
         box.querySelectorAll('.skTech').forEach(sel => sel.addEventListener('change', e => { const lane = +sel.dataset.lane; this.snapshot(); this.onLane(lane).forEach(({ v, r }) => { r.tech = e.target.value; r.standIn = null; this.fitReal(v, r); }); this.render(); }));
         box.querySelectorAll('.skRowName').forEach(el => el.addEventListener('click', () => { const lane = +el.parentNode.dataset.lane; this.pickerLane = this.pickerLane === lane ? null : lane; this.render(); }));
         box.querySelectorAll('.skSolo').forEach(el => el.addEventListener('click', ev => { ev.stopPropagation(); const lane = +el.dataset.lane; const mine = this.onLane(lane).map(h => h.v); if (!mine.length) return; this.snapshot(); const on = !mine.every(v => v.solo); mine.forEach(v => { v.solo = on; }); this.render(); }));
@@ -954,7 +1032,7 @@ const D = {
             const btn = 'background:#2a2a30;color:#ddd;border:1px solid #555;border-radius:3px;padding:0 4px;font-size:10px;cursor:pointer';
             ctl.innerHTML = '<span style="color:#9a9">rhythm</span>' +
                 // §377 (composer, 2026-09-10: "put the shape selection at the top of the rhythm group")
-                '<label>shape <select id="skShape" style="' + inp + ';width:64px"><option value="played">as played</option><option value="even">even</option><option value="front">front-loaded</option><option value="back">back-loaded</option><option value="centre">centre</option><option value="edges">edges</option><option value="random">random</option><option value="accel">accel · round robin</option></select></label>' +
+                '<label>shape <select id="skShape" style="' + inp + ';width:64px"><option value="played">as played</option><option value="unison">unison</option><option value="even">even</option><option value="front">front-loaded</option><option value="back">back-loaded</option><option value="centre">centre</option><option value="edges">edges</option><option value="random">random</option><option value="accel">accel · round robin</option></select></label>' +
                 '<label>span × <input id="skTimeX" type="number" min="0.01" step="0.05" style="' + inp + '"></label>' +
                 '<label title="U11: first onset → last onset of the strike as shaped now; type a duration and span × follows">= <input id="skSpanMs" type="number" min="1" step="1" style="' + inp + '"> ms</label>' +
                 '<label title="U12: the mean gap between the onsets that sound; type a gap and the duration follows: gap × (onsets − 1)">gap <input id="skGapMs" type="number" min="0.1" step="0.1" style="' + inp + '"> ms</label>' +
@@ -1055,6 +1133,14 @@ const D = {
             Q('#skADeal').value = c.aDeal === 'free' ? 'free' : 'robin'; Q('#skAPool').value = c.aPool === 'strike' ? 'strike' : 'cards'; Q('#skARedeal').disabled = c.aDeal === 'free'; }
           else { msBox.style.outline = ''; const pp = this.pat(); const m = pp.length, last = m ? pp[m - 1] : 0; msBox.value = Math.round(last); gapBox.value = m > 1 ? +(last / (m - 1)).toFixed(1) : 0; gapBox.title = 'the mean gap between the onsets that sound; type a gap and the duration follows: gap × (onsets − 1)'; }
           msBox.disabled = false; ctl.querySelector('#skDrop').checked = !!this.cfg.dropRests; }   // 1h: in accel the ms box is the run's duration, typed
+        // PLAN 1t step 3: under UNISON there is no span, so span × · = ms · gap are greyed and say why — rather than accepting a
+        // number that does nothing
+        { const uni = this.cfg.shape === 'unison';
+          [['#skTimeX', 'span ×'], ['#skSpanMs', 'the duration'], ['#skGapMs', 'the gap']].forEach(([sel, what]) => {
+              const b = ctl.querySelector(sel); if (!b) return;
+              b.disabled = uni; b.style.opacity = uni ? 0.4 : '';
+              if (uni) b.title = 'unison: every onset is at the first, so there is no span — ' + what + ' has nothing to stretch';
+          }); }
         // §347: measure the panel now it is filled; if the strip was laid out against a different width, lay it out once more.
         { const w = ctl.offsetWidth || ctl.getBoundingClientRect().width || 0;
           if (w && Math.abs(w - (this._rhyCtlW || 130)) > 1 && !this._rhyReflow) {

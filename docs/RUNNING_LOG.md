@@ -11448,3 +11448,89 @@ the piano's OWN onset (the assumption), not the first or every onset.
 
 **The build list for the chain, now five:** the crescendo panel · the playhead-to-end key · `unison` in the rhythm column · free/busy
 ticks in the orchestration panel · the piano block for the plain strike.
+
+## §419. PLAN 1t BUILT — the chain, item by item in the score: the panel, the END key, `unison`, the free/busy ticks, the piano block factored (2026-09-12, Opus 5)
+
+**Prompted by** his go after the afternoon's planning: *"assumption yes. can you make plan for opus to build after clear"* — then, at the
+postclear, *"and go with build"*. Built in one pass on a copy at :5301 (`scores/zz-ai-1t-walk.json`), the six steps in the plan's order,
+then his scenario walked with real clicks end to end.
+
+**Step 1 · the crescendo panel on a selection — SHIFT+C.** Three new files, two of them pure:
+
+- **`score/public/sounding.js`** — *what is sounding over a window*, once for the whole app. A note by its length, a crescendo by its
+  span, a zone by its zone; **an end exactly at t counts as FREE** (the secco cut, CN-49) and a start exactly at t counts as BUSY. It is
+  its own file because PLAN 1q-PRINCIPLE demands it: the panel's `who` ticks (step 1) and the orchestration panel's ticks (step 4) are
+  the sibling pair whose divergence is this drawer's whole defect history (§340–351), so they call ONE function. It deliberately does
+  **not** apply spacing.js's 150 ms rest — that answers "may this player start a new gesture", this answers "is it making a sound".
+- **`score/public/cresc_deal.js`** — the deal, pure: onsets × events × ticked lanes × ranges → the crescendos, the aborts, the notes.
+  *A departure from the plan's letter, deliberate:* the plan named ONE new file (`cresc_panel.js`), but its own to-do asks for headless
+  checks in the `check_fill.js` idiom, and 1q-PRINCIPLE wants the rule in one function called by both the panel and the check — so the
+  deal is its own pure module and the panel is the chassis around it. Nothing else was widened.
+- **`score/public/cresc_panel.js`** — cresc_card.js's chassis: the tick row (`who`), the mode, `ends`, `harmony`, dynamics, shape,
+  secco, `preview` and `[go]`. ESC closes; the settings live in `Composer._crescPanel` as the card's do; every crescendo it writes is an
+  ordinary crescendo afterwards (its own card opens on it). Behind the CLASSIC guard.
+
+The order the deal runs in was changed once while writing it: **who and how-long are decided in ONE walk**, not two passes. Deciding
+everyone first and the lengths afterwards let two crescendos land on one player, because a player is only busy at the next onset once
+the crescendo it just took has an end.
+
+**Step 2 · END** = `Composer.playheadToSelectionEnd()` — the LATEST end among the selected, read through `Spacing.eventOf` so a note, a
+crescendo and a zone are read by one rule; it parks the playhead through `goTo()`, the app's one way to park it. Nothing selected = no
+move, said.
+
+**Step 3 · `unison`** = one case in `pattern()` (`shaped = base.map(() => 0)`), which is the only source of onsets, so `timed()`, `pat()`,
+`bands()`, Hear, the strip and Insert all get it from the same place — deliberately NO second way through `= ms` 0. That box already
+refuses a span of 0 and says so; under `unison` span × · = ms · gap are greyed and say why.
+
+**Step 4 · free/busy ticks** in the orchestration panel: a tick per row before the landing dot, the row dimmed and `busy → t s` in grey
+when it is sounding at the playhead, `5 free · 2 busy` in the header, and **`shuffleOrch` deals onto ticked rows only**. The ticks
+refresh on `applyScroll` and `markDirty` (wrapped once, one rAF). `laneOff` is session state, never saved into a take — an unticking
+belongs to where the playhead stands, not to the strike.
+
+**Step 5 · the piano block factored.** `dealChordAt`'s piano section lifted out verbatim into **`pianoBlock(a)`** — (pitches, chosen,
+count, 8va, hands, prev) → the piano's notes + the readout — and called from BOTH the chord deal (behaviour untouched) and the new
+`applyPlainPiano`, which expands the piano's ONE note at its own shuffled onset into a chord of `count`. Controls on the piano row of
+the footer beside §H's flags: `count` · `8va` · `hands`; blank = today exactly. An onset the CHORD deal already handled keeps its own
+piano chord — one rule per onset, never both.
+
+**The numbers.**
+
+- **`score/tools/check_cresc_panel.js` — 30 checks, all green on the first run.** 4 strikes / 3 ticked → 3 crescendos and the fourth
+  onset named (`ticksRanOut`) · all-others from one onset → 5 · the piano refused even when ticked · `next strike` dealt in time order
+  (10, 11, 12) and the fourth named (`noNextOnset`) · a player mid-crescendo refused, the same player free once it ends · **an end
+  exactly at the onset counts as free** · 3 s capped to 1.83 by the next sound and said · 0.1 s raised to the 0.3 s floor and said ·
+  1.03 s of room aborts (`noRoom`) · `together` → four crescendos, one end at 8.50 · a pitch folded −3 8ve, and one no octave reaches
+  named (`noOctave`) · the drawer's pitches dealt by register · sounding.js's own six.
+- **check_fill · check_containers · check_cresc_deck · test_septet_notation (86) · test_identity (20) all green; the tuba battery
+  (layout · render · animobj · splice · stamps · coords · graphic · pattern_fit) all GREEN in its own repo, untouched by this work.**
+
+**The walk, real clicks, on `zz-ai-1t-walk` at :5301** — his eight steps of §416:
+
+1. the ticks used to make a **single-note strike** (only the flute ticked → the shuffle placed one note) — step 4 proving itself;
+2. the note selected, **SHIFT+C**: `1 note · 1 onset · 0.00 → 0.00 s`; `Fl ·` disabled (striking), `Pno ✕` disabled (cannot swell), the
+   other five ticked; the preview read `1 crescendo · 1 folded into range · BCl B3 0.00 → 3.00 (3.00 s, −2 8ve)`. **[go]** wrote it:
+   lane 1, 0 → 3.00, technique `senza_vel` (the ordinary voice), `groupId grp-strike-0-0` — the strike's;
+3. the crescendo selected, **END** → `playhead at 3.00 s — the end of the selected object (latest: BCl)`;
+4. strike 2 inserted there (Vn1, 3.00). At 1.50 s the orchestration panel read `1 free · 1 busy` with BCl's tick disabled; **at 3.00 s
+   BCl read FREE** — the end exactly at the playhead, live;
+5. strike 3 at 6 s, four notes over three onsets (6.000 · 6.022 · 6.083);
+6–7. strike 2 selected, **SHIFT+C**, `all others from each onset` + `ends: next strike` → `3 crescendos · 1 capped by the next sound ·
+   1 folded into range · none for: 2 × no onset left in the next strike` — Fl G4 3.00 → 6.00, BCl G3 3.00 → 6.02, **Vn2 G3 3.00 → 5.83
+   capped** (Vn2 strikes at 6.00, so 1l's 0.17 s rule cuts it). **One CTRL+Z removed all three; redo brought them back** — one undo
+   step per go;
+8. two crescendos selected, **END** → `playhead at 6.02 s — the end of 2 selected objects (latest: BCl)`. Then `unison` in the rhythm
+   column (the pattern read `[0,0,0,0,0,0,0,0,0]`, the three boxes greyed), the piano row's **count 4 · hands one, alt** → the piano's
+   one note (C5) became **F4 · G4 · G#4 · C5**, readout `4 per onset · one hand · 4 left over`; at **count 6** it read `4 left over +
+   1 doubled · 5/hand caps 6`, at **+2 8va** the window moved up and said so, and on `hands: two` it spread 43…83 as `4 left over +
+   2 doubled`. Inserted: **nine notes, every one at exactly 10.000 s, one group**, the piano's four among them. The strip drew
+   **four solid blue rings and the count `0+4`** — §410's rings carry to the plain path.
+
+**Two things seen and logged, not fixed** (SWEEP #11, #12): the conflict badge counts the piano's own chord as hard conflicts (one lane,
+four simultaneous notes — a pianist's hand), and a crescendo ending exactly where the next sound begins reads as a soft one. Both
+pre-date 1t (the chord deal's piano does the same); both will be seen more often now. **And one question for him:** after `[go]` the
+panel leaves the SELECTION on the strike, so END goes to the strike's end, not the crescendo's — he must click the crescendo first.
+Leaving the crescendos selected would make his eight steps flow without that click, but it changes selection behaviour he did not ask
+for, so it is his call (STRIKES_TOOL §AI).
+
+**Chords mode and fill mode stay deprecated** (§413) — nothing was built on either, and fill's read of "what is sounding over a time"
+was NOT called into: `sounding.js` is the lift.

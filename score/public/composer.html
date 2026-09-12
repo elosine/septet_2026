@@ -557,7 +557,11 @@
 <script src="/multitempo_panel.js" defer></script>
 <script src="/cresc.js"></script>   <!-- PLAN 1l: the crescendo — the shapes, the end rule, the object (pure) -->
 <script src="/spacing.js"></script>   <!-- PLAN 1l: the one spacing rule — a player is free 150 ms after its last sound ENDS, between gestures (pure) -->
+<script src="/sounding.js"></script>   <!-- PLAN 1t step 1: WHAT IS SOUNDING over a window — one read for the crescendo panel's ticks and the orchestration panel's (pure) -->
+<script src="/cresc_deal.js"></script>   <!-- PLAN 1t step 1: the crescendo panel's deal — who, from when to when, on what pitch (pure) -->
 <script src="/cresc_card.js"></script>
+<script src="/cresc_panel.js"></script>   <!-- PLAN 1t step 1: SHIFT+C — crescendos from the selected strikes, one go, one undo -->
+
 <script src="/note_card.js"></script>
 <script src="/cresc_strikes.js"></script>   <!-- 2026-09-10: crescStrikes() — a piano strike at the end of every crescendo (RUNNING_LOG §356/§358) -->   <!-- 2026-09-09: select a note → voice, pitch, start, length, and every change auditioned at once -->   <!-- PLAN 1m step 2: the crescendo card — the four controls on the live crescendo, hear alone / in context, ENTER keeps / ESC removes -->
 <script src="/passages.js"></script>   <!-- 2026-09-10: capture a stretch of score, insert it at the playhead in any score (RUNNING_LOG §360–361) -->
@@ -1968,6 +1972,30 @@ const Composer = {
         return this.scrollOffset / this.pixelsPerSecond;
     },
 
+    // END (PLAN 1t step 2, CN-72): park the playhead at the END of what is selected — the LATEST end among them, so that
+    // `Insert @ playhead` puts the next strike exactly where the crescendo stops. A strike's end is onset + length, a
+    // crescendo's is its span end, a zone's its end time: spacing.js already owns that reading, so it does it here too.
+    playheadToSelectionEnd() {
+        const sel = (this.selectedObjects && this.selectedObjects.length) ? this.selectedObjects
+                  : (this.selectedObject ? [this.selectedObject] : []);
+        if (!sel.length) { this.saveStatus.textContent = 'END: nothing selected — the playhead did not move'; return null; }
+        const S = (typeof Spacing !== 'undefined') ? Spacing : null;
+        let end = -Infinity, what = null;
+        sel.forEach(o => {
+            const e = S ? S.eventOf(o) : null;
+            const t = e ? e.t1 : (o.type === 'zone' ? +o.endTime : +o.endSeconds);
+            if (isFinite(t) && t > end) { end = t; what = o; }
+        });
+        if (!isFinite(end)) { this.saveStatus.textContent = 'END: the selection has no end to go to'; return null; }
+        const to = Math.round(end * 1000) / 1000;
+        if (typeof goTo === 'function') goTo(to);
+        else { this.scrollOffset = Math.max(0, to) * this.pixelsPerSecond; this.applyScroll && this.applyScroll(); }
+        this.saveStatus.textContent = 'playhead at ' + to.toFixed(2) + ' s — the end of '
+            + (sel.length === 1 ? 'the selected object' : (sel.length + ' selected objects'))
+            + ((TRACKS[what.layer] && TRACKS[what.layer].short) ? ' (latest: ' + TRACKS[what.layer].short + ')' : '');
+        return to;
+    },
+
     setupScrollDrag() {
         let dragging = false;
         let dragStartX = 0;
@@ -2214,8 +2242,24 @@ const Composer = {
             }
             if (e.key === 'Escape' && this._crescRepoint) { this._crescRepoint = null; this.saveStatus.textContent = 're-point cancelled'; }
 
+            // SHIFT+C = the CRESCENDO PANEL on the selection (PLAN 1t step 1, CN-68–CN-71): one go writes a crescendo per selected
+            // onset, on players not striking and free there. Before the plain C below, which would otherwise take it.
+            if ((e.key === 'C' || e.key === 'c') && e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && !e.target.matches('input, textarea, select')) {
+                e.preventDefault();
+                if (typeof CrescPanel !== 'undefined') CrescPanel.toggle();
+                return;
+            }
+
+            // END = park the playhead at the END of the selection (PLAN 1t step 2): the latest end among the selected objects, so
+            // `Insert @ playhead` lands the next strike exactly there.
+            if (e.key === 'End' && !e.ctrlKey && !e.altKey && !e.metaKey && !e.target.matches('input, textarea, select')) {
+                e.preventDefault();
+                this.playheadToSelectionEnd();
+                return;
+            }
+
             // C = add a CRESCENDO (PLAN 1m, composer 2026-09-08) — the trill's chassis, one note at a time
-            if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.altKey && !e.metaKey && !e.target.matches('input, textarea, select')) {
+            if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey && !e.target.matches('input, textarea, select')) {
                 e.preventDefault();
                 this.createCrescendo();
                 return;

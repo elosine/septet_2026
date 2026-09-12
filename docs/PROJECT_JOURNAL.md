@@ -85,15 +85,30 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word.
 
-**SESSION 9 — 2026-09-12, Fable 5.1 (+ Opus 5 for the four) — (mid-session checkpoint, written on Fable at his /checkpoint; the
-rule is WRAP ON OPUS — next time switch first).** *(RUNNING_LOG §405–§410; STRIKES_TOOL §AH; CN-65 · CN-66 · CN-67; SWEEP #10.)*
+**SESSION 9 — 2026-09-12, Fable 5.1 → Opus 5 (the build).** *(RUNNING_LOG §405–§419; STRIKES_TOOL §AH · §AI; CN-65 … CN-72; SWEEP #10–#12.)*
+
+- **PLAN 1t BUILT — 2026-09-12 evening, Opus 5, at his "and go with build" (RUNNING_LOG §419; STRIKES_TOOL §AI now carries "how to
+  use it").** All six steps, in order, on a copy at :5301. **New files:** `score/public/sounding.js` (what is sounding over a window —
+  ONE read for the panel's ticks and the drawer's, an end exactly at t = free) · `cresc_deal.js` (the deal, pure) · `cresc_panel.js`
+  (SHIFT+C — who · mode · ends · harmony · dynamics · shape · preview · go, ONE undo step) · `score/tools/check_cresc_panel.js`
+  (**30 green, first run**). **Changed:** composer.html (SHIFT+C · **END** = playhead to the selection's latest end) ·
+  `strike_drawer.js` (**`unison`** in the rhythm column, the three span boxes greyed under it; the **free/busy ticks**, the shuffle
+  dealing onto ticked rows only, `5 free · 2 busy`; the piano row's `count` · `8va` · `hands`) · `strike_sounds.js` (the piano block
+  factored into **`pianoBlock()`**, called from the chord deal AND the new `applyPlainPiano`). Chords and fill stay deprecated.
+  **Walked with real clicks**, his eight steps of §416, on `zz-ai-1t-walk`: single-note strike → panel even 3 s → END 3.00 → strike 2
+  → strike 3 → panel `next strike` + `all others` (3 made, 1 capped, 2 named without) → CTRL+Z removed all three → END 6.02 → a
+  `unison` strike whose piano count 4 / one hand gave F4 G4 G#4 C5, nine notes at exactly 10.000 s. Batteries: check_fill ·
+  check_containers · check_cresc_deck · 86 · test_identity · the whole tuba battery GREEN.
+  **⚠ UNHEARD BY HIM — his SPACE is the test.** **One question for him (§419):** after `[go]` the selection stays on the STRIKE, so
+  END goes to the strike's end and he must click the crescendo first — leave it, or have `[go]` select what it made?
+  **Logged, not fixed:** SWEEP #11 (the piano's own chord reads as `hard` conflicts) · #12 (the secco cut reads as `soft`).
 
 - **CHECKPOINT 2 — 2026-09-12 evening, Fable 5.1 — PLAN 1t WRITTEN AT HIS WORD ("assumption yes. can you make plan for opus to build
   after clear").** The afternoon was one planning conversation (RUNNING_LOG §411–§418; CN-68 → CN-72): the chain — strikes alternating
   with crescendos — settled as ITEM BY ITEM IN THE SCORE: the drawer makes only the strikes; a panel on a selection makes the crescendos.
   **Chords mode and fill mode DEPRECATED at his word (§413)** — left in the code, not offered again.
   **NEXT CONCRETE STEP: `/clear` → switch to OPUS → `/postclear` → BUILD PLAN 1t** on a copy at :5301, steps 1–6 in order, the walk
-  with his scenario, then he hears it. **Resume reads: PLAN 1t · STRIKES_TOOL §AI.** Nothing else — the plan is self-contained.
+  with his scenario, then he hears it. **(Superseded: PLAN 1t is built — see the entry above.)**
   CN-65 (N1) is paused, not dropped: his CN-67 verdict and the strikes-page eye are still pending. Committed and pushed: the five docs.
   His score files stay uncommitted (the list below unchanged).
 - **The task: HIS FIRST PASS AT CN-65 IN THE DRAWER — composing, not building.** He is in the composer at :5300, the strikes drawer
@@ -111,8 +126,8 @@ rule is WRAP ON OPUS — next time switch first).** *(RUNNING_LOG §405–§410;
   strike · `piano count` per onset · `hands: one, alternating` · Hear · take. **The AI's next step:** answer what he asks, log any
   fault to `docs/SWEEP_LIST.md` (batch, don't fix — unless it blocks, as today's two did), journal as it happens. When he stops:
   his verdict on CN-67 in the app (it is proven headlessly only, §409) → STRIKES_TOOL §AH6 marked walked or not.
-- **Resume reads: nothing beyond §2.** (STRIKES_TOOL §AH only if a drawer fault comes up; CN-65/CN-67 in COMPOSITION_NOTES only if
-  the passage's rule is in question.)
+- **Resume reads: nothing beyond §2.** (STRIKES_TOOL §AI — "how to use it" — if he asks how a control works; §AH only if a drawer
+  fault comes up; CN-65/CN-67 in COMPOSITION_NOTES only if the passage's rule is in question.)
 - **Pending from him:** SWEEP #10 — `max` counts the piano in; he wants `max` = the six and the piano by `piano count` alone ("leave
   it for now") · CN-67's L.H./R.H. marking in the notation (a later rule) · the older list below unchanged.
 - **Deferred still:** AH5 proper (the piano's own voicing per onset — CN-67 is its one-hand half) · the hand override · AB3.
@@ -174,7 +189,8 @@ rule is WRAP ON OPUS — next time switch first).** *(RUNNING_LOG §405–§410;
 | # | Step | Model | Clear first? |
 |---|---|---|---|
 | ~~N0~~ | ~~BUILD the four~~ — **done 2026-09-12 (RUNNING_LOG §407):** built, harnessed, walked on a copy at :5301, 86 green, pushed | — | — |
-| **N1b** | **► NEXT — BUILD PLAN 1t** (the chain: the crescendo panel on a selection · the playhead-to-end key · `unison` · free/busy ticks · the piano block on the plain strike), steps 1–6 in order on a copy at :5301, the walk with his scenario (§416's eight steps), then his ear. Read PLAN 1t + STRIKES_TOOL §AI only | **Opus** | **yes — clear now, switch, /postclear** |
+| ~~N1b~~ | ~~BUILD PLAN 1t~~ — **done 2026-09-12 (RUNNING_LOG §419):** all six steps, 30 new checks green, his eight steps walked on `zz-ai-1t-walk` at :5301, pushed | — | — |
+| **N1c** | **► NEXT — HIS EAR ON THE CHAIN.** :5300 → CTRL+SHIFT+R → make a strike, SHIFT+C on it, `go`, END, the next strike; SPACE. Then his two verdicts: does the chain sound right, and should `[go]` leave the new crescendos SELECTED (so END reaches them without a click)? | **Fable** (his composing questions) · **Opus** for any fix | no |
 | **N1** | **PAUSED for N1b (2026-09-12 evening) — he was composing CN-65 in the drawer** (from #0 in `ChordStrikes01a-even`, a second pattern from #23). The AI answers, logs faults to SWEEP_LIST, journals. Then: **his verdict on CN-67 in the app** (headless-proven only) — then his eye and ear over the strikes 0–176 s (:5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker → video · SPACE) | **Fable** (composing questions) · **Opus** for any fix he does ask for | no |
 | ~~N2~~ | ~~The fold in his tab → rebuild from `piece-septet` → delete the copy~~ — **done 2026-09-11 late (RUNNING_LOG §402)** | — | — |
 | **N3** | **The 15 geometry touches** + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
