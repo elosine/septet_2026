@@ -10969,3 +10969,5 @@ Not decided, not needed for strike 1: the accent on fl/bcl he may revise once he
   test_stamps: STAMPS GREEN: parity + anchors-compose + snapshot stable
   test_coords: COORDS GREEN: unit tests + snapshot stable
   
+
+**§401b, correction on the tests:** `test_render` was RED by its byte-snapshot of the tuba page, not by a fault — the staff now runs to the page edge in every view (his verdict) and every `<text>` carries `xml:space="preserve"`. Intentional, so the fixture was regenerated on the staged goldens (`test_render.js --update`) and is GREEN again. This is the first tuba snapshot the septet's registry changes on purpose; "the tuba pages unchanged" now reads "unchanged except the staff's extent".
