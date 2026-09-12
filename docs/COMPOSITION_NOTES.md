@@ -1449,3 +1449,45 @@ instrument-change marks drop off the 2a adaptation list; the flute's clef is tre
 effect over something else. Nothing hangs on it yet; it is recorded here so it survives every clear, and it is
 his to change. Where it is written down: this entry, `docs/PLANNER.md` (the piece header), `docs/PLAN.md`
 (phase 2's authoring line, where a cover and format entry will need a title) and journal §7 as a live item.
+
+## CN-65 — 2026-09-12: the chord-to-chord passage he wants to try (verbatim, held while the fixes are made)
+
+> *"First, let's keep track of what I want to try. I want a even rhythm as in the image, and then I want to go through the strikes starting
+> with zero in order and have each chord be a different strike harmony. And then I want to have alternations of the ensemble in various
+> fashions. So it could be three than three... the the other three than the other three. Or as I described, four then six then three then
+> two, etcetera. And then each turn taking up the members of the ensemble that didn't play last strike plus any additional ones they need.
+> And, of course, if I don't make the gap large enough, then only the players left out last time were available, and that's okay too.
+> We'll need to figure that out. and then the cano should be based on essentially number of notes. So I'll want them to play five notes at
+> strike, and then they take whatever's rest plus any additional ones reshuffled if they need to make five. The next one, they play none,
+> for example. The next two, they play whatever, six and two respectively. Same thing. If there's leftover pitches that aren't used from
+> the harmony, but if there's not enough, then they get other pitches from the harmony reshuffled. So keep track of that, uh, what I wanna
+> try. while we make fixes."* (composer, 2026-09-12, dictated; "the cano" = the piano)
+
+**The rhythm in his image** (the drawer's rhythm column, 2026-09-12): shape `accel · round robin` · span × 1 · = 2600 ms · gap 200 · drop
+rests ✓ · run `even` · steep 1 · notes 14 · → last 180 · jitter 0 · hold 0 gaps · mirror off · vel as is · re-attack ≥ **250** · deal
+`round robin` · pitches `the whole strike`. *(AI note: at gap 200 and re-attack 250, a player who struck is never free at the next
+onset — the "only the players left out last time" case he accepts.)*
+
+*(AI reading, marked as such — what the drawer would need, = STRIKES_TOOL §AH1–AH3 plus one more: **AH4 · `← banner in turn` from strike
+#0, in order** — check that it already starts at the top of the column and walks down; if it does, nothing to build.)*
+
+## CN-66 — 2026-09-12: the piano may double when it tops up; and the piano's own voicing per onset, with a hands guard (the eventuality)
+
+> *"For this scenario, what I would like is the piano to be able to take up the remaining pitches in the court. And then if necessary,
+> additional pitches that are already being played by the other members of the ensemble. So, yes, stumbling [doubling]. However, there
+> probably will be more. This is a specific scenario. There'll probably be more different ones. So let's just take one minute. I don't want
+> to go too deep into making it universal. But if it's some quick games [gains] now, let's think about that. So there might be other
+> scenarios. Also, I may want the piano to play a different shuffle. So for example, when I initially picked the initial harmony to generate
+> the rhythm, I might pick, say, strike zero and then shuffle it a couple times. and then set a lot of orchestration and then start
+> assigning individual strikes. For example, I pick one and then decide the piano should play six of these notes. There are three left in
+> the harmony, three that piano needs to double from other instruments. But then those six, I might want to play different registers for
+> the piano and maybe something similar to the voicing ones, original spread out cluster, etcetera. with the transpositions. But then
+> there's the guard or complication of making sure that that particular reshuffle slash amount of notes is playable by the piano. So if
+> there's a standing guard that just knows no matter what the piano's playing or ask the piano to play that it can detect if it's within
+> the playability for the two hands. If this is too complicated a layer, we can defer it for another time. But, ideally, this is the
+> eventuality. I'd like to be able to do."* (composer, 2026-09-12, dictated)
+
+*(AI reading, marked as such:)* **Decided:** CN-61's "never a doubling" is relaxed — when the piano tops up to its count, it may take
+pitches the ensemble is already playing (leftovers first). **Deferred, his eventuality:** the piano's SIX (say) re-voiced on their own —
+registers, the keyboard's presets (original · spread · cluster …), the ±½/±8va transpositions — per onset, behind a standing two-hand
+guard. The guard exists today in one form: `handFit` (reach 14 semitones · 5 per hand · the middle dropped · the card says "n dropped").

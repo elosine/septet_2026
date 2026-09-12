@@ -11099,3 +11099,31 @@ Two more doubled piano notes deleted by him (156.20 s, then one more) and rebuil
 **Why it collided anyway, measured not guessed:** the page planner picks a cut and `planPages` opens the next page AT that cut. A cut can land exactly on a note’s onset — page 4 began at 35.364, the viola’s own go time. The go line then sits at x = G, and everything the nh-unit draws BEFORE the go line (head, accidental, ledgers: measured worst case **3.44 ss**, and 3.9 ss including the sharp s own width) falls at x < G, on the clef. Every other theory was checked and eliminated first: the gutter is applied in both views (staff rects start at 72), glyph items ARE window-clipped (so it is not a stale neighbour), reshow is a text label only, and the note is the FIRST of its page, not the last of the one before.
 
 **Built:** `page_rules.musicStartBufferSs: 4.2` — the page window opens that many staff spaces EARLY, so the first note’s ink clears the gutter. Stated in ss because ssPx and px-per-second both scale with the zoom, so one number holds in the video frame, the ×2 zoom and any export; clamped never to open before the IR’s own start; 0 = the old behaviour. The zoom opens on the same buffered start. **Proof across all 15 pages: leftmost music ink 73.4 px against a 72 px gutter — nothing enters it** (page 7’s sharp at 68.79 s is the closest). 3.6 ss was tried first and left that one sharp 3 px inside — the measurement caught it.
+
+## §405. How the chord-per-onset drawer is used, and three things it cannot do yet (2026-09-12, Fable 5.1)
+
+**Prompted by** his first question of session 9: *"how to use the strikes drawer in the new chord-per-strike Capability. The new one, not the
+old one."* — answered from STRIKES_TOOL §AG/§AD (NOTES mode · double-click a dot · click a harmony · `all onsets ←` · `rest` ~20–50 at 130 ms
+gaps · the piano's remainder). Then the follow-up, verbatim in STRIKES_TOOL §AH: alternate chord to chord with a scripted count and a
+memory of who just played · the piano off for one onset · the piano topped up to a target · what "done" is.
+
+**Read, not guessed** (`strike_sounds.js` `dealChordAt`, `pnoCfg`, `handFit`):
+- free = no other note of that lane inside t ± (140 ms + `rest`); `rest` = the run's `re-attack ≥`, one number for the pattern;
+- `max` per onset (the card) or for every onset (`sndMax`); WHO = the k lowest-register free players under `register`, any under `random`;
+  **no memory of the previous onset** — so "the two who sat out plus one repeat" is not dialable, only approachable (`rest` long enough
+  that the last onset's players are busy → all-new by itself; `random` + `reshuffle` for variety);
+- the piano's share (`none · one · up to n · the rest`) is ONE setting for the pattern; `up to n` caps, never tops up; CN-61 (a) forbids
+  doubling an ensemble note;
+- the chords live in the drawer's `cfg.sounds`, keyed by position in the run; **Insert** writes them (§378: Insert = Hear 76/76);
+  closing the panel writes nothing; a take keeps them.
+
+**Decided:** nothing built — his standing rule (§AE/§AF): collect, update later. Three requests logged as AH1–AH3.
+
+## §406. Decided: the piano may double when it tops up; the piano's own voicing per onset deferred (2026-09-12, Fable 5.1)
+
+**Prompted by** his verdict on §405's three builds (verbatim CN-66): *"yes, [doubling]"* for the top-up — leftovers first, then pitches
+the ensemble already plays. **Rejected:** keeping CN-61's "never a doubling" (his own rule of 2026-09-10) — it would cap the piano at the
+leftovers and his passage needs a count. **Deferred at his word:** the piano's notes re-voiced per onset (registers · presets ·
+transpositions) behind a standing two-hand guard — STRIKES_TOOL AH5; `handFit` is the guard's present form. **Not universal:** *"I don't
+want to go too deep into making it universal"* — the three builds (rested-first deal · the piano's count per onset · the top-up) are made
+for this scenario, on one file, and logged so the next scenario can widen them.

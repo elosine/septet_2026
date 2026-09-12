@@ -1134,6 +1134,44 @@ that comes sooner, the ensemble's rest does not apply to it. Off under a crescen
 `strike_sounds.js` (dealChordAt with max / deal / seed / the piano · handFit · the card's boxes · ♪ through a `_onlyAt` filter on notesFor) ·
 `strike_chords_ui.js` (the onset card's drag released in the capture phase — §348's fix, never carried here — and the `(old)` label).
 
+## AH · Chord to chord: who plays next, the piano off for one onset, the piano topped up — `collected 2026-09-12, NOT built` (his rule: collect the requests, update later)
+
+> *"And so what if I want to alternate? Cord to cord. So have four on the first. and sometimes include repeats. So four four on the first,
+> three on the next, for example. So that would include the two missing plus one, and so on. Then the next one might be three, which would
+> be all new three. The next one might be six, or let's say five, sorry, which would be all the ones not included in the three, but
+> including two of the three, etcetera, etcetera. And what if I don't wanna include the piano on one? And how do I get the piano to take
+> on, for example, the rest of the notes, but if they aren't enough, then some additional notes. Can I dial that in? So let's say I want
+> the piano to take on five pitches. There's only two left over. So it takes those two plus three more random from the cord. And then what
+> do I do when I'm done? Just close the panel and it's set, or do I have to set it somehow?"* (composer, 2026-09-12)
+
+**What the drawer does today** *(read from `strike_sounds.js` `dealChordAt`, 2026-09-12):* the COUNT per onset is dialable (`max` on the
+onset card); WHO is by register (the k lowest-register free players, pitches low→high onto players low→high) or `random`; a player is
+free when no other note of theirs lies inside t ± (140 ms + `rest`). Nobody remembers who played the onset before. The piano's share is
+ONE setting for the pattern (`pnoCfg`), never per onset; `up to n` is a cap, never a target, and CN-61 (a) forbids a doubling.
+
+- **AH1 · "Prefer the rested" — the players who sat out the last onset are dealt first.** Then his 4 → 3 (the two missing + one repeat)
+  → 3 all new → 5 (the three left out + two of the three) falls out of `max` alone, without `rest` having to exclude anyone. *(AI
+  reading, marked as such: a rank by "onsets since last played" ahead of the register sort in `dealChordAt`; `random` breaks ties.)*
+- **AH2 · The piano's share PER ONSET** — `none` on one onset, `the rest` on the others. *(AI reading: `pnoShare` on the onset card
+  overriding the pattern's, the way `max` overrides `sndMax`.)*
+- **AH3 · The piano topped up to a target** — "take the rest, and if fewer than n are left, add random notes from the chord until n."
+  *(AI reading: a `target n` mode beside `up to n`; the top-up doubles ensemble notes, which CN-61 (a) forbids today — his rule to
+  relax, per onset or for the pattern.)*
+  **Decided 2026-09-12 (CN-66): yes — the piano may double when it tops up; leftovers first, then pitches the ensemble already plays.**
+- **AH5 · The piano's own voicing per onset, behind a hands guard — DEFERRED at his word ("if this is too complicated a layer, we can
+  defer it")** (composer, 2026-09-12, verbatim in CN-66): the piano's n notes at an onset re-voiced on their own — registers, the
+  keyboard's presets (original · spread out · cluster …), the transpositions — with *"a standing guard that just knows no matter what the
+  piano's playing … if it's within the playability for the two hands."* *(AI reading: the guard is `handFit` today — reach 14 · 5 per
+  hand · the middle dropped, reported on the card; the re-voicing is the keyboard's voicing engine run on a second pitch set per onset,
+  a new row on the card — medium. The cheap version, offered: a ±8va for the piano on the onset card.)*
+- **AH4 · The passage he wants to try — the script the fixes are for** (composer, 2026-09-12, verbatim in COMPOSITION_NOTES **CN-65**):
+  an even rhythm (his image: gap 200 · notes 14 · re-attack 250) · each onset a different strike harmony, **from strike #0 in order** ·
+  the ensemble alternating — *3 then the other 3*, or *4 · 6 · 3 · 2* — **each turn taking the players who sat out last strike, plus any
+  more it needs** (AH1) · the piano by NOTE COUNT per onset — *5 · none · 6 · 2* — the leftover pitches first, **topped up from the
+  harmony, reshuffled, when there are not enough** (AH2 + AH3). *"If I don't make the gap large enough, then only the players left out
+  last time were available, and that's okay too."*
+- **Answered, not a request:** the chords are written by **Insert**, not by closing the panel; a take keeps them by name.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the
