@@ -103,7 +103,7 @@ no tool calls beyond the resume reads. Start only on his word.
   resolved to no instrument (§401f); it also stretched notes to the IR's sample-true lengths, now the composer score's own
   (§401g); the page that "didn't fit" was Chrome's per-origin zoom on :5300, CTRL+0 (§401i).
 
-**STATE — THE STRIKES 0–176 s ARE ON THE PAGE (session 8 end). RUNNING_LOG §399–§401n. RESUME FROM HERE.**
+**STATE — THE STRIKES 0–176 s ARE ON THE PAGE (session 8 end). RUNNING_LOG §399–§404. RESUME FROM HERE.**
 
 - **Nothing in flight; everything pushed.** The IR `strike1` = **511 strikes, 0–176 s, 15 pages**, built from `piece-septet`
   ITSELF (RUNNING_LOG §402 — he ran `foldFlute()` and Saved at 22:40, and removed a doubled piano note at 67.79; the copy is
@@ -111,6 +111,11 @@ no tool calls beyond the resume reads. Start only on his word.
   next notation session, his word.**
 - **⚠ DO NOT PRESS R ON THE STRIKES PAGE** (RUNNING_LOG §403): R strips the recorded window and forces `--all`, so it widens 0–176 s to the whole piece and pulls in the morph material. A deletion in the composer → Save → the AI rebuilds (`--score piece-septet --w0 0 --w1 176 --bricks --id strike1 --exp`). **Parked fix (his "leave for now"): option A — R honours an IR's recorded window; `--all` gets its own key.**
 - **Unseen / unheard by him:** the 15 pages; MIDI after the three fixes (ports · tracks · score lengths) — his SPACE is the test.
+- **After the first wrap (§402–§404), all pushed:** he deleted three doubled piano notes (67.79 · 156.20 · one more) and ran
+  `foldFlute()` himself — so the page is built from `piece-septet` ITSELF, the copy is gone, and **511 strikes** stand. Then
+  **§404 THE BUFFER AFTER THE CLEF:** a page cut can land exactly on a note's onset, and its unit (head · accidental · ledgers,
+  up to 3.4 ss) then hangs into the gutter over the clef — `page_rules.musicStartBufferSs: 4.2` opens each page window that
+  many staff spaces early. Proven across all 15 pages: leftmost ink 73.4 px against a 72 px gutter.
 - **NEXT CONCRETE STEP:** his eye and ear over the 15 pages (:5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker
   "piece-septet · strikes 0–176 s" → video · SPACE for MIDI). Then the next notation session: **trills' written look, then the
   morph curves** — planning method on Fable, build on Opus after a clear.
