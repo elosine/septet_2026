@@ -58,7 +58,15 @@ const byKind = k => inst.filter(i => i.kind === k);
 ok(byKind('gc').length === 1 && byKind('gc')[0]._src === 'ir-device', 'gc collected from IR devices');
 ok(byKind('curveFollower').length === 1, 'morph bend -> curveFollower');
 ok(byKind('envFollower').length === 1, 'layer-10 shape -> envFollower');
-ok(byKind('lineWedge').length === 1, 'long hold -> lineWedge (morph and short notes excluded)');
+// the wedge port: OFF in the septet's registry (§401m — 'they don't play a part here'), so its coverage
+// check runs with the switch forced on, the pie's pattern; the registry value itself is asserted off
+ok(ST.lineWedge.enabled === false, 'registry: lineWedge is OFF (§401m)');
+ok(byKind('lineWedge').length === 0, 'lineWedge OFF collects no wedges');
+{
+  const ON = JSON.parse(JSON.stringify(ST)); ON.lineWedge.enabled = true;
+  const w = Anim.collect(ir, score, ON).filter(i => i.kind === 'lineWedge');
+  ok(w.length === 1, 'long hold -> lineWedge (switch on; morph and short notes excluded)');
+}
 // the pie port: OFF in the registry since day 24 (the density build's groups are
 // provenance, not motives), so the coverage check runs with the switch forced on —
 // and the registry value itself is asserted off, so a silent flip back is caught
