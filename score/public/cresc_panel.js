@@ -102,6 +102,19 @@ const PANEL = {
             const m = SEP && SEP.parseNote ? SEP.parseNote(tok, 48) : null; return m == null ? NaN : +m;
         }).filter(n => isFinite(n) && n >= 0 && n <= 127))].sort((a, b) => a - b);
     },
+    // §424: every attack of a plain note after t, in order — the selection's own later onsets included. `ends: next strike` ends a
+    // crescendo at the first of these after its onset.
+    attacksAfter(t) {
+        const C = HOST(), Cr = CR(), D = CD(); if (!C || !D) return [];
+        const plain = [];
+        C.objects.forEach(o => {
+            if (!o || o.type !== 'waveCurve' || o.sonifyNote == null || o.layer == null || o.layer >= ML()) return;
+            if (Cr && Cr.isCresc(o)) return;
+            if (!(+o.startSeconds > t + 1e-6)) return;
+            plain.push({ id: o.id, lane: o.layer, midi: +o.sonifyNote, startSeconds: +o.startSeconds, groupId: o.groupId || null });
+        });
+        return D.onsetsOf(plain);
+    },
     drawerPitches() {
         const D = root.StrikeDrawer;
         if (!D || !D.voices || !D.voices.length) return [];
@@ -277,6 +290,7 @@ const PANEL = {
         return D.deal(this.onsets, this.events(), lanes, this.ranges(), {
             mode: c.mode, ends: c.ends, endsS: +c.endsS, harmony: c.harmony,
             nextOnsets: needNext ? this.nextStrike(lastT) : [],
+            attacks: c.ends === 'next' ? this.attacksAfter(this.onsets[0].t) : [],   // §424: every attack after the first selected onset
             drawerPitches: c.harmony === 'drawer' ? this.drawerPitches() : c.harmony === 'typed' ? this.typedPitches() : [],
             selectionLanes: this.sel.map(n => n.lane),
             piano: this.pianoLane(),

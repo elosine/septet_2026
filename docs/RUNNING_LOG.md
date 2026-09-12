@@ -11592,3 +11592,11 @@ was NOT called into: `sounding.js` is the lift.
 ## §423. `harmony: typed pitches` in the crescendo panel (2026-09-12, Fable 5.1)
 
 **Prompted by:** *"What if I want to select my pitches? instead of drawing from the drawer."* A fourth harmony: **typed pitches** — a box under the select (shown only then), note names (F2, C#3, Bb1 — the morph panel's parser, a bare class near C3) or MIDI numbers; dealt exactly as the drawer's list is (`pitchFor`'s drawer branch: sorted low → high, the lowest to the lowest-sitting ticked player, folded into range). Keys in the box do not reach the score's shortcuts. 34 green. Unheard.
+
+## §424. `ends: next strike` = the next ATTACK after the onset, for everyone — rule B undone (2026-09-12, Fable 5.1)
+
+**Prompted by:** *"and one note is longer than the other"* — Vn1 34.99 → 35.85, Vn2 34.99 → 36.68: the next strike was a run, and §421's landings dealt its onsets round-robin over the players. Asked A (everyone at the first attack) or B (spread), he said what he meant instead: *"This is one long strike spread out in an acceleration pattern. But in principle here, instead of selecting several onsets to go to several next offsets, I want to be able to go from one onset to the next onset. These are single notes, but using several instruments."*
+
+**The rule now:** every crescendo from an onset ends at the **next attack after it** — the first onset of any plain note later than it, the selection's own later onsets included — all the players together, however many. No count of landings, no refusal but "no attack after it". `harmony: next strike` still reads the next strike GROUP (`nextStrike()`, §422); the ends read a new list, `attacksAfter(firstSelectedOnset)` → `O.attacks`. Check 3 rewritten (1·3·5·7 → 3·5·7·10, four made, none refused; nothing after → all four named), check 11 replaced (a run as the next strike: four players end together; one per onset across a selection ends each at the next onset). **Verified in the app** (:5301, `zz-ai-1t-walk`): from the strike at 0, attacks after it 3 · 6 · 6.022; Vn1 and Va both dealt to 3 (Vn1 capped at 2.83 by its own next sound — the cap rule, right).
+
+*(Method note, for the AI: a script fed to `node -` on stdin lost backslashes twice tonight — `\s` → `s`, `\'` → `'`. Scripts with escapes go in a file.)*

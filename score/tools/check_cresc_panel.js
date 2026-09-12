@@ -58,12 +58,15 @@ ok('the piano is not among them even when ticked', (() => {
 })(), 'CN-34: the piano never swells');
 ok('a player in the selection is never offered', !r2.crescs.some(c => c.lane === 0));
 
-H('3 · ends: next strike — dealt in time order, and the abort when they run out');
-const r3 = D.deal(ONS, evOf(base), [3, 4, 5, 6], RANGES, OPT({ mode: 'one', ends: 'next', harmony: 'these', nextOnsets: NEXT }));
+H('3 · ends: next strike — each ends at the next ATTACK after its onset (§424); the abort when nothing follows');
+// the panel passes `attacks` = every attack after the first selected onset — the selection's own later onsets (3, 5, 7) and the next group (10, 11, 12)
+const AT3 = D.onsetsOf(SEL_OBJ.slice(1).concat(NEXT_OBJ).map(o => ({ id: o.id, lane: o.layer, midi: o.sonifyNote, startSeconds: o.startSeconds, groupId: o.groupId })));
+const r3 = D.deal(ONS, evOf(base), [3, 4, 5, 6], RANGES, OPT({ mode: 'one', ends: 'next', harmony: 'these', nextOnsets: NEXT, attacks: AT3 }));
 console.log('     ' + D.summarize(r3));
-ok('three crescendos end ON the next group\'s onsets, in order',
-   r3.crescs.length === 3 && r3.crescs.map(c => c.t1).join(',') === '10,11,12', r3.crescs.map(c => c.t0 + '→' + c.t1).join(' · '));
-ok('the fourth is NAMED, not silently dropped', r3.aborts.length === 1 && r3.aborts[0].why === 'noNextOnset', JSON.stringify(r3.aborts));
+ok('four crescendos, each to the next attack after its onset: 1→3 · 3→5 · 5→7 · 7→10',
+   r3.crescs.length === 4 && r3.crescs.map(c => c.t1).join(',') === '3,5,7,10', r3.crescs.map(c => c.t0 + '→' + c.t1).join(' · '));
+const r3n = D.deal(ONS, evOf(base), [3, 4, 5, 6], RANGES, OPT({ mode: 'one', ends: 'next', harmony: 'these', nextOnsets: [], attacks: [] }));
+ok('nothing after them: all four NAMED, not silently dropped', r3n.crescs.length === 0 && r3n.aborts.length === 4 && r3n.aborts.every(x => x.why === 'noNextOnset'), JSON.stringify(r3n.aborts.map(x => x.why)));
 const r3h = D.deal([ONS[0]], evOf(base), [3, 4, 5], RANGES, OPT({ mode: 'all', ends: 'even', endsS: 2, harmony: 'next', nextOnsets: NEXT }));
 ok('harmony: next strike deals that group\'s pitches in order', r3h.crescs.map(c => c.raw).join(',') === '50,51,52',
    r3h.crescs.map(c => c.raw).join(','));
@@ -129,19 +132,24 @@ ok('over(): touching at either edge is free', Sn.overIn(ev, 1.14, 3, [0]).free.l
 ok('over(): an overlap is busy, and says until when', Sn.overIn(ev, 1.05, 3, [0]).until[0] === 1.14,
    JSON.stringify(Sn.overIn(ev, 1.05, 3, [0]).until));
 
-H('11 · FIX-NOW 2 (§421, his "b"): an onset with n notes is n landings');
-// the next strike: two notes 10 ms apart (ONE onset, two landings) and a third at 10.5 — on lanes no ticked player uses
+H('11 · §424: ends: next strike = the next ATTACK after the onset, for everyone');
+// the next strike is a run: attacks at 10 (two notes), 10.5, 10.8 — on lanes no ticked player uses
 {
-    const N2 = [note(1, 10, 50, 0.14, 'grp-strike-2'), note(PIANO, 10.01, 60, 0.14, 'grp-strike-2'), note(PIANO, 10.5, 64, 0.14, 'grp-strike-2')];
-    const NX = D.onsetsOf(N2.map(o => ({ id: o.id, lane: o.layer, midi: o.sonifyNote, startSeconds: o.startSeconds, groupId: o.groupId })));
-    ok('two notes 10 ms apart are one onset · 2 onsets in all', NX.length === 2 && NX[0].notes.length === 2, NX.map(x => x.t + ':' + x.notes.length).join(' '));
+    const N2 = [note(1, 10, 50, 0.14, 'grp-strike-2'), note(PIANO, 10.01, 60, 0.14, 'grp-strike-2'), note(PIANO, 10.5, 64, 0.14, 'grp-strike-2'), note(1, 10.8, 52, 0.14, 'grp-strike-2')];
+    const AT = D.onsetsOf(N2.map(o => ({ id: o.id, lane: o.layer, midi: o.sonifyNote, startSeconds: o.startSeconds, groupId: o.groupId })));
+    ok('two notes 10 ms apart are one attack · 3 attacks in all', AT.length === 3 && AT[0].notes.length === 2, AT.map(x => x.t + ':' + x.notes.length).join(' '));
     const ev2 = evOf(SEL_OBJ.concat(N2));
-    const r = D.deal([ONS[0]], ev2, [3, 4, 5], RANGES, OPT({ mode: 'all', ends: 'next', harmony: 'these', nextOnsets: NX }));
-    ok('3 players · 3 notes in the next strike → 3 crescendos (was 2)', r.crescs.length === 3, r.crescs.length + ' · ' + D.summarize(r));
-    const ends = r.crescs.map(c => c.t1).sort((a, b) => a - b);
-    ok('round-robin: two land on the double onset, one on the single', ends.join() === '10,10,10.5', ends.join());
-    const r4 = D.deal([ONS[0]], ev2, [3, 4, 5, 6], RANGES, OPT({ mode: 'all', ends: 'next', harmony: 'these', nextOnsets: NX }));
-    ok('a 4th player: no landing left, and the readout says the count', r4.crescs.length === 3 && /2 onsets · 3 landings, all taken/.test(D.summarize(r4)), D.summarize(r4));
+    const r = D.deal([ONS[0]], ev2, [3, 4, 5, 6], RANGES, OPT({ mode: 'all', ends: 'next', harmony: 'these', nextOnsets: AT, attacks: AT }));
+    ok('4 players from one onset → 4 crescendos, none refused', r.crescs.length === 4, r.crescs.length + ' · ' + D.summarize(r));
+    ok('all four end at the next attack, 10 — the same length', r.crescs.every(c => c.t1 === 10), r.crescs.map(c => c.t1).join());
+    // several selected onsets: each ends at the attack after IT — the selection's own next onset counts (attacks = everything after the first)
+    const selAll = ONS;   // 1, 3, 5, 7 on lane 0
+    const AT2 = D.onsetsOf(SEL_OBJ.slice(1).concat(N2).map(o => ({ id: o.id, lane: o.layer, midi: o.sonifyNote, startSeconds: o.startSeconds, groupId: o.groupId })));
+    const r2 = D.deal(selAll, ev2, [3, 4, 5, 6], RANGES, OPT({ mode: 'one', ends: 'next', harmony: 'these', nextOnsets: AT, attacks: AT2 }));
+    const byT = {}; r2.crescs.forEach(c => { byT[c.t0] = c.t1; });
+    ok('one per onset over 1·3·5·7: each ends at the next onset (3·5·7·10)', byT[1] === 3 && byT[3] === 5 && byT[5] === 7 && byT[7] === 10, JSON.stringify(byT));
+    const r0 = D.deal([ONS[0]], ev2, [3], RANGES, OPT({ mode: 'all', ends: 'next', harmony: 'these', nextOnsets: [], attacks: [] }));
+    ok('nothing after it: refused, and says so', r0.crescs.length === 0 && /no attack after/.test(D.summarize(r0)), D.summarize(r0));
 }
 
 console.log('\n' + (fail ? fail + ' FAILED' : 'all green'));
