@@ -1491,3 +1491,16 @@ onset — the "only the players left out last time" case he accepts.)*
 pitches the ensemble is already playing (leftovers first). **Deferred, his eventuality:** the piano's SIX (say) re-voiced on their own —
 registers, the keyboard's presets (original · spread · cluster …), the ±½/±8va transpositions — per onset, behind a standing two-hand
 guard. The guard exists today in one form: `handFit` (reach 14 semitones · 5 per hand · the middle dropped · the card says "n dropped").
+
+## CN-67 — 2026-09-12: the pianist alternating hands in a fast rhythm — each chord in ONE hand, never over the last one's ground
+
+> *"I want a pianist to alternate hands. in a fast rhythm. Is there a way to do this?"* … *"But with, for example, the [piano] count at,
+> say, four and then the [piano] octave down and then the next one up, etcetera, does that assure that those notes will still fit in one
+> hand or they might be spread out? And then what can we do to make it so that we can make any given [chord] fit into one of the hands?
+> Either the left or the right. They can cross. That's okay. They just can't be the next one can't be on top or overlapping physically the
+> area where the previous one was."* (composer, 2026-09-12, dictated)
+
+*(AI reading, marked as such — the rule as heard, to confirm:)* per onset a **one-hand** voicing: the piano's n notes within one hand's
+reach (`reach 14`, `/hand 5`), drawn from the harmony (leftovers first, doubles after, octave-folded into the window when needed) ·
+consecutive chords' **windows never overlap** on the keyboard (crossing allowed — above OR below the last one) · so the hands alternate
+by construction. Today's `piano 8va` moves the whole chord and does not narrow it: no guarantee of one hand.

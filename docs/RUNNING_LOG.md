@@ -11206,3 +11206,28 @@ whole drawer if any of this is worse. **His ear next, and nothing else.**
 - Answered on the way, for the record: `piano count 0` = the piano silent on that onset · at `rest 250` over ~190 ms onsets the
   ensemble ALTERNATES (4 · 2 · 4 · 2 under `max 4`; 6 · 0 under `max all`) — `rest ≤ 180` frees everyone every chord · the card's
   "(n players free here)" is the per-onset tell.
+
+## §409. CN-67 built: the piano in ONE hand per onset, the hands alternating, "duplicate at the octave to reach n" (2026-09-12, Fable 5.1)
+
+**Prompted by** *"I want a pianist to alternate hands. in a fast rhythm."* then the real question (CN-67 verbatim): does `piano count 4` with
+`8va` −1 / +1 assure one hand? — no, the octave moves the whole chord and the leftovers can span two hands (his card: E2 → D4). His
+rule: each chord in one hand, either hand, crossing fine, **never on top of or overlapping the ground of the previous one**; the
+one thing only he could answer — when the harmony cannot fill n inside one hand: *"duplicate at the octave to reach n, build it."*
+
+**Built in `score/public/strike_sounds.js`** (no plan, his word): `oneHandFit(pool, n, P, oct, prev)` and a branch in the piano deal —
+- **`hands` on the pattern's piano row** (`two` = today · `one, alternating`) and **`hand` on the onset card** (`patt` · `one` · `two`);
+  the pattern setting rides in `cfg.pnoHands`, the onset's in `sound.pnoHand` — so a take carries both.
+- **The window:** one reach wide (`reach 14`), aimed at the median of the raw pitches (+ `piano 8va` as a nudge), then **slid**
+  nearest-first within the room until n notes fit. n ≤ `/hand`. The pool: leftovers first (ascending), then the ensemble's pitches
+  shuffled with the onset's own seed (`reshuffle` re-draws), each folded by octave into the window; then a pitch already in the set
+  again **an octave up when the reach allows** — which is why the slide matters: an octave doubling needs its pitch in the bottom
+  (reach − 12) of the window.
+- **The side:** wholly above or wholly below the previous piano chord's realized range (`_pnoPrev`, tracked through `applySounds` in
+  time order; a two-hand chord records its range too); the side ALTERNATES (`dir` flips); the first chord after a two-hand one goes
+  to the side the raw pitches lean to; at the keyboard's end the side flips; with no room either side the rule yields and the
+  readout says so. The readout: `one hand ↑ · 2 left over + 1 doubled + 1 at the 8ve` (+ `n short of …`, `5/hand caps …`, `no room …`).
+
+**Proven headlessly** (a vm load of the module; the drawer stubbed): his four strikes #0–#3 at n 4 → windows 48–55 · 56–62 (↑) ·
+44–48 (↓) · 51–54 (↑), none overlapping its predecessor, each within a 9th · a two-pitch harmony asked for 4 → `60 62 72 74` (2 at
+the 8ve, span 14) · one pitch asked for 3 → 2 (a third copy would need two octaves) · at the keyboard's top the next goes below.
+86 green. **Not yet walked in the app** — his reload and his ear are the test; the card's readout is the tell.

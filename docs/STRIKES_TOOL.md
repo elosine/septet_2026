@@ -1187,6 +1187,11 @@ ONE setting for the pattern (`pnoCfg`), never per onset; `up to n` is a cap, nev
 
 - **Answered, not a request:** the chords are written by **Insert**, not by closing the panel; a take keeps them by name.
 
+- **AH6 · ONE HAND per onset, the hands alternating — BUILT 2026-09-12 (CN-67, RUNNING_LOG §409).** `hands` on the piano row
+  (`two` · `one, alternating`) and `hand` on the onset card (`patt` · `one` · `two`). The piano's n notes (n ≤ /hand) folded into one
+  reach, the window wholly above or below the previous piano chord and the side alternating; leftovers → doubles → the same pitch
+  again at the octave (his word) when the reach allows. Readout `one hand ↑ · …`. Unwalked in the app at the build.
+
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the

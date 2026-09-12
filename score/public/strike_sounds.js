@@ -71,7 +71,7 @@ Object.assign(D, {
     // §377 · CN-61 — the piano's share of a chord, one setting for the pattern; defaults when a take or the browser has none
     pnoCfg() { const c = this.cfg, num = (v, d) => (v === '' || v == null || !isFinite(+v)) ? d : +v;
         return { share: ['none', 'one', 'n', 'rest'].indexOf(c.pnoShare) >= 0 ? c.pnoShare : 'rest', n: Math.max(1, Math.round(num(c.pnoN, 2))),
-                 reach: Math.max(1, Math.round(num(c.pnoReach, 14))), perHand: Math.max(1, Math.round(num(c.pnoPerHand, 5))), ms: Math.max(0, num(c.pnoMs, 100)) }; },
+                 reach: Math.max(1, Math.round(num(c.pnoReach, 14))), perHand: Math.max(1, Math.round(num(c.pnoPerHand, 5))), ms: Math.max(0, num(c.pnoMs, 100)), hands: c.pnoHands === 'one' ? 'one' : 'two' }; },
     pianoLane() { return TRK().findIndex(t => t.instKey === 'piano'); },
     // CN-61, his (a): the remainder fitted to two hands — the left from the bottom up and the right from the top down, each within its reach
     // and its count; what neither hand can hold is the MIDDLE, and it is dropped. Taken alternately (LH, RH, LH …) so `one` is the lowest
@@ -85,6 +85,39 @@ Object.assign(D, {
         const out = []; for (let i = 0; i < Math.max(lh.length, rh.length); i++) { if (i < lh.length) out.push(lh[i]); if (i < rh.length) out.push(rh[i]); }
         const lim = P.share === 'one' ? 1 : P.share === 'n' ? P.n : Infinity;
         return out.slice(0, lim);
+    },
+    // CN-67 (2026-09-12): ONE HAND per onset, the hands alternating. The piano's n notes (n ≤ notes/hand) are folded by octave into a
+    // window one reach wide; the window sits wholly ABOVE or wholly BELOW the previous chord's (never over its ground — crossing is
+    // fine), the side alternating from chord to chord (the first with a predecessor goes to the side the raw pitches lean to). The
+    // pool is the leftovers first, then the ensemble's pitches (doubled), then — his word — a pitch already in the chord again at the
+    // octave, when the reach allows it. `piano 8va` nudges where the window is aimed; the no-overlap rule wins. Short = what would not fit.
+    oneHandFit(pool, n, P, oct, prev) {
+        const KLO = 21, KHI = 108, R = Math.max(1, P.reach);
+        const raw = pool.slice(0, Math.max(1, n)).map(x => x.p).sort((a, b) => a - b);
+        const mid = raw.length ? raw[Math.floor(raw.length / 2)] + 12 * (oct || 0) : 60;
+        const ideal = Math.round(mid - R / 2);
+        const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+        let dir = 0, noRoom = false, rlo = KLO, rhi = KHI - R;
+        if (prev) {
+            dir = prev.dir ? -prev.dir : (mid > (prev.lo + prev.hi) / 2 ? 1 : -1);
+            const room = d => d > 0 ? [prev.hi + 1, KHI - R] : [KLO, prev.lo - 1 - R];
+            let rg = room(dir); if (rg[0] > rg[1]) { dir = -dir; rg = room(dir); }
+            if (rg[0] > rg[1]) { dir = 0; noRoom = true; } else { rlo = rg[0]; rhi = rg[1]; }
+        }
+        // the window is aimed at the raw pitches, then slid (nearest first, within the room) until n notes fit — an octave
+        // duplicate needs its pitch in the bottom (reach − 12) of the window, so the slide is what makes his "duplicate at the octave" land
+        const fill = base => {
+            const top = base + R, set = [], src = { left: 0, dbl: 0, dup: 0 };
+            for (const x of pool) { if (set.length >= n) break; const q = base + (((x.p - base) % 12) + 12) % 12; if (q > top || set.indexOf(q) >= 0) continue; set.push(q); src[x.src]++; }
+            for (const q of set.slice().sort((a, b) => a - b)) { if (set.length >= n) break; if (q + 12 <= top && set.indexOf(q + 12) < 0) { set.push(q + 12); src.dup++; } }
+            set.sort((a, b) => a - b); return { base, set, src };
+        };
+        const c0 = clamp(ideal, rlo, rhi); let best = fill(c0);
+        for (let d = 1; best.set.length < n && d <= 12; d++) {
+            for (const b of [c0 - d, c0 + d]) { if (b < rlo || b > rhi) continue; const t = fill(b); if (t.set.length > best.set.length) best = t; if (best.set.length >= n) break; }
+        }
+        const base = best.base, set = best.set, src = best.src;
+        return { set, dir, lo: set.length ? set[0] : base, hi: set.length ? set[set.length - 1] : top, fromLeft: src.left, fromChosen: src.dbl, dup: src.dup, short: Math.max(0, n - set.length), noRoom };
     },
     dealChordAt(onset, harm, notes, sound) {
         const S = SC(); const restMs = this.sndRest(), t = onset.onMs; sound = sound || {};
@@ -154,6 +187,27 @@ Object.assign(D, {
                 why = Math.min(left.length, perOnset) + ' left over' + (doubled ? ' + ' + doubled + ' doubled' : '')
                     + (set.length < perOnset ? ' — ' + perOnset + ' asked, the harmony has ' + pitches.length : '');
             }
+            const hand = (sound.pnoHand === 'one' || sound.pnoHand === 'two') ? sound.pnoHand : P.hands;
+            if (hand === 'one' && !pBusy && (left.length || chosen.length)) {   // CN-67
+                const n0 = perOnset > 0 ? perOnset : P.share === 'one' ? 1 : P.share === 'n' ? P.n : left.length;
+                if (!n0) { out.pnoWhy = 'nothing left'; return out; }
+                const n = Math.min(n0, P.perHand);
+                const bag = chosen.slice();
+                for (let i = bag.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [bag[i], bag[j]] = [bag[j], bag[i]]; }
+                const pool = left.slice().sort((a, b) => a - b).map(p => ({ p, src: 'left' })).concat(bag.map(p => ({ p, src: 'dbl' })));
+                const fit = this.oneHandFit(pool, n, P, oct, this._pnoPrev || null);
+                const tech = this.sndTechOf(pl, notes);
+                fit.set.forEach(p => { const rz = this.realize(p, { lane: pl, tech }); if (!rz) return; out.notes.push({ lane: pl, tech, midi: rz.midi, standIn: !!rz.standIn, pitch: p, onMs: t, durMs, vel }); out.pno++; });
+                out.pnoWin = { lo: fit.lo, hi: fit.hi, dir: fit.dir };
+                const bits = ['one hand' + (fit.dir > 0 ? ' \u2191' : fit.dir < 0 ? ' \u2193' : '')];
+                bits.push(fit.fromLeft + ' left over' + (fit.fromChosen ? ' + ' + fit.fromChosen + ' doubled' : '') + (fit.dup ? ' + ' + fit.dup + ' at the 8ve' : ''));
+                if (fit.short) bits.push(fit.short + ' short of ' + n);
+                if (n < n0) bits.push(P.perHand + '/hand caps ' + n0);
+                if (fit.noRoom) bits.push('no room beside the last chord');
+                if (oct) bits.push((oct > 0 ? '+' : '') + oct + ' 8va');
+                out.pnoWhy = bits.join(' \u00b7 ');
+                return out;
+            }
             const want = perOnset > 0 ? Math.min(set.length, perOnset) : set.length;
             if (!want) out.pnoWhy = perOnset > 0 ? 'nothing to take' : 'nothing left';
             else if (pBusy) out.pnoWhy = 'too soon';
@@ -161,6 +215,7 @@ Object.assign(D, {
                 const tech = this.sndTechOf(pl, notes);
                 const lim = perOnset > 0 ? { share: 'n', n: perOnset, reach: P.reach, perHand: P.perHand, ms: P.ms } : P;
                 this.handFit(set.map(p => p + 12 * oct), lim).forEach(p => { const rz = this.realize(p, { lane: pl, tech }); if (!rz) return; out.notes.push({ lane: pl, tech, midi: rz.midi, standIn: !!rz.standIn, pitch: p, onMs: t, durMs, vel }); out.pno++; });
+                if (out.pno) { const ps = out.notes.filter(n => n.lane === pl).map(n => n.midi); out.pnoWin = { lo: Math.min.apply(null, ps), hi: Math.max.apply(null, ps), dir: 0 }; }
                 const drop = want - out.pno;
                 const bits = []; if (why) bits.push(why); if (drop > 0) bits.push(drop + ' dropped'); if (oct) bits.push((oct > 0 ? '+' : '') + oct + ' 8va');
                 out.pnoWhy = bits.join(' · ');
@@ -173,11 +228,11 @@ Object.assign(D, {
         const map = this.snd(); const keys = Object.keys(map).filter(k => map[k] && map[k].kind === 'chord');
         if (!keys.length) this._sndReport = [];   // §378: `clear all` left the last report behind, so its hollow dots stayed on the strip
         if (!keys.length || mode === 'piano' || (this.isChords && this.isChords()) || (this.isFill && this.isFill())) return notes;
-        const onsets = this.onsetList(); let out = notes.slice(); const report = [];
+        const onsets = this.onsetList(); let out = notes.slice(); const report = []; this._pnoPrev = null;   // CN-67: the last piano chord's window
         // deal in time order, each deal seeing the pattern as it stands with the earlier deals in it (so a big chord early leaves fewer free)
         onsets.filter(o => keys.includes(o.key)).sort((a, b) => a.onMs - b.onMs).forEach(o => {
             const harm = map[o.key].harm; if (!harm || !harm.pitches || !harm.pitches.length) return;
-            const r = this.dealChordAt(o, harm, out, map[o.key]);
+            const r = this.dealChordAt(o, harm, out, map[o.key]); if (r.pno > 0 && r.pnoWin) this._pnoPrev = r.pnoWin;
             out = out.filter(n => Math.abs(n.onMs - o.onMs) >= 1.5).concat(r.notes.map(n => ({ lane: n.lane, tech: n.tech, midi: n.midi, vel: n.vel, onMs: n.onMs, durMs: n.durMs, chord: harm.name || harm.id })));
             report.push({ key: o.key, pos: o.pos, taken: r.taken, wanted: r.wanted, free: r.free, folds: r.folds, pno: r.pno, pnoWhy: r.pnoWhy, notes: r.notes });
         });
@@ -196,7 +251,7 @@ Object.assign(D, {
         try { await this.play('orch'); } finally { this._onlyAt = null; }
     },
 
-    pnoSummary() { const P = this.pnoCfg(); return ({ none: 'none', one: 'one note', n: 'up to ' + P.n, rest: 'the rest' })[P.share] + ' · reach ' + P.reach + ' · ' + P.perHand + '/hand · ≥ ' + P.ms + ' ms'; },
+    pnoSummary() { const P = this.pnoCfg(); return ({ none: 'none', one: 'one note', n: 'up to ' + P.n, rest: 'the rest' })[P.share] + ' · reach ' + P.reach + ' · ' + P.perHand + '/hand · ≥ ' + P.ms + ' ms' + (P.hands === 'one' ? ' · one hand, alternating' : ''); },
 
     // ------------------------------------------------------------ setting a sound
     setSoundAt(key, sound) {
@@ -279,12 +334,14 @@ Object.assign(D, {
             + '<label>n <input id="skSndPnoN" type="number" min="1" max="10" step="1" style="' + INP + ';width:34px"></label>'
             + '<label title="one hand\'s reach in semitones (14 = a ninth)">reach <input id="skSndReach" type="number" min="1" max="24" step="1" style="' + INP + ';width:34px"></label>'
             + '<label title="notes per hand">/hand <input id="skSndHand" type="number" min="1" max="5" step="1" style="' + INP + ';width:30px"></label>'
+            + '<label title="CN-67: one = each chord in ONE hand (n &le; notes/hand, folded into one reach), wholly above or below the last chord, the side alternating — the hands alternate by construction">hands <select id="skSndHands" style="' + INP + '"><option value="two">two</option><option value="one">one, alternating</option></select></label>'
             + '<label title="the piano\'s own clock, attack to attack: it skips a chord that comes sooner than this after its last one (the ensemble\'s rest does not apply to it)">&ge; <input id="skSndPnoMs" type="number" min="0" step="10" style="' + INP + ';width:42px"> ms</label></div>'
             // §405 · AH2 · AH3: this onset's own piano count and octave — the way `max` overrides `every onset: max`
             + '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">'
             + '<span style="color:#e8cf9a">this onset</span>'
             + '<label title="how many notes the piano takes AT THIS ONSET — blank = whatever the pattern says above &middot; 0 = the piano sits this one out &middot; n = a TARGET of n notes: the leftovers first, then pitches the ensemble is already playing, until n (CN-66)">piano count <input id="skSndPnoAt" type="number" min="0" max="10" step="1" placeholder="patt" style="' + INP + ';width:42px"></label>'
-            + '<label title="the piano&#39;s pitches at this onset moved by whole octaves before the keyboard folds them; the two-hand guard runs after, unchanged">piano 8va <input id="skSndPno8va" type="number" min="-2" max="2" step="1" style="' + INP + ';width:38px"></label></div>'
+            + '<label title="the piano&#39;s pitches at this onset moved by whole octaves before the keyboard folds them; the two-hand guard runs after, unchanged">piano 8va <input id="skSndPno8va" type="number" min="-2" max="2" step="1" style="' + INP + ';width:38px"></label>'
+            + '<label title="this onset&#39;s hands — blank = the pattern&#39;s setting &middot; one = this chord in one hand, clear of the last &middot; two = both hands">hand <select id="skSndPnoHandAt" style="' + INP + '"><option value="">patt</option><option value="one">one</option><option value="two">two</option></select></label></div>'
             + '<div style="display:flex;gap:4px;flex-wrap:wrap;border-top:1px solid #3a3a44;padding-top:5px">'
             + '<button id="skSndAll" style="' + BTN + '" title="this harmony on every onset of the pattern">all onsets &larr; this harmony</button>'
             + '<select id="skSndBank" style="' + INP + '" title="every onset gets the next row of a banner, in turn"></select><button id="skSndAllBank" style="' + BTN + '">all onsets &larr; banner in turn</button>'
@@ -318,11 +375,14 @@ Object.assign(D, {
         q('#skSndReach').addEventListener('change', e => pno('pnoReach', Math.max(1, Math.round(+e.target.value || 14))));
         q('#skSndHand').addEventListener('change', e => pno('pnoPerHand', Math.max(1, Math.min(5, Math.round(+e.target.value || 5)))));
         q('#skSndPnoMs').addEventListener('change', e => pno('pnoMs', Math.max(0, +e.target.value || 0)));
+        q('#skSndHands').addEventListener('change', e => pno('pnoHands', e.target.value === 'one' ? 'one' : 'two'));   // CN-67
         // §405: these two ride on the ONSET's sound (so a take carries them), not on the pattern — hence onThis, which wants a chord first
         q('#skSndPnoAt').addEventListener('change', e => onThis(cur => { const v = e.target.value; if (v === '' || v == null || !isFinite(+v)) delete cur.pno; else cur.pno = Math.max(0, Math.min(10, Math.round(+v))); },
             cur => 'piano ' + (cur.pno == null ? 'as the pattern says (' + this.pnoSummary() + ')' : cur.pno === 0 ? 'off at this onset' : 'a target of ' + cur.pno + ' notes here')));
         q('#skSndPno8va').addEventListener('change', e => onThis(cur => { const v = Math.max(-2, Math.min(2, Math.round(+e.target.value || 0))); if (v) cur.pno8va = v; else delete cur.pno8va; },
             cur => 'piano ' + (cur.pno8va ? (cur.pno8va > 0 ? '+' : '') + cur.pno8va + ' octave' + (Math.abs(cur.pno8va) > 1 ? 's' : '') + ' here' : 'at pitch')));
+        q('#skSndPnoHandAt').addEventListener('change', e => onThis(cur => { const v = e.target.value; if (v === 'one' || v === 'two') cur.pnoHand = v; else delete cur.pnoHand; },
+            cur => 'piano ' + (cur.pnoHand ? (cur.pnoHand === 'one' ? 'in one hand here, clear of the last chord' : 'in two hands here') : 'hands as the pattern says')));   // CN-67
         this._sndKey = k => { if (this._sndCard && k.key === 'Escape') { k.preventDefault(); k.stopPropagation(); this.closeSoundCard(); } };
         document.addEventListener('keydown', this._sndKey, true);
         // drag by the head
@@ -363,6 +423,7 @@ Object.assign(D, {
         setv('#skSndPnoAt', cur && cur.pno != null ? cur.pno : ''); setv('#skSndPno8va', cur && cur.pno8va ? cur.pno8va : 0);
         const P = this.pnoCfg(); setv('#skSndPno', P.share); setv('#skSndPnoN', P.n); setv('#skSndReach', P.reach); setv('#skSndHand', P.perHand); setv('#skSndPnoMs', P.ms);
         q('#skSndPnoN').disabled = P.share !== 'n';
+        setv('#skSndHands', P.hands); setv('#skSndPnoHandAt', cur && cur.pnoHand ? cur.pnoHand : '');
         q('#skSndRe').textContent = cur && cur.seed ? 'reshuffle (' + (cur.seed + 1) + ')' : 'reshuffle';
         this.paintSoundMarks();
     },
