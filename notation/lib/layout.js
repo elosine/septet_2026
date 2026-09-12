@@ -1411,7 +1411,10 @@
                   const lineY = above ? ref + std + hook : ref - std - hook;
                   items.push({
                     k: 'ottava', t: tU, dx0Ss: leftEdgeDx,
-                    dx1Ss: headDx + nhO.wSs / 2 + ((O.endPadSs != null) ? O.endPadSs : 0),
+                    // §401l (the composer, option A): the hook clears the LEDGER LINE's overhang on the right,
+                    // as the sign already clears the accidental on the left (Gould: sign at the first note's
+                    // left edge, line to the last note's right edge, hook toward the staff)
+                    dx1Ss: headDx + nhO.wSs / 2 + (ledgers.length ? ledgerExt : 0) + ((O.endPadSs != null) ? O.endPadSs : 0),
                     ySs: lineY, dir: above ? 'above' : 'below', label, ev: e.id,
                   });
                 }
