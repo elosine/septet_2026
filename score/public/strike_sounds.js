@@ -231,14 +231,18 @@ Object.assign(D, {
     allOnsetsBannerInTurn(bankKey) {
         const groups = this.harmGroups ? this.harmGroups() : null; if (!groups) { this.setStatus('the harmonies are not read yet — open the morph panel once', true); return; }
         const H = HS(); let items = [];
-        if (bankKey === 'strikes') items = (this.seq ? this.seq.strikeIds : []).map(id => this.harmFromId(id)).filter(Boolean);
+        if (bankKey === 'strikes') {
+            const ids = this.seq ? this.seq.strikeIds : [];
+            const from = Math.max(0, ids.indexOf(this.cfg.strikeId));   // 2026-09-12: the walk starts at the HIGHLIGHTED strike (#14 on → #14, #15 …), #0 when none
+            items = ids.slice(from).concat(ids.slice(0, from)).map(id => this.harmFromId(id)).filter(Boolean);
+        }
         else { const g = groups.find(x => x.key === bankKey); if (g) items = g.items.map(e => this.harmFromId(H.harmId(e.value, e.root))).filter(Boolean); }
         if (!items.length) { this.setStatus('nothing in that banner', true); return; }
         this.snapshot(); const map = this.snd();
         this.onsetList().forEach((o, i) => { map[o.key] = Object.assign({}, map[o.key] || {}, { kind: 'chord', harm: items[i % items.length] }); });
         if (this.chordDirty) this.chordDirty();
         this.save(); this.render(); this.paintSoundCard();
-        this.setStatus('every onset ← ' + bankKey + ' in turn (' + items.length + ') · ' + this.sndReadout());
+        this.setStatus('every onset ← ' + bankKey + ' in turn from ' + (items[0] && items[0].name || 'the top') + ' (' + items.length + ') · ' + this.sndReadout());
     },
     clearSounds() { this.snapshot(); this.cfg.sounds = {}; if (this.chordDirty) this.chordDirty(); this.save(); this.render(); this.paintSoundCard(); this.setStatus('every onset back to a note'); },
 

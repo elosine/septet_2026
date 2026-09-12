@@ -11191,3 +11191,18 @@ that miss, that the app was swallowing the keystroke, was wrong.
 **Not built, still:** AH5 (the piano re-voiced per onset behind the hands guard) · the hand override per chord · AB3.
 **Tests:** `node tools/test_septet_notation.js` — **86 green**, unchanged. The classic flag `septet.strikes.classic` still reverts the
 whole drawer if any of this is worse. **His ear next, and nothing else.**
+
+## §408. `banner in turn` now starts at the highlighted strike; SWEEP #10 — `max` counts the piano in (2026-09-12, Fable 5.1)
+
+**Prompted by** his first pass at CN-65 in the drawer, on the take `ChordStrikes01a-even` (onset 1 ← #0 · `max 4` · `piano count 4` ·
+`8va −1`; onsets 2–14 ← #1 … #13). Two things came up while composing, no plan, his word "build it, no plan, just as quick as you can":
+
+- **The walk always restarted at #0.** *"I was on 14 When I clicked all onset spanner in turn, it reverted back to zero. Any way of
+  continuing from fourteen on?"* — `allOnsetsBannerInTurn` took `seq.strikeIds` from index 0. **Built:** for the `strikes` banner the
+  list is rotated to start at `cfg.strikeId` (the highlighted row), so #14 highlighted → onsets get #14, #15 …; #0 highlighted = the
+  old behaviour; the status line names the start (`in turn from #14`). Passage banners unchanged. 86 green.
+- **`max` counts the piano in** (his observation; not diagnosed — his "leave it for now, I just want to start"). Logged verbatim as
+  **SWEEP #10**; his preference on record: `max` = the six, the piano by `piano count` alone.
+- Answered on the way, for the record: `piano count 0` = the piano silent on that onset · at `rest 250` over ~190 ms onsets the
+  ensemble ALTERNATES (4 · 2 · 4 · 2 under `max 4`; 6 · 0 under `max all`) — `rest ≤ 180` frees everyone every chord · the card's
+  "(n players free here)" is the per-onset tell.
