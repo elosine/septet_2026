@@ -85,29 +85,17 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word.
 
-**MID-SESSION CHECKPOINT — session 9, 2026-09-12, Fable 5.1 → the build goes to OPUS after a clear.** *(RUNNING_LOG §405–§406;
-STRIKES_TOOL §AH; CN-65 · CN-66.)* After `/postclear`: play this back, then STOP and wait for his "go".
+**SESSION 9 — 2026-09-12, Fable 5.1 to decide, Opus 5 to build. THE FOUR LANDED** *(RUNNING_LOG §405–§407; STRIKES_TOOL §AH;
+CN-65 · CN-66.)* The chord-per-onset drawer now does all four, in `score/public/strike_sounds.js`:
 
-**THE BUILD BRIEF — four small things in the chord-per-onset drawer, all in `score/public/strike_sounds.js`** (`dealChordAt` ·
-`pnoCfg` · `handFit` · the onset card's HTML + handlers ~ lines 240–320). For the passage in CN-65 (even rhythm, gap 200, notes 14; one
-strike harmony per onset from #0 via `all onsets ← strikes in turn`, which already works; the ensemble alternating; the piano by count).
-Build on a `zz-ai-` copy of a score, walk with real clicks, then commit + push; **his ear next, nothing else.**
+- **the rested play first** — an onset takes the players who sat out longest, `max` still the count, the pitches still by register;
+- **`piano count` per onset** — blank = the pattern · 0 = off here · n = a target;
+- **the top-up** — under the target, the leftovers first, then pitches the ensemble plays (CN-66 allows the doubling), re-drawn by `reshuffle`;
+- **`piano 8va` per onset** (−2 … +2), folded at the keyboard's ends, the hands guard after.
 
-1. **Rested-first deal.** In `dealChordAt`, before the register sort of `ps`, rank the free players by *time since that lane last
-   played* (from `others`: the lane's latest `onMs` < t; never played = ∞), longest rest first; ties by register (or shuffled under
-   `deal: random`). So an onset takes the players who sat out the last one, then adds more. `max` stays the count.
-2. **The piano's count per onset.** A number box on the onset card — blank = the pattern's setting (`pnoCfg`, untouched), `0` = none,
-   `n` = a TARGET of n notes — stored in `cfg.sounds[key]` so takes carry it, the way `max` overrides `sndMax`.
-3. **The top-up (CN-66: doubling allowed).** When the onset's target n > the leftover pitches, add pitches the ensemble already took
-   (`chosen`), drawn with the onset's `rnd` (so `reshuffle` re-draws them), until n; leftovers first; then `handFit` as now. The card's
-   readout says e.g. `2 left over + 3 doubled`.
-4. **±8va for the piano per onset.** A `piano 8va` box on the card (−2 … +2, default 0): the piano's pitches shifted by that many
-   octaves before `realize` (which folds at the keyboard's ends); the two-hand guard runs after, unchanged.
-
-**Not in this build:** the piano re-voiced by the presets per onset (AH5, deferred) · the hand override per chord · AB3.
-**Tests:** `grep -l dealChordAt tools/` for any covering test; `node tools/test_septet_notation.js` must stay 86 green. **The classic flag**
-`septet.strikes.classic` still reverts the drawer if anything is worse.
-**Resume reads:** STRIKES_TOOL §AH (lines ~1137–1175) · `strike_sounds.js` lines 60–140 and 240–320. Nothing else.
+Proven headlessly (his own 4 → 3 → 3 → 5 script falls out of `max` alone) and **walked in the app with real clicks** on
+`zz-ai-chordonset` at :5301 — the alternation on the page, `piano 8 (6 left over + 2 doubled)`, `-2 8va`, reshuffle, `0`. Tests 86 green.
+**HIS EAR IS THE NEXT THING, and nothing else.** Deferred still: AH5 (the piano re-voiced per onset) · the hand override · AB3.
 
 **Last session (8 — 2026-09-10 → 11, Claude Code / Opus 5 + Fable 5.1) — RUNNING_LOG §352–§401n.** A long session in three movements:
 
@@ -143,9 +131,9 @@ Build on a `zz-ai-` copy of a score, walk with real clicks, then commit + push; 
 - **NEXT CONCRETE STEP:** his eye and ear over the 15 pages (:5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker
   "piece-septet · strikes 0–176 s" → video · SPACE for MIDI). Then the next notation session: **trills' written look, then the
   morph curves** — planning method on Fable, build on Opus after a clear.
-- **Decided this session (9, 2026-09-12, promote at end):** the piano MAY DOUBLE ensemble pitches when it tops up to its count (CN-66
-  relaxes CN-61); the piano's per-onset voicing + hands guard DEFERRED (STRIKES_TOOL AH5). Three builds queued: rested-first deal · piano
-  count per onset · top-up (AH1–AH3, for CN-65's passage).
+- **Decided and built this session (9, 2026-09-12):** the piano MAY DOUBLE ensemble pitches when it tops up to its count (CN-66
+  relaxes CN-61); the piano's per-onset voicing + hands guard DEFERRED (STRIKES_TOOL AH5). **All four landed (RUNNING_LOG §407)** —
+  rested-first deal · piano count per onset · the top-up · ±8va per onset — proven headlessly and walked on a copy at :5301.
 - **Pending decisions from him:** the **15 geometry touches** around the piano over 0–176 s (§401n — the piano's stack meets BCl's
   or Vn1's in the band between lanes; fix ladder = flip a chain · per-page nudge · more piano air) · the Vn1 high-note spill
   (~1 ss over its lane top) · whether the ottava hook's 0.30 ss reads · the drawer verdicts (STRIKES_TOOL §AG) · whether to commit
@@ -166,8 +154,8 @@ Build on a `zz-ai-` copy of a score, walk with real clicks, then commit + push; 
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N0** | **► BUILD the four (the brief above)** — rested-first deal · piano count per onset · top-up with doubling · ±8va per onset; walk on a copy; commit + push; his ear | **Opus** | **yes** — done, cleared for it |
-| **N1** | **HIS EYE AND EAR over the strikes 0–176 s** — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker "piece-septet · strikes 0–176 s" → video · SPACE for MIDI. Fix what he marks (the look is registry data) | **Fable** | no |
+| ~~N0~~ | ~~BUILD the four~~ — **done 2026-09-12 (RUNNING_LOG §407):** built, harnessed, walked on a copy at :5301, 86 green, pushed | — | — |
+| **N1** | **► HIS EAR ON THE FOUR** (the drawer: an even rhythm, strikes in turn, `every onset: max 3`, a piano count on an onset or two) — **then HIS EYE AND EAR over the strikes 0–176 s** — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker "piece-septet · strikes 0–176 s" → video · SPACE for MIDI. Fix what he marks (the look is registry data) | **Fable** | no |
 | ~~N2~~ | ~~The fold in his tab → rebuild from `piece-septet` → delete the copy~~ — **done 2026-09-11 late (RUNNING_LOG §402)** | — | — |
 | **N3** | **The 15 geometry touches** + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
 | **N4** | **Next notation session: trills' written look, then the morph curves** — planning method, then build | **Fable** to plan, **Opus** to build | **yes** — wrap on Opus, clear, switch |

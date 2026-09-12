@@ -16,6 +16,10 @@
 //   · Hear and Insert see the chords through the drawer's own notesFor — nothing new in the score's file format (ordinary strike notes);
 //     with the sound switch on `crescendo`, a chord's notes become swells like any other note at that onset.
 //
+// 2026-09-12 (§405, AH1–AH4): the deal now takes the players who SAT OUT LONGEST first (his alternation, 4 → 3 → 3 → 5, out of `max`
+// alone), and an onset may carry its own piano count (0 = none here, n = a target topped up from the harmony, doubling allowed — CN-66)
+// and its own ±8va for the piano.
+//
 // The sounds ride in cfg (so in takes and in the browser). REVERT: the git tag pre-revision-2026-09-10, or
 // localStorage.setItem('septet.strikes.classic', '1') + reload, which makes this file do nothing.
 (function (root) {
@@ -105,8 +109,18 @@ Object.assign(D, {
         // §377: `reshuffle` per onset moves its seed; `deal: random` lets any free player take any note (by register otherwise)
         const rnd = (S && S.mulberry32) ? S.mulberry32(((+this.cfg.vSeed || 1) * 977) + onset.pos * 31 + 3 + (+sound.seed || 0) * 7919) : Math.random;
         const chosen = k ? ((S && S.select) ? S.select(pitches, k, this.sndSelection(), rnd) : pitches.slice(0, k)) : [];
-        let ps = free.slice().sort((a, b) => a.centre - b.centre);
-        if (sound.deal === 'random') for (let i = ps.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [ps[i], ps[j]] = [ps[j], ps[i]]; }
+        // §405 · AH1 (CN-65) THE RESTED PLAY FIRST. `others` is the pattern as it stands (the earlier deals already in it), so a lane's
+        // latest onset before t gives its rest; a lane that has not played at all is Infinity and heads the queue. The COUNT is still
+        // `max` — only WHO changes: the k longest-rested free players. Ties keep the order underneath (register, or shuffled under
+        // `deal: random`), which holds because V8's sort is stable. His 4 → 3 → 3 → 5 then falls out of `max` alone.
+        let pool = free.slice().sort((a, b) => a.centre - b.centre);
+        if (sound.deal === 'random') for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+        const lastOn = lane => { let best = -Infinity; for (const x of others) if (x.lane === lane && x.onMs < t && x.onMs > best) best = x.onMs; return best; };
+        pool.forEach(p => { const L = lastOn(p.lane); p.rest = (L === -Infinity) ? Infinity : (t - L); });
+        pool.sort((a, b) => (a.rest === b.rest ? 0 : b.rest > a.rest ? 1 : -1));
+        // the players are CHOSEN by rest; the pitches still land on them by register (1k's rule) unless the deal is random
+        let ps = pool.slice(0, k);
+        if (sound.deal !== 'random') ps.sort((a, b) => a.centre - b.centre);
         const durMs = own.length ? own[0].durMs : HIT_MS, vel = own.length ? own[0].vel : 100;
         chosen.slice().sort((a, b) => a - b).forEach((P, j) => {
             const p = ps[j]; if (!p) return;
@@ -118,16 +132,38 @@ Object.assign(D, {
         out.taken = out.notes.length;
         // CN-61: the piano — the chord's REMAINDER (never a doubling), fitted to two hands, on its own attack-to-attack clock (a pianist
         // repeats faster than the ensemble's rest allows). Not under a crescendo: a piano cannot swell (CN-34, §343).
+        // §405 · AH2 · AH3 · the ±8va (CN-65 · CN-66). The pattern's setting still rules, but an onset may carry its OWN COUNT:
+        // blank = the pattern's · 0 = the piano sits this one out · n = a TARGET of n notes — the leftovers first and then, when they do
+        // not reach n, pitches the ensemble is already playing (CN-66 relaxes CN-61 (a)'s no-doubling, for the top-up only), drawn with
+        // this onset's own `rnd` so `reshuffle` re-draws them. `piano 8va` moves the piano's pitches before realize (which folds at the
+        // keyboard's ends); the two-hand guard runs after, unchanged.
         const P = this.pnoCfg();
-        if (pl >= 0 && P.share !== 'none' && !(this.isSwell && this.isSwell())) {
+        const perOnset = (sound.pno === '' || sound.pno == null || !isFinite(+sound.pno)) ? null : Math.max(0, Math.round(+sound.pno));
+        const oct = Math.max(-2, Math.min(2, Math.round(+sound.pno8va || 0)));
+        if (pl >= 0 && perOnset === 0) out.pnoWhy = 'off here';
+        else if (pl >= 0 && (perOnset > 0 || P.share !== 'none') && !(this.isSwell && this.isSwell())) {
             const left = pitches.slice(); chosen.forEach(c => { const i = left.indexOf(c); if (i >= 0) left.splice(i, 1); });
             const pBusy = others.some(n => n.lane === pl && Math.abs(n.onMs - t) < P.ms);
-            if (!left.length) out.pnoWhy = 'nothing left';
+            let set = left.slice(), doubled = 0, why = '';
+            if (perOnset > 0) {
+                if (set.length < perOnset && chosen.length) {           // the top-up, drawn in this onset's own shuffle
+                    const bag = chosen.slice();
+                    for (let i = bag.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [bag[i], bag[j]] = [bag[j], bag[i]]; }
+                    while (set.length < perOnset && bag.length) { set.push(bag.shift()); doubled++; }
+                }
+                why = Math.min(left.length, perOnset) + ' left over' + (doubled ? ' + ' + doubled + ' doubled' : '')
+                    + (set.length < perOnset ? ' — ' + perOnset + ' asked, the harmony has ' + pitches.length : '');
+            }
+            const want = perOnset > 0 ? Math.min(set.length, perOnset) : set.length;
+            if (!want) out.pnoWhy = perOnset > 0 ? 'nothing to take' : 'nothing left';
             else if (pBusy) out.pnoWhy = 'too soon';
             else {
                 const tech = this.sndTechOf(pl, notes);
-                this.handFit(left, P).forEach(p => { const rz = this.realize(p, { lane: pl, tech }); if (!rz) return; out.notes.push({ lane: pl, tech, midi: rz.midi, standIn: !!rz.standIn, pitch: p, onMs: t, durMs, vel }); out.pno++; });
-                if (out.pno < left.length) out.pnoWhy = (left.length - out.pno) + ' dropped';
+                const lim = perOnset > 0 ? { share: 'n', n: perOnset, reach: P.reach, perHand: P.perHand, ms: P.ms } : P;
+                this.handFit(set.map(p => p + 12 * oct), lim).forEach(p => { const rz = this.realize(p, { lane: pl, tech }); if (!rz) return; out.notes.push({ lane: pl, tech, midi: rz.midi, standIn: !!rz.standIn, pitch: p, onMs: t, durMs, vel }); out.pno++; });
+                const drop = want - out.pno;
+                const bits = []; if (why) bits.push(why); if (drop > 0) bits.push(drop + ' dropped'); if (oct) bits.push((oct > 0 ? '+' : '') + oct + ' 8va');
+                out.pnoWhy = bits.join(' · ');
             }
         }
         return out;
@@ -240,6 +276,11 @@ Object.assign(D, {
             + '<label title="one hand\'s reach in semitones (14 = a ninth)">reach <input id="skSndReach" type="number" min="1" max="24" step="1" style="' + INP + ';width:34px"></label>'
             + '<label title="notes per hand">/hand <input id="skSndHand" type="number" min="1" max="5" step="1" style="' + INP + ';width:30px"></label>'
             + '<label title="the piano\'s own clock, attack to attack: it skips a chord that comes sooner than this after its last one (the ensemble\'s rest does not apply to it)">&ge; <input id="skSndPnoMs" type="number" min="0" step="10" style="' + INP + ';width:42px"> ms</label></div>'
+            // §405 · AH2 · AH3: this onset's own piano count and octave — the way `max` overrides `every onset: max`
+            + '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">'
+            + '<span style="color:#e8cf9a">this onset</span>'
+            + '<label title="how many notes the piano takes AT THIS ONSET — blank = whatever the pattern says above &middot; 0 = the piano sits this one out &middot; n = a TARGET of n notes: the leftovers first, then pitches the ensemble is already playing, until n (CN-66)">piano count <input id="skSndPnoAt" type="number" min="0" max="10" step="1" placeholder="patt" style="' + INP + ';width:42px"></label>'
+            + '<label title="the piano&#39;s pitches at this onset moved by whole octaves before the keyboard folds them; the two-hand guard runs after, unchanged">piano 8va <input id="skSndPno8va" type="number" min="-2" max="2" step="1" style="' + INP + ';width:38px"></label></div>'
             + '<div style="display:flex;gap:4px;flex-wrap:wrap;border-top:1px solid #3a3a44;padding-top:5px">'
             + '<button id="skSndAll" style="' + BTN + '" title="this harmony on every onset of the pattern">all onsets &larr; this harmony</button>'
             + '<select id="skSndBank" style="' + INP + '" title="every onset gets the next row of a banner, in turn"></select><button id="skSndAllBank" style="' + BTN + '">all onsets &larr; banner in turn</button>'
@@ -273,6 +314,11 @@ Object.assign(D, {
         q('#skSndReach').addEventListener('change', e => pno('pnoReach', Math.max(1, Math.round(+e.target.value || 14))));
         q('#skSndHand').addEventListener('change', e => pno('pnoPerHand', Math.max(1, Math.min(5, Math.round(+e.target.value || 5)))));
         q('#skSndPnoMs').addEventListener('change', e => pno('pnoMs', Math.max(0, +e.target.value || 0)));
+        // §405: these two ride on the ONSET's sound (so a take carries them), not on the pattern — hence onThis, which wants a chord first
+        q('#skSndPnoAt').addEventListener('change', e => onThis(cur => { const v = e.target.value; if (v === '' || v == null || !isFinite(+v)) delete cur.pno; else cur.pno = Math.max(0, Math.min(10, Math.round(+v))); },
+            cur => 'piano ' + (cur.pno == null ? 'as the pattern says (' + this.pnoSummary() + ')' : cur.pno === 0 ? 'off at this onset' : 'a target of ' + cur.pno + ' notes here')));
+        q('#skSndPno8va').addEventListener('change', e => onThis(cur => { const v = Math.max(-2, Math.min(2, Math.round(+e.target.value || 0))); if (v) cur.pno8va = v; else delete cur.pno8va; },
+            cur => 'piano ' + (cur.pno8va ? (cur.pno8va > 0 ? '+' : '') + cur.pno8va + ' octave' + (Math.abs(cur.pno8va) > 1 ? 's' : '') + ' here' : 'at pitch')));
         this._sndKey = k => { if (this._sndCard && k.key === 'Escape') { k.preventDefault(); k.stopPropagation(); this.closeSoundCard(); } };
         document.addEventListener('keydown', this._sndKey, true);
         // drag by the head
@@ -310,6 +356,7 @@ Object.assign(D, {
         const setv = (id, v) => { const el = q(id); if (el && document.activeElement !== el) el.value = v; };
         setv('#skSndMaxAll', +this.cfg.sndMax > 0 ? this.cfg.sndMax : ''); q('#skSndMax').placeholder = +this.cfg.sndMax > 0 ? String(this.cfg.sndMax) : 'all';
         setv('#skSndMax', cur && cur.max ? cur.max : ''); setv('#skSndDealBy', cur && cur.deal === 'random' ? 'random' : 'register'); setv('#skSndRest', this.sndRest());
+        setv('#skSndPnoAt', cur && cur.pno != null ? cur.pno : ''); setv('#skSndPno8va', cur && cur.pno8va ? cur.pno8va : 0);
         const P = this.pnoCfg(); setv('#skSndPno', P.share); setv('#skSndPnoN', P.n); setv('#skSndReach', P.reach); setv('#skSndHand', P.perHand); setv('#skSndPnoMs', P.ms);
         q('#skSndPnoN').disabled = P.share !== 'n';
         q('#skSndRe').textContent = cur && cur.seed ? 'reshuffle (' + (cur.seed + 1) + ')' : 'reshuffle';

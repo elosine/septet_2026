@@ -1134,7 +1134,7 @@ that comes sooner, the ensemble's rest does not apply to it. Off under a crescen
 `strike_sounds.js` (dealChordAt with max / deal / seed / the piano · handFit · the card's boxes · ♪ through a `_onlyAt` filter on notesFor) ·
 `strike_chords_ui.js` (the onset card's drag released in the capture phase — §348's fix, never carried here — and the `(old)` label).
 
-## AH · Chord to chord: who plays next, the piano off for one onset, the piano topped up — `collected 2026-09-12, NOT built` (his rule: collect the requests, update later)
+## AH · Chord to chord: who plays next, the piano off for one onset, the piano topped up — `collected 2026-09-12` · **AH1 · AH2 · AH3 and the ±8va BUILT 2026-09-12** (RUNNING_LOG §407) · AH5 deferred at his word
 
 > *"And so what if I want to alternate? Cord to cord. So have four on the first. and sometimes include repeats. So four four on the first,
 > three on the next, for example. So that would include the two missing plus one, and so on. Then the next one might be three, which would
@@ -1170,6 +1170,21 @@ ONE setting for the pattern (`pnoCfg`), never per onset; `up to n` is a cap, nev
   more it needs** (AH1) · the piano by NOTE COUNT per onset — *5 · none · 6 · 2* — the leftover pitches first, **topped up from the
   harmony, reshuffled, when there are not enough** (AH2 + AH3). *"If I don't make the gap large enough, then only the players left out
   last time were available, and that's okay too."*
+**HOW IT WORKS NOW (built 2026-09-12, RUNNING_LOG §407 — `strike_sounds.js`):**
+
+- **AH1 · the rested play first, always.** The free players are ranked by time since that lane last played (a lane that has not played
+  is first), and an onset takes the longest-rested `max` of them; ties keep the old order (register, or shuffled under `deal: random`).
+  The pitches still land on the chosen players BY REGISTER. Nothing to switch on: `max` alone gives his 4 → 3 → 3 → 5.
+- **AH2 · `piano count` on the onset card** — blank = the pattern's piano row above · `0` = the piano sits this onset out
+  (`off here`) · `n` = a target of n notes. Stored on the onset, so a take carries it.
+- **AH3 · the top-up** — under a target, the leftovers come first and then pitches the ensemble is already playing, drawn with the
+  onset's own seed (`reshuffle` re-draws them), until n. The readout says `6 left over + 2 doubled`. `handFit` still has the last word,
+  and reports what it drops.
+- **`piano 8va` on the onset card** (−2 … +2) — the cheap half of AH5: the piano's pitches moved by whole octaves, folded at the
+  keyboard's ends, the two-hand guard unchanged after.
+- **Walked in the app on a copy** (:5301, real clicks): the alternation on the page, `piano 8 (6 left over + 2 doubled)`, `-2 8va`
+  folding 19 → 31, reshuffle re-drawing only the doubles, `0` silencing the piano for one onset. **Unheard by him.**
+
 - **Answered, not a request:** the chords are written by **Insert**, not by closing the panel; a take keeps them by name.
 
 ## Open questions for the composer (only what blocks the next piece)

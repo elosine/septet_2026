@@ -11127,3 +11127,67 @@ leftovers and his passage needs a count. **Deferred at his word:** the piano's n
 transpositions) behind a standing two-hand guard — STRIKES_TOOL AH5; `handFit` is the guard's present form. **Not universal:** *"I don't
 want to go too deep into making it universal"* — the three builds (rested-first deal · the piano's count per onset · the top-up) are made
 for this scenario, on one file, and logged so the next scenario can widen them.
+
+## §407. The four built: the rested play first, the piano by count, the top-up that may double, ±8va per onset (2026-09-12, Opus 5)
+
+**Prompted by** §405's brief and his one word after the clear: *"go"*. Built in `score/public/strike_sounds.js` alone — six sites.
+No other file in the repo reads the sound config (`grep -rln "dealChordAt|pnoShare|cfg.sounds" --include=*.js .` → one file), so no
+test covered the deal and none could break.
+
+**What was built, in order:**
+
+1. **AH1 · the rested play first.** In `dealChordAt`, `others` — the pattern as it stands, with the earlier deals already in it —
+   gives every free lane its rest: the latest onset before t, and Infinity for a lane that has not played at all. The pool is sorted by
+   rest, longest first, ON TOP OF the old order (register, or shuffled under `deal: random`), and V8's stable sort is what keeps the
+   ties in that order. `max` is still the COUNT; only WHO changed. **The pitch→player mapping is untouched:** the k chosen players are
+   re-sorted by register before the pitches land on them, so 1k's rule survives inside the new set.
+2. **AH2 · the piano's count per onset** — a `piano count` box on the onset card, stored as `pno` in `cfg.sounds[key]` exactly the way
+   `max` overrides `sndMax`: blank = the pattern's `pnoCfg` untouched · 0 = the piano sits this onset out · n = a TARGET of n.
+3. **AH3 · the top-up (CN-66).** When the target is more than the leftovers, pitches the ensemble is already playing are added —
+   shuffled with the onset's own `rnd`, so `reshuffle` re-draws them — until the target is met or the harmony runs out. Then `handFit`,
+   unchanged. The card says e.g. `6 left over + 2 doubled`.
+4. **±8va per onset** — a `piano 8va` box (−2 … +2): the piano's pitches moved by whole octaves BEFORE `realize`, which folds at the
+   keyboard's ends; the two-hand guard runs after, unchanged. (A uniform shift cannot change what `handFit` picks, so the order is
+   only a matter of what the readout reports.)
+
+**Measured headlessly first** — a harness over `dealChordAt` with the seven tracks, `instOf`, `realize` and the RNG stubbed:
+
+- max 3 on every onset, six players free: **BCl Vc Va → Fl Vn1 Vn2 → BCl Vc Va → Fl Vn1 Vn2.** Disjoint neighbours, and the cycle closes.
+- **his own script, 4 → 3 → 3 → 5** (CN-65): onset 2 holds BOTH players onset 1 left out, plus one repeat; onset 3 is all new against
+  onset 2; onset 4's five hold everyone onset 3 left out. **So the alternation he described falls out of `max` alone**, as §405 predicted —
+  `rest` never has to exclude anybody.
+- his piano case — a target of 5 with only 2 left over: **`2 left over + 3 doubled`**, and all three doubles are pitches the ensemble has.
+- six seeds → six different draws of the doubled notes; the same seed twice → the same draw.
+- ±1 octave = ±12 on every piano pitch; blank = the old behaviour exactly (the 2 leftovers); 0 = none.
+
+**Two harness faults, both mine, both worth keeping:** the first run dealt ONE player, because the placeholder notes all sat on lane 0 and
+`sndLanes` reads the lanes the pattern USES; the override that fixed it then did nothing, because the module's `Object.assign(D, …)` runs
+at require time and overwrote it. The code under test was right both times — the second lesson is the sharper one for any future harness
+over this file: **stub after the require, never before.**
+
+**Then the walk in the running app** — `zz-ai-chordonset` (a copy of `piece-septet`) on :5301, real clicks throughout: shape `even`,
+gap 200, 9 onsets, `all onsets ← strikes in turn`, rest 20, `every onset: max 3`:
+
+- **the alternation on the page:** onsets 1 · 3 · 5 · 7 = Vc Va Vn2, onsets 2 · 4 · 6 = BCl Vn1 Fl — two disjoint groups, and onset 1
+  (nobody has played yet) broken by register, as designed.
+- **the card:** `piano count 8` → status *"onset 1: piano a target of 8 notes here"*, readout **`piano 8 (6 left over + 2 doubled)`**.
+  The harmony was [43 52 53 55 72 73 80 82 83]; the ensemble took 43 · 72 · 83; **the two doubles were 43 and 72** — CN-66 in the app.
+- **`piano 8va −2`** → 43 52 53 55 72 73 80 82 became 28 29 31 31 48 49 56 58: two octaves down, and the one that fell under A0 folded
+  back up (19 → 31). Readout `· -2 8va`.
+- **reshuffle** → the ensemble unchanged (BCl Vc Va), the doubled pair changed (… 48 49 56 58 → … 49 56 58 59).
+- **`piano count 0`** → *"piano off at this onset"*, no piano note, readout `off here`.
+- It all rides in the onset's sound — `{"kind":"chord","harm":{…},"pno":0,"pno8va":-2,"seed":1}` — **so a take carries it.**
+
+**A drawer state worth knowing, and not a defect:** the copy opened with the piano quick-share on `all`, so every voice was
+`piano: true` with `lane: -1`, the chord had no ensemble player to deal to, and the report read `pno 9 · pno 7 …` with an empty
+ensemble. One click of shuffle-orchestration spread the strike over the seven lanes and the deal came alive. **Which lanes take part is
+still whatever the pattern uses at that moment** (`sndLanes`, unchanged) — a pattern the orchestration has not touched deals to nobody.
+
+**Two automation notes for the next walk in this app** (neither is an app fault): the sound card RE-LAYS OUT whenever the readout grows,
+so a coordinate read before a render is stale by the time it is clicked — read, then click, with nothing in between; and Enter does not
+commit a number box here, a blur does (click a dead area of the card). `Down` is not a key name — `ArrowDown` is; the first reading of
+that miss, that the app was swallowing the keystroke, was wrong.
+
+**Not built, still:** AH5 (the piano re-voiced per onset behind the hands guard) · the hand override per chord · AB3.
+**Tests:** `node tools/test_septet_notation.js` — **86 green**, unchanged. The classic flag `septet.strikes.classic` still reverts the
+whole drawer if any of this is worse. **His ear next, and nothing else.**
