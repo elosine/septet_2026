@@ -1535,7 +1535,7 @@ player would touch parts, solo, crop and print.
     ladder (flip a chain · per-page nudge · more piano air) is data. *Why:* his eye decides which of the three, per page.
   - **2e.3 Trills and the morph curves** — `todo` — the next notation session: their written look by the planning method, then built.
     *Why:* he set them aside deliberately — *"leave the trills and curves will fill those in next notation session"*.
-- **2b — Presentation score** — print PDF (A3 landscape, format entry + cover + performance
+- **2b — Presentation score** *(the title on the cover and in the format entry: **tentative _Scattered Substance_**, CN-64 — confirm with him before either is written)* — print PDF (A3 landscape, format entry + cover + performance
   notes page as in #4) + video (`export_video.js`, Reaper render at fixed BPM, sync proof
   as #4's PHASE 5). **Deadline-bound: 2026-10-15.**
 - **2c — Parts** — only if selected; due ~2026-10-29.

@@ -9,6 +9,8 @@
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 
+**TENTATIVE TITLE: _Scattered Substance_** *(composer, 2026-09-11 — CN-64; his to change, nothing depends on it yet)*.
+
 **Duration cap:** 12:00 (the call). **Forces:** fl(picc/bfl) · bcl · pno · vn1 · vn2 · va · vc.
 
 1. **OPENING — the scattered strikes, expanded** (CN-5 · CN-8 · CN-10) · the piano's 46 recorded strikes

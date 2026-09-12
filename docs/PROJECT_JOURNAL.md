@@ -673,6 +673,8 @@ cut mid-way — write patch scripts to the scratchpad, splice by exact anchor, a
 *(The composer's own to-dos and reminders. Reviewed at every session end.)*
 
 **Active:**
+- **The title — tentative: _Scattered Substance_** *(2026-09-11, CN-64)*. Confirm or change before the cover and the
+  Tempus format entry are written (PLAN 2b authoring). Written down in CN-64, PLANNER and PLAN 2b.
 - Decide piccolo vs bass flute when the music asks (Q1); confirm that library is installed.
 - **Test the trills and the curve windows on the piece** (reload): T on a strike note · `1 2 3` on the zone · P for the
   attack and the interval · `A B C`, `✒ Points`, `Fill`, hold the line to bend · SHIFT-drag a span, T. Say what bites; then

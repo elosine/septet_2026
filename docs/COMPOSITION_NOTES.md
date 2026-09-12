@@ -1437,3 +1437,15 @@ instrument-change marks drop off the 2a adaptation list; the flute's clef is tre
 > *"bartok pizz is in str qtr, you can find glyph there I think and for future many string glyphs might be there; tongue ram transposition, notate fingered pitch and alert when it is out of range; slap +; 3 above"* — (3 = technique symbols above the note)
 
 **AI's reading (marked):** the page is time-proportional and each player's strike is its own event with its own GC — the roll is composed, not noise. The decisions and the research are in RUNNING_LOG §399.
+
+
+## CN-64 — 2026-09-11: the title (tentative)
+
+> *"put in doc somewhere tentative title Scattered Substance"*
+
+**TENTATIVE TITLE: _Scattered Substance_.**
+
+**AI's reading (marked):** it names what the piece is made of — the scattered strikes are the substance, not an
+effect over something else. Nothing hangs on it yet; it is recorded here so it survives every clear, and it is
+his to change. Where it is written down: this entry, `docs/PLANNER.md` (the piece header), `docs/PLAN.md`
+(phase 2's authoring line, where a cover and format entry will need a title) and journal §7 as a live item.
