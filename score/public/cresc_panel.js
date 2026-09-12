@@ -75,20 +75,24 @@ const PANEL = {
 
     // THE NEXT STRIKE GROUP after the selection's last onset — its onsets, in time order. Used by `ends: next strike` and by
     // `harmony: next strike`, one read for both.
+    // §422 (2026-09-12, his "ends at the flute strike ... it's not letting me"): a note placed by hand, or by any tool but the drawer,
+    // has no `grp-strike-` group — and was invisible here. Now: the earliest plain note after the selection is the next strike; if it
+    // belongs to a drawer strike, that whole group is (its onsets, as before); if not, the notes attacking with it (within 20 ms).
     nextStrike(afterT) {
-        const C = HOST(); if (!C) return [];
-        const g = {};
+        const C = HOST(), Cr = CR(); if (!C) return [];
+        const plain = [];
         C.objects.forEach(o => {
-            if (!o || o.type !== 'waveCurve' || o.sonifyNote == null || !o.groupId) return;
-            if (!/^grp-strike-/.test(o.groupId)) return;
-            if (o.layer == null || o.layer >= ML()) return;
-            const e = g[o.groupId] || (g[o.groupId] = { id: o.groupId, t: Infinity, notes: [] });
-            e.t = Math.min(e.t, +o.startSeconds);
-            e.notes.push({ id: o.id, lane: o.layer, midi: +o.sonifyNote, startSeconds: +o.startSeconds, groupId: o.groupId });
+            if (!o || o.type !== 'waveCurve' || o.sonifyNote == null || o.layer == null || o.layer >= ML()) return;
+            if (Cr && Cr.isCresc(o)) return;
+            if (!(+o.startSeconds > afterT + 1e-6)) return;
+            plain.push({ id: o.id, lane: o.layer, midi: +o.sonifyNote, startSeconds: +o.startSeconds, groupId: o.groupId || null });
         });
-        const groups = Object.values(g).filter(x => x.t > afterT + 1e-6).sort((a, b) => a.t - b.t);
-        if (!groups.length) return [];
-        const D = CD(); return D ? D.onsetsOf(groups[0].notes) : [];
+        if (!plain.length) return [];
+        plain.sort((a, b) => a.startSeconds - b.startSeconds);
+        const first = plain[0];
+        const strikeGroup = first.groupId && /^grp-strike-/.test(first.groupId) ? first.groupId : null;
+        const notes = strikeGroup ? plain.filter(n => n.groupId === strikeGroup) : plain.filter(n => n.startSeconds - first.startSeconds <= 0.02 + 1e-6);
+        const D = CD(); return D ? D.onsetsOf(notes) : [];
     },
     drawerPitches() {
         const D = root.StrikeDrawer;

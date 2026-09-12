@@ -11584,3 +11584,7 @@ was NOT called into: `sounding.js` is the lift.
 
 **Proof:** four files parse; `check_cresc_panel` **34 green** (30 + check 11's 4); the 86 green; :5301 loads with no console error.
 **Unheard by him — his SPACE is the test**, and the three sounding paths (row ♪ · as dealt · ▶ hear) need his MIDI ports.
+
+## §422. `ends: next strike` could not see a note the drawer did not write (2026-09-12, Fable 5.1)
+
+**Prompted by:** *"i want to make a crescendo that starts at the viola strike and ends at the flute strike in violin one. But it's not letting me."* The panel said the truth — "no strike after the selection" — because `nextStrike()` read only `grp-strike-` groups, and the flute note was placed by hand (or by another tool). **Fixed:** the earliest plain sounding note after the selection is the next strike; a drawer strike still counts whole (its onsets, as before); any other note counts with the notes attacking within 20 ms of it. `harmony: next strike` reads the same. 34 green. Unheard.
