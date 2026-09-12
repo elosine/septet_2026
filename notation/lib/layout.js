@@ -1366,7 +1366,9 @@
                 // instruction slot); ySs is the BASELINE, the em box sits on it
                 if (instrTxt) {
                   const yT = placeChain(instrEm);
-                  items.push({ k: 'text', t: tU, dxSs: headDx - nhO.wSs / 2, ySs: yT - instrEm / 2 + instrEm * 0.2, text: instrTxt, size: TS.technique, color: '#000' });
+                  const al = dev.instrAlign === 'end' || dev.instrAlign === 'middle' ? dev.instrAlign : 'start';   // §401b: the composer — tongue ram right-justified (clear of the GC), (slap) / jeté centred
+                  const dxT = al === 'end' ? headDx + nhO.wSs / 2 : al === 'middle' ? headDx : headDx - nhO.wSs / 2;
+                  items.push({ k: 'text', t: tU, dxSs: dxT, ySs: yT - instrEm / 2 + instrEm * 0.2, text: instrTxt, size: TS.technique, color: '#000', anchor: al });
                 }
                 // [§400] THE TECHNIQUE SYMBOL — ABOVE THE UNIT (the composer,
                 // 2026-09-11: "3 above" — Gould's side for snap pizz and the

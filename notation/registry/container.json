@@ -97,6 +97,7 @@
       "nhUnit": true,
       "nhHead": "filled",
       "nhStemDir": "up",
+      "brick": false,
       "nhHeadScale": 0.844,
       "nhStem": "flag16",
       "nhStemRule": "flagClear",
@@ -146,13 +147,14 @@
       "dynMark": "band",
       "dynBesideStem": true
      },
-     "_septetStrikes": "RUNNING_LOG §399–400 (2026-09-11, the composer, strike 1): section 1's strikes are written the tuba staccato way — every note at its own onset with its own GC, the filled 16th-flag head, the dot nearest the head and the ACCENT outside it (nhArtic), fff at a part's first strike and then nothing until its dynamic changes (dynOnChange), the technique SYMBOL above the unit (techSymbol: snap pizz for bartók, + for the slap; #2's font-size −3 = 0.707), the instruction TEXT in the below-chain's instruction slot (instrText every note, instrFirst at the part's first only). The piano's `main` gets it through byEnv.strike (the score's srcKind), never by technique — a long `main` keeps its family look.",
+     "_septetStrikes": "RUNNING_LOG §399–400 (2026-09-11, the composer, strike 1): section 1's strikes are written the tuba staccato way — every note at its own onset with its own GC, the filled 16th-flag head, the dot nearest the head and the ACCENT outside it (nhArtic), fff at a part's first strike and then nothing until its dynamic changes (dynOnChange), the technique SYMBOL above the unit (techSymbol: snap pizz for bartók, + for the slap; #2's font-size −3 = 0.707), the instruction TEXT in the below-chain's instruction slot (instrFirst on change of technique; instrAlign start|middle|end on the head column — the composer 2026-09-11: tongue ram right-justified clear of the GC, (slap) and jeté centred). No duration brick on a strike (his: 'the short notes with gcs don't have duration lines'). The piano's `main` gets it through byEnv.strike (the score's srcKind), never by technique — a long `main` keeps its family look.",
      "gettato_vel": {
       "goLine": true,
       "gc": true,
       "nhUnit": true,
       "nhHead": "filled",
       "nhStemDir": "up",
+      "brick": false,
       "nhHeadScale": 0.844,
       "nhStem": "flag16",
       "nhStemRule": "flagClear",
@@ -163,7 +165,8 @@
       "dynMark": "band",
       "dynBesideStem": true,
       "dynOnChange": true,
-      "instrFirst": "jeté"
+      "instrFirst": "jeté",
+      "instrAlign": "middle"
      },
      "bartok_vel": {
       "goLine": true,
@@ -171,6 +174,7 @@
       "nhUnit": true,
       "nhHead": "filled",
       "nhStemDir": "up",
+      "brick": false,
       "nhHeadScale": 0.844,
       "nhStem": "flag16",
       "nhStemRule": "flagClear",
@@ -190,6 +194,7 @@
       "nhUnit": true,
       "nhHead": "filled",
       "nhStemDir": "up",
+      "brick": false,
       "nhHeadScale": 0.844,
       "nhStem": "flag16",
       "nhStemRule": "flagClear",
@@ -202,7 +207,8 @@
       "dynOnChange": true,
       "techSymbol": "plus",
       "techSymbolScale": 0.707,
-      "instrFirst": "(slap)"
+      "instrFirst": "(slap)",
+      "instrAlign": "middle"
      },
      "pizzicato": {
       "goLine": true,
@@ -210,6 +216,7 @@
       "nhUnit": true,
       "nhHead": "filled",
       "nhStemDir": "up",
+      "brick": false,
       "nhHeadScale": 0.844,
       "nhStem": "flag16",
       "nhStemRule": "flagClear",
@@ -220,7 +227,8 @@
       "dynMark": "band",
       "dynBesideStem": true,
       "dynOnChange": true,
-      "instrFirst": "tongue ram"
+      "instrFirst": "tongue ram",
+      "instrAlign": "end"
      },
      "_staccatoNote": "day 23, OPTION B of the layering discussion (Tufte: layering & separation, 1+1=3, position before colour): NO go line for a point-in-time gesture — the GC's impact marker IS the go mark, so a go line was a third encoding of one time; the unit sits BEFORE the go time like every other unit (reading rule: the ink just before the mark is what you play at the mark), with nhGapSs 0.6 so the head clears the marker's left edge (r 0.51 ss) with air; head, dot and ledgers sit under the arc (the ictus hang keeps the arc at 35 %+ height 0.05 s before impact); stem and flag may cross it (composer). Option A (centred on go, marker lightened) rejected: it lightens the datum. nhAnchor 'center' remains available as a device value."
     }
@@ -369,6 +377,8 @@
    }
   },
   "render": {
+   "staffFull": true,
+   "_staffFullNote": "2026-09-11 (RUNNING_LOG §401b, the composer: 'put the staff lines to the end of the page'): the staff is furniture in every view — drawn to the page edges, not cut at the material's end (the tuba's day-22 verdict cut them short). false = the tuba look.",
    "ink": "#111",
    "muted": "#8a8a8a",
    "brick": "#4E7A9B",

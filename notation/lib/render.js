@@ -138,7 +138,9 @@
           // ends — "staff lines cut short" verdict, day 22. Interior
           // staff-off spans keep their authored extents.
           const mw = model.window || [it.t0, it.t1];
-          const full = opts && opts.staffFull;
+          // §401b (the composer: 'put the staff lines to the end of the page'): registry
+          // engraving.render.staffFull makes every view draw the staff to the page edges
+          const full = (opts && opts.staffFull) || !!E.staffFull;
           const t0 = (full && it.t0 <= mw[0] + 1e-9) ? w0 : Math.max(it.t0, w0);
           const t1 = (full && it.t1 >= mw[1] - 1e-9) ? w1 : Math.min(it.t1, w1);
           const x0 = view.xOfSeconds(t0), x1 = view.xOfSeconds(t1);
@@ -221,7 +223,7 @@
         } else if (it.k === 'text') {
           if (!inWin(it.t)) continue;
           parts.push('<text x="' + X(it.t, it.dxSs).toFixed(1) + '" y="' + Y(it.ySs).toFixed(1) + '" font-size="' + ((it.size || 1) * ssPx * E.textScale).toFixed(1) +
-            '"' + fontAttr + ' fill="' + (it.color || o.muted) + '">' + esc(it.text) + '</text>');
+            '"' + fontAttr + (it.anchor && it.anchor !== 'start' ? ' text-anchor="' + it.anchor + '"' : '') + ' xml:space="preserve" fill="' + (it.color || o.muted) + '">' + esc(it.text) + '</text>');
         } else if (it.k === 'attackline') {
           if (!inWin(it.t)) continue;
           // M4: a vertical stroke straddling the pitch position

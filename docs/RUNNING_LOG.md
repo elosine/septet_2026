@@ -10946,3 +10946,26 @@ Not decided, not needed for strike 1: the accent on fl/bcl he may revise once he
 **Seen on the way, not mine:** `scores/piece-septet.json` differs from HEAD (modified 14:31 today: 11 notes removed, 4 re-pitched, 14 moved, 69 edited) — his editing, uncommitted, untouched.
 
 **For him:** the page is on his :5300 now — picker "piece-septet · strike 1 (§400)", Z for the zoom. The fold is his to run in HIS composer tab after CTRL+SHIFT+R: console `foldFlute()` → Save; then the IR is rebuilt from piece-septet itself (`--score piece-septet`) and the copy, its IR and the picker entry go. Until then the copy stays, uncommitted, as the IR's source.
+
+## §401b. Strikes 1–3 on the page — his first four verdicts on strike 1, and the bass clarinet's order (2026-09-11 late, Fable 5.1)
+
+**His words, on seeing strike 1:** *"the short notes with gcs don't have duration lines, take note and remove them from strike 1; can you right justify tongue ram and make sure there is a space between tongue and ram there may be the gc may be in the way; center (slap) and jete better please; and can you look into the vertical order for bcl is it dot accent + or dot + accent, or something else; lets do the 1st 3 strikes and pls put the staff lines to the end of the page; and midi playback? defered for when you do more?"*
+
+**Done, all registry data plus two small code paths:**
+- **No duration brick on a strike** — `brick: false` in byEnv.strike and the four byTechnique strike entries. STANDING RULE, his: a short note with a GC has no duration line.
+- **Text alignment per technique** — `instrAlign` (start | middle | end) on the head column: tongue ram `end` (right edge at the head's right edge, clear of the go line and the GC's landing), (slap) and jeté `middle`. layout passes `anchor`, render writes `text-anchor` and `xml:space="preserve"` (the space between "tongue" and "ram" was being swallowed by the GC's arc over it, not by the font; preserved now either way).
+- **Staff lines to the page edge in every view** — `engraving.render.staffFull: true` (render honoured it only as a notation-view option; the tuba's day-22 verdict cut the staff at the material's end; false = the tuba look).
+- **Strikes 1–3** — the IR rebuilt `--w0 0 --w1 3.6` (strike 3 ends 3.39 s): 21 events, 14 chunks, GEOMETRY clean; same id `strike1`, picker label "piece-septet · strikes 1–3 (§400)". Strikes 2 and 3 show the rule: the accent only (BCl its + as well) — no fff, no text, as decided.
+
+**The bass clarinet's column, from the head outward: dot · > · + · fff · (slap).** Gould (Behind Bars, "combining articulation marks", from memory — the search found nothing quotable): staccato and tenuto nearest the notehead, accents next, technique signs (harmonic ○, stopped +, snap pizz, bowing) outermost of the articulations, then dynamics. What the page draws is that order. The same holds for the violins' snap-pizz circle: dot · > · ○ · fff.
+
+**MIDI playback — deferred, and here is the honest state:** the notation app's player is the tuba's, ported byte-exact (0g); its per-part ports and channels for the septet (D11's curve channels, the piano's two tracks) are unverified, and the AI's browser hears nothing (NITS). It is a section-1 item, done when the section is built, checked against his rack.
+
+**Tests:** SEPTET-NOTATION GREEN: clefs · written  · staged tuba batteries (26 files, deleted after):
+  test_layout: LAYOUT GREEN: staff math + A3 census + beaming + parachute +
+  test_render: RENDER RED: 1 failure(s)
+  test_animobj: ANIMOBJ GREEN: contract + 5 ports + transport + boundaries +
+  test_splice: SPLICE GREEN: 6 section pages, multi-part stamp-atomic prove
+  test_stamps: STAMPS GREEN: parity + anchors-compose + snapshot stable
+  test_coords: COORDS GREEN: unit tests + snapshot stable
+  
