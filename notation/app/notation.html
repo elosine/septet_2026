@@ -949,6 +949,10 @@
     const t = ev.target, tag = t && t.tagName;
     if (tag === 'SELECT' || (tag === 'INPUT' && /checkbox|radio/i.test(t.type))) t.blur();
   });
+  // §401d (the composer: "b key no longer works"): a <select> just used (the picker) keeps focus, and the
+  // handler below returns for SELECT — so B, Z, T went nowhere until ESC. The composer app's cure (2026-09-03,
+  // NITS): every select and number input blurs on change; the keys are free again the moment a pick is made.
+  document.addEventListener('change', e => { if (e.target && e.target.matches && e.target.matches('select, input[type=number]')) e.target.blur(); }, true);
   document.addEventListener('keydown', ev => {
     if (!document.body.classList.contains('cmode')) return;
     const tag = ev.target && ev.target.tagName;

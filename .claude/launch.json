@@ -36,6 +36,16 @@
         "cd C:/Users/jwloy/GitHub/composition_for_two_pianos_and_two_percussion; node server.js"
       ],
       "port": 5000
+    },
+    {
+      "name": "pno2perc2-5000",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": [
+        "-NoProfile",
+        "-Command",
+        "Set-Location C:/Users/jwloy/GitHub/composition_for_two_pianos_and_two_percussion; node server.js"
+      ],
+      "port": 5000
     }
   ]
 }

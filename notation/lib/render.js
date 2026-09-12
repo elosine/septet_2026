@@ -88,6 +88,21 @@
       // [2a.1] a staff of a multi-staff part is its own system ('<part>:<i>')
       try { sys = view.system(sysModel.key !== undefined ? sysModel.key : sysModel.part); } catch (e) { continue; } // part not in this view
       const ssPx = sys.ssPx;
+      // §401d: a staff of a multi-staff part is its own system, but the GO LINE and the GC belong to the
+      // PART's whole lane — the ball (animobj) already lands on the lane edge; the composer, on seeing the
+      // piano's arc on one staff: 'the arc and the go line need to span entire staff'. laneOf = the first
+      // staff's top to the last staff's bottom; a single-staff part is its own lane, unchanged.
+      const laneOf = (sm, sy) => {
+        if (sm.key === undefined || typeof sm.part !== 'number') return sy;
+        const pc = o.ensemble && o.ensemble.parts && o.ensemble.parts.find(q => q.part === sm.part);
+        const nSt = (pc && pc.staves && pc.staves.length) || 1;
+        if (nSt < 2) return sy;
+        try {
+          const a = view.system(sm.part + ':0'), b = view.system(sm.part + ':' + (nSt - 1));
+          return { yTopPx: a.yTopPx, yBotPx: b.yBotPx, heightPx: b.yBotPx - a.yTopPx, ssPx: sy.ssPx };
+        } catch (e) { return sy; }
+      };
+      const lane = laneOf(sysModel, sys);
       const X = (t, dxSs) => view.xOfSeconds(t) + (dxSs || 0) * ssPx;
       const Y = ss => sys.yOfSs(ss);
       // class carries the part so a caller can restyle ONE lane without a
@@ -465,7 +480,7 @@
           if (!inWin(it.t)) continue;
           const GL = E.goLine;
           const gx = view.xOfSeconds(it.t).toFixed(2);
-          parts.push('<line x1="' + gx + '" y1="' + sys.yTopPx.toFixed(1) + '" x2="' + gx + '" y2="' + sys.yBotPx.toFixed(1) +
+          parts.push('<line x1="' + gx + '" y1="' + lane.yTopPx.toFixed(1) + '" x2="' + gx + '" y2="' + lane.yBotPx.toFixed(1) +
             '" stroke="' + GL.color + '" stroke-width="' + GL.wPx + '" stroke-opacity="' + GL.opacity +
             '" stroke-dasharray="' + GL.dash + '"/>');
         } else if (it.k === 'gc') {
@@ -476,7 +491,7 @@
           // Clipped to the page like the ring bar (an arc may cross a cut).
           const P = GC.params(Object.assign({}, (E.gc && E.gc.preset) || {}, it.preset || {}));
           if (it.t + P.post < w0 || it.t - P.pre > w1) continue;
-          const G = GC.laneGeom(sys, view, E.gc && E.gc.look);
+          const G = GC.laneGeom(lane, view, E.gc && E.gc.look);
           const color = (E.gc && E.gc.color) || G.look.color;
           const d = GC.trajectory(P).map((p, i) =>
             (i ? 'L' : 'M') + view.xOfSeconds(it.t + p.dt).toFixed(2) + ' ' + (G.impactY - p.frac * G.h).toFixed(2)).join(' ');

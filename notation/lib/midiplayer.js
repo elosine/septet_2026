@@ -49,6 +49,13 @@
     const touched = new Set(); // 'port|ch' any event went to (the flush sweep list)
     const bentCh = new Set(); // 'port|ch' a morph bend touched
     const missing = new Set(); // ports the score wants but no output exists
+    // §401d (the composer: 'still no audio'): the recipes name ports CASE-EXACT ('Fluteb') and the app keys its
+
+    // outputs by LOWERCASE name (as the composer app does — which also looks them up lowercased). This player
+
+    // looked them up as named, so every port with a capital was 'missing'. One lookup, both spellings.
+
+    const outOf = port => outputs[port] || outputs[String(port).toLowerCase()];
     let lastT = null;
     let sent = 0;
 
@@ -75,7 +82,7 @@
         if (t > wc.endSeconds + 1 && !active[wc.id]) continue;
         const r = resolve(wc);
         if (!r || !r.port) continue;
-        const out = outputs[r.port];
+        const out = outOf(r.port);
         if (!out) { missing.add(r.port); continue; }
         const ch = r.ch, key = r.port + '|' + ch;
         const tech = r.tech;
@@ -147,7 +154,7 @@
     function flush() {
       for (const id of Object.keys(active)) {
         const st = active[id];
-        const out = outputs[st.port];
+        const out = outOf(st.port);
         if (out) send(out, st.port + '|' + st.ch, [0x80 | st.ch, st.note, 0]);
         delete active[id];
       }
