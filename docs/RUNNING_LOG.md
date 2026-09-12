@@ -11013,3 +11013,12 @@ Not decided, not needed for strike 1: the accent on fl/bcl he may revise once he
 - **Decided, his:** for this piece the player uses the composer score's own lengths — registry `playback.scoreDurations: true` (false = the tuba behaviour), honoured in `notation.html` `midiPlayer()`. Everything else in the path is the composer's own `sonify_core` (technique → port/channel, CC7 from the level, the bends), so what he hears is what the composer plays, minus timestamps (NITS: per-frame sends).
 - **T. R.** centred (`instrAlign: middle`); the first *tongue ram* stays right-justified (`instrFirstAlign: end`) — layout's `instrIsFirst`.
 - **The piano's GC** (§401e) stays as built.
+
+## §401h. T. R. everywhere; the go lines trimmed to the arc; the page that does not fit his screen (2026-09-11 late, Fable 5.1)
+
+**His words** (with a crop of the piano's B5: stem down, the stack above, the go line running past the arc's top): *"page doesn't quite fit screen even it fullscreen mode, is this right? but talk first no change to this yet. first tongue ram can be tr too; you can trim the go lines, up to the top of the gc arcs and keep bottom; except pno can be about 4 dashes shorter on bottom"*
+
+- **T. R.** on every flute strike, centred (`instrFirst` dropped).
+- **Go lines:** registry `goLine.topAtGcArc: true` — a note with a GC starts its go line at the arc's top (frac 1 of the GC geometry) rather than the lane top; `goLine.multiStaffBottomTrimPx: 36` — a multi-staff part's line stops 4 dashes (5,4 dasharray = 9 px each at the 1080 frame, scaled) above its lane bottom. render.js knows which events carry a GC from the system's own items. Tuba look = false / 0.
+- **The page fit — the fact, not changed:** the video view is a fixed 1920×1080 frame; the app's own note: "At F11 on a 1920×1080 screen the video frame fits EXACTLY". Fit-scaling exists only in container mode (`cmode`). On any other screen — his remote laptop — the frame overflows. His call whether the video view should scale to the window.
+- septet 86 GREEN · staged render GREEN.

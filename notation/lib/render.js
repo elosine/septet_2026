@@ -103,6 +103,7 @@
         } catch (e) { return sy; }
       };
       const lane = laneOf(sysModel, sys);
+      const hasGc = new Set((sysModel.items || []).filter(x => x.k === 'gc' && x.ev).map(x => x.ev));   // §401h
       const X = (t, dxSs) => view.xOfSeconds(t) + (dxSs || 0) * ssPx;
       const Y = ss => sys.yOfSs(ss);
       // class carries the part so a caller can restyle ONE lane without a
@@ -480,7 +481,15 @@
           if (!inWin(it.t)) continue;
           const GL = E.goLine;
           const gx = view.xOfSeconds(it.t).toFixed(2);
-          parts.push('<line x1="' + gx + '" y1="' + lane.yTopPx.toFixed(1) + '" x2="' + gx + '" y2="' + lane.yBotPx.toFixed(1) +
+          // §401h: the top at the GC arc's top when this note carries a GC and the registry says so; a
+          // multi-staff part's bottom trimmed by multiStaffBottomTrimPx (at the 1080 frame, scaled)
+          let gy1 = lane.yTopPx, gy2 = lane.yBotPx;
+          if (GL.topAtGcArc && hasGc.has(it.ev)) {
+            const Gg = GC.laneGeom(GC.systemOf(view, sysModel.part), view, E.gc && E.gc.look);
+            gy1 = Math.max(gy1, Gg.impactY - Gg.h);
+          }
+          if (lane !== sys && GL.multiStaffBottomTrimPx > 0) gy2 -= GL.multiStaffBottomTrimPx * (view.heightPx / 1080);
+          parts.push('<line x1="' + gx + '" y1="' + gy1.toFixed(1) + '" x2="' + gx + '" y2="' + gy2.toFixed(1) +
             '" stroke="' + GL.color + '" stroke-width="' + GL.wPx + '" stroke-opacity="' + GL.opacity +
             '" stroke-dasharray="' + GL.dash + '"/>');
         } else if (it.k === 'gc') {
