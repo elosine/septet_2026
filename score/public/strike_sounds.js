@@ -172,7 +172,7 @@ Object.assign(D, {
         // keyboard's ends); the two-hand guard runs after, unchanged.
         const P = this.pnoCfg();
         const perOnset = (sound.pno === '' || sound.pno == null || !isFinite(+sound.pno)) ? null : Math.max(0, Math.round(+sound.pno));
-        const oct = Math.max(-2, Math.min(2, Math.round(+sound.pno8va || 0)));
+        const oct = Math.max(-4, Math.min(4, Math.round(+sound.pno8va || 0)));
         if (pl >= 0 && perOnset === 0) out.pnoWhy = 'off here';
         else if (pl >= 0 && (perOnset > 0 || P.share !== 'none') && !(this.isSwell && this.isSwell())) {
             const left = pitches.slice(); chosen.forEach(c => { const i = left.indexOf(c); if (i >= 0) left.splice(i, 1); });
@@ -340,7 +340,7 @@ Object.assign(D, {
             + '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">'
             + '<span style="color:#e8cf9a">this onset</span>'
             + '<label title="how many notes the piano takes AT THIS ONSET — blank = whatever the pattern says above &middot; 0 = the piano sits this one out &middot; n = a TARGET of n notes: the leftovers first, then pitches the ensemble is already playing, until n (CN-66)">piano count <input id="skSndPnoAt" type="number" min="0" max="10" step="1" placeholder="patt" style="' + INP + ';width:42px"></label>'
-            + '<label title="the piano&#39;s pitches at this onset moved by whole octaves before the keyboard folds them; the two-hand guard runs after, unchanged">piano 8va <input id="skSndPno8va" type="number" min="-2" max="2" step="1" style="' + INP + ';width:38px"></label>'
+            + '<label title="the piano&#39;s pitches at this onset moved by whole octaves before the keyboard folds them; the two-hand guard runs after, unchanged">piano 8va <input id="skSndPno8va" type="number" min="-4" max="4" step="1" style="' + INP + ';width:38px"></label>'
             + '<label title="this onset&#39;s hands — blank = the pattern&#39;s setting &middot; one = this chord in one hand, clear of the last &middot; two = both hands">hand <select id="skSndPnoHandAt" style="' + INP + '"><option value="">patt</option><option value="one">one</option><option value="two">two</option></select></label></div>'
             + '<div style="display:flex;gap:4px;flex-wrap:wrap;border-top:1px solid #3a3a44;padding-top:5px">'
             + '<button id="skSndAll" style="' + BTN + '" title="this harmony on every onset of the pattern">all onsets &larr; this harmony</button>'
@@ -379,7 +379,7 @@ Object.assign(D, {
         // §405: these two ride on the ONSET's sound (so a take carries them), not on the pattern — hence onThis, which wants a chord first
         q('#skSndPnoAt').addEventListener('change', e => onThis(cur => { const v = e.target.value; if (v === '' || v == null || !isFinite(+v)) delete cur.pno; else cur.pno = Math.max(0, Math.min(10, Math.round(+v))); },
             cur => 'piano ' + (cur.pno == null ? 'as the pattern says (' + this.pnoSummary() + ')' : cur.pno === 0 ? 'off at this onset' : 'a target of ' + cur.pno + ' notes here')));
-        q('#skSndPno8va').addEventListener('change', e => onThis(cur => { const v = Math.max(-2, Math.min(2, Math.round(+e.target.value || 0))); if (v) cur.pno8va = v; else delete cur.pno8va; },
+        q('#skSndPno8va').addEventListener('change', e => onThis(cur => { const v = Math.max(-4, Math.min(4, Math.round(+e.target.value || 0))); if (v) cur.pno8va = v; else delete cur.pno8va; },
             cur => 'piano ' + (cur.pno8va ? (cur.pno8va > 0 ? '+' : '') + cur.pno8va + ' octave' + (Math.abs(cur.pno8va) > 1 ? 's' : '') + ' here' : 'at pitch')));
         q('#skSndPnoHandAt').addEventListener('change', e => onThis(cur => { const v = e.target.value; if (v === 'one' || v === 'two') cur.pnoHand = v; else delete cur.pnoHand; },
             cur => 'piano ' + (cur.pnoHand ? (cur.pnoHand === 'one' ? 'in one hand here, clear of the last chord' : 'in two hands here') : 'hands as the pattern says')));   // CN-67
