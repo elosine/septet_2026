@@ -10102,28 +10102,6 @@
    "vel": 127
   },
   {
-   "id": "ev-wc-1243",
-   "source": {
-    "score": "piece-septet",
-    "objectId": "wc-1243"
-   },
-   "onset": 156.196,
-   "duration": 0.08299999999999841,
-   "pitch": {
-    "midi": 59,
-    "spelled": {
-     "step": "B",
-     "alter": 0,
-     "octave": 3
-    }
-   },
-   "technique": "main",
-   "provenance": "derived",
-   "env": "strike",
-   "mode": "plain",
-   "vel": 127
-  },
-  {
    "id": "ev-wc-1244",
    "source": {
     "score": "piece-septet",
@@ -13274,7 +13252,7 @@
    "part": 2,
    "span": [
     152.65,
-    156.196
+    156.281
    ],
    "class": "ord-sustained",
    "strategy": "unresolved",
@@ -13284,16 +13262,15 @@
    "provenance": "derived"
   },
   {
-   "id": "ch-2-wc-1243",
+   "id": "ch-2-wc-1249",
    "part": 2,
    "span": [
-    156.196,
+    156.281,
     159.5
    ],
-   "class": "trance-stream",
+   "class": "ord-sustained",
    "strategy": "unresolved",
    "events": [
-    "ev-wc-1243",
     "ev-wc-1249"
    ],
    "provenance": "derived"
