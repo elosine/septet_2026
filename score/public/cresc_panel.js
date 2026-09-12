@@ -97,8 +97,8 @@ const PANEL = {
     // §423: the typed list → sorted MIDI; a name without an octave sits around C3 (the morph panel's parser, the same reading)
     typedPitches() {
         const SEP = root.MorphSeptet, c = this.cfg();
-        return [...new Set(String(c.pitches || '').split(/[s,;]+/).filter(Boolean).map(tok => {
-            if (/^d+$/.test(tok)) return +tok;
+        return [...new Set(String(c.pitches || '').split(/[\s,;]+/).filter(Boolean).map(tok => {
+            if (/^\d+$/.test(tok)) return +tok;
             const m = SEP && SEP.parseNote ? SEP.parseNote(tok, 48) : null; return m == null ? NaN : +m;
         }).filter(n => isFinite(n) && n >= 0 && n <= 127))].sort((a, b) => a - b);
     },
