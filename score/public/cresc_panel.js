@@ -113,8 +113,8 @@ const PANEL = {
     },
     close() {
         if (this._key) { document.removeEventListener('keydown', this._key, true); this._key = null; }
-        if (this._mv) { window.removeEventListener('mousemove', this._mv); this._mv = null; }
-        if (this._up) { window.removeEventListener('mouseup', this._up); this._up = null; }
+        if (this._mv) { document.removeEventListener('mousemove', this._mv); this._mv = null; }
+        if (this._up) { document.removeEventListener('mouseup', this._up, true); this._up = null; }
         if (this.el) { this.el.remove(); this.el = null; }
     },
     isOpen() { return !!this.el; },
@@ -180,6 +180,7 @@ const PANEL = {
             '<div style="display:flex;gap:4px;align-items:center">',
             '<button id="cpGo" style="' + LIT + '" title="write one crescendo per selected onset — ONE undo step">go</button>',
             '<button id="cpPre" style="' + BTN + '" title="what [go] would write, without writing it">preview</button>',
+            '<button id="cpHear" style="' + BTN + '" title="FIX-NOW 4: hear what [go] would write — the crescendos alone, from the first of them; nothing written">&#9654; hear</button>',
             '<span style="color:#666;margin-left:auto">ESC closes</span></div>',
             '<div id="cpOut" style="color:#9a9;max-height:76px;overflow:auto"></div>',
             '</div>',
@@ -226,6 +227,7 @@ const PANEL = {
         q('#cpSecco').addEventListener('change', e => { c.secco = e.target.checked; this.preview(); });
         q('#cpGo').addEventListener('click', () => this.go());
         q('#cpPre').addEventListener('click', () => this.preview());
+        q('#cpHear').addEventListener('click', () => this.hear());
         q('#cpX').addEventListener('click', () => this.close());
 
         // drag by the header, cresc_card's idiom
@@ -233,7 +235,10 @@ const PANEL = {
         head.addEventListener('mousedown', e => { dragging = true; dx = e.clientX - box.offsetLeft; dy = e.clientY - box.offsetTop; e.preventDefault(); });
         this._mv = e => { if (!dragging) return; box.style.left = Math.max(0, e.clientX - dx) + 'px'; box.style.top = Math.max(0, e.clientY - dy) + 'px'; };
         this._up = () => { dragging = false; };
-        window.addEventListener('mousemove', this._mv); window.addEventListener('mouseup', this._up);
+        // FIX-NOW 3 (2026-09-12, §421 — "sticky mouse to pannel, this is recurring problem"): §348's fault again — the box stops
+        // mouseup (line ~189) and a drag by the header ends with the cursor over the box, so a window listener never fired and
+        // the panel followed the mouse. CAPTURE on document runs before the box can eat it.
+        document.addEventListener('mousemove', this._mv); document.addEventListener('mouseup', this._up, true);
 
         // ESC closes; ENTER on the panel goes
         this._key = (e) => {
@@ -273,18 +278,29 @@ const PANEL = {
         return res;
     },
     go() {
-        const C = HOST(), Cr = CR(), D = CD(), c = this.cfg();
+        const C = HOST(), D = CD();
         const res = this.run();
         if (!res || !res.crescs.length) { this.preview(); C.saveStatus.textContent = 'no crescendo could be made — see the panel'; return; }
         C.pushUndoState();                                   // ONE undo step for the whole go
-        let made = 0;
+        const wcs = this.makeCurves(res);
+        wcs.forEach(wc => { wc.id = 'wc-' + (C.nextId++); C.objects.push(wc); });
+        const made = wcs.length;
+        // FIX-NOW 6 (2026-09-12, §421 — the §419 question, his yes): what [go] made IS the selection now, so END parks at the
+        // crescendos' end without a click, and the next strike is one END away
+        if (wcs.length) { if (C.deselectAll) C.deselectAll(); C.selectedObjects = wcs.slice(); C.selectedObject = wcs[0]; C.selectedNodeIdx = -1; }
+        C.curveDirty(); C.renderAll(); C.markDirty(); C.scheduleConflictRefresh && C.scheduleConflictRefresh();
+        this.preview();
+        C.saveStatus.textContent = 'wrote ' + made + ' crescendo' + (made === 1 ? '' : 's') + ' · ' + D.summarize(res) + ' — selected (END parks at their end) · CTRL+Z undoes it';
+    },
+    // the curves [go] writes, built and NOT in the score — go gives them ids and pushes them; hear plays them (FIX-NOW 4)
+    makeCurves(res) {
+        const C = HOST(), Cr = CR(), c = this.cfg(), out = [];
         res.crescs.forEach(x => {
             const tech = (C.ordinaryTech && C.ordinaryTech(x.lane)) || {};
             const wc = Cr.make(x.t0, x.midi, { lane: x.lane, tech: tech.key, label: (TRK()[x.lane] || {}).short }, [],
                 { durS: x.len, dynLo: Cr.dynHeight(c.dynLo), dynHi: Cr.dynHeight(c.dynHi),
                   shape: c.shape, ratio: +c.ratio, secco: c.secco !== false });
             if (!wc) return;
-            wc.id = 'wc-' + (C.nextId++);
             if (x.groupId) wc.groupId = x.groupId;           // an accent's rule: it dies with the gesture that launched it
             wc.endSeconds = x.t1;
             wc.properties.cresc.end = x.how === 'next' ? 'toNextStrike' : x.capped ? 'toNextSound' : 'panel';
@@ -296,13 +312,38 @@ const PANEL = {
                 + c.dynLo + '→' + c.dynHi + ' ' + x.len.toFixed(2) + ' s (' + why + ')'
                 + (x.fold ? ' · ' + Cr.nm(x.raw) + ' folded ' + (x.fold > 0 ? '+' : '') + x.fold + ' 8ve' : '')
                 + ' · from the strike at ' + x.onsetKey.toFixed(2) + ' s';
-            C.objects.push(wc);
-            made++;
+            out.push(wc);
         });
-        C.curveDirty(); C.renderAll(); C.markDirty(); C.scheduleConflictRefresh && C.scheduleConflictRefresh();
-        this.preview();
-        C.saveStatus.textContent = 'wrote ' + made + ' crescendo' + (made === 1 ? '' : 's') + ' · ' + D.summarize(res) + ' — CTRL+Z undoes it';
+        return out;
     },
+    // FIX-NOW 4 (2026-09-12, §421 — his "preview button in cres panel doesnt play"): hear what [go] would write. The would-be
+    // crescendos alone, timed from the first of them, each on its own player's route with its ramp (cresc_card's hear, per curve).
+    // Nothing is written.
+    async hear() {
+        const C = HOST(), res = this.run(); if (!C || !res) return;
+        const wcs = this.makeCurves(res);
+        if (!wcs.length) { this.preview(); C.saveStatus.textContent = 'nothing to hear — see the panel'; return; }
+        try { if (!C._zoneMidiInited && C.initZoneMidi) await C.initZoneMidi(); } catch (e) { }
+        const t0 = Math.min.apply(null, wcs.map(w => +w.startSeconds)), base = performance.now() + 40;
+        let heard = 0; const missing = [];
+        wcs.forEach(wc => {
+            const inst = C.trackInstrument(wc.layer), tech = C.curveTechniqueFor(wc);
+            const route = C.routeForNote(wc, tech, inst);
+            const out = C._zoneMidiOutputs && route && C._zoneMidiOutputs[route.port];
+            if (!out) { missing.push((route && route.port) || (TRK()[wc.layer] || {}).short || String(wc.layer)); return; }
+            const ch = route.ch, dur = Math.min(6, wc.endSeconds - wc.startSeconds), at = base + (wc.startSeconds - t0) * 1000;
+            if (tech && tech.cc0 != null) out.send([0xB0 | ch, 0, tech.cc0], at - 20);
+            out.send([0xB0 | ch, 7, C.heldCc7(wc, C.evalWaveCurve(wc, 0))], at);
+            out.send([0x90 | ch, wc.sonifyNote, C.heldVel(wc)], at + 5);
+            const steps = 24;
+            for (let i = 1; i <= steps; i++) { const u = i / steps; out.send([0xB0 | ch, 7, C.heldCc7(wc, C.evalWaveCurve(wc, u))], at + 5 + u * dur * 1000); }
+            if (wc.properties.cresc.secco !== false) out.send([0xB0 | ch, 7, 0], at + 5 + dur * 1000 - 10);
+            out.send([0x80 | ch, wc.sonifyNote, 0], at + 5 + dur * 1000);
+            heard++;
+        });
+        C.saveStatus.textContent = 'hearing ' + heard + ' crescendo' + (heard === 1 ? '' : 's') + ' from ' + t0.toFixed(2) + ' s — nothing written'
+            + (missing.length ? ' · no MIDI output for ' + Array.from(new Set(missing)).join(', ') : '');
+    }
 };
 
 root.CrescPanel = PANEL;

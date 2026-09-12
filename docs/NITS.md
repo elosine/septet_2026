@@ -336,3 +336,5 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 - **`positionResolver` (animobj's followers) ignores the technique transposition** — a follower placed at the flute's tongue-ram pitch would sit a M7 below the written head. Only matters if a follower ever rides a flute strike; the GC ball lands on the lane edge, unaffected.
 - **The long piano `main` note has no strike look by design** (byEnv.strike); a long `main` still draws the family look (open head + brick). Its real notation is a section-2 question.
 - **`foldFlute()` is unrun in a browser** — proven on a file copy only (61 of 70). It uses the same calls as `moveNote` (pushUndoState · renderWaveCurve · markDirty); his first run is the proof.
+
+- 2026-09-12 (his ask, while composing the chain): **a ♪ on each harmony row of the strikes drawer** — audition the chord alone, before it is loaded. Today the only path is load it → `Hear piano`. "any way to preview chords in drawer" — no.

@@ -104,7 +104,8 @@ Object.assign(D, {
                 (folded ? '&#9656; ' : '&#9662; ') + '<span style="flex:1 1 auto;overflow:hidden;text-overflow:ellipsis">' + esc(title) + '</span>' + (extra || '') + '</div>';
         };
         const row = (id, a, aw, b, c, d, title) => '<div class="skSeqRow" data-id="' + esc(id) + '" title="' + esc(title || '') + '" style="padding:2px 8px;cursor:pointer;display:flex;gap:6px;white-space:nowrap;' + (id === cur ? 'background:rgba(201,160,90,.25)' : '') + '">' +
-            '<span style="color:#777;width:' + aw + 'px;flex:none;overflow:hidden">' + esc(a) + '</span><span style="flex:1 1 auto;overflow:hidden;text-overflow:ellipsis">' + esc(b) + '</span><span style="color:#bbb;flex:none">' + esc(c) + '</span><span style="color:#777;flex:none">' + esc(d) + '</span></div>';
+            '<span style="color:#777;width:' + aw + 'px;flex:none;overflow:hidden">' + esc(a) + '</span><span style="flex:1 1 auto;overflow:hidden;text-overflow:ellipsis">' + esc(b) + '</span><span style="color:#bbb;flex:none">' + esc(c) + '</span><span style="color:#777;flex:none">' + esc(d) + '</span>' +
+            '<span class="skRowHear" data-id="' + esc(id) + '" title="FIX-NOW 1 (2026-09-12): hear this harmony alone — a piano block, nothing loaded" style="color:#e8cf9a;flex:none;cursor:pointer;padding:0 3px">&#9834;</span></div>';
         let h = '';
         const seq = this.seq, ids = seq ? seq.strikeIds : [];
         h += banner('strikes', 'STRIKES · ' + ids.length + (seq ? ' · ' + (seq.spanMs / 1000).toFixed(1) + ' s' : ''));
@@ -127,6 +128,7 @@ Object.assign(D, {
             const k = el.dataset.bank; hs.collapsed[k] = !this.hsCollapsed(k); this.save(); this.renderBanners();
         }));
         list.querySelectorAll('.skSeqRow').forEach(el => el.addEventListener('click', () => this.select(el.dataset.id)));
+        list.querySelectorAll('.skRowHear').forEach(el => el.addEventListener('click', ev => { ev.stopPropagation(); this.hearHarmony(el.dataset.id); }));
         list.querySelectorAll('.skHsRoot').forEach(inp => {
             ['mousedown', 'click', 'dblclick', 'keydown', 'keyup'].forEach(t => inp.addEventListener(t, ev => ev.stopPropagation()));
             // ENTER commits and ESC restores here, explicitly — found on the walk (2026-09-09): a real ENTER left 'C#3' in the box and the root at F2

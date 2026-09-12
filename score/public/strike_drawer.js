@@ -152,6 +152,7 @@ const D = {
             '<div id="skHandle" style="flex:none;height:8px;cursor:ns-resize;background:linear-gradient(#3a3a44,#1b1b20)"></div>' +
             '<div id="skHead" style="flex:none;display:flex;gap:10px;align-items:center;padding:3px 10px;border-bottom:1px solid #444;background:rgba(201,160,90,.12)">' +
               '<b style="color:#e8cf9a">STRIKES</b>' +
+              '<button id="skHearChord" style="' + btn + '" title="FIX-NOW 1 (2026-09-12): the loaded harmony AS DEALT — every player its note, one strike, no rhythm">&#9834; as dealt</button>' +
               '<span id="skStatus" style="color:#9a9;flex:1 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">idle</span>' +
               '<label>source <select id="skSeqSel" style="' + inp + '"></select></label>' +
               '<button id="skReload" style="' + btn + '" title="re-read bank/scattered_strikes.json">&#8635; db</button>' +
@@ -237,6 +238,7 @@ const D = {
         d.querySelectorAll('.skTr').forEach(b => b.addEventListener('click', () => { if (!this.strike) return; this.snapshot(); this.cfg.transpose = clamp((+this.cfg.transpose || 0) + (+b.dataset.d), -48, 48); this.applyVoicing(); this.save(); this.render(); this.setStatus('voicing transposed ' + (this.cfg.transpose > 0 ? '+' : '') + this.cfg.transpose + ' semitones — the players re-fitted'); }));
         q('#skHearP').addEventListener('click', () => this.play('piano'));
         q('#skHearO').addEventListener('click', () => this.play('orch'));
+        q('#skHearChord').addEventListener('click', () => this.hearDealt());
         q('#skStop').addEventListener('click', () => { const e = E_(); if (e) e.panic(); this.onStopped(); });
         q('#skDurX').addEventListener('change', e => { this.cfg.durX = clamp(+e.target.value || 1, 0.1, 20); this.save(); });
         q('#skDynX').addEventListener('change', e => { this.cfg.dynX = clamp(+e.target.value || 1, 0.1, 2); this.save(); });
@@ -596,6 +598,27 @@ const D = {
         // the piano plays what it was given (one note); any leftover voice is silent until flagged
         this.voices.forEach(v => { if (v.lane >= 0 && T[v.lane].instKey === 'piano') v.piano = true; });
     },
+    // FIX-NOW 5 (2026-09-12, §421 — his "unticking does not take them out from hear orch"): an untick drops the player at once.
+    // Its doublings go; each of its own notes moves to a free TICKED player that fits (the others keep their notes — this is not a
+    // reshuffle), or falls silent with a word. Ticking it back changes nothing until he shuffles or assigns.
+    dropLane(lane) {
+        const here = this.onLane(lane); if (!here.length) { this.renderOrch(); return; }
+        this.snapshot();
+        const B = this.busyLanes(), T = TRK();
+        const swell = this.isSwell && this.isSwell();
+        let moved = 0, silent = 0;
+        here.forEach(({ v, r }) => {
+            if (r !== v) { this.dropReal(v, r); return; }
+            v.lane = -1; v.piano = false; v.fold = 0; v.standIn = null; v.skip = false;
+            const used = new Set(); this.voices.forEach(w => this.reals(w).forEach(x => used.add(x.lane)));
+            const cand = T.map((t, l) => l).filter(l => l !== lane && !used.has(l) && this.laneTicked(l, B) && !(swell && T[l].instKey === 'piano'));
+            for (const l of cand) { this.assign(v, l); if (!v.skip) break; v.lane = -1; v.skip = false; v.fold = 0; v.standIn = null; }
+            if (v.lane >= 0) { moved++; if (T[v.lane].instKey === 'piano') v.piano = true; } else silent++;
+        });
+        this.save(); this.render();
+        this.setStatus((T[lane] ? T[lane].short : 'lane ' + lane) + ' unticked — ' + moved + ' note' + (moved === 1 ? '' : 's') + ' moved to a free player'
+            + (silent ? ' · ' + silent + ' silent (no free ticked player fits — tick one, or shuffle)' : ''));
+    },
     assign(v, lane, tech) { v.lane = lane; v.fold = 0; v.standIn = null; if (lane >= 0) { v.tech = tech || this.defaultTech(lane); if (!this.fitVoice(v)) v.skip = true; } },   // tech: the row's current technique, if it has one (U7)
     pianoQuick(k) {
         const vs = [...this.voices].sort((a, b) => a.pitch - b.pitch);
@@ -922,8 +945,8 @@ const D = {
         box.querySelectorAll('.skTick').forEach(cb => cb.addEventListener('click', ev => {
             ev.stopPropagation();
             const lane = +cb.dataset.lane;
-            if (cb.checked) delete this.laneOff[lane]; else this.laneOff[lane] = true;
-            this.renderOrch();
+            if (cb.checked) { delete this.laneOff[lane]; this.renderOrch(); }
+            else { this.laneOff[lane] = true; this.dropLane(lane); }   // FIX-NOW 5 (§421): an untick drops the player NOW
         }));
         box.querySelectorAll('.skTech').forEach(sel => sel.addEventListener('change', e => { const lane = +sel.dataset.lane; this.snapshot(); this.onLane(lane).forEach(({ v, r }) => { r.tech = e.target.value; r.standIn = null; this.fitReal(v, r); }); this.render(); }));
         box.querySelectorAll('.skRowName').forEach(el => el.addEventListener('click', () => { const lane = +el.parentNode.dataset.lane; this.pickerLane = this.pickerLane === lane ? null : lane; this.render(); }));
@@ -1207,11 +1230,13 @@ const D = {
         });
         return out;
     },
-    async play(mode) {
-        const e = E_(); if (!this.strike) return;
+    async play(mode) { if (!this.strike) return; return this.playNotes(this.notesFor(mode), mode === 'piano' ? 'the harmony on the piano' : 'orchestrated'); },
+    // FIX-NOW 1 (2026-09-12, §421): Hear's body, given its notes — Hear, the list's row ♪ (a harmony as a piano block) and the
+    // head's ♪ as dealt (the loaded harmony, every player its note, one strike, no rhythm) all play through this one path
+    async playNotes(notes, label) {
+        const e = E_();
         e.panic();
         if (!await e.ensureMidi()) { this.setStatus(e._midiError || 'MIDI unavailable', true); return; }
-        const notes = this.notesFor(mode);
         const routes = {}, missing = {}; let skipped = 0;
         notes.forEach(n => { const k = n.lane + '|' + n.tech; if (!(k in routes)) { const r = e.routeFor(n.lane, n.tech); routes[k] = r || null; if (!r) { const inst = this.instOf(n.lane); missing[(inst && inst.port) || ('lane ' + n.lane)] = 1; } } if (!routes[k]) skipped++; });
         if (!notes.length || skipped === notes.length) { this.setStatus(Object.keys(missing).length ? 'no MIDI port for ' + Object.keys(missing).join(', ') : 'nothing to play — shuffle or assign first', true); return; }
@@ -1227,7 +1252,23 @@ const D = {
         });
         e._timers.push(setTimeout(() => e.panic(), span + 700));
         this.startPlayhead(span);
-        this.setStatus('hearing ' + (mode === 'piano' ? 'the harmony on the piano' : 'orchestrated') + ' · ' + (notes.length - skipped) + ' notes' + (skipped ? ' · ' + skipped + ' had no port' : ''));
+        this.setStatus('hearing ' + label + ' · ' + (notes.length - skipped) + ' notes' + (skipped ? ' · ' + skipped + ' had no port' : ''));
+    },
+    // FIX-NOW 1 · the head's ♪: the loaded harmony as dealt — what Hear orchestrated would play, every onset moved to 0, each
+    // player·pitch once. The deal is heard, not the rhythm.
+    hearDealt() {
+        if (!this.strike) { this.setStatus('load a harmony first', true); return; }
+        const seen = new Set(), notes = [];
+        this.notesFor('orch').forEach(n => { const k = n.lane + '|' + n.tech + '|' + n.midi; if (seen.has(k)) return; seen.add(k); notes.push(Object.assign({}, n, { onMs: 0, durMs: Math.max(600, +n.durMs || 0) })); });
+        return this.playNotes(notes, 'the harmony as dealt · one strike');
+    },
+    // FIX-NOW 1 · a row's ♪: that harmony alone as a piano block, ~600 ms — nothing loaded, nothing changed
+    hearHarmony(id) {
+        const s = this.strikeById(id); if (!s) { this.setStatus('no such harmony: ' + id, true); return; }
+        const T = TRK(), pl = T.findIndex(t => t.instKey === 'piano'); if (pl < 0) { this.setStatus('no piano lane to audition on', true); return; }
+        const tech = this.defaultTech(pl);
+        const notes = [...new Set((s.notes || []).map(n => +n.midi).filter(isFinite))].map(m => ({ lane: pl, tech, midi: clamp(m, 21, 108), vel: 100, onMs: 0, durMs: 600 }));
+        return this.playNotes(notes, (s.label || String(id)) + ' · piano block');
     },
     async hearOne(lane, techKey, midi) {
         const e = E_(); e.panic();

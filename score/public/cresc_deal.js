@@ -116,9 +116,16 @@ function deal(onsets, events, lanes, ranges, o) {
     const lastOnsetT = ON[ON.length - 1].t;
     const togetherEnd = r3(lastOnsetT + Math.max(minS, +O.endsS || 0));
 
-    // 'next strike': the onsets of the first strike group after the selection's last onset, dealt one per crescendo
+    // 'next strike': the onsets of the first strike group after the selection's last onset. FIX-NOW 2 (2026-09-12, §421, his "b"):
+    // an onset with n notes is n LANDINGS — n crescendos may end there, each where a note of the next strike attacks. Dealt
+    // round-robin (the landing with the fewest crescendos so far, the earliest on a tie), so the first k land exactly as before.
     const nextOnsets = (O.nextOnsets || []).slice().sort((a, b) => a.t - b.t);
-    let nextIdx = 0;
+    const nextSlots = nextOnsets.map(x => Math.max(1, (x.notes || []).length)), nextTaken = nextOnsets.map(() => 0);
+    const nextLanding = afterT => {
+        let best = -1;
+        nextOnsets.forEach((x, k) => { if (x.t <= afterT + EPS || nextTaken[k] >= nextSlots[k]) return; if (best < 0 || nextTaken[k] < nextTaken[best]) best = k; });
+        return best;
+    };
 
     // ---------------------------------------------------------- the pass: who, from when, to when — ONE walk, in time order
     // The end is decided at the moment a player is chosen, because the crescendo just placed is what makes that player busy at the
@@ -139,9 +146,9 @@ function deal(onsets, events, lanes, ranges, o) {
             if (O.ends === 'even') t1 = on.t + Math.max(0, +O.endsS || 0);
             else if (O.ends === 'together') t1 = togetherEnd;
             else {
-                while (nextIdx < nextOnsets.length && nextOnsets[nextIdx].t <= on.t + EPS) nextIdx++;
-                if (nextIdx >= nextOnsets.length) { aborts.push({ t: on.t, lane, why: 'noNextOnset' }); return; }
-                t1 = nextOnsets[nextIdx++].t;
+                const k = nextLanding(on.t);
+                if (k < 0) { aborts.push({ t: on.t, lane, why: 'noNextOnset' }); return; }
+                nextTaken[k]++; t1 = nextOnsets[k].t;
             }
             // the floor, then the cap — in that order: a typed length under 0.3 s is raised to it, and the room may still refuse it
             let floored = false, capped = false;
@@ -177,6 +184,9 @@ function deal(onsets, events, lanes, ranges, o) {
         made.push(Object.assign({}, c, { midi: f.pitch, raw, fold: f.fold }));
     });
 
+    if (aborts.some(a => a.why === 'noNextOnset')) notes.push(nextOnsets.length
+        ? 'the next strike has ' + nextOnsets.length + ' onset' + (nextOnsets.length === 1 ? '' : 's') + ' · ' + nextSlots.reduce((a, b) => a + b, 0) + ' landings, all taken'
+        : 'no strike after the selection');
     if (made.some(c => c.capped)) notes.push(made.filter(c => c.capped).length + ' capped by the next sound');
     if (made.some(c => c.floored)) notes.push(made.filter(c => c.floored).length + ' raised to the 0.3 s floor');
     if (made.some(c => c.fold)) notes.push(made.filter(c => c.fold).length + ' folded into range');
@@ -188,7 +198,7 @@ function summarize(res) {
     const n = res.crescs.length;
     const why = {};
     res.aborts.forEach(a => { why[a.why] = (why[a.why] || 0) + 1; });
-    const WHY = { noFreePlayer: 'no free player', ticksRanOut: 'the ticks ran out', noNextOnset: 'no onset left in the next strike',
+    const WHY = { noFreePlayer: 'no free player', ticksRanOut: 'the ticks ran out', noNextOnset: 'no landing left in the next strike',
                   noRoom: 'no room', noPitch: 'no pitch', noOctave: 'no octave reaches', noTickedPlayer: 'nothing ticked' };
     const tail = Object.keys(why).map(k => why[k] + ' × ' + (WHY[k] || k)).join(' · ');
     return n + ' crescendo' + (n === 1 ? '' : 's')

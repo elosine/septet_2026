@@ -85,6 +85,26 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word.
 
+**FIX-NOW LIST — BUILT 2026-09-12 late, Fable 5.1, at his "no just fix now as quick as possible" (RUNNING_LOG §421): all six; `check_cresc_panel` 34 green (check 11 = rule B) · the 86 green · :5301 loads clean. Committed and pushed. UNHEARD BY HIM — CTRL+SHIFT+R on :5300, then: a row ♪ in the drawer's left column · `♪ as dealt` in its head · untick a player (it drops now) · SHIFT+C → `▶ hear` → `go` (the crescendos come back SELECTED → END → the next strike). Rule B is live: n notes at an onset = n landings.**
+
+*(The list as written before the build:)* **FIX-NOW LIST — 2026-09-12 late, his word "Yes. To all these and as quick as you can" (RUNNING_LOG §420). Six small fixes, one chunk,
+OPUS, on his :5300 copy or a :5301 copy, walked once each, then he hears. Everything else on SWEEP_LIST waits ("Forget about the rest for now").**
+
+1. **Drawer chord ♪ — shape C.** A ♪ on every harmony row of the left column (the chord as a piano block, ~600 ms, nothing loaded,
+   nothing changed) AND a ♪ by the loaded harmony's name above the keyboard (the chord AS DEALT — each player's voice, one strike, no
+   rhythm). `hearOne` (strike_drawer.js:991) already plays one voice; the Hear path plays notes at time 0.
+2. **Ends rule B** — `ends: next strike`: an onset with n notes takes n crescendos (each ends where a note of the next strike attacks).
+   Today cresc_deal.js:142–144 consumes each onset once. Also the readout: say "next strike has k onsets · m ticked" instead of
+   "no onset left" (SWEEP #15).
+3. **Sticky panel drag** — the crescendo panel (cresc_panel.js) sticks to the mouse after release; the onset card (`#skSndDrag`) and any
+   panel on the same pattern. The sound card was fixed for this in §347 — the same fix: mouseup on `document` / pointer capture. SWEEP #13.
+4. **Cresc panel preview that SOUNDS** — beside `preview`: play the would-be crescendos from the selection's first onset through the
+   composer's own player, nothing written (`preview()` cresc_panel.js:264 builds the deal; `go` writes it). SWEEP #14.
+5. **Unticking a player drops it at once** — the free/busy tick (strike_drawer.js:921): untick → the lane's dealt notes go and the deal
+   re-runs on the ticked rows with the current seed (today the tick only steers the next `reshuffle voicing`).
+6. **`[go]` selects what it made** — after writing, the composer's selection = the new crescendo notes, so END reaches their end
+   without a click (the §419 question, answered yes).
+
 **SESSION 9 — 2026-09-12, Fable 5.1 → Opus 5 (the build).** *(RUNNING_LOG §405–§419; STRIKES_TOOL §AH · §AI; CN-65 … CN-72; SWEEP #10–#12.)*
 
 - **PLAN 1t BUILT — 2026-09-12 evening, Opus 5, at his "and go with build" (RUNNING_LOG §419; STRIKES_TOOL §AI now carries "how to
@@ -190,7 +210,8 @@ no tool calls beyond the resume reads. Start only on his word.
 |---|---|---|---|
 | ~~N0~~ | ~~BUILD the four~~ — **done 2026-09-12 (RUNNING_LOG §407):** built, harnessed, walked on a copy at :5301, 86 green, pushed | — | — |
 | ~~N1b~~ | ~~BUILD PLAN 1t~~ — **done 2026-09-12 (RUNNING_LOG §419):** all six steps, 30 new checks green, his eight steps walked on `zz-ai-1t-walk` at :5301, pushed | — | — |
-| **N1c** | **► NEXT — HIS EAR ON THE CHAIN.** :5300 → CTRL+SHIFT+R → make a strike, SHIFT+C on it, `go`, END, the next strike; SPACE. Then his two verdicts: does the chain sound right, and should `[go]` leave the new crescendos SELECTED (so END reaches them without a click)? | **Fable** (his composing questions) · **Opus** for any fix | no |
+| ~~N1d~~ | ~~THE FIX-NOW LIST~~ — **done 2026-09-12 late on Fable (RUNNING_LOG §421)**, 34 + 86 green, unheard | — | — |
+| **N1c** | **► NEXT — HIS EAR ON THE CHAIN** (in progress; the six fixes of §421 are in and unheard — the first hour is §420). :5300 → CTRL+SHIFT+R → make a strike, SHIFT+C on it, `go`, END, the next strike; SPACE. Then his two verdicts: does the chain sound right, and should `[go]` leave the new crescendos SELECTED (so END reaches them without a click)? | **Fable** (his composing questions) · **Opus** for any fix | no |
 | **N1** | **PAUSED for N1b (2026-09-12 evening) — he was composing CN-65 in the drawer** (from #0 in `ChordStrikes01a-even`, a second pattern from #23). The AI answers, logs faults to SWEEP_LIST, journals. Then: **his verdict on CN-67 in the app** (headless-proven only) — then his eye and ear over the strikes 0–176 s (:5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker → video · SPACE) | **Fable** (composing questions) · **Opus** for any fix he does ask for | no |
 | ~~N2~~ | ~~The fold in his tab → rebuild from `piece-septet` → delete the copy~~ — **done 2026-09-11 late (RUNNING_LOG §402)** | — | — |
 | **N3** | **The 15 geometry touches** + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |

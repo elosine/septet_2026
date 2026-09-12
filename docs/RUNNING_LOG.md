@@ -11534,3 +11534,53 @@ for, so it is his call (STRIKES_TOOL §AI).
 
 **Chords mode and fill mode stay deprecated** (§413) — nothing was built on either, and fill's read of "what is sounding over a time"
 was NOT called into: `sounding.js` is the lift.
+
+## §420. His ear on the chain, the first hour — five faults logged, one rule changed (2026-09-12, Fable 5.1)
+
+**Prompted by:** his first pass at PLAN 1t at :5300, tonight, questions fired as they came ("Answer as quickly and competently as you can" · "very simply and breifly what to do, too much reading").
+
+**What came up, in order:**
+1. *"it's playing four courts for each strike ... that notes mode isn't working. Neither is the sound attack."* — Not the mode: every onset still carried its saved chord (`cfg.sounds`). `clear all` on the onset card. Attack/crescendo is the note's shape, not its count.
+2. *"unchecking does not take them out from hear orch"* — the free/busy ticks steer the NEXT deal only (PLAN 1t step 4); `reshuffle voicing` after unticking.
+3. *"i changed the = to 245ms how to go back"* — the piano's `≥` clock; the default is 100 (`pnoCfg`).
+4. *"how to get the additional piano notes in the new mode ... for just the normal blast"* — the piano row's `count` · `8va` · `hands` in the drawer's bottom bar (PLAN 1t step 5).
+5. *"sticky mouse to pannel, this is recurring problem"* — SWEEP #13. *"chose the drawer, but I don't see the drawer"* — `harmony: drawer` reads the pitches loaded in the strikes drawer (`drawerPitches`); there is no picker.
+6. *"any way to preview chords in drawer"* — no. Logged to NITS; proposals below.
+7. *"preview button in cres panel doesnt play"* — it is the text list, by design. SWEEP #14. *"it won't include cello, can't it fold octive?"* — not range: `ends: next strike` — SWEEP #15.
+8. *"no there are 3 onsets"* — 3 notes, 2 onsets: two are within `onsetsOf`'s 20 ms tolerance, and the rule consumed each onset once (cresc_deal.js:143).
+
+**Decided (his word "b"):** an onset with n notes may take n crescendos — each ends where a note of the next strike attacks. **Also decided:** fix the sticky panel drag (SWEEP #13). **Open:** the shape of the drawer chord preview — A (♪ per harmony row, piano block) · B (♪ on the loaded harmony, as dealt) · C both; the AI recommends C.
+
+**Where it goes:** Opus after a clear — the three fixes as one small chunk.
+
+## §421. THE FIX-NOW LIST BUILT — six fixes in one pass, at his "no just fix now as quick as possible" (2026-09-12, Fable 5.1)
+
+**Prompted by:** §420's list, confirmed item by item ("Yes. To all these and as quick as you can"), then the model switch declined:
+*"no just fix now as quick as possible"* — so built on Fable, against the standing rule, at his word.
+
+**What was built, where:**
+1. **The drawer chord ♪, shape C** (his pick was open; C taken as recommended, both buttons are cheap). `harm_source_ui.js`: a ♪ at the end
+   of EVERY harmony row (`.skRowHear`) → `hearHarmony(id)` — the row's pitches as a piano block, 600 ms, on the piano lane's default
+   technique; nothing loaded, nothing changed. `strike_drawer.js`: `♪ as dealt` in the head → `hearDealt()` — `notesFor('orch')` with every
+   onset moved to 0, each player·pitch once: the deal is heard, not the rhythm. Both through **`playNotes(notes, label)`** — Hear's body,
+   factored out of `play(mode)` (1q-PRINCIPLE: one path).
+2. **Ends rule B** (`cresc_deal.js`): `nextSlots[k]` = the notes at next-onset k; `nextLanding(afterT)` picks the eligible landing with the
+   fewest crescendos so far, earliest on a tie — round-robin, so the first k crescendos land exactly as before. `noNextOnset` now reads
+   "no landing left in the next strike" and the notes say **"the next strike has k onsets · n landings, all taken"** (his "no there are 3
+   onsets" — it was 3 notes at 2 onsets, two within `onsetsOf`'s 20 ms). **Check 11** added to `check_cresc_panel.js`: 3 players · 3 notes
+   at 2 onsets → 3 crescendos ending 10 · 10 · 10.5; a 4th player aborts with the count in the readout.
+3. **Sticky drag** (`cresc_panel.js`): §348's fault, verbatim — the box stops `mouseup`, the drag ends over the box, the window listener
+   never fires. Now `document.addEventListener('mouseup', up, true)` (capture) and the same on close. The onset card had this fix already;
+   no other panel drags.
+4. **`▶ hear` in the crescendo panel** (`cresc_panel.js`): `makeCurves(res)` builds the curves [go] would write, not in the score; `go`
+   gives them ids and pushes; `hear()` plays them — each on its own player's route with its 24-step CC7 ramp and the secco cut (cresc_card's
+   `hear`, per curve), timed from the first of them. Status: "hearing n crescendos from t s — nothing written".
+5. **Untick drops the player** (`strike_drawer.js` `dropLane(lane)`): its doublings go; each of its own notes moves to a free TICKED player
+   that fits (`assign`, the others untouched — not a reshuffle) or falls silent with a word in the status. Ticking back changes nothing
+   until he shuffles or assigns. (§420 item 2's advice — `reshuffle voicing` — was the VOICING button, `#skVRe`; the orchestration's is
+   `shuffle` at the top. It happened to work because a voicing change re-deals. Noted, not a fault.)
+6. **`[go]` selects what it made** (`cresc_panel.js`): `deselectAll` → `selectedObjects = wcs` → `renderAll`; the status says "selected
+   (END parks at their end)". So the chain is: strike → SHIFT+C → go → END → next strike.
+
+**Proof:** four files parse; `check_cresc_panel` **34 green** (30 + check 11's 4); the 86 green; :5301 loads with no console error.
+**Unheard by him — his SPACE is the test**, and the three sounding paths (row ♪ · as dealt · ▶ hear) need his MIDI ports.

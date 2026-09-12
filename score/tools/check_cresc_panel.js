@@ -129,5 +129,20 @@ ok('over(): touching at either edge is free', Sn.overIn(ev, 1.14, 3, [0]).free.l
 ok('over(): an overlap is busy, and says until when', Sn.overIn(ev, 1.05, 3, [0]).until[0] === 1.14,
    JSON.stringify(Sn.overIn(ev, 1.05, 3, [0]).until));
 
+H('11 · FIX-NOW 2 (§421, his "b"): an onset with n notes is n landings');
+// the next strike: two notes 10 ms apart (ONE onset, two landings) and a third at 10.5 — on lanes no ticked player uses
+{
+    const N2 = [note(1, 10, 50, 0.14, 'grp-strike-2'), note(PIANO, 10.01, 60, 0.14, 'grp-strike-2'), note(PIANO, 10.5, 64, 0.14, 'grp-strike-2')];
+    const NX = D.onsetsOf(N2.map(o => ({ id: o.id, lane: o.layer, midi: o.sonifyNote, startSeconds: o.startSeconds, groupId: o.groupId })));
+    ok('two notes 10 ms apart are one onset · 2 onsets in all', NX.length === 2 && NX[0].notes.length === 2, NX.map(x => x.t + ':' + x.notes.length).join(' '));
+    const ev2 = evOf(SEL_OBJ.concat(N2));
+    const r = D.deal([ONS[0]], ev2, [3, 4, 5], RANGES, OPT({ mode: 'all', ends: 'next', harmony: 'these', nextOnsets: NX }));
+    ok('3 players · 3 notes in the next strike → 3 crescendos (was 2)', r.crescs.length === 3, r.crescs.length + ' · ' + D.summarize(r));
+    const ends = r.crescs.map(c => c.t1).sort((a, b) => a - b);
+    ok('round-robin: two land on the double onset, one on the single', ends.join() === '10,10,10.5', ends.join());
+    const r4 = D.deal([ONS[0]], ev2, [3, 4, 5, 6], RANGES, OPT({ mode: 'all', ends: 'next', harmony: 'these', nextOnsets: NX }));
+    ok('a 4th player: no landing left, and the readout says the count', r4.crescs.length === 3 && /2 onsets · 3 landings, all taken/.test(D.summarize(r4)), D.summarize(r4));
+}
+
 console.log('\n' + (fail ? fail + ' FAILED' : 'all green'));
 process.exit(fail ? 1 : 0);
