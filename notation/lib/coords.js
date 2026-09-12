@@ -55,7 +55,14 @@
   // each staff is added as a sub-system keyed '<part>:<i>', an equal slice
   // of the lane from the top, with its share of the lane's staff scale, so
   // every staff in the frame is the same size. stavesOf(part) -> count.
-  function withStaves(systems, stavesOf) {
+  // [§401k, 2026-09-11] opts.interStaffGapSs (or centreToCentreFrac): the distance between the middle lines of
+  // adjacent staves of ONE part, as a fraction of the frame height — the grand staff's
+  // inter-staff gap made data (registry engraving.layout.grandStaff.interStaffGapSs, 6 ss =
+  // piece #2's locked LilyPond measurement; LilyPond's own PianoStaff default is 5). The
+  // staves are placed at that distance, CENTRED IN THE LANE; each keeps its half-lane band
+  // (the GC's impact stays at the gap's middle) and gets a `midFrac` the view honours for
+  // its middle line. Without opts: each staff centred in its own share, as before.
+  function withStaves(systems, stavesOf, opts) {
     const out = [];
     for (const s of systems) {
       out.push(s);
@@ -63,11 +70,17 @@
       if (n < 2) continue;
       const h = (s.laneFrac1 - s.laneFrac0) / n;
       for (let i = 0; i < n; i++) {
+        // the gap in ss becomes a frame fraction through THIS lane's own scale (ss per lane
+        // height), so the same number holds in the video frame, the zoom and any export
+        const c2c = opts && opts.interStaffGapSs > 0 && s.ssPerSystem > 0
+          ? (opts.interStaffGapSs + 4) * (s.laneFrac1 - s.laneFrac0) / s.ssPerSystem
+          : (opts && opts.centreToCentreFrac > 0 ? opts.centreToCentreFrac : null);
+        const laneMid = (s.laneFrac0 + s.laneFrac1) / 2;
         out.push(Object.assign({}, s, {
           part: s.part + ':' + i, lane: s.part, staff: i,
           laneFrac0: s.laneFrac0 + i * h, laneFrac1: s.laneFrac0 + (i + 1) * h,
           ssPerSystem: s.ssPerSystem ? s.ssPerSystem / n : undefined,
-        }));
+        }, c2c ? { midFrac: laneMid + (i - (n - 1) / 2) * c2c } : {}));
       }
     }
     return out;
@@ -103,7 +116,7 @@
       const hPx = yBotPx - yTopPx;
       const ssSys = s.ssPerSystem || ssPerSystem;     // per-lane staff scale
       const ssPx = hPx / ssSys;                       // SZ-7: lane-relative
-      const yMidPx = (yTopPx + yBotPx) / 2;           // staff middle line
+      const yMidPx = s.midFrac != null ? yOfLaneFrac(s.midFrac) : (yTopPx + yBotPx) / 2;   // staff middle line ([§401k] a staff of a grand staff sits where its part's gap puts it)
       return {
         part: s.part,
         yTopPx, yBotPx, heightPx: hPx, ssPx, yMidPx, ssPerSystem: ssSys,

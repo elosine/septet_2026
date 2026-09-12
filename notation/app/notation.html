@@ -169,6 +169,9 @@
   const ensPart = p => (state.ensemble && state.ensemble.parts.find(q => q.part === p)) || null;
   const partName = p => { const e = ensPart(p); return e ? e.short : 'T' + (p + 1); };
   const stavesOf = p => { const e = ensPart(p); return (e && e.staves && e.staves.length) || 1; };
+  // [§401k] the grand staff's inter-staff gap (registry engraving.layout.grandStaff.interStaffGapSs) —
+  // withStaves places a part's staves at it, centred in the lane; absent = each staff centred in its share
+  function grandStaffOpts() { const g = (((state.container || {}).engraving || {}).layout || {}).grandStaff; return g && g.interStaffGapSs > 0 ? { interStaffGapSs: g.interStaffGapSs } : undefined; }
   const weightOf = p => { const e = ensPart(p); return (e && e.weight) || 1; };
   // hoisted: a RESTORED container view (UI persistence) runs the whole
   // transport/anim/MIDI path during the INITIAL render, which the old
@@ -673,7 +676,7 @@
       if (state.ensemble) sysList.forEach((s, i) => { s.ssPerSystem = NotationCoords.DEFAULTS.ssPerSystem * wts[i]; });
       const view = NotationCoords.makeView({
         widthPx, heightPx, window: [t0, t1],
-        systems: NotationCoords.withStaves(sysList, stavesOf),
+        systems: NotationCoords.withStaves(sysList, stavesOf, grandStaffOpts()),
       });
       $('sheet').innerHTML = NotationRender.renderSection(state.model, view, state.glyphs, { markers: state.markers, reshow, ownsEnd, hideBricks: !$('bricks').checked, staffFull: !paged, ensemble: state.ensemble });
       applySolo();   // innerHTML replaced the lanes - re-assert the dim
@@ -736,7 +739,7 @@
       const ssPerSystem = lanePx / (((C.staff && C.staff.staffHeightPx) || 31.6) / 4);
       if (state.ensemble) {
         systems.forEach((s, i) => { s.ssPerSystem = ssPerSystem * weights[i]; });
-        systems = NotationCoords.withStaves(systems, stavesOf);
+        systems = NotationCoords.withStaves(systems, stavesOf, grandStaffOpts());
       }
       const p = state.vPages[state.pageIdx];
       // CONSTANT TIME SCALE (day 22, second note — composer: "in page two
