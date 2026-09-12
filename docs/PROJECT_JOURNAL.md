@@ -397,7 +397,20 @@ the plan is already on paper. Wrap on Opus, always.
 - **Next:** N2 his eye on the page and 2d (**Fable**, wrap on Opus first) · then plan 2b with him (**Fable**, fresh context).
 - **Resume reads:** this block · PLAN §2 head + the 2b line (to plan it). Nothing else pre-emptively.
 
-**STATE — STRIKE 1 BUILT (2026-09-11 late — session 8 continued, Claude Code / Fable 5.1; his word: build here, no clear). RUNNING_LOG §399–401. THIS IS THE ONE TO RESUME FROM.**
+**STATE — THE STRIKES 0–176 s ARE ON THE PAGE; THE STANDARDS WRITTEN (2026-09-11 late — session 8 continued, Claude Code / Fable 5.1). RUNNING_LOG §399–§401n. THIS IS THE ONE TO RESUME FROM.**
+
+- **FIRST — HIS STANDING RULE:** after `/postclear`: play back, then **STOP and ask**. No edits, no builds. Start only on his word.
+- **Task and state:** section 1's strikes are notated by rules he decided one by one (§399–§401m) — the strike look, the stack on the head side, classic stems, the grand staff's 6 ss gap, the piano's GC, go lines, ottavas, text and fff on every note, the flute's rams folded and written at the fingering. **`docs/NOTATION_STANDARDS.md` §1 is the index of every rule → its registry key → its §.** The IR `strike1` covers **0–176 s (514 strikes)** from the copy `scores/zz-ai-strike1.json` (his score at 14:31 + the flute fold). **Trills (zones) and the morph curves (from 183 s) are NOT notated — next notation session, his word.** All pushed; nothing in flight.
+- **Unheard/unseen by him:** the 0–176 s page set; MIDI after the two fixes (§401d ports, §401f tracks, §401g score lengths) — his SPACE is the test.
+- **NEXT CONCRETE STEP (after his go):** his eye and ear across the 15 pages; the 15 geometry touches around the piano (§401n) — flip/nudge/air on his verdict. **The fold in HIS tab** (CTRL+SHIFT+R → `foldFlute()` → Save) and then one rebuild from `piece-septet` itself (`--score piece-septet --w0 0 --w1 176 --bricks --id strike1 …`), the copy deleted. Then the next notation session: trills' written look, the morph curves (plan by the planning method, Fable; build on Opus after a clear).
+- **Pending decisions from him:** the geometry touches · the Vn1 high-note spill · whether 0.30 reads on the ottava hook · the drawer verdicts (STRIKES_TOOL §AG) · his two passages · track 7's Kontakt.
+- **Deliberately uncommitted — all his:** `scores/piece-septet.json` (his 14:31 editing) · `bank/panel_snapshots.json` · `reaper/septet_rack.rpp` · `bank/passages/accentedcres01*.json` · `scores/SeptetSec03-Materials-B/-C/-D/-a.json`. **The AI's, uncommitted on purpose until the fold lands in his score:** `scores/zz-ai-strike1.json` · `notation/ir/strike1.ir.json` · the `strike1` entry in `notation/ir/index.json`.
+- **Servers the AI started (stop on his word):** #2's performance score :3001 (`pno2perc2-perf-3001`) · the tuba's :5200 (`tubas-5200`) — launch entries in `.claude/launch.json`.
+- **Tests:** `node tools/test_septet_notation.js` (86) · the tuba battery staged per `notation/ir/README.md`: layout · render · animobj · splice · stamps · coords · graphic · pattern_fit GREEN (render's snapshot regenerated once, §401b); the standing REDs unchanged.
+- **Model:** **Fable** for his verdicts; Opus for the next build after a clear.
+- **Resume reads:** `docs/NOTATION_STANDARDS.md` §1 · RUNNING_LOG **§401n**. Nothing else pre-emptively.
+
+**STATE — STRIKE 1 BUILT (2026-09-11 late — session 8 continued, Claude Code / Fable 5.1; his word: build here, no clear). RUNNING_LOG §399–401. *(Superseded by the block above.)*
 
 - **FIRST — HIS STANDING RULE:** after `/postclear`: play back, then **STOP and ask**. No edits, no builds. Start only on his word.
 - **Task and state:** section 1's strikes are written the tuba staccato way, every note at its own onset with its own GC — decided point by point (§399–400) and **strike 1 built, tested, committed and pushed** (§401). **Unseen by him.** Nothing in flight.
