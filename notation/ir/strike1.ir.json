@@ -11048,28 +11048,6 @@
    "vel": 127
   },
   {
-   "id": "ev-wc-1347",
-   "source": {
-    "score": "piece-septet",
-    "objectId": "wc-1347"
-   },
-   "onset": 172.941,
-   "duration": 0.08599999999998431,
-   "pitch": {
-    "midi": 29,
-    "spelled": {
-     "step": "F",
-     "alter": 0,
-     "octave": 1
-    }
-   },
-   "technique": "main",
-   "provenance": "derived",
-   "env": "strike",
-   "mode": "plain",
-   "vel": 127
-  },
-  {
    "id": "ev-wc-1349",
    "source": {
     "score": "piece-septet",
@@ -13323,26 +13301,12 @@
    "part": 2,
    "span": [
     171.11,
-    173.011
+    175.605
    ],
    "class": "trance-stream",
    "strategy": "unresolved",
    "events": [
     "ev-wc-1340",
-    "ev-wc-1347"
-   ],
-   "provenance": "derived"
-  },
-  {
-   "id": "ch-2-wc-1349",
-   "part": 2,
-   "span": [
-    173.011,
-    175.605
-   ],
-   "class": "ord-sustained",
-   "strategy": "unresolved",
-   "events": [
     "ev-wc-1349"
    ],
    "provenance": "derived"
