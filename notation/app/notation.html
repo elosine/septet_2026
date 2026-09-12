@@ -1057,7 +1057,12 @@
     const key = name + '|' + parts.join(',') + '|' + state.ir.id;
     const cached = state.midi.players[key];
     if (!cached || cached.ir !== state.ir) {
-      const amended = NotationMidiPlayer.withIrDurations(score, state.ir);
+      // §401g (the composer: 'should be precisely what I hear in the composer score'): registry
+      // playback.scoreDurations = the composer score's own note lengths — the tuba's 'IR is authoritative
+      // for sound' (day 22) held a 0.13 s jeté for its 1.22 s sample length. The rest of the path is the
+      // composer's own sonify_core already.
+      const PB = (state.container && state.container.playback) || {};
+      const amended = PB.scoreDurations ? { score, amended: [] } : NotationMidiPlayer.withIrDurations(score, state.ir);
       const player = NotationMidiPlayer.makeMidiPlayer({
         score: amended.score, instruments: INSTRUMENTS, ccPoints: state.midi.ccPoints,
         outputs: state.midi.outputs, parts,

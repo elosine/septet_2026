@@ -1005,7 +1005,8 @@
                 // head like the cuivré mark.
                 const articG = dev.nhArtic && stemKind !== 'beam' ? (glyphs.articulation && glyphs.articulation[dev.nhArtic]) || null : null;
                 if (dev.nhArtic && stemKind !== 'beam' && !articG) warnings.push('nh-unit ' + e.id + ': articulation glyph "' + dev.nhArtic + '" missing — not drawn');
-                const instrTxt = (dev.instrFirst && instrShown.has(e.id)) ? dev.instrFirst : (dev.instrText || null);
+                const instrIsFirst = !!(dev.instrFirst && instrShown.has(e.id));
+                const instrTxt = instrIsFirst ? dev.instrFirst : (dev.instrText || null);
                 const instrEm = instrTxt ? TS.technique * (o.textEmScale != null ? o.textEmScale : 1.3) : 0;
                 // [§400] THE TECHNIQUE SYMBOL goes above the unit when the lane
                 // has room above the stem tip (a flagged stem-up unit already
@@ -1371,7 +1372,8 @@
                 // instruction slot); ySs is the BASELINE, the em box sits on it
                 if (instrTxt) {
                   const yT = placeChain(instrEm);
-                  const al = dev.instrAlign === 'end' || dev.instrAlign === 'middle' ? dev.instrAlign : 'start';   // §401b: the composer — tongue ram right-justified (clear of the GC), (slap) / jeté centred
+                  const alRaw = (instrIsFirst && dev.instrFirstAlign) || dev.instrAlign;   // §401g: the first text may sit differently ('tongue ram' right, 'T. R.' centred)
+                  const al = alRaw === 'end' || alRaw === 'middle' ? alRaw : 'start';   // §401b: the composer — tongue ram right-justified (clear of the GC), (slap) / jeté centred
                   const dxT = al === 'end' ? headDx + nhO.wSs / 2 : al === 'middle' ? headDx : headDx - nhO.wSs / 2;
                   items.push({ k: 'text', t: tU, dxSs: dxT, ySs: yT - instrEm / 2 + instrEm * 0.2, text: instrTxt, size: TS.technique, color: '#000', anchor: al });
                 }

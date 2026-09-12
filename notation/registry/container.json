@@ -3,6 +3,10 @@
  "_history": [
   "2026-08-20 (day 21): created after the first true-size proof slate (proofs_v0). A/B/C/D verdicts filed — composer's words in COMPOSER_LOG same date."
  ],
+ "playback": {
+  "scoreDurations": true,
+  "_doc": "RUNNING_LOG §401g (2026-09-11, the composer: 'should be precisely what I hear in the composer score'): the notation app's MIDI player uses the COMPOSER SCORE's note lengths, not the IR's sample-true durations (the tuba's day-22 rule, which held a 0.13 s jeté for 1.22 s). false = the tuba behaviour."
+ },
  "frame": {
   "widthPx": 1920,
   "heightPx": 1080,
@@ -223,8 +227,9 @@
       "dynMark": "band",
       "dynBesideStem": true,
       "instrFirst": "tongue ram",
+      "instrFirstAlign": "end",
       "instrText": "T. R.",
-      "instrAlign": "end"
+      "instrAlign": "middle"
      },
      "_staccatoNote": "day 23, OPTION B of the layering discussion (Tufte: layering & separation, 1+1=3, position before colour): NO go line for a point-in-time gesture — the GC's impact marker IS the go mark, so a go line was a third encoding of one time; the unit sits BEFORE the go time like every other unit (reading rule: the ink just before the mark is what you play at the mark), with nhGapSs 0.6 so the head clears the marker's left edge (r 0.51 ss) with air; head, dot and ledgers sit under the arc (the ictus hang keeps the arc at 35 %+ height 0.05 s before impact); stem and flag may cross it (composer). Option A (centred on go, marker lightened) rejected: it lightens the datum. nhAnchor 'center' remains available as a device value."
     }
