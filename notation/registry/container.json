@@ -555,6 +555,8 @@
    "opacity": 0.9
   },
   "lineWedge": {
+   "enabled": false,
+   "_note": "§401m (2026-09-11): OFF for the septet — the composer: the wedge/pie animations 'don't play a part here'. No object in section 1 would trigger it anyway (no hold ≥ 3 s among the strikes); kindOn honours enabled:false for every kind now.",
    "minHoldSeconds": 3,
    "ySs": 5.2,
    "radiusSs": 0.9,

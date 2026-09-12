@@ -248,7 +248,9 @@
     // page wants its two METERS and none of the dots (composer: "I want the
     // meters. I don't want the dots."). Opt-in: absent = every kind as before.
     const offKinds = (ir && ir.animated) || {};
-    const kindOn = k => offKinds[k] !== false;
+    // [§401m] ...and a registry block with enabled:false switches its kind off — the tuba's day-24 pie cure,
+    // for every kind (the composer: 'make sure those are hidden or shut off. They don't play a part here.')
+    const kindOn = k => (offKinds[k] !== false) && !(style && style[k] && style[k].enabled === false);
     const partList = O.parts || (ir && ir.source && ir.source.parts) || null;
     const allowed = partList ? new Set(partList) : null;   // null = unscoped
     const has = l => !allowed || allowed.has(l);
