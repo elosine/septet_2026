@@ -105,10 +105,11 @@ no tool calls beyond the resume reads. Start only on his word.
 
 **STATE — THE STRIKES 0–176 s ARE ON THE PAGE (session 8 end). RUNNING_LOG §399–§401n. RESUME FROM HERE.**
 
-- **Nothing in flight; everything pushed.** The IR `strike1` = **513 strikes, 0–176 s, 15 pages**, built from `piece-septet`
+- **Nothing in flight; everything pushed.** The IR `strike1` = **511 strikes, 0–176 s, 15 pages**, built from `piece-septet`
   ITSELF (RUNNING_LOG §402 — he ran `foldFlute()` and Saved at 22:40, and removed a doubled piano note at 67.79; the copy is
   deleted, score and page are one thing again). **Trills (zones) and the morph curves (from 183 s) are deliberately NOT notated —
   next notation session, his word.**
+- **⚠ DO NOT PRESS R ON THE STRIKES PAGE** (RUNNING_LOG §403): R strips the recorded window and forces `--all`, so it widens 0–176 s to the whole piece and pulls in the morph material. A deletion in the composer → Save → the AI rebuilds (`--score piece-septet --w0 0 --w1 176 --bricks --id strike1 --exp`). **Parked fix (his "leave for now"): option A — R honours an IR's recorded window; `--all` gets its own key.**
 - **Unseen / unheard by him:** the 15 pages; MIDI after the three fixes (ports · tracks · score lengths) — his SPACE is the test.
 - **NEXT CONCRETE STEP:** his eye and ear over the 15 pages (:5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker
   "piece-septet · strikes 0–176 s" → video · SPACE for MIDI). Then the next notation session: **trills' written look, then the
@@ -127,7 +128,7 @@ no tool calls beyond the resume reads. Start only on his word.
 - **Tests:** `node tools/test_septet_notation.js` (86) · `test_identity` (20) · the tuba battery staged per
   `notation/ir/README.md` — layout · render · animobj · splice · stamps · coords · graphic · pattern_fit GREEN (render's snapshot
   regenerated once on purpose, §401b); the standing REDs unchanged.
-- **Resume reads:** `docs/NOTATION_STANDARDS.md` §1 · RUNNING_LOG **§401n–§402**. Nothing else pre-emptively.
+- **Resume reads:** `docs/NOTATION_STANDARDS.md` §1 · RUNNING_LOG **§401n–§403**. Nothing else pre-emptively.
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
 

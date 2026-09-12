@@ -11081,3 +11081,10 @@ Gould (from memory; nothing quotable found online): the sign at the first affect
 - **`foldFlute()` run by him in his own tab, Saved 22:40** — the one-writer rule held: the AI never touched his working copy. Measured after: **70 flute tongue rams in 0–183 s, all inside sounding C3–D4** (51–62), none outside; wc-591 (strike 1) is C♯4. The written pitches on the page are those +M7 = the fingerings, B3–C♯5, so the range alert now fires on nothing.
 - **The IR rebuilt from `piece-septet` ITSELF** (`--score piece-septet --w0 0 --w1 176 --bricks --id strike1 --exp`): 513 events, 327 chunks, VALID vs source. The copy `scores/zz-ai-strike1.json` is deleted — **score and page are one thing again (D9).** The 15 geometry touches stand, unchanged by the fold.
 - **Committed at last:** `notation/ir/strike1.ir.json` + its picker row, held back all evening precisely because they were built from a copy.
+
+
+## §403. R widened the pinned page — the trap, and the fix parked (2026-09-11 late, Opus 5)
+
+Two more doubled piano notes deleted by him (156.20 s, then one more) and rebuilt. On the second he pressed **R** — and R, by 2d.3's own design, STRIPS the recorded window and forces  ( refresh route): the page went from 0–176 s / 512 events to **0–567 s / 885 events, 374 of them past 176 s** — the morph material he had deliberately left out. His deletion had landed correctly (0 stale events); only the window was wrong. Rebuilt to 0–176: **511 events**.
+
+**Why the design was right and is now wrong here:** R exists so material composed PAST the old window comes in (2d.3, notate while composing). A page pinned to a section wants the opposite. **Offered and parked at his word ("leave for now"): option A — R honours an IR's recorded window when it has one,  moving to its own key or a console line; pages that want to grow simply record no window.** Until then: delete in the composer, Save, and the AI rebuilds; do not press R on the strikes page.
