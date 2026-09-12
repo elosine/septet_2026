@@ -1414,7 +1414,10 @@
                     // §401l (the composer, option A): the hook clears the LEDGER LINE's overhang on the right,
                     // as the sign already clears the accidental on the left (Gould: sign at the first note's
                     // left edge, line to the last note's right edge, hook toward the staff)
-                    dx1Ss: headDx + nhO.wSs / 2 + (ledgers.length ? ledgerExt : 0) + ((O.endPadSs != null) ? O.endPadSs : 0),
+                    // §401m (the composer): the hook ends at the RIGHTMOST INK (head, or the ledger's overhang)
+                    // plus the smallest gap — registry ottavaEndGapSs (the staccato-dot gap, 0.15); LilyPond's own
+                    // OttavaBracket runs 0.6 ss past the last note (shorten-pair (-0.8 . -0.6))
+                    dx1Ss: headDx + nhO.wSs / 2 + (ledgers.length ? ledgerExt : 0) + (o.ottavaEndGapSs != null ? o.ottavaEndGapSs : ((O.endPadSs != null) ? O.endPadSs : 0)),
                     ySs: lineY, dir: above ? 'above' : 'below', label, ev: e.id,
                   });
                 }
