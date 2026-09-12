@@ -94,6 +94,14 @@ const PANEL = {
         const notes = strikeGroup ? plain.filter(n => n.groupId === strikeGroup) : plain.filter(n => n.startSeconds - first.startSeconds <= 0.02 + 1e-6);
         const D = CD(); return D ? D.onsetsOf(notes) : [];
     },
+    // §423: the typed list → sorted MIDI; a name without an octave sits around C3 (the morph panel's parser, the same reading)
+    typedPitches() {
+        const SEP = root.MorphSeptet, c = this.cfg();
+        return [...new Set(String(c.pitches || '').split(/[s,;]+/).filter(Boolean).map(tok => {
+            if (/^d+$/.test(tok)) return +tok;
+            const m = SEP && SEP.parseNote ? SEP.parseNote(tok, 48) : null; return m == null ? NaN : +m;
+        }).filter(n => isFinite(n) && n >= 0 && n <= 127))].sort((a, b) => a - b);
+    },
     drawerPitches() {
         const D = root.StrikeDrawer;
         if (!D || !D.voices || !D.voices.length) return [];
@@ -172,7 +180,9 @@ const PANEL = {
             '<input id="cpEndsS" type="number" step="0.1" min="0.3" style="' + INP + ';width:56px"> <span style="color:#888">s</span>',
             '</div></div>',
             // harmony
-            '<div><div style="color:#888">harmony</div><select id="cpHarm" style="' + INP + ';width:100%">' + opt(D.HARMONY, c.harmony) + '</select></div>',
+            '<div><div style="color:#888">harmony</div><select id="cpHarm" style="' + INP + ';width:100%">' + opt(D.HARMONY, c.harmony) + '</select>',
+            // §423 (his "What if I want to select my pitches?"): typed pitches — note names or MIDI numbers, dealt by register (low → the lowest-sitting player)
+            '<input id="cpPitches" placeholder="G2 C#4 F4 — or 43 61 65 · low to high, dealt by register" title="§423: your own pitches for the crescendos — note names (F2, C#3, Bb1) or MIDI numbers, space- or comma-separated; dealt like the drawer list: the lowest to the lowest-sitting ticked player, folded into range" style="' + INP + ';width:100%;margin-top:3px;display:none"></div>',
             // dynamics + shape
             '<div style="display:flex;gap:4px;align-items:center">',
             '<select id="cpLo" style="' + INP + ';width:52px">' + dynOpts + '</select><span style="color:#888">&rarr;</span>',
@@ -219,7 +229,10 @@ const PANEL = {
         // the controls, from the remembered settings
         q('#cpEndsS').value = c.endsS; q('#cpLo').value = c.dynLo; q('#cpHi').value = c.dynHi;
         q('#cpShape').value = c.shape; q('#cpRatio').value = c.ratio; q('#cpSecco').checked = c.secco !== false;
-        const endsBox = () => { q('#cpEndsS').disabled = q('#cpEnds').value === 'next'; };
+        const endsBox = () => { q('#cpEndsS').disabled = q('#cpEnds').value === 'next'; q('#cpPitches').style.display = q('#cpHarm').value === 'typed' ? '' : 'none'; };
+        q('#cpPitches').value = c.pitches || '';
+        q('#cpPitches').addEventListener('input', e => { c.pitches = e.target.value; this.preview(); });
+        ['keydown', 'keyup', 'keypress'].forEach(t => q('#cpPitches').addEventListener(t, e => { if (e.key !== 'Escape') e.stopPropagation(); }));
         endsBox();
         const bind = (id, key, cast) => q(id).addEventListener('change', e => {
             c[key] = cast ? cast(e.target.value) : e.target.value; endsBox(); this.preview();
@@ -264,7 +277,7 @@ const PANEL = {
         return D.deal(this.onsets, this.events(), lanes, this.ranges(), {
             mode: c.mode, ends: c.ends, endsS: +c.endsS, harmony: c.harmony,
             nextOnsets: needNext ? this.nextStrike(lastT) : [],
-            drawerPitches: c.harmony === 'drawer' ? this.drawerPitches() : [],
+            drawerPitches: c.harmony === 'drawer' ? this.drawerPitches() : c.harmony === 'typed' ? this.typedPitches() : [],
             selectionLanes: this.sel.map(n => n.lane),
             piano: this.pianoLane(),
             endGapS: Cr.DEFAULTS.endGapS, minS: Cr.DEFAULTS.minS,
