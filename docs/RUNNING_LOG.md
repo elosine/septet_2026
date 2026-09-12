@@ -11588,3 +11588,7 @@ was NOT called into: `sounding.js` is the lift.
 ## §422. `ends: next strike` could not see a note the drawer did not write (2026-09-12, Fable 5.1)
 
 **Prompted by:** *"i want to make a crescendo that starts at the viola strike and ends at the flute strike in violin one. But it's not letting me."* The panel said the truth — "no strike after the selection" — because `nextStrike()` read only `grp-strike-` groups, and the flute note was placed by hand (or by another tool). **Fixed:** the earliest plain sounding note after the selection is the next strike; a drawer strike still counts whole (its onsets, as before); any other note counts with the notes attacking within 20 ms of it. `harmony: next strike` reads the same. 34 green. Unheard.
+
+## §423. `harmony: typed pitches` in the crescendo panel (2026-09-12, Fable 5.1)
+
+**Prompted by:** *"What if I want to select my pitches? instead of drawing from the drawer."* A fourth harmony: **typed pitches** — a box under the select (shown only then), note names (F2, C#3, Bb1 — the morph panel's parser, a bare class near C3) or MIDI numbers; dealt exactly as the drawer's list is (`pitchFor`'s drawer branch: sorted low → high, the lowest to the lowest-sitting ticked player, folded into range). Keys in the box do not reach the score's shortcuts. 34 green. Unheard.

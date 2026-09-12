@@ -41,7 +41,7 @@ function CR() {
 
 const MODES = [['one', 'one per onset'], ['all', 'all others from each onset']];
 const ENDS = [['even', 'even'], ['together', 'together'], ['next', 'next strike']];
-const HARMONY = [['these', 'these notes'], ['next', 'next strike'], ['drawer', 'the drawer']];
+const HARMONY = [['these', 'these notes'], ['next', 'next strike'], ['drawer', 'the drawer'], ['typed', 'typed pitches']];   // §423: typed = his own list, dealt by register like the drawer's
 
 const DEFAULTS = {
     mode: 'one',
