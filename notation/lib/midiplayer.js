@@ -64,7 +64,7 @@
     function resolve(wc) {
       const key = wc.layer + '|' + (wc.technique || '');
       let r = resCache.get(key);
-      if (r === undefined) { r = Core.techniqueFor(wc, instruments); resCache.set(key, r); }
+      if (r === undefined) { r = Core.techniqueFor(wc, instruments, score.tracks); resCache.set(key, r); }   // §401f: the SEPTET resolves a layer through score.tracks (laneInstKey) — without them every note resolved to nothing, silently
       return r;
     }
     const send = (out, key, bytes) => { out.send(bytes); touched.add(key); sent++; };

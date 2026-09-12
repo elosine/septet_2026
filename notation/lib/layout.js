@@ -1026,7 +1026,7 @@
                 const clrF = o.flagClearanceSs != null ? o.flagClearanceSs : 0.38;
                 // the stem tip a flagged stem-up unit will reach at least (the flag-clear rule)
                 const tipUpMin = flagG && stemDir === 'up' ? STAFF_EDGE + clrF + flagH : null;
-                const symAbove = !!symG && (stemDir === 'down' || tipUpMin == null || tipUpMin + stackGap + symH <= laneHalfU + 1e-9);
+                const symAbove = !!symG && dev.chainSide !== 'headSide' && (stemDir === 'down' || tipUpMin == null || tipUpMin + stackGap + symH <= laneHalfU + 1e-9);   // §401f: a head-side chain keeps its symbol in the stack
                 const symInChain = !!symG && !symAbove;
                 const chainH = (pairG ? pairG.h : 0) + (markG && !markAboveBeam ? markG.hSs : 0) + (articG ? articG.hSs : 0) + instrEm + (symInChain ? symH : 0);
                 const chainN = (pairG ? 1 : 0) + (markG && !markAboveBeam ? 1 : 0) + (articG ? 1 : 0) + (instrTxt ? 1 : 0) + (symInChain ? 1 : 0);
@@ -1092,7 +1092,12 @@
                 const besideMark = !!(markG && !markAboveBeam && dev.dynBesideStem && stemKind && stemDir === 'up');
                 const needAboveCol = needAbove - (besideMark ? gapAbove + markG.hSs : 0);
                 const fitsAbove = !underFlag || (refTop0 + needAboveCol + clrF + flagH <= CS.laneHalfSs + 1e-9);
-                const chainAbove = dev.chainSide
+                // §401f (the composer: 'keep our stack but mirror depending on stem direction, stem direction, classic
+                // way'): chainSide 'headSide' puts the whole chain on the HEAD side — below a stem-up unit, ABOVE a
+                // stem-down one — same order outward from the head (dot · accent · symbol · dynamic · text).
+                const chainAbove = dev.chainSide === 'headSide'
+                  ? stemDir === 'down'
+                  : dev.chainSide
                   ? dev.chainSide === 'above'
                   : CS.rule === 'sideWithRoom' && octShift === 0 && chainN > 0
                     && needBelow > roomBelow + 1e-9 && roomAbove > roomBelow + 1e-9 && fitsAbove;
