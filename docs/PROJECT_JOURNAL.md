@@ -105,13 +105,13 @@ no tool calls beyond the resume reads. Start only on his word.
 
 **STATE — THE STRIKES 0–176 s ARE ON THE PAGE (session 8 end). RUNNING_LOG §399–§401n. RESUME FROM HERE.**
 
-- **Nothing in flight; everything pushed.** The IR `strike1` = **514 strikes, 0–176 s, 15 pages**, built from the copy
-  `scores/zz-ai-strike1.json` (his score as saved 14:31 + the flute fold). **Trills (zones) and the morph curves (from 183 s) are
-  deliberately NOT notated — next notation session, his word.**
+- **Nothing in flight; everything pushed.** The IR `strike1` = **513 strikes, 0–176 s, 15 pages**, built from `piece-septet`
+  ITSELF (RUNNING_LOG §402 — he ran `foldFlute()` and Saved at 22:40, and removed a doubled piano note at 67.79; the copy is
+  deleted, score and page are one thing again). **Trills (zones) and the morph curves (from 183 s) are deliberately NOT notated —
+  next notation session, his word.**
 - **Unseen / unheard by him:** the 15 pages; MIDI after the three fixes (ports · tracks · score lengths) — his SPACE is the test.
-- **NEXT CONCRETE STEP:** his eye and ear over the pages. Then **the fold in HIS tab** (CTRL+SHIFT+R → console `foldFlute()` →
-  Save) and ONE rebuild from `piece-septet` itself (`--score piece-septet --w0 0 --w1 176 --bricks --id strike1 --exp`), after
-  which the copy, its IR entry and `zz-ai-strike1.json` go. Then the next notation session: **trills' written look, then the
+- **NEXT CONCRETE STEP:** his eye and ear over the 15 pages (:5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker
+  "piece-septet · strikes 0–176 s" → video · SPACE for MIDI). Then the next notation session: **trills' written look, then the
   morph curves** — planning method on Fable, build on Opus after a clear.
 - **Pending decisions from him:** the **15 geometry touches** around the piano over 0–176 s (§401n — the piano's stack meets BCl's
   or Vn1's in the band between lanes; fix ladder = flip a chain · per-page nudge · more piano air) · the Vn1 high-note spill
@@ -119,23 +119,22 @@ no tool calls beyond the resume reads. Start only on his word.
   his two passages · track 7's Kontakt.
 - **Deliberately uncommitted — all his:** `scores/piece-septet.json` (his 14:31 editing) · `bank/panel_snapshots.json` ·
   `reaper/septet_rack.rpp` · `bank/passages/accentedcres01*.json` · `scores/SeptetSec03-Materials-B/-C/-D/-a.json`.
-  **The AI's, held back on purpose until the fold lands in his score:** `scores/zz-ai-strike1.json` · `notation/ir/strike1.ir.json`
-  · the `strike1` row in `notation/ir/index.json`.
-- **7 unsaved working copies** (`tools/unsaved_check.js`): cres-run01 · cres2strike · piano-harmonics-test · Sec3-Materials (never
+  *(The IR and its picker row are committed as of §402 — built from his score, no copy in the way.)*
+- **Unsaved working copies** (`tools/unsaved_check.js`): cres-run01 · cres2strike · piano-harmonics-test · Sec3-Materials (never
   saved) · SeptetSec03-Materials-D · trill-curve-test · trillBuildTst — **D17: his to Save or Reload, never the AI's to touch.**
 - **Servers the AI started** (his to keep or kill): #2's performance score :3001 (`pno2perc2-perf-3001`) · the tuba's :5200
   (`tubas-5200`) — launch entries in `.claude/launch.json`.
 - **Tests:** `node tools/test_septet_notation.js` (86) · `test_identity` (20) · the tuba battery staged per
   `notation/ir/README.md` — layout · render · animobj · splice · stamps · coords · graphic · pattern_fit GREEN (render's snapshot
   regenerated once on purpose, §401b); the standing REDs unchanged.
-- **Resume reads:** `docs/NOTATION_STANDARDS.md` §1 · RUNNING_LOG **§401n**. Nothing else pre-emptively.
+- **Resume reads:** `docs/NOTATION_STANDARDS.md` §1 · RUNNING_LOG **§401n–§402**. Nothing else pre-emptively.
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
 | **N1** | **► HIS EYE AND EAR over the strikes 0–176 s** — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker "piece-septet · strikes 0–176 s" → video · SPACE for MIDI. Fix what he marks (the look is registry data) | **Fable** | no |
-| **N2** | **The fold in his tab** (`foldFlute()` → Save) → one rebuild from `piece-septet` → delete the copy + its IR | **Opus** | no |
+| ~~N2~~ | ~~The fold in his tab → rebuild from `piece-septet` → delete the copy~~ — **done 2026-09-11 late (RUNNING_LOG §402)** | — | — |
 | **N3** | **The 15 geometry touches** + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
 | **N4** | **Next notation session: trills' written look, then the morph curves** — planning method, then build | **Fable** to plan, **Opus** to build | **yes** — wrap on Opus, clear, switch |
 | **N5** | Still open from before: the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE, one decision from him) · PLAN 1q proper | **Opus** | no |

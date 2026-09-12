@@ -20,6 +20,17 @@
     580
    ],
    "profile": "trance"
+  },
+  {
+   "id": "strike1",
+   "label": "piece-septet · strikes 0–176 s (§400)",
+   "score": "piece-septet",
+   "window": [
+    0,
+    176
+   ],
+   "profile": "trance",
+   "exp": true
   }
  ]
 }

@@ -11071,3 +11071,13 @@ Gould (from memory; nothing quotable found online): the sign at the first affect
 - **The standards:** every rule of the strike look is registry DATA already (container / techniques / ensemble), each with its `_doc`; what was missing was one place to read them — `docs/NOTATION_STANDARDS.md` §1, a table of rule · data key · journal §. §2 is the open list (trills, curves, long notes).
 - **The build:** the copy `scores/zz-ai-strike1.json` regenerated from his score as saved at 14:31 (his edits in), the flute's 61 rams folded on the copy (his `foldFlute()` still to run in his tab); `notate_section --w0 0 --w1 176 --bricks` → **514 events, 328 chunks, VALID**; 0 zones and 0 non-strike curves in the window, so trills and curves are out by construction. Picker: "piece-septet · strikes 0–176 s (§400; flute folded on the copy)". Layout warnings: the folded flute notes below the sample-length table's range use the drawn length (harmless: no bricks, playback from the score).
 - **GEOMETRY: 15 touches over 15 pages, all around the piano (T3):** 6.46 fff/fff · 11.71–12.61 (three) · 27.21 (two, BCl) · 43.51 (BCl) · 102.82 · 132.08 (two) and the rest of the list in the build output — the piano's head-side stacks meeting BCl's below or Vn1's above in the 4 px bands. His to judge; the fix ladder (flip a chain, a per-page nudge, or more piano air via its weight) is data.
+
+
+## §402. The fold landed; the page rebuilt from his score itself; the copy retired (2026-09-11 late, Opus 5)
+
+**His words:** *"there was a double note at 67.53 in the piano, ive taken it out of the composer score can you remove it from the presentation score"* → then, on the fold: *"ok done."*
+
+- **wc-930** (Pno G♯4 @ 67.788, the double he removed) is out of his score (saved 22:36) and out of the page.
+- **`foldFlute()` run by him in his own tab, Saved 22:40** — the one-writer rule held: the AI never touched his working copy. Measured after: **70 flute tongue rams in 0–183 s, all inside sounding C3–D4** (51–62), none outside; wc-591 (strike 1) is C♯4. The written pitches on the page are those +M7 = the fingerings, B3–C♯5, so the range alert now fires on nothing.
+- **The IR rebuilt from `piece-septet` ITSELF** (`--score piece-septet --w0 0 --w1 176 --bricks --id strike1 --exp`): 513 events, 327 chunks, VALID vs source. The copy `scores/zz-ai-strike1.json` is deleted — **score and page are one thing again (D9).** The 15 geometry touches stand, unchanged by the fold.
+- **Committed at last:** `notation/ir/strike1.ir.json` + its picker row, held back all evening precisely because they were built from a copy.

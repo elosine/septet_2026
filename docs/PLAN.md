@@ -1520,7 +1520,7 @@ player would touch parts, solo, crop and print.
   default parts from the score (until then `--parts 0-6`) · part labels from
   `tracks[].short` · the seven-lane container · **score order and bracketing per D10**
   (the composer score's order top to bottom; winds bracket · piano brace · strings bracket).
-- **2e — Section 1 notated: the strikes** — `built 2026-09-11 (RUNNING_LOG §399–§401n) — 514 strikes over 0–176 s on 15 pages; his
+- **2e — Section 1 notated: the strikes** — `built 2026-09-11 (RUNNING_LOG §399–§401n) — 513 strikes over 0–176 s on 15 pages; his
   eye and ear pending; trills and the morph curves deliberately left for the next notation session` *(the top line's step 2, "the
   first real page from `piece-septet`", opened at his word: "I'm going to have ai notate section 1 from ir ... I want to start
   fresh and tell ai how all the notes from ir and the composer score are supposed to look in sec 1")* — **Result when done:** every
@@ -1529,8 +1529,8 @@ player would touch parts, solo, crop and print.
   a GC per note, the head-side stack) · D36 (playback = the composer score's lengths) · D37 (grand staff 6 ss) · D38 (the tongue
   rams folded and written at the fingering) · the ottava from the 4th ledger line · go lines from the arc top · staff to the page
   edge · text and fff on every strike.
-  - **2e.1 The fold in his tab** — `todo` — `foldFlute()` → Save, then ONE rebuild from `piece-septet` itself and the copy
-    `scores/zz-ai-strike1.json` + its IR row removed. *Why:* the page is currently built from a copy; the score is the ground truth (D9).
+  - **2e.1 The fold in his tab** — `done 2026-09-11 (RUNNING_LOG §402)` — he ran `foldFlute()` and Saved (70 rams all inside
+    sounding C3–D4); the IR rebuilt from `piece-septet` itself, 513 events, and the copy deleted. *Why:* the score is the ground truth (D9).
   - **2e.2 The 15 geometry touches** — `todo` — the piano's stack meeting BCl's or Vn1's in the band between lanes (§401n); the fix
     ladder (flip a chain · per-page nudge · more piano air) is data. *Why:* his eye decides which of the three, per page.
   - **2e.3 Trills and the morph curves** — `todo` — the next notation session: their written look by the planning method, then built.
