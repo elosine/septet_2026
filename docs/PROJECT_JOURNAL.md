@@ -85,17 +85,29 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word.
 
-**SESSION 9 — 2026-09-12, Fable 5.1 to decide, Opus 5 to build. THE FOUR LANDED** *(RUNNING_LOG §405–§407; STRIKES_TOOL §AH;
-CN-65 · CN-66.)* The chord-per-onset drawer now does all four, in `score/public/strike_sounds.js`:
+**SESSION 9 — 2026-09-12, Fable 5.1 (+ Opus 5 for the four) — (mid-session checkpoint, written on Fable at his /checkpoint; the
+rule is WRAP ON OPUS — next time switch first).** *(RUNNING_LOG §405–§410; STRIKES_TOOL §AH; CN-65 · CN-66 · CN-67; SWEEP #10.)*
 
-- **the rested play first** — an onset takes the players who sat out longest, `max` still the count, the pitches still by register;
-- **`piano count` per onset** — blank = the pattern · 0 = off here · n = a target;
-- **the top-up** — under the target, the leftovers first, then pitches the ensemble plays (CN-66 allows the doubling), re-drawn by `reshuffle`;
-- **`piano 8va` per onset** (−2 … +2), folded at the keyboard's ends, the hands guard after.
-
-Proven headlessly (his own 4 → 3 → 3 → 5 script falls out of `max` alone) and **walked in the app with real clicks** on
-`zz-ai-chordonset` at :5301 — the alternation on the page, `piano 8 (6 left over + 2 doubled)`, `-2 8va`, reshuffle, `0`. Tests 86 green.
-**HIS EAR IS THE NEXT THING, and nothing else.** Deferred still: AH5 (the piano re-voiced per onset) · the hand override · AB3.
+- **The task: HIS FIRST PASS AT CN-65 IN THE DRAWER — composing, not building.** He is in the composer at :5300, the strikes drawer
+  open, the chord-per-onset card in use. Everything built today is pushed; the page needs CTRL+SHIFT+R after each build.
+- **Built today, all in `score/public/strike_sounds.js`, all pushed:** the four (§407: rested-first · `piano count` · the top-up that may
+  double · `piano 8va`) · **`banner in turn` starts at the HIGHLIGHTED strike** (§408 — #14 highlighted → onsets get #14, #15 …) ·
+  **CN-67: the piano in ONE HAND per onset, the hands alternating** (§409 — `hands: one, alternating` on the piano row, `hand` per
+  onset; the window one reach wide, wholly above or below the last piano chord, side alternating; leftovers → doubles → the same
+  pitch again at the octave, his word) · `piano 8va` released to **±4** · the strip's rings: **piano solid blue, ensemble dashed
+  gold, the count `4+5`** (§410).
+- **Latest deliverable:** his take `ChordStrikes01a-even` in `bank/panel_snapshots.json` (onset 1 ← #0 · max 4 · piano 4 · 8va −1;
+  onsets 2–14 ← #1 … #13) — verified in the file. A second pattern was in hand at the checkpoint (from **#23**, 7 notes, 840 ms, gap
+  140, one hand) — his tab, unsaved as a take unless he took it.
+- **NEXT CONCRETE STEP (his, not the AI's):** keep composing the CN-65 passage in his tab — `banner in turn` from the highlighted
+  strike · `piano count` per onset · `hands: one, alternating` · Hear · take. **The AI's next step:** answer what he asks, log any
+  fault to `docs/SWEEP_LIST.md` (batch, don't fix — unless it blocks, as today's two did), journal as it happens. When he stops:
+  his verdict on CN-67 in the app (it is proven headlessly only, §409) → STRIKES_TOOL §AH6 marked walked or not.
+- **Resume reads: nothing beyond §2.** (STRIKES_TOOL §AH only if a drawer fault comes up; CN-65/CN-67 in COMPOSITION_NOTES only if
+  the passage's rule is in question.)
+- **Pending from him:** SWEEP #10 — `max` counts the piano in; he wants `max` = the six and the piano by `piano count` alone ("leave
+  it for now") · CN-67's L.H./R.H. marking in the notation (a later rule) · the older list below unchanged.
+- **Deferred still:** AH5 proper (the piano's own voicing per onset — CN-67 is its one-hand half) · the hand override · AB3.
 
 **Last session (8 — 2026-09-10 → 11, Claude Code / Opus 5 + Fable 5.1) — RUNNING_LOG §352–§401n.** A long session in three movements:
 
@@ -131,9 +143,8 @@ Proven headlessly (his own 4 → 3 → 3 → 5 script falls out of `max` alone) 
 - **NEXT CONCRETE STEP:** his eye and ear over the 15 pages (:5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker
   "piece-septet · strikes 0–176 s" → video · SPACE for MIDI). Then the next notation session: **trills' written look, then the
   morph curves** — planning method on Fable, build on Opus after a clear.
-- **Decided and built this session (9, 2026-09-12):** the piano MAY DOUBLE ensemble pitches when it tops up to its count (CN-66
-  relaxes CN-61); the piano's per-onset voicing + hands guard DEFERRED (STRIKES_TOOL AH5). **All four landed (RUNNING_LOG §407)** —
-  rested-first deal · piano count per onset · the top-up · ±8va per onset — proven headlessly and walked on a copy at :5301.
+- **Session 9 (2026-09-12) in one line:** the four (§407) · `banner in turn` from the highlighted strike (§408) · CN-67 one hand,
+  alternating (§409) · 8va ±4 · the strip's blue piano rings (§410) · SWEEP #10 logged. He is composing CN-65 in the drawer.
 - **Pending decisions from him:** the **15 geometry touches** around the piano over 0–176 s (§401n — the piano's stack meets BCl's
   or Vn1's in the band between lanes; fix ladder = flip a chain · per-page nudge · more piano air) · the Vn1 high-note spill
   (~1 ss over its lane top) · whether the ottava hook's 0.30 ss reads · the drawer verdicts (STRIKES_TOOL §AG) · whether to commit
@@ -155,7 +166,7 @@ Proven headlessly (his own 4 → 3 → 3 → 5 script falls out of `max` alone) 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
 | ~~N0~~ | ~~BUILD the four~~ — **done 2026-09-12 (RUNNING_LOG §407):** built, harnessed, walked on a copy at :5301, 86 green, pushed | — | — |
-| **N1** | **► HIS EAR ON THE FOUR** (the drawer: an even rhythm, strikes in turn, `every onset: max 3`, a piano count on an onset or two) — **then HIS EYE AND EAR over the strikes 0–176 s** — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker "piece-septet · strikes 0–176 s" → video · SPACE for MIDI. Fix what he marks (the look is registry data) | **Fable** | no |
+| **N1** | **► IN PROGRESS — HE IS COMPOSING CN-65 IN THE DRAWER** (from #0 in `ChordStrikes01a-even`, a second pattern from #23). The AI answers, logs faults to SWEEP_LIST, journals. Then: **his verdict on CN-67 in the app** (headless-proven only) — then his eye and ear over the strikes 0–176 s (:5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker → video · SPACE) | **Fable** (composing questions) · **Opus** for any fix he does ask for | no |
 | ~~N2~~ | ~~The fold in his tab → rebuild from `piece-septet` → delete the copy~~ — **done 2026-09-11 late (RUNNING_LOG §402)** | — | — |
 | **N3** | **The 15 geometry touches** + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
 | **N4** | **Next notation session: trills' written look, then the morph curves** — planning method, then build | **Fable** to plan, **Opus** to build | **yes** — wrap on Opus, clear, switch |

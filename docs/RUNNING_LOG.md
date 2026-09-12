@@ -11231,3 +11231,18 @@ one thing only he could answer — when the harmony cannot fill n inside one han
 44–48 (↓) · 51–54 (↑), none overlapping its predecessor, each within a 9th · a two-pitch harmony asked for 4 → `60 62 72 74` (2 at
 the 8ve, span 14) · one pitch asked for 3 → 2 (a third copy would need two octaves) · at the keyboard's top the next goes below.
 86 green. **Not yet walked in the app** — his reload and his ear are the test; the card's readout is the tell.
+
+## §410. Three small ones while he composed: `hand: one` IS the alternation · `piano 8va` ±4 · the strip's piano rings blue (2026-09-12, Fable 5.1)
+
+- *"just one no alternating slot"* — on the onset card's `hand` select he looked for an "alternating" option. There is none because
+  `one` is it: each one-hand chord goes to the opposite side of the last, so the alternation is between consecutive chords, not a
+  mode. The pattern-level box on the piano row is named `one, alternating` for that reason; the per-onset `one` is the same thing for
+  one onset. *"Setting this first onset, it means done for the whole pattern or do I have to do each one separately?"* — the onset's
+  `hand` is that onset only; `hands` on the piano row is the pattern. Seen working in his tab: `piano 4 (one hand · 4 left over) —
+  E2 F2 A2 C3`, a 9th. `piano 8va` still nudges per onset; the no-overlap rule wins.
+- *"octive for pno clamped at 2 can we release this"* — the clamp and the box widened to **±4** (three sites; the keyboard is ~7
+  octaves, so ±4 reaches either end from the middle).
+- *"Thus circles indicating the players. Can you distinguish the piano and the rest of the ensemble?"* — `paintSoundMarks`: the piano's
+  rings are now **solid blue** (`#8fc8ff`), the ensemble's stay dashed gold; the count under the column reads `4+5` (ensemble + piano).
+- Also today, answered for the record: `piano count 0` silences the piano on an onset; at `rest 250` over ~190 ms onsets the ensemble
+  alternates (§408). Second pattern in hand at the checkpoint: from **#23**, 7 notes, 840 ms, gap 140, one hand.
