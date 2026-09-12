@@ -11022,3 +11022,9 @@ Not decided, not needed for strike 1: the accent on fl/bcl he may revise once he
 - **Go lines:** registry `goLine.topAtGcArc: true` — a note with a GC starts its go line at the arc's top (frac 1 of the GC geometry) rather than the lane top; `goLine.multiStaffBottomTrimPx: 36` — a multi-staff part's line stops 4 dashes (5,4 dasharray = 9 px each at the 1080 frame, scaled) above its lane bottom. render.js knows which events carry a GC from the system's own items. Tuba look = false / 0.
 - **The page fit — the fact, not changed:** the video view is a fixed 1920×1080 frame; the app's own note: "At F11 on a 1920×1080 screen the video frame fits EXACTLY". Fit-scaling exists only in container mode (`cmode`). On any other screen — his remote laptop — the frame overflows. His call whether the video view should scale to the window.
 - septet 86 GREEN · staged render GREEN.
+
+## §401i. The zoom was the browser's; the piano's go line mirrored; the first page of strikes (2026-09-11 late, Fable 5.1)
+
+- **The page that did not fit (§401h):** measured in the AI's pane, both apps at his window's shape in video view — identical (sheet 1333×750, bar 43 px). The difference was Chrome's PER-ORIGIN zoom on localhost:5300 (the composer's origin, where CTRL+wheel had been tried over remote desktop); **CTRL+0 fixed it** — *"ok reset zoom works"*. The "missing controls" were the ⚙ engineering checkbox, off in that tab. Nothing in the app.
+- **The piano's go line:** *"too short on bottom make it the same amount below bottom staff as currently above top staff"* — registry `goLine.multiStaffBottomMirrorsTop: true` (the 36 px trim retired): the line ends below the bass staff's bottom line by the distance its top sits above the treble's top line.
+- **A full page:** the IR rebuilt for 0–12 s (one video page; every note in 0–183 s is a strike) — picker "piece-septet · strikes, page 1 (0–12 s, §400)".

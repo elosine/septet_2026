@@ -488,7 +488,16 @@
             const Gg = GC.laneGeom(GC.systemOf(view, sysModel.part), view, E.gc && E.gc.look);
             gy1 = Math.max(gy1, Gg.impactY - Gg.h);
           }
-          if (lane !== sys && GL.multiStaffBottomTrimPx > 0) gy2 -= GL.multiStaffBottomTrimPx * (view.heightPx / 1080);
+          // §401i (the composer: 'make it the same amount below bottom staff as currently above top staff'):
+          // on a multi-staff part the go line ends below the LAST staff's bottom line by exactly the distance
+          // its top sits above the FIRST staff's top line — a mirror, not a pixel count
+          if (lane !== sys && GL.multiStaffBottomMirrorsTop) {
+            try {
+              const pc = o.ensemble.parts.find(q => q.part === sysModel.part);
+              const a = view.system(sysModel.part + ':0'), b = view.system(sysModel.part + ':' + (pc.staves.length - 1));
+              gy2 = b.yOfSs(-2) + (a.yOfSs(2) - gy1);
+            } catch (e) { /* no ensemble or staves: the lane bottom stands */ }
+          }
           parts.push('<line x1="' + gx + '" y1="' + gy1.toFixed(1) + '" x2="' + gx + '" y2="' + gy2.toFixed(1) +
             '" stroke="' + GL.color + '" stroke-width="' + GL.wPx + '" stroke-opacity="' + GL.opacity +
             '" stroke-dasharray="' + GL.dash + '"/>');
