@@ -66,6 +66,7 @@ ok(byKind('lineWedge').length === 0, 'lineWedge OFF collects no wedges');
   const ON = JSON.parse(JSON.stringify(ST)); ON.lineWedge.enabled = true;
   const w = Anim.collect(ir, score, ON).filter(i => i.kind === 'lineWedge');
   ok(w.length === 1, 'long hold -> lineWedge (switch on; morph and short notes excluded)');
+  var WEDGE = w[0];   // the port checks below ride the switch-on instance
 }
 // the pie port: OFF in the registry since day 24 (the density build's groups are
 // provenance, not motives), so the coverage check runs with the switch forced on —
@@ -234,7 +235,7 @@ const efy = t => parseFloat(Anim._registry.envFollower(ef, view, t, efSt)[0].mat
 ok(efy(20.9) < efy(11.1), 'env follower rises with the crescendo');
 
 // lineWedge: fill fraction 0 at start, full circle near the end
-const lw = byKind('lineWedge')[0], lwSt = ST.lineWedge;
+const lw = WEDGE, lwSt = ST.lineWedge;
 ok(Anim._registry.lineWedge(lw, view, 13.0, lwSt).join('').includes('path') === false, 'wedge empty at exact hold start');
 ok(Anim._registry.lineWedge(lw, view, 18.99, lwSt).join('').includes('circle cx'), 'wedge ~full near hold end');
 
