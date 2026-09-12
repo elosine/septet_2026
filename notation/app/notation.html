@@ -749,15 +749,23 @@
       // material's end. Before, the last page's window was [t0, t1] of the
       // material mapped across the full width: 5 s stretched over 1920 px.
       const srcEnd = state.ir.source.window[1];
+      // [§404] THE BUFFER AFTER THE CLEF (page_rules.musicStartBufferSs): a cut can land on a note's
+      // own onset, and the unit hangs LEFT of its go line — so the window opens that many staff spaces
+      // early and the first note's ink clears the gutter. ss -> seconds through this view's own scale,
+      // which makes it zoom-invariant; never before the IR's own start.
+      const bufSs = (state.pageRules && state.pageRules.musicStartBufferSs) || 0;
+      const pxPerSec = (W - ((C.prefatory && C.prefatory.gutterPx) || 0)) / pageSeconds;
+      const bufSec = bufSs > 0 ? (bufSs * ssPerSystem > 0 ? bufSs * (lanePx / ssPerSystem) / pxPerSec : 0) : 0;
+      const pageT0 = Math.max(state.ir.source.window[0], p.t0 - bufSec);
       const baseCfg = {
-        widthPx: W, heightPx: H, window: [p.t0, p.t0 + pageSeconds],
+        widthPx: W, heightPx: H, window: [pageT0, pageT0 + pageSeconds],
         gutterPx: (C.prefatory && C.prefatory.gutterPx) || 0,
         systems, ssPerSystem,
       };
       let cfg = baseCfg, Z = 1;
       if (mode === 'zoom') {
         Z = ((C.realizations || {})['zoom-working'] || {}).zoomZ || 2;
-        cfg = NotationCoords.zoomCfg(baseCfg, Z, state.zoomT0 !== undefined ? state.zoomT0 : p.t0);
+        cfg = NotationCoords.zoomCfg(baseCfg, Z, state.zoomT0 !== undefined ? state.zoomT0 : pageT0);   // [§404] the zoom opens on the same buffered start
         state.zoomT0 = cfg.window[0];
         state.zoomSpan = cfg.window[1] - cfg.window[0];
       }

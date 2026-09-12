@@ -25,6 +25,7 @@
 | **Go line:** from the GC arc's top (not the lane top) to the lane bottom; a grand staff's line ends below the bass staff by what it sits above the treble | `goLine.topAtGcArc` · `goLine.multiStaffBottomMirrorsTop` | §401h · §401i |
 | **Staff lines to the page edge** in every view | `engraving.render.staffFull` | §401b |
 | **Ottava from the 4th ledger line on** (within 3 stays), every part; **the bracket** from the accidental's left edge to the rightmost ink (head or ledger overhang) **+ 0.30 ss**, hook toward the staff (Gould; LP runs 0.6 past) | `ottavaLedgerThreshold: 3` · `ottavaEndGapSs: 0.3` | §401j · §401l · §401m |
+| **The buffer after the clef:** a page window opens 4.2 ss early, so a note whose onset IS the page cut still draws its unit clear of the gutter (the tuba's rule is the gutter itself; this is what makes it hold when a cut lands on a note) |  | §404 |
 | **The three gaps:** tight 0.15 (dot ↔ head) · medium 0.30 · standard 0.45 (the stack) | `tightGapSs` · `gapMediumSs` · `stackGapSs` | inherited |
 | **Playback = the composer score:** the notation player uses the score's own note lengths (not the IR's sample-true ones) through the composer's `sonify_core` with `score.tracks` | `playback.scoreDurations` · `midiplayer.js` | §401f · §401g |
 | **Animated devices:** only the GC; wedge and pie OFF; any kind switches off by `enabled: false` | `animated.lineWedge/motivePie.enabled` · `animobj kindOn` | §401m |
