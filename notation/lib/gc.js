@@ -97,5 +97,14 @@
     return { k, impactY, h, look: L };
   }
 
-  return { DEFAULT_PRESET, LOOK, params, heightFrac, trajectory, laneGeom };
+    // §401e (the composer, on the piano's double-height lane: 'make the GC the same height as all the
+  // other GCs ... the top of the arc at the very top of the lane ... the impact lands between the two
+  // staffs'): THE GC'S SYSTEM for a part is the FIRST STAFF of a multi-staff part — its top is the
+  // lane's top, its bottom is the boundary between the staves, its height a single lane's — else the
+  // part's own lane. ONE copy for render.js (arc + impact marker) and animobj.js (the ball), so the
+  // ball lands where the marker is. Ensemble-free: a part with staves has a ':0' system.
+  function systemOf(view, part) {
+    try { return view.system(part + ':0'); } catch (e) { return view.system(part); }
+  }
+  return { DEFAULT_PRESET, LOOK, params, heightFrac, trajectory, laneGeom, systemOf };
 });

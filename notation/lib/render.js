@@ -491,7 +491,9 @@
           // Clipped to the page like the ring bar (an arc may cross a cut).
           const P = GC.params(Object.assign({}, (E.gc && E.gc.preset) || {}, it.preset || {}));
           if (it.t + P.post < w0 || it.t - P.pre > w1) continue;
-          const G = GC.laneGeom(lane, view, E.gc && E.gc.look);
+          // §401e: the GC's own system (the first staff of a multi-staff part) — a single lane's height, the
+          // impact between the piano's staves; the go line above keeps the whole lane
+          const G = GC.laneGeom(GC.systemOf(view, sysModel.part), view, E.gc && E.gc.look);
           const color = (E.gc && E.gc.color) || G.look.color;
           const d = GC.trajectory(P).map((p, i) =>
             (i ? 'L' : 'M') + view.xOfSeconds(it.t + p.dt).toFixed(2) + ' ' + (G.impactY - p.frac * G.h).toFixed(2)).join(' ');

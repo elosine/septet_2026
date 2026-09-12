@@ -88,7 +88,7 @@
   // on the go line exactly at impact. Sizes are piece #1's px at the 1080
   // frame, scaled by the view's magnification (PP-6).
   register('gc', (inst, view, t, st) => {
-    const s = view.system(inst.part);
+    const s = GC.systemOf(view, inst.part);   // §401e: the first staff of a multi-staff part (one copy with render.js)
     const P = GC.params(Object.assign({}, st.preset || {}, (inst && inst.preset) || {}));
     const frac = GC.heightFrac(P, t - inst.at);
     if (frac === null) return [];
