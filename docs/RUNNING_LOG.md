@@ -11246,3 +11246,205 @@ the 8ve, span 14) · one pitch asked for 3 → 2 (a third copy would need two oc
   rings are now **solid blue** (`#8fc8ff`), the ensemble's stay dashed gold; the count under the column reads `4+5` (ensemble + piano).
 - Also today, answered for the record: `piano count 0` silences the piano on an onset; at `rest 250` over ~190 ms onsets the ensemble
   alternates (§408). Second pattern in hand at the checkpoint: from **#23**, 7 notes, 840 ms, gap 140, one hand.
+
+## §411. CN-68 read: strikes alternating with crescendos — what the drawer has, the one gap, the verdict (2026-09-12, Fable 5.1)
+
+**Prompted by** his /postclear brief and its follow-up (verbatim in COMPOSITION_NOTES **CN-68**): *"create a series of strikes, just
+single note ones that alternate with crescendos … I need to figure out a way to treat the piano so they can only be on the strikes.
+and then figure out the crescendo length … So I believe most of the machinery is there … recommend whether it's all doable and
+relatively risk free slash pretty quick to implement. Or if not, recommend some things to defer."* The planning method's phase 1: the
+requirements read back, he answered the two questions only he could — the length rule *"the first and 3rd"* (one typed length per
+link · a crescendo bridging two strikes), the rotation *"two ensembles … or some simple rotational rule … three, two, four, one … two
+be the minimum"*.
+
+**Read** (named first, then opened): STRIKES_TOOL §AD (the 2026-09-10 revision: the sound at an onset, the swell's percentage/typed
+length and start/end anchor, the accent row) · §AH (rested-first, the piano's count) · `strike_sounds.js` header and `dealChordAt`
+(the deal, `lastOn`, `busy`, the piano's exclusion under a swell) · `swell_ui.js` header (the switch is pattern-wide, four things it
+changes) · `cresc_card.js` header (the accent at start/end). Nothing else.
+
+**Found — the machinery IS mostly there:** the rhythm column for every onset · the rested-first deal with `max` (the rotation engine,
+AH1) · the piano never swelling (CN-34) and by count (AH2/AH3/AH6) · the swell writer with a typed length and start/end anchors ·
+accents at a crescendo's end in the score · takes and Insert. **The one gap:** the swell is a switch over the WHOLE pattern — no onset
+can carry a strike for some players and the start of a crescendo for the others; so the chain cannot be dealt today, only assembled
+by hand (his `cres2strike` working copy is that by hand). **Two small wrongs for this use:** rest counts from a lane's last onset, not
+its end (a player coming off a crescendo ties with everyone); and nothing groups onsets into links.
+
+**The verdict given** (the AI's; his call next): doable, and the build is ONE generator on top of what exists — a per-link deal
+(STRIKES_TOOL §AI, AI1–AI5) — medium, not quick: the risk is AI4, a per-note kind (attack | swell) wired through the deal, Hear,
+Insert and the strip, the 1q-PRINCIPLE hazard. **Recommended defers:** crescendo ends as NEW onsets (the rhythm column stays the
+driver — his rule (3) places the next strike where the crescendo ends), the "one ending seeds the next group" variant (the same
+answer), crescendo pitch strategies beyond the harmony, any rotation rule beyond rested-first + sizes. **What that gets him:** both
+timing shapes (uneven and unison), both length rules, both who-modes, the piano on strikes only, a Hear and a take — everything in
+CN-68 except a rhythm that grows out of crescendo lengths, which the rhythm column can be made to say by hand.
+
+**Not decided yet:** whether to build now (Opus, after a clear, on a copy at :5301) or keep composing CN-65 first. The NEXT STEPS
+table in the journal §2 carries it as N1b once he answers.
+
+## §412. CORRECTION to §411: fill mode (1n) already IS the second pass — the "one gap" was closed on 2026-09-08; what is actually missing is four small options (2026-09-12, Fable 5.1)
+
+**Prompted by** his question: *"did you look at, in addition to the strikes drawer, there are some functions in the main score, which I
+can't remember anymore. Like, I think I can turn strikes into crescendos. Something like that. there might be some additional
+functionality there as well. something to do with the c key, I think."* — and *"give me a more simple rundown of what this will look
+like when I actually go to use it."*
+
+**What §411 missed, read now** (STRIKES_TOOL §Y · `fill.js` `deal` · `fill_ui.js` · `cresc_run.js` · `cresc_strikes.js` · the C key at
+`composer.html:2218`): the main score has **C** = a crescendo on the selected note (1m, the card), the console **`crescRun`** (a run
+of overlapping crescendos, accelerating, round-robin players, a typed `lenS` — his section-3 gesture) with **`crescStrikes`** (a piano
+strike at the end of every crescendo, §356), and — the one that matters here — **FILL MODE in the drawer (1n, §Y): a strike pattern
+already in the score goes in, and one crescendo per attack comes out, each on ANOTHER player**, never the striker, never one already
+inside a long, least-recently-long first; anchored `launch` (starts at the attack, the room ends it), `cut` (ends at the attack) or
+`both` (attack to attack, `cut after` n attacks); the pitch a strategy; Generate · Hear · Insert; per long the card's flip and re-point.
+**Fill already writes attacks and crescendos together through Hear and Insert** — so §411's "one gap" (no onset can hold a strike for
+some and a crescendo start for others) and its risk AI4 (a per-note kind through four paths) were wrong: the gap was closed by 1n as a
+second pass, and the four paths are already wired. A correction, not an edit — §411 stands as written.
+
+**So the chain, with what exists today, is two passes:** (1) notes mode — the rhythm, the sound per onset (a note, or the chord card
+with `max` = the link's size, rested-first choosing who; `piano count` per onset; banner in turn) → Insert = the strike group;
+(2) fill mode over that group — kind crescendo, anchor `launch` or `both` with `cut after` = the link's size (his rule 3: "begin at
+the first strike and end on one of the notes from the second") → Generate · Hear · Insert. Unison links = a chord at one onset, the
+same two passes.
+
+**What fill mode does NOT have, measured against CN-68 — four small things, one of them a fault:**
+1. **The piano can be given a crescendo.** `fill_ui.js:132` hands `deal` every lane (`TRK().map((t, i) => i)`); CN-34's "a piano cannot
+   swell" lives in the drawer's swell path and in `crescRun`'s players, not in fill. One line: no piano under kind `cresc`.
+2. **No typed length** (his rule 1, "an even, let's say, four seconds"): the length is derived from the room, by design (§Y "derived,
+   never chosen"). A `length: typed` option, still capped by the room — small.
+3. **Exactly one crescendo per attack**, never "everyone else": a strike of 3 gives 3 crescendos, not the 4 who are free. A `per
+   attack: one | all free` option in `deal` — small-to-medium (the candidate loop already ranks all of them; take all instead of the
+   first).
+4. **`cut after` is one number for the pass**, so rule 3 with varying link sizes (`3 2 4 1`) needs it per link, or his hand on the
+   card's re-point. Small.
+- **Two ensembles pinned:** the fill side is nearly free — `deal` already takes a `players` list, the screen just has no field for it;
+  the strike side (who strikes) is rested-first with no pin (§AF, collected). Half a mode; the other half deferred.
+
+**The revised verdict:** quick and low-risk — four options in fill mode and one field, no new generator, no per-note-kind wiring.
+Opus, on a copy at :5301, walked. The one defer unchanged: a rhythm that grows out of crescendo lengths (the rhythm column stays the
+driver). **Unheard and undecided:** his a/b (build now, or compose first) — and whether the two-pass shape is what he wants to live
+with, or he wants it as one card.
+
+## §413. Chords mode and fill mode DEPRECATED at his word; the chain as notes mode twice — one take, two inserts (2026-09-12, Fable 5.1)
+
+**Prompted by** his reaction to the fill-mode walkthrough (§412's two passes): *"that drawer wasn't working, like the old cords. Let's
+depreciate these ones the old ones, except for notes that continues to work. They just weren't working right, and I don't want to
+troubleshoot them. So present me, please, an alternative. once I insert … the strike into the score, then how do I … the next step
+is to have a crescendo. How do I insert the crescendos, and how do I select the variety I've expressed earlier?"*
+
+**Decided (his):** the drawer's CHORDS mode (§X, 1k) and FILL mode (§Y, 1n) are deprecated — left in the code, marked in STRIKES_TOOL,
+never again offered as the path; NOTES mode with its onset card (§AD, §AG, §AH) and the sound switch (§Z, §AD 2) is the drawer.
+*(AI note: the sound switch and the onset card are what he used all day; fill mode was walked once at its build (§295–300) and never
+by him in anger. Deprecating rather than deleting keeps 81 checks and the tag revert honest.)*
+
+**The alternative, read from `swell_ui.js` and the Insert rule** (`strike_drawer.js:195` — an earlier insert is replaced only at the
+same time AND for a strike group; the swell insert writes its own `grp-swell-…` group, `swell_ui.js:171`, so two inserts of one take
+at one playhead stand side by side): **NOTES MODE TWICE FROM THE SAME TAKE.** Pass 1 with `sound: attack` — the rhythm, the strikers
+(the orchestration panel's rows by hand, or the onset card's `max` rested-first), `piano count` — Insert. Pass 2, the same take still
+loaded: `sound → crescendo` — the piano drops out by construction (CN-34 in the deal) — the crescendo players (the rows by hand = the
+OTHER ensemble, or `max`), the swell group's length `typed` L s (his rule 1) or `% of the gap` 100 (to the next onset = strike to
+strike when each link is one onset, his rule 3 for unison), `starts on the onset` — Hear orchestrated — Insert at the same playhead.
+
+**What that gives today with no build:** both timing shapes (unison = a chord per onset via the card; uneven = one note per onset),
+both length rules (unison for rule 3), the two-ensemble mode by his hand in the panel, the piano on strikes only. **What it does not:**
+the crescendo pass does not know who struck (it sees only its own pattern), so rotation between links is his hand, not `max`; and rule
+3 for UNEVEN links (the % reaching the next link's onsets, not the next onset in the same link) is not there.
+
+**The small builds that give the rest, offered:** (1) `busy` in `dealChordAt` also reads the OPEN SCORE's notes at the onset (the
+strikes just inserted), so the crescendo pass takes "the others" and rested-first rotates on both passes — one function; (2) a `link`
+count in the swell group so `% of the gap` measures to the onset `link` ahead — small. Neither decided yet.
+
+## §414. CN-69 read: the chain item by item — what today's tools do for each of the five elements, and the three small things that would make it exact (2026-09-12, Fable 5.1)
+
+**Prompted by** CN-69 (verbatim there): *"is there a way to do this item by item? either in the strikes or the main score … unlike the
+courts, I won't be adding something to every note"* — his concrete example: strike 1 (4) · crescendos (3, from each onset, 3 s) ·
+strike 2 at the last end · strike 3 placed later · unison crescendos from strike 2's last onset to strike 3's onsets.
+
+**Element by element, against what exists** *(no code opened beyond §411–§413's reads; the tools named are the ones read there):*
+1. **Strike 1** — the drawer as he uses it. Exists.
+2. **Crescendo set 1** — two ways today. (a) The drawer: a harmony for the crescendos with strike 1's rhythm as the rhythm source
+   (§AA), the notes on the 3 players by hand in the orchestration panel, `sound → crescendo`, the swell group's length `typed` 3 s,
+   `starts on the onset`, Insert at the same playhead (its own `grp-swell-…` group, §413). **Unchecked in the app:** 4 onsets over a
+   3-note harmony — what the rhythm source does with the count mismatch. (b) The score: no way today to launch a crescendo on ANOTHER
+   player from a selected strike — the C key makes one on the selected note's own player; the crescendo card's accent row is the
+   reverse (a strike from a crescendo).
+3. **Strike 2 at the last crescendo's end** — today: click that crescendo, read its end on the card, console `goTo(t)` (chord_run.js:
+   "the playhead is where I am working"), then the drawer's Insert @ playhead. Exact, but by the console. No "playhead → end of the
+   selected object" key exists.
+4. **Strike 3 later** — the playhead anywhere after, Insert. Exists.
+5. **Crescendo set 2, unison start, each to one of strike 3's onsets** — today: the drawer with an even rhythm at gap 0 (unison — whether
+   the gap box accepts 0 is unchecked; 1 ms is a near-unison), the 3 players by hand, `sound → crescendo`, Insert at strike 2's last
+   onset; then each crescendo's END by hand on its card (the DURATION control, typed or dragged — 1m). No "ends at: click an onset"
+   for a plain crescendo; that idiom (`finishRepoint`) exists only for fill's longs.
+
+**The reading — three small things make it item-by-item and exact, all in the SCORE, none in the drawer:**
+- **B1 · the note card: `+ crescendo from this strike`** — on another player (a select), a length in s OR `until…` then click an onset,
+  the pitch typed or from 1m's harmony bar, the articulation the player's ordinary voice, into the strike's group. The reverse of the
+  accent row, built on the same crescendo maker (`Cresc.make`). This is his unit: select a strike, add its crescendo.
+- **B2 · a key: playhead → the END of the selected object** (a crescendo's end, a strike's onset). Then Insert @ playhead is exact.
+- **B3 · `ends at… click an onset` on the crescendo card for ANY crescendo** — `finishRepoint` generalized from fill's longs.
+With B1–B3 the drawer makes only the strikes; every crescendo is made from the strike that launches it, one at a time, and every
+placement is a click, not a number. **Estimate:** small each; B1 the largest (a card row + the maker call). Opus, on a copy.
+**Undecided:** build these, or use today's drawer path with the two unchecked spots tried in the app first.
+
+## §415. CN-70: the group action folds CN-69's three builds into one panel plus one key (2026-09-12, Fable 5.1)
+
+**Prompted by** CN-70 (verbatim there): select the whole strike, choose an ending rule (even 3 s · end together · to the next strike)
+and a harmony (the launching notes · the next strike's · the drawer's "chord shape seven"), *"I hit go"*; then the cursor to the end
+of the last crescendo, the drawer, Insert @ playhead.
+
+**The reading:** one selection-level action in the SCORE replaces §414's B1 and B3 — a small panel on a key with strike notes selected:
+- **who:** the players not in the selection, the piano never (CN-34); one crescendo per selected onset, in onset order, until the
+  players run out (4 onsets, 3 free → 3 crescendos, the readout says which onset went without);
+- **when it ends:** `even` (typed s) · `together` (the latest start + s, or a typed time) · `next strike` (each on one onset of the
+  next strike group after the selection, in order) — the ending rule is a list, so others can be added;
+- **the pitch:** `the launching notes` (each crescendo takes its strike's pitch) · `the next strike` (its pitches dealt in order) ·
+  `the drawer` (whatever the keyboard holds now — 1k's deal by register, folded into range);
+- **[go]** writes them with `Cresc.make` at 1l/1m's defaults, secco, into the strike's group, CTRL+Z undoes; the card edits any one after.
+- **Plus one key:** playhead → the end of the selected object(s) (B2) — then Insert @ playhead lands the next strike exactly there.
+
+**Estimate:** the panel small-to-medium (the who/when/pitch rules are each a few lines; the panel is the accent row's chassis grown to
+a selection); the key trivial. Opus, on a copy at :5301, walked with his example (CN-69's five elements). **Undecided:** his go.
+
+## §416. CN-71 read: the scenario end to end needs CN-70's panel + `who: all others` + a `unison` rhythm; nothing else new (2026-09-12, Fable 5.1)
+
+**Prompted by** CN-71 (verbatim there). Walked against CN-70's panel and the drawer as read in §411–§413: every step is either the
+drawer as he uses it, the panel, or the playhead key — with two additions: **`who: all others from each onset`** on the panel (one
+selected onset launches every other player) and **`unison`** in the rhythm column (all onsets at the first; the chord card at one onset
+already does it without his shuffle, and whether `= ms` takes 0 is unchecked). The build list stands at: the panel (ends · harmony ·
+who · go), the playhead-to-end key, the unison rhythm entry. Opus, on a copy, his scenario as the walk. His go not yet given; the
+step list is in the chat and goes into the plan item when he says so.
+
+## §417. Two more for the panel and the drawer: the crescendo's dynamics and shape exposed; who is FREE read from the score, in both places (2026-09-12, Fable 5.1)
+
+**Prompted by** *"How about the crescendo's curvature and dynamic range?"* and *"Is there a way to detect the available instruments?
+and then choose from all those or a subset. And then same thing. The blast I insert, I would have to manually reorchestrate them after
+the crescendo … is there a way to see what instruments are available after that crescendo? and then choose a subset. or the whole
+thing."* (composer, 2026-09-12)
+
+- **Dynamics and shape:** `Cresc.make` already takes `dynLo`/`dynHi` (ppp … fff, 0–10) and `shape` + `ratio` (surge 5× the standard
+  since 2026-09-08; the score's own presets; line = 1×), secco. The panel exposes them as two controls; each crescendo can still be bent
+  by its line or re-set on its card. No new machinery.
+- **Who is free — read from the SCORE, the same read in both places** (fill mode's `fillEvents` idiom — the objects sounding over a
+  time, per lane — reused, not rebuilt):
+  · **the panel:** `who` becomes a row of ticks, one per player, pre-ticked = not in the selection AND nothing sounding over that
+    onset, the piano never; he unticks for a subset. The readout names who is busy and why.
+  · **the drawer's orchestration panel:** each row shows free / busy AT THE PLAYHEAD (a crescendo ending exactly there counts as
+    free — the secco cut), with a tick per row; `shuffle` deals onto the ticked rows only. This is §AF's "a player assignment that
+    survives a shuffle" in its small form, and it answers "reorchestrate after the crescendo" without his hand on every row.
+- The build list grows by these two, both small. Still: the panel (who · ends · harmony · dynamics · shape · go), the playhead-to-end
+  key, `unison` in the rhythm column, the free/busy ticks in the orchestration panel.
+
+## §418. CN-72 read: the chord card's piano block, reused for the plain strike — one rule, factored once (2026-09-12, Fable 5.1)
+
+**Prompted by** CN-72 (verbatim there): the piano in a regular strike with a count, leftovers then doubles, two hands checked, ±8va.
+
+**What exists:** all of it, inside `dealChordAt`'s piano section in `strike_sounds.js` — the target count with the top-up (AH3, CN-66),
+`handFit` (two hands) and `oneHandFit` (CN-67), the ±4 `8va`, the readout — but only for an onset whose sound is a CHORD. The plain
+strike's piano is §H's: flags per note, one note at its shuffled onset.
+
+**The reading:** factor the piano block out of `dealChordAt` into one function (pitches · chosen · count · 8va · hands → the piano's
+notes + readout) and call it from BOTH paths — the chord deal as now, and the plain deal at the piano's own onset when the piano row
+carries a count. Controls on the orchestration panel's piano row: `count` · `8va` · `hands` (two · one), blank = today. The 1q-PRINCIPLE
+point: the same rule in two paths, so it is one function or it will drift. Small-to-medium. **To confirm with him:** the chord lands at
+the piano's OWN onset (the assumption), not the first or every onset.
+
+**The build list for the chain, now five:** the crescendo panel · the playhead-to-end key · `unison` in the rhythm column · free/busy
+ticks in the orchestration panel · the piano block for the plain strike.

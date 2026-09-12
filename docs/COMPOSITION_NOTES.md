@@ -1504,3 +1504,128 @@ guard. The guard exists today in one form: `handFit` (reach 14 semitones · 5 pe
 reach (`reach 14`, `/hand 5`), drawn from the harmony (leftovers first, doubles after, octave-folded into the window when needed) ·
 consecutive chords' **windows never overlap** on the keyboard (crossing allowed — above OR below the last one) · so the hands alternate
 by construction. Today's `piano 8va` moves the whole chord and does not narrow it: no guarantee of one hand.
+
+## CN-68 — 2026-09-12: strikes alternating with crescendos — a chain, the roles rotating, the piano on the strikes only
+
+> *"The next thing I would like to do is create a series of strikes, just single note ones that alternate with crescendos. So there might
+> be a strike from four players. And then the other three begin a crescendo at that strike. And then when they're done with the
+> Crescendos, each of their endings corresponds to a stripe in some other instruments. and I'd like to potentially rotate instruments.
+> Through the strikes and crescendos. I need to figure out a way to treat the piano so they can only be on the strikes. and then figure
+> out the crescendo length. So these are... so, like, if the strike is not even at the same time. So then all the crescendos in the other
+> parts will start at different times and end at different times. And then the next strike will start at different times. or actually
+> I can have the option of just having the end of one of those crescendos being the start of a new strike. that has a rhythm
+> independent. Also, I want the option of having even ones too. So, like, uh, unison strike and then even crescendos that lead to a
+> unison strike. So I believe most of the machinery is there. Can you do a few things? Sort out the requirements and organize them.
+> look at the existing machinery and see what needs to be adjusted for these things, and then recommend whether it's all doable and
+> relatively risk free slash pretty quick to implement. Or if not, recommend some things to defer and tell me what... how much of what
+> I'm looking for that gets me."* (composer, 2026-09-12, dictated — the /postclear brief)
+
+> *"a the first and 3rd So for example, if there's a strike first and then there's an even, let's say, four seconds, they'll all start
+> at the one of the strike onsets that might be uneven. So they're not onset at the same time. And then last for four seconds, then
+> end. They'll all end at different times. Another possibility is I put in two strikes. They begin at the first strike and end on one
+> of the notes from the second strike. The rotation helped me organizes\sorted it out. So one mode is just to simply have two ensembles
+> and alternate, and that's okay. That should be an option. Another one is some sort of forced rotation. Let's say the first one begins
+> with three players, then then the Crescendo has four players, but then in order to rotate some of the players, the next strike has
+> two players. and then the next crescendo has three players, etcetera. And then there's more leftover, and somehow they rotate
+> through. So I'm happy enough with two ensembles if that's all we can manage or some simple rotational rule that allows subsequent
+> ensembles to change a bit at least. So, obviously, the two ensembles, I can just decide which players are in which, and the other one
+> have some sort of shuffle. So it might have, like, three, two, four, one or something like that. Maybe two be the minimum. And then
+> it's able to then shuffle two players through"* (composer, 2026-09-12, dictated — answering the AI's A: the length rule · B: the rotation)
+
+*(AI reading, marked as such — the requirements as organized, agreed in the chat 2026-09-12:)*
+- **The link:** a STRIKE (single notes, a subset of players) → at it the OTHERS begin a CRESCENDO → the crescendos end → the next strike.
+  The chain alternates. The piano strikes or sits out; it never crescendos (CN-34 already).
+- **Two timing shapes:** UNEVEN — the strike's onsets staggered, one player each, so the crescendos start and end at different times;
+  EVEN — a unison strike, equal crescendos, a unison strike.
+- **The length, two rules (his "the first and 3rd"):** (1) ONE TYPED LENGTH per link — each crescendo starts at one of the strike's
+  onsets and lasts that long, so uneven starts give uneven ends; (3) BRIDGE TWO STRIKES — each crescendo starts on a note of the first
+  strike and ends on a note of the second. The rhythm column stays the source of every strike onset in both.
+- **Who, two modes:** TWO ENSEMBLES, his membership, alternating (enough on its own, his word); or a ROTATION — the strike sizes as a
+  list (*"three, two, four, one"*, two the minimum), the crescendo set the rest, the players shuffled through by who has rested.
+- **Kept as a thought, not asked for now:** a crescendo's end as the seed of the next strike group with a rhythm of its own (his "or
+  actually …") — under rule (3) the rhythm column already places that next strike where the crescendo ends.
+
+## CN-69 — 2026-09-12: the chain ITEM BY ITEM — a concrete example (4 strike · 3 crescendo, 3 s · the next strike at the last end · unison crescendos to the third strike's onsets)
+
+> *"is there a way to do this item by item? either in the strikes or the main score; So I would have the strike. It could be inserted
+> in the cord, in the score, or still in the attack drawer. But unlike the courts, I won't be adding something to every note, for
+> example. it stays notes. And then the next thing, let's just say concretely, I want to add in the remaining... I forgot what I said.
+> Let's say I said four. In the remaining three parts, I want to make those crescendos that begin at each of those strikes in each
+> last three seconds. So they'll end in a similar fashion to the strikes how they're spaced apart. But time. And then I wanna choose
+> some sort of harmony for that set of crescendos. And then let's... this is getting complicated. So let's just forget about the re
+> orchestrate. I can do that some other time. So we'll just keep it a four three alternation, same instruments. but I can change the
+> cord and do a shuffle whatnot for that crescendo. And then when that's done, some way either to save or insert, and then I want to
+> insert another strike after the crescendos. And I want it to start or the first onset of that strike to start precisely with the end
+> of the last crescendo. And then I would use the same strikes procedure, pick a harmony, shuffle, dial in the rhythm, and be able to
+> insert at the end of the last crescendo from the previous element. then in this case, the next crescendo, I'm gonna take those
+> initial four players. Sorry. Whoever's on Crescendo. and then we're going to all start in unison on the last onset of the second
+> blast or second strike. I guess we need to do this out of order then. I need to dial in the third strike at some point later, start
+> these crescendos, which is a second crescendo at the last onset of the second strike, and then have each of those crescendos last
+> up to one of the onset of the third strike."* (composer, 2026-09-12, dictated)
+
+*(AI reading, marked as such — the example as five elements, in the order he would make them:)*
+1. **Strike 1** — the drawer, 4 players, a harmony shuffled, the rhythm dialled → Insert.
+2. **Crescendo set 1** — the other 3 players, each beginning AT one of strike 1's onsets, each **3 s** long (so the ends are spaced as
+   the strikes were), a harmony of their own, shuffleable → insert.
+3. **Strike 2** — the drawer again, its FIRST onset **exactly at the end of the last crescendo** of set 1.
+4. **Strike 3** — dialled in early, placed later in time, so set 2 has onsets to end on.
+5. **Crescendo set 2** — the same 3 players, all beginning **in unison at the LAST onset of strike 2**, each ending **on one of strike
+   3's onsets**.
+- **Fixed for now (his word):** the 4 / 3 alternation with the same instruments — no re-orchestration between links. The piano is
+  one of the 4 or absent.
+
+## CN-70 — 2026-09-12: the chain as a GROUP action in the score — select the strike, choose the ending rule and the harmony, go
+
+> *"What if I wanted the group like I expressed earlier? So then extending your scenario, but I'm also open to other ways of doing
+> this, I would perhaps select all four from the initial strike. and it would be an option of crescendos of even length. or
+> crescendos at end the same time. or something like Christian knows that and at the next blast. There might be others here. And then
+> let's pretend they're even length. So I say three seconds. and then I could choose for all three of those crescendos a harmony. And
+> it'll be like either the notes that launch them, the next notes, if there's a second blast in there, a second strike, or I can
+> choose from the drawer. Let's say chord shape seven. I hit go, and then the crescendos draw in each starting at the same time as one
+> of the onset of the first strike, lasting for three seconds, but then they would have... Not the same ending time. Then next, I
+> would choose or just move my cursor to the end of the last crescendo, go back into the strikes drawer, just choose a strike,
+> however, and then insert a playhead. And then that strike would begin at the end of that crescendo."* (composer, 2026-09-12, dictated)
+
+*(AI reading, marked as such:)* the item-by-item unit of CN-69, at the level of a SELECTION. Select a strike's notes in the score → one
+action → a small panel: **the ending rule** (even length, typed s · all end together · each on an onset of the next strike · room for
+others) · **the harmony** (the launching notes' own · the next strike's · what the drawer holds) · [go]. The crescendos land on the
+players NOT in the selection (the piano never), one per selected onset in order, starting exactly at that onset, pitched from the
+harmony by register. Then the playhead to the end of the last crescendo, the drawer, Insert @ playhead — the next strike begins there.
+The single-note [+ crescendo] of CN-69 is this panel with one note selected: one build, not two.
+
+## CN-71 — 2026-09-12: the scenario continued — strike 2 at the last end · strike 3 four seconds on · crescendos from strike 2 ending on strike 3's onsets · all crescendos from strike 3's last onset ending together · a UNISON strike at that end
+
+> *"Then I insert a... well, I insert the one we talked about, the strike at the end of the last crescendo in the first set of
+> crescendos. And then I move my play head down the way, say, about four seconds down and insert another strike. That's the third
+> one. did I come back to the second strike, select those notes, insert crescendo that each begins on one of those strike onset, but
+> they'd last until the... one of the third strikes onset. They end there. Same thing. I could choose a harmony. The destination
+> pitches, the launching pitches or something from the drawer. And after the third strike, I want all the crescendos after that to
+> begin on the same point. and end on the same point. So whatever. I'm not sure how we're doing this. Something similar. Maybe I just
+> choose. Anyways, I wanted to begin at the last onset of the third strike, and then each last three seconds and end together. But
+> then at that ending point, I would like a unison strike. where I don't really have that facility yet in the strikes drawer. or
+> maybe I do. in any case. Let's pretend I do. I go into the strikes drawer. I set my cursor first to playhead just at the end of the
+> set of crescendos and end together. I choose a harmony and insert it. I just shuffle, choose orchestration, and then inserted a
+> strike. But in unison. Let's talk through this scenario, and then can you just list each of the steps? because there's other things
+> to... that we haven't considered. but talk me first through this one, how this might be done."* (composer, 2026-09-12, dictated)
+
+*(AI reading, marked as such — two things the scenario adds to CN-70's panel and the drawer:)*
+- **`who` on the panel:** `one per onset` (CN-70's default — a strike of 4 launches 3) · **`all others from each onset`** — one selected
+  onset (strike 3's last) launches a crescendo on EVERY player not in that strike, so "begin on the same point, 3 s, end together" is
+  one selection, one go.
+- **`unison` in the drawer's rhythm column** — every onset at the first, so his ordinary flow (harmony · shuffle · orchestration · Insert)
+  writes a unison strike. Today the chord card at one onset does it without the shuffle; whether `= ms` accepts 0 is unchecked.
+- "The destination pitches" = CN-70's `next strike` harmony; "end on one of the third strike's onsets" = its `next strike` ending rule.
+
+## CN-72 — 2026-09-12: the piano in a REGULAR strike — a count, the leftovers then doubles, two hands checked, transposable by octave
+
+> *"And then can I have a... just for the regular strikes. Can I have a piano facility that's similar to what we have for the courts?
+> So I'll want to be able to set the amount that the piano plays. So let's say I say four. It plays four notes. I'll want it to be
+> able to use the rest that haven't been chosen yet in that harmony and double other ones. And then I wanna check to see if it fits.
+> But in two hands, that's fine. I think that's it. Oh, and I wanna be able to transpose the octave. of what it's playing."*
+> (composer, 2026-09-12, dictated, with the chord card's piano block on screen)
+
+*(AI reading, marked as such — to confirm:)* in notes mode, with no chord card, the piano's ONE note at its shuffled onset becomes a
+chord of `count` notes AT THAT SAME ONSET: the harmony's leftover pitches first (the ones no ensemble player took), then doubles of
+pitches the ensemble plays, until the count (CN-66's rule); `handFit` two hands (reach 14, 5 per hand, the middle dropped) with the
+readout; `8va` ±4 moving the whole chord. Set once per pattern on the orchestration panel's piano row (§H), blank = as today. The
+assumption to confirm: the chord sounds at the piano's OWN onset from the shuffle, not at the first onset and not at every onset.

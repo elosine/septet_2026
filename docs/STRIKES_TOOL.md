@@ -563,7 +563,7 @@ call, as the chart decides (§86).
 > ignored, the length by ms (every gap exactly the length ÷ the count) or by notes — with the same dealing and pool as a run. The
 > calibration of words to numbers waits for his go.
 
-## X · Chords mode — `built 2026-09-08 (PLAN 1k; RUNNING_LOG §234–251; CN-44 · CN-45 · CN-46 · CN-47)`
+## X · Chords mode — `built 2026-09-08 (PLAN 1k; RUNNING_LOG §234–251; CN-44 · CN-45 · CN-46 · CN-47)` · **DEPRECATED 2026-09-12 at his word (RUNNING_LOG §413): left in the code, not offered again — notes mode + the onset card is the drawer**
 
 > *"use the rhythms that are generated usually for one strike individual notes … but I'd like to make those onsets carry a cord or part
 > of a cord … I want four players on this one or two players on that one and then the algorithm would shuffle so that no player has
@@ -620,7 +620,7 @@ the score's file format:** an insert writes ordinary strike notes in an ordinary
 now a to-do with a shape (CN-52, PLAN 1k step 7): it sits out today, and the plan is to give it the ensemble's REMAINDER (the notes an
 onset could not take) or several notes of the sonority freely, chosen by a per-strike rule rather than by hand**; his listening.
 
-## Y · Fill mode — `built 2026-09-08 (PLAN 1n steps 1–4; RUNNING_LOG §285–300; CN-48 · CN-54 · CN-55)`
+## Y · Fill mode — `built 2026-09-08 (PLAN 1n steps 1–4; RUNNING_LOG §285–300; CN-48 · CN-54 · CN-55)` · **DEPRECATED 2026-09-12 at his word (RUNNING_LOG §413): left in the code, not offered again — notes mode + the sound switch is the drawer**
 
 His picture (CN-54): *"the unit is the accent and the prolongued thing eg trill, crescendo, longtone; so the accent kicks off the long as
 if they were one unit"* — and *"two players, the accent prolonged by another instrument … the typical application would be to generate a
@@ -1192,6 +1192,60 @@ ONE setting for the pattern (`pnoCfg`), never per onset; `up to n` is a cap, nev
   reach, the window wholly above or below the previous piano chord and the side alternating; leftovers → doubles → the same pitch
   again at the octave (his word) when the reach allows. Readout `one hand ↑ · …`. Unwalked in the app at the build.
 
+## AI · Strikes alternating with crescendos — a chain of links, the roles rotating, the piano on the strikes only — `collected 2026-09-12 (CN-68, verbatim there) — NOT built; the planning conversation is in RUNNING_LOG §411`
+
+**What the drawer does today** *(read 2026-09-12 from `strike_sounds.js` `dealChordAt`, `swell_ui.js`, `cresc_card.js`):*
+
+- **The rhythm column is the only source of onsets** (§J · §W · §AA): as played · even · accel · containers · `= ms` · jitter. Nothing
+  makes an onset out of where a crescendo ends.
+- **At an onset, the sound is ONE KIND for the whole pattern's swell state:** a note or a chord (dealt over the free players, the
+  longest-rested first, `max` the count — AH1), and the sound switch (§Z, §AD) turns EVERY onset's sound into a swell — length a
+  percentage of the gap to the next onset or one typed length for the pass, anchored at the onset's start or its end. **No onset can
+  hold a strike for some players and the start of a crescendo for the others.** That is the one gap.
+- **The piano never swells** (CN-34, `!this.isSwell()` in the deal) and takes the remainder or a count under an attack — already his
+  "piano on the strikes only", by construction.
+- **A player's rest is measured from its last ONSET** (`lastOn`), which is right for strikes and wrong for a player coming off a
+  crescendo: at the moment a swell ends, its player reads as rested since the swell BEGAN. `busy` does honour the swell's length.
+- **In the score, a crescendo takes an accent — a short strike by another player — at its start or its end** (§AD 3, `cresc_card.js`
+  ACCENT row), one crescendo at a time, by hand. That is his "each ending corresponds to a strike in some other instrument", built
+  already but one at a time.
+- **He has been at this by hand already:** the unsaved working copy `cres2strike` and the passage bank's `accentedcres01*.json`.
+
+**The reading — a sketch to keep the thread, NOT a plan** *(the AI's, 2026-09-12; the plan follows the planning method when he says so):*
+
+- **AI1 · The link as the unit of the deal.** The rhythm's onsets grouped into links by the strike sizes: UNEVEN — a link is s
+  consecutive onsets, one striker each; EVEN — a link is one onset holding a chord of s strikers (the chord deal as it is). The
+  strikers are the longest-rested free players (AH1 unchanged); the piano by its own count rule (AH2 · AH3 · AH6 unchanged).
+- **AI2 · The crescendo set = the free non-piano players the link did not strike with**, each starting on one of the link's onsets
+  (round-robin over them) and ending by the length rule: (1) start + the typed length; (3) on one of the NEXT link's onsets
+  (round-robin). Pitches from the link's harmony, the strikers' notes first taken, the swell's the rest — `take` decides as now.
+- **AI3 · Who: two modes.** `two ensembles` — his membership typed once, the roles swapping link by link; `rotation` — the sizes list
+  (`3 2 4 1`, a floor of 2) with rested-first doing the shuffle. Rested-first with varying sizes rotates by itself; the two-ensemble
+  mode is the sizes held constant with the membership pinned.
+- **AI4 · The one real change: a per-note KIND (attack | swell) through the three sibling paths** — the deal, Hear, Insert (and the
+  strip's marks) — where today the swell is a pattern-wide switch. PLAN 1q-PRINCIPLE's hazard exactly: one rule, four paths, each
+  wired or the fault appears in the one that was not.
+- **AI5 · Rest from the note's END for the chain** (`lastOn` → last end), so a player just off a crescendo is the least rested, not
+  tied with everyone.
+- **Deferred at the reading (to confirm with him):** a crescendo's END as a NEW onset (length-driven rhythm — the rhythm column stays
+  the driver; under rule (3) he places the next strike where the crescendo should end) · his "one ending seeds the next strike group
+  with its own rhythm" (the same: the rhythm column) · any crescendo pitch strategy beyond the harmony by register · the rotation as a
+  strict shuffle rule beyond rested-first + sizes.
+
+
+**CORRECTED the same day (RUNNING_LOG §412) — the "one gap" above was already closed by FILL MODE (§Y, 1n, 2026-09-08), which the first
+reading did not open.** Fill mode is the second pass: a strike group in the score goes in, one crescendo per attack comes out on another
+player, anchored launch · cut · both (attack to attack, `cut after` n), Generate · Hear · Insert, the card's flip and re-point per long.
+It already writes attacks and crescendos together — AI4 is not a risk, and AI1–AI3 are two passes he can run today. What fill mode
+lacks against CN-68, and the revised build (small, on fill mode, not a new generator):
+
+- **AI6 · the piano must never take a crescendo in fill** — today `fill_ui.js` hands `deal` every lane; CN-34 is not applied there. One line.
+- **AI7 · a typed length** (rule 1) beside the derived one, still capped by the room.
+- **AI8 · `per attack: one | all free`** — "the other three begin a crescendo" needs everyone free, not one long per attack.
+- **AI9 · `cut after` per link** when the sizes vary under rule 3 — or his hand on re-point until then.
+- **AI10 · a `players` field for the fill pass** (two ensembles, the crescendo side; `deal` already takes the list). The strike side's
+  pin stays with §AF.
+- AI5 (rest from the end) is fill's already — "never one already inside a long". Deferred as before: ends as new onsets.
 ## Open questions for the composer (only what blocks the next piece)
 
 *(Both answered 2026-09-03: cluster = the smallest chromatic span, movable by octave (R5); the
