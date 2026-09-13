@@ -1569,7 +1569,7 @@ player would touch parts, solo, crop and print.
   *"too close to the other gcs for percussive notes"*) · the curve = the trill's resolved window (`auto` → the A window on layer 8
   covering the span; `C` → the C window on layer 10; §431: all 69 resolve, none flat), height = dynamic (D23) · CN-77 (the notation's
   swell is the standard shape, not the playback's bent one) applies to SECTION 3, not here.
-  - **2f.1 The spec sheet** — `todo` — `docs/TRILL_NOTATION_SPEC.md`: every number the device needs, READ from the tuba's registry and
+  - **2f.1 The spec sheet** — `done 2026-09-13 (RUNNING_LOG §435) — docs/TRILL_NOTATION_SPEC.md; the LilyPond probe tools/fixtures/lp_probes/trill.ly; ⚠ 52 of 69 trill curves are flat at fff, for his eye` — `docs/TRILL_NOTATION_SPEC.md`: every number the device needs, READ from the tuba's registry and
     standards (the surge row of `for_seven_tubas/docs/NOTATION_STANDARDS.md` → `engraving.layout.devices.byEnv.surge` in its container)
     and from this repo's registry, each line with provenance: the curve's colour · opacity · geometry · the 90° cut at the end · the go
     line at the onset at the SEPTET's section-1 length (NOTATION_STANDARDS §1, not the tuba's) · the horizontal gap after the column's

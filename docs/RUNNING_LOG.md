@@ -11752,3 +11752,36 @@ the tuba's surge (go line · open nh-unit · the level curve; no GC). Reason, hi
 means "percussive" in this piece's language. Top line (§433's six steps) accepted as it stands minus the GC; written into PLAN 2f without
 phase 3's per-step pass at his word ("ready to build?") — the sub-steps are the pointers the implementing model needs, not a code plan.
 The handover: Opus after a clear, `/postclear`, then 2f step by step.
+
+## §435. PLAN 2f.1 built: `docs/TRILL_NOTATION_SPEC.md` — the tuba's numbers, a LilyPond probe for the pitched trill, and the flat curves found
+
+**His word, 2026-09-13 (on Opus):** *"go ahead and start build, no clear at this point"*.
+
+**Read, not guessed (the spec's provenance keys):** the tuba registry as carried here — `devices.byEnv.surge` {curve, cut, goLine, nhUnit,
+dynPair}, `nhGapSs 0.25` (the unit's right ink → the go line), `stackGapSs 0.45` and `stackBelow` (the below-chain), `chainSide.sideWithRoom`,
+`render.envCurve` (#2E7D32, fill 0.3, no stroke), `render.goLine` (#333, 1.5 px, 0.85, dash 5,4, `topAtGcArc`, `multiStaffBottomMirrorsTop`);
+`layout.js` for how the surge unit, the chain and the symbol-above are placed; `render.js` for the curve band and the go line's ends;
+`composer.html` `trillRefResolved` / `refCurvesOn` / `curvesLevelAt` / `getYAtTime` for the curve a trill reads.
+
+**The probe** (`tools/fixtures/lp_probes/trill.ly`, LilyPond 2.24.4, every TrillPitch* grob at its default, `NoteHead.font-size = #-2`;
+extents reported by `after-line-breaking` callbacks relative to the system, in staff spaces — no SVG parsing). Three notes: C2 → D2 (two
+ledgers), C3 → D♭3, F♯3 → G3. Measured, identical on all three: main head's right ink → the left paren **0.300** (TrillPitchGroup padding) ·
+paren ink ↔ enclosed ink **0.417** both sides · neighbour accidental → neighbour head **0.200** · neighbour head **0.815 × 0.709** (filled, −4)
+· parens **1.26** tall · the `tr` centred on the head within 0.09 · its bottom 0.55 above the top line's centre (staff-padding) or 0.46–0.50
+above the ink below it. LilyPond's defaults (define-grobs.scm): TrillPitchHead/Accidental/Parentheses font-size −4; group padding 0.3,
+minimum-space 2.5; TrillSpanner direction UP, padding 0.5, staff-padding 1.0. **Two LilyPond behaviours not taken:** it prints a NATURAL on
+every trill pitch (D2 and G3 got one) — the house prints no naturals on nh-units, so neither does the neighbour (flagged for his eye); its
+neighbour ledger overhangs 0.15, the house rule gives 0.21 (kept for consistency). The house symbol-above gap 0.45 is kept over LilyPond's 0.50.
+
+**A correction to §429–§430 (a new entry, not an edit):** the parentheses scale with LilyPond's TrillPitchParentheses, font-size −4 = × 0.63
+of stock (= × 0.794 of the house head, which is what "scale with the head" meant) — not × 0.794 of stock as §429 wrote. GLYPH_SIZING §2 row
+updated, §5 register line appended.
+
+**Found, and flagged rather than decided:** sampling each trill's resolved reference over its span, **52 of 69 trills read a flat level —
+all at 1.0**. The A window `wc-952` (63.07 → 72.49 s) holds 1.0 from 63.07 to 66.30, dips to 0.03 at 67.62, back to 1.0 at 68.79. The piano's
+first trill (63.72–65.45) is on the plateau: drawn as specified, a full-height green block, not the swell of the tuba picture he sent. The
+first varying trills are at 72.80 s (0.06 → 1.0). The build draws the data as it stands; the question goes to him at 2f.5.
+**Also found:** `sonify_core.evalWaveCurve` (the extractor's evaluator) lacks the `smooth` blend of the composer's `getYAtPos`. No window in
+`piece-septet` has smooth nodes (0 of 6), so they agree today; 2f.3 must follow the composer's math or refuse a smooth node loudly.
+**Also found:** the extractor does not skip notes stamped `mutedBy` (11 today, `wc-880` = the piano's 63.72 attack among them) — the strikes
+page draws the trill's launching note as a strike with a GC. 2f.3 skips them when trills are extracted (opt-in, so `strike1` is unchanged).
