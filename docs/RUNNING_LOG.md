@@ -12110,3 +12110,12 @@ tube check finds the outline by shape, not by order.
 **Recorded, not applied:** the motive pie (a square of staffHeight/4 left of the meter; the remaining sector in the item's colour @ 0.3; a
 black 1 px hand and border) and the line-wedge meter (a square of staffHeight/3 touching the cursor; #555 0.5 px border; a black donut ring
 @ 0.7, width 0.35 × radius) — both OFF in the septet (§401m); the spec is for any piece that wants them.
+
+## §449. Checkpoint at his word: the curve shape is the first thing after the clear
+
+**His word, 2026-09-13:** *"Okay. I want to go over the curve shape, but I want to clear first and then switch models. So I'm going to
+checkpoint now, and then can you just make sure, uh, my prompt and any details about working out the curve shape is first to do after post
+clear?"* — journal §2 now opens with the checkpoint: §444's prompt verbatim, the three images described, the AI's reading (a drawn floor of
+0.1 = "1" on the 0–10 scale, the top kept; drawing only), the four questions only he can answer, where it would be built
+(`layout.js drawnLevelSamples`, a device `curveFloor`), then his order after it. Resume on Fable (a design conversation), build on Opus.
+Resume reads: §444 only.

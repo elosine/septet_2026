@@ -85,9 +85,53 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word.
 
-**SESSION 10 — 2026-09-13, Fable: the trills' written look DECIDED, PLAN 2f WRITTEN (RUNNING_LOG §427–§434; CN-75 · CN-76 · CN-77).** The neighbour = the zone's `interval` (1 · 2, all upper), written as a parenthesised head · `sfz` on every attack · `tr` × 0.70 = 1.68 × 1.54 ss · open head, the tuba's SURGE as drawn, go line only, **no GC** · the curve = the resolved A / C window (all 69 resolve, §431) · `docs/GLYPH_SIZING.md` opened · CN-77 = the standard swell for section 3, later. **BUILT on Opus the same session, no clear (his word): 2f.1 the spec sheet (§435) · 2f.2 the glyphs (§436) · 2f.3 the IR (§437) · 2f.4 the device (§438).** **2f.5 DONE (§439): `tr` 0.57, his "That is good".** **2f.6 DONE (§440): all 69 trills on the page, in the MAIN notation file (D41) — `notation/ir/piece-septet.ir.json`, picker "piece-septet · MAIN notation score", the whole piece; Save + R keeps it current.** 7 trills meet strike ink at 146.97–148.65 s (§440, for his eye with N3). **► NOW — PLAN 2f.7, the trill notation settled (§444–§445):** (a) the column RIGHT of the go line — built on the first five (`--trillsRight 63-68` in the main build), HIS LOOK next, then all; (b) the curve's floor at 1 (show him a 1 first); (c) GC × trill conflicts — recommendations, discuss. **Then his order: 2f.8 the MIDI export learns trills → 2f.9 export + Reaper render → the WAV in `notation/audio/` (the ♪ render chip).** The morph curves and the CN-76 beaming after. *(The first look's questions, kept for the record:)* **2f.5 HIS EYE on the first trill:** :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker "piece-septet · trill 1 (PLAN 2f.4)" → Z. Four things for him, by weight: (1) **the curve is a solid block** — 52 of 69 trills are flat at fff (the first is one): draw the data, a standard swell (CN-77's reasoning), or redraw the windows? (2) the `tr`'s height and its distance above a low note (3) the neighbour's look — size, parens, no natural (4) the spellings D♯ → E♯, A♯ → B♯. Then 2f.6 the rest.
+**▶ CHECKPOINT (mid-session checkpoint) — session 10, 2026-09-13, written on Opus. Nothing in flight; everything committed and pushed.**
 
-**Resume reads for 2f (Opus):** PLAN 2f (all of it) · RUNNING_LOG §427–§434 · `docs/GLYPH_SIZING.md` §2 + §4 · `docs/NOTATION_STANDARDS.md` §1 + §2 · `docs/TRILLS_TOOL.md` §5 + the §105 block · `notation/GLYPH_EXTENSION_CONTRACT.md` · `notation/ir/README.md` · the surge row of `for_seven_tubas/docs/NOTATION_STANDARDS.md`. Standing: one open composer tab per score · CTRL+SHIFT+R after each build · do not press R on the strikes page.
+**THE FIRST TASK AFTER /postclear — his word: work out the TRILL CURVE SHAPE with him** (PLAN 2f.7 (b); RUNNING_LOG §444). He wants to
+clear, switch models, and go over the curve shape before anything else. **Talk first, build after — the planning method** (state and
+restate; his words, then the AI's reading, one question at a time). His prompt, verbatim:
+
+> *"can we recalibrate the graphic curve so it doesn't blank out or have too thin a portion at the bottom, let me see what a 1 looks like;
+> so 0=1 graphically and re calibrate 0-max beginning at 1 graphically; so image 1 you see there is just white space for a bit before the
+> graphic curve starts; image 2 the ends/beginning of the curves not so smooth; i3 goes to almost white space, doesn't look like part of the
+> curve"*
+
+**His three images (described — they are not in the files):** (1) the column of seven trills at ~85.35 s: each curve STARTS at level 0, so
+white space shows between the go line and where the green begins · (2) curves between two staves whose beginnings and ends taper to
+hair-thin, uneven slivers · (3) a curve dipping to almost nothing — the A window `wc-952` reads 0.03 at 67.62 s (trills 65.76–68.9 s).
+
+**The AI's reading, to put to him (not decided):** DRAWING ONLY — the composer's curve data and the playback never change. The drawn
+height maps a level v (0–1) to **floor + v × (1 − floor)**, floor = **0.1** = "1" on the composer score's 0–10 scale: 0 draws at a tenth of
+the lane, the top stays at the top ("0–max beginning at 1"). **"Let me see what a 1 looks like" = show him the floor on the page before
+settling it.** Questions only he can answer: (a) the top stays at 10 — yes? (b) every trill curve, and later the morph curves — or trills
+only? (c) image 2's ends: does the floor alone cure them, or does he also want the start and end eased? (d) the meters ride the same drawn
+curve — they would rise from the floor too (the AI's reading: yes, one source).
+
+**Where it would be built (for the build step, not a resume read):** `notation/lib/layout.js → drawnLevelSamples(e, dev)` already transforms
+the DRAWN samples (`curveZero`, `cut`) and feeds both the page and the meters — a device option (e.g. `curveFloor: 0.1`) on
+`container.json → engraving.layout.devices.byEnv.trill`; layout-time, so no IR rebuild — CTRL+SHIFT+R on the main file. `tools/test_trills.js`
+(74 green) gets the checks. The curve wears D42 now (`docs/CURVE_LOOK.md`: limeGreen, fill 0.3, 2 px stroke, path opacity 0.3).
+
+**After the curve shape, his order (PLAN 2f.7 → 2f.9):** his look at the FIVE trills moved RIGHT of their go lines (`--trillsRight 63-68` in
+the main build, §445) → then all of them · the GC × trill conflicts — recommendations, discussion first · **2f.8** the MIDI export learns
+trills (play each trill's saved `midiSnippet`; the `mutedBy` notes silent; §441–§443) · **2f.9** export → he renders in Reaper → the WAV in
+`notation/audio/` → the ♪ render chip (the tuba's route).
+
+**Latest deliverables:** the MAIN notation file `notation/ir/piece-septet.ir.json` (picker "piece-septet · MAIN notation score", D41) ·
+`docs/CURVE_LOOK.md` (D42 — the curves, the meters, #2's pie and line-wedge spec) · `docs/TRILL_NOTATION_SPEC.md` · `docs/GLYPH_SIZING.md`.
+
+**Resume reads:** `docs/RUNNING_LOG.md` §444 (his words + the reading, in full) — and nothing else; `docs/CURVE_LOOK.md` §2 only if he asks
+what the curve wears now.
+
+**Model:** resume on **Fable** — the curve shape is a design conversation (THE RHYTHM); switch to **Opus** for its build.
+
+**Deliberately uncommitted — all his:** `bank/panel_snapshots.json` (takes) · `reaper/septet_rack.rpp` (the rack) · `bank/passages/4materials ·
+accentedcres01 · accentedcres01-2 · chordcyc01 · chstr02 · section3` (his passages) · `scores/Sec3.json` · `scores/SeptetSec03-Materials-B/-C/-D`
+· `scores/SeptetSec03-Materialsa.json` (section-3 material files) · `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` · `scores/piece-septet-
+v1.32-finalDraft1.0.json` (his named versions / backups) · `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
+**Servers:** the AI's :5301 was started and stopped each time; nothing of the AI's is running.
+
+**Session 10 so far (2026-09-13, Fable → Opus), one line:** trills decided (§427–§434) and built — spec, glyphs, IR, device, all 69 in the MAIN file (§435–§440, D41) · `tr` 0.57 (§439) · playback diagnosed, the tuba route chosen (§441–§443) · the column right of the go line on five (§445) · D42 the curve look + meters (§446–§448).
 
 **STATE — 2026-09-12 late, session 9 ended. THE FIRST FULL DRAFT IS TAGGED: `Scattered_Substance-finalDraft_1.0`** (RUNNING_LOG §426;
 CN-73 · CN-74; D39 · D40). `scores/piece-septet.json` — his Save of 2026-09-12 late — is committed at that tag. Nothing in flight; everything pushed.
@@ -134,7 +178,7 @@ trill-curve-test · trillBuildTst · zz-ai-1t-walk — **D17: his to Save or Rel
 **Tests:** `node tools/test_septet_notation.js` (86) · `tools/test_identity.js` (20) · `score/tools/check_cresc_panel.js` (35) · check_fill ·
 check_containers · check_cresc_deck · the tuba battery per `notation/ir/README.md` (the standing REDs unchanged).
 
-**Resume reads: nothing beyond §2.** STRIKES_TOOL §AI + "AFTER THE FIRST HOUR" if he asks how a chain control works · §Z · §AD for the
+*(Session 9's resume reads — SUPERSEDED by the ▶ CHECKPOINT at the top of §2:)* Resume reads: nothing beyond §2. STRIKES_TOOL §AI + "AFTER THE FIRST HOUR" if he asks how a chain control works · §Z · §AD for the
 drawer's swell switch · `docs/NOTATION_STANDARDS.md` §1 when notation resumes · RUNNING_LOG only if a question sends you there.
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
@@ -144,7 +188,7 @@ drawer's swell switch · `docs/NOTATION_STANDARDS.md` §1 when notation resumes 
 | **N1c** | HIS EAR on the chain and the pure-crescendo runs** (§420–§426; the draft is tagged). The AI answers, logs to SWEEP_LIST, journals | **Fable** (composing questions) · **Opus** for any fix | no |
 | **N1** | His verdict on CN-67 in the app (headless-proven only) → then his eye and ear over the 15 pages (the picker, video, SPACE) | **Fable** · **Opus** for any fix | no |
 | **N3** | The 15 geometry touches + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
-| **N4** | ~~2f.5 his eye~~ **DONE §439** · ~~2f.6 the rest~~ **DONE §440 (the MAIN file, D41)** — was: PLAN 2f.5, HIS EYE on the first trill (2f.1–2f.4 built, §435–§438): the page "piece-septet · trill 1"; his verdicts on the flat-curve block, the `tr` height, the neighbour's look, E♯/B♯. Then 2f.6 the rest (all 69, one page build with `--trills`), then the morph curves (a new item) | **Fable** for the verdicts (the curve question is a composing one) · **Opus** for 2f.6 | no — the verdicts first; clear before 2f.6 if the session is long |
+| **N4** | **► FIRST after /postclear — THE TRILL CURVE SHAPE** (§444; the checkpoint above): talk it through, show him a floor of 1, then build (`drawnLevelSamples`, a device `curveFloor`). Then his look at the five right of the go line → all · GC × trill conflicts · 2f.8 MIDI export learns trills · 2f.9 export + Reaper render | **Fable** to talk · **Opus** to build | **yes** — he clears and switches now |
 | **N5** | Still open: the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE, one decision from him) · PLAN 1q proper | **Opus** | no |
 
 **The standing rule:** Fable for the turns where a wrong reading costs a day; Opus for every turn where the plan is already on paper.
