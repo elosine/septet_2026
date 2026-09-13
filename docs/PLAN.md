@@ -1576,7 +1576,7 @@ player would touch parts, solo, crop and print.
     rightmost ink (head · ledger · accidental · the neighbour's right paren) · the vertical rule for dynamics, used for the `sfz` · the
     `tr`'s vertical place above the head (proposal: the stack-above rule, 0.45 ss over the topmost ink) · the neighbour head at the head
     size with the parens at 0.794 · CN-77 as a standing note. *Why:* his — *"look up all the specs"* (§432); numbers are data, never guessed.
-  - **2f.2 The glyphs** — `todo` — `scripts.trill` at × 0.70 and `accidentals.leftparen` / `rightparen` at × 0.794 into
+  - **2f.2 The glyphs** — `done 2026-09-13 (RUNNING_LOG §436) — stock size in glyphs.json, factors as data; tools/test_trills.js 16 green, seen red` — `scripts.trill` at × 0.70 and `accidentals.leftparen` / `rightparen` at × 0.794 into
     `notation/lib/glyphs.json` through `tools/glyph_scripts.py` (extend its SCRIPTS map; a factor per entry, recorded in `_provenance`),
     then the contract's other touchpoints (stamp maker · layout item · render case); a census assertion; every existing snapshot
     byte-stable. *Why:* GLYPH_SIZING.md §4, steps 4–5.

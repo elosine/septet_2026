@@ -11785,3 +11785,15 @@ first varying trills are at 72.80 s (0.06 → 1.0). The build draws the data as 
 `piece-septet` has smooth nodes (0 of 6), so they agree today; 2f.3 must follow the composer's math or refuse a smooth node loudly.
 **Also found:** the extractor does not skip notes stamped `mutedBy` (11 today, `wc-880` = the piano's 63.72 attack among them) — the strikes
 page draws the trill's launching note as a strike with a GC. 2f.3 skips them when trills are extracted (opt-in, so `strike1` is unchanged).
+
+## §436. PLAN 2f.2 built: the trill sign and the neighbour's parentheses in `glyphs.json`, stock size; `tools/test_trills.js` opened
+
+`tools/glyph_scripts.py` extended: `trill` → Emmentaler `scripts.trill` in the articulation group; `leftParen` / `rightParen` →
+`accidentals.leftparen` / `rightparen` in the accidental group. **Stored at STOCK size** (trill 2.396 × 2.204 ss; parens 0.452 × 2.104),
+the factors staying data for the device (0.70 · 0.63) — the GLYPH_EXTENSION_CONTRACT rule that scale is registry data, and the snap-pizz's
+precedent (stock entry, `techSymbolScale` on the device). The tool now keeps an entry whose outline and box are unchanged, so a re-run no
+longer rewrites the 2026-09-11 provenance of snappizz and plus: the diff to `glyphs.json` is +60 lines, 0 changed. (Its docstring made a
+raw string — Python warned on `\snappizzicato`.) No stamp or render change was needed: `artic-*` and `accidental-*` items with a `scale`
+already render (touchpoints 2 and 4). `tools/test_trills.js`: 16 checks GREEN; run against the pre-2f.2 `glyphs.json` it goes RED (5
+failures) — seen red once. `test_septet_notation` 86 · `test_identity` 20 unchanged. The tuba render snapshot was not staged for this step:
+the change is additive and no existing item names the new keys; 2f.4 (layout) runs it.
