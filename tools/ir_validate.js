@@ -244,6 +244,20 @@ function againstSource(doc, errs) {
     if (!byId) { errs.push(`${e.id}: source score "${e.source.score}" not found in scores/`); continue; }
     const o = byId.get(e.source.objectId);
     if (!o) { errs.push(`${e.id}: source object ${e.source.objectId} not in ${e.source.score}`); continue; }
+    // [PLAN 2f.3] a trill event sources a composer-score trill ZONE: its onset is the zone's startTime, its
+    // pitch the zone's trill.pitch, its technique the trill's, its part the zone's layer
+    if (e.env === 'trill') {
+      if (o.type !== 'zone' || o.midiModel !== 'trill' || !o.trill) { errs.push(`${e.id}: env trill but source ${e.source.objectId} is not a trill zone`); continue; }
+      if (Math.abs(e.onset - o.startTime) > 1e-9) errs.push(`${e.id}: onset ${e.onset} != trill startTime ${o.startTime}`);
+      if (Math.abs(e.duration - (o.endTime - o.startTime)) > 1e-9) errs.push(`${e.id}: duration ${e.duration} != trill span ${o.endTime - o.startTime}`);
+      if (e.pitch.midi !== Math.round(o.trill.pitch)) errs.push(`${e.id}: midi ${e.pitch.midi} != trill pitch ${o.trill.pitch}`);
+      if (!e.trill || e.trill.interval !== o.trill.interval) errs.push(`${e.id}: trill interval != source ${o.trill.interval}`);
+      else if (e.trill.neighbour.midi !== e.pitch.midi + e.trill.interval) errs.push(`${e.id}: neighbour midi ${e.trill.neighbour.midi} != pitch + interval`);
+      if (e.technique !== o.trill.technique) errs.push(`${e.id}: technique "${e.technique}" != trill "${o.trill.technique}"`);
+      const partT = partOf.get(e.id);
+      if (partT !== undefined && o.layer !== partT) errs.push(`${e.id}: containing chunk part ${partT} != trill layer ${o.layer}`);
+      continue;
+    }
     if (o.type !== 'waveCurve' || o.startSeconds === undefined) {
       errs.push(`${e.id}: source object ${e.source.objectId} is not a waveCurve — a sounding event never sources a ${o.type}`);
       continue;
@@ -266,10 +280,17 @@ function completeness(doc, errs) {
   const score = JSON.parse(fs.readFileSync(f, 'utf8'));
   const have = new Set(doc.events.filter(e => e.source).map(e => e.source.objectId));
   const [w0, w1] = doc.source.window;
+  // [PLAN 2f.3] a document extracted WITH trills (it holds an env trill event) must hold every trill zone in
+  // window x parts, and a note that one of those trills ate (mutedBy) is complete by the trill's presence
+  const withTrills = doc.events.some(e => e.env === 'trill');
   for (const o of score.objects || []) {
+    if (withTrills && o.type === 'zone' && o.midiModel === 'trill' && o.trill && doc.source.parts.includes(o.layer)
+      && o.startTime >= w0 && o.startTime < w1 && !have.has(o.id))
+      errs.push(`--complete: trill ${o.id} (layer ${o.layer}, t=${o.startTime}) has no event in this document`);
     if (o.type !== 'waveCurve' || o.layer === 10) continue;
     if (!doc.source.parts.includes(o.layer)) continue;
     if (o.startSeconds < w0 || o.startSeconds >= w1) continue; // half-open (A3 ownership law)
+    if (withTrills && o.mutedBy && (score.objects || []).some(z => z.id === o.mutedBy && z.type === 'zone' && z.midiModel === 'trill')) continue;
     if (!have.has(o.id)) errs.push(`--complete: S1 object ${o.id} (layer ${o.layer}, t=${o.startSeconds}) has no event in this document`);
   }
 }

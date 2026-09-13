@@ -259,7 +259,7 @@
     },
     "env": {
      "type": "string",
-     "description": "envelope species as drawn (surge, sine, expodec, ...) — day 22 amendment 3, optional"
+     "description": "envelope species as drawn (surge, sine, expodec, ...) — day 22 amendment 3, optional; 'strike' = a note the strikes tool wrote (§400); 'trill' = a composer-score trill zone (PLAN 2f.3, 2026-09-13)"
     },
     "mode": {
      "enum": [
@@ -276,7 +276,7 @@
     },
     "level": {
      "type": "object",
-     "description": "the drawn level curve, normalized samples 0-1 over the note span (piece #1 curve-library precedent; sampled at extract time by sonify_core.evalWaveCurve) — day 22 amendment 4, optional, curve-mode events only",
+     "description": "the drawn level curve, normalized samples 0-1 over the note span (piece #1 curve-library precedent; sampled at extract time by sonify_core.evalWaveCurve) — day 22 amendment 4, optional, curve-mode events only; for env trill: the composer score's own trill reference (auto/A/B/C/lane/flat) sampled over the trill span with composer.html getYAtPos (PLAN 2f.3)",
      "properties": {
       "samples": {
        "type": "array",
@@ -292,6 +292,73 @@
       "samples"
      ],
      "additionalProperties": false
+    },
+    "trill": {
+     "type": "object",
+     "description": "PLAN 2f.3 (2026-09-13) — an env trill event's neighbour and curve reference (docs/TRILL_NOTATION_SPEC.md §1). The sounding neighbour = pitch.midi + interval; spelled = the next letter name up (a second). curve names the reference the level was sampled from (auto:A, C, lane, flat ...).",
+     "required": [
+      "interval",
+      "neighbour"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "interval": {
+       "type": "integer",
+       "minimum": -12,
+       "maximum": 12
+      },
+      "neighbour": {
+       "type": "object",
+       "required": [
+        "midi",
+        "spelled"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "midi": {
+         "type": "integer",
+         "minimum": 0,
+         "maximum": 127
+        },
+        "spelled": {
+         "type": "object",
+         "required": [
+          "step",
+          "alter",
+          "octave"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "step": {
+           "enum": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G"
+           ]
+          },
+          "alter": {
+           "type": "number",
+           "multipleOf": 0.5,
+           "minimum": -2,
+           "maximum": 2
+          },
+          "octave": {
+           "type": "integer",
+           "minimum": -1,
+           "maximum": 9
+          }
+         }
+        }
+       }
+      },
+      "curve": {
+       "type": "string"
+      }
+     }
     }
    }
   },

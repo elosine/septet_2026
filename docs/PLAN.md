@@ -1580,7 +1580,7 @@ player would touch parts, solo, crop and print.
     `notation/lib/glyphs.json` through `tools/glyph_scripts.py` (extend its SCRIPTS map; a factor per entry, recorded in `_provenance`),
     then the contract's other touchpoints (stamp maker · layout item · render case); a census assertion; every existing snapshot
     byte-stable. *Why:* GLYPH_SIZING.md §4, steps 4–5.
-  - **2f.3 The IR** — `todo` — the extractor (`notation/ir/README.md`) reads `zone` objects with `midiModel: 'trill'` and emits a
+  - **2f.3 The IR** — `done 2026-09-13 (RUNNING_LOG §437) — --trills; the composer's curve math ported and checked against composer.html; byte-identical without it; test_trills 31 green, seen red` — the extractor (`notation/ir/README.md`) reads `zone` objects with `midiModel: 'trill'` and emits a
     `trill` event: part (from the zone's track / the snippet's port), pitch, interval, start, end, technique, attack velocity, and the
     curve SAMPLED from the resolved window over [start, end] (the rule above; TRILLS_TOOL §105). IR_SCHEMA note; `piece-septet` yields 69;
     `tools/test_septet_notation.js` (86) and the tuba battery green; nothing on the page yet. *Why:* NITS 2026-09-11 — trills are skipped

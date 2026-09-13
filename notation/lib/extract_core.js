@@ -41,6 +41,13 @@
     // third note a 15 ms window split off into a collision a step away
     // (RUNNING_LOG §384) — while the fastest written rhythm here is 130 ms.
     CHORD_TOL: 0.04,
+    // [PLAN 2f.3, 2026-09-13] with options.trills: the composer score's trill ZONES
+    // (midiModel 'trill') become events of env 'trill', and a note a trill has eaten
+    // (stamped mutedBy) is not extracted — its attack is the trill's. Off = every
+    // page extracts exactly as before (docs/TRILL_NOTATION_SPEC.md §1).
+    trills: false,
+    // the curve windows a trill reads by name — composer.html CURVE_LAYERS / CURVE_NAMES
+    CURVE_WINDOWS: { A: 8, B: 9, C: 10 },
   };
 
   const PC = { 0: ['C', 0], 1: ['C', 1], 2: ['D', 0], 3: ['D', 1], 4: ['E', 0], 5: ['F', 0], 6: ['F', 1], 7: ['G', 0], 8: ['G', 1], 9: ['A', 0], 10: ['A', 1], 11: ['B', 0] };
@@ -48,6 +55,100 @@
     const pc = ((midi % 12) + 12) % 12;
     const [step, alter] = PC[pc];
     return { step, alter, octave: Math.floor(midi / 12) - 1 };
+  }
+
+  // ---- [PLAN 2f.3] trills ----
+  // THE NEIGHBOUR'S SPELLING (TRILL_NOTATION_SPEC §1): a trill is a SECOND, so the
+  // neighbour takes the next letter name up from the main note's spelling (C + 1 =
+  // D-flat, never C-sharp); a double sharp or flat falls back to the plain speller.
+  const STEPS = 'CDEFGAB', NAT = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+  function spellNeighbour(main, midi) {
+    const si = STEPS.indexOf(main.step);
+    const step = STEPS[(si + 1) % 7];
+    const octave = main.octave + (main.step === 'B' ? 1 : 0);
+    const alter = midi - ((octave + 1) * 12 + NAT[step]);
+    return Math.abs(alter) > 1 ? naiveSpell(midi) : { step, alter, octave };
+  }
+  // THE CURVE A TRILL READS — composer.html's own math, ported line for line so the
+  // page draws what playback follows: trillRefResolved (auto = the A window if a curve
+  // there overlaps the span, else the lane's own drawn curve, else flat), refCurvesOn
+  // (drawn curves only — never a note, a META shape or a container), curvesLevelAt (the
+  // covering curve, else the nearest one's nearer edge, else the trill's flat level) and
+  // getYAtPos (WITH its smooth blend, which sonify_core.evalWaveCurve does not have).
+  function curveYAtPos(wc, pos) {
+    const nodes = wc.nodes, segments = wc.segments || [];
+    if (!nodes || nodes.length < 2) return 0;
+    const seg = SonifyCore.computeSegY;
+    pos = Math.max(0, Math.min(1, pos));
+    for (let i = 1; i < nodes.length - 1; i++) {
+      const s = nodes[i].smooth != null ? nodes[i].smooth : 0;
+      if (s <= 0) continue;
+      const leftLen = nodes[i].pos - nodes[i - 1].pos, rightLen = nodes[i + 1].pos - nodes[i].pos;
+      const radius = s * Math.min(leftLen, rightLen) * 0.5;
+      if (radius <= 0) continue;
+      const lb = nodes[i].pos - radius, rb = nodes[i].pos + radius;
+      if (pos < lb || pos > rb) continue;
+      const zw = rb - lb;
+      if (zw <= 0) continue;
+      const u = (pos - lb) / zw;
+      const lSeg = segments[i - 1] || { model: 'bezier', slope: 0 };
+      const rSeg = segments[i] || { model: 'bezier', slope: 0 };
+      const lT = leftLen > 0 ? Math.min(1, (lb - nodes[i - 1].pos) / leftLen) : 0;
+      const rT = rightLen > 0 ? Math.min(1, (rb - nodes[i].pos) / rightLen) : 0;
+      const yL = seg(lSeg, nodes[i - 1].y / 10, nodes[i].y / 10, lT) * 10;
+      const yR = seg(rSeg, nodes[i].y / 10, nodes[i + 1].y / 10, rT) * 10;
+      const eps = Math.max(radius * 0.01, 1e-6);
+      const lTe = leftLen > 0 ? Math.min(1, (lb + eps - nodes[i - 1].pos) / leftLen) : 0;
+      const yLp = seg(lSeg, nodes[i - 1].y / 10, nodes[i].y / 10, lTe) * 10;
+      const slopeL = (yLp - yL) / eps;
+      const rTe = rightLen > 0 ? Math.max(0, (rb - eps - nodes[i].pos) / rightLen) : 0;
+      const yRm = seg(rSeg, nodes[i].y / 10, nodes[i + 1].y / 10, rTe) * 10;
+      const slopeR = (yR - yRm) / eps;
+      const m0 = slopeL * zw, m1 = slopeR * zw;
+      const u2 = u * u, u3 = u2 * u;
+      return (2 * u3 - 3 * u2 + 1) * yL + (u3 - 2 * u2 + u) * m0 + (-2 * u3 + 3 * u2) * yR + (u3 - u2) * m1;
+    }
+    for (let i = 0; i < nodes.length - 1; i++) {
+      if (pos >= nodes[i].pos && pos <= nodes[i + 1].pos) {
+        const segLen = nodes[i + 1].pos - nodes[i].pos;
+        const segT = segLen > 0 ? (pos - nodes[i].pos) / segLen : 0;
+        return seg(segments[i] || { model: 'bezier', slope: 0 }, nodes[i].y / 10, nodes[i + 1].y / 10, segT) * 10;
+      }
+    }
+    return nodes[nodes.length - 1].y;
+  }
+  function curveYAtTime(wc, sec) {
+    if (!wc.nodes || wc.nodes.length < 2) return 0;
+    const dur = wc.endSeconds - wc.startSeconds;
+    if (dur <= 0) return wc.nodes[0].y;
+    return curveYAtPos(wc, Math.max(0, Math.min(1, (sec - wc.startSeconds) / dur)));
+  }
+  function trillReference(score, z, windows) {
+    const t = z.trill || {}, ref = t.curveRef || 'auto';
+    const on = L => (score.objects || []).filter(o => o.type === 'waveCurve' && o.layer === L && !o.groupId && o.sonifyNote == null && !o.isContainer
+      && o.endSeconds > z.startTime && o.startSeconds < z.endTime).sort((a, b) => a.startSeconds - b.startSeconds);
+    const meta = name => windows[name] == null ? null : { kind: 'meta', name, curves: on(windows[name]) };
+    const lane = () => { const all = on(z.layer); const pick = (t.curveId && all.find(o => o.id === t.curveId)) || all[0]; return { kind: 'lane', name: 'lane', curves: pick ? [pick] : [] }; };
+    if (ref === 'flat') return { kind: 'flat', name: 'flat', curves: [] };
+    if (ref === 'lane') return lane();
+    if (ref === 'A' || ref === 'B' || ref === 'C') return meta(ref) || { kind: 'flat', name: 'flat', curves: [] };
+    const a = meta('A'); if (a && a.curves.length) return Object.assign(a, { auto: true });
+    const l = lane(); if (l.curves.length) return Object.assign(l, { auto: true });
+    return { kind: 'flat', name: 'flat', curves: [], auto: true };
+  }
+  function trillLevelSamples(r, z) {
+    const lv = Math.max(0, Math.min(1, z.trill && z.trill.level != null ? +z.trill.level : 0.5));
+    const at = sec => {
+      if (r.kind === 'flat' || !r.curves.length) return lv;
+      const c = r.curves.find(o => sec >= o.startSeconds && sec <= o.endSeconds);
+      if (c) return curveYAtTime(c, sec) / 10;
+      let best = null, bd = Infinity;
+      for (const o of r.curves) { const d = sec < o.startSeconds ? o.startSeconds - sec : sec - o.endSeconds; if (d < bd) { bd = d; best = o; } }
+      return best ? curveYAtTime(best, sec < best.startSeconds ? best.startSeconds : best.endSeconds) / 10 : lv;
+    };
+    const span = z.endTime - z.startTime;
+    // clamped to the schema's 0-1: a ctrl segment may overshoot (cy up to 1.4)
+    return Array.from({ length: 101 }, (_, i) => +Math.max(0, Math.min(1, at(z.startTime + span * (i / 100)))).toFixed(4));
   }
 
   function approxGcd(a, b, tol) {
@@ -148,7 +249,8 @@
     const out = [];
     for (let i = 0; i < items.length;) {
       let j = i + 1;
-      while (j < items.length && items[j].ev.onset - items[i].ev.onset <= tol) j++;
+      // [2f.3] a trill stands alone — it is a sustained event, never a chord member
+      if (items[i].cls !== 'trill') while (j < items.length && items[j].cls !== 'trill' && items[j].ev.onset - items[i].ev.onset <= tol) j++;
       if (j - i === 1) out.push(items[i]);
       else out.push({ ev: items[i].ev, cls: 'chord', chord: items.slice(i, j) });
       i = j;
@@ -253,11 +355,52 @@
     // inclusive both ends — surfaced day 21 when a piece extraction hit
     // an onset at exactly the cut and the chunk-span validator refused it.
     const inWin = o => o.type === 'waveCurve' && o.startSeconds >= w0 && o.startSeconds < w1 && parts.includes(o.layer);
-    const objs = score.objects.filter(inWin).sort((a, b) => a.startSeconds - b.startSeconds || a.layer - b.layer);
+    // [2f.3] with options.trills: the trill zones in the window, and the notes they ate left out
+    const trillIds = new Set();
+    const zones = opt.trills ? (score.objects || []).filter(o => o.type === 'zone' && o.midiModel === 'trill' && o.trill
+      && o.startTime >= w0 && o.startTime < w1 && parts.includes(o.layer)) : [];
+    if (opt.trills) for (const o of score.objects || []) if (o.type === 'zone' && o.midiModel === 'trill') trillIds.add(o.id);
+    let eatenN = 0;
+    const objs = score.objects.filter(o => {
+      if (!inWin(o)) return false;
+      if (opt.trills && o.mutedBy) {
+        if (trillIds.has(o.mutedBy)) { eatenN++; return false; }
+        warnings.push(o.id + ': mutedBy ' + o.mutedBy + ', which is not a trill in this score — extracted as a note (a stale stamp; a Save refreshes it)');
+      }
+      return true;
+    }).map(o => ({ o, t: o.startSeconds }))
+      .concat(zones.map(z => ({ z, o: z, t: z.startTime })))
+      .sort((a, b) => a.t - b.t || a.o.layer - b.o.layer);
 
     const events = [];
     const perPart = new Map(parts.map(p => [p, []]));
-    for (const o of objs) {
+    let flatN = 0;
+    for (const { o: o0, z } of objs) {
+      if (z) {
+        const T = z.trill;
+        if (!(z.endTime > z.startTime)) { warnings.push(z.id + ': trill with no duration — skipped'); continue; }
+        const midi = Math.round(T.pitch);
+        const spelled = naiveSpell(midi);
+        const nMidi = midi + T.interval;
+        const r = trillReference(score, z, opt.CURVE_WINDOWS);
+        if (r.kind === 'flat') flatN++;
+        const ev = {
+          id: 'ev-' + z.id,
+          source: { score: scoreName, objectId: z.id },
+          onset: z.startTime,
+          duration: z.endTime - z.startTime,
+          pitch: { midi, spelled },
+          technique: T.technique,
+          provenance: 'derived',
+          env: 'trill',
+          trill: { interval: T.interval, neighbour: { midi: nMidi, spelled: spellNeighbour(spelled, nMidi) }, curve: r.auto ? 'auto:' + r.name : r.name },
+          level: { samples: trillLevelSamples(r, z) },
+        };
+        events.push(ev);
+        perPart.get(z.layer).push({ ev, cls: 'trill', obj: z });
+        continue;
+      }
+      const o = o0;
       // [2a] the piece's META layer and technique table (both optional;
       // absent = the tuba rules — classify.js)
       const cls = Classify.classify(o, { metaLayer: params.metaLayer, techniques: params.techniques });
@@ -480,7 +623,8 @@
           createdBy: toolName || 'extract_core',
           date: date || 'undated',
           tool: toolName || 'extract_core',
-          notes: 'Derived extraction (B1). Segmentation: DB-6 greedy IOI runs, TOL ' + opt.TOL + ' s. Regenerable; authored content belongs in overlays only.',
+          notes: 'Derived extraction (B1). Segmentation: DB-6 greedy IOI runs, TOL ' + opt.TOL + ' s. Regenerable; authored content belongs in overlays only.'
+            + (opt.trills ? ' TRILLS (PLAN 2f.3): ' + zones.length + ' trill zone(s) as env trill; ' + eatenN + ' eaten note(s) (mutedBy) not extracted; ' + flatN + ' trill(s) read a flat level.' : ''),
         },
         events,
         chunks,
@@ -490,5 +634,5 @@
     };
   }
 
-  return { extract, segment, segmentPlayed, fitPlayed, fitUnit, approxGcd, naiveSpell, DEFAULTS };
+  return { extract, segment, segmentPlayed, fitPlayed, fitUnit, approxGcd, naiveSpell, spellNeighbour, curveYAtPos, trillReference, DEFAULTS };
 });

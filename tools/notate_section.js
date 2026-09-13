@@ -18,6 +18,7 @@
 //                            the app hot-reloads it within ~1 s.
 //   --exp                    group the entry under "experiments" in the picker
 //   --bricks                 every chunk unresolved: bricks everywhere + per-note devices (working files)
+//   --trills                 [PLAN 2f.3] the composer score's trill zones as env trill events; the notes they ate left out
 //   --cluster t0-t1[@part]   mark a span as one beamed cluster (repeatable; authored
 //                            overlays). THE MODIFIERS BELOW ARE POSITIONAL: each applies
 //                            to the --cluster that precedes it (day 24, two clusters in
@@ -237,9 +238,9 @@ const FIG_CL = FIG.cluster || {}, FIG_BM = FIG.beam || {};
 
 const { doc, warnings } = Extract.extract(score, {
   // chords (2a.4): the ensemble's players may sound several notes at one onset
-  scoreName, window: [w0, w1], parts, id, registry, sampleLengths, profile, options: ENS_APPLIES ? { chords: true } : {}, metaLayer, techniques,
+  scoreName, window: [w0, w1], parts, id, registry, sampleLengths, profile, options: Object.assign(ENS_APPLIES ? { chords: true } : {}, flag('trills') ? { trills: true } : {}), metaLayer, techniques,
   date: new Date().toISOString().slice(0, 10),
-  toolName: 'tools/notate_section.js (profile ' + profile + ')' + (flag('bricks') ? ' --bricks' : ''),
+  toolName: 'tools/notate_section.js (profile ' + profile + ')' + (flag('bricks') ? ' --bricks' : '') + (flag('trills') ? ' --trills' : ''),
 });
 // [§400] THE RANGE ALERT AT BUILD TIME: a technique whose registry `written`
 // entry carries a range (the flute's tongue ram: written = sounding + 11,

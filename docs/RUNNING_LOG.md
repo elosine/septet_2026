@@ -11797,3 +11797,31 @@ raw string — Python warned on `\snappizzicato`.) No stamp or render change was
 already render (touchpoints 2 and 4). `tools/test_trills.js`: 16 checks GREEN; run against the pre-2f.2 `glyphs.json` it goes RED (5
 failures) — seen red once. `test_septet_notation` 86 · `test_identity` 20 unchanged. The tuba render snapshot was not staged for this step:
 the change is additive and no existing item names the new keys; 2f.4 (layout) runs it.
+
+## §437. PLAN 2f.3 built: trills in the IR — opt-in, the composer's own curve math, the eaten notes out; byte-identical without it
+
+**What changed.** `notation/lib/extract_core.js` with `options.trills` (`tools/notate_section.js --trills`): every trill zone in window × parts
+becomes an event `env: 'trill'` with `trill { interval, neighbour { midi, spelled }, curve }` and `level.samples` (101); a note stamped
+`mutedBy` a trill of the same score is not extracted (a stale stamp warns and extracts). Each trill is its own chunk, class `trill` (added
+to `notation/registry/classes.json`), strategy unresolved, excluded from chord grouping. Schema: `event.trill` (IR_SCHEMA_v0 amendment 8).
+`tools/ir_validate.js`: a trill event is checked against its zone; `--complete` on a trill document requires every trill and excuses the
+notes they ate.
+
+**The curve, ported not approximated.** The level is composer.html's own chain — `trillRefResolved` → `refCurvesOn` → `curvesLevelAt` →
+`getYAtTime` → `getYAtPos` — copied line for line, including `getYAtPos`'s smooth blend that `sonify_core.evalWaveCurve` lacks. The battery
+lifts `getYAtPos` out of the live composer.html at test time and compares it with the port on a synthetic smoothed curve at 401 points:
+max difference 0 (and that curve is one evalWaveCurve gets wrong by more than 0.05 of 10, so the check is not vacuous). Each of the 69
+trills' samples also matches its window read independently (worst under 2e-3).
+
+**The neighbour's spelling** = the next letter up from the main note's (naive, sharp-biased) spelling; a double accidental falls back.
+On the live score this yields, among the 21 distinct cases, **D♯ → E♯ and A♯ → B♯** for whole-tone trills on sharp-spelled notes — correct
+as seconds, unusual on the page. For his eye at 2f.5 (the alternative is respelling the MAIN note flat, E♭ → F).
+
+**Numbers on piece-septet 0–176 s:** 511 events without trills; with them 569 = 511 − 11 eaten + 69 trills; 403 chunks. Curves: 65 `auto:A`,
+4 `C`, none flat by reference (52 flat by value, §435).
+
+**Proofs.** `tools/test_trills.js` 31 GREEN; against the pre-2f.3 extractor it goes RED, 6 failures, cleanly (a crash on an empty trill list
+guarded first). **Unchanged without the option:** the old and new `extract()` compared as JSON strings — IDENTICAL on piece-septet 0–176
+and 0–580 (chords) and on three tuba scores read in place (piece-final-draft-001, piece-s27, cloud02i-b; trance and section1). A probe page
+(`--bricks --trills`, 60–75 s) built, VALID against source and complete, then pruned. `test_septet_notation` 86 · `test_identity` 20.
+The probe's SVG (`tools/fixtures/lp_probes/trill.svg`) is committed beside its `.ly`, as the tuba's fixtures are.

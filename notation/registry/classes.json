@@ -105,6 +105,14 @@
       "accommodation": "stamp-atomic",
       "fallback": "release text instruction",
       "status": "proposed"
+    },
+    {
+      "class": "trill",
+      "classify": { "type": "zone", "midiModel": "trill", "context": "PLAN 2f.3 (2026-09-13) — extracted only with options.trills (notate_section --trills)" },
+      "ir": "event env trill: pitch + trill.interval (the neighbour) + level samples from the trill curve reference (docs/TRILL_NOTATION_SPEC.md §1); the notes it ate (mutedBy) are not extracted",
+      "accommodation": "stamp-atomic",
+      "fallback": "tr + the parenthesised neighbour + go line, no curve",
+      "status": "proposed"
     }
   ]
 }

@@ -137,6 +137,32 @@ One IR document = one worked span of one or more parts:
   them from S1 via `source`, through the optional per-material transform
   slot (amendment 2).
 
+**Amendment 8 — trill events (septet PLAN 2f.3, 2026-09-13; RUNNING_LOG §437).** With the extractor's
+`options.trills` (`notate_section --trills`), a composer-score trill ZONE (`type: 'zone'`,
+`midiModel: 'trill'`) becomes an event whose `source.objectId` is the zone — the one sounding event
+that does not source a waveCurve:
+
+```jsonc
+{
+  "id": "ev-zn-953", "source": { "score": "piece-septet", "objectId": "zn-953" },
+  "onset": 63.72, "duration": 1.73,             // the zone's startTime, endTime − startTime
+  "pitch": { "midi": 36, "spelled": { "step": "C", "alter": 0, "octave": 2 } },   // trill.pitch
+  "technique": "main", "provenance": "derived",
+  "env": "trill",
+  "trill": { "interval": 2,                     // trill.interval — the upper neighbour (1 semitone, 2 whole tone)
+             "neighbour": { "midi": 38, "spelled": { "step": "D", "alter": 0, "octave": 2 } },  // the next letter up
+             "curve": "auto:A" },               // the reference its level was read from
+  "level": { "samples": [1, 1, ...] }           // 101 samples over the span — composer.html's own curve math
+}
+```
+
+A note stamped `mutedBy` (eaten by a trill in the same score) is NOT extracted when trills are: its attack is the
+trill's. Each trill is its own chunk, class `trill` (registry), strategy `unresolved`, never part of a chord. The
+validator checks a trill event against its zone (onset, span, pitch, interval, technique, part), and `--complete` on
+a document holding trills requires every trill zone in window × parts and excuses the notes they ate. Without the
+option nothing changes: the extraction is byte-identical (8 runs, septet and tuba scores, both profiles). The sounding
+neighbour is stored; the WRITTEN neighbour (a transposing part) is the layout's to spell from the written main note.
+
 ## 5. Chunks — the atom of the strip
 
 A chunk is a contiguous span of ONE part with a class and a strategy
