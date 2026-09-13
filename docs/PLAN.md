@@ -1559,7 +1559,7 @@ player would touch parts, solo, crop and print.
     ladder (flip a chain · per-page nudge · more piano air) is data. *Why:* his eye decides which of the three, per page.
   - **2e.3 Trills and the morph curves** — `trills → PLAN 2f (2026-09-13); the morph curves still todo` — the next notation session: their written look by the planning method, then built.
     *Why:* he set them aside deliberately — *"leave the trills and curves will fill those in next notation session"*.
-- **2f — Section 1 notated: the trills** — `planned 2026-09-13 (RUNNING_LOG §427–§434; CN-75 · CN-77; GLYPH_SIZING.md) — build on
+- **2f — Section 1 notated: the trills** — `BUILT 2026-09-13 (§435–§440) — the main notation file carries them (D41)` · `planned 2026-09-13 (RUNNING_LOG §427–§434; CN-75 · CN-77; GLYPH_SIZING.md) — build on
   Opus after a clear, step by step` — **Result when done:** every trill zone in 63–149 s is on the page as the tuba's SURGE with a trill
   on it: open head + accidental + ledgers, the parenthesised neighbour head after it, `tr` above, `sfz` below, the go line at the
   onset, the level curve in the tuba's colour over the exact span, **no GC**; the rules are registry data; NOTATION_STANDARDS §2 indexes
@@ -1590,9 +1590,9 @@ player would touch parts, solo, crop and print.
     above, `sfz` below by the dynamics rule, the go line at the onset, the level curve from the head over the span with the 90° cut, no
     GC. Layout emits seconds + ss only. First instance: the piano's 63.72 s trill (C2, whole tone), picker "piece-septet · trill 1".
     *Why:* §432–§434.
-  - **2f.5 His eye** — `in progress 2026-09-13 (RUNNING_LOG §439) — first look: tr too big → 0.57 (halfway to the sfz); placement, neighbour, the full curve, the spelling all fine; his second look next` — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → the picker → Z: the `tr`'s height, the neighbour,
+  - **2f.5 His eye** — `done 2026-09-13 (RUNNING_LOG §439) — tr too big → 0.57 (halfway to the sfz), then "That is good"; placement, neighbour, the full curve, the spelling all fine` — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → the picker → Z: the `tr`'s height, the neighbour,
     the column's gap, the curve. The fix ladder is data. *Why:* a confidence claim must be verified in the running app (AI_METHODOLOGY).
-  - **2f.6 The rest** — `todo` — all 69 through the device; the 0.15 s trills' width judged (§431); NOTATION_STANDARDS §2 completed.
+  - **2f.6 The rest** — `done 2026-09-13 (RUNNING_LOG §440) — all 69 in the MAIN notation file notation/ir/piece-septet.ir.json (D41: the whole piece, --all --bricks --trills, first in the picker; R keeps it current); 69/69 full device, 0 warnings; 7 meet strike ink at 146.97–148.65 s, for his eye with N3; test_trills 59` — all 69 through the device; the 0.15 s trills' width judged (§431); NOTATION_STANDARDS §2 completed.
     *Why:* his — *"And then we'll look at it from there."*
 - **2b — Presentation score** *(the title on the cover and in the format entry: **tentative _Scattered Substance_**, CN-64 — confirm with him before either is written)* — print PDF (A3 landscape, format entry + cover + performance
   notes page as in #4) + video (`export_video.js`, Reaper render at fixed BPM, sync proof

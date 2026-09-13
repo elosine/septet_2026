@@ -118,6 +118,9 @@ routing advice is also credit advice, and these bind every Fable turn:
   he closes it first; a :5301 tab opens its origin's last score, so read `Composer.sessionName` first and open the `zz-ai-` copy.
 - **Sandbox:** `node sandbox/serve.js` → http://localhost:4800
 - **Notation workshop:** carried over with the port, NOT adapted until phase 2 (PLAN 0g / 2a).
+- **THE MAIN NOTATION FILE (D41):** `notation/ir/piece-septet.ir.json` — :5300 → `/notation/app/notation.html` → picker "piece-septet ·
+  MAIN notation score" (first). The whole piece with every notation rule in force; kept current by Save in the composer + **R** on the page.
+  A new notation rule = a flag added to its recorded build, then one rebuild (`docs/NAMING.md`).
 - **Ports** (loopMIDI, case-sensitive) — decided in PLAN 0e; 5300/4800 are distinct from
   #4's 5200/4700 and #3's 5100/4600 so two repos' servers can run at once.
 

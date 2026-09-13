@@ -201,7 +201,10 @@ const parts = partsArg.includes('-') && !partsArg.includes(',')
 const metaLayer = TRACKS ? TRACKS.length : 10;
 const profile = arg('profile', 'trance');
 const id = arg('id', ALL ? scoreName : (scoreName + '-' + w0 + '-' + w1).replace(/[^a-zA-Z0-9-]/g, '-'));
-const label = arg('label', ALL ? scoreName + ' · whole score' + (flag('bricks') ? ' (bricks)' : '') : id + ' (' + profile + ')');
+// [§440] a rebuild without --label keeps the page's own picker label — the app's R re-runs a page's recorded build with
+// --label dropped, and the MAIN notation file must not come back as "whole score (bricks)"
+const existingEntry = readManifest().irs.find(e => e.id === id);
+const label = arg('label', existingEntry && existingEntry.label ? existingEntry.label : (ALL ? scoreName + ' · whole score' + (flag('bricks') ? ' (bricks)' : '') : id + ' (' + profile + ')'));
 const outRel = 'notation/ir/' + id + '.ir.json';
 
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'registry', 'classes.json'), 'utf8'));
@@ -1321,8 +1324,10 @@ try {
 
 // picker manifest (the app reads this; hardcoded options remain as fallback)
 const manifest = readManifest();
-manifest.irs = manifest.irs.filter(e => e.id !== id);
-manifest.irs.push({ id, label, score: scoreName, window: [w0, w1], profile, exp: flag('exp') || undefined });
+// [§440] an existing page is replaced IN PLACE (the MAIN file stays first in the picker); a new one is appended
+const entryNew = { id, label, score: scoreName, window: [w0, w1], profile, exp: flag('exp') || undefined };
+const at = manifest.irs.findIndex(e => e.id === id);
+if (at >= 0) manifest.irs[at] = entryNew; else manifest.irs.push(entryNew);
 writeManifest(manifest);
 
 // ── THE GEOMETRY GUARD (day 31) ──────────────────────────────────────────────

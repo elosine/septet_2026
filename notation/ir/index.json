@@ -1,6 +1,16 @@
 {
  "irs": [
   {
+   "id": "piece-septet",
+   "label": "piece-septet · MAIN notation score",
+   "score": "piece-septet",
+   "window": [
+    0,
+    625
+   ],
+   "profile": "trance"
+  },
+  {
    "id": "0i-test-b",
    "label": "0i test b",
    "score": "0i-test-b",
@@ -10,16 +20,6 @@
    ],
    "profile": "trance",
    "exp": true
-  },
-  {
-   "id": "piece-septet",
-   "label": "piece-septet · 2a proof (all parts, 0-580 s, bricks)",
-   "score": "piece-septet",
-   "window": [
-    0,
-    580
-   ],
-   "profile": "trance"
   },
   {
    "id": "strike1",

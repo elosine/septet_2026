@@ -34,7 +34,10 @@
 edge; a high stem-down note's stack above (Vn1 A♯5) ~1 ss over the top; the piano's stacks meet BCl's/Vn1's in 15 places over
 0–176 s. The tuba's fix ladder applies per page.
 
-## §2 Trills, morph curves, long notes — in progress (trills: 2026-09-13)
+## §2 Trills, morph curves, long notes — trills BUILT 2026-09-13 (§435–§440); morph curves and long notes not yet decided
+
+**Where the notation lives: the MAIN notation file** `notation/ir/piece-septet.ir.json` (D41) — the whole piece, every rule below and in §1 in
+force (`--all --bricks --trills`); a new rule becomes a flag in its build.
 
 **Sizing of any new glyph: `docs/GLYPH_SIZING.md`** — the families, the factors, what to compare to, the procedure.
 

@@ -2,6 +2,7 @@
 //   2f.2 the glyphs — the trill sign and the neighbour's parentheses, stock size from Emmentaler
 //   2f.3 the IR — trill zones as env trill events, eaten notes out, the composer's curve math, the validator
 //   2f.4 the device — the column left of the go line, tr and sfz, the curve over the lane, the go line's top, no GC
+//   2f.6 the rest — every trill in the save, the whole piece, the full device, no warning
 // Spec: docs/TRILL_NOTATION_SPEC.md. piece-septet.json is the composer's LIVE score: read, never written.
 // --glyphs <path> / --extract <path> run the checks against another glyphs.json / extract_core.js (to see them go red once).
 'use strict';
@@ -264,6 +265,37 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
   }
 }
 
+// ---- 2f.6 the rest — every trill in the live save, over the whole piece, the full device, no warning ----
+{
+  const Extract = require('../notation/lib/extract_core.js');
+  const Layout = require('../notation/lib/layout.js');
+  const score = J('scores/piece-septet.json');
+  const ens = J('notation/registry/ensemble.json'), tech = J('notation/registry/techniques.json'), C = J('notation/registry/container.json');
+  const parts = ens.parts.map(p => p.part);
+  const ends = score.objects.filter(o => o.type === 'waveCurve' && o.sonifyNote != null && o.endSeconds != null).map(o => o.endSeconds);
+  const w1 = Math.ceil(Math.max(...ends));   // notate_section --all
+  const { doc } = Extract.extract(score, { scoreName: 'piece-septet', window: [0, w1], parts, id: 'trill-all', registry: J('notation/registry/classes.json'),
+    sampleLengths: J('bank/sample_lengths.json'), profile: 'trance', options: { chords: true, trills: true }, metaLayer: ens.metaLayer, techniques: tech.techniques });
+  for (const c of doc.chunks) c.strategy = 'unresolved';
+  const model = Layout.layoutSection(doc, glyphs, Object.assign({ frameParts: parts, ensemble: ens, techniques: tech }, C.engraving.layout));
+  const trills = doc.events.filter(e => e.env === 'trill');
+  const zonesAll = score.objects.filter(o => o.type === 'zone' && o.midiModel === 'trill' && o.trill && parts.includes(o.layer) && o.startTime < w1);
+  ok(trills.length === zonesAll.length, 'the whole piece: every trill in the save is on the page (' + trills.length + ')');
+  const need = ['notehead-open', 'accidental-leftParen', 'accidental-rightParen', 'artic-trill', 'dyn-sfz'];
+  const bad = [];
+  for (const e of trills) {
+    const its = model.systems.flatMap(s => s.items.filter(i => Math.abs((i.t != null ? i.t : i.t0) - e.onset) < 1e-9));
+    const miss = need.filter(k => !its.some(i => i.k === 'glyph' && i.g === k));
+    if (!its.some(i => i.k === 'envcurve' && i.ev === e.id)) miss.push('curve');
+    if (!its.some(i => i.k === 'goline' && i.ev === e.id)) miss.push('goline');
+    if (its.some(i => i.k === 'gc' && i.ev === e.id)) miss.push('HAS A GC');
+    if (miss.length) bad.push(e.id + ' ' + miss.join(','));
+  }
+  ok(!bad.length, 'the whole piece: every trill draws head · ( neighbour ) · tr · sfz · curve · go line, and no GC' + (bad.length ? ' — ' + bad.slice(0, 5).join(' | ') : ''));
+  const warn = (model.warnings || []).filter(w => /trill|ev-zn-/.test(w));
+  ok(!warn.length, 'the whole piece: no layout warning names a trill' + (warn.length ? ' — ' + warn.slice(0, 3).join(' | ') : ''));
+}
+
 console.log(pass + ' passed, ' + fail + ' failed');
-console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR · 2f.4 device');
+console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR · 2f.4 device · 2f.6 the whole piece');
 process.exit(fail ? 1 : 0);

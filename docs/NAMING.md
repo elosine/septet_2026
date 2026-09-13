@@ -20,6 +20,11 @@
 | `trill-*` | trill tests written by `tools/trill_curve_gen.js` (a curve + his timing under it); `trill0-listen` = the rejected formula file (RUNNING_LOG §99) |
 | everything else | research archive — frozen experiment renders; never overwritten |
 
+**Notation pages (`notation/ir/`, listed in `index.json` = the notation app's picker):** **`piece-septet.ir.json` is THE MAIN NOTATION
+FILE** (D41, 2026-09-13) — the whole piece, first in the picker as "piece-septet · MAIN notation score", derived from `scores/piece-septet.json`
+by the build its `provenance.build` records; kept current by Save (composer) + R (notation page). Every other page is an experiment
+(`exp`, listed under experiments): a step's proof (`strike1`, `trill1`), kept as history. Derived, so regenerable — never hand-edited.
+
 - **The save system (D17, composer 2026-09-04; RUNNING_LOG §67–68) — one rule for every score,
   piece or experiment:** open a score → you are in its working copy (autosave lives there; the file
   changes only on Save) · **Save / CTRL+S** when it's good · **Name version** when a chunk is done

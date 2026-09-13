@@ -85,7 +85,7 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word.
 
-**SESSION 10 — 2026-09-13, Fable: the trills' written look DECIDED, PLAN 2f WRITTEN (RUNNING_LOG §427–§434; CN-75 · CN-76 · CN-77).** The neighbour = the zone's `interval` (1 · 2, all upper), written as a parenthesised head · `sfz` on every attack · `tr` × 0.70 = 1.68 × 1.54 ss · open head, the tuba's SURGE as drawn, go line only, **no GC** · the curve = the resolved A / C window (all 69 resolve, §431) · `docs/GLYPH_SIZING.md` opened · CN-77 = the standard swell for section 3, later. **BUILT on Opus the same session, no clear (his word): 2f.1 the spec sheet (§435) · 2f.2 the glyphs (§436) · 2f.3 the IR (§437) · 2f.4 the device (§438).** **2f.5 FIRST LOOK DONE (§439): `tr` 0.70 → 0.57 (halfway to the sfz's height); the placement, the neighbour, the full curve (flat = a block, as drawn) and the spelling all fine.** **► NEXT — his SECOND look at the size, then 2f.6.** *(The first look's questions, kept for the record:)* **2f.5 HIS EYE on the first trill:** :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker "piece-septet · trill 1 (PLAN 2f.4)" → Z. Four things for him, by weight: (1) **the curve is a solid block** — 52 of 69 trills are flat at fff (the first is one): draw the data, a standard swell (CN-77's reasoning), or redraw the windows? (2) the `tr`'s height and its distance above a low note (3) the neighbour's look — size, parens, no natural (4) the spellings D♯ → E♯, A♯ → B♯. Then 2f.6 the rest.
+**SESSION 10 — 2026-09-13, Fable: the trills' written look DECIDED, PLAN 2f WRITTEN (RUNNING_LOG §427–§434; CN-75 · CN-76 · CN-77).** The neighbour = the zone's `interval` (1 · 2, all upper), written as a parenthesised head · `sfz` on every attack · `tr` × 0.70 = 1.68 × 1.54 ss · open head, the tuba's SURGE as drawn, go line only, **no GC** · the curve = the resolved A / C window (all 69 resolve, §431) · `docs/GLYPH_SIZING.md` opened · CN-77 = the standard swell for section 3, later. **BUILT on Opus the same session, no clear (his word): 2f.1 the spec sheet (§435) · 2f.2 the glyphs (§436) · 2f.3 the IR (§437) · 2f.4 the device (§438).** **2f.5 DONE (§439): `tr` 0.57, his "That is good".** **2f.6 DONE (§440): all 69 trills on the page, in the MAIN notation file (D41) — `notation/ir/piece-septet.ir.json`, picker "piece-septet · MAIN notation score", the whole piece; Save + R keeps it current.** 7 trills meet strike ink at 146.97–148.65 s (§440, for his eye with N3). **► NEXT: his eye on the main file; then the morph curves (a new plan item) or the CN-76 beaming at 43.31 s — his choice.** *(The first look's questions, kept for the record:)* **2f.5 HIS EYE on the first trill:** :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker "piece-septet · trill 1 (PLAN 2f.4)" → Z. Four things for him, by weight: (1) **the curve is a solid block** — 52 of 69 trills are flat at fff (the first is one): draw the data, a standard swell (CN-77's reasoning), or redraw the windows? (2) the `tr`'s height and its distance above a low note (3) the neighbour's look — size, parens, no natural (4) the spellings D♯ → E♯, A♯ → B♯. Then 2f.6 the rest.
 
 **Resume reads for 2f (Opus):** PLAN 2f (all of it) · RUNNING_LOG §427–§434 · `docs/GLYPH_SIZING.md` §2 + §4 · `docs/NOTATION_STANDARDS.md` §1 + §2 · `docs/TRILLS_TOOL.md` §5 + the §105 block · `notation/GLYPH_EXTENSION_CONTRACT.md` · `notation/ir/README.md` · the surge row of `for_seven_tubas/docs/NOTATION_STANDARDS.md`. Standing: one open composer tab per score · CTRL+SHIFT+R after each build · do not press R on the strikes page.
 
@@ -118,8 +118,11 @@ CN-73 · CN-74; D39 · D40). `scores/piece-septet.json` — his Save of 2026-09-
 (the conflict badge's `hard`/`soft`) — *"forget about the rest for now"* stands · CN-67 in the app (headless-proven only, §409) · whether
 "the same crescendo in several parts" means both players on every onset (`chords (old)` + `crescendo`, deprecated §413 — his word first).
 
+**THE MAIN NOTATION FILE (D41):** `notation/ir/piece-septet.ir.json` — picker "piece-septet · MAIN notation score" (first). Save in the composer,
+then R on this page. A new notation rule = a flag in its build (`provenance.build`) and one rebuild. **R is safe on the main file** (whole piece).
+
 **Standing warnings:** ⚠ **do not press R on the strikes page** (§403: it widens 0–176 s to the whole piece; parked fix = R honours the IR's
-recorded window) · **one open composer tab per score** (2d.5.8) · the page needs CTRL+SHIFT+R after each build · the piano never swells (CN-34).
+recorded window — the MAIN file does not have this problem) · **one open composer tab per score** (2d.5.8) · the page needs CTRL+SHIFT+R after each build · the piano never swells (CN-34).
 
 **Deliberately uncommitted — all his:** `bank/panel_snapshots.json` (takes) · `bank/passages/4materials · accentedcres01 · accentedcres01-2 ·
 chordcyc01 · chstr02` · `reaper/septet_rack.rpp` · `scores/Sec3.json` · `scores/SeptetSec03-Materials-B/-C/-D/-a.json` ·
@@ -141,7 +144,7 @@ drawer's swell switch · `docs/NOTATION_STANDARDS.md` §1 when notation resumes 
 | **N1c** | HIS EAR on the chain and the pure-crescendo runs** (§420–§426; the draft is tagged). The AI answers, logs to SWEEP_LIST, journals | **Fable** (composing questions) · **Opus** for any fix | no |
 | **N1** | His verdict on CN-67 in the app (headless-proven only) → then his eye and ear over the 15 pages (the picker, video, SPACE) | **Fable** · **Opus** for any fix | no |
 | **N3** | The 15 geometry touches + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
-| **N4** | **► NEXT — PLAN 2f.5, HIS EYE on the first trill** (2f.1–2f.4 built, §435–§438): the page "piece-septet · trill 1"; his verdicts on the flat-curve block, the `tr` height, the neighbour's look, E♯/B♯. Then 2f.6 the rest (all 69, one page build with `--trills`), then the morph curves (a new item) | **Fable** for the verdicts (the curve question is a composing one) · **Opus** for 2f.6 | no — the verdicts first; clear before 2f.6 if the session is long |
+| **N4** | ~~2f.5 his eye~~ **DONE §439** · ~~2f.6 the rest~~ **DONE §440 (the MAIN file, D41)** — was: PLAN 2f.5, HIS EYE on the first trill (2f.1–2f.4 built, §435–§438): the page "piece-septet · trill 1"; his verdicts on the flat-curve block, the `tr` height, the neighbour's look, E♯/B♯. Then 2f.6 the rest (all 69, one page build with `--trills`), then the morph curves (a new item) | **Fable** for the verdicts (the curve question is a composing one) · **Opus** for 2f.6 | no — the verdicts first; clear before 2f.6 if the session is long |
 | **N5** | Still open: the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE, one decision from him) · PLAN 1q proper | **Opus** | no |
 
 **The standing rule:** Fable for the turns where a wrong reading costs a day; Opus for every turn where the plan is already on paper.
@@ -583,6 +586,13 @@ sources; verified here only when they bite.)*
   would mark the tools, not the piece. *Kept as before:* the takes, the passages, the rack, the section-3 material files and his v1.31
   backup stay uncommitted — his. *(The AI's reading of "this is Scattered_Substance-finalDraft_1.0"; the title itself stays tentative
   per CN-64 until he says otherwise.)*
+- **D41** *(2026-09-13, composer, RUNNING_LOG §440)* — **One MAIN notation file: `notation/ir/piece-septet.ir.json`, the whole piece,
+  first in the picker ("piece-septet · MAIN notation score"), built with every rule in force (`--all --bricks --trills`).** His: *"could we
+  have a main notation score save file? That's the primary file and have that updated."* Updated by Save in the composer, then **R** on the
+  notation page (R re-runs the recorded build over the whole score — `notate_section` now keeps the page's label and picker position).
+  Each new notation rule is added to that build and the file rebuilt. *Why whole piece:* R always rebuilds the whole score (§403), so only a
+  whole-piece page refreshes truthfully. *Rejected:* a section-only main file; a second whole-score page beside `piece-septet`.
+  `strike1` / `trill1` stay as experiment pages (history).
 
 ## §5 Playbooks
 

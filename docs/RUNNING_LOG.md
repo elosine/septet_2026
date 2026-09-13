@@ -11887,3 +11887,38 @@ was 1.543 ss tall; the sfz is 0.9705; halfway = 1.257 → factor 1.257 / 2.204 =
 Laid out on `trill1`: scale 0.57, bottom ink still 0.45 over the bass staff's top line (centre 3.078). His :5300 already serves the new
 registry (read from disk) — CTRL+SHIFT+R on the notation page shows it. `test_trills` 56 GREEN, its size check now a relation (the drawn
 height halfway between the 0.70 height and the sfz's) read from the registry rather than a restated number.
+
+## §440. PLAN 2f.6 built: all 69 trills on the page — in ONE MAIN notation file, `piece-septet`, the whole piece, first in the picker (D41)
+
+**His word, 2026-09-13:** *"Okay. That is good. Let's go ahead and fill in the rest of the trills. And could we have a main notation score save
+file? That's the primary file and have that updated."* — "That is good" = the `tr` at 0.57 (§439): 2f.5 closed.
+
+**The reading, and why this shape.** A notation page is an IR in `notation/ir/` listed in the picker; until now each step made its own
+(`strike1` for the strikes, `trill1` for the first trill), and `piece-septet.ir.json` was 2a's stale proof page (0–580 s, 2026-09-11, no
+strike look). **The MAIN notation file is `notation/ir/piece-septet.ir.json`** — the page named after the score — rebuilt as the WHOLE PIECE
+with every notation rule in force: `node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --id piece-septet
+--label "piece-septet · MAIN notation score"` → 0–625 s, 1808 events (1432 strikes, 69 trills, 11 eaten notes out), 1166 chunks, VALID against
+source and complete; placed FIRST in the picker, not an experiment. **Whole piece, not section 1, because of R:** the app's R ("refresh from the
+last Save", 2d.3) re-runs a page's recorded build with `--all` — it always rebuilds the whole score (which is why R on `strike1` widens it,
+§403). A whole-piece main file is the one page R refreshes truthfully, so "have that updated" = Save in the composer, R on the notation page.
+The sections not yet notated show as they stand (strikes in the strike look wherever the strikes tool wrote them; the rest bricks) and fill in
+as each section is notated. *Rejected:* a section-1-only main file (R would widen it, the §403 trap); a new id beside `piece-septet` (two
+whole-score pages of one score to keep in step).
+
+**Two small changes to `tools/notate_section.js` so R keeps it MAIN:** (1) a rebuild without `--label` keeps the page's existing picker
+label — R drops `--label`, which would have renamed it "piece-septet · whole score (bricks)"; (2) an existing page is replaced IN PLACE in
+`index.json` (it had been moved to the end on every rebuild). **Proved** by running R's exact argument transform from `score/server.js`
+on the main file: exit 0, label "piece-septet · MAIN notation score", still first, 69 trills, 1808 events. No server change — his :5300 needs
+no restart (the tool is spawned per R).
+
+**2f.6, measured on the main file laid out with the ensemble:** 69 of 69 trills draw the full device (open head · `( ● )` · `tr` · `sfz` ·
+curve · go line, no GC); 0 layout warnings name a trill; 0 trills under 20 px of curve (the shortest, 0.15 s, is 23 px). **7 trills meet a
+neighbouring strike's ink** — all at the dense close of section 1, 146.97–148.65 s, where trills alternate with strikes ~150 ms apart (1 ss =
+51 ms on the page): Bass Cl @147.78 (sharp × a strike head) · @148.23 (head × head, `tr` × accent) · the piano @147.47 and @147.63 (each
+other's head, accidental and `tr` × accent) · Vn1 @148.09 (sharp × head) · @148.65 (head × head, `sfz` × accent) · Vn2 @147.14 (sharp ×
+head). Logged for his eye with N3's geometry touches — the same passage CN-76's beaming decision will reshape. Not fixed.
+
+**In the running app** (:5301, the AI's copy, stopped afterwards): the picker's first entry is "piece-septet · MAIN notation score"; stepping
+pages, trills appear from page 6 (5 · 13 · 7 `tr` signs at scale 0.57), no NaN; console errors = the optional choices sidecar (404).
+**Proofs.** `test_trills` 59 GREEN (+3: the whole piece — every trill in the save on the page, the full device and no GC for each, no warning
+naming a trill) · `test_septet_notation` 86. `trill1` and `strike1` stay in the picker as experiments (history); the main file supersedes both.
