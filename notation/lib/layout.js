@@ -963,8 +963,34 @@
                 // pair: "move the first black note head in so that it's
                 // centered on the go line"): the HEAD's own centre on the go
                 // time, accidental and ledgers hanging off it as they fall.
+                // [§445] 'afterGo' (the composer, 2026-09-13, on the trills: "move the trill notation to the right of the go
+                // line. There's too many conflicts on the left"): the column's LEFTMOST INK sits afterGoGapSs (default the
+                // house nhGapSs, 0.25) to the RIGHT of the go line. Leftmost of: the head, its ledger overhang, its accidental
+                // (leftRel) · the marks centred on the head column — the technique symbol (the trill's tr) and a dynamic mark
+                // (its sfz) · an ottava sign, which render WIDENS LEFTWARD on a short unit to the bracket's minimum span: the
+                // same registry numbers, computed here so layout knows where the sign starts. Not for chords.
+                let afterGoLeft = null;
+                if (dev.nhAnchor === 'afterGo' && !CG) {
+                  let L = leftRel;
+                  const sgA = dev.techSymbol && glyphs.articulation && glyphs.articulation[dev.techSymbol];
+                  if (sgA) L = Math.min(L, -sgA.wSs * (dev.techSymbolScale > 0 ? dev.techSymbolScale : 1) / 2);
+                  const mkA = dev.dynMark === 'band' ? (Number.isFinite(e.vel) ? bandOf(e.vel) : null) : dev.dynMark;
+                  const mgA = mkA && glyphs.dynamic && glyphs.dynamic[mkA];
+                  if (mgA) L = Math.min(L, -mgA.wSs / 2);
+                  if (octShift !== 0) {
+                    const OA = stds.ottava || {};
+                    const nA = Math.min(2, Math.abs(octShift));
+                    const lgA = glyphs.ottavaText && glyphs.ottavaText[octShift > 0 ? (nA === 1 ? 'va8' : 'ma15') : (nA === 1 ? 'vb8' : 'mb15')];
+                    const lgW = lgA ? lgA.wSs + (OA.textGapBeforeLineSs || 0.1) : 0;
+                    const hookRel = (TPG ? TPG.right : nhO.wSs / 2 + (ledgers.length ? ledgerExt : 0)) + (o.ottavaEndGapSs != null ? o.ottavaEndGapSs : (OA.endPadSs != null ? OA.endPadSs : 0));
+                    L = Math.min(L, hookRel - (OA.minBracketSpanSs || 1.37) - lgW);   // render.js: xLabel = xHook - minSpan - label
+                  }
+                  afterGoLeft = L;
+                }
                 // [2a.4] in a chord the head sits where the column puts it
-                const headDx = CG ? CG.headDx : dev.nhAnchor === 'leftEdge'
+                const headDx = CG ? CG.headDx : afterGoLeft != null
+                  ? (dev.afterGoGapSs != null ? dev.afterGoGapSs : (o.nhGapSs != null ? o.nhGapSs : 0.25)) - afterGoLeft
+                  : dev.nhAnchor === 'leftEdge'
                   ? nhO.wSs / 2
                   : dev.nhAnchor === 'headCenter'
                     ? 0
@@ -1479,7 +1505,7 @@
                     // §401m (the composer): the hook ends at the RIGHTMOST INK (head, or the ledger's overhang)
                     // plus the smallest gap — registry ottavaEndGapSs (the staccato-dot gap, 0.15); LilyPond's own
                     // OttavaBracket runs 0.6 ss past the last note (shorten-pair (-0.8 . -0.6))
-                    dx1Ss: headDx + nhO.wSs / 2 + (ledgers.length ? ledgerExt : 0) + (o.ottavaEndGapSs != null ? o.ottavaEndGapSs : ((O.endPadSs != null) ? O.endPadSs : 0)),
+                    dx1Ss: headDx + (TPG ? TPG.right : nhO.wSs / 2 + (ledgers.length ? ledgerExt : 0)) + (o.ottavaEndGapSs != null ? o.ottavaEndGapSs : ((O.endPadSs != null) ? O.endPadSs : 0)),   // [§445] a trill: the bracket runs over the neighbour group too (the ottava transposes it)
                     ySs: lineY, dir: above ? 'above' : 'below', label, ev: e.id,
                   });
                 }

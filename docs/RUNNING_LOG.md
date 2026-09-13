@@ -11922,3 +11922,117 @@ head). Logged for his eye with N3's geometry touches — the same passage CN-76'
 pages, trills appear from page 6 (5 · 13 · 7 `tr` signs at scale 0.57), no NaN; console errors = the optional choices sidecar (404).
 **Proofs.** `test_trills` 59 GREEN (+3: the whole piece — every trill in the save on the page, the full device and no GC for each, no warning
 naming a trill) · `test_septet_notation` 86. `trill1` and `strike1` stay in the picker as experiments (history); the main file supersedes both.
+
+## §441. "no trills audio" — diagnosed: the notation page's player has never played a trill (zones are skipped), and it still plays the notes the trills ate
+
+**His word, 2026-09-13, on the MAIN notation file:** *"no trills audio"*.
+
+**Found in the code (read, not guessed):** the notation page's MIDI player (`notation/lib/midiplayer.js`, `tick`) — like
+`sonify_core.compileScore` — iterates `waveCurve` objects with a `sonifyNote` ONLY. A trill is a `zone` whose sound is its `midiSnippet`
+(timestamped events the composer builds with `TrillEngine` in `regenerateTrill` at every play start, seeded, and plays with
+`tickZoneMidiPlayback`). The notation player has no zone path, so **no trill has ever sounded on a notation page** — the strikes page was
+the same; the main file only made it visible. **And the player ignores `mutedBy`:** the 11 notes the trills ate (the piano's `wc-880` at
+63.72 s among them) still sound as single strikes where the page now shows a trill — so at a trill onset he hears one struck note, then
+nothing. Neither is caused by 2f.3–2f.6 (the player reads the SCORE, not the IR), but both are on the page he is judging.
+
+**Proposed, not built (his word first):** in `midiplayer.js` (one path, used by the notation page and its exports): skip a `waveCurve`
+stamped `mutedBy` a trill; play each trill zone's saved `midiSnippet` — its notes, velocities, durations, CC events and per-event routing —
+from `startTime − leadMs`, the composer's own snippet semantics ported from `tickZoneMidiPlayback`. The saved snippet is the composer's last
+generation (seeded, regenerated at each play start and written on Save), so it is what the composer plays as of his last Save. Verified by
+ear is his; verified by a battery that counts the note-ons a trill sends against its snippet.
+
+## §442. "So will the notation score then replicate what is in the composer score?" — not yet, and not by the trill fix alone: six differences, measured
+
+**His question, 2026-09-13:** *"So will the notation score then replicate what is in the composer score?"* (on §441's proposed trill fix)
+
+**Compared, the composer's playback (`tickCurvePlayback`, `tickZoneMidiPlayback`, `startPlay → regenerateTrills`) against the notation
+page's (`notation/lib/midiplayer.js` tick), on `piece-septet.json`:**
+1. **Trills** (69 zones, the only objects with a snippet) — composer: regenerated at play start, played from the snippet · notation: silent.
+2. **Notes a trill ate** (11, `mutedBy`) — composer: silent (`mutedByLive`, `trillCovers`) · notation: they sound.
+3. **The swells at 526.8–559.4 s** (78 notes, passage group `grp-psg-mtz5nz`) — composer: velocity pinned (`velAbs`) and CC7 on their own
+   range (`cc7Abs` 65–127, §316/§349) · notation: velocity 100 and the anchor-scale CC7 — a different loudness shape.
+4. **The other held (curve-mode) notes** (185, the morph notes) — composer: velocity from the measured remap (`heldVel`) · notation: 100.
+5. **Timing** — composer: every event handed to Web MIDI ahead with its exact timestamp (§103, the "jumpy" cure) · notation: sent at
+   screen-frame time (~16 ms steps, worse under load) — the failure §102 found in the composer, and trills are where it is heard.
+6. **The plain strikes** (1487) — already the same: `recVel`, CC7 127, the score's own lengths (§401g).
+
+**Reading:** patching trills alone would leave 3–5, and add a second copy of the zone-playback rules to keep in step with the composer — the
+one-rule-in-one-path-not-its-sibling class of 1q-PRINCIPLE. Put to him: (A) port the missing rules into the notation player now; (B) one
+playback engine — the composer's own ticks lifted into a shared module both pages call, proven by comparing their MIDI streams event for
+event; (C) A's trills + eaten notes now as a stopgap, B planned next. AI recommendation: C.
+
+## §443. "what did we do with the tuba score?" — the tuba never played its video from the page's live MIDI: a Reaper render of an exported MIDI file, slaved to the page
+
+**His question, 2026-09-13:** *"what did we do with the tuba score?"* (on §442's three options)
+
+**Read in `for_seven_tubas`:** `docs/plans/VIDEO_BUILD_PLAN.md` PHASE 0 · `docs/NOTATION_WORKFLOW.md` §4 · journal D47 / D49 and the day-36
+milestone. **The route:** (1) `tools/export_midi.js` compiled the save through `sonify_core` — the composer's extracted twin, held equal
+by a parity battery (`test_sonify_core`, `test_midiplayer`) — into `midi/piece-final-draft-001.mid` (4481 notes, 25 755 CC, 4408 bends,
+read back against the compiled events); (2) the composer rendered it in Reaper at 60 BPM → `notation/audio/piece-final-draft-001.wav`
+(762.000 s; first attack 32 ms after the first onset — the sampler's transient, constant); (3) the notation page auto-detects
+`notation/audio/<score>.wav`, shows **♪ render**, and one click slaves the page's clock to the WAV; the video exporter muxed the same WAV.
+Composer, on that: *"sync is very good"*. The page's live MIDI was the working convenience, never the deliverable's sound. **And the tuba
+had no zones:** `piece-final-draft-001` holds 4505 waveCurves and 138 markers, 0 midiSnippets — the trill question never arose there.
+
+**What that means here:** the septet has the same machinery (`tools/export_midi.js`, the ♪ render chip, an empty `notation/audio/`). A
+MIDI file carries exact times (difference 5 of §442 gone) and `compileScore` already honours `velAbs` / `cc7Abs` (§349 — difference 3 gone),
+but the export path has the notation player's other gaps: it compiles waveCurves only (no trills), ignores `mutedBy` (the eaten notes
+sound), and sends 100 where the composer's `heldVel` uses the remap (the morph notes). So the tuba route gives a sample-accurate render
+once `sonify_core` learns trills, eaten notes and the held velocity — the same three rules, fixed once in the shared computation that feeds
+the page, the export and the video.
+
+## §444. His eye on the main file's trills — a column to the right of its go line, the curve's floor at 1, the GC × trill conflicts — HELD at his word
+
+**His word, 2026-09-13, with four crops of the main file attached** (a column of seven trills at ~85.35 s, each a strike's GC arc falling just
+before the trill's column and go line · the curves' thin tapering ends between two staves · a trill curve dipping almost to nothing · a run of
+strikes and trills where GC arcs cross the trill columns):
+
+> *"for this column of trills at 85.35 can we move the trill notation to the right of the go line; and can we recalibrate the graphic curve
+> so it doesn't blank out or have too thin a portion at the bottom, let me see what a 1 looks like; so 0=1 graphically and re calibrate 0-max
+> beginning at 1 graphically; so image 1 you see there is just white space for a bit before the graphic curve starts; image 2 the ends/beginning
+> of the curves not so smooth;i3 goes to almost white space, doesn't look like part of the curve; and then lets discuss what to do about these
+> conflicts in the images between gcs and trills notation, recommendations? hold on to this prompt while I read about the playback, no action
+> yet"*
+
+*(AI reading, marked as such — nothing acted on; he asked to hold, and §443's playback A / B / C is still open:)*
+(1) **the column at 85.35 s** — its trill notation (head · neighbour · `tr` · `sfz`) placed to the RIGHT of the go line instead of left, where the
+strikes' GCs crowd the space before it; whether as a one-column choice or a rule is to ask. (2) **the curve's graphic floor** — drawing only,
+never the data: level 0 drawn at 1 (of the composer score's 0–10 scale, a tenth of the lane), and 0 → max re-mapped onto 1 → max, so a trill
+never starts in white space (image 1), its ends are not hair-thin slivers (image 2), and a dip reads as part of the curve (image 3: the A
+window's 0.03 at 67.62 s). "Let me see what a 1 looks like" = show him the floor before settling it. (3) **the GC × trill conflicts** —
+recommendations to be put to him, discussion first.
+
+## §445. The trill column moved to the RIGHT of its go line — built on the first five; the leftmost ink measured, not assumed; the order set
+
+**His word, 2026-09-13:** *"lets fix the trill notation first then With that is settled. We'll fix the midi fix the export for trills and and
+do a export and render the audio file. Let's just move the trill notation to the right of the go line. There's too many conflicts on the
+left. Just confirm that you understand the horizontal spacing here. there's a lot of things, and different ones make the furthest most left
+horizontal point in the column. So, for example, if there's an ottava, the left edge of the ottava is generally the left most point, then
+there's ledger lines and accidentals, things like that. just confirm that you already have something to detect those and put the
+appropriate spacing. to the right of the go line before the... any notation starts. and tell me what that spacing is. And then let's just
+build it on the first few. So the first two is fine. Or, actually, let's do the first two, and then there's a series of three together.
+Let's see those five first."* — and, before it, *"Okay. The audio situation is that I render the midi file into an audio file, and then
+I'll have audio playback from the audio file in the notations code. Correct?"* (yes — the tuba's route, §443).
+
+**THE ORDER, his:** (1) the trill notation settled (§444's three: this column move · the curve floor at 1 · the GC × trill conflicts);
+(2) the MIDI export learns trills (§443: the snippets, the eaten notes); (3) export, render in Reaper, the WAV in `notation/audio/`.
+
+**Checked before confirming — one part was NOT there:** layout already knew the column's left ink from the head, its ledger overhang and its
+accidental (`leftRel`, the H.4c ledger clearance). It did NOT know two things: (a) **the ottava sign** — render.js widens a short bracket
+LEFTWARD to its minimum span (1.37 ss + the label), so on a single head the "8va" starts well left of the note, decided only at draw time;
+(b) **the marks centred on the head** — the `tr` (1.37 wide) and the `sfz` (1.18) are wider than the open head (1.11). Both now enter.
+
+**Built.** `notation/lib/layout.js`: `nhAnchor: 'afterGo'` — the column's leftmost ink (head · ledgers · accidental · the technique symbol ·
+the dynamic mark · the ottava sign by render's own minimum-span rule, same registry numbers) sits `afterGoGapSs` — default the house
+`nhGapSs` **0.25 ss** (≈ 2 px at the video's 7.9 px/ss; the same gap the column kept BEFORE the go line, mirrored) — RIGHT of the go line.
+Not for chords. `tools/notate_section.js --trillsRight t0-t1`: every trill with its onset in the span gets the anchor (an engraving
+overlay, recorded in the build, so R keeps it). **Found on the way and fixed:** an ottava on a trill ended its bracket at the main head —
+but the ottava transposes the neighbour too; the hook now runs to the right paren + `ottavaEndGapSs` (both in the ink and in the leftmost
+computation, so the bracket no longer needs render's leftward widening).
+
+**The main file rebuilt:** `... --bricks --trills --trillsRight 63-68 --id piece-septet` → the five: the piano @63.72 · Vc @65.76 · Va @67.82
+· Vn1 @67.85 · Vn2 @67.85. **Measured, each column's leftmost ink = +0.250 ss exactly, and a different element each time:** the piano C2 — its
+ledger · Vc (8va) — its sharp · Va (15ma) — the `tr` · Vn1 — the `tr` · Vn2 — a ledger. The rest unchanged (right ink −0.250).
+`test_trills` 63 GREEN (+4: leftmost = nhGapSs on the five · ≥ 2 kinds of leftmost element · the others unchanged · the ottava over the
+neighbour); against the pre-§445 layout RED, 2. `test_septet_notation` 86. **For his eye:** the five, CTRL+SHIFT+R on the main file.
+The column now sits over the start of its green curve (the curve is drawn over the ink at 0.3) — his to judge with §444's curve floor.

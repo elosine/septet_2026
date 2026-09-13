@@ -43,6 +43,7 @@ the whole column left of the go line · the go line at the onset · the level cu
 | **the unit's right ink** | the right paren's right edge | this sheet |
 | **gap: the unit's right ink → the go line** | **0.25 ss** — the surge's `nhGapSs` (the composer's "2 px" at staff 31.6) | T `layout.nhGapSs`, `_nhGapNote` |
 | GC push | none — no GC (the 0.6 ss strike gap does not apply) | D §434 |
+| **RIGHT of the go line** (§445, first five by `--trillsRight`) | `nhAnchor: afterGo` — the column's LEFTMOST ink (head · ledgers · accidental · `tr` · `sfz` · the ottava sign, by render's minimum-span rule) **0.25 ss** (`nhGapSs`) right of the go line; an ottava's bracket runs over the neighbour group | D §445 |
 
 **Width check, the piano's first trill (C2 → D2):** head 1.107 · 0.30 · paren 0.285 · 0.42 · head 0.83 · 0.42 · paren 0.285 = **3.65 ss**
 of ink, plus the main head's left ledger overhang (0.28), then 0.25 to the go line. The column's left edge sits ~4.2 ss before the onset.

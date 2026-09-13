@@ -22,7 +22,7 @@
   "date": "2026-09-13",
   "tool": "tools/notate_section.js (profile trance) --bricks --trills",
   "notes": "Derived extraction (B1). Segmentation: DB-6 greedy IOI runs, TOL 0.015 s. Regenerable; authored content belongs in overlays only. TRILLS (PLAN 2f.3): 69 trill zone(s) as env trill; 11 eaten note(s) (mutedBy) not extracted; 0 trill(s) read a flat level. BRICKS MODE: all chunks forced unresolved (working file).",
-  "build": "node tools/notate_section.js --score piece-septet --profile trance --bricks --trills --id piece-septet --all"
+  "build": "node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --trillsRight 63-68 --id piece-septet"
  },
  "events": [
   {
@@ -91487,5 +91487,71 @@
    "provenance": "derived"
   }
  ],
- "overlays": []
+ "overlays": [
+  {
+   "id": "ov-trillright-ev-zn-953",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-zn-953"
+   },
+   "value": {
+    "device": {
+     "nhAnchor": "afterGo"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-trillright-ev-zn-959",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-zn-959"
+   },
+   "value": {
+    "device": {
+     "nhAnchor": "afterGo"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-trillright-ev-zn-963",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-zn-963"
+   },
+   "value": {
+    "device": {
+     "nhAnchor": "afterGo"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-trillright-ev-zn-965",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-zn-965"
+   },
+   "value": {
+    "device": {
+     "nhAnchor": "afterGo"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-trillright-ev-zn-964",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-zn-964"
+   },
+   "value": {
+    "device": {
+     "nhAnchor": "afterGo"
+    }
+   },
+   "provenance": "authored"
+  }
+ ]
 }

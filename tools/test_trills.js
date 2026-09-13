@@ -296,6 +296,53 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
   ok(!warn.length, 'the whole piece: no layout warning names a trill' + (warn.length ? ' — ' + warn.slice(0, 3).join(' | ') : ''));
 }
 
+// ---- §445 the column RIGHT of the go line (nhAnchor 'afterGo', notate_section --trillsRight) ----
+{
+  const Extract = require('../notation/lib/extract_core.js');
+  const Layout = require('../notation/lib/layout.js');
+  const score = J('scores/piece-septet.json');
+  const ens = J('notation/registry/ensemble.json'), tech = J('notation/registry/techniques.json'), C = J('notation/registry/container.json');
+  const L = C.engraving.layout, O = glyphs.standards.ottava, LF = glyphs.standards.ledgerLine.lengthFraction;
+  const parts = ens.parts.map(p => p.part);
+  const z = score.objects.filter(o => o.type === 'zone' && o.midiModel === 'trill' && o.trill).sort((a, b) => a.startTime - b.startTime);
+  const w0 = Math.floor(z[0].startTime) - 1, w1 = z[Math.min(7, z.length - 1)].endTime + 0.2;
+  const { doc } = Extract.extract(score, { scoreName: 'piece-septet', window: [w0, w1], parts, id: 'trill-right', registry: J('notation/registry/classes.json'),
+    sampleLengths: J('bank/sample_lengths.json'), profile: 'trance', options: { chords: true, trills: true }, metaLayer: ens.metaLayer, techniques: tech.techniques });
+  for (const c of doc.chunks) c.strategy = 'unresolved';
+  const trills = doc.events.filter(e => e.env === 'trill').sort((a, b) => a.onset - b.onset);
+  const rightIds = new Set(trills.slice(0, 5).map(e => e.id));   // the first five, as the composer asked
+  for (const id of rightIds) doc.overlays.push({ id: 'ov-trillright-' + id, kind: 'engraving', target: { event: id }, value: { device: { nhAnchor: 'afterGo' } }, provenance: 'authored' });
+  const model = Layout.layoutSection(doc, glyphs, Object.assign({ frameParts: parts, ensemble: ens, techniques: tech }, L));
+  const G = n => n === 'notehead-open' ? glyphs.notehead.open : n === 'notehead' ? glyphs.notehead.filled : n.startsWith('accidental-') ? glyphs.accidental[n.slice(11)]
+    : n.startsWith('artic-') ? glyphs.articulation[n.slice(6)] : n.startsWith('dyn-') ? glyphs.dynamic[n.slice(4)] : null;
+  const ext = i => {
+    if (i.k === 'ledger') { const w = i.wSs * (1 + 2 * LF); return [i.dxSs - w / 2, i.dxSs + w / 2]; }
+    if (i.k === 'ottava') { const lg = glyphs.ottavaText[i.label], lgW = lg ? lg.wSs + (O.textGapBeforeLineSs || 0.1) : 0;
+      let x0 = i.dx0Ss; if (i.dx1Ss - (x0 + lgW) < (O.minBracketSpanSs || 1.37)) x0 = i.dx1Ss - (O.minBracketSpanSs || 1.37) - lgW; return [x0, i.dx1Ss]; }
+    if (i.k !== 'glyph') return null; const g = G(i.g); if (!g) return null; const k = i.scale || 1;
+    if (i.align === 'noteY' && g.anchors && g.anchors.noteY) { const x = i.dxSs - g.anchors.noteY.x * k; return [x, x + g.wSs * k]; }
+    return [i.dxSs - g.wSs * k / 2, i.dxSs + g.wSs * k / 2];
+  };
+  let badR = [], badL = [], badO = [], kinds = new Set();
+  for (const e of trills) {
+    const sys = model.systems.find(s => s.items.some(i => i.k === 'envcurve' && i.ev === e.id));
+    const its = sys.items.filter(i => Math.abs((i.t != null ? i.t : i.t0) - e.onset) < 1e-9);
+    const xs = its.map(ext).filter(Boolean);
+    const left = Math.min(...xs.map(x => x[0])), right = Math.max(...xs.map(x => x[1]));
+    if (rightIds.has(e.id)) {
+      if (Math.abs(left - L.nhGapSs) > 1e-6) badR.push(e.source.objectId + ' left ' + left.toFixed(3));
+      const who = its.map(i => [i, ext(i)]).filter(p => p[1]).reduce((a, p) => (p[1][0] < a[1][0] ? p : a));
+      kinds.add(who[0].k === 'glyph' ? who[0].g : who[0].k);
+    } else if (Math.abs(right + L.nhGapSs) > 1e-6) badL.push(e.source.objectId + ' right ' + right.toFixed(3));
+    const ott = its.find(i => i.k === 'ottava'), rp = its.find(i => i.g === 'accidental-rightParen');
+    if (ott && rp && ott.dx1Ss < ext(rp)[1] - 1e-9) badO.push(e.source.objectId);
+  }
+  ok(!badR.length, 'afterGo: each of the first five trill columns starts nhGapSs (' + L.nhGapSs + ') right of its go line, from its leftmost ink — the leftmost here: ' + [...kinds].join(', ') + (badR.length ? ' — ' + badR.join(', ') : ''));
+  ok(kinds.size >= 2, 'afterGo: the leftmost element differs from column to column (' + kinds.size + ' kinds) — the rule measures, it does not assume the head');
+  ok(!badL.length, 'the trills without the flag keep their column left of the go line (right ink −nhGapSs)' + (badL.length ? ' — ' + badL.join(', ') : ''));
+  ok(!badO.length, 'an ottava on a trill runs over the neighbour group (its hook past the right paren)' + (badO.length ? ' — ' + badO.join(', ') : ''));
+}
+
 console.log(pass + ' passed, ' + fail + ' failed');
-console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR · 2f.4 device · 2f.6 the whole piece');
+console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR · 2f.4 device · 2f.6 the whole piece · §445 right of the go line');
 process.exit(fail ? 1 : 0);

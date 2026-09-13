@@ -1115,6 +1115,26 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
     console.log('  dynSide: ' + e.source.objectId + '@T' + (part + 1) + ' ' + e.onset.toFixed(2) + 's -> ' + side);
   }
 }
+// --trillsRight t0-t1 (§445, the composer 2026-09-13: "move the trill notation to the right of the go line. There's too many
+// conflicts on the left ... let's do the first two, and then there's a series of three together"): every trill whose onset lies
+// in the span gets device.nhAnchor 'afterGo' — its whole column (head, neighbour, tr, sfz) starts nhGapSs RIGHT of its go line,
+// measured from the column's leftmost ink. Repeatable; recorded in the build, so R keeps it.
+{
+  for (let i = 0; i < process.argv.length; i++) {
+    if (process.argv[i] !== '--trillsRight') continue;
+    const m = String(process.argv[i + 1] || '').match(/^([\d.]+)-([\d.]+)$/);
+    if (!m) { console.error('--trillsRight needs t0-t1 (e.g. --trillsRight 63-68)'); process.exit(2); }
+    const t0 = parseFloat(m[1]), t1 = parseFloat(m[2]);
+    const hit = doc.events.filter(e => e.env === 'trill' && e.onset >= t0 && e.onset <= t1);
+    if (!hit.length) console.warn('  --trillsRight ' + m[0] + ': no trill in the span (build with --trills)');
+    for (const e of hit) {
+      const existing = doc.overlays.find(o => o.kind === 'engraving' && o.target.event === e.id);
+      if (existing) existing.value.device = Object.assign({}, existing.value.device, { nhAnchor: 'afterGo' });
+      else doc.overlays.push({ id: 'ov-trillright-' + e.id, kind: 'engraving', target: { event: e.id }, value: { device: { nhAnchor: 'afterGo' } }, provenance: 'authored' });
+    }
+    console.log('  trillsRight ' + m[0] + ': ' + hit.length + ' trill(s) → the column right of the go line (' + hit.map(e => e.source.objectId + '@' + e.onset.toFixed(2)).join(', ') + ')');
+  }
+}
 // --ringFromBrick t0-t1 (day 30): UNIFORM WRITTEN RING LENGTH FROM THE DRAWN
 // BRICK. Composer, closing CLOUD02-I: "the long tone at forty one, just make
 // sure they're all the same length. Take the length from the brick in the
