@@ -2413,6 +2413,14 @@
       for (let i = 1; i < smp.length; i++) if (smp[i] > smp[iMax]) iMax = i;
       if (iMax >= 1) smp = smp.slice(0, iMax + 1);
     }
+    // curveFloor (2f.7, the composer 2026-09-13, RUNNING_LOG §444 · §450-§451): "0=1 graphically and re calibrate 0-max
+    // beginning at 1" — level v draws at floor + v × (1 − floor), so 0 sits a tenth of the lane up and the top stays at the
+    // top. A trill never starts in white space, its thin ends keep a body, a dip reads as part of the curve. LAST, so it
+    // lifts whatever curveZero / cut produced; opt-in per device; the meters ride it with the page.
+    if (dev && dev.curveFloor > 0 && dev.curveFloor < 1) {
+      const f = dev.curveFloor;
+      smp = smp.map(v => +(f + v * (1 - f)).toFixed(5));
+    }
     return smp;
   }
 

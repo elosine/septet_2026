@@ -24,7 +24,7 @@ the whole column left of the go line · the go line at the onset · the level cu
 | neighbour | `trill.pitch + trill.interval` (1 = semitone, 2 = whole tone; the draft's 69 are all upper) | D §427 |
 | neighbour spelling | **the next letter name up** (a second, never a unison): C + 1 = D♭, E + 1 = F, C♯ + 2 = D♯. If that needs a double sharp or flat, the house speller instead | proposal — his eye at 2f.5 |
 | env | `trill` (a new species; resolves `devices.byEnv.trill`) | this sheet |
-| level | 101 samples 0–1 over [onset, onset + duration], from the resolved reference (§5) | C, D23 |
+| level | samples 0–1 over [onset, onset + duration], from the resolved reference (§5): **100 per second, never fewer than 101**, in the MAIN file (`--trillRate 100`, 2f.7, RUNNING_LOG §451); 101 without the flag | C, D23 |
 | eaten notes | a note stamped `mutedBy: <trill id>` is **not extracted** when trills are (its attack is the trill's attack). 11 notes carry the stamp today, the piano's `wc-880` at 63.72 s among them | C, TRILLS_TOOL §6 |
 | opt-in | trills are extracted only with a build flag, so the strikes page (`strike1`) is unchanged until rebuilt with it | the D9 / snapshot discipline |
 
@@ -78,6 +78,8 @@ of ink, plus the main head's left ledger overhang (0.28), then 0.25 to the go li
 | band | value 0 → the lane's bottom edge, 1 → its top edge; **the piano: its whole lane** (both staves), as its go line and GC already are | T render (`envcurve`); S §401d. Built 2f.4: the curve item carries `band: lane`, render draws it over the part's whole lane |
 | back edge | a vertical edge at the trill's end (the fill closes straight down) | T render |
 | peak truncation (`cut`) | **off** — the tuba's surge truncates its rise at the peak; a trill's curve is drawn over its whole span as sampled | this sheet |
+| **the drawn floor** (2f.7) | level v drawn at **0.1 + v × 0.9** — 0 at 1 of the composer's 0–10, the top at the top; the curve never blanks out at 0, its ends keep a body. Drawing only: the IR keeps the true level, the sound is untouched; the meters ride the same drawn samples | registry `devices.byEnv.trill.curveFloor: 0.1` · layout `drawnLevelSamples` · RUNNING_LOG §444 · §450–§451 |
+| the look | superseded by **D42** (`docs/CURVE_LOOK.md`): limeGreen `#99FF00`, fill 0.3, 2 px stroke, path opacity 0.3 — the colour row above is the 2f.4 build | D42 |
 | the reference | `trill.curveRef`: `auto` → the A window (layer 8) if a curve there overlaps the span, else the lane's own drawn curve (never a note), else flat at `trill.level`; `A`/`B`/`C` → that window; `lane` → `trill.curveId` or the lane's first curve; `flat` → `trill.level` | C `trillRefResolved`, `refCurvesOn` |
 | the value at time t | the curve covering t, else the nearest curve's nearer edge; `getYAtTime(c, t) / 10` | C `curvesLevelAt`, `getYAtTime` |
 | the evaluator | the composer's `getYAtPos` — **it has a `smooth` blend that `sonify_core.evalWaveCurve` lacks**. No window in `piece-septet` has smooth nodes today (0 of 6), so the two agree; the extractor must still follow the composer's math or refuse a smooth node loudly | C; §435 |

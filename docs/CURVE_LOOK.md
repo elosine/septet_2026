@@ -32,6 +32,15 @@ Piece #2 (*composition for two pianos and two percussion*), its final performanc
 **What the eye sees:** the interior at **0.3 × 0.3 = 9 %**, the outline at **30 %** — a faint body with a clear edge. The "border" is
 the stroke, three times as strong as the fill, because the path opacity multiplies a fill that is already at 0.3.
 
+### §2a The density and the floor (2f.7, 2026-09-13 — the trills; RUNNING_LOG §450–§451)
+
+- **Density: 100 samples per second**, never fewer than 101 — piece #2's own number (`generateCurveDataArray` bakes every curve at 100/s;
+  the page joins them with straight segments). A fixed count per curve is the fault: 101 over a 17 s trill drew 28 px corners at the video's
+  160 px/s. In the septet: `notate_section --trillRate 100`.
+- **The floor: 1 of 10.** Level v is drawn at **0.1 + v × 0.9** — zero never blanks out, a low stretch keeps a body, the top stays at the top.
+  Drawing only; the meters ride the same samples. NO earlier piece drew one (#2's curves leave 0 at once; the tuba's swells never sound
+  below 0.2). In the septet: `devices.byEnv.trill.curveFloor: 0.1`. **Provisional until the composer's eye on the page.**
+
 ## §3 The colours, by role
 
 | colour | hex | #2's use | the standard's use |
@@ -104,3 +113,5 @@ device is wanted.* Both are drawn per lane at the cursor, from `builds/performan
   was the tuba's `#2E7D32`, fill 0.3, no stroke), `crescCurve` and `glissCurve` (were fill 0.22, no stroke). RUNNING_LOG §446–§447.
 - **2026-09-13 — D42, the meters** — `curveMeter` · `crescMeter` · `glissMeter` to #2's follower: fill 0.6 → 0.3, the fill drawn before
   the outline. The motive pie and the line-wedge meter recorded as #2's spec (§7), not enabled. RUNNING_LOG §448.
+- **2026-09-13 — 2f.7** — the density (100 samples per second) and the drawn floor at 1 of 10, on the septet's trills (§2a). The morph
+  crescendo not yet — his word. RUNNING_LOG §450–§451.

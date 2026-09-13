@@ -12119,3 +12119,88 @@ clear?"* — journal §2 now opens with the checkpoint: §444's prompt verbatim,
 0.1 = "1" on the 0–10 scale, the top kept; drawing only), the four questions only he can answer, where it would be built
 (`layout.js drawnLevelSamples`, a device `curveFloor`), then his order after it. Resume on Fable (a design conversation), build on Opus.
 Resume reads: §444 only.
+
+## §450. The curve shapes across the four pieces, measured — no piece draws a floor; the septet's polygon is the 101-sample cap
+
+**His word, 2026-09-13, on resuming (Fable) — the `/postclear` prompt verbatim:**
+
+> *"I want to revisit the curve shapes in the septet. Can we have a look at the shapes in all the scores? The string quartet, the two piano,
+> two percussion, and then the tuba piece. in particular in the tuba piece, I noticed that the curves are much smoother there, and the sound
+> does go from nothing and to nothing. However, the curves there's no white space. The curves are smooth too. So let's look at those standards
+> and see what we can do about the curves in the CPTEP. they blank out at zero. And when they're very low, when they're at minimum, there's
+> hardly anything showing. And also the curves aren't very smooth. These are the trill curves so far."*
+
+**What was read (targeted, no scan):** `docs/CURVE_LOOK.md` · septet `notation/lib/layout.js drawnLevelSamples` + the envcurve item ·
+`render.js` envcurve / glisscurve · `extract_core.js trillLevelSamples` + `curveYAtPos` · the MAIN IR's 69 trills (samples measured) · the tuba's
+`layout.js` / `render.js` (byte-equal on these paths) · the tuba IRs `db1` `trance-a4` `morph-x01` (samples measured) · #2's
+`builds/performance/index.html generatePathFromModel` / `generateCurveDataArray` + its `score.json` 148 curves · #1's `renderCurve`.
+
+**The comparison (measured):**
+
+| | #1 quartet · #2 pianos/perc | #4 tubas | septet trills |
+|---|---|---|---|
+| the shape's source | a MODEL between two endpoints (y1→y2 on 0–10; #2: all 148 `logarithmic`, y1 = 0, y2 = 10) | fixed samples in the IR: swells 101 per event; morph gliss/cresc 401 over 108 s from a Catmull-Rom fit of 13–21 anchors | 101 samples per trill whatever its length, sampled from his curve windows (`curveYAtTime`: bezier segments + the node `smooth` blend — a smooth function) |
+| how it is drawn | the model evaluated at render every ≤ 2 px (≥ 200 points) — smooth by construction | straight `L` segments between the samples | straight `L` segments between the samples (same code) |
+| density | ~2 px per point | swells 16–42 samples/s; morph 3.7/s but on a smooth fit | 17.3 s trills = 5.8/s ≈ **28 px per corner** at the video's 160 px/s (12 s pages); 12.05 s trills = 8.3/s ≈ 19 px; under 3 s = ≥ 39/s, smooth |
+| at zero | 0 draws ON the baseline; a log curve from 0 leaves it at once — no hug | 0 on the baseline; morph cresc 0 → 0.04 sits under 10 % for 4.3 s / 1.9 s at its ends, the gliss 10 s / 6.8 s; the swells never sound below 0.2 (drawn from 0 via `curveZero`) and rise at once; the surges 0 → cut | 0 on the baseline: the 85.35 s column starts at 0.015 and sits under 10 % for 0.17 s (≈ 27 px); ev-zn-1136 at 132.13 s under 10 % for 0.51 s (≈ 82 px, 20 % of its span); three trills (127.15 · 129.17 · 132.13 s) dip to 0.000x at **132.43 s**; the 72.8 s seven bottom out at 0.061 |
+| a floor | none | none | none |
+
+**Correction to §444 / the checkpoint's image 3:** the dip "to almost white space" is NOT at 67.62 s — every trill between 63.7 and 70.5 s is flat
+at 1.0. The near-zero dips are at 132.43 s (ev-zn-1121 · 1129 · 1136, all ending 134.70). The A-window 0.03 at 67.62 s (wc-952) was read off a
+different object.
+
+**The reading (AI, put to him — not decided):** two faults, two independent cures, both drawing-only.
+(A) **the floor** — his "0 = 1 graphically": drawn height = floor + v × (1 − floor), floor 0.1 (≈ 14 px of a ≈ 140 px lane at the video
+frame); cures image 1 (white space at the go line), image 3 (the dips read as part of the curve) and the hair-thin slivers of image 2 (the 2 px
+outline collapsing on itself under ~3 px of height). The meters ride the same samples, so they rise from the floor too. NO earlier piece has a
+floor; #2 never needed one because a two-point log curve leaves 0 instantly, and the tuba's swells never sound below 0.2.
+(B) **the density** — the 101-sample cap is the polygon. Cure at extract: samples per trill = max(101, ceil(duration × 50)) — the 17.3 s trills
+get 865 (≈ 3 px per segment); the same math playback follows (`curveYAtTime`), so nothing is invented. Costs one rebuild of the MAIN file
+(a flag in its `provenance.build`, D41). The alternative — a spline through the 101 at render — needs no rebuild but draws shape the data
+does not hold; rejected in the reading. The tuba's morph at 3.7/s reads smooth because its samples lie on a smooth fit and its page is
+zoomed out — not a precedent for the septet's 160 px/s pages.
+**Open, his to answer, one at a time:** trills only, or the morph crescendo too (the glissando is pitch — no floor)?
+
+## §451. BUILT — the trill curve shape: 100 samples per second and the drawn floor at 1 (PLAN 2f.7 (b))
+
+**His word, 2026-09-13, after the §450 readings were cut down at his asking** (*"explain to me more simply and basically and very
+concisely"*; then *"And the two piano, two percussion piece, those were done from formula as well. ? And why weren't these ones done from a
+formula? And what would it look like if we derive them from a formula?"*; then *"What's the revised recommendation then very simply?"*):
+the recommendation put to him — (1) bake 100 dots per second into each trill's curve, the two-piano number · (2) draw zero at 1 on his 0–10
+scale, the top at 10, the meters on the same floor — and he switched to Opus without a clear: *"go ahead and build it"*.
+
+**Correction to §450, found while answering him:** piece #2's 148 curves are NOT drawn live from their formula. `generateCurveDataArray`
+bakes the model into samples at **100 per second** when the curve is saved (`preBaked`, all 148), and `_generatePreBakedPath` joins them
+with straight `L` segments — the septet's drawing exactly. The difference was only density. Why the septet froze samples at all: D9, the
+IR is the one source every score reads; the page knows nothing of the composer's curve models. The 101 came from piece #4's swells (none
+longer than ~6 s); the trills were the first 12 s and 17 s curves through that path.
+
+**What was built (Opus):**
+- `extract_core.js` — option `trillRate` (samples per second): n = max(101, ceil(duration × rate) + 1), the same `curveYAtTime` math;
+  absent = the fixed 101, so every other build is unchanged.
+- `tools/notate_section.js --trillRate N` → the option, and into the tool name. **The MAIN file's recorded build now carries
+  `--trillRate 100`** (D41: a new notation rule = a flag in its build), so R in the page keeps it.
+- `layout.js drawnLevelSamples` — device option `curveFloor`: v → floor + v × (1 − floor), applied LAST (after curveZero and cut);
+  opt-in. `container.json → devices.byEnv.trill.curveFloor: 0.1`. The meters ride it (the page's `drawnOf`).
+- Rebuilt `notation/ir/piece-septet.ir.json`: 69 trills, 28 868 samples (was 6 969), 1.34 → 1.60 MB. **Nothing else in the IR changed**
+  — diffed against HEAD with the trill samples set aside: only `provenance.build / tool / createdBy`.
+- `tools/test_trills.js` +17 checks (the rate: counts, ≤ 10 ms apart on the 17.3 s trill, the same ends as the 101 reading, every sample
+  matches its window read independently — worst < 0.002; no rate = still 101 · the floor: registry 0.1, the surge none, 0 → 0.1 · 0.5 → 0.55
+  · 1 → 1, no flag = unchanged, the order after curveZero / cut, the data still dips < 0.01 · layout: every trill curve 0–176 s drawn in
+  0.1–1 · render: a level-0 start 10 % of the lane up, the fill still closing on the baseline · the meter at level 0 fills a tenth · the MAIN
+  file's build and counts). **91 green** · `test_septet_notation` 86 green · `test_identity` all pass.
+
+**Seen in the running app** (his :5300, a view-only tab in the in-app browser, 1920 × 1080, the fresh page — R not pressed; measured off the SVG):
+
+| where | before (§450) | now |
+|---|---|---|
+| the 85.35 s column, start at the go line | on the baseline, under 10 % for ≈ 27 px | **15.7 px** up in a 137.3 px lane |
+| the same, its lowest point | 0 — blank | **13.8 px** (a tenth) |
+| the same, longest straight segment | ≈ 28 px | **3.3 px** (4.9 px on the piano's 216 px lane) |
+| the 72.8 s seven on page 8 | ≈ 19 px segments | **1.6 px** |
+| the dip at 132.43 s (127.15 · 129.17 · 132.13 s) | 0.000x — gone | **13.8 px** on a string lane, **21.7 px** on the piano's |
+| the piano trill at 132.13 s, start | ≈ 2 px | **23.8 px** |
+| every curve's top | full lane | full lane (137.3 / 216.3 px) |
+
+**Not done, his to answer:** the floor on the morph crescendo too (default: trills only — one more flag, `crescCurve` has no device path yet,
+it would go in layout's cresccurve item) · his eye on the page before the floor is settled (*"let me see what a 1 looks like"*).

@@ -97,6 +97,7 @@
       "curve": true,
       "cut": false,
       "curveBand": "lane",
+      "curveFloor": 0.1,
       "dynPair": false,
       "dynMark": "sfz",
       "techSymbol": "trill",

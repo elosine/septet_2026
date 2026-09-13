@@ -46,6 +46,10 @@
     // (stamped mutedBy) is not extracted — its attack is the trill's. Off = every
     // page extracts exactly as before (docs/TRILL_NOTATION_SPEC.md §1).
     trills: false,
+    // [2f.7, 2026-09-13, RUNNING_LOG §450-§451] with options.trillRate (samples per second): a trill's drawn level is
+    // sampled by TIME, never fewer than 101 — the two-piano piece's pre-baked curves (100/s). 0 = the fixed 101 of
+    // piece #4's swells, which a 17 s trill spread 28 px apart at the video scale (the corners the composer saw).
+    trillRate: 0,
     // the curve windows a trill reads by name — composer.html CURVE_LAYERS / CURVE_NAMES
     CURVE_WINDOWS: { A: 8, B: 9, C: 10 },
   };
@@ -136,7 +140,7 @@
     const l = lane(); if (l.curves.length) return Object.assign(l, { auto: true });
     return { kind: 'flat', name: 'flat', curves: [], auto: true };
   }
-  function trillLevelSamples(r, z) {
+  function trillLevelSamples(r, z, rate) {
     const lv = Math.max(0, Math.min(1, z.trill && z.trill.level != null ? +z.trill.level : 0.5));
     const at = sec => {
       if (r.kind === 'flat' || !r.curves.length) return lv;
@@ -148,7 +152,8 @@
     };
     const span = z.endTime - z.startTime;
     // clamped to the schema's 0-1: a ctrl segment may overshoot (cy up to 1.4)
-    return Array.from({ length: 101 }, (_, i) => +Math.max(0, Math.min(1, at(z.startTime + span * (i / 100)))).toFixed(4));
+    const n = rate > 0 ? Math.max(101, Math.ceil(span * rate) + 1) : 101;
+    return Array.from({ length: n }, (_, i) => +Math.max(0, Math.min(1, at(z.startTime + span * (i / (n - 1))))).toFixed(4));
   }
 
   function approxGcd(a, b, tol) {
@@ -394,7 +399,7 @@
           provenance: 'derived',
           env: 'trill',
           trill: { interval: T.interval, neighbour: { midi: nMidi, spelled: spellNeighbour(spelled, nMidi) }, curve: r.auto ? 'auto:' + r.name : r.name },
-          level: { samples: trillLevelSamples(r, z) },
+          level: { samples: trillLevelSamples(r, z, opt.trillRate) },
         };
         events.push(ev);
         perPart.get(z.layer).push({ ev, cls: 'trill', obj: z });

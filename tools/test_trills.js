@@ -387,6 +387,108 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
   }
 }
 
+// ---- 2f.7 the curve shape (§450–§451): 100 samples per second · the drawn floor at 1 of 10 — drawing only ----
+{
+  const Extract = require(arg('--extract') ? path.resolve(arg('--extract')) : '../notation/lib/extract_core.js');
+  const SonifyCore = require('../score/public/sonify_core.js');
+  const Layout = require('../notation/lib/layout.js');
+  const Render = require('../notation/lib/render.js');
+  const Coords = require('../notation/lib/coords.js');
+  const A = require('../notation/lib/animobj.js');
+  const C = J('notation/registry/container.json');
+  const score = J('scores/piece-septet.json');
+  const base = { scoreName: 'piece-septet', window: [0, 176], parts: [0, 1, 2, 3, 4, 5, 6], id: 'trill-rate', profile: 'trance', metaLayer: 7,
+    registry: J('notation/registry/classes.json'), sampleLengths: J('bank/sample_lengths.json'), techniques: J('notation/registry/techniques.json').techniques };
+  const at101 = Extract.extract(score, Object.assign({}, base, { options: { chords: true, trills: true } })).doc.events.filter(e => e.env === 'trill');
+  const at100 = Extract.extract(score, Object.assign({}, base, { options: { chords: true, trills: true, trillRate: 100 } })).doc.events.filter(e => e.env === 'trill');
+  const want = e => Math.max(101, Math.ceil(e.duration * 100) + 1);
+  ok(at100.length === at101.length && at100.length > 0, 'trillRate 100: the same trills as without it (' + at100.length + ')');
+  const badN = at100.filter(e => e.level.samples.length !== want(e) || e.level.samples.some(v => !(v >= 0 && v <= 1)));
+  ok(!badN.length, 'trillRate 100: every trill carries max(101, ceil(duration × 100) + 1) samples, all in 0–1' + (badN.length ? ' — ' + badN.slice(0, 4).map(e => e.id + ' ' + e.level.samples.length).join(', ') : ''));
+  const long = at100.reduce((m, e) => (e.duration > m.duration ? e : m), at100[0]);
+  ok(long.level.samples.length >= 1731 && long.duration / (long.level.samples.length - 1) <= 0.01 + 1e-12,
+    'trillRate 100: the longest trill (' + long.duration.toFixed(2) + ' s) is sampled at most 10 ms apart (' + long.level.samples.length + ')');
+  ok(at101.every(e => e.level.samples.length === 101), 'no trillRate: still the fixed 101 (every other build unchanged)');
+  // the same math, only denser: the ends agree, and every sample matches its window read independently (no smooth nodes)
+  ok(at100.every((e, k) => Math.abs(e.level.samples[0] - at101[k].level.samples[0]) < 1e-9
+    && Math.abs(e.level.samples[e.level.samples.length - 1] - at101[k].level.samples[100]) < 1e-9),
+    'trillRate 100: each trill starts and ends on the same level as the 101-sample reading');
+  {
+    let worst = 0;
+    const win = { A: 8, B: 9, C: 10 };
+    for (const e of at100) {
+      const z = score.objects.find(o => o.id === e.source.objectId);
+      const L = z.trill.curveRef === 'auto' ? 8 : win[z.trill.curveRef];
+      if (L == null) continue;
+      const cs = score.objects.filter(o => o.type === 'waveCurve' && o.layer === L && !o.groupId && o.sonifyNote == null && o.endSeconds > z.startTime && o.startSeconds < z.endTime);
+      if (!cs.length || cs.some(c => c.nodes.some(n => n.smooth > 0))) continue;
+      const n = e.level.samples.length;
+      for (let i = 0; i < n; i += 7) {
+        const sec = z.startTime + (z.endTime - z.startTime) * i / (n - 1);
+        const c = cs.find(o => sec >= o.startSeconds && sec <= o.endSeconds);
+        if (!c) continue;
+        const v = Math.max(0, Math.min(1, SonifyCore.evalWaveCurve(c, (sec - c.startSeconds) / (c.endSeconds - c.startSeconds))));
+        worst = Math.max(worst, Math.abs(v - e.level.samples[i]));
+      }
+    }
+    ok(worst < 2e-3, 'trillRate 100: the dense samples match the windows read independently, nothing invented (worst ' + worst.toFixed(5) + ')');
+  }
+
+  // THE FLOOR: the registry, the transform, and its order after curveZero / cut
+  const DEV = C.engraving.layout.devices.byEnv;
+  ok(DEV.trill.curveFloor === 0.1 && DEV.surge.curveFloor == null, 'registry: byEnv.trill.curveFloor 0.1 (1 on the 0–10 scale); the surge has none');
+  const lv = smp => ({ level: { samples: smp } });
+  ok(JSON.stringify(Layout.drawnLevelSamples(lv([0, 0.5, 1]), { curveFloor: 0.1 })) === '[0.1,0.55,1]',
+    'drawnLevelSamples curveFloor 0.1: 0 → 0.1, 0.5 → 0.55, 1 → 1 (the top stays at the top)');
+  ok(JSON.stringify(Layout.drawnLevelSamples(lv([0, 0.5, 1]), {})) === '[0,0.5,1]' && JSON.stringify(Layout.drawnLevelSamples(lv([0, 0.5, 1]), { curveFloor: 0 })) === '[0,0.5,1]',
+    'drawnLevelSamples without a floor: the samples unchanged (the surges, the tuba batteries)');
+  ok(JSON.stringify(Layout.drawnLevelSamples(lv([0.2, 0.6, 1, 0.9]), { curveZero: true, cut: true, curveFloor: 0.1 })) === '[0.1,0.55,1]',
+    'the floor comes LAST: curveZero (0.2 → 0), cut (at the peak), then 0 → 0.1');
+  ok(at100.some(e => Math.min(...e.level.samples) < 0.01), 'the IR keeps the true level (a trill still dips below 0.01 in the data): the floor is the page\'s, not the sound\'s');
+
+  // the section through layout: every trill's drawn curve sits at or above the floor
+  const ens = J('notation/registry/ensemble.json'), tech = J('notation/registry/techniques.json');
+  const parts = ens.parts.map(q => q.part);
+  const { doc } = Extract.extract(score, Object.assign({}, base, { parts, options: { chords: true, trills: true, trillRate: 100 }, metaLayer: ens.metaLayer, techniques: tech.techniques }));
+  for (const c of doc.chunks) c.strategy = 'unresolved';
+  const model = Layout.layoutSection(doc, glyphs, Object.assign({ frameParts: parts, ensemble: ens, techniques: tech }, C.engraving.layout));
+  const curves = model.systems.flatMap(sy => sy.items.filter(i => i.k === 'envcurve'));
+  const trEvs = doc.events.filter(e => e.env === 'trill');
+  ok(curves.length === trEvs.length && curves.every(i => Math.min(...i.samples) >= 0.1 - 1e-9 && Math.max(...i.samples) <= 1 + 1e-9),
+    'layout, 0–176 s: every trill curve (' + curves.length + ' of ' + trEvs.length + ') is drawn between 0.1 and 1, none blanks out');
+  const dipEv = doc.events.find(e => e.id === 'ev-zn-1136');
+  const dip = curves.find(i => i.ev === 'ev-zn-1136');
+  ok(!!(dip && dipEv) && Math.abs(dip.samples[0] - (0.1 + 0.9 * dipEv.level.samples[0])) < 1e-4 && dip.samples[0] > 0.1,
+    'layout: the 132.13 s trill (level ' + (dipEv ? dipEv.level.samples[0] : '?') + ' at its go line) is drawn from ' + (dip ? dip.samples[0] : '?') + ', no white space');
+
+  // render: a level-0 stretch draws a tenth of the lane above the baseline
+  const sysList = Coords.systemsForParts([0], { topPad: 0.01, botPad: 0.01, gap: 0 });
+  const view = Coords.makeView({ widthPx: 1920, heightPx: 1080, window: [0, 10], systems: sysList, ssPerSystem: 30 });
+  const smp = Layout.drawnLevelSamples(lv([0, 0, 1]), { curveFloor: 0.1 });
+  const svg = Render.renderSection({ window: [0, 10], systems: [{ part: 0, clef: 'bass', items: [{ k: 'envcurve', t0: 1, t1: 4, samples: smp, ev: 'e1', cut: false }] }] },
+    view, glyphs, { engraving: C.engraving.render });
+  const d = (svg.match(/<path d="(M[^"]*Z)" fill="#99FF00"/) || [])[1] || '';
+  const ys = [...d.matchAll(/[ML]([\d.]+),([\d.]+)/g)].map(m => +m[2]);
+  const sy = view.system(0) || view.systems[0];
+  ok(ys.length >= 4 && Math.abs(ys[0] - (sy.yBotPx - 0.1 * (sy.yBotPx - sy.yTopPx))) < 0.11 && Math.abs(Math.max(...ys) - sy.yBotPx) < 0.11,
+    'render: a level-0 start draws 10 % of the lane above its baseline; the fill still closes on the baseline');
+
+  // the meter rides the same floor
+  const mview = { widthPx: 1920, heightPx: 1080, window: [0, 10], xOfSeconds: t => 100 * t, systems: [{ yTopPx: 100, yBotPx: 300, ssPx: 7.9 }], system() { return this.systems[0]; } };
+  const msvg = String(A.frameSvg([{ kind: 'curveMeter', part: 0, t0: 0, t1: 10, samples: Layout.drawnLevelSamples(lv([0, 0]), { curveFloor: 0.1 }), full: true }],
+    mview, 5, C.animated, { cursor: false }));
+  const fillR = [...msvg.matchAll(/<rect [^>]*>/g)].map(m => m[0]).find(r => !/fill="none"/.test(r)) || '';
+  eq(+((fillR.match(/height="([\d.]+)"/) || [])[1]), 20, 0.6, 'the meter at level 0 with the floor fills a tenth of its 200 px tube');
+  ok(/drawnOf: e => NotationLayout\.drawnLevelSamples\(e/.test(fs.readFileSync(path.join(ROOT, 'notation/app/notation.html'), 'utf8')),
+    'the page injects drawnLevelSamples as the meters\' drawnOf (one source for page and meter)');
+
+  // the MAIN file (D41) is built with the rate
+  const main = J('notation/ir/piece-septet.ir.json');
+  const mt = main.events.filter(e => e.env === 'trill');
+  ok(/--trillRate 100\b/.test(main.provenance.build) && mt.length > 0 && mt.every(e => e.level.samples.length === want(e)),
+    'the MAIN file: its recorded build carries --trillRate 100, and all ' + mt.length + ' trills are sampled at 100/s');
+}
+
 console.log(pass + ' passed, ' + fail + ' failed');
-console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR · 2f.4 device · 2f.6 the whole piece · §445 right of the go line · D42 the curve look and the meters');
+console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR · 2f.4 device · 2f.6 the whole piece · §445 right of the go line · D42 the curve look and the meters · 2f.7 100/s and the floor at 1');
 process.exit(fail ? 1 : 0);

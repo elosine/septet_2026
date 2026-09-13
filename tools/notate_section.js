@@ -19,6 +19,7 @@
 //   --exp                    group the entry under "experiments" in the picker
 //   --bricks                 every chunk unresolved: bricks everywhere + per-note devices (working files)
 //   --trills                 [PLAN 2f.3] the composer score's trill zones as env trill events; the notes they ate left out
+//   --trillRate N            [2f.7, §451] a trill's drawn level sampled at N per second (never fewer than 101) — the MAIN file uses 100
 //   --cluster t0-t1[@part]   mark a span as one beamed cluster (repeatable; authored
 //                            overlays). THE MODIFIERS BELOW ARE POSITIONAL: each applies
 //                            to the --cluster that precedes it (day 24, two clusters in
@@ -239,11 +240,14 @@ const ENS_APPLIES = !!(ENS && TRACKS.length === (ENS.parts || []).length);
 const FIG = (JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'registry', 'container.json'), 'utf8')).engraving.layout.figures) || {};
 const FIG_CL = FIG.cluster || {}, FIG_BM = FIG.beam || {};
 
+// [2f.7] --trillRate N: samples per second on a trill's drawn level (the two-piano piece's 100/s); absent = the fixed 101
+const TRILL_RATE = arg('trillRate', null);
+if (TRILL_RATE != null && !(parseFloat(TRILL_RATE) > 0)) { console.error('--trillRate needs a positive number of samples per second (e.g. --trillRate 100)'); process.exit(2); }
 const { doc, warnings } = Extract.extract(score, {
   // chords (2a.4): the ensemble's players may sound several notes at one onset
-  scoreName, window: [w0, w1], parts, id, registry, sampleLengths, profile, options: Object.assign(ENS_APPLIES ? { chords: true } : {}, flag('trills') ? { trills: true } : {}), metaLayer, techniques,
+  scoreName, window: [w0, w1], parts, id, registry, sampleLengths, profile, options: Object.assign(ENS_APPLIES ? { chords: true } : {}, flag('trills') ? { trills: true } : {}, TRILL_RATE != null ? { trillRate: parseFloat(TRILL_RATE) } : {}), metaLayer, techniques,
   date: new Date().toISOString().slice(0, 10),
-  toolName: 'tools/notate_section.js (profile ' + profile + ')' + (flag('bricks') ? ' --bricks' : '') + (flag('trills') ? ' --trills' : ''),
+  toolName: 'tools/notate_section.js (profile ' + profile + ')' + (flag('bricks') ? ' --bricks' : '') + (flag('trills') ? ' --trills' : '') + (TRILL_RATE != null ? ' --trillRate ' + parseFloat(TRILL_RATE) : ''),
 });
 // [§400] THE RANGE ALERT AT BUILD TIME: a technique whose registry `written`
 // entry carries a range (the flute's tongue ram: written = sounding + 11,
