@@ -1326,3 +1326,33 @@ Start: `cd C:\Users\jwloy\GitHub\septet_2026` → `node score\server.js` (restar
 - 2026-09-04, session 3 — **O v2 + the SPACE bug** (composer: "yes lets keep those save files as well, also I've saved 2 already lets try to preserve them" · "I hit space to play, that was working But then at some point, it started playing the main score"): takes moved from the browser to `bank/panel_snapshots.json` through the panels' snapshot route (bucket `strikes`), with a one-time migration of the v1 localStorage takes, the server's name rule checked in the drawer, and a `×` delete; SPACE re-routed — a window capture-phase listener owns SPACE while the drawer is open, because the score's blur-every-select-on-change rule dropped the focus to the page body and the score's own SPACE handler took over. Reproduced, fixed and verified in the running app (RUNNING_LOG §65). Also answered: an instrument left out by the shuffle is hooked back in by hand — double-click the dot, click the player's row; the note folds by octave into range (↓ / ↑); nothing else moves (F, the two-click assign).
 - 2026-09-04, session 3 — **Q v2** (composer: "have the time code carry with the strike … whatever save file's open, it can insert at that time code … rename the button, like, insert in original time"): `Replace in place` → `Insert @ 0.61 s (original)` — the label carries the strike's t0; it writes at t0 into whatever score is open, removing originals only where they truly exist (id + layer + pitch + onset within 25 ms), so the source guard is gone. Verified: into an empty score → 7 notes + META at 0.608 s, "no originals in this score"; into a copy of the committed ScatteredStrikes01 → "replaced 9 original notes". RUNNING_LOG §68. Built alongside D17 (the save system).
 - 2026-09-09, session 7 — **§AA built:** the harmony banners and *rhythm from · extra notes* (composer: "update the strikes side panel there with everything" · "Can we have either" · "yes to rule 2, go"); walked with real clicks on a `zz-ai-harm` copy — RUNNING_LOG §324.
+
+### AI · AFTER THE FIRST HOUR IN HIS HANDS — 2026-09-12 late (RUNNING_LOG §420–§424)
+
+Six fixes at his word, then three rule changes as he composed. The controls as they stand:
+
+**The strikes drawer**
+- **A ♪ at the end of every harmony row** (left column): that harmony alone as a **piano block**, 600 ms — nothing loaded, nothing
+  changed. **`♪ as dealt`** in the head: the LOADED harmony as it is orchestrated — every player its note, one strike, no rhythm.
+  Both go through `playNotes(notes, label)`, which is Hear's body (`play(mode)` calls it too).
+- **Unticking a player in the orchestration panel drops it AT ONCE** (`dropLane`): its doublings go, each of its own notes moves to
+  a free TICKED player that fits, or falls silent with a word in the status. Ticking back changes nothing until a shuffle.
+  *(Before this it only steered the next deal — his "unchecking does not take them out from hear orch".)*
+- **Chords still saved per onset survive a mode switch.** `notes` mode does not clear them: `clear all` on the onset card does
+  ("every onset back to a single note"). His "it's playing four courts for each strike ... notes mode isn't working" was this.
+- The piano on a PLAIN strike: **`count` · `8va` · `hands`** on the bottom bar, right of `piano none|one|top+bottom|rest|all`.
+- The run's length: the **`=` ms box** IS the run's length while the shape is `accel` (steep and notes follow). Gentler = `steep`
+  toward 1. "All the notes, then shuffle, then all the notes again" = deal `round robin` · pitches **`the cards`** (not `the whole
+  strike`, which draws at random from a pool) · **re-deal pitches after cycle 1** ticked.
+
+**The crescendo panel (SHIFT+C)**
+- **`▶ hear`** beside `preview`: plays the would-be crescendos — each on its own player's route with its CC7 ramp and the secco
+  cut, timed from the first of them — and writes nothing. `preview` is still the TEXT list only.
+- **`ends: next strike` = the NEXT ATTACK after the onset, for every player** (§424). Not a spread over the next strike's onsets:
+  they all end together. Across a selection, each onset ends at the attack after IT — the selection's own later onsets included.
+- **The "next strike" is any plain note**, not only one the drawer wrote (§422) — a note placed by hand counts.
+- **`harmony: typed pitches`** (§423): a box appears under the select — note names (F2, C#3, Bb1) or MIDI numbers, space- or
+  comma-separated, dealt low → high by register like the drawer's list. `harmony: the drawer` has no picker: it reads whatever is
+  loaded in the strikes drawer.
+- **`[go]` leaves what it made SELECTED**, so **END** parks the playhead at the crescendos' end and the next strike is one key away.
+- The panel no longer sticks to the mouse (mouseup captured on `document` — §348's fix, which the panel never got).

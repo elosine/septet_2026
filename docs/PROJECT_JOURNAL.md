@@ -85,6 +85,34 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word.
 
+**CHECKPOINT 3 (mid-session) — 2026-09-12 late, Fable 5.1 → Opus 5. HE IS COMPOSING; THE TOOLS ANSWERED TO HIM ALL EVENING.**
+*(RUNNING_LOG §420–§425; STRIKES_TOOL §AI + its "AFTER THE FIRST HOUR" addendum carries every control as it now stands.)*
+
+- **The task: HIS FIRST PASS AT THE CHAIN (N1c), and it turned into nine small builds.** Everything below is in, pushed, and
+  **green** (`check_cresc_panel` 35 · the 86); the sounding paths are **unheard by the AI — his SPACE is the test**.
+  **The six of the fix-now list (§421)** — the harmony-row ♪ and `♪ as dealt` · `▶ hear` in the crescendo panel · the sticky panel
+  drag · an untick drops the player at once · `[go]` leaves the new crescendos selected (END reaches them) · the ends rule.
+  **Then three as he composed:** the next strike is **any plain note**, not only a drawer strike (§422) · **`harmony: typed
+  pitches`** (§423) · **`ends: next strike` = the next ATTACK after the onset, for EVERY player** (§424 — rule B, built earlier the
+  same evening, undone at his "one note is longer than the other" · "I want to be able to go from one onset to the next onset").
+- **§425 — A CUT AND A MOVE IN HIS SAVE FILE, at his word, after he Saved.** `scores/piece-septet.json`: 49 piano notes deleted
+  (333.32 → 435.65 s); the morph **M2 — SPECTRAL DRIFT** (`grp-morph-03`: META curve, 92 notes, its marker) **+ 24 piano notes**
+  moved **−130.999 s** so the curve starts at **314.000** (now 314.0 → 428.0; the piano 318.5 → 428.0). 437–570 is empty off the
+  META lane. Backup: `scratchpad/piece-septet.before-425.json` — **and his own `scores/piece-septet-v1.31-preDeleteMiddleMorph.json`.**
+- **NEXT CONCRETE STEP (his, not the AI's):** he is building an **accel run of 180 s** in the strikes drawer — type `180000` in the
+  **`=`** box with the shape on `accel` (steep and notes follow), then tick more players or drop **re-attack ≥** so the tail's
+  130 ms gaps stop clashing (the ⚠ line says how many). **The AI's next step: answer what he asks, log any fault to
+  `docs/SWEEP_LIST.md` (batch, don't fix — unless it blocks, as tonight's did), journal as it happens.**
+- **Resume reads: nothing beyond §2.** (STRIKES_TOOL §AI + "AFTER THE FIRST HOUR" if he asks how a control works — it is the
+  index of every change tonight. RUNNING_LOG only if a question sends you there.)
+- **Pending from him:** whether `preview`/`▶ hear`, the ♪s and the untick behave in his ears · SWEEP **#4** (how the crescendo card
+  closes) and **#10** (`max` counts the piano in) still want his word · **#11 · #12** (the conflict badge reads `hard` on a piano
+  chord, `soft` on a secco cut) logged, cosmetic, **"forget about the rest for now"** stands.
+- **Deliberately uncommitted — all his unless marked:** `scores/piece-septet.json` (tonight's composing + the §425 edit) ·
+  `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` (his backup) · `scores/Sec3.json` · `scores/SeptetSec03-Materials-B/-C/-D/-a.json`
+  · `bank/panel_snapshots.json` · `bank/passages/4materials · accentedcres01 · accentedcres01-2 · chordcyc01 · chstr02` ·
+  `reaper/septet_rack.rpp` · **`scores/zz-ai-1t-walk.json` (the AI's PLAN 1t walk copy — deletable, his call).**
+
 **FIX-NOW LIST — BUILT 2026-09-12 late, Fable 5.1, at his "no just fix now as quick as possible" (RUNNING_LOG §421): all six; `check_cresc_panel` 34 green (check 11 = rule B) · the 86 green · :5301 loads clean. Committed and pushed. UNHEARD BY HIM — CTRL+SHIFT+R on :5300, then: a row ♪ in the drawer's left column · `♪ as dealt` in its head · untick a player (it drops now) · SHIFT+C → `▶ hear` → `go` (the crescendos come back SELECTED → END → the next strike). Rule B is live: n notes at an onset = n landings.**
 
 *(The list as written before the build:)* **FIX-NOW LIST — 2026-09-12 late, his word "Yes. To all these and as quick as you can" (RUNNING_LOG §420). Six small fixes, one chunk,
@@ -211,7 +239,7 @@ OPUS, on his :5300 copy or a :5301 copy, walked once each, then he hears. Everyt
 | ~~N0~~ | ~~BUILD the four~~ — **done 2026-09-12 (RUNNING_LOG §407):** built, harnessed, walked on a copy at :5301, 86 green, pushed | — | — |
 | ~~N1b~~ | ~~BUILD PLAN 1t~~ — **done 2026-09-12 (RUNNING_LOG §419):** all six steps, 30 new checks green, his eight steps walked on `zz-ai-1t-walk` at :5301, pushed | — | — |
 | ~~N1d~~ | ~~THE FIX-NOW LIST~~ — **done 2026-09-12 late on Fable (RUNNING_LOG §421)**, 34 + 86 green, unheard | — | — |
-| **N1c** | **► NEXT — HIS EAR ON THE CHAIN** (in progress; the six fixes of §421 are in and unheard — the first hour is §420). :5300 → CTRL+SHIFT+R → make a strike, SHIFT+C on it, `go`, END, the next strike; SPACE. Then his two verdicts: does the chain sound right, and should `[go]` leave the new crescendos SELECTED (so END reaches them without a click)? | **Fable** (his composing questions) · **Opus** for any fix | no |
+| **N1c** | **► NEXT — HE IS COMPOSING WITH THE CHAIN** (his first pass ran all evening and produced §420–§425; an accel run of 180 s is in hand). The AI answers, logs to SWEEP_LIST, journals. (was: his ear on the chain, §421 unheard — the first hour is §420). :5300 → CTRL+SHIFT+R → make a strike, SHIFT+C on it, `go`, END, the next strike; SPACE. Then his two verdicts: does the chain sound right, and should `[go]` leave the new crescendos SELECTED (so END reaches them without a click)? | **Fable** (his composing questions) · **Opus** for any fix | no |
 | **N1** | **PAUSED for N1b (2026-09-12 evening) — he was composing CN-65 in the drawer** (from #0 in `ChordStrikes01a-even`, a second pattern from #23). The AI answers, logs faults to SWEEP_LIST, journals. Then: **his verdict on CN-67 in the app** (headless-proven only) — then his eye and ear over the strikes 0–176 s (:5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker → video · SPACE) | **Fable** (composing questions) · **Opus** for any fix he does ask for | no |
 | ~~N2~~ | ~~The fold in his tab → rebuild from `piece-septet` → delete the copy~~ — **done 2026-09-11 late (RUNNING_LOG §402)** | — | — |
 | **N3** | **The 15 geometry touches** + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
