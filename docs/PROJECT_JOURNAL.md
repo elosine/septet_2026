@@ -85,184 +85,76 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word.
 
-**CHECKPOINT 3 (mid-session) — 2026-09-12 late, Fable 5.1 → Opus 5. HE IS COMPOSING; THE TOOLS ANSWERED TO HIM ALL EVENING.**
-*(RUNNING_LOG §420–§425; STRIKES_TOOL §AI + its "AFTER THE FIRST HOUR" addendum carries every control as it now stands.)*
+**STATE — 2026-09-12 late, session 9 ended. THE FIRST FULL DRAFT IS TAGGED: `Scattered_Substance-finalDraft_1.0`** (RUNNING_LOG §426;
+CN-73 · CN-74; D39 · D40). `scores/piece-septet.json` — his Save of 2026-09-12 late — is committed at that tag. Nothing in flight; everything pushed.
 
-- **The task: HIS FIRST PASS AT THE CHAIN (N1c), and it turned into nine small builds.** Everything below is in, pushed, and
-  **green** (`check_cresc_panel` 35 · the 86); the sounding paths are **unheard by the AI — his SPACE is the test**.
-  **The six of the fix-now list (§421)** — the harmony-row ♪ and `♪ as dealt` · `▶ hear` in the crescendo panel · the sticky panel
-  drag · an untick drops the player at once · `[go]` leaves the new crescendos selected (END reaches them) · the ends rule.
-  **Then three as he composed:** the next strike is **any plain note**, not only a drawer strike (§422) · **`harmony: typed
-  pitches`** (§423) · **`ends: next strike` = the next ATTACK after the onset, for EVERY player** (§424 — rule B, built earlier the
-  same evening, undone at his "one note is longer than the other" · "I want to be able to go from one onset to the next onset").
-- **§425 — A CUT AND A MOVE IN HIS SAVE FILE, at his word, after he Saved.** `scores/piece-septet.json`: 49 piano notes deleted
-  (333.32 → 435.65 s); the morph **M2 — SPECTRAL DRIFT** (`grp-morph-03`: META curve, 92 notes, its marker) **+ 24 piano notes**
-  moved **−130.999 s** so the curve starts at **314.000** (now 314.0 → 428.0; the piano 318.5 → 428.0). 437–570 is empty off the
-  META lane. Backup: `scratchpad/piece-septet.before-425.json` — **and his own `scores/piece-septet-v1.31-preDeleteMiddleMorph.json`.**
-- **NEXT CONCRETE STEP (his, not the AI's):** he is building an **accel run of 180 s** in the strikes drawer — type `180000` in the
-  **`=`** box with the shape on `accel` (steep and notes follow), then tick more players or drop **re-attack ≥** so the tail's
-  130 ms gaps stop clashing (the ⚠ line says how many). **The AI's next step: answer what he asks, log any fault to
-  `docs/SWEEP_LIST.md` (batch, don't fix — unless it blocks, as tonight's did), journal as it happens.**
-- **Resume reads: nothing beyond §2.** (STRIKES_TOOL §AI + "AFTER THE FIRST HOUR" if he asks how a control works — it is the
-  index of every change tonight. RUNNING_LOG only if a question sends you there.)
-- **Pending from him:** whether `preview`/`▶ hear`, the ♪s and the untick behave in his ears · SWEEP **#4** (how the crescendo card
-  closes) and **#10** (`max` counts the piano in) still want his word · **#11 · #12** (the conflict badge reads `hard` on a piano
-  chord, `soft` on a secco cut) logged, cosmetic, **"forget about the rest for now"** stands.
-- **Deliberately uncommitted — all his unless marked:** `scores/piece-septet.json` (tonight's composing + the §425 edit) ·
-  `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` (his backup) · `scores/Sec3.json` · `scores/SeptetSec03-Materials-B/-C/-D/-a.json`
-  · `bank/panel_snapshots.json` · `bank/passages/4materials · accentedcres01 · accentedcres01-2 · chordcyc01 · chstr02` ·
-  `reaper/septet_rack.rpp` · **`scores/zz-ai-1t-walk.json` (the AI's PLAN 1t walk copy — deletable, his call).**
+**Last session (9 — 2026-09-12, Fable 5.1 + Opus 5) — RUNNING_LOG §405–§426.**
+- **The chord-per-onset drawer does the four** (§407) · `banner in turn` from the highlighted strike (§408) · CN-67 the piano in one hand,
+  alternating (§409) · `piano 8va` ±4 · the strip's blue piano rings (§410).
+- **PLAN 1t — THE CHAIN — planned on Fable (§411–§418) and BUILT on Opus (§419):** strikes alternating with crescendos, item by item in
+  the score — **SHIFT+C** the crescendo panel on a selection · **END** = playhead to the selection's latest end · `unison` in the rhythm
+  column · free/busy ticks · the piano block on the plain strike (`count` · `8va` · `hands`). **Chords mode and fill mode deprecated (§413).**
+- **His first pass, all evening:** the fix-now six (§420–§421), then three rule changes as he composed (§422–§424 = **D39**: the next strike
+  is any plain note · `harmony: typed pitches` · `ends: next strike` = the next ATTACK after the onset, for everyone; rule B undone).
+  `check_cresc_panel` 35 · the 86 green. **STRIKES_TOOL §AI + "AFTER THE FIRST HOUR" is the index of every control as it stands.**
+- **§425, at his word:** 49 piano notes cut (333–436 s); the morph **M2 — SPECTRAL DRIFT** + 24 piano notes moved −131 s so its curve
+  starts at 314.0 (now 314 → 428). Backups: `scratchpad/piece-septet.before-425.json` · his `scores/piece-septet-v1.31-preDeleteMiddleMorph.json`.
+- **§426:** an accel run as PURE CRESCENDOS — the drawer's `sound → crescendo`, `% of the gap` 100, `starts on the onset`; round robin
+  over two players lands each swell on the next onset (one player would end 170 ms early); the piano never swells. Then the tag.
 
-**FIX-NOW LIST — BUILT 2026-09-12 late, Fable 5.1, at his "no just fix now as quick as possible" (RUNNING_LOG §421): all six; `check_cresc_panel` 34 green (check 11 = rule B) · the 86 green · :5301 loads clean. Committed and pushed. UNHEARD BY HIM — CTRL+SHIFT+R on :5300, then: a row ♪ in the drawer's left column · `♪ as dealt` in its head · untick a player (it drops now) · SHIFT+C → `▶ hear` → `go` (the crescendos come back SELECTED → END → the next strike). Rule B is live: n notes at an onset = n landings.**
+**Next up — his ear and eye, in this order:**
+1. **The chain and the crescendo runs in his ears** (:5300, CTRL+SHIFT+R first): `▶ hear`, the ♪s, the untick, the crescendos after `[go]`.
+   The AI answers, logs faults to `docs/SWEEP_LIST.md` (batch, don't fix — unless it blocks), journals as it happens.
+2. **The 15 pages of strikes 0–176 s** (:5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker "piece-septet · strikes 0–176 s"
+   → video · SPACE). Then **the next notation session: trills' written look, then the morph curves** — planning method on Fable, build on
+   Opus after a clear.
+3. **N3** — the 15 geometry touches around the piano + the Vn1 spill (§401n): his verdict, then the fix ladder.
 
-*(The list as written before the build:)* **FIX-NOW LIST — 2026-09-12 late, his word "Yes. To all these and as quick as you can" (RUNNING_LOG §420). Six small fixes, one chunk,
-OPUS, on his :5300 copy or a :5301 copy, walked once each, then he hears. Everything else on SWEEP_LIST waits ("Forget about the rest for now").**
+**Open at session end (pending his word):** SWEEP **#4** (how the crescendo card closes) · **#10** (`max` counts the piano in) · **#11 · #12**
+(the conflict badge's `hard`/`soft`) — *"forget about the rest for now"* stands · CN-67 in the app (headless-proven only, §409) · whether
+"the same crescendo in several parts" means both players on every onset (`chords (old)` + `crescendo`, deprecated §413 — his word first).
 
-1. **Drawer chord ♪ — shape C.** A ♪ on every harmony row of the left column (the chord as a piano block, ~600 ms, nothing loaded,
-   nothing changed) AND a ♪ by the loaded harmony's name above the keyboard (the chord AS DEALT — each player's voice, one strike, no
-   rhythm). `hearOne` (strike_drawer.js:991) already plays one voice; the Hear path plays notes at time 0.
-2. **Ends rule B** — `ends: next strike`: an onset with n notes takes n crescendos (each ends where a note of the next strike attacks).
-   Today cresc_deal.js:142–144 consumes each onset once. Also the readout: say "next strike has k onsets · m ticked" instead of
-   "no onset left" (SWEEP #15).
-3. **Sticky panel drag** — the crescendo panel (cresc_panel.js) sticks to the mouse after release; the onset card (`#skSndDrag`) and any
-   panel on the same pattern. The sound card was fixed for this in §347 — the same fix: mouseup on `document` / pointer capture. SWEEP #13.
-4. **Cresc panel preview that SOUNDS** — beside `preview`: play the would-be crescendos from the selection's first onset through the
-   composer's own player, nothing written (`preview()` cresc_panel.js:264 builds the deal; `go` writes it). SWEEP #14.
-5. **Unticking a player drops it at once** — the free/busy tick (strike_drawer.js:921): untick → the lane's dealt notes go and the deal
-   re-runs on the ticked rows with the current seed (today the tick only steers the next `reshuffle voicing`).
-6. **`[go]` selects what it made** — after writing, the composer's selection = the new crescendo notes, so END reaches their end
-   without a click (the §419 question, answered yes).
+**Standing warnings:** ⚠ **do not press R on the strikes page** (§403: it widens 0–176 s to the whole piece; parked fix = R honours the IR's
+recorded window) · **one open composer tab per score** (2d.5.8) · the page needs CTRL+SHIFT+R after each build · the piano never swells (CN-34).
 
-**SESSION 9 — 2026-09-12, Fable 5.1 → Opus 5 (the build).** *(RUNNING_LOG §405–§419; STRIKES_TOOL §AH · §AI; CN-65 … CN-72; SWEEP #10–#12.)*
+**Deliberately uncommitted — all his:** `bank/panel_snapshots.json` (takes) · `bank/passages/4materials · accentedcres01 · accentedcres01-2 ·
+chordcyc01 · chstr02` · `reaper/septet_rack.rpp` · `scores/Sec3.json` · `scores/SeptetSec03-Materials-B/-C/-D/-a.json` ·
+`scores/piece-septet-v1.31-preDeleteMiddleMorph.json` (his backup) · `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
+**Unsaved working copies** (`node tools/unsaved_check.js`, 7): cres-run01 · cres2strike · piano-harmonics-test · Sec3-Materials (never saved) ·
+trill-curve-test · trillBuildTst · zz-ai-1t-walk — **D17: his to Save or Reload, never the AI's to touch.**
 
-- **PLAN 1t BUILT — 2026-09-12 evening, Opus 5, at his "and go with build" (RUNNING_LOG §419; STRIKES_TOOL §AI now carries "how to
-  use it").** All six steps, in order, on a copy at :5301. **New files:** `score/public/sounding.js` (what is sounding over a window —
-  ONE read for the panel's ticks and the drawer's, an end exactly at t = free) · `cresc_deal.js` (the deal, pure) · `cresc_panel.js`
-  (SHIFT+C — who · mode · ends · harmony · dynamics · shape · preview · go, ONE undo step) · `score/tools/check_cresc_panel.js`
-  (**30 green, first run**). **Changed:** composer.html (SHIFT+C · **END** = playhead to the selection's latest end) ·
-  `strike_drawer.js` (**`unison`** in the rhythm column, the three span boxes greyed under it; the **free/busy ticks**, the shuffle
-  dealing onto ticked rows only, `5 free · 2 busy`; the piano row's `count` · `8va` · `hands`) · `strike_sounds.js` (the piano block
-  factored into **`pianoBlock()`**, called from the chord deal AND the new `applyPlainPiano`). Chords and fill stay deprecated.
-  **Walked with real clicks**, his eight steps of §416, on `zz-ai-1t-walk`: single-note strike → panel even 3 s → END 3.00 → strike 2
-  → strike 3 → panel `next strike` + `all others` (3 made, 1 capped, 2 named without) → CTRL+Z removed all three → END 6.02 → a
-  `unison` strike whose piano count 4 / one hand gave F4 G4 G#4 C5, nine notes at exactly 10.000 s. Batteries: check_fill ·
-  check_containers · check_cresc_deck · 86 · test_identity · the whole tuba battery GREEN.
-  **⚠ UNHEARD BY HIM — his SPACE is the test.** **One question for him (§419):** after `[go]` the selection stays on the STRIKE, so
-  END goes to the strike's end and he must click the crescendo first — leave it, or have `[go]` select what it made?
-  **Logged, not fixed:** SWEEP #11 (the piano's own chord reads as `hard` conflicts) · #12 (the secco cut reads as `soft`).
+**Servers the AI started** (his to keep or kill): #2's :3001 (`pno2perc2-perf-3001`) · the tuba's :5200 (`tubas-5200`) — `.claude/launch.json`.
+**Tests:** `node tools/test_septet_notation.js` (86) · `tools/test_identity.js` (20) · `score/tools/check_cresc_panel.js` (35) · check_fill ·
+check_containers · check_cresc_deck · the tuba battery per `notation/ir/README.md` (the standing REDs unchanged).
 
-- **CHECKPOINT 2 — 2026-09-12 evening, Fable 5.1 — PLAN 1t WRITTEN AT HIS WORD ("assumption yes. can you make plan for opus to build
-  after clear").** The afternoon was one planning conversation (RUNNING_LOG §411–§418; CN-68 → CN-72): the chain — strikes alternating
-  with crescendos — settled as ITEM BY ITEM IN THE SCORE: the drawer makes only the strikes; a panel on a selection makes the crescendos.
-  **Chords mode and fill mode DEPRECATED at his word (§413)** — left in the code, not offered again.
-  **NEXT CONCRETE STEP: `/clear` → switch to OPUS → `/postclear` → BUILD PLAN 1t** on a copy at :5301, steps 1–6 in order, the walk
-  with his scenario, then he hears it. **(Superseded: PLAN 1t is built — see the entry above.)**
-  CN-65 (N1) is paused, not dropped: his CN-67 verdict and the strikes-page eye are still pending. Committed and pushed: the five docs.
-  His score files stay uncommitted (the list below unchanged).
-- **The task: HIS FIRST PASS AT CN-65 IN THE DRAWER — composing, not building.** He is in the composer at :5300, the strikes drawer
-  open, the chord-per-onset card in use. Everything built today is pushed; the page needs CTRL+SHIFT+R after each build.
-- **Built today, all in `score/public/strike_sounds.js`, all pushed:** the four (§407: rested-first · `piano count` · the top-up that may
-  double · `piano 8va`) · **`banner in turn` starts at the HIGHLIGHTED strike** (§408 — #14 highlighted → onsets get #14, #15 …) ·
-  **CN-67: the piano in ONE HAND per onset, the hands alternating** (§409 — `hands: one, alternating` on the piano row, `hand` per
-  onset; the window one reach wide, wholly above or below the last piano chord, side alternating; leftovers → doubles → the same
-  pitch again at the octave, his word) · `piano 8va` released to **±4** · the strip's rings: **piano solid blue, ensemble dashed
-  gold, the count `4+5`** (§410).
-- **Latest deliverable:** his take `ChordStrikes01a-even` in `bank/panel_snapshots.json` (onset 1 ← #0 · max 4 · piano 4 · 8va −1;
-  onsets 2–14 ← #1 … #13) — verified in the file. A second pattern was in hand at the checkpoint (from **#23**, 7 notes, 840 ms, gap
-  140, one hand) — his tab, unsaved as a take unless he took it.
-- **NEXT CONCRETE STEP (his, not the AI's):** keep composing the CN-65 passage in his tab — `banner in turn` from the highlighted
-  strike · `piano count` per onset · `hands: one, alternating` · Hear · take. **The AI's next step:** answer what he asks, log any
-  fault to `docs/SWEEP_LIST.md` (batch, don't fix — unless it blocks, as today's two did), journal as it happens. When he stops:
-  his verdict on CN-67 in the app (it is proven headlessly only, §409) → STRIKES_TOOL §AH6 marked walked or not.
-- **Resume reads: nothing beyond §2.** (STRIKES_TOOL §AI — "how to use it" — if he asks how a control works; §AH only if a drawer
-  fault comes up; CN-65/CN-67 in COMPOSITION_NOTES only if the passage's rule is in question.)
-- **Pending from him:** SWEEP #10 — `max` counts the piano in; he wants `max` = the six and the piano by `piano count` alone ("leave
-  it for now") · CN-67's L.H./R.H. marking in the notation (a later rule) · the older list below unchanged.
-- **Deferred still:** AH5 proper (the piano's own voicing per onset — CN-67 is its one-hand half) · the hand override · AB3.
-
-**Last session (8 — 2026-09-10 → 11, Claude Code / Opus 5 + Fable 5.1) — RUNNING_LOG §352–§401n.** A long session in three movements:
-
-- **The tools stopped being the work.** He named the one-fault-at-a-time loop as the problem; `docs/SWEEP_LIST.md` opened (log a
-  fault while composing, batch the fix). Then the strikes drawer was unblocked to his brief (chords at an onset, NOTES mode), the
-  passage collection built, and the piano's balance measured — **his own finding:** the probe's CC7 127 wiped every plugin trim, so
-  a plugin volume knob is the wrong place for a per-voice trim in this system.
-- **PHASE 2 OPENED — the notation layer.** **PLAN 2a built** (engine → seven parts: clefs, written pitch, the piano's grand staff,
-  #2's chord rules, 148 techniques classified). **PLAN 2d built** (notate while composing: ids never re-issued · the choices
-  sidecar · **R** rebuilds the page from the last Save · orphans listed, never dropped · move-to-part in the note card · **G** beams).
-- **SECTION 1's STRIKES NOTATED, rule by rule with him (§399–§401n).** Every strike at its own onset with its own GC ("as
-  millisecond/pixel accurate as possible"); the tuba staccato look; the stack on the head side mirrored with a classic stem; fff
-  and the technique text on every note; the flute's tongue rams folded into C3–D4 and written at the fingering (+M7) with a range
-  alert; the grand staff's gap at **6 ss** (#2's LilyPond-measured standard); the piano's GC one lane tall landing between its
-  staves; ottava from the 4th ledger line. **`docs/NOTATION_STANDARDS.md` §1 is the index: rule → registry key → journal §.**
-- **Two silences and a zoom, all diagnosed not guessed:** the notation player passed no `score.tracks`, so every septet note
-  resolved to no instrument (§401f); it also stretched notes to the IR's sample-true lengths, now the composer score's own
-  (§401g); the page that "didn't fit" was Chrome's per-origin zoom on :5300, CTRL+0 (§401i).
-
-**STATE — THE STRIKES 0–176 s ARE ON THE PAGE (session 8 end). RUNNING_LOG §399–§404. RESUME FROM HERE.**
-
-- **Nothing in flight; everything pushed.** The IR `strike1` = **511 strikes, 0–176 s, 15 pages**, built from `piece-septet`
-  ITSELF (RUNNING_LOG §402 — he ran `foldFlute()` and Saved at 22:40, and removed a doubled piano note at 67.79; the copy is
-  deleted, score and page are one thing again). **Trills (zones) and the morph curves (from 183 s) are deliberately NOT notated —
-  next notation session, his word.**
-- **⚠ DO NOT PRESS R ON THE STRIKES PAGE** (RUNNING_LOG §403): R strips the recorded window and forces `--all`, so it widens 0–176 s to the whole piece and pulls in the morph material. A deletion in the composer → Save → the AI rebuilds (`--score piece-septet --w0 0 --w1 176 --bricks --id strike1 --exp`). **Parked fix (his "leave for now"): option A — R honours an IR's recorded window; `--all` gets its own key.**
-- **Unseen / unheard by him:** the 15 pages; MIDI after the three fixes (ports · tracks · score lengths) — his SPACE is the test.
-- **After the first wrap (§402–§404), all pushed:** he deleted three doubled piano notes (67.79 · 156.20 · one more) and ran
-  `foldFlute()` himself — so the page is built from `piece-septet` ITSELF, the copy is gone, and **511 strikes** stand. Then
-  **§404 THE BUFFER AFTER THE CLEF:** a page cut can land exactly on a note's onset, and its unit (head · accidental · ledgers,
-  up to 3.4 ss) then hangs into the gutter over the clef — `page_rules.musicStartBufferSs: 4.2` opens each page window that
-  many staff spaces early. Proven across all 15 pages: leftmost ink 73.4 px against a 72 px gutter.
-- **NEXT CONCRETE STEP:** his eye and ear over the 15 pages (:5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker
-  "piece-septet · strikes 0–176 s" → video · SPACE for MIDI). Then the next notation session: **trills' written look, then the
-  morph curves** — planning method on Fable, build on Opus after a clear.
-- **Session 9 (2026-09-12) in one line:** the four (§407) · `banner in turn` from the highlighted strike (§408) · CN-67 one hand,
-  alternating (§409) · 8va ±4 · the strip's blue piano rings (§410) · SWEEP #10 logged. He is composing CN-65 in the drawer.
-- **Pending decisions from him:** the **15 geometry touches** around the piano over 0–176 s (§401n — the piano's stack meets BCl's
-  or Vn1's in the band between lanes; fix ladder = flip a chain · per-page nudge · more piano air) · the Vn1 high-note spill
-  (~1 ss over its lane top) · whether the ottava hook's 0.30 ss reads · the drawer verdicts (STRIKES_TOOL §AG) · whether to commit
-  his two passages · track 7's Kontakt.
-- **Deliberately uncommitted — all his:** `scores/piece-septet.json` (his 14:31 editing) · `bank/panel_snapshots.json` ·
-  `reaper/septet_rack.rpp` · `bank/passages/accentedcres01*.json` · `scores/SeptetSec03-Materials-B/-C/-D/-a.json`.
-  *(The IR and its picker row are committed as of §402 — built from his score, no copy in the way.)*
-- **Unsaved working copies** (`tools/unsaved_check.js`): cres-run01 · cres2strike · piano-harmonics-test · Sec3-Materials (never
-  saved) · SeptetSec03-Materials-D · trill-curve-test · trillBuildTst — **D17: his to Save or Reload, never the AI's to touch.**
-- **Servers the AI started** (his to keep or kill): #2's performance score :3001 (`pno2perc2-perf-3001`) · the tuba's :5200
-  (`tubas-5200`) — launch entries in `.claude/launch.json`.
-- **Tests:** `node tools/test_septet_notation.js` (86) · `test_identity` (20) · the tuba battery staged per
-  `notation/ir/README.md` — layout · render · animobj · splice · stamps · coords · graphic · pattern_fit GREEN (render's snapshot
-  regenerated once on purpose, §401b); the standing REDs unchanged.
-- **Resume reads:** `docs/NOTATION_STANDARDS.md` §1 · RUNNING_LOG **§401n–§403**. Nothing else pre-emptively.
+**Resume reads: nothing beyond §2.** STRIKES_TOOL §AI + "AFTER THE FIRST HOUR" if he asks how a chain control works · §Z · §AD for the
+drawer's swell switch · `docs/NOTATION_STANDARDS.md` §1 when notation resumes · RUNNING_LOG only if a question sends you there.
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| ~~N0~~ | ~~BUILD the four~~ — **done 2026-09-12 (RUNNING_LOG §407):** built, harnessed, walked on a copy at :5301, 86 green, pushed | — | — |
-| ~~N1b~~ | ~~BUILD PLAN 1t~~ — **done 2026-09-12 (RUNNING_LOG §419):** all six steps, 30 new checks green, his eight steps walked on `zz-ai-1t-walk` at :5301, pushed | — | — |
-| ~~N1d~~ | ~~THE FIX-NOW LIST~~ — **done 2026-09-12 late on Fable (RUNNING_LOG §421)**, 34 + 86 green, unheard | — | — |
-| **N1c** | **► NEXT — HE IS COMPOSING WITH THE CHAIN** (his first pass ran all evening and produced §420–§425; an accel run of 180 s is in hand). The AI answers, logs to SWEEP_LIST, journals. (was: his ear on the chain, §421 unheard — the first hour is §420). :5300 → CTRL+SHIFT+R → make a strike, SHIFT+C on it, `go`, END, the next strike; SPACE. Then his two verdicts: does the chain sound right, and should `[go]` leave the new crescendos SELECTED (so END reaches them without a click)? | **Fable** (his composing questions) · **Opus** for any fix | no |
-| **N1** | **PAUSED for N1b (2026-09-12 evening) — he was composing CN-65 in the drawer** (from #0 in `ChordStrikes01a-even`, a second pattern from #23). The AI answers, logs faults to SWEEP_LIST, journals. Then: **his verdict on CN-67 in the app** (headless-proven only) — then his eye and ear over the strikes 0–176 s (:5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker → video · SPACE) | **Fable** (composing questions) · **Opus** for any fix he does ask for | no |
-| ~~N2~~ | ~~The fold in his tab → rebuild from `piece-septet` → delete the copy~~ — **done 2026-09-11 late (RUNNING_LOG §402)** | — | — |
-| **N3** | **The 15 geometry touches** + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
-| **N4** | **Next notation session: trills' written look, then the morph curves** — planning method, then build | **Fable** to plan, **Opus** to build | **yes** — wrap on Opus, clear, switch |
-| **N5** | Still open from before: the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE, one decision from him) · PLAN 1q proper | **Opus** | no |
+| **N1c** | **► NEXT — HIS EAR on the chain and the pure-crescendo runs** (§420–§426; the draft is tagged). The AI answers, logs to SWEEP_LIST, journals | **Fable** (composing questions) · **Opus** for any fix | no |
+| **N1** | His verdict on CN-67 in the app (headless-proven only) → then his eye and ear over the 15 pages (the picker, video, SPACE) | **Fable** · **Opus** for any fix | no |
+| **N3** | The 15 geometry touches + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
+| **N4** | Next notation session: trills' written look, then the morph curves — planning method, then build | **Fable** to plan, **Opus** to build | **yes** — wrap on Opus, clear, switch |
+| **N5** | Still open: the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE, one decision from him) · PLAN 1q proper | **Opus** | no |
 
-**The standing rule:** Fable for the turns where a wrong reading costs a day; Opus for every turn where the plan is already on
-paper. Wrap on Opus, always. **Fable's allotment is the one he watches** — fewest round trips, no Fable subagents, minimal
-resume reads.
+**The standing rule:** Fable for the turns where a wrong reading costs a day; Opus for every turn where the plan is already on paper.
+Wrap on Opus, always. **Fable's allotment is the one he watches** — fewest round trips, no Fable subagents, minimal resume reads.
 
-**Earlier sessions, one line each:** **8** (2026-09-10 → 11) above. **7** (2026-09-09 → 10) the strikes drawer revised overnight
-at his commission (the sound at an onset: note · chord · crescendo with Hear = Insert), the console lines `crescRun` ·
-`chordRun` · `goTo`, then a defect-clearing day whose nine faults were all one rule wired into one path and not its sibling
-(→ PLAN 1q-PRINCIPLE) — §324–351. **6** (2026-09-09) the morph's fade found to live in CC7, timestamped playback, the note card
-— §311–323. **5** folded into 6. **4** (2026-09-06 → 08) the BEATING tool (parked), the morph panel the tuba way, the crescendo
-suite 1l–1o, D11's curve channels — §111–310. **3** (2026-09-04 → 06) the piece to #31 / 72 s, the drawer U5–U13b, the trill
-module phases 0–3, the curve windows (D18–D21) — §65–110. **2** the strikes drawer and the sandbox. **1** the port from the tuba piece.
+**Earlier sessions, one line each:** **9** (2026-09-12) above. **8** (2026-09-10 → 11) the tools stopped being the work (SWEEP_LIST opened) ·
+phase 2 opened: PLAN 2a (the engine for seven parts) and 2d (notate while composing) built · section 1's strikes notated rule by rule,
+0–176 s on 15 pages · `NOTATION_STANDARDS.md` §1 — §352–§404. **7** (2026-09-09 → 10) the strikes drawer revised overnight at his
+commission (the sound at an onset: note · chord · crescendo, Hear = Insert), then a defect-clearing day whose nine faults were one rule
+wired into one path and not its sibling (→ PLAN 1q-PRINCIPLE) — §324–351. **6** (2026-09-09) the morph's fade found to live in CC7,
+timestamped playback, the note card — §311–323. **5** folded into 6. **4** (2026-09-06 → 08) the BEATING tool (parked), the morph panel
+the tuba way, the crescendo suite 1l–1o, D11's curve channels — §111–310. **3** (2026-09-04 → 06) the piece to #31 / 72 s, the drawer
+U5–U13b, the trill module phases 0–3, the curve windows (D18–D21) — §65–110. **2** the strikes drawer and the sandbox. **1** the port.
 
-**Open questions:** Q7 the bass clarinet's bottom B♭1. *(Q1 closed 2026-09-11: no flute doubling, CN-62. Q5 closed 2026-09-11:
-A3 landscape, RUNNING_LOG §380.)*
+**Open questions:** Q7 the bass clarinet's bottom B♭1. *(Q1 closed 2026-09-11: no flute doubling, CN-62. Q5 closed 2026-09-11: A3 landscape.)*
 
 **Blockers:** none.
-
 
 ## §3 Principles
 
@@ -676,6 +568,18 @@ sources; verified here only when they bite.)*
   pitches and writing tongue pizzicato instead (at pitch, but soft — the strikes are fff); dropping only the 14 strays (leaves the
   part split between two registers). A written note outside B3–C♯5 now warns at build and shows red on the page.
 
+- **D39** *(2026-09-12, composer, RUNNING_LOG §422–§424)* — **The crescendo panel's `ends: next strike` = the next ATTACK after the
+  onset, for every player launched from it; the "next strike" is any plain note, not only a drawer group; a harmony can be typed.**
+  *Why:* his *"one note is longer than the other"* · *"I want to be able to go from one onset to the next onset"* — the crescendos from
+  one onset all end together, on the first attack after it, the selection's own later onsets included; a note placed by hand must count
+  as the next strike or the chain cannot be composed freely. *Rejected:* rule B (§421, built the same evening — n notes at the next onset
+  = n landings, each crescendo on its own note of the next strike), undone at his word; a "next strike" only the drawer's groups could be.
+- **D40** *(2026-09-12, composer, RUNNING_LOG §426; CN-74)* — **The first full draft is tagged `Scattered_Substance-finalDraft_1.0`, and
+  the tag carries the score:** `scores/piece-septet.json` (his Save) is committed at it. *Why:* a draft tag on a commit without the score
+  would mark the tools, not the piece. *Kept as before:* the takes, the passages, the rack, the section-3 material files and his v1.31
+  backup stay uncommitted — his. *(The AI's reading of "this is Scattered_Substance-finalDraft_1.0"; the title itself stays tentative
+  per CN-64 until he says otherwise.)*
+
 ## §5 Playbooks
 
 - **Sound research (mapping a sample library):** piece #3's journal §5.1 — the escalation
@@ -718,6 +622,9 @@ cut mid-way — write patch scripts to the scratchpad, splice by exact anchor, a
 
 ## §6 Done
 
+- 2026-09-12 — **THE FIRST FULL DRAFT — `Scattered_Substance-finalDraft_1.0`** (RUNNING_LOG §426; CN-74; D40). The chain (PLAN 1t) planned
+  and built in a day and composed with all evening (§411–§424); the piano cut and the morph M2 moved to 314 s (§425); the score committed
+  and tagged at his word. The title is still tentative (CN-64).
 - 2026-09-09 — **THE MORPH'S FADE-IN, and the note-editing interface around it** (RUNNING_LOG §311–323; D32–D34). The fade took three
   wrong builds before his own question found it — *"in the morphs without any fade in … how do you achieve that fade in?"* — and the
   answer was that the morph already fades with ONE velocity and a rising CC7. `attack.mode: 'fade'` now does that, in CC7 space, after
@@ -774,7 +681,7 @@ cut mid-way — write patch scripts to the scratchpad, splice by exact anchor, a
 *(The composer's own to-dos and reminders. Reviewed at every session end.)*
 
 **Active:**
-- **The title — tentative: _Scattered Substance_** *(2026-09-11, CN-64)*. Confirm or change before the cover and the
+- **The title — tentative: _Scattered Substance_** *(2026-09-11, CN-64; used unqualified in the draft tag name 2026-09-12, CN-74)*. Confirm or change before the cover and the
   Tempus format entry are written (PLAN 2b authoring). Written down in CN-64, PLANNER and PLAN 2b.
 - Decide piccolo vs bass flute when the music asks (Q1); confirm that library is installed.
 - **Test the trills and the curve windows on the piece** (reload): T on a strike note · `1 2 3` on the zone · P for the

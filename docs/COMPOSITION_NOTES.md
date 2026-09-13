@@ -1629,3 +1629,26 @@ chord of `count` notes AT THAT SAME ONSET: the harmony's leftover pitches first 
 pitches the ensemble plays, until the count (CN-66's rule); `handFit` two hands (reach 14, 5 per hand, the middle dropped) with the
 readout; `8va` ±4 moving the whole chord. Set once per pattern on the orchestration panel's piano row (§H), blank = as today. The
 assumption to confirm: the chord sounds at the piano's OWN onset from the shuffle, not at the first onset and not at every onset.
+
+## CN-73 — 2026-09-12 late: an accelerating run as PURE CRESCENDOS, each ending at the next onset, the same figure over several parts
+
+> *"how to make an excelerating crescendo the same one in several parts"* (composer, 2026-09-12, carried on the `/postclear`)
+>
+> *"I want pure crescendos each one ending at the next onset. what next?"* (composer, 2026-09-12, with the drawer on screen: shape `accel · rc`,
+> 34 notes over 30137 ms, geometric, steep 0.977, the last gap 610 ms, round robin over Bass Cl. and Vn 1, the piano busy)
+>
+> *"174.9-146.33 in ms"* · *"240-177.12 in ms"* (the two placements — 28 570 ms from 146.33 s; 62 880 ms from 177.12 s)
+
+*(AI reading, marked as such:)* an accelerating rhythm whose every onset is the START of a swell that lasts exactly to the next onset — no
+attacks at all — the figure alternating between two players by round robin, so each player's swell reaches the next onset untouched
+(RUNNING_LOG §426 has the controls: `sound → crescendo`, `% of the gap` 100, `starts on the onset`). Two such runs placed after the
+section-1 strikes, at 146.33 s and 177.12 s, to lengths read off the score. Whether "the same one in several parts" means the two players
+alternating or BOTH on every onset (chords of swells, deprecated §413) is his to say.
+
+## CN-74 — 2026-09-12 late: the first full draft, named — `Scattered_Substance-finalDraft_1.0`
+
+> *"and can you tag, this is Scattered_Substance-finalDraft_1.0 and nothing to add from me for session end"* (composer, 2026-09-12, at session end)
+
+*(AI reading, marked as such:)* the piece has reached a complete first draft in `piece-septet.json` — after the evening's chain composing
+and the §425 cut and move (the morph M2 now from 314 s). The title is used unqualified for the first time; CN-64 called it tentative and
+nothing here changes that until he says so. The git tag of that name marks the commit carrying the score (D40).
