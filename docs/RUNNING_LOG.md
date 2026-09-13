@@ -12247,3 +12247,100 @@ falling arm of the strike AFTER it.
 
 **Seen in the running app** (his :5300, a view-only tab reloaded, 1920 × 1080; R not pressed): page 13/54, 138.5–150.5 s, the dense close of
 section 1 — every trill column (`tr` · head `( ● )` · `sfz`) starts just right of its dashed go line, clear of the strikes before it.
+
+## §453. The recording: the composer's own playback captured, laid out as the rack, rendered through the bridge — no clip, linked to the page
+
+**His word, 2026-09-13 (Opus):** *"Let's prep the recording and sort out the trill midi and then generate the midi file and do a record and
+then link it to the notation score. for the recording. Just double check to make sure the file you produce will roll out nicely when I paste
+it into the track layout, the current track layout or is this something you are able to do now?. And then can you look at the recording we
+made for... or the specs for the tuba piece? because there was clipping, and we had to redo it a couple times and reduce the volume."*
+
+**Read first (named questions only):** RUNNING_LOG §441–§443 (the playback diagnosis, the tuba route) · piece #4: `docs/GAIN_STAGING.md`,
+`docs/plans/VIDEO_BUILD_PLAN.md` PHASE 0, RUNNING_LOG day 36 (the render and its clip), its demo-recording `.rpp` and MIDI file · the septet's
+`tools/export_midi.js`, `score/public/sonify_core.js compileScore`, `composer.html` (the play loop, the zone and curve ticks, `regenerateTrill`,
+`trillCovers`, `mutedByLive`, `heldVel`/`heldCc7`, `initZoneMidi`, `loadSession`), `reaper/septet_rack.rpp`, `reaper/bridge/README.md`,
+`docs/REAPER_CONTROL.md`.
+
+**The tuba's specs, as found (piece #4, day 36):** the file 60 BPM / 960 PPQ with a tempo track; the Reaper session set to 60 by hand (it sat at
+120 — every duration would halve); 20 items one per track at 0:00; the REC track muted (a second send, +6 dB on two tubas, and armed with
+monitoring); a positional-drop trap (a duplicated Tuba8 pair); render 2 ch / 48 kHz / 24-bit. **The clip:** the pre-flight watched the trance's
+final crescendo (−7.4 dBFS with the master at −6) and called it clear; the first render came back **Peak +4.2 dBFS, Clip >999** — the
+peaks were simultaneous attacks, 11.6 dB over the sustained passage measured. Fix: master −6 → −13.5, plain gain (LRA 19.8 is the piece),
+a second render. Verified off the PCM: 762.000 s exactly; the first sound 32 ms after the first onset.
+
+**What was found in the septet (read, not guessed):**
+1. `tools/export_midi.js` was piece #4's, unported: it wrote tracks for the ports `tuba1 … tuba10b` — every septet event would have been
+   dropped — and it required `tools/midi_out.js`, which the port never copied. The export could not run at all.
+2. The shared computation it used (`compileScore`) lacks more of the composer's playback than §442 listed: trills (zone snippets,
+   regenerated at play start), the eaten notes (`trillCovers` + `mutedByLive`), the measured held velocity AND the measured CC7
+   (`heldCc7`), the secco cut, the late switch beside a trill, the measured bend range.
+3. The rack: 15 tracks — REC (a FOLDER every part sums through, no second send) · Flute SI2 · Flute strikes (a bus, no MIDI input) ·
+   Fluteb SI2 · Bass Clarinet XS ×2 (ONE port) · BassCl strikes (a bus) · Piano Kontakt · PianoPlucked · PianoMute PP2 · PianoHarm PP2 (all
+   FOUR on the Piano port) · Vn1 · Vn2 · Va · Vc; every instrument track armed, monitoring, all channels. 120 BPM. Master 0 dB, no FX.
+4. `notation/audio/*.wav` was not gitignored (a render is ~190 MB).
+
+**Decided (the AI, the conceptual call under his "don't get bogged down … do a good, solid job"):** not to port the missing rules into a
+second engine — the class §442 warned of — but to **capture the composer's own playback**. `tools/capture_composer_midi.js`: composer.html in
+headless Chrome under a virtual clock; Web MIDI replaced by recording outputs named as the loopMIDI ports (a past timestamp = now, `clear()`
+drops what is queued, as Web MIDI does); every non-GET request refused (no autosave, no Save — it cannot touch a working copy); the score
+loaded from its FILE; the timing table and the velocity remap awaited; `startPlay()` at 0 (it regenerates the trills, as his ▶ does), the
+play loop's own step at 60 fps to the end, `stopPlay()`. No stored browser setting feeds playback (all 19 localStorage keys checked).
+**Rejected:** porting the rules into `sonify_core` (a second copy to keep in step); the notation page's player (the same gaps).
+
+**The capture (piece-septet as saved 2026-09-13 02:12):** 37 627 frames, 627 s, 13 min of wall time · 20 565 messages · **0 writes
+attempted** · 69 trills regenerated · no score file changed.
+
+**The export — `tools/export_midi.js`, rewritten — checks the stream against the composer's own objects before writing anything:**
+snippet notes **2066 / 2066** (69 trills, each note at its time ±3 ms) · sounding notes **1739 / 1739** (each once, on its route, at its onset) ·
+the **11 eaten notes silent** · note-ons nothing explains **0** · notes never closed **0** · the file read back equal. Note-ons 3805 = 2066 + 1739.
+**The layout is the rack's, read from the .rpp:** each track gets what its LIVE input gets — the whole port, all channels — so the four piano
+tracks each carry the Piano port and the two bass clarinet tracks each the BassCl port, exactly as when he plays; the two buses get one inert
+message (CC 110 = 0, channel 16) so a drag cannot skip them. Out: `midi/piece-septet.mid` (14 named tracks + tempo, the rack's order, 60 BPM /
+960 PPQ, 627.12 s) · `midi/piece-septet/NN <track>.mid` (one format-0 file per track) · `reaper/place_piece-septet_midi.lua` (by hand).
+
+**"is this something you are able to do now?" — yes, through the Reaper bridge** (PLAN 0k; alive, Reaper 7.72, the rack open and saved).
+`tools/render_reaper.js`: the rack COPIED to `reaper/piece-septet_render.rpp`, opened in a NEW tab; 60 BPM; each part on the track of its
+NAME (the n-th file of a name on the n-th track of that name); render settings master mix · WAV 32-bit FLOAT · 48 kHz · stereo · 0 → the last
+note-off + 6 s · no normalize, no dither; saved; rendered (action 42230); the tab closed; the rack never written.
+
+**The first attempt stopped on a dialog — his screenshot:** *"MIDI import: Flute SI2 — Import 16-channel MIDI and meta-events as:
+Multichannel item on a single track · ☑ Always prompt"*. `InsertMedia` runs Reaper's MIDI import, which prompts for a multichannel file; the
+bridge job waited on it past its 240 s timeout. The AI told him to keep "Multichannel item on a single track" and either untick "Always prompt"
+and OK once, or OK fourteen times; he cleared it; the job finished (324 s) and the tool resumed (`--resume`). **Verified inside Reaper,
+by name, before rendering:** every track's note count equal to the export (Flute 462 · Fluteb 44 · BassCl 518 ×2 · Piano 772 ×4 · Vn1 487 ·
+Vn2 485 · Va 500 · Vc 537), every item at 0:00, 628 s long at 60 BPM. Controller counts 1–6 fewer on some tracks: Reaper merges identical
+messages at one instant (the stop's repeated CC7 127).
+**Fixed so it cannot recur:** `tools/reaper_midi_place.js` builds each item DIRECTLY (`CreateNewMIDIItemInProj` + `MIDI_SetAllEvts`) — no
+import, no prompt, no dependence on his preferences; both tools use it. **Proven** in an empty tab (no samplers loaded): the Vn1 part read back
+487 notes, the first at 0.755208 s (the capture 0.755; one tick = 1.04 ms), ending 0.807292 (0.807), pitch 82, vel 127, the last at 624 s;
+saved to a scratch file so the tab closed without a prompt; the rack current again.
+**Also fixed:** `reaper_job.js`'s project guard would have refused every job once the render tab was current (the setup job passed only
+because Reaper was busy loading) — the tool now names the open project for the guard, and each job checks its own path.
+
+**The render (150 s offline; Reaper 3.6 → 5.2 GB with the second tab open, 15.8 GB free before):**
+
+| measured off the file | value |
+|---|---|
+| format | pcm_f32le · 48 000 Hz · 2 ch |
+| length | **630.100 s** (30 244 800 samples) |
+| true peak (float) | **+2.0 dBTP** — sample peak +1.7 dBFS |
+| loudness | −22.7 LUFS integrated · LRA **14.1 LU** |
+| gain to −1 dBTP | **−3.0 dB**, plain, no limiter |
+| `notation/audio/piece-septet.wav` | 24-bit · true peak **−1.0 dBTP** · sample peak −1.3 dBFS · 181 MB |
+| sync | the first onset 0.608 s · the first sound 0.612 s (**3.7 ms**, the sampler's attack) |
+
+**A 24-bit render straight out of this rack at master 0 dB would have clipped** — piece #4's incident again, +2.0 over full scale. The float
+render measured it instead; one gain, no second render. The equivalent master fader for a direct 24-bit render: −3 dB (−4 for margin).
+
+**Linked, in the running app** (his :5300, the MAIN file, a fresh load): the **♪ render** chip shows (`/api/notation/renders` lists
+`piece-septet.wav`); clicked → **♪ render ✓**, live MIDI unticked itself, no error, the WAV fetched 200. Decoded silently in the page:
+ready to play through, a seek to 300 s lands at 300. **Not verified: his ear on the sync** (the tuba's proof was his "sync is very good").
+**Nit, not fixed:** the server streams the WAV with no length and no byte ranges, so the browser reports the duration as Infinity and seeks
+only within what it has buffered (fast, locally) — piece #4's server is the same and its sync passed.
+
+**A lesson from the build:** `String.replace(a, b)` reads `$'` in `b` as "the text after the match" — a Lua pattern ending in `$'` inserted
+the rest of the file into the tool mid-edit (caught by the anchor count, nothing written). Edits now pass `() => b`. The earlier commits
+(`d2d8811`, `782d475`) were checked: their diffs are exactly the intended lines.
+
+**Also left:** `tools/test_sonify_core.js` and `tools/test_midiplayer.js` still read the TUBA score `piece-s25-finished01` (unported;
+NITS). The render is a snapshot: **re-run the three commands after the next Save** (`docs/RENDER.md`).

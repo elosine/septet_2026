@@ -338,3 +338,14 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 - **`foldFlute()` is unrun in a browser** — proven on a file copy only (61 of 70). It uses the same calls as `moveNote` (pushUndoState · renderWaveCurve · markDirty); his first run is the proof.
 
 - 2026-09-12 (his ask, while composing the chain): **a ♪ on each harmony row of the strikes drawer** — audition the chord alone, before it is loaded. Today the only path is load it → `Hear piano`. "any way to preview chords in drawer" — no.
+
+## 2026-09-13 — the recording (RUNNING_LOG §453)
+
+- **The score server streams a WAV with no length and no byte ranges** (`score/server.js` static GET; HEAD is 404): the page's audio reports
+  duration Infinity and seeks only within what it has buffered. Harmless locally (181 MB buffers fast; a seek to 300 s landed) and piece #4's
+  server is the same. If a seek ever lands wrong: answer `Range` with 206 + `Content-Length` + `Accept-Ranges: bytes` for `/notation/audio/`.
+- **`tools/test_sonify_core.js` and `tools/test_midiplayer.js` still read the tuba score `piece-s25-finished01`** and the tuba ports — never
+  ported. The septet's recording no longer goes through `sonify_core` (the capture is the composer itself), so they guard nothing here;
+  the notation page's live MIDI player still does (§441–§442: trills silent, eaten notes sound on the page's ▶ — the render is the fix).
+- **The capture takes ~13 minutes** (the play loop stepped at 60 fps, the DOM transforms included, to stay exactly the live path). If it
+  matters: step only the three ticks, not `applyScroll`.
