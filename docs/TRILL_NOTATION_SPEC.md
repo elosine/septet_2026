@@ -5,7 +5,7 @@ Sizing method: `docs/GLYPH_SIZING.md`. Rule index: `docs/NOTATION_STANDARDS.md` 
 once built, the registry is the source and this sheet is the record of why.*
 
 **The device in one line:** the tuba's SURGE with a trill on it — open head · the parenthesised neighbour · `tr` above · `sfz` below ·
-the whole column left of the go line · the go line at the onset · the level curve over the exact span · **no GC**.
+the whole column **right of the go line** (§452; left until then) · the go line at the onset · the level curve over the exact span · **no GC**.
 
 **Provenance keys:** **T** = the tuba registry as carried in this repo (`notation/registry/container.json`, identical to piece #4's) ·
 **S** = the septet's section-1 rules (NOTATION_STANDARDS §1) · **LP** = LilyPond 2.24.4, measured by the probe
@@ -28,7 +28,7 @@ the whole column left of the go line · the go line at the onset · the level cu
 | eaten notes | a note stamped `mutedBy: <trill id>` is **not extracted** when trills are (its attack is the trill's attack). 11 notes carry the stamp today, the piano's `wc-880` at 63.72 s among them | C, TRILLS_TOOL §6 |
 | opt-in | trills are extracted only with a build flag, so the strikes page (`strike1`) is unchanged until rebuilt with it | the D9 / snapshot discipline |
 
-## 2 · The column (the nh-unit), horizontal — left of the go line
+## 2 · The column (the nh-unit), horizontal — right of the go line since §452 (the rows below the neighbour group were the left rule)
 
 | element | spec | from |
 |---|---|---|
@@ -41,12 +41,40 @@ the whole column left of the go line · the go line at the onset · the level cu
 | neighbour accidental | only when its alter ≠ 0 (the house prints no naturals); the house accidental × 0.794; its right ink **0.20 ss** before the neighbour head | LP `TrillPitchAccidental.padding 0.2` (measured 0.200). ⚠ LilyPond prints a natural on every trill pitch — the house does not |
 | neighbour ledgers | the house ledger rule at the neighbour's head width (0.25 × 0.83 = 0.21 ss overhang) | H. LilyPond draws them too, 0.15 overhang |
 | **the unit's right ink** | the right paren's right edge | this sheet |
-| **gap: the unit's right ink → the go line** | **0.25 ss** — the surge's `nhGapSs` (the composer's "2 px" at staff 31.6) | T `layout.nhGapSs`, `_nhGapNote` |
+| **gap: the unit's right ink → the go line** *(the LEFT rule, before §452)* | **0.25 ss** — the surge's `nhGapSs` (the composer's "2 px" at staff 31.6) | T `layout.nhGapSs`, `_nhGapNote` |
 | GC push | none — no GC (the 0.6 ss strike gap does not apply) | D §434 |
-| **RIGHT of the go line** (§445, first five by `--trillsRight`) | `nhAnchor: afterGo` — the column's LEFTMOST ink (head · ledgers · accidental · `tr` · `sfz` · the ottava sign, by render's minimum-span rule) **0.25 ss** (`nhGapSs`) right of the go line; an ottava's bracket runs over the neighbour group | D §445 |
+| **RIGHT of the go line — THE RULE, every trill** (§445 on five; §452 all, the composer 2026-09-13) — how it is measured: **§2a** | registry `devices.byEnv.trill.nhAnchor: afterGo` (the `--trillsRight` flag superseded) — — the column's LEFTMOST ink (head · ledgers · accidental · `tr` · `sfz` · the ottava sign, by render's minimum-span rule) **0.25 ss** (`nhGapSs`) right of the go line; an ottava's bracket runs over the neighbour group | D §445 |
 
 **Width check, the piano's first trill (C2 → D2):** head 1.107 · 0.30 · paren 0.285 · 0.42 · head 0.83 · 0.42 · paren 0.285 = **3.65 ss**
 of ink, plus the main head's left ledger overhang (0.28), then 0.25 to the go line. The column's left edge sits ~4.2 ss before the onset.
+*(That was the left rule. Since §452 the same column starts 0.25 ss AFTER the onset and ends ~4.2 ss after it.)*
+
+## 2a · Right of the go line — how it is measured (§445 · §452)
+
+*The composer, 2026-09-13: "there's a lot of things, and different ones make the furthest most left horizontal point in the column. So, for
+example, if there's an ottava, the left edge of the ottava is generally the left most point, then there's ledger lines and accidentals".*
+Code: `notation/lib/layout.js` (`nhAnchor === 'afterGo'`). All offsets are horizontal, in staff spaces, from the main head's centre.
+
+| step | rule | number | where |
+|---|---|---|---|
+| 1 | the candidates for the column's LEFTMOST ink: the head's left edge · its ledger overhang · its accidental · the `tr` · the `sfz` · the ottava sign | — | layout `leftRel` + the afterGo block |
+| 1a | the head | open head 1.107 wide → −0.554 | glyphs `notehead.open` |
+| 1b | a ledger | overhang 0.25 × the head's width past each side | glyphs `ledgerLine.lengthFraction` |
+| 1c | the main accidental | right ink 0.10 ss before the head, or before the ledger it touches | the nh-unit rule (§2) |
+| 1d | the `tr`, centred on the head column | 2.396 × 0.57 = 1.366 wide → −0.683 | `techSymbolScale` |
+| 1e | the `sfz`, centred on the head column | 1.18 wide → −0.59 | glyphs `dynamic.sfz` |
+| 1f | the ottava sign: the hook sits at the right paren's right edge + **0.3 ss**, so the bracket covers the neighbour (the ottava transposes it too). Render draws label → hook; when hook − (label + 0.1) is under the **minimum span 1.3671 ss**, it widens LEFT: left = hook − 1.3671 − label width − 0.1 | `ottavaEndGapSs` 0.3 · `minBracketSpanSs` 1.3671 · `textGapBeforeLineSs` 0.1 | registry `engraving.layout` · glyphs `standards.ottava` · render.js ottava |
+| 2 | leftmost = the smallest of 1a–1f. Which staff a mark sits on does not matter — the piano's `tr` above its upper staff counts the same as its head on the lower | — | this sheet |
+| 3 | the head is placed so that **leftmost = the go line + 0.25 ss** (`nhGapSs`, ≈ 2 px at 7.9 px/ss — the gap the column kept BEFORE the go line, mirrored). A device `afterGoGapSs` overrides it | **0.25 ss** | registry `engraving.layout.nhGapSs` |
+| 4 | the neighbour group, `tr` and `sfz` then follow the head by §2 and §3, unchanged | — | §2 · §3 |
+| 5 | not for chords — a chord column places its own head | — | layout `CG` |
+
+**Proof:** `tools/test_trills.js` §452 block — for every trill in the MAIN file, leftmost ink − go line = 0.25 ss exactly, and the leftmost
+element is of ≥ 3 different kinds (the rule measures; it does not assume the head). At §445 the five's leftmost were a ledger, a sharp,
+the `tr`, the `tr`, a ledger.
+
+**What it runs into:** `node tools/trill_conflicts.js --list` (add `--left` to compare the old rule) — pixel boxes on the video frame
+against other notes' ink and GC arcs in the same lane. §452: left 28 of 69 trills met something, right **3**, all GC arcs.
 
 ## 3 · The column, vertical
 

@@ -1123,6 +1123,9 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
 // conflicts on the left ... let's do the first two, and then there's a series of three together"): every trill whose onset lies
 // in the span gets device.nhAnchor 'afterGo' — its whole column (head, neighbour, tr, sfz) starts nhGapSs RIGHT of its go line,
 // measured from the column's leftmost ink. Repeatable; recorded in the build, so R keeps it.
+// SUPERSEDED 2026-09-13 (§452, the composer: "please move the rest of the trills to the right of go line"): the rule is now the
+// device's — registry devices.byEnv.trill.nhAnchor 'afterGo' — so every trill has it without the flag. Kept so an older
+// recorded build still runs; it adds nothing now.
 {
   for (let i = 0; i < process.argv.length; i++) {
     if (process.argv[i] !== '--trillsRight') continue;

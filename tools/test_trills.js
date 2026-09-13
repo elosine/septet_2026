@@ -1,7 +1,7 @@
 // test_trills.js — PLAN 2f (2026-09-13): section 1's trills, the battery grown step by step.
 //   2f.2 the glyphs — the trill sign and the neighbour's parentheses, stock size from Emmentaler
 //   2f.3 the IR — trill zones as env trill events, eaten notes out, the composer's curve math, the validator
-//   2f.4 the device — the column left of the go line, tr and sfz, the curve over the lane, the go line's top, no GC
+//   2f.4 the device — the column (right of the go line since §452), tr and sfz, the curve over the lane, the go line's top, no GC
 //   2f.6 the rest — every trill in the save, the whole piece, the full device, no warning
 // Spec: docs/TRILL_NOTATION_SPEC.md. piece-septet.json is the composer's LIVE score: read, never written.
 // --glyphs <path> / --extract <path> run the checks against another glyphs.json / extract_core.js (to see them go red once).
@@ -209,7 +209,7 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
       eq(lpLeft - hRight, P.groupPadSs, 1e-6, 'the left paren sits groupPadSs after the main head (LilyPond 0.30)');
       if (!its.some(i => i.ev === evId && /^accidental-(sharp|flat|natural)/.test(i.g || ''))) eq(nL - lpRight, P.parenInnerSs, 1e-6, 'paren → neighbour head: parenInnerSs (LilyPond 0.42)');
       eq(rpLeft - nR, P.parenInnerSs, 1e-6, 'neighbour head → right paren: parenInnerSs');
-      eq(-rpRight, L.nhGapSs, 1e-6, 'the right paren — the unit\'s right ink — ends nhGapSs before the go line (0.25)');
+      ok(head.dxSs - hw / 2 >= L.nhGapSs - 1e-6 && rpRight > 0, 'the column sits RIGHT of the go line (§452 afterGo; its leftmost ink measured for every trill below)');
       const nSp = { step: 'CDEFGAB'[('CDEFGAB'.indexOf(ev.pitch.spelled.step) + 1) % 7] };
       eq(nHead.ySs - head.ySs, 0.5, 1e-9, 'the neighbour head a step above the main (' + ev.pitch.spelled.step + ' → ' + nSp.step + ')');
       eq(lp.ySs, nHead.ySs, 1e-9, 'the parens centred on the neighbour head');
@@ -296,23 +296,18 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
   ok(!warn.length, 'the whole piece: no layout warning names a trill' + (warn.length ? ' — ' + warn.slice(0, 3).join(' | ') : ''));
 }
 
-// ---- §445 the column RIGHT of the go line (nhAnchor 'afterGo', notate_section --trillsRight) ----
+// ---- §445 → §452 the column RIGHT of the go line, EVERY trill (registry devices.byEnv.trill.nhAnchor 'afterGo') ----
 {
-  const Extract = require('../notation/lib/extract_core.js');
   const Layout = require('../notation/lib/layout.js');
-  const score = J('scores/piece-septet.json');
   const ens = J('notation/registry/ensemble.json'), tech = J('notation/registry/techniques.json'), C = J('notation/registry/container.json');
   const L = C.engraving.layout, O = glyphs.standards.ottava, LF = glyphs.standards.ledgerLine.lengthFraction;
   const parts = ens.parts.map(p => p.part);
-  const z = score.objects.filter(o => o.type === 'zone' && o.midiModel === 'trill' && o.trill).sort((a, b) => a.startTime - b.startTime);
-  const w0 = Math.floor(z[0].startTime) - 1, w1 = z[Math.min(7, z.length - 1)].endTime + 0.2;
-  const { doc } = Extract.extract(score, { scoreName: 'piece-septet', window: [w0, w1], parts, id: 'trill-right', registry: J('notation/registry/classes.json'),
-    sampleLengths: J('bank/sample_lengths.json'), profile: 'trance', options: { chords: true, trills: true }, metaLayer: ens.metaLayer, techniques: tech.techniques });
-  for (const c of doc.chunks) c.strategy = 'unresolved';
-  const trills = doc.events.filter(e => e.env === 'trill').sort((a, b) => a.onset - b.onset);
-  const rightIds = new Set(trills.slice(0, 5).map(e => e.id));   // the first five, as the composer asked
-  for (const id of rightIds) doc.overlays.push({ id: 'ov-trillright-' + id, kind: 'engraving', target: { event: id }, value: { device: { nhAnchor: 'afterGo' } }, provenance: 'authored' });
-  const model = Layout.layoutSection(doc, glyphs, Object.assign({ frameParts: parts, ensemble: ens, techniques: tech }, L));
+  ok(L.devices.byEnv.trill.nhAnchor === 'afterGo', 'registry: byEnv.trill.nhAnchor afterGo — the rule for every trill, no build flag');
+  // the MAIN file (D41), laid out as the page lays it out
+  const ir = J('notation/ir/piece-septet.ir.json');
+  ok(!/--trillsRight/.test(ir.provenance.build) && !ir.overlays.some(o => /^ov-trillright-/.test(o.id)), 'the MAIN file carries no per-span --trillsRight overlay — the registry holds the rule');
+  const model = Layout.layoutSection(JSON.parse(JSON.stringify(ir)), glyphs, Object.assign({ frameParts: parts, ensemble: ens, techniques: tech }, L));
+  const trills = ir.events.filter(e => e.env === 'trill').sort((a, b) => a.onset - b.onset);
   const G = n => n === 'notehead-open' ? glyphs.notehead.open : n === 'notehead' ? glyphs.notehead.filled : n.startsWith('accidental-') ? glyphs.accidental[n.slice(11)]
     : n.startsWith('artic-') ? glyphs.articulation[n.slice(6)] : n.startsWith('dyn-') ? glyphs.dynamic[n.slice(4)] : null;
   const ext = i => {
@@ -323,23 +318,24 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
     if (i.align === 'noteY' && g.anchors && g.anchors.noteY) { const x = i.dxSs - g.anchors.noteY.x * k; return [x, x + g.wSs * k]; }
     return [i.dxSs - g.wSs * k / 2, i.dxSs + g.wSs * k / 2];
   };
-  let badR = [], badL = [], badO = [], kinds = new Set();
+  let badR = [], badO = [], kinds = new Set(), n = 0;
   for (const e of trills) {
     const sys = model.systems.find(s => s.items.some(i => i.k === 'envcurve' && i.ev === e.id));
-    const its = sys.items.filter(i => Math.abs((i.t != null ? i.t : i.t0) - e.onset) < 1e-9);
-    const xs = its.map(ext).filter(Boolean);
-    const left = Math.min(...xs.map(x => x[0])), right = Math.max(...xs.map(x => x[1]));
-    if (rightIds.has(e.id)) {
-      if (Math.abs(left - L.nhGapSs) > 1e-6) badR.push(e.source.objectId + ' left ' + left.toFixed(3));
-      const who = its.map(i => [i, ext(i)]).filter(p => p[1]).reduce((a, p) => (p[1][0] < a[1][0] ? p : a));
-      kinds.add(who[0].k === 'glyph' ? who[0].g : who[0].k);
-    } else if (Math.abs(right + L.nhGapSs) > 1e-6) badL.push(e.source.objectId + ' right ' + right.toFixed(3));
+    const part = String(sys.key != null ? sys.key : sys.part).split(':')[0];
+    // the piano's column spans both of its staff systems (the tr above the upper, the head on the lower)
+    const its = model.systems.filter(s => String(s.key != null ? s.key : s.part).split(':')[0] === part)
+      .flatMap(s => s.items.filter(i => Math.abs((i.t != null ? i.t : i.t0) - e.onset) < 1e-9 && (i.ev === e.id || ['glyph', 'ledger', 'ottava'].includes(i.k))));
+    const xs = its.map(i => [i, ext(i)]).filter(p => p[1]);
+    if (!xs.length) { badR.push(e.source.objectId + ' no ink'); continue; }
+    n++;
+    const who = xs.reduce((a, p) => (p[1][0] < a[1][0] ? p : a));
+    if (Math.abs(who[1][0] - L.nhGapSs) > 1e-6) badR.push(e.source.objectId + '@' + e.onset.toFixed(2) + ' left ' + who[1][0].toFixed(3));
+    kinds.add(who[0].k === 'glyph' ? who[0].g : who[0].k);
     const ott = its.find(i => i.k === 'ottava'), rp = its.find(i => i.g === 'accidental-rightParen');
     if (ott && rp && ott.dx1Ss < ext(rp)[1] - 1e-9) badO.push(e.source.objectId);
   }
-  ok(!badR.length, 'afterGo: each of the first five trill columns starts nhGapSs (' + L.nhGapSs + ') right of its go line, from its leftmost ink — the leftmost here: ' + [...kinds].join(', ') + (badR.length ? ' — ' + badR.join(', ') : ''));
-  ok(kinds.size >= 2, 'afterGo: the leftmost element differs from column to column (' + kinds.size + ' kinds) — the rule measures, it does not assume the head');
-  ok(!badL.length, 'the trills without the flag keep their column left of the go line (right ink −nhGapSs)' + (badL.length ? ' — ' + badL.join(', ') : ''));
+  ok(n === trills.length && !badR.length, 'afterGo, the whole piece: every trill column (' + n + ' of ' + trills.length + ') starts nhGapSs (' + L.nhGapSs + ') right of its go line, from its leftmost ink' + (badR.length ? ' — ' + badR.slice(0, 5).join(', ') : ''));
+  ok(kinds.size >= 3, 'afterGo: the leftmost element differs from column to column (' + [...kinds].join(', ') + ') — the rule measures, it does not assume the head');
   ok(!badO.length, 'an ottava on a trill runs over the neighbour group (its hook past the right paren)' + (badO.length ? ' — ' + badO.join(', ') : ''));
 }
 
@@ -490,5 +486,5 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
 }
 
 console.log(pass + ' passed, ' + fail + ' failed');
-console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR · 2f.4 device · 2f.6 the whole piece · §445 right of the go line · D42 the curve look and the meters · 2f.7 100/s and the floor at 1');
+console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR · 2f.4 device · 2f.6 the whole piece · §452 every trill right of the go line · D42 the curve look and the meters · 2f.7 100/s and the floor at 1');
 process.exit(fail ? 1 : 0);

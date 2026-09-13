@@ -12204,3 +12204,46 @@ longer than ~6 s); the trills were the first 12 s and 17 s curves through that p
 
 **Not done, his to answer:** the floor on the morph crescendo too (default: trills only — one more flag, `crescCurve` has no device path yet,
 it would go in layout's cresccurve item) · his eye on the page before the floor is settled (*"let me see what a 1 looks like"*).
+
+## §452. Every trill RIGHT of its go line — the rule moved into the device; the measuring written down step by step; 28 → 3 trills meeting ink or an arc
+
+**His word, 2026-09-13 (Opus):** *"ok please move the rest of the trills to the right of go line, and confirm that you have recorded somewhere
+all the specs on how to measure and do this. And then go ahead."*
+
+**The record, checked before building.** The rule was written in three places: RUNNING_LOG §445 (his words, what was found missing and
+built, the five measured) · `TRILL_NOTATION_SPEC.md` §2 (one row) · `NOTATION_STANDARDS.md` §1 (one row). **What was NOT written down:**
+(a) the ottava sign's own numbers — the hook at the right paren + `ottavaEndGapSs` 0.3 ss, render's minimum bracket span 1.3671 ss + the
+label + 0.1 — were only in code; (b) that the piano's column is measured across both of its staff systems; (c) "not for chords"; (d) the
+§440 count of trills meeting strike ink was a one-off script, never saved. **Now written:** TRILL_NOTATION_SPEC **§2a**, "Right of the go
+line — how it is measured", every step with its number; and `tools/trill_conflicts.js`, the count as a tool.
+
+**Built.**
+- `container.json → devices.byEnv.trill.nhAnchor: "afterGo"` — the rule belongs to the device, so every trill has it with no flag,
+  on every page that draws trills. `--trillsRight` marked SUPERSEDED in `notate_section.js` (kept so an older build still runs).
+- The MAIN file rebuilt WITHOUT `--trillsRight 63-68`: `... --bricks --trills --trillRate 100 --id piece-septet`. Diffed against HEAD:
+  only the build string and the five `ov-trillright-*` overlays gone — the layout of those five is identical (the registry gives the same
+  device).
+- `tools/test_trills.js`: the §445 block now lays out the MAIN file and checks **all 69** — leftmost ink − go line = 0.25 ss exactly,
+  the leftmost element of ≥ 3 kinds, the ottava over the neighbour, the registry holds the rule, the MAIN build has no per-span overlay.
+  The 2f.4 check "the right paren ends 0.25 before the go line" replaced by "the column sits right of the go line". **92 green** ·
+  `test_septet_notation` 86 · `test_identity` pass.
+- `tools/trill_conflicts.js [<ir-id>] [--list] [--left]` — from a scratch measurement this turn: pixel boxes on the video frame
+  (1920 × 1080, 12 s pages, the app's lane math), each trill column's glyphs · ledgers · ottava sign against every other note's glyphs,
+  ledgers, ottava signs and stems within 1 s in the same part, and against every GC arc (gc.js trajectory — 0.36 s before its impact,
+  0.24 s after, rising back to full height — in its own lane geometry, ± half the stroke). Conservative: an arc through a glyph's empty
+  corner counts; instruction text is not boxed.
+
+**Measured (the tool, on the MAIN file):**
+
+| the column | trills meeting something | ink × ink | × a GC arc |
+|---|---|---|---|
+| LEFT of the go line (`--left`) | 28 of 69 | 9 | 27 |
+| RIGHT of it (the rule now) | **3 of 69** | **0** | **3** |
+
+A first pass in staff spaces, without the arcs, gave 9 → 0; it was checked not to be vacuous (the head at 147.63 s moves from −3.34 ss to
++1.45 ss) before the pixel pass added the arcs. **The three left, for his GC × trill discussion (not touched):** the piano @85.35 s — its
+`tr` × the rising arm of the strike before · Vc @146.06 s — the ottava sign × the strike before · Bass Cl @147.78 s — the right paren × the
+falling arm of the strike AFTER it.
+
+**Seen in the running app** (his :5300, a view-only tab reloaded, 1920 × 1080; R not pressed): page 13/54, 138.5–150.5 s, the dense close of
+section 1 — every trill column (`tr` · head `( ● )` · `sfz`) starts just right of its dashed go line, clear of the strikes before it.

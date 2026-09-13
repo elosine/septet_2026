@@ -92,6 +92,7 @@
       "gc": false,
       "nhUnit": true,
       "nhHead": "open",
+      "nhAnchor": "afterGo",
       "brick": false,
       "ringBar": false,
       "curve": true,
