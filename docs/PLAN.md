@@ -1590,7 +1590,7 @@ player would touch parts, solo, crop and print.
     above, `sfz` below by the dynamics rule, the go line at the onset, the level curve from the head over the span with the 90° cut, no
     GC. Layout emits seconds + ss only. First instance: the piano's 63.72 s trill (C2, whole tone), picker "piece-septet · trill 1".
     *Why:* §432–§434.
-  - **2f.5 His eye** — `todo` — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → the picker → Z: the `tr`'s height, the neighbour,
+  - **2f.5 His eye** — `in progress 2026-09-13 (RUNNING_LOG §439) — first look: tr too big → 0.57 (halfway to the sfz); placement, neighbour, the full curve, the spelling all fine; his second look next` — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → the picker → Z: the `tr`'s height, the neighbour,
     the column's gap, the curve. The fix ladder is data. *Why:* a confidence claim must be verified in the running app (AI_METHODOLOGY).
   - **2f.6 The rest** — `todo` — all 69 through the device; the 0.15 s trills' width judged (§431); NOTATION_STANDARDS §2 completed.
     *Why:* his — *"And then we'll look at it from there."*

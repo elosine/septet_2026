@@ -11867,3 +11867,23 @@ cannot come from this work. `test_septet_notation` 86.
 **For his eye (2f.5), in order of weight:** (1) the curve — 52 of 69 trills are flat at fff and draw as blocks; the first is one; (2) the
 `tr` height and its distance from a low note (above the staff, as LilyPond places it); (3) the neighbour's look — size, the parens, no
 natural; (4) the spellings D♯ → E♯ and A♯ → B♯ where they occur (§437).
+
+## §439. PLAN 2f.5, his eye on the first trill: the `tr` smaller (0.70 → 0.57, halfway to the sfz); everything else stands
+
+**His word, 2026-09-13:** *"The trill marking is too big. Let's try something between what it currently is now and the sforzando size. So
+halfway between those two. Trail placement is fine. The neighbor look is fine. And the full curve is fine. Okay. The spelling is fine, and I
+think we have a rule to use a different note name for the minor second ones. I think this might have been part of the string quartet, but
+that's fine. In other words, if you have for the drill adjacent notes, for example, a c and a c sharp, you would spell those c and d flat.
+fix the trill and the sample, and then I'll take another look."* — then, before it was done: *"is the new size in"* (it was not yet).
+
+**Verdicts on §438's four questions:** (1) the full curve — **fine as drawn**: the flat trills draw the data, a block at fff (option A; the
+standard-swell reading of CN-77 stays for section 3); (2) the `tr` placement — fine; (3) the neighbour's look — fine; (4) the spelling —
+fine. His "rule for the minor second" is the rule already built (§437): the neighbour always takes the NEXT LETTER NAME, so C with C♯ is
+written C → D♭; nothing to change.
+
+**The `tr` size — "halfway between those two", read as HEIGHT** (the dimension §429 compared the `tr` and `Ped.` by): at 0.70 the sign
+was 1.543 ss tall; the sfz is 0.9705; halfway = 1.257 → factor 1.257 / 2.204 = 0.5702 → **`techSymbolScale` 0.57** = **1.366 × 1.256 ss**.
+(Halfway by WIDTH would have been 0.595 — the `tr` is wider for its height than the sfz.) One registry number; the page needs no rebuild.
+Laid out on `trill1`: scale 0.57, bottom ink still 0.45 over the bass staff's top line (centre 3.078). His :5300 already serves the new
+registry (read from disk) — CTRL+SHIFT+R on the notation page shows it. `test_trills` 56 GREEN, its size check now a relation (the drawn
+height halfway between the 0.70 height and the sfz's) read from the registry rather than a restated number.

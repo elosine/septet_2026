@@ -24,7 +24,10 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
   if (tr) {
     eq(tr.wSs, 2.396, 0.002, 'trill sign stored at STOCK width');
     eq(tr.hSs, 2.204, 0.002, 'trill sign stored at STOCK height');
-    eq(tr.wSs * 0.70, 1.677, 0.002, 'trill sign at the device scale 0.70 = GLYPH_SIZING Ornaments 1.68 wide');
+    // §439 (the composer: "halfway between what it currently is now and the sforzando size"): the tr's drawn height is
+    // halfway between the first scale's (0.70) and the sfz's — the registry scale, read, not restated
+    const trK = J('notation/registry/container.json').engraving.layout.devices.byEnv.trill.techSymbolScale;
+    eq(tr.hSs * trK, (tr.hSs * 0.70 + glyphs.dynamic.sfz.hSs) / 2, 0.005, 'trill sign at the registry scale ' + trK + ': height halfway between 0.70 and the sfz (§439)');
     ok(/scripts\.trill/.test(tr._provenance && tr._provenance.source), 'trill sign provenance names the Emmentaler glyph');
   }
   for (const k of ['leftParen', 'rightParen']) {
@@ -42,9 +45,9 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
   const Stamps = require('../notation/lib/stamps.js');
   const S = Stamps.makeStamps(glyphs);
   let svgT = '', svgP = '';
-  try { svgT = Stamps.toSvg(Stamps.scaled(S.articulation('trill'), 0.70), { xPx: 10, yPx: 10, ssPx: 7.9, align: 'center' }); } catch (e) { /* red below */ }
+  try { svgT = Stamps.toSvg(Stamps.scaled(S.articulation('trill'), 0.57), { xPx: 10, yPx: 10, ssPx: 7.9, align: 'center' }); } catch (e) { /* red below */ }
   try { svgP = Stamps.toSvg(Stamps.scaled(S.accidental('leftParen'), 0.63), { xPx: 10, yPx: 10, ssPx: 7.9, align: 'center' }); } catch (e) { /* red below */ }
-  ok(/<path/.test(svgT), 'stamps: artic-trill renders a path at scale 0.70');
+  ok(/<path/.test(svgT), 'stamps: artic-trill renders a path at a scale');
   ok(/<path/.test(svgP), 'stamps: accidental-leftParen renders a path at scale 0.63');
 }
 
@@ -177,8 +180,8 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
   const DEV = C.engraving.layout.devices.byEnv.trill;
   const L = C.engraving.layout;
   ok(DEV && DEV.goLine && DEV.goLineTopAsGc && !DEV.gc && DEV.nhUnit && DEV.brick === false && DEV.curve && DEV.cut === false && DEV.curveBand === 'lane'
-    && DEV.dynMark === 'sfz' && DEV.techSymbol === 'trill' && Math.abs(DEV.techSymbolScale - 0.70) < 1e-9 && DEV.trillPitch && DEV.chainSide === undefined,
-    'registry byEnv.trill: go line (strikes\' length) · no GC · open unit · no brick · curve over the lane, not peak-cut · sfz · tr at 0.70 · the neighbour group · chainSide unset (the room rule)');
+    && DEV.dynMark === 'sfz' && DEV.techSymbol === 'trill' && Math.abs(DEV.techSymbolScale - 0.57) < 1e-9 && DEV.trillPitch && DEV.chainSide === undefined,
+    'registry byEnv.trill: go line (strikes\' length) · no GC · open unit · no brick · curve over the lane, not peak-cut · sfz · tr at 0.57 (§439) · the neighbour group · chainSide unset (the room rule)');
   const parts = ens.parts.map(p => p.part);
   // the first PIANO trill in the live save, never a hard-coded id
   const pz = score.objects.filter(o => o.type === 'zone' && o.midiModel === 'trill' && o.trill && o.layer === 2).sort((a, b) => a.startTime - b.startTime)[0];
@@ -215,7 +218,7 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
       eq(sfz.ySs + glyphs.dynamic.sfz.hSs / 2, inkBot - L.stackGapSs, 1e-6, 'sfz top ink stackGapSs below the unit\'s (or the staff\'s) bottom ink — the tuba chain');
       const inkTop = Math.max(head.ySs + glyphs.notehead.open.hSs / 2, lp.ySs + glyphs.accidental.leftParen.hSs * P.parenScale / 2, 2);
       eq(tr.ySs - glyphs.articulation.trill.hSs * DEV.techSymbolScale / 2, inkTop + L.stackGapSs, 1e-6, 'tr bottom ink stackGapSs above the staff or the unit\'s top ink');
-      ok(Math.abs(tr.scale - 0.70) < 1e-9 && Math.abs(lp.scale - P.parenScale) < 1e-9 && Math.abs(nHead.scale - P.headScale) < 1e-9, 'scales as data: tr 0.70 · parens ' + P.parenScale + ' · neighbour head ' + P.headScale);
+      ok(Math.abs(tr.scale - DEV.techSymbolScale) < 1e-9 && Math.abs(lp.scale - P.parenScale) < 1e-9 && Math.abs(nHead.scale - P.headScale) < 1e-9, 'scales as data: tr ' + DEV.techSymbolScale + ' · parens ' + P.parenScale + ' · neighbour head ' + P.headScale);
     }
     const allIt = model.systems.flatMap(s => s.items.filter(i => i.ev === evId));
     ok(!allIt.some(i => i.k === 'gc'), 'no GC on the trill');

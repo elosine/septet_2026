@@ -100,7 +100,7 @@
       "dynPair": false,
       "dynMark": "sfz",
       "techSymbol": "trill",
-      "techSymbolScale": 0.7,
+      "techSymbolScale": 0.57,
       "trillPitch": {
        "groupPadSs": 0.3,
        "parenScale": 0.63,

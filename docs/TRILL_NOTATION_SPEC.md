@@ -51,7 +51,7 @@ of ink, plus the main head's left ledger overhang (0.28), then 0.25 to the go li
 
 | element | spec | from |
 |---|---|---|
-| **`tr`** | Emmentaler `scripts.trill` × **0.70** = 1.68 × 1.54 ss | D §430 |
+| **`tr`** | Emmentaler `scripts.trill` × **0.57** = 1.37 × 1.26 ss — first 0.70 (1.68 × 1.54), then halfway to the sfz's height at his eye | D §430 · §439 |
 | `tr` horizontal | centred on the main head column | LP (centred within 0.09 ss); H (the strikes' symbol above, `headDx`) |
 | `tr` vertical | **above**: bottom ink **0.45 ss** above whichever is higher — the staff's top line or the unit's top ink (head · accidental · the neighbour group) | H `stackGapSs 0.45` (the strikes' symbol-above rule, §400). LP: 0.50 (`TrillSpanner` padding 0.5, staff-padding 1.0 measured 0.55 from the line centre) |
 | `tr` on the piano | above the staff the note is written on (C2 → above the bass staff, inside the grand staff's 6 ss gap) | S §401k |
@@ -106,7 +106,7 @@ windows redrawn, is his call when he sees it.
   "nhUnit": true, "nhHead": "open", "brick": false, "ringBar": false,
   "curve": true, "cut": false, "curveBand": "lane",
   "dynPair": false, "dynMark": "sfz",
-  "techSymbol": "trill", "techSymbolScale": 0.70,
+  "techSymbol": "trill", "techSymbolScale": 0.57,
   "trillPitch": { "groupPadSs": 0.30, "parenScale": 0.63, "parenInnerSs": 0.42,
                   "headScale": 0.794, "accScale": 0.794, "accPadSs": 0.20, "naturals": false }
 } } }
