@@ -552,11 +552,12 @@
    "wPx": 8,
    "gapPx": 3,
    "color": "#99FF00",
-   "fillOpacity": 0.6,
+   "fillOpacity": 0.3,
    "outlineWPx": 1.5,
    "outlineOpacity": 0.8,
    "_noteDay39": "day 39 (PROOFREAD_LEDGER #4), composer: the shadow behind the curve follower was fixed in the morph section and nowhere else. fillOpacity 0.3 -> 0.6 for PARITY with glissMeter and cresMeter, which took variant A1 on day 36 — the residual shadow is the STAFF LINES reading through a 30% fill. Animated layer only (app + video); the print PDF is unaffected. Supersedes the WISHLIST W1 line that said curveMeter deliberately stays at 0.3.",
-   "_note": "day 22, composer: the piece #2 curve follower — 8 px meter riding 3 px left of the cursor, fill height = current drawn level; limeGreen rgb(153,255,0) = p2's staff-1 green"
+   "_note": "day 22, composer: the piece #2 curve follower — 8 px meter riding 3 px left of the cursor, fill height = current drawn level; limeGreen rgb(153,255,0) = p2's staff-1 green",
+   "_d42MeterNote": "D42 (2026-09-13, RUNNING_LOG §448): the meters are piece #2's curve follower exactly (builds/performance _drawCurveFollower) — 8 px, right edge 3 px left of the cursor centre, the full-scale outline 1.5 px @ 0.8 in the curve's colour, the fill @ 0.3 drawn FIRST and the outline over it. fillOpacity 0.6 -> 0.3: the tuba's day-36/39 raise (staff lines reading through a 30% fill) superseded at the composer's word, 'update the meters to the same as the 2pno2perc'."
   },
   "gc": {
    "preset": {
@@ -607,19 +608,21 @@
    "wPx": 8,
    "gapPx": 3,
    "color": "#F04B00",
-   "fillOpacity": 0.6,
+   "fillOpacity": 0.3,
    "outlineWPx": 1.5,
    "outlineOpacity": 0.8,
-   "_note": "day 35, composer: 'give it its own curve follower, just the top half bright orange and then everything else the same as the existing one'. curveMeter's mechanism and every number, confined to the TOP HALF of the lane (the glissando's half) and coloured brightOrange #F04B00. fillOpacity 0.3 -> 0.60 on day 36 post-clear, the composer's pick of variant A1: once the exporter's premultiplied-alpha bug was fixed, the shadow still left inside the bar was the STAFF LINES reading through a 30% fill. 0.60 suppresses them and still reads as an overlay rather than as ink; 0.85 read as ink, and a white backing made the bar paler than its own band. See docs/WISHLIST.md W1."
+   "_note": "day 35, composer: 'give it its own curve follower, just the top half bright orange and then everything else the same as the existing one'. curveMeter's mechanism and every number, confined to the TOP HALF of the lane (the glissando's half) and coloured brightOrange #F04B00. fillOpacity 0.3 -> 0.60 on day 36 post-clear, the composer's pick of variant A1: once the exporter's premultiplied-alpha bug was fixed, the shadow still left inside the bar was the STAFF LINES reading through a 30% fill. 0.60 suppresses them and still reads as an overlay rather than as ink; 0.85 read as ink, and a white backing made the bar paler than its own band. See docs/WISHLIST.md W1.",
+   "_d42MeterNote": "D42 (2026-09-13, RUNNING_LOG §448): the meters are piece #2's curve follower exactly (builds/performance _drawCurveFollower) — 8 px, right edge 3 px left of the cursor centre, the full-scale outline 1.5 px @ 0.8 in the curve's colour, the fill @ 0.3 drawn FIRST and the outline over it. fillOpacity 0.6 -> 0.3: the tuba's day-36/39 raise (staff lines reading through a 30% fill) superseded at the composer's word, 'update the meters to the same as the 2pno2perc'."
   },
   "crescMeter": {
    "wPx": 8,
    "gapPx": 3,
    "color": "#99FF00",
-   "fillOpacity": 0.6,
+   "fillOpacity": 0.3,
    "outlineWPx": 1.5,
    "outlineOpacity": 0.8,
-   "_note": "day 35: the glissMeter's twin. curveMeter's mechanism and every number, confined to the BOTTOM HALF of the lane (the crescendo's half), limeGreen #99FF00. fillOpacity 0.3 -> 0.60 on day 36 post-clear, the composer's pick of variant A1: once the exporter's premultiplied-alpha bug was fixed, the shadow still left inside the bar was the STAFF LINES reading through a 30% fill. 0.60 suppresses them and still reads as an overlay rather than as ink; 0.85 read as ink, and a white backing made the bar paler than its own band. See docs/WISHLIST.md W1."
+   "_note": "day 35: the glissMeter's twin. curveMeter's mechanism and every number, confined to the BOTTOM HALF of the lane (the crescendo's half), limeGreen #99FF00. fillOpacity 0.3 -> 0.60 on day 36 post-clear, the composer's pick of variant A1: once the exporter's premultiplied-alpha bug was fixed, the shadow still left inside the bar was the STAFF LINES reading through a 30% fill. 0.60 suppresses them and still reads as an overlay rather than as ink; 0.85 read as ink, and a white backing made the bar paler than its own band. See docs/WISHLIST.md W1.",
+   "_d42MeterNote": "D42 (2026-09-13, RUNNING_LOG §448): the meters are piece #2's curve follower exactly (builds/performance _drawCurveFollower) — 8 px, right edge 3 px left of the cursor centre, the full-scale outline 1.5 px @ 0.8 in the curve's colour, the fill @ 0.3 drawn FIRST and the outline over it. fillOpacity 0.6 -> 0.3: the tuba's day-36/39 raise (staff lines reading through a 30% fill) superseded at the composer's word, 'update the meters to the same as the 2pno2perc'."
   }
  }
 }

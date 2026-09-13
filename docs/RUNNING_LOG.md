@@ -12084,3 +12084,29 @@ kept the old green; it now passes these three entries (and only these). **In the
 14 curves on the page, every one `fill=#99FF00 fill-opacity=0.3 stroke=#99FF00 stroke-width=2 opacity=0.3`, no NaN; seen — a pale lime
 body with a clear lime edge. `test_trills` 68 GREEN (+5, D42); against the old render and registry RED, 4. `test_septet_notation` 86.
 The septet's morph curves are not yet notated (PLAN: after the trills), so the gliss/cresc change is data waiting for them.
+
+## §448. D42 extended to the meters — piece #2's curve follower exactly; the pie and the line-wedge meter recorded, not used
+
+**His word, 2026-09-13, with a crop of the main file** (a trill column right of its go line, 8va, over the new lime curve; the lime meter bar
+beside the magenta cursor): *"we also need to update the meters to the same as the 2pno2perc and you can grab the pie wedge spec as well evenn
+though we arent using it in this piece"*
+
+**Read in #2's final performance viewer** (`builds/performance/index.html`): `_drawCurveFollower` — `meterX = cursorX − 11`, width 8;
+the fill from the lane bottom to the level in the curve's colour at `globalAlpha 0.3`, THEN the outline `strokeRect` of the full lane at
+1.5 px, alpha 0.8; the cursor 3 px in the staff colour. `_drawMotivePie` and `_drawLineWedgeMeter` read in full (spec in CURVE_LOOK §7).
+
+**Compared with the septet's meters** (piece #4's port, `animobj.js` + `animated.*`): width 8 ✓ · right edge 3 px left of the cursor
+centre ✓ (`x = cursorX − w − gapPx`) · the full-scale outline 1.5 @ 0.8 ✓ · colour by role ✓ · **fill 0.6 ✗** (piece #4 raised 0.3 → 0.6 on
+days 36/39: the staff lines read through a 30 % fill) · **drawing order ✗** (outline first, fill over it). The cursor: already #2's (3 px,
+`#FF15A0`).
+
+**Applied:** `curveMeter` · `crescMeter` · `glissMeter` fillOpacity 0.6 → **0.3** (a `_d42MeterNote` on each); `animobj.js` draws the fill
+first and the outline over it, all three. *The tuba's reason for 0.6 is superseded at his word — the staff lines may show through the bar
+again; his eye decides.* **Found on the way:** `animobj.js` in the working copy carried CRLF with stray LF lines, and `git add` did not
+normalise it (the staged blob kept 407 CRs — an 806-line diff); rewritten with LF as the repository holds it → the real change, 14 lines.
+**Proofs:** `test_trills` 74 GREEN (+6: each meter's registry numbers, and its SVG — fill first at 0.3, outline 1.5 @ 0.8 over it, right edge
+3 px left of the cursor); against the old meters RED, 6. **Piece #4's `test_animobj`** on staged fixtures (26, removed after): GREEN — its
+tube check finds the outline by shape, not by order.
+**Recorded, not applied:** the motive pie (a square of staffHeight/4 left of the meter; the remaining sector in the item's colour @ 0.3; a
+black 1 px hand and border) and the line-wedge meter (a square of staffHeight/3 touching the cursor; #555 0.5 px border; a black donut ring
+@ 0.7, width 0.35 × radius) — both OFF in the septet (§401m); the spec is for any piece that wants them.

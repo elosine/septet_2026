@@ -369,6 +369,24 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
     'render WITHOUT the registry (the tuba batteries\' code defaults): the old fill-only look, unchanged');
 }
 
+// ---- D42 the meters (§448): piece #2's curve follower — 8 px, right edge 3 px left of the cursor, fill 0.3 FIRST, outline 1.5 @ 0.8 over it ----
+{
+  const A = require('../notation/lib/animobj.js');
+  const C = J('notation/registry/container.json');
+  const view = { widthPx: 1920, heightPx: 1080, window: [0, 10], xOfSeconds: t => 100 * t, systems: [{ yTopPx: 100, yBotPx: 300, ssPx: 7.9 }], system() { return this.systems[0]; } };
+  for (const [kind, color] of [['curveMeter', '#99FF00'], ['crescMeter', '#99FF00'], ['glissMeter', '#F04B00']]) {
+    const st = C.animated[kind];
+    ok(st && st.wPx === 8 && st.gapPx === 3 && st.fillOpacity === 0.3 && st.outlineWPx === 1.5 && st.outlineOpacity === 0.8 && st.color === color,
+      'registry ' + kind + ' = #2\'s follower: 8 px · gap 3 · fill 0.3 · outline 1.5 @ 0.8 · ' + color);
+    const svg = String(A.frameSvg([{ kind, part: 0, t0: 0, t1: 10, samples: [0.5, 0.5], full: true }], view, 5, C.animated, { cursor: false }));
+    const rects = [...svg.matchAll(/<rect [^>]*>/g)].map(m => m[0]);
+    const fillR = rects.findIndex(r => !/fill="none"/.test(r)), lineR = rects.findIndex(r => /fill="none"/.test(r));
+    const xOf = r => +(r.match(/x="([\d.]+)"/) || [])[1];
+    ok(rects.length === 2 && fillR === 0 && lineR === 1 && /opacity="0.3"/.test(rects[0]) && /stroke-width="1.5" opacity="0.8"/.test(rects[1])
+      && Math.abs(xOf(rects[0]) + 8 - (500 - 3)) < 1e-9, kind + ' draws the fill FIRST (0.3), the outline over it (1.5 @ 0.8), right edge 3 px left of the cursor');
+  }
+}
+
 console.log(pass + ' passed, ' + fail + ' failed');
-console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR · 2f.4 device · 2f.6 the whole piece · §445 right of the go line · D42 the curve look');
+console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR · 2f.4 device · 2f.6 the whole piece · §445 right of the go line · D42 the curve look and the meters');
 process.exit(fail ? 1 : 0);

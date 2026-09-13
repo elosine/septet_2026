@@ -600,6 +600,9 @@ sources; verified here only when they bite.)*
   in there as well and across the board ... moving forward in the tuba, this piece, and other pieces."* Spec: `docs/CURVE_LOOK.md`;
   registry `envCurve` / `crescCurve` / `glissCurve`; `render.js curvePathD42`. Piece #4's presentation score stays as delivered.
   *Rejected:* the tuba's fill-only look (fill 0.3 dark green, 0.22 lime/orange, no outline).
+  **Extended the same day (§448) to the meters:** #2's curve follower exactly — 8 px, right edge 3 px left of the cursor, the full-lane
+  outline 1.5 px @ 0.8, the fill @ 0.3 drawn first (piece #4's 0.6 superseded). The motive pie and the line-wedge meter recorded as #2's
+  spec (CURVE_LOOK §7), not used here.
 
 ## §5 Playbooks
 

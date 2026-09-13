@@ -36,6 +36,8 @@ edge; a high stem-down note's stack above (Vn1 A♯5) ~1 ss over the top; the pi
 
 ## §2 Trills, morph curves, long notes — trills BUILT 2026-09-13 (§435–§440); morph curves and long notes not yet decided
 
+**The meters (D42, §448):** piece #2's curve follower — 8 px, right edge 3 px left of the cursor, outline 1.5 px @ 0.8, fill @ 0.3 drawn first (`animated.curveMeter` · `crescMeter` · `glissMeter`). The pie and the line-wedge meter: spec in CURVE_LOOK §7, OFF here.
+
 **The curve look (D42, all pieces): `docs/CURVE_LOOK.md`** — one closed path, fill 0.3, 2 px same-colour stroke, path opacity 0.3; limeGreen `#99FF00` for dynamics (the trills), brightOrange `#F04B00` for the morph glissando. Registry `envCurve` · `crescCurve` · `glissCurve`.
 
 **Where the notation lives: the MAIN notation file** `notation/ir/piece-septet.ir.json` (D41) — the whole piece, every rule below and in §1 in

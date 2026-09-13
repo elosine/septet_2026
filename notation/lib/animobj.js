@@ -118,6 +118,8 @@
   // one"): curveMeter's mechanism exactly — an outlined meter + fill riding a
   // fixed offset LEFT of the cursor, fill height = the current drawn level —
   // but confined to the TOP HALF of the lane, which is the glissando's half.
+  // [D42 · §448] ALL THREE METERS draw as piece #2's _drawCurveFollower does: the FILL first, then the full-scale OUTLINE over it
+  // (the order changes how the outline composites over the fill); fill opacity = the registry's (0.3, #2's globalAlpha).
   register('glissMeter', (inst, view, t, st) => {
     if (t < inst.t0 || t > inst.t1) return [];
     const s = view.system(inst.part);
@@ -130,10 +132,10 @@
     const w = st.wPx || 8;
     const x = view.xOfSeconds(t) - w - (st.gapPx != null ? st.gapPx : 3);
     return [
-      '<rect x="' + x.toFixed(1) + '" y="' + yT.toFixed(1) + '" width="' + w + '" height="' + H.toFixed(1) +
-        '" fill="none" stroke="' + st.color + '" stroke-width="' + (st.outlineWPx || 1.5) + '" opacity="' + (st.outlineOpacity != null ? st.outlineOpacity : 0.8) + '"/>',
       '<rect x="' + x.toFixed(1) + '" y="' + (yMid - lvl * H).toFixed(1) + '" width="' + w + '" height="' + (lvl * H).toFixed(1) +
         '" fill="' + st.color + '" opacity="' + (st.fillOpacity != null ? st.fillOpacity : 0.3) + '"/>',
+      '<rect x="' + x.toFixed(1) + '" y="' + yT.toFixed(1) + '" width="' + w + '" height="' + H.toFixed(1) +
+        '" fill="none" stroke="' + st.color + '" stroke-width="' + (st.outlineWPx || 1.5) + '" opacity="' + (st.outlineOpacity != null ? st.outlineOpacity : 0.8) + '"/>',
     ];
   });
 
@@ -158,10 +160,10 @@
     // Day 40, THE TUBE (composer ruling — see curveMeter): the full-scale
     // frame in BOTH variants; the top of the tube = max loudness.
     return [
-      '<rect x="' + x.toFixed(1) + '" y="' + yMid.toFixed(1) + '" width="' + w + '" height="' + H.toFixed(1) +
-        '" fill="none" stroke="' + st.color + '" stroke-width="' + (st.outlineWPx || 1.5) + '" opacity="' + (st.outlineOpacity != null ? st.outlineOpacity : 0.8) + '"/>',
       '<rect x="' + x.toFixed(1) + '" y="' + (yB - lvl * H).toFixed(1) + '" width="' + w + '" height="' + (lvl * H).toFixed(1) +
         '" fill="' + st.color + '" opacity="' + (st.fillOpacity != null ? st.fillOpacity : 0.3) + '"/>',
+      '<rect x="' + x.toFixed(1) + '" y="' + yMid.toFixed(1) + '" width="' + w + '" height="' + H.toFixed(1) +
+        '" fill="none" stroke="' + st.color + '" stroke-width="' + (st.outlineWPx || 1.5) + '" opacity="' + (st.outlineOpacity != null ? st.outlineOpacity : 0.8) + '"/>',
     ];
   });
 
@@ -200,10 +202,10 @@
     // (drawnOf), so the bar top sits ON the band edge — congruent by
     // construction; the earlier "shadow" was the fill overshooting the page.
     return [
-      '<rect x="' + x.toFixed(1) + '" y="' + yT.toFixed(1) + '" width="' + w + '" height="' + H.toFixed(1) +
-        '" fill="none" stroke="' + st.color + '" stroke-width="' + (st.outlineWPx || 1.5) + '" opacity="' + (st.outlineOpacity != null ? st.outlineOpacity : 0.8) + '"/>',
       '<rect x="' + x.toFixed(1) + '" y="' + (yB - lvl * H).toFixed(1) + '" width="' + w + '" height="' + (lvl * H).toFixed(1) +
         '" fill="' + st.color + '" opacity="' + (st.fillOpacity != null ? st.fillOpacity : 0.3) + '"/>',
+      '<rect x="' + x.toFixed(1) + '" y="' + yT.toFixed(1) + '" width="' + w + '" height="' + H.toFixed(1) +
+        '" fill="none" stroke="' + st.color + '" stroke-width="' + (st.outlineWPx || 1.5) + '" opacity="' + (st.outlineOpacity != null ? st.outlineOpacity : 0.8) + '"/>',
     ];
   });
 
