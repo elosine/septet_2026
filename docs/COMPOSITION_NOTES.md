@@ -1690,3 +1690,22 @@ crescendo) → four notes under one beam. Two thresholds to find, in ms between 
 Two open written-value choices, his: the pair as 16ths or as 8ths (the lone GC strikes are 16ths because he wants them SHORT); the four as
 16ths or 32nds. Parked until the 43.31 s pair is fixed up. The page's G-beam facility (2d.6) already beams chosen notes and keeps the choice
 across rebuilds; the rule here would decide WHICH notes, by timing.
+
+## CN-77 — 2026-09-13: the notation's swell is NOT the playback's swell — a performer reading a standard swell will make the bigger end by themselves
+
+> *"for the trills, the copying the curve specs from the composer score. That's what I'm understanding you saying here is fine here for
+> the trills. But later on in the third section to get the proper midi sound, we had to tweak the curvature of the playback and the
+> curve tweek shows up in the composer score graphics. But I want the notation curves to look different. I want them to look more like
+> the standard swells. I think we had this conversation in the tuba piece where visual perception. is going to produce a different type
+> of swell in a performer than it does in reality when you plot the actual physics of the volume change. In other words, later on, I
+> have these swells that the graphic and midi sound curve much more at the end. However, for a live performer to reproduce this sound,
+> they probably just need to see a more standard swell curve, and they'll just naturally produce a bigger swell at the end within some
+> margin of error"* (composer, 2026-09-13, dictated, while deciding the trills' written look)
+
+*(AI reading, marked as such:)* two curves, one event. The composer score's curve is the PLAYBACK's — shaped until the samples sound
+right, which in section 3 meant bending the swells hard toward their ends. The notation's curve is the PERFORMER's — a standard swell
+shape, because a player reading a conventional crescendo already overshoots at the end by instinct; drawing the bent playback curve would
+make them overdo it. For section 1's trills the two coincide (the A / C windows are drawn shapes, not MIDI corrections), so the notation
+copies the composer score's curve. For section 3's swells the notation must draw the standard shape instead — a rule for the extractor or
+the layout (which curve the page samples), to be decided when section 3 is notated. The tuba piece had this conversation first (to find
+when it is needed: the tuba's RUNNING_LOG / NOTATION_STANDARDS on perceived vs plotted swells).

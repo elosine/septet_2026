@@ -46,4 +46,6 @@ edge; a high stem-down note's stack above (Vn1 A♯5) ~1 ss over the top; the pi
 | **`sfz` on every trill attack** (D23's attack mark, fixed as sfz) | (build) | §428 |
 | **`tr`** = Emmentaler `scripts.trill` at **× 0.70** → 1.68 × 1.54 ss, the pedal's factor; parentheses scale with the head (0.794), provisional | (build; the factor as engraving data) | §429–§430 |
 | The trill's dynamic is its **curve** (height 0 = ppp … 1 = fff, D23); the rate curve is never notated | — | D23 |
-| Open: the trill's notehead · go line + GC at the attack · the curve's written form | — | next |
+| **The trill is the tuba's SURGE with a trill on it:** open head (the nh-unit) + accidental + ledgers · the parenthesised neighbour after it · the whole column LEFT of the go line at the tuba's gap after the rightmost ink · go line at the onset at the septet's section-1 length · the level curve in the tuba's colour over the exact span, 90° cut · **no GC** (his: too close to the strikes' GCs; a GC means percussive here) | `devices.byKind.trill` (build, PLAN 2f) | §432–§434 |
+| The `sfz` takes the tuba's vertical rule for dynamics; the `tr` sits above the head (its place fixed in 2f.1) | (2f.1 spec sheet) | §432 |
+| **CN-77 — for SECTION 3, not here:** the notation's swell is the standard shape, never the playback's bent curve | — | CN-77 |

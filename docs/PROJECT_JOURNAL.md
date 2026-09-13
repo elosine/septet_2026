@@ -85,7 +85,9 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word.
 
-**SESSION 10 IN PROGRESS — 2026-09-13, Fable: the trills' written look (RUNNING_LOG §427–§430).** Decided so far: the neighbour = the zone's `interval` (1 semitone · 2 whole tone, all upper), written as a parenthesised head (A) · `sfz` on every trill attack · `tr` at × 0.70 = 1.68 × 1.54 ss · `docs/GLYPH_SIZING.md` opened (the sizing standards, carry-forward). CN-75 · CN-76 logged. **Next: three look questions (the trill's notehead · go line + GC at the attack · the curve's form), then the first piano trill at 63.72 s — extractor zone → trill, then the ink — Opus after a clear.**
+**SESSION 10 — 2026-09-13, Fable: the trills' written look DECIDED, PLAN 2f WRITTEN (RUNNING_LOG §427–§434; CN-75 · CN-76 · CN-77).** The neighbour = the zone's `interval` (1 · 2, all upper), written as a parenthesised head · `sfz` on every attack · `tr` × 0.70 = 1.68 × 1.54 ss · open head, the tuba's SURGE as drawn, go line only, **no GC** · the curve = the resolved A / C window (all 69 resolve, §431) · `docs/GLYPH_SIZING.md` opened · CN-77 = the standard swell for section 3, later. **► NEXT: switch to OPUS → `/clear` → `/postclear` → BUILD PLAN 2f, 2f.1 → 2f.6, one step at a time, his eye at 2f.5.** Nothing in flight; everything committed and pushed.
+
+**Resume reads for 2f (Opus):** PLAN 2f (all of it) · RUNNING_LOG §427–§434 · `docs/GLYPH_SIZING.md` §2 + §4 · `docs/NOTATION_STANDARDS.md` §1 + §2 · `docs/TRILLS_TOOL.md` §5 + the §105 block · `notation/GLYPH_EXTENSION_CONTRACT.md` · `notation/ir/README.md` · the surge row of `for_seven_tubas/docs/NOTATION_STANDARDS.md`. Standing: one open composer tab per score · CTRL+SHIFT+R after each build · do not press R on the strikes page.
 
 **STATE — 2026-09-12 late, session 9 ended. THE FIRST FULL DRAFT IS TAGGED: `Scattered_Substance-finalDraft_1.0`** (RUNNING_LOG §426;
 CN-73 · CN-74; D39 · D40). `scores/piece-septet.json` — his Save of 2026-09-12 late — is committed at that tag. Nothing in flight; everything pushed.
@@ -139,7 +141,7 @@ drawer's swell switch · `docs/NOTATION_STANDARDS.md` §1 when notation resumes 
 | **N1c** | HIS EAR on the chain and the pure-crescendo runs** (§420–§426; the draft is tagged). The AI answers, logs to SWEEP_LIST, journals | **Fable** (composing questions) · **Opus** for any fix | no |
 | **N1** | His verdict on CN-67 in the app (headless-proven only) → then his eye and ear over the 15 pages (the picker, video, SPACE) | **Fable** · **Opus** for any fix | no |
 | **N3** | The 15 geometry touches + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
-| **N4** | **► NOW — the trills' written look** (§427–§430: neighbour A · sfz · tr 0.70 · GLYPH_SIZING.md). Next: the three look questions, then BUILD the first piano trill (63.72 s): extractor zone → trill event + its curve, the ink (head · tr · (neighbour) · sfz · level curve), judged on the page. Then the rest of the trills, then the morph curves | **Fable** for the three questions, **Opus** for the build | **yes** before the build — wrap on Opus, clear, switch |
+| **N4** | **► NEXT — BUILD PLAN 2f, the trills** (decided §427–§434; no GC). 2f.1 the spec sheet → 2f.2 the glyphs → 2f.3 the IR → 2f.4 the device on the piano's 63.72 s trill → 2f.5 his eye → 2f.6 the rest. Then the morph curves (a new item) | **Opus** | **yes — now:** switch to Opus, `/clear`, `/postclear` |
 | **N5** | Still open: the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE, one decision from him) · PLAN 1q proper | **Opus** | no |
 
 **The standing rule:** Fable for the turns where a wrong reading costs a day; Opus for every turn where the plan is already on paper.

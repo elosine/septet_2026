@@ -1557,8 +1557,43 @@ player would touch parts, solo, crop and print.
     sounding C3–D4); the IR rebuilt from `piece-septet` itself, 513 events, and the copy deleted. *Why:* the score is the ground truth (D9).
   - **2e.2 The 15 geometry touches** — `todo` — the piano's stack meeting BCl's or Vn1's in the band between lanes (§401n); the fix
     ladder (flip a chain · per-page nudge · more piano air) is data. *Why:* his eye decides which of the three, per page.
-  - **2e.3 Trills and the morph curves** — `todo` — the next notation session: their written look by the planning method, then built.
+  - **2e.3 Trills and the morph curves** — `trills → PLAN 2f (2026-09-13); the morph curves still todo` — the next notation session: their written look by the planning method, then built.
     *Why:* he set them aside deliberately — *"leave the trills and curves will fill those in next notation session"*.
+- **2f — Section 1 notated: the trills** — `planned 2026-09-13 (RUNNING_LOG §427–§434; CN-75 · CN-77; GLYPH_SIZING.md) — build on
+  Opus after a clear, step by step` — **Result when done:** every trill zone in 63–149 s is on the page as the tuba's SURGE with a trill
+  on it: open head + accidental + ledgers, the parenthesised neighbour head after it, `tr` above, `sfz` below, the go line at the
+  onset, the level curve in the tuba's colour over the exact span, **no GC**; the rules are registry data; NOTATION_STANDARDS §2 indexes
+  each as rule → key → §. **Decided (§427–§434):** the neighbour is the zone's `trill.interval` (1 = semitone, 2 = whole tone; the
+  draft's 69 are all upper), written as a parenthesised stemless head with its accidental (option A) · `sfz` on every attack · `tr` =
+  Emmentaler `scripts.trill` × 0.70 = 1.68 × 1.54 ss (the pedal's factor) · open head, the surge as drawn, go line only — no GC (his:
+  *"too close to the other gcs for percussive notes"*) · the curve = the trill's resolved window (`auto` → the A window on layer 8
+  covering the span; `C` → the C window on layer 10; §431: all 69 resolve, none flat), height = dynamic (D23) · CN-77 (the notation's
+  swell is the standard shape, not the playback's bent one) applies to SECTION 3, not here.
+  - **2f.1 The spec sheet** — `todo` — `docs/TRILL_NOTATION_SPEC.md`: every number the device needs, READ from the tuba's registry and
+    standards (the surge row of `for_seven_tubas/docs/NOTATION_STANDARDS.md` → `engraving.layout.devices.byEnv.surge` in its container)
+    and from this repo's registry, each line with provenance: the curve's colour · opacity · geometry · the 90° cut at the end · the go
+    line at the onset at the SEPTET's section-1 length (NOTATION_STANDARDS §1, not the tuba's) · the horizontal gap after the column's
+    rightmost ink (head · ledger · accidental · the neighbour's right paren) · the vertical rule for dynamics, used for the `sfz` · the
+    `tr`'s vertical place above the head (proposal: the stack-above rule, 0.45 ss over the topmost ink) · the neighbour head at the head
+    size with the parens at 0.794 · CN-77 as a standing note. *Why:* his — *"look up all the specs"* (§432); numbers are data, never guessed.
+  - **2f.2 The glyphs** — `todo` — `scripts.trill` at × 0.70 and `accidentals.leftparen` / `rightparen` at × 0.794 into
+    `notation/lib/glyphs.json` through `tools/glyph_scripts.py` (extend its SCRIPTS map; a factor per entry, recorded in `_provenance`),
+    then the contract's other touchpoints (stamp maker · layout item · render case); a census assertion; every existing snapshot
+    byte-stable. *Why:* GLYPH_SIZING.md §4, steps 4–5.
+  - **2f.3 The IR** — `todo` — the extractor (`notation/ir/README.md`) reads `zone` objects with `midiModel: 'trill'` and emits a
+    `trill` event: part (from the zone's track / the snippet's port), pitch, interval, start, end, technique, attack velocity, and the
+    curve SAMPLED from the resolved window over [start, end] (the rule above; TRILLS_TOOL §105). IR_SCHEMA note; `piece-septet` yields 69;
+    `tools/test_septet_notation.js` (86) and the tuba battery green; nothing on the page yet. *Why:* NITS 2026-09-11 — trills are skipped
+    silently today; D9 — the save is the ground truth.
+  - **2f.4 The device** — `todo` — `devices.byKind.trill` as registry data shaped on the surge: open head + accidental + ledgers, the
+    parenthesised neighbour after it (the column's width includes it; the WHOLE column sits left of the go line by 2f.1's gap), `tr`
+    above, `sfz` below by the dynamics rule, the go line at the onset, the level curve from the head over the span with the 90° cut, no
+    GC. Layout emits seconds + ss only. First instance: the piano's 63.72 s trill (C2, whole tone), picker "piece-septet · trill 1".
+    *Why:* §432–§434.
+  - **2f.5 His eye** — `todo` — :5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → the picker → Z: the `tr`'s height, the neighbour,
+    the column's gap, the curve. The fix ladder is data. *Why:* a confidence claim must be verified in the running app (AI_METHODOLOGY).
+  - **2f.6 The rest** — `todo` — all 69 through the device; the 0.15 s trills' width judged (§431); NOTATION_STANDARDS §2 completed.
+    *Why:* his — *"And then we'll look at it from there."*
 - **2b — Presentation score** *(the title on the cover and in the format entry: **tentative _Scattered Substance_**, CN-64 — confirm with him before either is written)* — print PDF (A3 landscape, format entry + cover + performance
   notes page as in #4) + video (`export_video.js`, Reaper render at fixed BPM, sync proof
   as #4's PHASE 5). **Deadline-bound: 2026-10-15.**

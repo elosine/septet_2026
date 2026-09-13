@@ -11698,3 +11698,57 @@ GLYPH_EXTENSION_CONTRACT (which is the four code touchpoints): §0 the one rule 
 where each was decided, and what a new glyph compares to · §3 the spacing standards (0.45 · 0.10 · 10 ss …) · §4 the procedure for a new
 glyph · §5 the append-only register of sizing decisions from #2 D.3 to today. One honest note recorded there: the snap-pizz is at stock
 here although #2 drew it at −3 — a factor to judge on the page, not a fault to fix unasked. Linked from NOTATION_STANDARDS §2 and the contract.
+
+## §431. Measured: every trill has a curve to draw — 65 read the A window, 4 read C; durations 0.15 → 17.3 s
+
+Before the look questions, the data behind "a wave curve per trill": the trill's dynamic IS its curve (D23), resolved as TRILLS_TOOL §105
+says — `auto` = the A window if one covers the span, else the lane's curve, else flat; A / B / C are the curve windows on layers 8 / 9 / 10.
+Counted in `piece-septet.json`: 69 trills, 63.7 → 148.8 s. `curveRef`: `auto` 65 (every one covered by an A window — 63.1→72.5 · 72.7→84.9 ·
+85.2→104.0 · 127.2→150.2), `C` 4 (the Vc · Va · Vn1 · Vn2 trills at 65.8–68.9 s, inside C 65.6→69.1). None resolves flat. (A first count
+looked only at layer 10 and reported 58 flat — wrong layer; corrected here, the first count not acted on.) The object overlapping the
+piano's first trill on its own lane is `wc-880`, the launching strike (63.72 → 63.85 s, muted by the trill per TRILLS_TOOL §6) — the
+attack the `sfz` marks. Durations: min 0.15 s · median 1.33 s · max 17.3 s — the 0.15 s ones will be narrow on the page (a look question
+for later, not now). The IR work is therefore: zone → trill event {pitch, interval, start, end, technique} + a level curve sampled from
+the resolved window over [start, end]; the extractor today reads `waveCurve` only (NITS 2026-09-11).
+
+## §432. His answers to the three look questions, with the tuba's surge as the picture — HELD at his word
+
+**His word, 2026-09-13, with a crop of the tuba's surge device attached (the green level curve rising over the staff, the dashed go line,
+an open notehead with its accidental on a ledger below, `ppp → fff` with the arrow above):**
+
+> *"1a, 2 just like tuba, look up all the specs, Same color curve. Go line at go time, but we adjusted the length of the go line in GCs for
+> the first section of the septet. notation before the goal line to the left and figure out from the tuba piece the horizontal spacing
+> rules, like how much horizontal space after the rightmost thing, ledger line, or whatever, notehead. and then figure out from the tuba
+> piece the dynamic placement, vertical placement rules. and we'll use those same rules for the sforzando. And then could you document
+> these specs into some sort of spec? for these curves. Also, you'll need to figure out the vertical placement of the trill. and include
+> the parenthesis, neighbor note in the horizontal placement. or displacement of the whole column. sending now, but please hold. It's just
+> I can't see the the context window above."*
+
+*(AI reading, marked as such — nothing acted on; he asked to hold:)* Q1 = A (open head). Q2 and Q3 = the tuba's surge as drawn: the same
+curve colour, the level curve over the span; the go line at the trill's onset, at the LENGTH the septet's section-1 GCs already use (not
+the tuba's); the whole notation column (head · accidental · ledgers · the parenthesised neighbour) to the LEFT of the go line, at the
+tuba's horizontal gap after the rightmost ink; the tuba's vertical rule for dynamics applied to the `sfz`; the `tr`'s vertical place to be
+decided; a spec document for the trill curves. Whether a GC rides the attack (§431's Q2 option A) is not said — the surge has none; to ask.
+
+## §433. Decided: Q3 = A, the tuba's level curve; a GC on the trill's attack, to be judged; CN-77 the perceptual swell; the top line asked for
+
+**His word, 2026-09-13:** *"3 Yes. A."* · *"Then let me see the top line of the implementation plan right now. So the top line of what we're
+handing over to the implementing agent. Let's include a GC for the trills and see how that looks. some of them are quite close to previous
+GCs. Let me look at it, but be prepared to take them out for the for the rest."* — and the passage on the swells, verbatim in CN-77.
+
+**Decided.** The trill's curve is the tuba's level curve device over the trill's span, in the tuba's colour, sampled from the resolved
+window (A or C) — for section 1's trills the composer score's own curve. **A GC rides the attack for the first trill** — provisional: he
+judges it on the page; if trills crowd earlier GCs, the rest go without (the go line stays). CN-77 is a standing rule for LATER sections:
+the notation's swell is the standard shape, not the playback's bent one — into the trill-curve spec as a note, acted on at section 3.
+The look questions are closed: Q1 open head · Q2 the surge as drawn, with a GC · Q3 the level curve. Next: the top line (§434).
+
+## §434. Decided: NO GC on the trills — go line only, the surge model; the plan handed over as PLAN 2f
+
+**His word, 2026-09-13:** *"I changed my mind, no gc for trills, they are too close to the other gcs for percussive notes. ready to build?
+check in so I can change model"*
+
+**Decided.** §433's provisional GC is withdrawn before it was built: the trill's attack is marked by the go line and the `sfz` only, exactly
+the tuba's surge (go line · open nh-unit · the level curve; no GC). Reason, his: the trills sit too close to the strikes' GCs, and a GC
+means "percussive" in this piece's language. Top line (§433's six steps) accepted as it stands minus the GC; written into PLAN 2f without
+phase 3's per-step pass at his word ("ready to build?") — the sub-steps are the pointers the implementing model needs, not a code plan.
+The handover: Opus after a clear, `/postclear`, then 2f step by step.
