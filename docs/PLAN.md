@@ -1727,7 +1727,7 @@ player would touch parts, solo, crop and print.
       partial, listed.
     - 2d.6.6 tuba battery once · septet battery green · RUNNING_LOG · 2d marked built.
 
-## 3. Performance score — `deferred` — port #4's modules when they exist there (D2).
+## 3. Performance score — `deferred` — port #4's modules when they exist there (D2). **Carries D42, the curve look (`docs/CURVE_LOOK.md`), in the rehearsal and performance scores — the composer, 2026-09-13.**
 
 ## 4. Submission package — `todo` — form (PDF), bio (½ page), work description (optional
   ½ page), fee €25 + payment PDF, score PDF ≤ A3. Field-by-field record in RUNNING_LOG.

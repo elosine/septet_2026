@@ -452,11 +452,13 @@
     "opacity": 0.55
    },
    "envCurve": {
-    "strokeWPx": 0,
-    "strokeOpacity": 0,
+    "strokeWPx": 2,
+    "strokeOpacity": 1,
     "fillOpacity": 0.3,
-    "color": "#2E7D32",
-    "_note": "day 22, retuned same day (composer: no outline; surge back edge = 90° cut, drawn by render when env=surge): fill-only at 0.3 so the shape reads alone. Piece #1 numbers (stroke 1.5 @ 0.8, fill 0.15) kept here for the record."
+    "color": "#99FF00",
+    "_note": "day 22, retuned same day (composer: no outline; surge back edge = 90° cut, drawn by render when env=surge): fill-only at 0.3 so the shape reads alone. Piece #1 numbers (stroke 1.5 @ 0.8, fill 0.15) kept here for the record.",
+    "pathOpacity": 0.3,
+    "_d42Note": "D42 (2026-09-13, RUNNING_LOG §447): the two-piano piece's curve look is the standard for these curves, across the board — limeGreen #99FF00 (#2 ColorMap rgb(153,255,0)), fill-opacity 0.3, a 2 px stroke of the same colour round the whole shape, opacity 0.3 on the path = interior 9 %, outline 30 %. Was the tuba's #2E7D32, fill 0.3, no stroke (day 22)."
    },
    "goLine": {
     "wPx": 1.5,
@@ -496,10 +498,12 @@
    "_gcNote": "day 23: THE GC OBJECT, ported WHOLE from piece #1 (composer: 'when I say GC, that is the whole thing ... the same colors, the same lines, and line thickness, and then those trajectory ... the ball should be the same color, the same size'). Static ink here (arc polyline + impact marker, render.js); the ball is animated.gc (same preset). Look = piece #1 renderGC/update verbatim: arc stroke 1.5 px in the GC color, no fill, x = time; impact marker r 4 px at laneBottom - 5; ball r 5 px; height = lane - 10. Color neonMagenta rgb(255,21,160) = piece #1 ColorMap. px are at the 1080 frame and scale with the view (PP-6). Piece #2 diffed the same day: drawn object byte-identical, only its preset differed (Medium 50/80/120/55/1.1).",
    "glissCurve": {
     "color": "#F04B00",
-    "strokeWPx": 0,
-    "strokeOpacity": 0,
+    "strokeWPx": 2,
+    "strokeOpacity": 1,
     "_note": "day 35, the morph section (composer): the glissando is ONE smooth interpolated line per section, brightOrange (#F04B00 = piece #1's `brightOrange`, its glissando colour), taking PRECISELY the TOP HALF of the lane; the crescendo takes the bottom half. Interpolated on purpose - 'players aren't going to be able to make small adjustments in pitch', so the drawn line is a fitted slope, not the sounding bend's every wiggle. Filled to the half-lane baseline (composer, day 35), the same read as the envelope curve. NO BORDER AT TOP (composer, day 35): fill only, no outline - the same verdict the env curve got on day 22.",
-    "fillOpacity": 0.22
+    "fillOpacity": 0.3,
+    "pathOpacity": 0.3,
+    "_d42Note": "D42: the morph glissando takes the two-piano piece's brightOrange curve look — #F04B00 (#2 ColorMap rgba(240,75,0)), fill-opacity 0.3, 2 px stroke round the shape, opacity 0.3 on the path (all 81 of #2's orange curves, 369–566 s, identical). Was fill 0.22, no stroke (day 35)."
    },
    "sectionHead": {
     "spacerSs": 0.45,
@@ -512,10 +516,12 @@
    },
    "crescCurve": {
     "color": "#99FF00",
-    "strokeWPx": 0,
-    "strokeOpacity": 0,
-    "fillOpacity": 0.22,
-    "_note": "day 35, composer: the crescendo is the glissando's twin - ONE interpolated curve for the whole section, limeGreen (#99FF00 = piece #1's crescendo colour), taking the BOTTOM HALF of the lane. Filled, no border, same as its twin."
+    "strokeWPx": 2,
+    "strokeOpacity": 1,
+    "fillOpacity": 0.3,
+    "_note": "day 35, composer: the crescendo is the glissando's twin - ONE interpolated curve for the whole section, limeGreen (#99FF00 = piece #1's crescendo colour), taking the BOTTOM HALF of the lane. Filled, no border, same as its twin.",
+    "pathOpacity": 0.3,
+    "_d42Note": "D42: the morph crescendo takes the same standard (limeGreen, 0.3 · 2 px · 0.3). Was fill 0.22, no stroke (day 35)."
    }
   }
  },

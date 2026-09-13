@@ -343,6 +343,32 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
   ok(!badO.length, 'an ottava on a trill runs over the neighbour group (its hook past the right paren)' + (badO.length ? ' — ' + badO.join(', ') : ''));
 }
 
+// ---- D42 the curve look (the two-piano piece's): one closed path, fill 0.3, a 2 px stroke round the shape, opacity 0.3 ----
+{
+  const Render = require('../notation/lib/render.js');
+  const Coords = require('../notation/lib/coords.js');
+  const C = J('notation/registry/container.json');
+  const R = C.engraving.render;
+  const std = k => R[k] && R[k].fillOpacity === 0.3 && R[k].strokeWPx === 2 && R[k].strokeOpacity === 1 && R[k].pathOpacity === 0.3;
+  ok(std('envCurve') && R.envCurve.color === '#99FF00', 'registry envCurve = D42: limeGreen #99FF00 · fill 0.3 · 2 px stroke · path opacity 0.3');
+  ok(std('crescCurve') && R.crescCurve.color === '#99FF00', 'registry crescCurve (the morph crescendo) = D42 limeGreen');
+  ok(std('glissCurve') && R.glissCurve.color === '#F04B00', 'registry glissCurve (the morph glissando) = D42 brightOrange #F04B00');
+  // a synthetic model: one curve item on one system
+  const sysList = Coords.systemsForParts([0], { topPad: 0.01, botPad: 0.01, gap: 0 });
+  const view = Coords.makeView({ widthPx: 1920, heightPx: 1080, window: [0, 10], systems: sysList, ssPerSystem: 30 });
+  const model = { window: [0, 10], systems: [{ part: 0, clef: 'bass', items: [
+    { k: 'envcurve', t0: 1, t1: 4, samples: [0, 0.5, 1], ev: 'e1', cut: false },
+    
+  ] }] };
+  const withReg = Render.renderSection(model, view, glyphs, { engraving: R });
+  const env = (withReg.match(/<path d="M[^"]*Z" fill="#99FF00"[^>]*>/) || [''])[0];
+  ok(/fill-opacity="0.3"/.test(env) && /stroke="#99FF00"/.test(env) && /stroke-width="2"/.test(env) && /opacity="0.3"\/>$/.test(env) && / Z"/.test(env),
+    'render with the registry: the curve is ONE closed path — fill, fill-opacity 0.3, stroke #99FF00 2 px, opacity 0.3 on the path');
+  const legacy = Render.renderSection(model, view, glyphs, {});
+  ok(/fill="#2E7D32" fill-opacity="0.3" stroke="none"/.test(legacy) && !/opacity="0.3"\/>/.test(legacy.replace(/fill-opacity="0.3"/g, '')),
+    'render WITHOUT the registry (the tuba batteries\' code defaults): the old fill-only look, unchanged');
+}
+
 console.log(pass + ' passed, ' + fail + ' failed');
-console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR · 2f.4 device · 2f.6 the whole piece · §445 right of the go line');
+console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR · 2f.4 device · 2f.6 the whole piece · §445 right of the go line · D42 the curve look');
 process.exit(fail ? 1 : 0);

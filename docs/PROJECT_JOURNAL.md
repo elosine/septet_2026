@@ -593,6 +593,13 @@ sources; verified here only when they bite.)*
   Each new notation rule is added to that build and the file rebuilt. *Why whole piece:* R always rebuilds the whole score (§403), so only a
   whole-piece page refreshes truthfully. *Rejected:* a section-only main file; a second whole-score page beside `piece-septet`.
   `strike1` / `trill1` stay as experiment pages (history).
+- **D42** *(2026-09-13, composer, RUNNING_LOG §446–§447)* — **THE CURVE LOOK, ALL PIECES: piece #2's final performance score.** One closed
+  path — fill = the colour at 0.3, a 2 px stroke of the same colour round the whole shape, opacity 0.3 on the path (interior 9 %, outline
+  30 %). **limeGreen `#99FF00`** for dynamics (the trills, surges, the morph crescendo); **brightOrange `#F04B00`** for the morph glissando.
+  His: *"record this as the standard ... when I actually make the rehearsal scores and the final performance score, I want these standards
+  in there as well and across the board ... moving forward in the tuba, this piece, and other pieces."* Spec: `docs/CURVE_LOOK.md`;
+  registry `envCurve` / `crescCurve` / `glissCurve`; `render.js curvePathD42`. Piece #4's presentation score stays as delivered.
+  *Rejected:* the tuba's fill-only look (fill 0.3 dark green, 0.22 lime/orange, no outline).
 
 ## §5 Playbooks
 

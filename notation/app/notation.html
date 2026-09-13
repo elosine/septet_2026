@@ -678,7 +678,10 @@
         widthPx, heightPx, window: [t0, t1],
         systems: NotationCoords.withStaves(sysList, stavesOf, grandStaffOpts()),
       });
-      $('sheet').innerHTML = NotationRender.renderSection(state.model, view, state.glyphs, { markers: state.markers, reshow, ownsEnd, hideBricks: !$('bricks').checked, staffFull: !paged, ensemble: state.ensemble });
+      $('sheet').innerHTML = NotationRender.renderSection(state.model, view, state.glyphs, { markers: state.markers, reshow, ownsEnd, hideBricks: !$('bricks').checked, staffFull: !paged, ensemble: state.ensemble,
+        // [D42, §447] the curve look is the same in every view: the window view passes the registry's three curve entries (only those —
+        // its other looks stay the code defaults, as before)
+        engraving: (R => Object.fromEntries(['envCurve', 'crescCurve', 'glissCurve'].filter(k => R[k]).map(k => [k, R[k]])))((state.container && state.container.engraving && state.container.engraving.render) || {}) });
       applySolo();   // innerHTML replaced the lanes - re-assert the dim
       state.lastView = view;
       $('meta').textContent = state.ir.id + ' · ' + state.ir.events.length + ' events · ' + state.ir.chunks.length +

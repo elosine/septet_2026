@@ -12,6 +12,16 @@
 
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+  // [D42, RUNNING_LOG §447] THE CURVE LOOK, from the two-piano piece's final performance score (builds/performance, renderCurve):
+  // ONE closed path — fill = the colour at fillOpacity, a stroke of the same colour and strokeWPx ROUND THE WHOLE SHAPE (top, sides and
+  // baseline), and pathOpacity on the path itself. With #2's numbers (0.3 · 2 px · 0.3) the interior shows at 0.3 × 0.3 = 9 % and the
+  // outline at 30 % — the border he saw. The composer, 2026-09-13: the standard for these curves, across the board.
+  function curvePathD42(C, d) {
+    return '<path d="' + d + '" fill="' + C.color + '" fill-opacity="' + (C.fillOpacity != null ? C.fillOpacity : 0.3) +
+      '" stroke="' + (C.strokeColor || C.color) + '" stroke-width="' + (C.strokeWPx != null ? C.strokeWPx : 2) +
+      '" stroke-opacity="' + (C.strokeOpacity != null ? C.strokeOpacity : 1) + '" stroke-linejoin="round" opacity="' + C.pathOpacity + '"/>';
+  }
+
   function renderSection(model, view, glyphs, opts) {
     const o = Object.assign({ ink: '#111', brick: '#4E7A9B', muted: '#8a8a8a', paper: '#fff' }, opts || {});
     // engraving registry (V0.10/V1): every look number in one mergeable
@@ -276,12 +286,14 @@
           }
           if (pts.length >= 2) {
             const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
-            if (EC.fillOpacity > 0) {
+            if (EC.pathOpacity != null) {   // [D42] the two-piano look: one closed path, stroked round, opacity on the whole
+              parts.push(curvePathD42(EC, line + ' L' + pts[pts.length - 1][0].toFixed(1) + ',' + yB.toFixed(1) + ' L' + pts[0][0].toFixed(1) + ',' + yB.toFixed(1) + ' Z'));
+            } else if (EC.fillOpacity > 0) {
               parts.push('<path d="' + line + ' L' + pts[pts.length - 1][0].toFixed(1) + ',' + yB.toFixed(1) +
                 ' L' + pts[0][0].toFixed(1) + ',' + yB.toFixed(1) + ' Z" fill="' + EC.color +
                 '" fill-opacity="' + EC.fillOpacity + '" stroke="none"/>');
             }
-            if (EC.strokeWPx > 0 && EC.strokeOpacity > 0) {
+            if (EC.pathOpacity == null && EC.strokeWPx > 0 && EC.strokeOpacity > 0) {
               parts.push('<path d="' + line + '" fill="none" stroke="' + EC.color + '" stroke-width="' + EC.strokeWPx +
                 '" stroke-opacity="' + EC.strokeOpacity + '"/>');
             }
@@ -359,12 +371,14 @@
           }
           if (cp.length >= 2) {
             const cline = cp.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
-            if (CC.fillOpacity > 0) {
+            if (CC.pathOpacity != null) {   // [D42]
+              parts.push(curvePathD42(CC, cline + ' L' + cp[cp.length - 1][0].toFixed(1) + ',' + yB.toFixed(1) + ' L' + cp[0][0].toFixed(1) + ',' + yB.toFixed(1) + ' Z'));
+            } else if (CC.fillOpacity > 0) {
               parts.push('<path d="' + cline + ' L' + cp[cp.length - 1][0].toFixed(1) + ',' + yB.toFixed(1) +
                 ' L' + cp[0][0].toFixed(1) + ',' + yB.toFixed(1) + ' Z" fill="' + CC.color +
                 '" fill-opacity="' + CC.fillOpacity + '" stroke="none"/>');
             }
-            if (CC.strokeWPx > 0 && CC.strokeOpacity > 0) {
+            if (CC.pathOpacity == null && CC.strokeWPx > 0 && CC.strokeOpacity > 0) {
               parts.push('<path d="' + cline + '" fill="none" stroke="' + CC.color +
                 '" stroke-width="' + CC.strokeWPx + '" stroke-opacity="' + CC.strokeOpacity + '"/>');
             }
@@ -386,7 +400,9 @@
             const line = gp.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
             // the fill closes on the HALF-LANE baseline, not the lane floor —
             // the glissando owns the top half only
-            if (GC2.fillOpacity > 0) {
+            if (GC2.pathOpacity != null) {   // [D42]
+              parts.push(curvePathD42(GC2, line + ' L' + gp[gp.length - 1][0].toFixed(1) + ',' + yMid.toFixed(1) + ' L' + gp[0][0].toFixed(1) + ',' + yMid.toFixed(1) + ' Z'));
+            } else if (GC2.fillOpacity > 0) {
               parts.push('<path d="' + line +
                 ' L' + gp[gp.length - 1][0].toFixed(1) + ',' + yMid.toFixed(1) +
                 ' L' + gp[0][0].toFixed(1) + ',' + yMid.toFixed(1) + ' Z" fill="' + GC2.color +
@@ -394,7 +410,7 @@
             }
             // no border on top: fill-only unless a stroke is explicitly asked for
             // (composer, day 35 — the same verdict the env curve got on day 22)
-            if (GC2.strokeWPx > 0 && GC2.strokeOpacity > 0) {
+            if (GC2.pathOpacity == null && GC2.strokeWPx > 0 && GC2.strokeOpacity > 0) {
               parts.push('<path d="' + line +
                 '" fill="none" stroke="' + GC2.color + '" stroke-width="' + GC2.strokeWPx +
                 '" stroke-opacity="' + GC2.strokeOpacity + '" stroke-linecap="round"/>');

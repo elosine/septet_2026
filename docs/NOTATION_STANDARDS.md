@@ -36,6 +36,8 @@ edge; a high stem-down note's stack above (Vn1 A♯5) ~1 ss over the top; the pi
 
 ## §2 Trills, morph curves, long notes — trills BUILT 2026-09-13 (§435–§440); morph curves and long notes not yet decided
 
+**The curve look (D42, all pieces): `docs/CURVE_LOOK.md`** — one closed path, fill 0.3, 2 px same-colour stroke, path opacity 0.3; limeGreen `#99FF00` for dynamics (the trills), brightOrange `#F04B00` for the morph glissando. Registry `envCurve` · `crescCurve` · `glissCurve`.
+
 **Where the notation lives: the MAIN notation file** `notation/ir/piece-septet.ir.json` (D41) — the whole piece, every rule below and in §1 in
 force (`--all --bricks --trills`); a new rule becomes a flag in its build.
 

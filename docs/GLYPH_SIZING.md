@@ -1,6 +1,7 @@
 # Glyph sizing — the standards, how each was found, and what to compare a new glyph to
 
 *Opened 2026-09-13 at the composer's word (RUNNING_LOG §430), for this piece and the ones after it. Carry it forward with the engine.
+Its sibling for filled curves (colour, fill, outline): `docs/CURVE_LOOK.md` (D42).
 The sizes themselves live in `notation/lib/glyphs.json` (each with `_provenance`); the tweakable factors are registry data
 (`container.json → engraving`, per `notation/GLYPH_EXTENSION_CONTRACT.md`). This file is the WHY and the compare table.*
 

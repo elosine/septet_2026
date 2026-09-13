@@ -12036,3 +12036,51 @@ ledger · Vc (8va) — its sharp · Va (15ma) — the `tr` · Vn1 — the `tr` �
 `test_trills` 63 GREEN (+4: leftmost = nhGapSs on the five · ≥ 2 kinds of leftmost element · the others unchanged · the ottava over the
 neighbour); against the pre-§445 layout RED, 2. `test_septet_notation` 86. **For his eye:** the five, CTRL+SHIFT+R on the main file.
 The column now sits over the start of its green curve (the curve is drawn over the ink at 0.3) — his to judge with §444's curve floor.
+
+## §446. The two-piano piece's curve look, read from its final performance build — lime green, 30 % opacity applied twice, a 2 px outline
+
+**His word, 2026-09-13:** *"Can you look at the two piano piece? for the color, transparency, and it looks like there's a border there too.
+Can we get those settings? This would be the final notation score. of the two piano, two percussion. Tell me what they are before applying
+to the CPTET."*
+
+**Where the final notation score is:** the :3001 performance server (`scripts/performance_server.js`) serves `builds/performance/index.html`
++ `builds/performance/score.json` (built 2026-05-28). Its curves live in `score.databases.curves.curves`: **148** — **67 `limeGreen`**
+(`fillMode: bottom`, no opacity field — the zone-dynamics swells, e.g. `pcrv-wc9-zn25-p1`, the opening piano tremolo; "limeGreen locked
+for zone-dynamics envelopes", #2 STANDARDS) and **81 `brightOrange`** (`fillMode: bottom`, opacity 0.3 — the accel/decel zones).
+
+**How the viewer draws one** (`renderCurve`, identical in the build and in `public/index.html`): `color = ColorMap[curve.color]` —
+limeGreen **rgb(153,255,0) = #99FF00**, brightOrange **#F04B00** · the filled path: `fill` = the colour, `fill-opacity` = `curve.opacity ??
+0.3`, **`stroke` = the same colour, `stroke-width` 2**, AND `opacity` = the same 0.3 on the whole path. So the opacity is applied twice:
+**the interior shows at 0.3 × 0.3 = 9 %, the 2 px outline at 30 %** — the border he sees is the stroke, three times as strong as the fill.
+
+**The septet today, for comparison:** `engraving.render.envCurve` = `#2E7D32` (the tuba's green), fill 0.3, no stroke (the tuba verdict of
+day 22: "no outline"). Not applied — his word first.
+
+## §447. D42 — the two-piano curve look is THE standard for every curve, all pieces; the orange read; applied to the trills and the morph entries
+
+**His word, 2026-09-13:** *"Okay. Let's record this as the standard. for these curves. We're also using it in the morph section of the tuba
+piece. So I need... when I actually make... it's too late for the presentation score, and that's fine. But when I actually make the
+rehearsal scores and the final performance score, I want these standards in there as well and across the board here. So for the morph
+section. while we're at it, can we look up the bright orange In the two piano two percussion score as well. and let's use that standard for
+the morph section in this piece and then moving forward in the tuba, this piece, and other pieces. Um, I'm looking at about six minutes and
+thirty seven seconds, but there's a bunch of them all throughout this section in the two piano, two percussion piece. and then go ahead and
+apply to the trills curves."*
+
+**The orange, read** (`builds/performance/score.json`): 81 `brightOrange` curves spanning 369.0–565.6 s, 21 of them between 380 and 420 s
+(6:37 = 397 s) — the accel/decel zones (e.g. `pcrv-wc425-zn426-piano2` 389.6–397.3); **all 81 one style**: `fillMode: bottom`,
+`opacity: 0.3` → the same renderCurve form as the lime green. ColorMap `rgba(240,75,0)` = `#F04B00`.
+
+**Recorded:** `docs/CURVE_LOOK.md` (new, the sibling of GLYPH_SIZING — the form, the colours by role, the engine keys, piece #4's
+port note, a register) · D42 in the journal · NOTATION_STANDARDS §2 · PLAN §3 (the performance score carries it) · the cross-project
+memory (piece #4 is read-only from here; the memory is how its rehearsal and performance scores will get it).
+
+**Applied** (render-time: no IR rebuild): registry `envCurve` (the trills) → limeGreen `#99FF00`, fill-opacity 0.3, 2 px stroke,
+stroke-opacity 1, **pathOpacity 0.3** (was the tuba's `#2E7D32` fill 0.3, no stroke) · `crescCurve` → the same (was 0.22, no stroke) ·
+`glissCurve` → brightOrange `#F04B00`, the same numbers (was 0.22, no stroke). `render.js curvePathD42()`: an entry carrying
+`pathOpacity` is drawn as ONE closed path with the stroke round the whole shape and the opacity on the path (#2's exact attributes); an
+entry without it keeps the old fill-only drawing — so the tuba batteries, which render with the code defaults, are unchanged (a check
+asserts it). **Found and fixed on the way:** the app's notation (window) view never passed the registry's render settings — it would have
+kept the old green; it now passes these three entries (and only these). **In the running app** (:5301, stopped after): video and zoom views,
+14 curves on the page, every one `fill=#99FF00 fill-opacity=0.3 stroke=#99FF00 stroke-width=2 opacity=0.3`, no NaN; seen — a pale lime
+body with a clear lime edge. `test_trills` 68 GREEN (+5, D42); against the old render and registry RED, 4. `test_septet_notation` 86.
+The septet's morph curves are not yet notated (PLAN: after the trills), so the gliss/cresc change is data waiting for them.
