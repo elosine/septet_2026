@@ -50,6 +50,19 @@
     const [step, alter] = PC_SPELL[((midi % 12) + 12) % 12];
     return { step, alter, octave: Math.floor(midi / 12) - 1 };
   }
+  // [PLAN 2f.4] THE TRILL'S WRITTEN NEIGHBOUR: a trill is a second, so the neighbour takes the next
+  // letter name up from the WRITTEN main note (a transposing part keeps its interval); a double
+  // accidental falls back to the plain speller. The same rule as extract_core.spellNeighbour.
+  const NAT_PC = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+  function midiOfSpelled(sp) { return (sp.octave + 1) * 12 + NAT_PC[sp.step] + sp.alter; }
+  function trillNeighbourSpelled(main, interval) {
+    const L = 'CDEFGAB';
+    const step = L[(L.indexOf(main.step) + 1) % 7];
+    const octave = main.octave + (main.step === 'B' ? 1 : 0);
+    const midi = midiOfSpelled(main) + interval;
+    const alter = midi - ((octave + 1) * 12 + NAT_PC[step]);
+    return Math.abs(alter) > 1 ? spellMidi(midi) : { step, alter, octave };
+  }
 
   // [2a.1–2a.3] THE ENSEMBLE (notation/registry/ensemble.json), passed as
   // opts.ensemble. Absent = the tuba piece exactly: one bass-clef staff per
@@ -657,9 +670,12 @@
               // day 40: transforms unified in drawnLevelSamples (curveZero
               // here + the cut truncation formerly done in render.js) — ONE
               // source, drawn by render and ridden by the meters alike.
-              items.push({ k: 'envcurve', t0: e.onset, t1: e.onset + e.duration, samples: drawnLevelSamples(e, dev), ev: e.id, cut: !!dev.cut });
+              items.push(Object.assign({ k: 'envcurve', t0: e.onset, t1: e.onset + e.duration, samples: drawnLevelSamples(e, dev), ev: e.id, cut: !!dev.cut },
+                dev.curveBand === 'lane' ? { band: 'lane' } : {}));   // [2f.4] the piano's curve spans both staves, as its go line and GC do (§401d)
             }
-            if (dev.goLine) items.push({ k: 'goline', t: tU, ev: e.id });
+            // [2f.4] goLineTopAsGc: the go line keeps the length a GC-bearing note's has in this part (§401h) — the
+            // trill carries no GC, and its go line must still match the section's strikes (TRILL_NOTATION_SPEC §4)
+            if (dev.goLine) items.push(Object.assign({ k: 'goline', t: tU, ev: e.id }, dev.goLineTopAsGc ? { topAsGc: true } : {}));
             // THE ONSET HEAD (day 35, the morph section): a small black
             // notehead LEFT-ALIGNED to the go line — the same rule the
             // clusters use, "every partial's notehead left edge sits on its
@@ -855,7 +871,44 @@
                 const ledgerExt = ledgers.length
                   ? nhO.wSs * ((stds.ledgerLine && stds.ledgerLine.lengthFraction) || 0.25) : 0;
                 const flagRight = flagG ? att.dx + (flagG.wSs - flagG.anchors.stemTip.x) : -Infinity;
-                const rightExt = Math.max(nhO.wSs / 2 + ledgerExt, flagRight);
+                // [PLAN 2f.4] THE TRILL PITCH GROUP (TRILL_NOTATION_SPEC §2, LilyPond-measured, probe trill.ly):
+                // ( [accidental] filled head ) to the RIGHT of the main head — group padding · paren · inner
+                // padding · accidental · its gap · head · inner padding · paren — at LilyPond's font-size −4
+                // against the house −2. It is part of the unit, so its right paren is the unit's right ink and
+                // the whole column sits left of the go line by nhGapSs. Offsets are from the main head's centre.
+                let TPG = null;
+                if (dev.trillPitch && e.trill && Number.isFinite(e.trill.interval)) {
+                  const P = Object.assign({ groupPadSs: 0.30, parenScale: 0.63, parenInnerSs: 0.42, headScale: 0.794, accScale: 0.794, accPadSs: 0.20, naturals: false }, dev.trillPitch);
+                  const pG = glyphs.accidental && glyphs.accidental.leftParen, qG = glyphs.accidental && glyphs.accidental.rightParen;
+                  if (!pG || !qG) warnings.push('trill ' + e.id + ': the parenthesis glyphs are missing — neighbour not drawn');
+                  else {
+                    const nSp = trillNeighbourSpelled(spN, e.trill.interval);
+                    const yN = posOf(nSp) - octShift * 3.5;   // the neighbour follows the main note's ottava
+                    const nG = glyphs.notehead.filled;
+                    const nw = nG.wSs * P.headScale, nh = nG.hSs * P.headScale;
+                    const pw = pG.wSs * P.parenScale, qw = qG.wSs * P.parenScale, ph = Math.max(pG.hSs, qG.hSs) * P.parenScale;
+                    const nAccKind = (nSp.alter || P.naturals) ? ({ '1': 'sharp', '-1': 'flat', '0': 'natural' })[String(nSp.alter)] : null;
+                    const nAcc = nAccKind ? glyphs.accidental[nAccKind] : null;
+                    if (nAccKind && !nAcc) warnings.push('trill ' + e.id + ': no accidental glyph "' + nAccKind + '" for the neighbour');
+                    let x = nhO.wSs / 2 + P.groupPadSs;
+                    const pCx = x + pw / 2; x += pw + P.parenInnerSs;
+                    let acc = null;
+                    if (nAcc) {
+                      const aw = nAcc.wSs * P.accScale, ah = nAcc.hSs * P.accScale;
+                      const noteY = nAcc.anchors && nAcc.anchors.noteY;
+                      acc = { kind: nAccKind, align: noteY ? 'noteY' : 'center', dx: x + (noteY ? noteY.x * P.accScale : aw / 2),
+                        top: noteY ? noteY.y * P.accScale : ah / 2, bot: noteY ? ah - noteY.y * P.accScale : ah / 2 };
+                      x += aw + P.accPadSs;
+                    }
+                    const nCx = x + nw / 2; x += nw + P.parenInnerSs;
+                    const qCx = x + qw / 2; x += qw;
+                    TPG = { P, nSp, yN, nw, nCx, pCx, qCx, acc, right: x,
+                      top: Math.max(yN + ph / 2, yN + nh / 2, acc ? yN + acc.top : -Infinity),
+                      bot: Math.min(yN - ph / 2, yN - nh / 2, acc ? yN - acc.bot : Infinity),
+                      ledgers: ledgersFor(yN) };
+                  }
+                }
+                const rightExt = Math.max(nhO.wSs / 2 + ledgerExt, flagRight, TPG ? TPG.right : -Infinity);
                 // ACCIDENTAL GEOMETRY, computed BEFORE the anchor (day 23):
                 // every offset below is relative to the head's center, so
                 // the unit's horizontal ink is known before it is placed —
@@ -920,6 +973,14 @@
                     : -(gapSs + rightExt);
                 items.push(Object.assign({ k: 'glyph', g: headGlyph, t: tU, dxSs: headDx, ySs: yDraw, align: 'center' }, headK !== 1 ? { scale: headK } : {}));
                 for (const L of ledgers) items.push({ k: 'ledger', t: tU, dxSs: headDx, ySs: L, wSs: nhO.wSs });
+                if (TPG) {   // [2f.4] the neighbour group, drawn with the unit
+                  const P = TPG.P;
+                  items.push({ k: 'glyph', g: 'accidental-leftParen', t: tU, dxSs: headDx + TPG.pCx, ySs: TPG.yN, align: 'center', scale: P.parenScale, ev: e.id });
+                  if (TPG.acc) items.push({ k: 'glyph', g: 'accidental-' + TPG.acc.kind, t: tU, dxSs: headDx + TPG.acc.dx, ySs: TPG.yN, align: TPG.acc.align, scale: P.accScale, ev: e.id });
+                  items.push({ k: 'glyph', g: 'notehead', t: tU, dxSs: headDx + TPG.nCx, ySs: TPG.yN, align: 'center', scale: P.headScale, ev: e.id });
+                  for (const L of TPG.ledgers) items.push({ k: 'ledger', t: tU, dxSs: headDx + TPG.nCx, ySs: L, wSs: TPG.nw });
+                  items.push({ k: 'glyph', g: 'accidental-rightParen', t: tU, dxSs: headDx + TPG.qCx, ySs: TPG.yN, align: 'center', scale: P.parenScale, ev: e.id });
+                }
                 // cuivré (day 30) — see the techText comment above the nh-unit.
                 // The em estimate mirrors engraving.render.textScale (1.3): the
                 // rendered height is size × textScale, and layout stays in ss.
@@ -1067,8 +1128,8 @@
                   const gapDot = dev.nhDotGapSs != null ? dev.nhDotGapSs : (stds.staccatoDot && stds.staccatoDot.gapFromNotehead) || 0.5;
                   yDot = stemDir === 'up' ? yDraw - nhO.hSs / 2 - gapDot - rDot : yDraw + nhO.hSs / 2 + gapDot + rDot;
                 }
-                const headTop = Math.max(inkTopY, yDot != null ? yDot + rDot : -Infinity, accRel ? yDraw + accRel.accTopExt : -Infinity);
-                const headBot = Math.min(inkBotY, yDot != null ? yDot - rDot : Infinity, accRel ? yDraw - accRel.accBotExt : Infinity);
+                const headTop = Math.max(inkTopY, yDot != null ? yDot + rDot : -Infinity, accRel ? yDraw + accRel.accTopExt : -Infinity, TPG ? TPG.top : -Infinity);
+                const headBot = Math.min(inkBotY, yDot != null ? yDot - rDot : Infinity, accRel ? yDraw - accRel.accBotExt : Infinity, TPG ? TPG.bot : Infinity);
                 const refBot0 = Math.min(headBot, -STAFF_EDGE), refTop0 = Math.max(headTop, STAFF_EDGE);
                 // above a flagged stem-up unit the chain sits under the flag with
                 // the tighter gap (registry chainAboveGapSs); elsewhere the house 0.45
@@ -1293,6 +1354,7 @@
                   inkTopY = Math.max(inkTopY, yDraw + accRel.accTopExt);
                   inkBotY = Math.min(inkBotY, yDraw - accRel.accBotExt);
                 }
+                if (TPG) { inkTopY = Math.max(inkTopY, TPG.top); inkBotY = Math.min(inkBotY, TPG.bot); }   // [2f.4] the tr and the sfz clear the neighbour group
                 // THE VERTICAL COLUMN STANDARD (day 22, composer + Gould +
                 // piece #2's own chain, which agree): below the unit, from
                 // the notehead outward — articulation · DYNAMIC · instruction

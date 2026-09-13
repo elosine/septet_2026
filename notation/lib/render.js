@@ -254,7 +254,8 @@
           // 0..1 maps bottom -> top of the track), clipped to the window
           if (it.t1 < w0 || it.t0 > w1) continue;
           const EC = E.envCurve;
-          const yT = sys.yTopPx, yB = sys.yBotPx;
+          // [2f.4] band 'lane': a multi-staff part's curve spans its whole lane (the piano's trills), as its go line does
+          const yT = it.band === 'lane' ? lane.yTopPx : sys.yTopPx, yB = it.band === 'lane' ? lane.yBotPx : sys.yBotPx;
           // cut (surge): the RISE, truncated at its peak sample, is mapped
           // over the FULL note span so it meets the note end at full height —
           // a SHARP top-right corner, then the 90° vertical back edge (the
@@ -484,7 +485,7 @@
           // §401h: the top at the GC arc's top when this note carries a GC and the registry says so; a
           // multi-staff part's bottom trimmed by multiStaffBottomTrimPx (at the 1080 frame, scaled)
           let gy1 = lane.yTopPx, gy2 = lane.yBotPx;
-          if (GL.topAtGcArc && hasGc.has(it.ev)) {
+          if (GL.topAtGcArc && (hasGc.has(it.ev) || it.topAsGc)) {   // [2f.4] topAsGc: a trill's go line, the strikes' length
             const Gg = GC.laneGeom(GC.systemOf(view, sysModel.part), view, E.gc && E.gc.look);
             gy1 = Math.max(gy1, Gg.impactY - Gg.h);
           }

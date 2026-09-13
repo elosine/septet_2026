@@ -1585,7 +1585,7 @@ player would touch parts, solo, crop and print.
     curve SAMPLED from the resolved window over [start, end] (the rule above; TRILLS_TOOL §105). IR_SCHEMA note; `piece-septet` yields 69;
     `tools/test_septet_notation.js` (86) and the tuba battery green; nothing on the page yet. *Why:* NITS 2026-09-11 — trills are skipped
     silently today; D9 — the save is the ground truth.
-  - **2f.4 The device** — `todo` — `devices.byKind.trill` as registry data shaped on the surge: open head + accidental + ledgers, the
+  - **2f.4 The device** — `done 2026-09-13 (RUNNING_LOG §438) — byEnv.trill + the neighbour group in layout.js, band/topAsGc in render.js; page trill1 (57–65.7 s, the piano's C2 → D2); test_trills 56 green, seen red; tuba layout/render/animobj/splice green, snapshots stable; seen in the running app` — `devices.byKind.trill` as registry data shaped on the surge: open head + accidental + ledgers, the
     parenthesised neighbour after it (the column's width includes it; the WHOLE column sits left of the go line by 2f.1's gap), `tr`
     above, `sfz` below by the dynamics rule, the go line at the onset, the level curve from the head over the span with the 90° cut, no
     GC. Layout emits seconds + ss only. First instance: the piano's 63.72 s trill (C2, whole tone), picker "piece-septet · trill 1".

@@ -1,0 +1,933 @@
+{
+ "irVersion": "0.1",
+ "id": "trill1",
+ "source": {
+  "score": "piece-septet",
+  "window": [
+   57,
+   65.7
+  ],
+  "parts": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ]
+ },
+ "provenance": {
+  "createdBy": "tools/notate_section.js (profile trance) --bricks --trills",
+  "date": "2026-09-13",
+  "tool": "tools/notate_section.js (profile trance) --bricks --trills",
+  "notes": "Derived extraction (B1). Segmentation: DB-6 greedy IOI runs, TOL 0.015 s. Regenerable; authored content belongs in overlays only. TRILLS (PLAN 2f.3): 1 trill zone(s) as env trill; 1 eaten note(s) (mutedBy) not extracted; 0 trill(s) read a flat level. BRICKS MODE: all chunks forced unresolved (working file).",
+  "build": "node tools/notate_section.js --score piece-septet --w0 57 --w1 65.7 --profile trance --bricks --trills --id trill1 --label \"piece-septet · trill 1 (PLAN 2f.4)\" --exp"
+ },
+ "events": [
+  {
+   "id": "ev-wc-863",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-863"
+   },
+   "onset": 57.285,
+   "duration": 0.868,
+   "pitch": {
+    "midi": 66,
+    "spelled": {
+     "step": "F",
+     "alter": 1,
+     "octave": 4
+    }
+   },
+   "technique": "gettato_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-864",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-864"
+   },
+   "onset": 57.669,
+   "duration": 0.6,
+   "pitch": {
+    "midi": 58,
+    "spelled": {
+     "step": "A",
+     "alter": 1,
+     "octave": 3
+    }
+   },
+   "technique": "slap",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-865",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-865"
+   },
+   "onset": 57.995,
+   "duration": 0.723,
+   "pitch": {
+    "midi": 55,
+    "spelled": {
+     "step": "G",
+     "alter": 0,
+     "octave": 3
+    }
+   },
+   "technique": "bartok_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-866",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-866"
+   },
+   "onset": 58.272,
+   "duration": 0.925,
+   "pitch": {
+    "midi": 57,
+    "spelled": {
+     "step": "A",
+     "alter": 0,
+     "octave": 3
+    }
+   },
+   "technique": "gettato_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-867",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-867"
+   },
+   "onset": 58.506,
+   "duration": 0.10600000000000165,
+   "pitch": {
+    "midi": 41,
+    "spelled": {
+     "step": "F",
+     "alter": 0,
+     "octave": 2
+    }
+   },
+   "technique": "main",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-868",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-868"
+   },
+   "onset": 58.705,
+   "duration": 0.10600000000000165,
+   "pitch": {
+    "midi": 63,
+    "spelled": {
+     "step": "D",
+     "alter": 1,
+     "octave": 4
+    }
+   },
+   "technique": "senza_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-869",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-869"
+   },
+   "onset": 58.873,
+   "duration": 0.07200000000000273,
+   "pitch": {
+    "midi": 62,
+    "spelled": {
+     "step": "D",
+     "alter": 0,
+     "octave": 4
+    }
+   },
+   "technique": "senza_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-870",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-870"
+   },
+   "onset": 59.016,
+   "duration": 0.10600000000000165,
+   "pitch": {
+    "midi": 57,
+    "spelled": {
+     "step": "A",
+     "alter": 0,
+     "octave": 3
+    }
+   },
+   "technique": "pizzicato",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-871",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-871"
+   },
+   "onset": 59.137,
+   "duration": 0.723,
+   "pitch": {
+    "midi": 55,
+    "spelled": {
+     "step": "G",
+     "alter": 0,
+     "octave": 3
+    }
+   },
+   "technique": "bartok_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-872",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-872"
+   },
+   "onset": 59.24,
+   "duration": 0.825,
+   "pitch": {
+    "midi": 62,
+    "spelled": {
+     "step": "D",
+     "alter": 0,
+     "octave": 4
+    }
+   },
+   "technique": "bartok_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-873",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-873"
+   },
+   "onset": 59.327,
+   "duration": 0.10600000000000165,
+   "pitch": {
+    "midi": 70,
+    "spelled": {
+     "step": "A",
+     "alter": 1,
+     "octave": 4
+    }
+   },
+   "technique": "main",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-874",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-874"
+   },
+   "onset": 59.401,
+   "duration": 0.92,
+   "pitch": {
+    "midi": 75,
+    "spelled": {
+     "step": "D",
+     "alter": 1,
+     "octave": 5
+    }
+   },
+   "technique": "gettato_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-875",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-875"
+   },
+   "onset": 59.463,
+   "duration": 0.54,
+   "pitch": {
+    "midi": 41,
+    "spelled": {
+     "step": "F",
+     "alter": 0,
+     "octave": 2
+    }
+   },
+   "technique": "slap",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-876",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-876"
+   },
+   "onset": 59.516,
+   "duration": 0.868,
+   "pitch": {
+    "midi": 66,
+    "spelled": {
+     "step": "F",
+     "alter": 1,
+     "octave": 4
+    }
+   },
+   "technique": "gettato_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-877",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-877"
+   },
+   "onset": 59.561,
+   "duration": 0.07200000000000273,
+   "pitch": {
+    "midi": 65,
+    "spelled": {
+     "step": "F",
+     "alter": 0,
+     "octave": 4
+    }
+   },
+   "technique": "ord",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-881",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-881"
+   },
+   "onset": 63.066,
+   "duration": 0.05299999999999727,
+   "pitch": {
+    "midi": 53,
+    "spelled": {
+     "step": "F",
+     "alter": 0,
+     "octave": 3
+    }
+   },
+   "technique": "pizzicato",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-879",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-879"
+   },
+   "onset": 63.242,
+   "duration": 0.868,
+   "pitch": {
+    "midi": 66,
+    "spelled": {
+     "step": "F",
+     "alter": 1,
+     "octave": 4
+    }
+   },
+   "technique": "gettato_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-882",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-882"
+   },
+   "onset": 63.308,
+   "duration": 0.925,
+   "pitch": {
+    "midi": 57,
+    "spelled": {
+     "step": "A",
+     "alter": 0,
+     "octave": 3
+    }
+   },
+   "technique": "gettato_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-885",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-885"
+   },
+   "onset": 63.31,
+   "duration": 0.66,
+   "pitch": {
+    "midi": 78,
+    "spelled": {
+     "step": "F",
+     "alter": 1,
+     "octave": 5
+    }
+   },
+   "technique": "bartok_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-884",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-884"
+   },
+   "onset": 63.437,
+   "duration": 0.64,
+   "pitch": {
+    "midi": 84,
+    "spelled": {
+     "step": "C",
+     "alter": 0,
+     "octave": 6
+    }
+   },
+   "technique": "bartok_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-883",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-883"
+   },
+   "onset": 63.72,
+   "duration": 0.67,
+   "pitch": {
+    "midi": 46,
+    "spelled": {
+     "step": "A",
+     "alter": 1,
+     "octave": 2
+    }
+   },
+   "technique": "slap",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-zn-953",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "zn-953"
+   },
+   "onset": 63.72,
+   "duration": 1.730000000000004,
+   "pitch": {
+    "midi": 36,
+    "spelled": {
+     "step": "C",
+     "alter": 0,
+     "octave": 2
+    }
+   },
+   "technique": "main",
+   "provenance": "derived",
+   "env": "trill",
+   "trill": {
+    "interval": 2,
+    "neighbour": {
+     "midi": 38,
+     "spelled": {
+      "step": "D",
+      "alter": 0,
+      "octave": 2
+     }
+    },
+    "curve": "auto:A"
+   },
+   "level": {
+    "samples": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "id": "ev-wc-890",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-890"
+   },
+   "onset": 65.319,
+   "duration": 0.987,
+   "pitch": {
+    "midi": 58,
+    "spelled": {
+     "step": "A",
+     "alter": 1,
+     "octave": 3
+    }
+   },
+   "technique": "gettato_vel",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  },
+  {
+   "id": "ev-wc-893",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-893"
+   },
+   "onset": 65.429,
+   "duration": 0.56,
+   "pitch": {
+    "midi": 51,
+    "spelled": {
+     "step": "D",
+     "alter": 1,
+     "octave": 3
+    }
+   },
+   "technique": "slap",
+   "provenance": "derived",
+   "env": "strike",
+   "mode": "plain",
+   "vel": 127
+  }
+ ],
+ "chunks": [
+  {
+   "id": "ch-0-wc-870",
+   "part": 0,
+   "span": [
+    59.016,
+    63.066
+   ],
+   "class": "trance-stream",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-870",
+    "ev-wc-877"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-0-wc-881",
+   "part": 0,
+   "span": [
+    63.066,
+    65.7
+   ],
+   "class": "fixed-oneshot",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-881"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-1-wc-864",
+   "part": 1,
+   "span": [
+    57.669,
+    59.463
+   ],
+   "class": "trance-stream",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-864",
+    "ev-wc-868"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-1-wc-875",
+   "part": 1,
+   "span": [
+    59.463,
+    63.72
+   ],
+   "class": "fixed-oneshot",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-875"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-1-wc-883",
+   "part": 1,
+   "span": [
+    63.72,
+    65.7
+   ],
+   "class": "trance-stream",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-883",
+    "ev-wc-893"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-2-wc-867",
+   "part": 2,
+   "span": [
+    58.506,
+    63.72
+   ],
+   "class": "trance-stream",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-867",
+    "ev-wc-873"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-2-zn-953",
+   "part": 2,
+   "span": [
+    63.72,
+    65.7
+   ],
+   "class": "trill",
+   "strategy": "unresolved",
+   "events": [
+    "ev-zn-953"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-3-wc-865",
+   "part": 3,
+   "span": [
+    57.995,
+    63.437
+   ],
+   "class": "trance-stream",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-865",
+    "ev-wc-871"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-3-wc-884",
+   "part": 3,
+   "span": [
+    63.437,
+    65.7
+   ],
+   "class": "fixed-oneshot",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-884"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-4-wc-872",
+   "part": 4,
+   "span": [
+    59.24,
+    63.31
+   ],
+   "class": "fixed-oneshot",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-872"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-4-wc-885",
+   "part": 4,
+   "span": [
+    63.31,
+    65.7
+   ],
+   "class": "fixed-oneshot",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-885"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-5-wc-866",
+   "part": 5,
+   "span": [
+    58.272,
+    59.516
+   ],
+   "class": "trance-stream",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-866",
+    "ev-wc-869"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-5-wc-876",
+   "part": 5,
+   "span": [
+    59.516,
+    63.242
+   ],
+   "class": "fixed-oneshot",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-876"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-5-wc-879",
+   "part": 5,
+   "span": [
+    63.242,
+    65.319
+   ],
+   "class": "fixed-oneshot",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-879"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-5-wc-890",
+   "part": 5,
+   "span": [
+    65.319,
+    65.7
+   ],
+   "class": "fixed-oneshot",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-890"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-6-wc-863",
+   "part": 6,
+   "span": [
+    57.285,
+    59.401
+   ],
+   "class": "fixed-oneshot",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-863"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-6-wc-874",
+   "part": 6,
+   "span": [
+    59.401,
+    63.308
+   ],
+   "class": "fixed-oneshot",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-874"
+   ],
+   "provenance": "derived"
+  },
+  {
+   "id": "ch-6-wc-882",
+   "part": 6,
+   "span": [
+    63.308,
+    65.7
+   ],
+   "class": "fixed-oneshot",
+   "strategy": "unresolved",
+   "events": [
+    "ev-wc-882"
+   ],
+   "provenance": "derived"
+  }
+ ],
+ "overlays": []
+}

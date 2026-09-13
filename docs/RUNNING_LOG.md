@@ -11825,3 +11825,45 @@ guarded first). **Unchanged without the option:** the old and new `extract()` co
 and 0–580 (chords) and on three tuba scores read in place (piece-final-draft-001, piece-s27, cloud02i-b; trance and section1). A probe page
 (`--bricks --trills`, 60–75 s) built, VALID against source and complete, then pruned. `test_septet_notation` 86 · `test_identity` 20.
 The probe's SVG (`tools/fixtures/lp_probes/trill.svg`) is committed beside its `.ly`, as the tuba's fixtures are.
+
+## §438. PLAN 2f.4 built: the trill device on the page — the piano's first trill at 63.72 s, picker "piece-septet · trill 1 (PLAN 2f.4)"
+
+**Registry** (`container.json → engraving.layout.devices.byEnv.trill`, with `_trillNote`): `goLine` + `goLineTopAsGc` · `gc: false` ·
+`nhUnit`, `nhHead: open` · `brick: false`, `ringBar: false` · `curve`, `cut: false`, `curveBand: lane` · `dynPair: false`, `dynMark: sfz` ·
+`techSymbol: trill`, `techSymbolScale: 0.70` · `trillPitch { groupPadSs 0.30, parenScale 0.63, parenInnerSs 0.42, headScale 0.794,
+accScale 0.794, accPadSs 0.20, naturals false }`. **Two departures from the spec sheet's §7 sketch, both to reuse what exists:** the `tr`
+rides the strikes' technique-symbol slot (`techSymbol` / `techSymbolScale`, the §400 symbol-above rule) instead of a new `trillSign` key;
+and `chainSide` is deliberately UNSET — a device `chainSide` of any value other than `headSide` short-circuits the room test to "below
+always", so setting `sideWithRoom` there would have disabled the very rule it names. Spec §7 corrected to the built shape.
+
+**Layout** (`notation/lib/layout.js`): the trill pitch group — `( [accidental] filled head )` — computed BEFORE the anchor, since its right
+paren is the unit's right ink; the written neighbour spelled from the WRITTEN main note (next letter up, the interval kept, so the bass
+clarinet's written +M9 carries through); it follows the main note's ottava; its ink joins the head-side extents so the `sfz` and the `tr`
+clear it; its own ledgers at its own width. The go line item carries `topAsGc`; the curve item carries `band: 'lane'`.
+**Render** (`notation/lib/render.js`): `band: 'lane'` draws the curve over the part's whole lane (the piano: both staves, as its go line and
+GC); `topAsGc` gives a GC-less go line the GC arc's top. Both are no-ops for every existing item.
+
+**The page:** `node tools/notate_section.js --score piece-septet --w0 57 --w1 65.7 --profile trance --bricks --trills --id trill1 --label
+"piece-septet · trill 1 (PLAN 2f.4)" --exp` — 24 events, 18 chunks, VALID vs source; the window ends before the next trill (65.76 s), so
+the page holds exactly one: the piano's C2 → D2. **Measured on the laid-out items:** left paren 0.300 after the open head · 0.419 / 0.420
+inner gaps · right paren ends 0.2495 before the go line · the neighbour a step above, parens centred on it · `sfz` centred on the head,
+its top 0.45 below the head's bottom ink (−4.44 → centre −5.377) · `tr` centred on the head, bottom 0.45 above the bass staff's top line
+(centre +3.221, inside the grand staff's 6 ss gap) · curve 63.72 → 65.45, 101 samples, band lane · go line `topAsGc` · no GC, no brick.
+
+**In the running app** (:5301, the AI's copy, stopped afterwards; his :5300 untouched): the picker lists the page; it loads with no NaN,
+one envCurve path, the three scaled glyphs; console errors = the two optional choices sidecars (404, pre-existing). Seen close (an enlarged
+clone of the page SVG, removed after): the open C2 on two ledgers, `( ● )` with its own ledger, `sfz` under it, `tr` above the bass staff,
+the dashed go line through the lane — and **the curve a solid green block over the whole piano lane**, the flat 1.0 flagged in §435.
+
+**Proofs.** `tools/test_trills.js` 56 GREEN (25 new: the registry shape; every gap and centre above re-derived from the glyphs and the
+registry, not restated; no GC/brick/ring bar; the eaten note absent; RENDER in the jury frame — the curve's path starts at the go line,
+its floor is the piano lane's bottom and its full-level samples reach the lane's top; the piano's own go line starts at the GC arc's top).
+Against the pre-2f.4 layout and render: RED, 5 failures. **The tuba unchanged:** staged per `notation/ir/README.md` (26 files, each
+recorded and removed afterwards) — `test_layout`, `test_render`, `test_animobj`, `test_splice` all GREEN, snapshots stable.
+`ir_extract_golden` (a duration 0.20 ≠ 0.44) and `test_extract_played` (1) RED — the standing REDs from the septet's own sample-length
+table (README; RUNNING_LOG §12): the trills-off extraction is byte-identical to the old extractor on those same scores (§437), so they
+cannot come from this work. `test_septet_notation` 86.
+
+**For his eye (2f.5), in order of weight:** (1) the curve — 52 of 69 trills are flat at fff and draw as blocks; the first is one; (2) the
+`tr` height and its distance from a low note (above the staff, as LilyPond places it); (3) the neighbour's look — size, the parens, no
+natural; (4) the spellings D♯ → E♯ and A♯ → B♯ where they occur (§437).

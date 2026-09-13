@@ -31,6 +31,17 @@
    ],
    "profile": "trance",
    "exp": true
+  },
+  {
+   "id": "trill1",
+   "label": "piece-septet · trill 1 (PLAN 2f.4)",
+   "score": "piece-septet",
+   "window": [
+    57,
+    65.7
+   ],
+   "profile": "trance",
+   "exp": true
   }
  ]
 }

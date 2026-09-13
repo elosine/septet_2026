@@ -86,6 +86,32 @@
    "_nhGapNote": "day 22, nh-unit horizontal standard for the surge device: the unit's rightmost ink ends this far before the go line (composer asked for 2 px at staff 31.6; expressed in ss = 2/7.9 ≈ 0.25 so the PP-6 zoom invariant holds)",
    "devices": {
     "byEnv": {
+     "trill": {
+      "goLine": true,
+      "goLineTopAsGc": true,
+      "gc": false,
+      "nhUnit": true,
+      "nhHead": "open",
+      "brick": false,
+      "ringBar": false,
+      "curve": true,
+      "cut": false,
+      "curveBand": "lane",
+      "dynPair": false,
+      "dynMark": "sfz",
+      "techSymbol": "trill",
+      "techSymbolScale": 0.7,
+      "trillPitch": {
+       "groupPadSs": 0.3,
+       "parenScale": 0.63,
+       "parenInnerSs": 0.42,
+       "headScale": 0.794,
+       "accScale": 0.794,
+       "accPadSs": 0.2,
+       "naturals": false
+      }
+     },
+     "_trillNote": "PLAN 2f.4 (2026-09-13, RUNNING_LOG §438; docs/TRILL_NOTATION_SPEC.md): the TRILL is the tuba's surge with a trill on it — the open nh-unit (no stem, no brick, no ring bar), the parenthesised neighbour after it (trillPitch: LilyPond's pitched-trill group measured by tools/fixtures/lp_probes/trill.ly — group padding 0.30, parens at font-size −4 = 0.63, inner padding 0.42, the neighbour head and accidental at 0.794 of the house, accidental gap 0.20, no naturals), the whole column nhGapSs (0.25) before the go line; the go line at the onset with the strikes' length (goLineTopAsGc — §401h) and NO GC (the composer: 'no gc for trills, they are too close to the other gcs for percussive notes'); `tr` = the technique-symbol slot above (glyphs.articulation.trill at 0.70, GLYPH_SIZING Ornaments — the pedal's factor), the strikes' symbol-above rule; sfz on every attack by the tuba's below-chain and side-with-room rule (chainSide deliberately UNSET: a device chainSide would disable the room test); the level curve over the exact span in the envCurve colour, never peak-cut, over the part's whole lane (curveBand). The level is the composer score's own trill reference (IR amendment 8).",
      "surge": {
       "curve": true,
       "cut": true,

@@ -1,6 +1,7 @@
 // test_trills.js — PLAN 2f (2026-09-13): section 1's trills, the battery grown step by step.
 //   2f.2 the glyphs — the trill sign and the neighbour's parentheses, stock size from Emmentaler
 //   2f.3 the IR — trill zones as env trill events, eaten notes out, the composer's curve math, the validator
+//   2f.4 the device — the column left of the go line, tr and sfz, the curve over the lane, the go line's top, no GC
 // Spec: docs/TRILL_NOTATION_SPEC.md. piece-septet.json is the composer's LIVE score: read, never written.
 // --glyphs <path> / --extract <path> run the checks against another glyphs.json / extract_core.js (to see them go red once).
 'use strict';
@@ -165,6 +166,101 @@ const glyphs = J(arg('--glyphs') || 'notation/lib/glyphs.json');
   }
 }
 
+// ---- 2f.4 the device (TRILL_NOTATION_SPEC §2–§5; registry devices.byEnv.trill) ----
+{
+  const Extract = require('../notation/lib/extract_core.js');
+  const Layout = require('../notation/lib/layout.js');
+  const Render = require('../notation/lib/render.js');
+  const Coords = require('../notation/lib/coords.js');
+  const score = J('scores/piece-septet.json');
+  const ens = J('notation/registry/ensemble.json'), tech = J('notation/registry/techniques.json'), C = J('notation/registry/container.json');
+  const DEV = C.engraving.layout.devices.byEnv.trill;
+  const L = C.engraving.layout;
+  ok(DEV && DEV.goLine && DEV.goLineTopAsGc && !DEV.gc && DEV.nhUnit && DEV.brick === false && DEV.curve && DEV.cut === false && DEV.curveBand === 'lane'
+    && DEV.dynMark === 'sfz' && DEV.techSymbol === 'trill' && Math.abs(DEV.techSymbolScale - 0.70) < 1e-9 && DEV.trillPitch && DEV.chainSide === undefined,
+    'registry byEnv.trill: go line (strikes\' length) · no GC · open unit · no brick · curve over the lane, not peak-cut · sfz · tr at 0.70 · the neighbour group · chainSide unset (the room rule)');
+  const parts = ens.parts.map(p => p.part);
+  // the first PIANO trill in the live save, never a hard-coded id
+  const pz = score.objects.filter(o => o.type === 'zone' && o.midiModel === 'trill' && o.trill && o.layer === 2).sort((a, b) => a.startTime - b.startTime)[0];
+  ok(!!pz, 'the live save holds a piano trill');
+  if (pz) {
+    const w0 = Math.floor(pz.startTime) - 3, w1 = pz.endTime + 0.2;
+    const { doc } = Extract.extract(score, { scoreName: 'piece-septet', window: [w0, w1], parts, id: 'trill-dev', registry: J('notation/registry/classes.json'),
+      sampleLengths: J('bank/sample_lengths.json'), profile: 'trance', options: { chords: true, trills: true }, metaLayer: ens.metaLayer, techniques: tech.techniques });
+    for (const c of doc.chunks) c.strategy = 'unresolved';   // the --bricks page
+    const model = Layout.layoutSection(doc, glyphs, Object.assign({ frameParts: parts, ensemble: ens, techniques: tech }, L));
+    const evId = 'ev-' + pz.id;
+    const ev = doc.events.find(e => e.id === evId);
+    const sys = model.systems.find(s => s.items.some(i => i.ev === evId || (i.k === 'glyph' && i.g === 'notehead-open' && Math.abs(i.t - pz.startTime) < 1e-9)));
+    const its = sys ? sys.items.filter(i => Math.abs((i.t != null ? i.t : i.t0) - pz.startTime) < 1e-9 && (i.ev === evId || ['glyph', 'ledger'].includes(i.k))) : [];
+    const g = k => its.filter(i => i.k === 'glyph' && i.g === k);
+    const head = g('notehead-open')[0], lp = g('accidental-leftParen')[0], rp = g('accidental-rightParen')[0];
+    const nHead = its.find(i => i.k === 'glyph' && i.g === 'notehead' && i.ev === evId), sfz = g('dyn-sfz')[0], tr = g('artic-trill')[0];
+    ok(head && lp && rp && nHead && sfz && tr, 'the piano trill draws: open head · ( neighbour ) · sfz · tr');
+    if (head && lp && rp && nHead && sfz && tr) {
+      const P = DEV.trillPitch;
+      const hw = glyphs.notehead.open.wSs, pw = glyphs.accidental.leftParen.wSs * P.parenScale, nw = glyphs.notehead.filled.wSs * P.headScale;
+      const hRight = head.dxSs + hw / 2, lpLeft = lp.dxSs - pw / 2, lpRight = lp.dxSs + pw / 2;
+      const nL = nHead.dxSs - nw / 2, nR = nHead.dxSs + nw / 2, rpLeft = rp.dxSs - pw / 2, rpRight = rp.dxSs + pw / 2;
+      eq(lpLeft - hRight, P.groupPadSs, 1e-6, 'the left paren sits groupPadSs after the main head (LilyPond 0.30)');
+      if (!its.some(i => i.ev === evId && /^accidental-(sharp|flat|natural)/.test(i.g || ''))) eq(nL - lpRight, P.parenInnerSs, 1e-6, 'paren → neighbour head: parenInnerSs (LilyPond 0.42)');
+      eq(rpLeft - nR, P.parenInnerSs, 1e-6, 'neighbour head → right paren: parenInnerSs');
+      eq(-rpRight, L.nhGapSs, 1e-6, 'the right paren — the unit\'s right ink — ends nhGapSs before the go line (0.25)');
+      const nSp = { step: 'CDEFGAB'[('CDEFGAB'.indexOf(ev.pitch.spelled.step) + 1) % 7] };
+      eq(nHead.ySs - head.ySs, 0.5, 1e-9, 'the neighbour head a step above the main (' + ev.pitch.spelled.step + ' → ' + nSp.step + ')');
+      eq(lp.ySs, nHead.ySs, 1e-9, 'the parens centred on the neighbour head');
+      eq(sfz.dxSs, head.dxSs, 1e-9, 'sfz centred on the head column');
+      eq(tr.dxSs, head.dxSs, 1e-9, 'tr centred on the head column');
+      const inkBot = Math.min(head.ySs - glyphs.notehead.open.hSs / 2, lp.ySs - glyphs.accidental.leftParen.hSs * P.parenScale / 2, -2);
+      eq(sfz.ySs + glyphs.dynamic.sfz.hSs / 2, inkBot - L.stackGapSs, 1e-6, 'sfz top ink stackGapSs below the unit\'s (or the staff\'s) bottom ink — the tuba chain');
+      const inkTop = Math.max(head.ySs + glyphs.notehead.open.hSs / 2, lp.ySs + glyphs.accidental.leftParen.hSs * P.parenScale / 2, 2);
+      eq(tr.ySs - glyphs.articulation.trill.hSs * DEV.techSymbolScale / 2, inkTop + L.stackGapSs, 1e-6, 'tr bottom ink stackGapSs above the staff or the unit\'s top ink');
+      ok(Math.abs(tr.scale - 0.70) < 1e-9 && Math.abs(lp.scale - P.parenScale) < 1e-9 && Math.abs(nHead.scale - P.headScale) < 1e-9, 'scales as data: tr 0.70 · parens ' + P.parenScale + ' · neighbour head ' + P.headScale);
+    }
+    const allIt = model.systems.flatMap(s => s.items.filter(i => i.ev === evId));
+    ok(!allIt.some(i => i.k === 'gc'), 'no GC on the trill');
+    ok(!allIt.some(i => i.k === 'brick' || i.k === 'ringbar'), 'no brick, no ring bar on the trill');
+    const curve = allIt.find(i => i.k === 'envcurve'), gl = allIt.find(i => i.k === 'goline');
+    ok(curve && curve.band === 'lane' && Math.abs(curve.t0 - pz.startTime) < 1e-9 && Math.abs(curve.t1 - pz.endTime) < 1e-9 && curve.samples.length === 101,
+      'the curve: the trill\'s exact span, 101 samples, the whole lane');
+    ok(gl && gl.topAsGc && Math.abs(gl.t - pz.startTime) < 1e-9, 'the go line at the onset, topAsGc');
+    ok(!doc.events.some(e => score.objects.some(o => o.id === e.source.objectId && o.mutedBy === pz.id)), 'the note the trill ate is not on the page');
+
+    // RENDER in the jury frame with the app's lane math: the curve fills the piano's whole lane; the go line's top is a GC's
+    const W = 1920, H = 1080, lanes = C.realizations['video-jury'].lanes;
+    const topPad = lanes.padTopPx / H, botPad = lanes.padBotPx / H, gap = lanes.gapPx / H;
+    const weights = parts.map(p => ens.parts.find(q => q.part === p).weight || 1);
+    const unit = ((1 - topPad - botPad - gap * (parts.length - 1)) / weights.reduce((a, b) => a + b, 0)) * H;
+    let systems = Coords.systemsForParts(parts, { topPad, botPad, gap, weights });
+    const ssPer = unit / (C.staff.staffHeightPx / 4);
+    systems.forEach((s, i) => { s.ssPerSystem = ssPer * weights[i]; });
+    systems = Coords.withStaves(systems, p => { const e = ens.parts.find(q => q.part === p); return (e.staves && e.staves.length) || 1; });
+    const view = Coords.makeView({ widthPx: W, heightPx: H, window: [w0, w1], gutterPx: C.prefatory.gutterPx, systems, ssPerSystem: ssPer });
+    const svg = Render.renderSection(model, view, glyphs, { engraving: C.engraving.render, ensemble: ens });
+    ok(!/NaN|Infinity/.test(svg), 'render: no NaN or Infinity');
+    const a = view.system('2:0'), b = view.system('2:1');
+    const col = C.engraving.render.envCurve.color;
+    const paths = [...svg.matchAll(new RegExp('<path d="([^"]+)" fill="' + col + '"', 'g'))].map(m => m[1]);
+    const xOn = view.xOfSeconds(pz.startTime);
+    const ours = paths.find(d => { const m = d.match(/^M([\d.]+),/); return m && Math.abs(+m[1] - xOn) < 1; });
+    ok(!!ours, 'render: the trill\'s curve path starts at its go line (x ' + xOn.toFixed(1) + ')');
+    if (ours) {
+      const ys = [...ours.matchAll(/[ML]([\d.]+),([\d.]+)/g)].map(m => +m[2]);
+      eq(Math.max(...ys), b.yBotPx, 0.11, 'render: the curve\'s floor is the piano lane\'s bottom (the lower staff system)');
+      if (ev.level.samples.some(v => v >= 0.999)) eq(Math.min(...ys), a.yTopPx, 0.11, 'render: a full-level sample reaches the piano lane\'s top (the upper staff system)');
+    }
+    const lines = [...svg.matchAll(/<line x1="([\d.]+)" y1="([\d.]+)" x2="[\d.]+" y2="([\d.]+)" stroke="#333"/g)].map(m => ({ x: +m[1], y1: +m[2], y2: +m[3] }));
+    // the piano's own go line — another part may strike at the same onset (the bass clarinet does at the first trill)
+    const trLine = lines.find(l => Math.abs(l.x - xOn) < 0.01 && l.y2 > a.yTopPx && l.y1 < b.yBotPx);
+    ok(!!trLine, 'render: the trill\'s go line is drawn');
+    if (trLine) {
+      const GC = require('../notation/lib/gc.js');
+      const Gg = GC.laneGeom(GC.systemOf(view, 2), view, C.engraving.render.gc.look);
+      eq(trLine.y1, Math.max(a.yTopPx, Gg.impactY - Gg.h), 0.11, 'render: the go line starts at the GC arc\'s top, like the strikes\'');
+    }
+  }
+}
+
 console.log(pass + ' passed, ' + fail + ' failed');
-console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR');
+console.log(fail ? 'TRILLS RED: ' + fail + ' failure(s)' : 'TRILLS GREEN: 2f.2 glyphs · 2f.3 IR · 2f.4 device');
 process.exit(fail ? 1 : 0);

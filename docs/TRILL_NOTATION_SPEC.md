@@ -74,7 +74,7 @@ of ink, plus the main head's left ledger overhang (0.28), then 0.25 to the go li
 |---|---|---|
 | drawn span | from the go line (onset) to the trill's end, exactly | D (CN-75) |
 | colour · fill · outline | `#2E7D32` · fill-opacity **0.3** · no stroke | T `render.envCurve` — "same color curve", D §432 |
-| band | value 0 → the lane's bottom edge, 1 → its top edge; **the piano: its whole lane** (both staves), as its go line and GC already are | T render (`envcurve`); S §401d. ⚠ render draws the curve over the STAFF system today — one line changes for multi-staff parts |
+| band | value 0 → the lane's bottom edge, 1 → its top edge; **the piano: its whole lane** (both staves), as its go line and GC already are | T render (`envcurve`); S §401d. Built 2f.4: the curve item carries `band: lane`, render draws it over the part's whole lane |
 | back edge | a vertical edge at the trill's end (the fill closes straight down) | T render |
 | peak truncation (`cut`) | **off** — the tuba's surge truncates its rise at the peak; a trill's curve is drawn over its whole span as sampled | this sheet |
 | the reference | `trill.curveRef`: `auto` → the A window (layer 8) if a curve there overlaps the span, else the lane's own drawn curve (never a note), else flat at `trill.level`; `A`/`B`/`C` → that window; `lane` → `trill.curveId` or the lane's first curve; `flat` → `trill.level` | C `trillRefResolved`, `refCurvesOn` |
@@ -98,19 +98,23 @@ windows redrawn, is his call when he sees it.
 - no dynamic pair (`ppp → fff` is the surge's; the trill states `sfz` and its curve)
 - the rate curve is never notated (TRILLS_TOOL, the composer: "it'll just say trill")
 
-## 7 · Registry shape (for 2f.2–2f.4)
+## 7 · Registry shape — as BUILT (2f.4, RUNNING_LOG §438)
 
 ```json
 "devices": { "byEnv": { "trill": {
-  "goLine": true, "goLineTopAsGc": true, "nhUnit": true, "nhHead": "open",
+  "goLine": true, "goLineTopAsGc": true, "gc": false,
+  "nhUnit": true, "nhHead": "open", "brick": false, "ringBar": false,
   "curve": true, "cut": false, "curveBand": "lane",
-  "trillSign": "trill", "trillSignScale": 0.70,
+  "dynPair": false, "dynMark": "sfz",
+  "techSymbol": "trill", "techSymbolScale": 0.70,
   "trillPitch": { "groupPadSs": 0.30, "parenScale": 0.63, "parenInnerSs": 0.42,
-                  "headScale": 0.794, "accScale": 0.794, "accPadSs": 0.20, "naturals": false },
-  "dynMark": "sfz", "chainSide": "sideWithRoom"
+                  "headScale": 0.794, "accScale": 0.794, "accPadSs": 0.20, "naturals": false }
 } } }
 ```
 
-Glyph keys (2f.2): `glyphs.articulation.trill` (or an `ornament` group) from `scripts.trill`; `glyphs.accidental.leftParen` /
-`rightParen` from `accidentals.leftparen` / `rightparen` — stored at STOCK size with the factor applied as data, so a change of factor is
-a registry edit, not a re-extraction.
+Two changes from the first sketch, both to reuse what exists: the `tr` rides the strikes' technique-symbol slot (`techSymbol`,
+`techSymbolScale` — the symbol-above rule of §400) rather than a new `trillSign` key; and **`chainSide` is left UNSET** — any device
+value other than `headSide` bypasses the side-with-room test, so writing `sideWithRoom` there would switch the rule off.
+
+Glyph keys (2f.2): `glyphs.articulation.trill` from `scripts.trill`; `glyphs.accidental.leftParen` / `rightParen` from
+`accidentals.leftparen` / `rightparen` — stored at STOCK size, the factors applied as data.
