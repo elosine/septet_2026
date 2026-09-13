@@ -34,4 +34,16 @@
 edge; a high stem-down note's stack above (Vn1 A♯5) ~1 ss over the top; the piano's stacks meet BCl's/Vn1's in 15 places over
 0–176 s. The tuba's fix ladder applies per page.
 
-## §2 Trills, morph curves, long notes — not yet decided
+## §2 Trills, morph curves, long notes — in progress (trills: 2026-09-13)
+
+**Sizing of any new glyph: `docs/GLYPH_SIZING.md`** — the families, the factors, what to compare to, the procedure.
+
+**Trills — decided so far (RUNNING_LOG §427–§430), not yet on the page:**
+
+| rule | registry key | § |
+|---|---|---|
+| **The neighbour** is the zone's `trill.interval` (1 = semitone, 2 = whole tone; the draft: 69 trills, all upper), written as a small stemless notehead in parentheses after the trilled note, with its accidental — LilyPond's pitched-trill look | (build) | §427–§428 |
+| **`sfz` on every trill attack** (D23's attack mark, fixed as sfz) | (build) | §428 |
+| **`tr`** = Emmentaler `scripts.trill` at **× 0.70** → 1.68 × 1.54 ss, the pedal's factor; parentheses scale with the head (0.794), provisional | (build; the factor as engraving data) | §429–§430 |
+| The trill's dynamic is its **curve** (height 0 = ppp … 1 = fff, D23); the rate curve is never notated | — | D23 |
+| Open: the trill's notehead · go line + GC at the attack · the curve's written form | — | next |

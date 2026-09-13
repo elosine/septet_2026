@@ -1652,3 +1652,41 @@ alternating or BOTH on every onset (chords of swells, deprecated §413) is his t
 *(AI reading, marked as such:)* the piece has reached a complete first draft in `piece-septet.json` — after the evening's chain composing
 and the §425 cut and move (the morph M2 now from 314 s). The title is used unqualified for the first time; CN-64 called it tentative and
 nothing here changes that until he says so. The git tag of that name marks the commit carrying the score (D40).
+
+## CN-75 — 2026-09-13: the TRILLS of section 1 — written the #2 way: pitch, a wave curve per trill, the LilyPond `tr` at house size, no dynamic; the neighbour is a semitone or a whole tone, never else
+
+> *"I want to start notating the trills in section 1 of the septet. these start around 63.5 in the piano and Then spread out to the other
+> parts. The notation will be like in the two piano, two percussion piece. The very first gesture there is a tremolo in the piano. Here,
+> they will be trills. no dynamic, and they'll have a wave curve per trill. just like in two piano or two percussion that lasts the
+> duration of that trill. They'll have the pitch. And then can you look up and discuss with me how to tell what the neighboring pitch
+> should be? In this piece, it's sometimes a major second, and sometimes it's a semitone. but those are the only two. then we'll have to
+> get the trill symbol from  Lilly Pond, and it should have the same sizing specs that the other things like pedal already do or
+> sforzondo or dynamics Let's see if we can work out the proper sizing for that. And then once we've decided those things, can you just
+> make the first trill in the piano? at around sixty three point five. in the notation the presentation score. And then we'll look at it
+> from there."* (composer, 2026-09-13, dictated, carried on the `/postclear`)
+
+*(AI reading, marked as such:)* the next notation layer after the strikes — section 1's trills, the piano first at ~63.5 s, then the
+other parts as they take it up. Each trill is written as #2 wrote its opening piano tremolo: the pitch on the staff, the `tr` glyph from
+LilyPond's Emmentaler font at the same size rule the pedal, sfz and dynamics already obey, and a wave curve of the trill's exact duration
+(the curve IS the length; no dynamic mark). The neighbour note is one of two intervals only — minor second or major second — and the score
+must say which; the rule for telling them apart is the first thing to settle (the trill module's own data from session 3 is the first
+place to look). First deliverable: ONE trill, the piano's at ~63.5 s, on the presentation score, for his eye.
+
+## CN-76 — 2026-09-13: onsets TOO CLOSE for their own GC — one GC on the first note, the rest BEAMED (2, then 4); the thresholds and the written values to decide later
+
+> *"And the following is a note for after we do the first trill: in the piano at forty three point three one. There are two notes
+> relatively close together. after thinking or after composing the last section, I think the way I want to handle the notes that are too
+> close for subsequent GCs. is to have them be one GC on the first note and then make those 2  beamed 16 notes. then for even faster ones
+> that come later in the third section will make four notes beamed. So, for example, the last section is a long crescendo. I would like to
+> figure out the spacing threshold , the timing thresholds to go to two notes beamed, and then the other spacing or timing threshold for
+> four notes beamed. and then I need to make a decision as to just keep them all as being sixteenth notes or for the two notes beamed
+> or... make those two eighth notes even though the GC ones are notated as sixteenth notes because I want them to be short. And then the
+> final ones, do I make those four beamed sixteenth notes or thirty second notes? Just keep this as a note and we'll take action when its
+> time to fix up the two notes at forty three seconds in the piano."* (composer, 2026-09-13, dictated — a note, no action yet)
+
+*(AI reading, marked as such:)* a written-rhythm rule for strikes whose onsets fall closer than a GC can follow (the first case: the piano
+pair at 43.31 s). Two close notes → ONE GC on the first, the pair written as two beamed 16ths. Faster still (section 3's long accelerating
+crescendo) → four notes under one beam. Two thresholds to find, in ms between onsets: where two-beamed begins, where four-beamed begins.
+Two open written-value choices, his: the pair as 16ths or as 8ths (the lone GC strikes are 16ths because he wants them SHORT); the four as
+16ths or 32nds. Parked until the 43.31 s pair is fixed up. The page's G-beam facility (2d.6) already beams chosen notes and keeps the choice
+across rebuilds; the rule here would decide WHICH notes, by timing.

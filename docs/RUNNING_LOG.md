@@ -11612,3 +11612,89 @@ was NOT called into: `sounding.js` is the lift.
 **Answered from STRIKES_TOOL §Z · §AD, no code opened.** The head's `sound → crescendo` (notes mode + crescendo = a single line of swells, no strikes); the foot's swell group at `% of the gap` **100** = onset to onset, `starts on the onset`; Hear; `Insert swells`. Two facts worth the line: a swell is cut 0.17 s short only before its OWN player's next dealt note, so round robin over TWO players lands each swell exactly on the next onset, while ONE ticked player would end every swell 170 ms early; the piano never swells (CN-34). If "the same one in several parts" meant both players on every onset, that is `chords (old)` + `crescendo` (1o's chords of swells), deprecated at his word (§413) — named, not offered without his word. Two placements for the `=` box, in ms: 174.9 − 146.33 = **28 570** · 240 − 177.12 = **62 880**. Not journaled at the time — a how-a-control-works answer; written here at the wrap.
 
 **Then his `/session-end`:** *"and can you tag, this is Scattered_Substance-finalDraft_1.0 and nothing to add from me for session end."* The reading (D40): the piece has its first full draft and the tag must carry it — so `scores/piece-septet.json` (his Save; `unsaved_check` shows piece-septet clean, the seven OLD test copies unsaved as before) is committed with this wrap and the tag `Scattered_Substance-finalDraft_1.0` set on that commit and pushed. NOT committed, his as before: the takes (`bank/panel_snapshots.json`), the five passages, the rack, the section-3 material files, his v1.31 backup, the AI's `zz-ai-1t-walk`. The wrap ran on Fable at his invocation (the standing rule says Opus; "nothing to add from me" read as "do it now, no questions"). The title is used unqualified for the first time; CN-64's "tentative" stands until he says otherwise (§7 note updated).
+
+## §427. Session 10 opens: the trills' written look — CN-75 · CN-76 logged; the neighbour pitch is already in the data
+
+**What prompted it** — his `/postclear` argument, 2026-09-13: *"I want to start notating the trills in section 1 of the septet. these
+start around 63.5 in the piano and Then spread out to the other parts. The notation will be like in the two piano, two percussion piece
+... no dynamic, and they'll have a wave curve per trill ... They'll have the pitch. And then can you look up and discuss with me how to
+tell what the neighboring pitch should be? In this piece, it's sometimes a major second, and sometimes it's a semitone. but those are the
+only two. then we'll have to get the trill symbol from Lilly Pond, and it should have the same sizing specs that the other things like
+pedal already do or sforzondo or dynamics"* — the whole of it in CN-75; the 43.31 s beaming note in CN-76 (parked at his word).
+
+**Read, in one batch each (no code opened):** the save's trill zones · TRILLS_TOOL §5 and D23 · NITS 2026-09-11 · `notation/lib/glyphs.json`
+metrics and provenance · `GLYPH_EXTENSION_CONTRACT.md` · #2's STANDARDS rows for the glyph workflow and the tremolo catalogue.
+
+**Found — the neighbour:** every trill in `piece-septet.json` is a `zone` with `midiModel: 'trill'` and a `trill` block whose `interval`
+field IS the neighbour: `1` = semitone, `2` = whole tone (TRILLS_TOOL §1: the panel takes m2 → M6 above or below; the draft uses only
+1 and 2, all positive = upper neighbour). 69 trills: 47 semitone · 22 whole tone. Per part (semitone / whole tone): Piano 7/3 · Flute 6/4 ·
+BassCl 7/3 · Vn1 8/3 · Vn2 6/3 · Va 6/3 · Vc 7/3. The snippet confirms it sounds so (the piano's first: notes 36 and 38 alternating).
+**The first piano trill: 63.72 → 65.45 s, C2 + whole tone (D2), `technique: main`, `curveRef: auto`.** The question "how to tell" is
+answered by the data, not by analysis; the open question is the WRITTEN form of the neighbour (put to him below, §428).
+
+**Found — the IR gap (NITS 2026-09-11 stands):** the extractor reads `waveCurve` objects only; the 69 trill zones are skipped. The first
+trill build must add zone → trill event to the extractor before any ink.
+
+**Found — the sizing precedent, two families in `glyphs.json`:** dynamics (ppp … sfzp) at `DynamicText.font-size = #-8.5`, #2's locked
+session-49 size (fff hSs 0.9705); scripts (accent, marcato) at "stock Script size" — and the two newest scripts (snap-pizz `+`, 2026-09-11)
+came straight from `emmentaler-20.otf` via `tools/glyph_scripts.py` at stock size. `tr` is a Script in LilyPond (`scripts.trill`), so the
+house route is the second: the same tool, stock size. `pedal` is NOT in this repo's glyph set (it is #2's `pedal_paths.json`); "pedal" in
+his ask names the sizing discipline, not a glyph here.
+
+**Found — the wave curve:** #2's tremolo was `tremolo-twoHand` (§17.1) with its swell curve; this engine (the tuba's) already draws a level
+curve for `waveCurve` objects (the surge device, NOTATION_STANDARDS tuba §one-shot). D23 (2026-09-06): a trill's dynamics are READ FROM ITS
+CURVE, height 0 = ppp … 1 = fff, the rate curve never notated. `curveRef: auto` = the A lane if drawn under the trill, else the lane's
+curve, else flat (§105). **D23 also gave the attack an fp/sfz mark; CN-75 says "no dynamic" — his word decides whether that supersedes it.**
+
+## §428. Decided: the neighbour is a parenthesised notehead (option A); an `sfz` on every trill attack
+
+**His word, 2026-09-13:** *"sfz on each trill attack; A for trill neighbor"* — in answer to §427's A / B / C and the D23 question.
+
+**Decided.** (1) The neighbour pitch is written as LilyPond's pitched-trill auxiliary: a small stemless notehead in parentheses, with its
+accidental, right after the trilled note, at the pitch the zone's `interval` gives (1 = semitone, 2 = whole tone above; the draft has no
+lower neighbours). Option B (an accidental over the `tr`) rejected: it presumes a diatonic neighbour and cannot tell 1 from 2 in an
+unkeyed score. Option C (bare `tr`) rejected: it hands the performer the choice his "only those two" forbids.
+(2) **D23's attack mark stands and is fixed as `sfz`** — every trill attack carries `sfz`; CN-75's "no dynamic" is read as "no dynamic
+band on the trill itself" (its level is the curve, D23), not as "no attack mark". The `sfz` glyph is already in `glyphs.json`.
+The parenthesised head needs its own gap rule in the chain (as `>` and `fff` have) — a build detail, PLAN item to come.
+
+## §429. Measured: the stock `tr` against the pedal — the trill sign is a big glyph; #2 drew its pedal at 0.70
+
+**What prompted it** — his question, 2026-09-13: *"what is the tr size compared to ped"*, on §427's claim that `tr` would come in at stock
+Script size like the accent.
+
+**Measured from `emmentaler-20.otf` (fontTools, 1 ss = unitsPerEm / 4 — the frame `tools/glyph_scripts.py` uses), nothing written:**
+
+| glyph | stock w × h (ss) | as drawn in the house |
+|---|---|---|
+| `scripts.trill` (tr) | **2.40 × 2.20** | not yet in the set |
+| `pedal.Ped` (Ped without the dot) | 3.20 × 2.00 | #2: **× 0.70** → `Ped.` 2.43 × 1.40 (PEDAL_SCALE_FACTOR, composer's choice, #2 session 49) |
+| `pedal.*` | 1.56 × 1.56 | #2: × 0.70 → 1.09 |
+| `scripts.sforzato` (accent) | 1.50 × 0.84 | stock (the accent entry matches the font exactly — the tool's frame is right) |
+| `scripts.snappizzicato` | 1.06 × 1.40 | stock |
+| `accidentals.leftparen` / `rightparen` | 0.45 × 2.10 | not yet in the set |
+| fff (for scale) | — | 1.63 × 0.97 at DynamicText −8.5 |
+
+**Reading.** §427's expectation ("about 1 ss tall") was wrong: the stock trill sign is 2.2 ss tall, taller than the stock `Ped` and 2.6× the
+accent's height. At stock it would tower over the 0.844 ss strike heads, the 0.84 accent and the 0.97 fff. #2 met the same problem with the
+pedal and scaled it 0.70 by the composer's choice. `tr × 0.70 = 1.68 × 1.54 ss` — the same height band as #2's `Ped.` (1.40) and the
+accent's width. The parentheses belong to the neighbour head and should scale with the notehead (house head = −2 ≈ × 0.794 → 0.36 × 1.67),
+not with `tr`. Put to him: the pedal's 0.70, or another factor — a registry number either way (GLYPH_EXTENSION_CONTRACT: scale is data).
+
+## §430. Decided: `tr` at the pedal's 0.70 (option A) — and the sizing document commissioned: `docs/GLYPH_SIZING.md`
+
+**His word, 2026-09-13:** *"a; And then as I work through this piece and in future pieces, we'll need to work a lot of this spacing and
+sizing types of things out. So can you draw up a document or add it to what's there already? So when we come up... come across new things
+to capture or in future pieces, new things to make, we understand what sizing analysis has been done already and what types of things to
+compare it to. I haven't exactly followed every detail of the different sizing, informational paths you took, but it'd be good to
+understand how it came up with different sizes of different things for future glyphs."*
+
+**Decided:** `scripts.trill` enters `glyphs.json` at × 0.70 → 1.68 × 1.54 ss (§429's table). Option B (match `Ped.`'s 1.40 height, × 0.64)
+and C (stock) rejected — A is literally "the same sizing spec as pedal" and lands in the accent's width band. The factor is registry data.
+
+**Written:** `docs/GLYPH_SIZING.md` — new, not folded into NOTATION_STANDARDS (which is rule → key for THIS piece) nor into the
+GLYPH_EXTENSION_CONTRACT (which is the four code touchpoints): §0 the one rule · §1 the frame (ss, the font, probe vs font, LilyPond's
+2^(n/6) arithmetic — the fact that explains why −2, −6 and −8.5 give 0.79, 0.50 and 0.37) · §2 the families with every member's size,
+where each was decided, and what a new glyph compares to · §3 the spacing standards (0.45 · 0.10 · 10 ss …) · §4 the procedure for a new
+glyph · §5 the append-only register of sizing decisions from #2 D.3 to today. One honest note recorded there: the snap-pizz is at stock
+here although #2 drew it at −3 — a factor to judge on the page, not a fault to fix unasked. Linked from NOTATION_STANDARDS §2 and the contract.

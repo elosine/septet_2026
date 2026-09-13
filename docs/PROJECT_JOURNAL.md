@@ -85,6 +85,8 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word.
 
+**SESSION 10 IN PROGRESS — 2026-09-13, Fable: the trills' written look (RUNNING_LOG §427–§430).** Decided so far: the neighbour = the zone's `interval` (1 semitone · 2 whole tone, all upper), written as a parenthesised head (A) · `sfz` on every trill attack · `tr` at × 0.70 = 1.68 × 1.54 ss · `docs/GLYPH_SIZING.md` opened (the sizing standards, carry-forward). CN-75 · CN-76 logged. **Next: three look questions (the trill's notehead · go line + GC at the attack · the curve's form), then the first piano trill at 63.72 s — extractor zone → trill, then the ink — Opus after a clear.**
+
 **STATE — 2026-09-12 late, session 9 ended. THE FIRST FULL DRAFT IS TAGGED: `Scattered_Substance-finalDraft_1.0`** (RUNNING_LOG §426;
 CN-73 · CN-74; D39 · D40). `scores/piece-septet.json` — his Save of 2026-09-12 late — is committed at that tag. Nothing in flight; everything pushed.
 
@@ -134,10 +136,10 @@ drawer's swell switch · `docs/NOTATION_STANDARDS.md` §1 when notation resumes 
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N1c** | **► NEXT — HIS EAR on the chain and the pure-crescendo runs** (§420–§426; the draft is tagged). The AI answers, logs to SWEEP_LIST, journals | **Fable** (composing questions) · **Opus** for any fix | no |
+| **N1c** | HIS EAR on the chain and the pure-crescendo runs** (§420–§426; the draft is tagged). The AI answers, logs to SWEEP_LIST, journals | **Fable** (composing questions) · **Opus** for any fix | no |
 | **N1** | His verdict on CN-67 in the app (headless-proven only) → then his eye and ear over the 15 pages (the picker, video, SPACE) | **Fable** · **Opus** for any fix | no |
 | **N3** | The 15 geometry touches + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
-| **N4** | Next notation session: trills' written look, then the morph curves — planning method, then build | **Fable** to plan, **Opus** to build | **yes** — wrap on Opus, clear, switch |
+| **N4** | **► NOW — the trills' written look** (§427–§430: neighbour A · sfz · tr 0.70 · GLYPH_SIZING.md). Next: the three look questions, then BUILD the first piano trill (63.72 s): extractor zone → trill event + its curve, the ink (head · tr · (neighbour) · sfz · level curve), judged on the page. Then the rest of the trills, then the morph curves | **Fable** for the three questions, **Opus** for the build | **yes** before the build — wrap on Opus, clear, switch |
 | **N5** | Still open: the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE, one decision from him) · PLAN 1q proper | **Opus** | no |
 
 **The standing rule:** Fable for the turns where a wrong reading costs a day; Opus for every turn where the plan is already on paper.

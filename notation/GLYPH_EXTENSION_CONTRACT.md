@@ -43,3 +43,9 @@ a pure `state(t) → SVG primitives` function registered in the V2 animated-
 object layer, reading strata data + the clock interface. Static PRINT
 counterparts of animated devices (e.g. the GC arc) ARE glyphs and follow
 this contract.
+
+## Sizing a new glyph
+
+The SIZE (the factor against Emmentaler's stock, and what to compare it to)
+is decided by `docs/GLYPH_SIZING.md` — the families, the LilyPond
+font-size arithmetic, the procedure, the register. Read it before step 1.
