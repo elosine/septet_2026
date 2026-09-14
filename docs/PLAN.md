@@ -1644,7 +1644,9 @@ player would touch parts, solo, crop and print.
   save (CN-83) and written once per band per part, every close run grouped (D43 · D51: 1 · 2 · 3 · 4 per GC — the piano's across the grand
   staff, 2g.1), the crescendo run 526.8–575.0 s as the surge device with "secco" (CN-84), the D49 audit's findings fixed piece-wide, the
   audio re-rendered, the demo video made. **Six sittings, A–F; one step at a time in the planning method; the builds on Opus after a clear.**
-  1. **Go-to-time + HOME on the notation page** (§456 item 5) — `todo · sitting A · Opus` — a type-a-time control on the video view; HOME → 0.
+  1. **Go-to-time + HOME on the notation page** (§456 item 5) — `built 2026-09-14 (RUNNING_LOG §516), proven in the running page; his try owed` — a type-a-time control on the video view; HOME → 0.
+     The bar's **go** box (seconds or m:ss, ENTER; clamped to the material; the page turns, the playhead lands, playing or paused) and a ⌂
+     button, in the video and zoom views · the HOME key → time 0 in the video view; the zoom view's HOME keeps its day-23 meaning (page start).
   2. **The D49 audit** (NITS 2026-09-14) — `todo · sitting A · Fable verdicts → Opus fixes` — the strikes' displacement after D60 · the trills ·
      the tuba inheritances (`ord` 55, `surge`, `fortepiano`, `cuivre`, `staccato`) · the morph headers · the built groups. The out-of-range
      census is done (§507: 79 flute rams, all section 3 → step 3).

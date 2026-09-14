@@ -14010,3 +14010,24 @@ and then if there is a beating reference within the rest of the ensemble, use on
 **The AI's reading (not put to him):** item 4 is the spectral morph's analogue of BLOOM's beat-rate video — the player hears the start and the
 goal, then the pitch against the one partner that makes the beat audible, rather than the whole texture. Open when reached: how long "some
 seconds" is; which partner is the reference per part (a table from the save's M1 pitches). Written into PLAN 2b and 2h.7; journal §2 N4.
+
+## §516. BUILT: PLAN 2i.1 — go-to-time + HOME on the notation page (2026-09-14, Opus 5)
+
+**His word:** *"yes go ahead with step 1"* — the ask itself is §456 item 5: *"can we have a goto time in the presentation score and home to go to 0?"*
+
+**Built (`notation/app/notation.html` only):**
+- **The go box** on the bar, beside the time readout, shown in the video and zoom views: type seconds (`300`) or m:ss (`7:30.5`), ENTER. The
+  time is clamped to the material; the video view turns to the page that holds it, the zoom view puts it 1 s from the left edge (the rule
+  `goToChoice` already uses); the playhead is seeked there, playing or paused — the same seek a click on the score makes. The field blurs on
+  ENTER so SPACE plays from there. A bad entry flashes the two forms and moves nothing.
+- **HOME → time 0** in the video view (key) and a **⌂** button on the bar (both views).
+- **Kept, not changed:** the zoom view's HOME = re-align to the page start (his day-23 rule, piece #4). Reason: the ask names the presentation
+  score, which is the video view; the zoom view is the working lens, and its HOME already means something he chose.
+
+**Proven in the running page (:5300, MAIN IR, a separate AI tab, never played — no MIDI sent), via `__notationFrame`:**
+video · `300` → t 300.00, page 294.50–306.50 · `7:30.5` → t 450.50, page 448.54–460.54 · `99999` → t 625.00 (clamped), the last page ·
+`abc` → the flash, nothing moved · HOME → t 0.00, page 0–12 · zoom · `300` → t 300, window 299.0–304.8, focus back on the page · zoom HOME →
+294.7 (the page start, unchanged). No page errors. **Not exercised:** a go while playing (it would sound through his rig) — the seek is the one
+the score click already uses while playing. The tab was put back to the zoom view at 210.5 and closed.
+
+**For his try:** reload his notation tab (the page file changed; the ♪ render needs a click again after a reload).
