@@ -336,6 +336,13 @@
           // half-note heads, a standard spacer clear of each head
           if (!inWin(it.t)) continue;
           const gy = Y(it.ySs), gt = it.thickSs * ssPx;
+          if (it.y1Ss != null && it.y1Ss !== it.ySs) {
+            // [PLAN 2h.2] D45: the start and the destination on different lines — the rule slants
+            // from head to head, the same vertical thickness as the level one
+            const xa = X(it.t, it.dx0Ss), xb = X(it.t, it.dx1Ss), gy1 = Y(it.y1Ss);
+            parts.push('<polygon points="' + [[xa, gy - gt / 2], [xb, gy1 - gt / 2], [xb, gy1 + gt / 2], [xa, gy + gt / 2]]
+              .map(p => p[0].toFixed(2) + ',' + p[1].toFixed(2)).join(' ') + '"/>');
+          } else
           parts.push('<rect x="' + X(it.t, it.dx0Ss).toFixed(2) + '" y="' + (gy - gt / 2).toFixed(2) +
             '" width="' + ((it.dx1Ss - it.dx0Ss) * ssPx).toFixed(2) + '" height="' + gt.toFixed(2) + '"/>');
         } else if (it.k === 'niente') {

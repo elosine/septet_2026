@@ -349,3 +349,17 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   the notation page's live MIDI player still does (§441–§442: trills silent, eaten notes sound on the page's ▶ — the render is the fix).
 - **The capture takes ~13 minutes** (the play loop stepped at 60 fps, the DOM transforms included, to stay exactly the live path). If it
   matters: step only the three ticks, not `applyScroll`.
+
+## 2026-09-14 — PLAN 2h.2, the morph tool's septet rules: what it left (RUNNING_LOG §477)
+
+- **`notation/lib/trance_overlays.js:145` still takes `layer < 10` as parts** — the same port bug the morph library had (§464 flag 6;
+  on the septet it swept in the META curve and crashed). The septet has no trance section, so nothing calls it; fix it the morph way
+  (`maxLayer` = `tracks.length`) if a trance fold is ever used here.
+- **The MAIN IR grows ≈ 2 MB per morph at 100 samples/s × 5 decimals** (twelve curves of ~11 700 samples). If the page's load or the R rebuild
+  slows, drop the morph samples to 4 decimals (0.0001 of a half-lane is sub-pixel) — one `toFixed` in `morph_overlays.js`.
+- **PIECE #4 — FOR HIM, NOT FIXED HERE (read-only repo): the tuba's morph headers never carried their pitch.** `morph_overlays.js` computes
+  `spelled` but never writes it into the header overlay, and `layout.js` then draws every header head at its default **F2**. Checked in
+  `for_seven_tubas/notation/ir`: `db1` has 30 headers, `morph-bloom` / `-balance` / `-converge` 10 each, `morph-x01` 1 — **none carries
+  `spelled`.** Right only where the part really starts on F2 (BLOOM's T1, the reference page, which is why it looked right); BLOOM's parts
+  sit on F2 · B♭2 · E♭3 · A♭3 · D♭4. **Unverified by eye** — whether the tuba's presentation score shows it depends on which page it prints
+  from. The septet's D45 heads carry their own written pitch, so this piece is not affected.

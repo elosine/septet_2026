@@ -13101,3 +13101,61 @@ absolute) · 3 D47 (no floor, the arc through the breath peaks, 100/s) · 4 defe
 **The top line to notate the morph section (given at his ask; PLAN 2h):** 1 the standards in — done today · 2 the tool's septet fixes, with
 checks (Opus, after a clear) · 3 M1 folded into the MAIN file, headless proofs, his eye · 4 M2 the same · 5 fixes from his eye; journal,
 D-entries, commit · 6 later: the piano's notes (deferred) · 7 the practice videos with the rates, at the performance stage.
+
+## §477. PLAN 2h.2 BUILT — the morph tool's septet rules, with checks; the tuba's output frozen and proven unchanged; one deviation from the letter of D47, measured (2026-09-14, Opus 5)
+
+**Prompt:** his *"yes go pls"* at `/postclear`, on the checkpoint's next step (build 2h.2 per NOTATION_STANDARDS §3, a check file, then fold M1).
+
+**First, the tuba frozen.** Before any edit, `tools/fixtures/morph_notation_baseline.json`: sha1 of `MorphOv.forGroup` with no options on the
+tuba's piece-s27 BLOOM / BALANCE / CONVERGE and on the septet's M1 / M2, and of `Layout.layoutSection` on the tuba's three morph pages (read
+in place from `for_seven_tubas`). **The septet's rules are OPT-IN** — the library with no options is the tuba's exactly; `notate_section.js
+--morph` and `notate_morph.js` pass the septet's options wherever the ensemble applies (the same switch the ensemble already is, 2a).
+
+**What was built:**
+- `notation/lib/morph_overlays.js` — `forPart(…, opts)` → `forPartSeptet`: parts under META (`maxLayer`) · 100 samples/s on both curves ·
+  the gliss curve the tuba's ladder fit, normalised · **D44** under 20 c → one head, no gliss curve, an ALERT line · **D45** the travel read every
+  10 ms; the destination = the extreme farthest from the start; `nearestGrid` (the tie at 25 c toward the start) and `spellQ` (quarter-tone
+  signs, never ¾, a natural beats a sign, equal signs → the letter of travel: rising takes the upper letter's flat, falling the lower's sharp),
+  in WRITTEN pitch (the ensemble's transposition) · the cents text from `centsMin` (7) · **D46 + D47** the crescendo: the level × the D32 fade
+  weight (`Morph.fadeWeight`), one anchor per breath at its loudest point (a plateau at its middle), the ends anchored where the sound starts
+  and stops, no floor, no normalisation. The tuba's sampling and fit moved to module level unchanged (hash-proven).
+- `notation/lib/layout.js` — a D45 header branch (only when `figure: 'D45'`): the start head left, the destination right, each on its own
+  written line, its own sign, ledgers where needed, the gliss line head to head, the cents centred over the destination head (never inside
+  the staff), one head for D44; the dynamic figure unchanged. `render.js` — the gliss line slants when its two ends differ (`y1Ss`).
+- `tools/notate_section.js` — the fold passes the septet options and prints every ALERT; `--centsMin N`. `tools/notate_morph.js` — parts under
+  META, and the septet's page built through the shared library (it had its own copy of the tuba code).
+
+**Found on the way:**
+- **The META bug was a crash, not just a stray part:** the tuba's `layer < 10` takes M1's and M2's META curve (layer 7) and dies on it (no
+  `morphBend`). Now a check. *(The same `layer < 10` sits in `notation/lib/trance_overlays.js` — the tuba's trance section, not used here → NITS.)*
+- **The header's pitch was never the part's — in piece #4 too:** the library computes `spelled` but never writes it into the header overlay,
+  so layout draws every header head at its default F2. Checked in `for_seven_tubas/notation/ir`: `db1`'s 30 headers and the three morph
+  pages' 10 each carry no `spelled` — right only for a part that starts on F2 (BLOOM's T1, the reference page); BLOOM's parts sit on F2 ·
+  B♭2 · E♭3 · A♭3 · D♭4. **Put to him, not fixed (a read-only repo; unverified by eye there)** → NITS. D45's heads carry their own written
+  spelling, so the septet is not affected.
+- **D47's "Catmull-Rom through the peaks", taken literally, sags:** measured on the two morphs — undershoot up to **8.4 %** of the half-lane
+  (M1's viola: two breaths at 0.23, 16 s apart, the curve dips to ≈ 0.15 between them) and overshoot up to **2.7 %** above a peak (M2's
+  second violin). Both contradict what D47 was chosen for (*"never sags, and its height is the level actually reached"*, §475). **Done:** the
+  Catmull-Rom tangents LIMITED (Fritsch–Carlson — zero at a local peak or trough, scaled where they would overshoot): the same cubic through
+  the same anchors; undershoot and overshoot **0.0000** on all twelve curves, through each anchor within 0.0003. *Rejected:* plain
+  Catmull-Rom (the sag); a different curve family (not needed). **The AI's call inside his decision, not a new decision — flagged here for
+  his eye on M1's page.**
+
+**The numbers (the septet options on the saved score):**
+
+| | the figure (written) | travel | cresc: start · top | anchors |
+|---|---|---|---|---|
+| M1 Fl · BCl · Vn1 · Vn2 · Va · Vc | A5→A +25 · D5→D −25 · D5→D +25 · A5→A −25 · D5→D −25 · C4→C +25 | 24.7–25.0 c | 0 · 0.92 (the breath peak itself) | 17–18 |
+| M2 Fl · BCl | C4 · E3 — **D44 ALERT** ×2 | 4.0 · 14.0 c | 0.15 · 0.85 | 18 · 16 |
+| M2 Vn1 · Va · Vn2 · Vc | A3→B♭ · A3→B♭ · C4→D −14 · D2→E¼♭ (−2 unwritten) | 100 · 99.5 · 185.6 · 148.2 c | 0.15 · 0.85–0.88 | 16–17 |
+
+Every figure is §474's list exactly (Vn2's −14 needs the 10 ms read: the extreme is 6185.58 c; a 2400-sample read gives 6185.3 → −15). Samples
+11173–12183 per curve (100/s). The gliss fit error, worst: M2's Vn2 19.4 c (under the 25 c limit). File size: about 2 MB added to the MAIN IR per
+morph at 5 decimals — to watch.
+
+**Checks:** `tools/test_morph_notation.js` — **162 pass** (the tuba hashes · META · 100/s · absolute + fade · no floor · through the peaks and
+never past them · D44 + alerts · the speller, the tie, the threshold, `--centsMin 0` · written pitch · the header on the page: heads, lines,
+ledgers, signs, the slanted gliss line, the cents, D44's one head, niente · arrow · fff). **Proven red:** the tie turned toward the destination
+and the tangent limit removed → 23 fail; restored → 162. **The batteries:** test_septet_notation 86 · test_trills 92 · test_identity · check_cresc_panel ·
+morph_septet_check — all green; the tuba's test_layout · test_render · test_animobj · ir_validate_battery GREEN on the staging (26 files copied, the
+septet's own `index.json` skipped, the 26 removed after).

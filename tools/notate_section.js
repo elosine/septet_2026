@@ -1235,9 +1235,20 @@ if (flag('bricks')) {
   const MorphOv = require(path.join(ROOT, 'notation', 'lib', 'morph_overlays.js'));
   const groups = [];
   process.argv.forEach((a, i) => { if (a === '--morph' && process.argv[i + 1]) groups.push(process.argv[i + 1]); });
+  // [PLAN 2h.2] THE SEPTET'S MORPH RULES (NOTATION_STANDARDS §3) wherever the ensemble applies:
+  // parts under the META layer, 100 samples/s, the crescendo absolute through the breath peaks,
+  // D44's crescendo-only voices (ALERTED), D45's pitch figure in written pitch. The tuba's
+  // fixtures (no ensemble) keep the tuba's rules. --centsMin N: D45's threshold (default 7).
+  const CENTS_MIN = arg('centsMin', null);
+  const morphOpts = ENS_APPLIES ? {
+    maxLayer: metaLayer,
+    centsMin: CENTS_MIN != null ? +CENTS_MIN : MorphOv.SEPTET.centsMin,
+    transposeOf: p => ((ENS.parts || []).find(x => x.part === p) || {}).transpose || 0,
+  } : undefined;
   for (const gid of groups) {
-    const built = MorphOv.forGroup(score.objects || [], gid, parts, gid.replace('grp-act-', '').replace('-01-01', ''));
+    const built = MorphOv.forGroup(score.objects || [], gid, parts, gid.replace('grp-act-', '').replace('-01-01', ''), morphOpts);
     if (!built.length) { console.log('  --morph ' + gid + ': no tones in this score/parts — nothing folded'); continue; }
+    for (const b of built) for (const a of b.alerts || []) console.warn('  ALERT --morph ' + gid + ' ' + a);
     let dev = 0, other = 0;
     for (const b of built) for (const ov of b.overlays) {
       if (ov.kind === 'engraving') {

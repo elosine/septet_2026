@@ -282,7 +282,9 @@
           acc: (ov.value && ov.value.acc !== undefined) ? ov.value.acc : 'quarterSharp',
           accOn: (ov.value && ov.value.accOn) || 'high',
           oneHead: !!(ov.value && ov.value.oneHead),
-          spelled: (ov.value && ov.value.spelled) || { step: 'F', alter: 0, octave: 2 } }); continue;
+          spelled: (ov.value && ov.value.spelled) || { step: 'F', alter: 0, octave: 2 },
+          // [PLAN 2h.2] D45's figure: the heads in TIME order, each its own WRITTEN pitch and sign
+          figure: ov.value && ov.value.figure, heads: ov.value && ov.value.heads }); continue;
       }
       if (ov.kind === 'dynamic' && tgt.event) {
         const e = evById.get(tgt.event);
@@ -573,6 +575,47 @@
         const hs = 1;
         const hw = HEAD.wSs * hs;
         const glissLen = OPEN.wSs * 2;                       // "two regular half note white notes"
+        // [PLAN 2h.2] THE SEPTET'S PITCH FIGURE — D45 (NOTATION_STANDARDS §3, RUNNING_LOG §474): the
+        // START head left, the DESTINATION head right, each on its own written pitch with its own
+        // quarter-tone sign, ledger lines where the pitch needs them, the gliss line from head to
+        // head, the signed cents number centred over the destination head. Right to left from the
+        // go line with the tuba's spacers; the dynamic figure below is unchanged (D46).
+        if (h.figure === 'D45' && Array.isArray(h.heads) && h.heads.length) {
+          const accGap = o.accGap || 0.25;
+          const LL = (glyphs.standards || {}).ledgerLine, ledgerFrac = (LL && LL.lengthFraction) || 0.25;
+          const accOf = k => (k ? glyphs.accidental[k] : null);
+          const drawHead = (hd, cx) => {
+            const y = posOf(hd.spelled);
+            items.push({ k: 'glyph', g: 'notehead-open', t: h.t, dxSs: cx, ySs: y, align: 'center', scale: hs });
+            for (const Lg of ledgersFor(y)) items.push({ k: 'ledger', t: h.t, dxSs: cx, ySs: Lg, wSs: hw });
+            const ag = accOf(hd.acc);
+            if (ag) items.push({ k: 'glyph', g: 'accidental-' + hd.acc, t: h.t, dxSs: cx - hw / 2 - accGap - ag.wSs / 2, ySs: y,
+              align: ag.anchors && ag.anchors.noteY ? 'noteY' : 'center' });
+            return y;
+          };
+          // the ink left of a head: its sign, or its ledger line's overhang
+          const leftInk = hd => { const ag = accOf(hd.acc); const y = posOf(hd.spelled);
+            return Math.max(ag ? accGap + ag.wSs : 0, ledgersFor(y).length ? hw * ledgerFrac : 0); };
+          const rightInk = hd => (ledgersFor(posOf(hd.spelled)).length ? hw * ledgerFrac : 0);
+          const hdS = h.heads[0], hdD = h.heads[1];
+          let x = -A.gapSs;                                   // the figure ends a standard spacer before the go line
+          if (hdD && !h.oneHead) {
+            const cD = x - rightInk(hdD) - hw / 2;
+            const yD = drawHead(hdD, cD);
+            if (hdD.cents) items.push({ k: 'text', t: h.t, dxSs: cD, anchor: 'middle', text: String(hdD.cents), size: TS.instruction,
+              ySs: Math.max(yD + 0.5, 2) + (o.centsGapSs != null ? o.centsGapSs : 0.6) });   // over the head, never inside the staff
+            const glR = cD - hw / 2 - leftInk(hdD) - A.gapSs, glL = glR - glissLen;
+            const cS = glL - A.gapSs - rightInk(hdS) - hw / 2;
+            const yS = drawHead(hdS, cS);
+            items.push({ k: 'glissline', t: h.t, dx0Ss: glL, dx1Ss: glR, ySs: yS, y1Ss: yD, thickSs: A.thickSs });
+          } else {
+            drawHead(hdS, x - rightInk(hdS) - hw / 2);          // D44: one pitch, no gliss line
+          }
+          items.push({ k: 'niente', t: h.t, dxSs: cirC, ySs: y, diaSs: HD.circleDiaSs, thickSs: A.thickSs });
+          items.push({ k: 'dynarrow', t: h.t, dx0Ss: arrL, dx1Ss: arrR, ySs: y, headSs: A.headSs, thickSs: A.thickSs });
+          items.push({ k: 'glyph', g: 'dyn-' + h.endMark, t: h.t, dxSs: markC, ySs: y, align: 'center' });
+          continue;
+        }
         // the header's accidental follows the gliss DIRECTION — quarterSharp
         // rising, quarterFlat falling; null when the gliss is a single pitch
         const accKey = h.acc;

@@ -49,7 +49,21 @@ if (!GROUP || !ID) {
 }
 
 const sc = JSON.parse(fs.readFileSync(path.join(ROOT, 'scores', SCORE + '.json'), 'utf8'));
-const ALL = sc.objects.filter(o => o.groupId === GROUP && o.type === 'waveCurve' && o.layer < 10);
+// [PLAN 2h.2] parts are the layers under META (the septet's is 7, tracks.length; the tuba's 10), and
+// where the septet's ensemble applies the page takes the septet's rules from the shared library
+// (NOTATION_STANDARDS §3) — the same rule notate_section.js --morph folds, so the two cannot drift
+const TRACKS = Array.isArray(sc.tracks) ? sc.tracks : null;
+const ENS_PATH = path.join(ROOT, 'notation', 'registry', 'ensemble.json');
+const ENS = TRACKS && fs.existsSync(ENS_PATH) ? JSON.parse(fs.readFileSync(ENS_PATH, 'utf8')) : null;
+const ENS_APPLIES = !!(ENS && TRACKS.length === (ENS.parts || []).length);
+const META_LAYER = TRACKS ? TRACKS.length : 10;
+const MorphOv = require(path.join(ROOT, 'notation', 'lib', 'morph_overlays.js'));
+const SEPTET_OPTS = ENS_APPLIES ? {
+  maxLayer: META_LAYER,
+  centsMin: arg('centsMin') != null ? +arg('centsMin') : MorphOv.SEPTET.centsMin,
+  transposeOf: p => ((ENS.parts || []).find(x => x.part === p) || {}).transpose || 0,
+} : null;
+const ALL = sc.objects.filter(o => o.groupId === GROUP && o.type === 'waveCurve' && o.layer < META_LAYER);
 if (!ALL.length) { console.error('no tones for group ' + GROUP); process.exit(2); }
 const PARTS = PARTS_ARG === 'all'
   ? [...new Set(ALL.map(o => o.layer))].sort((a, b) => a - b)
@@ -71,7 +85,27 @@ function crom(P, x) {
 const LADDER = [9, 13, 17, 21, 25];
 const NS = 400;
 
+function buildPartSeptet(PART) {
+  const b = MorphOv.forPart(ALL, GROUP, PART, ID, SEPTET_OPTS);
+  if (!b) return null;
+  const spelled = { step: STEPS[((b.baseMidi % 12) + 12) % 12][0], alter: STEPS[((b.baseMidi % 12) + 12) % 12][1], octave: Math.floor(b.baseMidi / 12) - 1 };
+  const events = [], chunks = [];
+  b.tones.forEach((o, i) => {
+    const id = 'ev-' + o.id;
+    events.push({ id, source: { score: SCORE, objectId: o.id },
+      onset: o.startSeconds, duration: o.endSeconds - o.startSeconds,
+      pitch: { midi: o.sonifyNote, spelled }, technique: 'ord', provenance: 'derived' });
+    chunks.push({ id: 'ch-' + ID + '-p' + PART + '-' + (i + 1), part: PART,
+      span: [o.startSeconds, o.endSeconds], class: 'morph-tone',
+      strategy: 'unresolved', events: [id], provenance: 'derived' });
+  });
+  const fig = b.heads.map(h => h.spelled.step + (h.acc ? '(' + h.acc + ')' : '') + h.spelled.octave + (h.cents ? ' ' + h.cents : '')).join(' → ');
+  return { PART, tones: b.tones, T_ENTRY: b.T0, T_END: b.T1, G: b.G, L: { max: Math.max(...b.L.samples) }, baseMidi: b.baseMidi,
+    extent: b.extent, qSteps: b.qSteps, figure: fig, alerts: b.alerts, events, chunks, overlays: b.overlays };
+}
+
 function buildPart(PART) {
+  if (SEPTET_OPTS) return buildPartSeptet(PART);
   const tones = ALL.filter(o => o.layer === PART).sort((a, b) => a.startSeconds - b.startSeconds);
   if (!tones.length) return null;
   const T_ENTRY = tones[0].startSeconds, T_END = tones[tones.length - 1].endSeconds;
@@ -176,8 +210,9 @@ console.log('');
 console.log(' part  base   displacement   written        gliss fit   cresc fit   breaths');
 let refused = null;
 built.forEach(b => {
-  const written = b.qSteps === 0 ? 'ONE pitch'
+  const written = b.figure ? b.figure : b.qSteps === 0 ? 'ONE pitch'
     : (b.qSteps + ' qt ' + (b.accName === 'quarterSharp' ? 'UP' : 'DOWN'));
+  for (const a of b.alerts || []) console.warn('  ALERT ' + a);
   console.log('  T' + String(b.PART + 1).padEnd(3),
     nameOf(b.baseMidi).padEnd(5),
     (b.extent.toFixed(1) + ' c').padStart(11),
