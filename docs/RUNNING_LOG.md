@@ -13033,3 +13033,46 @@ M2 — Vn2 C4 → D −14 · Vc (the traveller) D2 → E¼♭ (−2 dropped) · 
 **Recorded:** journal D45 addendum · NOTATION_STANDARDS §3 (the D45 row rewritten, the pending row gone) · PLAN 2h.2 (no new glyphs: the
 quarter-tone signs exist; a `cents` text item; `--centsMin 7`; the header laid out start-left in `layout.js`) · CN-81 (his words) · the
 cross-project memory: **piece #4's rehearsal and performance scores take the settled D45 — the cents and the time order — when made.**
+
+## §475. DECIDED 3 of 5 — D47: NO floor on the morph crescendo (the tuba way); the arc drawn THROUGH THE BREATH PEAKS; 100 samples/s — measured first against the tuba's morph and the trills (2026-09-14, Fable 5.1)
+
+**His word:** *"Can we compare this to the tuba piece? the tube of peace looks fine even though it goes to zero in the curve. But the trill
+curves did not. So that's why I adjusted them for there. It might have just been the sampling rate that was the issue, and I didn't need
+to raise the floor. In other words, are there differences between this... these morphs and the tubomorphs in the way the graphics will
+be drawn. And then how will... if not, I think drawing the same way as a tuba is good, but how would it look different if I drew it with
+the same way as the the trills?"* → *"a, record it and move to decision 4"*
+
+**Answered from the record (§450–§451):** the trills had TWO faults — the sample count (101 over 17 s → 28 px corners; cured by 100/s, not
+a floor matter) and the shape (3 s trills starting at 0.015, three dipping to 0.000x mid-phrase, the D42 outline collapsing on itself under
+~3 px — what the floor cured). **The morphs share the tuba's drawing code and page scale** (the tuba's main draft 11.41 s/page, the septet
+12 s at 160 px/s); three differences: the D42 outline (the tuba's morph was fill-only — a thin stretch there was a faint smear, here a
+doubled 2 px line), the absolute height (D46) instead of filled-to-the-top, and M1's 17 s CC7 fade from silence.
+
+**Measured (the tuba's 9–25-anchor fit on the septet's ABSOLUTE level — `Core.evalWaveCurve` is 0–1 — with the fade weight in; NS 1200):**
+
+| | under 10 % at the start | under 10 % at the end | peak | the plain fit's mid-curve min |
+|---|---|---|---|---|
+| M1 (the fade) | Fl 17.9 s · BCl 7.3 · Vn1 14.6 · Vn2 12.9 · Va 12.4 · Vc 5.4 | 3.7–10.2 s | 91–94 % | −2 … 5 % |
+| M2 | 0 s (starts at 0.4 of 10) | 3.3–20.1 s | 83–86 % | 0 … 15 % |
+| the tuba's morph cresc (§450) | 4.3 s | 1.9 s | 100 % (normalised) | — |
+
+**Found on the way:** every breath in both morphs swells from near zero — **9–16 dips under 10 % per part in the RAW level** (the dyn
+shape `swell`; the tuba's morphs did the same). The tuba's fit smooths them away on purpose (MORPH_NOTATION: *"the per-breath resets being
+smoothed away — that is the purpose"*), but its anchors land at fixed fractions of the span, so on M1's deeper dips the arc sags to 0–5 %
+mid-way — the trills' hair-thin fault reappearing mid-morph. **The cure that also serves D46 ("the curve's height is the sound's level"): the
+arc through each BREATH'S PEAK** — one anchor per breath at its loudest point, Catmull-Rom through them — reads as the tuba's single arc,
+never sags, and its height is the level actually reached.
+
+**How each way would look (put to him):** the tuba way — M1 opens as a doubled 2 px line at the baseline for a page or so, then rises: the
+fade drawn true; the ends taper the same. The trills' way — a band ≈ 10 % of the half-lane (≈ 7 px at the video frame) always present under
+every morph curve; the fade never touches the baseline; the top squeezed by 10 %.
+
+**D47 (his "a"):** **no floor on the morph crescendo** (`curveFloor` stays the trills' device option; the morph device carries none) · **the
+crescendo arc through the breath peaks** (an anchor per breath at its peak, the level × the D32 fade weight, absolute per D46; the gliss
+curve stays the tuba's fit of the pitch, normalised) · **100 samples per second** (2f.7's density rule; the fit sampled at 100/s, ≥ 101).
+**His eye on M1's first page decides; the floor stays a flag.** *Rejected:* the trills' floor on the morphs (a band where there is nothing;
+the fade from silence contradicted); the plain positional fit (sags to 0 % between breaths); the raw per-breath level (15 humps per part —
+the tuba's principle: one arc per part).
+
+**Recorded:** journal D47 · NOTATION_STANDARDS §3 (the held row shrinks to 4 · 5; a D47 row) · PLAN 2h.2 (the build: `fit('level')` →
+the breath-peak envelope, absolute, ×fade, 100/s; no floor) · §2.

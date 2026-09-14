@@ -108,8 +108,8 @@ notation at his word (CN-78: max four per GC, 1 · 2 · 4; same staff as normal;
 down into the bass — PLAN 2g.1). **The header's PITCH FIGURE decided and settled 2026-09-14 — D45 (§474): quarter-tone signs only, the destination spelled to the nearest quarter tone,
 a signed cents number from 7 c, no arrow, ties toward the start, the heads in time order; all pieces from here, piece #4's rehearsal / performance
 scores take it when made.** **Held decisions, his to make at the build (§464; surface them one at a time when asked):** ~~(2) the header's
-two marks~~ **decided — D46: fixed niente → fff, the crescendo curve absolute on that scale (§473)**  · (3) the drawn floor at 1
-for the morph crescendo (now on an absolute curve; the gliss is pitch, no floor) · (4) the piano's 44 plucked notes in the section — the section-1 strike device with a plucked mark, or another device ·
+two marks~~ **decided — D46: fixed niente → fff, the crescendo curve absolute on that scale (§473)**  · ~~(3) the floor~~ **decided — D47: no floor on the
+morph, the arc through the breath peaks, 100/s (§475)** · (4) the piano's 44 plucked notes in the section — the section-1 strike device with a plucked mark, or another device ·
 (5) the beating indication — parts only (recommended, as the tuba), or on the score.
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
@@ -647,6 +647,14 @@ sources; verified here only when they bite.)*
   notice. *Why:* one legend for every morph, the curve then tells the truth about the amount. *Rejected:* the marks from the data through
   the ladder (put to him as the recommendation); the tuba's per-curve normalisation of the crescendo (kept for the gliss, whose amount the
   pitch figure states). The level scale is D23's, the D32 fade weight multiplied in (AI's reading, marked). Spec: NOTATION_STANDARDS §3.
+- **D47** *(2026-09-14, composer, RUNNING_LOG §475)* — **NO FLOOR ON THE MORPH CRESCENDO; THE ARC THROUGH THE BREATH PEAKS; 100 SAMPLES/S.**
+  The morph is drawn the tuba's way — the fade from silence from the baseline — not the trills' (their floor at 1 stays theirs): *"the tuba
+  piece looks fine even though it goes to zero in the curve … drawing the same way as the tuba is good"* → *"a"*. *Why:* the trills' floor
+  cured 3 s curves starting at 0.015 and mid-phrase dips to zero, faults the morph's smoothed arc does not have; M1's 5–18 s under 10 % at
+  the start IS the fade. The arc's anchors at the breath peaks (not the tuba's fixed fractions of the span) because the tuba's fit sagged to
+  0–5 % between M1's breaths, and D46 wants the height to be the level reached. *Rejected:* the trills' floor on the morphs (a 7 px band
+  where there is nothing); the raw per-breath level (9–16 humps per part; the tuba's principle is one arc per part). His eye on M1's first
+  page decides; the floor stays a flag. Spec: NOTATION_STANDARDS §3; build: PLAN 2h.2.
 
 ## §5 Playbooks
 
