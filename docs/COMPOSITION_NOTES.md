@@ -1776,3 +1776,13 @@ here: RUNNING_LOG §469–§471.
 the destination spelled to the nearest quarter tone, and the exact residual as a signed cents number once it is 7 c or more — the
 just-noticeable difference of beating, ballparked, chosen over the player's pitch acuity because the players will rehearse the beating
 itself. Purpose-oriented: the threshold is a flag, and a future piece may want the 2-cent case written. The header reads forward in time.
+
+## CN-82 — 2026-09-14: the piano's notes in the morphs — where to look when the device is chosen (2h.5): piece #2's plucked notes, the pedal, the rosette, the duration line
+
+> *"note for the piano part notes for later, see 2pno2perc around 0:50 for plucked notes, ped, rosetta and duration line, maybe dur line
+> from tuba"* (composer, 2026-09-14, after M2 was folded; RUNNING_LOG §480)
+
+*(AI reading, marked as such:)* a pointer, not a decision — the reference for PLAN 2h.5 when it is reached. "2pno2perc" = piece #2,
+`composition_for_two_pianos_and_two_percussion`, around 0:50 of its score: how it wrote plucked (inside-the-piano) notes, the pedal marking,
+the "rosetta" — read as the pedal-release rosette (Ped. … ✱), to confirm with him — and a duration line for the ring. "Maybe dur line from
+tuba": piece #4's duration line as the alternative source for that one element. Nothing looked up yet.

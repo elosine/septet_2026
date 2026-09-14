@@ -13216,3 +13216,10 @@ again in the app after a reload: the three figures clear.
 
 **Stopped for his eye on M2's pages (page 27, 306.5 s →):** the two crescendo-only voices (D44 — his case-by-case look) · the four travellers'
 figures and slanted lines · the dropped dynamic rows.
+
+## §480. A pointer for the piano's notes in the morphs (PLAN 2h.5), recorded for later (2026-09-14, Opus 5)
+
+**His word:** *"note for the piano part notes for later, see 2pno2perc around 0:50 for plucked notes, ped, rosetta and duration line, maybe
+dur line from tuba"* → CN-82 (verbatim), PLAN 2h.5 (the reference named). **Not acted on** — "for later"; nothing read in piece #2 or #4 yet.
+The AI's reading of "rosetta": the pedal-release rosette (✱) — to confirm with him at 2h.5. The earlier recommendation (§476: the section-1
+strike device with "pizz." / "ord." marks) stands beside it as one option, now with his reference to weigh.

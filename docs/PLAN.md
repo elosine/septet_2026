@@ -1625,6 +1625,8 @@ player would touch parts, solo, crop and print.
      (14 c, the holder since the swap) crescendo-only with the alert (D44) — measured at the 2h.2 build (§477).
   5. **The piano's 44 notes** — `deferred at his word 2026-09-14 (§476): after the morphs are done` — the device chosen then (the section-1 strike
      device with "pizz." / "ord." marks recommended; 34 onsets, 32 plucked + 12 ordinary, one pair 0.19 s apart under D43).
+     **HIS REFERENCE (CN-82, §480): piece #2's score around 0:50 — its plucked notes, the pedal mark, the rosette (✱, to confirm) and the
+     duration line; maybe the duration line from piece #4.** Read those first when this step opens.
   6. **Journal, standards, D-entry; commit** — `todo`.
   7. **The practice videos with the beat rates (D48)** — `later, the performance stage` — a set for this piece like the tuba's: the players see
      the beating speed and hear it in isolation; BLOOM first, SPECTRAL his to think about (M1 at full spread: C4 ≈ 7 Hz · D5 ≈ 16 · A5 ≈ 22).
