@@ -1709,3 +1709,41 @@ make them overdo it. For section 1's trills the two coincide (the A / C windows 
 copies the composer score's curve. For section 3's swells the notation must draw the standard shape instead — a rule for the extractor or
 the layout (which curve the page samples), to be decided when section 3 is notated. The tuba piece had this conversation first (to find
 when it is needed: the tuba's RUNNING_LOG / NOTATION_STANDARDS on perceived vs plotted swells).
+
+---
+
+## CN-78 — 2026-09-14: the beamed group closed — max FOUR per GC (1 · 2 · 4); same staff = as normal; across the grand staff = try the beam above the treble, stems down into the bass; built when section 3 is notated
+
+> *"I want to shore up some of the loose ends for the multinotes per GC strategy, but then I wanna move on to the morph section. So a few
+> things from the previous session end, I think it'll be max four notes per GC. So one, two, and four notes per GC. I want to beam them if
+> they all fit in one staff, I want to beam them as normal. whatever we were doing before for beams above or stems up or stems down still
+> abides. But if there are cross staff notes in a beam of two or four, then we're gonna try beams at top above the treble, and then stems
+> are reached down into the base clef. But I want to actually figure this out and implement it when we notate section three. Not now. I
+> just saw some replies from AI before the session end, and I just wanted to shore those up."* (composer, 2026-09-14, at the session start;
+> speech-to-text — "base clef" = the bass clef)
+
+*(AI reading, marked as such:)* §463's three items become one rule and one deferral. The rule: a GC carries 1, 2 or 4 notes, never eight
+(§463 item 3 closed); a group on one staff keeps every rule already in force (D43: beam-side accents, one stem direction, left edges on go
+times); a group on both staves of the grand staff is the one open design — his first try is the beam above the treble staff with the
+lower notes' stems reaching down into the bass. The deferral: it is designed and built when section 3 is notated, since every such group
+is in the piano's closing run. NOTATION_STANDARDS §2 · PLAN 2g · D43 addendum.
+
+---
+
+## CN-79 — 2026-09-14: the morph's near-static voice is crescendo-only under 20 c, the tool alerts, each case looked at; the bass clarinet and the cello trade seats in M2
+
+> *"ok b for the rule but alert in the future and I want to look at these case by case; then hold on to the other decisions and be able to
+> surface them later; then tell me what it would look like to swap the base clarinet and the cello in this section. So swap it in the
+> composer score and the IR, and then we'll notate that swap. Just discuss what this involves."* (composer, 2026-09-14; typed)
+
+> *"do you know why the morph generator only gave such a small gliss to those players?"* … *"i would like to do c; I think I saved it; look
+> at these files and compare it to what I have now and see if they're the same. And then let's reassess what it would take to do the swap
+> with the new set of breaths and bowing. save file in composer: spectralMorph"* … *"saved, go"* (composer, 2026-09-14; typed)
+
+*(AI reading, marked as such:)* two things. **The notation rule (D44):** a morph voice whose whole travel is under 20 c is written with one
+pitch and the green crescendo only — no orange curve, no quarter-tone head; the build tool says so every time it applies, and he looks at
+each case (M2's flute at 4 c and cello at 14 c are the first two). **The swap:** M2's pair on D2 re-cast — the bass clarinet takes the
+cello's seat, so the bass clarinet HOLDS (14 c) with breaths and the cello TRAVELS (D2 → E2 −49 c) with bows; done by re-rendering the
+pair from its take (option c: "the new set of breaths and bowing"), the other four lines kept exactly as he has them. Built 2026-09-14
+(RUNNING_LOG §465–§467, ACT-SPECTRAL-05); his ear pending; the notation of the swapped M2 follows in PLAN 2h.
+

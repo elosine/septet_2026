@@ -1595,13 +1595,33 @@ player would touch parts, solo, crop and print.
   - **2f.7 His eye on the main file — the trill notation settled** — `in progress 2026-09-13 (RUNNING_LOG §444–§445)` — **(b) the curve shape — BUILT 2026-09-13 (RUNNING_LOG §450–§451): 100 samples per second (`--trillRate 100` in the MAIN build) and the drawn floor at 1 (`byEnv.trill.curveFloor 0.1`); his eye on the page next, and whether the morph crescendo gets the floor too;** (a) the column RIGHT of the go line — **DONE 2026-09-13 for all 69** (RUNNING_LOG §452: the registry rule `byEnv.trill.nhAnchor afterGo`; measured in TRILL_NOTATION_SPEC §2a; 28 → 3 trills meeting ink or a GC arc, `tools/trill_conflicts.js`); (c) the GC × trill conflicts — recommendations, discussion first; **widened at his word (§454): with the general rule for strikes too fast for their GCs** ("like the tuba density builds but with some differences"; 376 gaps under the GC's 0.6 s). *(Done inside 2f.7 the same day: D42 — the curve look and the meters, §446–§448.)* **Then, his order:** 2f.8 the MIDI export learns trills (the snippets; the eaten notes silent) → 2f.9 export, render in Reaper, the WAV in `notation/audio/` (the tuba's route, §443). **2f.8 + 2f.9 DONE 2026-09-13 (RUNNING_LOG §453, `docs/RENDER.md`):** the export is the composer's own playback, captured (trills 2066/2066, eaten 11 silent); rendered through the bridge as float, +2.0 dBTP → −3 dB → −1.0 dBTP; `notation/audio/piece-septet.wav` linked (♪ render ✓). His ear on the sync next. *Why:* his — *"lets fix the trill notation first then With that is settled. We'll fix the midi fix the export for trills ... and render the audio file."* · **(c) the three GC × trill conflicts: accepted, no change** (RUNNING_LOG §456, D43).
   - **2f.6 The rest** — `done 2026-09-13 (RUNNING_LOG §440) — all 69 in the MAIN notation file notation/ir/piece-septet.ir.json (D41: the whole piece, --all --bricks --trills, first in the picker; R keeps it current); 69/69 full device, 0 warnings; 7 meet strike ink at 146.97–148.65 s, for his eye with N3; test_trills 59` — all 69 through the device; the 0.15 s trills' width judged (§431); NOTATION_STANDARDS §2 completed.
     *Why:* his — *"And then we'll look at it from there."*
-- **2g — The beamed group: strikes too close for their own GCs** — `in progress 2026-09-13 (RUNNING_LOG §455–§463, D43)` — **Result when done:**
+- **2g — The beamed group: strikes too close for their own GCs** — `section 1 done 2026-09-13 (RUNNING_LOG §455–§463, D43); the rest DEFERRED to section 3's notation at his word 2026-09-14 (§464, CN-78)` — **Result when done:**
   every strike gap under 0.4 s in the piece is written as the group D43 describes, each group on one GC, the page still millisecond-true.
   **Done:** the rule (NOTATION_STANDARDS §2) · `--cluster … --gridDiv --restAfter` · the pair at 43.3 · the bass four at 620.3 · section 1
-  complete. **Next, his order (§463):** 2g.1 the piano's beam ABOVE the treble staff, stems down into the bass (a group across both staff
-  systems) → 2g.2 several fours in a row at the end, each with its GC — too crowded? → 2g.3 eight per GC if so → 2g.4 the run from 581 s cut
-  into groups → 2g.5 a `--pairs` flag for the six other parts (46 pairs, 2 triples). *Why:* his — *"the beams allow players to play several
-  notes on one gc."*
+  complete. **Closed 2026-09-14 (CN-78):** max FOUR per GC — 1, 2 or 4, never eight (2g.3 dropped); a group on one staff = as normal.
+  **When section 3 is notated, his order:** 2g.1 a group on BOTH staves of the grand staff — TRY one beam ABOVE the treble staff, the lower
+  notes' stems reaching down into the bass (one group across the two layout systems; §462–§463's defaults) → 2g.2 several fours in a row at
+  the end, each with its GC — his eye on the crowding → 2g.4 the run from 581 s cut into groups → 2g.5 a `--pairs` flag for the six other
+  parts (46 pairs, 2 triples). *Why:* his — *"the beams allow players to play several notes on one gc."*
+
+- **2h — Section 2 notated: the morphs** — `planned 2026-09-14 (RUNNING_LOG §464–§467; NOTATION_STANDARDS §3; D44)` — **Result when done:**
+  M1 and M2 on the MAIN notation file in the tuba's morph vocabulary with this piece's differences, each part's header in its own clef and
+  written pitch, the two curves in the D42 look, the meters riding them; the piano's 44 notes in the section written with a decided device;
+  his eye on both pages. **Build on Opus, after a clear, from the written spec (NOTATION_STANDARDS §3 + §464's flags).**
+  1. **The rules decided** — `1 of 5 decided 2026-09-14 (D44: crescendo-only under 20 c, the tool alerts); 2–5 held at his word (journal §2 Open questions)` — the header's marks · the floor · the piano's device · the beating indication.
+  2. **The tool's septet fixes, with checks** — `todo` — `morph_overlays.js` / `notate_morph.js`: parts = layers under `tracks.length` (not
+     10 — the tuba's META; the panel had the same port bug, §204) · samples at 100/s (2f.7; today 400 per morph) · the `cc7Fade` weight
+     multiplied into the sampled level (D32 — M1's 17 s fade from silence is in CC7, not the level) · the header's marks from the data (or
+     the tuba's fixed ones, per step 1) · the 20 c threshold with the alert (D44) · the clef / written pitch of the header verified for the
+     bass clarinet. Prove: the tuba batteries unchanged; a septet check per fix.
+  3. **M1 folded into the MAIN file** — `todo` — `--morph grp-morph-01` added to the recorded build (D41), rebuilt; headless: six headers,
+     six gliss + six cresc overlays, 94 go lines, the dot off; his eye on the page: the D42 look on both curves, the meters, the header.
+  4. **M2 the same** — `todo` — `--morph grp-morph-03`; the swapped D2 pair (§467) as it now stands; the flute and the cello crescendo-only
+     with the alert (D44).
+  5. **The piano's 44 notes** — `todo` — the device from step 1, built and verified.
+  6. **Journal, standards, D-entry; commit** — `todo`.
+  *Why:* his — *"I believe this one will be notated very similar"* to the tuba; the differences measured before the build so nothing is
+  ported blind (§464). The rules first, then one build from a written spec (AI_METHODOLOGY).
 
 - **2b — Presentation score** *(the title on the cover and in the format entry: **tentative _Scattered Substance_**, CN-64 — confirm with him before either is written)* — print PDF (A3 landscape, format entry + cover + performance
   notes page as in #4) + video (`export_video.js`, Reaper render at fixed BPM, sync proof

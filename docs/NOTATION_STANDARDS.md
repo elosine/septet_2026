@@ -68,6 +68,8 @@ trigger is a gap, not a named span; no tempo mark; every head keeps its dot and 
 |---|---|---|
 | **Trigger, the pair:** two successive strikes in ONE part under **0.4 s** apart → one beamed group, written **16th · 16th rest · 16th · 16th rest** (rhythmically 8ths); the written 16th = half the gap; **the beam runs on over the last rest**; each rest's left edge on its own slot time (D61) | `--cluster t0-t1@part --gridDiv 2 --restAfter 1 --beamOver 1` after the day-35 defaults `--beamsThrough --rests16` (`tools/notate_section.js`) | §456 · §457 |
 | **Trigger, the four:** gaps under **0.25 s** → four beamed 16ths, straight, no rests; the piano's run written **four notes at a time**. First instance built: the bass four at 620.3 (§462). **Open:** a group on BOTH staves of the grand staff — the engine splits it per staff today; a cross-staff beam is the next design (§462) · how the run's 169 notes are cut into fours | `--cluster t0-t1@part --dyn 1 --accents 1,2,3,4` | §456 · §462 |
+| **Max FOUR per GC — groups of 1, 2 or 4, never eight** (his "max four notes per GC. So one, two, and four", CN-78; §463's "eight per GC" closed) | inherent | §464 · CN-78 |
+| **A group on ONE staff:** beamed as normal — every rule above stands (beam-side accents, one stem direction, left edges on go times). **A group on BOTH staves of the grand staff:** TRY one beam ABOVE the treble staff, the lower notes' stems reaching down into the bass. **Designed and built when SECTION 3 is notated, not before** — every such group is in the piano's closing run | (build, PLAN 2g.1 — deferred to section 3) | §463 · §464 · CN-78 |
 | **GC on the FIRST note only**, at its own onset | `figures.cluster.gc: "first"` | §457 |
 | **No go line on any note of the group** — nothing is displaced | `figures.cluster.goLine: false` | §457 |
 | **Every head's LEFT EDGE on its own go time.** Onsets never move; the spatial score stays millisecond-true | `figures.cluster.nhAnchor: "leftEdge"` | §457 |
@@ -80,3 +82,17 @@ trigger is a gap, not a named span; no tempo mark; every head keeps its dot and 
 **Where the counts stand at the 0.4 s trigger (§461):** **section 1 is complete** — its only gap under 0.4 s is this pair. After 183 s: 218 gaps
 under 0.4 s (99 under 0.25) — 46 isolated pairs and two triples across the six non-piano parts, and the piano's ONE run of 169 notes (168 gaps,
 87 under 0.25), the density build proper, whose writing is the next design conversation.
+
+## §3 The morph section — opened 2026-09-14 (RUNNING_LOG §464–§467); the tuba's vocabulary (`for_seven_tubas/docs/MORPH_NOTATION.md`) with this piece's differences
+
+*The starting point is the tuba's settled form: normal staff and clef · a header at each part's entry (the two written pitches, a gliss line,
+niente · arrow · end mark on the dynamic row) · one go line per breath · the gliss curve (brightOrange) in the top half of the lane, the
+crescendo (limeGreen) in the bottom, each normalised to its own extremes · two meters, no dots. Its look is D42's (CURVE_LOOK.md). The
+tool: `tools/notate_morph.js` / `notation/lib/morph_overlays.js` / `notate_section.js --morph <group>`, carried by the port.*
+
+| rule | data | decided |
+|---|---|---|
+| **A voice whose whole travel is under 20 c is written crescendo-only:** one written pitch, no gliss line, no quarter-tone head, no orange curve — the green crescendo alone (the tuba's BALANCE form). **The build tool ALERTS every time it applies; each case is looked at by him.** First cases: M2's flute (4 c) and cello (14 c) | (build: a threshold in `morph_overlays.js`, the alert in the tool's output) | **D44** · §464 · CN-79 |
+| **Held, his to decide at the build (§464):** the header's two marks — from the data through D23's ladder, or the tuba's fixed niente → `fff` · the drawn floor at 1 for the morph crescendo (the gliss is pitch, no floor) · the piano's 44 notes in the morph section — the section-1 strike device with a plucked mark, or another · the beating indication — parts only, or on the score | — | open |
+| **Fixes the septet needs before the first fold (§464 flags 3 · 5 · 6, + 2f.7):** the fade weight (`cc7Fade`, D32) multiplied into the sampled level so the crescendo starts from nothing where the sound does · the header in each part's clef and written pitch (BCl +M9) — verify · parts = layers under `tracks.length`, not 10 · 100 samples/s | (build, PLAN 2h.2) | §464 |
+| **The morphs in the score:** M1 BEATING BLOOM 183.003 → ~305 s · M2 SPECTRAL DRIFT 314.000 → ~435 s, its D2 pair re-cast 2026-09-14 (BCl holds, Vc travels; ACT-SPECTRAL-05, §467). Pairs by pitch, across families (§464) | `scores/piece-septet.json` | §464 · §467 |

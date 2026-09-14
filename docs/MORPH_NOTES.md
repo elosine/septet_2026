@@ -1097,3 +1097,18 @@ sounding. For the all-purpose tool: any pitch picker should show the context (wh
 *AI reading (not the composer's words):* the player ticks were in step 4's picture; his example fixes the RULE — a line is shown when
 its kind is ticked AND its player is ticked — written into the step. For the all-purpose tool: a derived event grid is filtered by
 kind × source, and the filter is a view, never the data.
+
+### 2026-09-14 — re-casting a PLACED morph: a seat swapped, the other lines kept, one pair's breaths re-dealt (session 11, RUNNING_LOG §466–§467)
+
+> *"tell me what it would look like to swap the base clarinet and the cello in this section. So swap it in the composer score and the IR,
+> and then we'll notate that swap."* … *"i would like to do c … let's reassess what it would take to do the swap with the new set of
+> breaths and bowing"* (composer, 2026-09-14)
+
+*AI reading (not the composer's words):* what the tool cannot do today and the script did by hand — **re-cast a morph that is already in
+the score**: swap one seat, re-deal that pair's breaths and bows for the new instruments, leave every other line untouched (the engine
+renders them identically — `perVoice: true`), place the two new lines exactly where the old ones were. Two things the revision needs:
+(1) **a placed morph remembers its dials** — M2's tail matched no saved take and no `duration` value, so the panel could not have re-made
+it; the take must be written at Insert, not only at "Save as ACTUAL"; (2) **a per-pair re-render on the placed group** — the panel's seat
+pull-downs act on the next Generate, not on what is placed. Also seen: the SPECTRAL model's "nearest free partial" makes a shared-pitch
+pair asymmetric (one holds, one travels) — the tool could say which seat holds before the render (§465).
+

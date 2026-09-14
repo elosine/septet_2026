@@ -85,9 +85,11 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-**STATE — 2026-09-13 late, session 10 ended (Fable 5.1 → Opus 5 for the wrap). Nothing in flight; everything committed and pushed.**
-The MAIN notation file `notation/ir/piece-septet.ir.json` carries every rule in force: the strikes (§1), the 69 trills, and the beamed
-group's first two instances. The render `notation/audio/piece-septet.wav` is linked (♪ render).
+**STATE — 2026-09-14, session 11 in progress (Fable 5.1). Chunk 1 committed: the beamed group closed by his dictation (CN-78), the morph
+section assessed (RUNNING_LOG §464), D44, and M2's D2 pair RE-CAST in the saved score — the bass clarinet holds, the cello travels
+(§467, ACT-SPECTRAL-05).** **His ear pending: Reload in the composer, listen to M2 from 314 s; R on the notation page** (the MAIN IR and the
+render still hold the pre-swap M2). The MAIN file `notation/ir/piece-septet.ir.json` otherwise carries every rule in force (strikes §1, the 69
+trills, the beamed group's two instances); `notation/audio/piece-septet.wav` is the pre-swap render (re-render after his ear, RENDER.md).
 
 **Last session (10 — 2026-09-13, Fable 5.1 + Opus 5) — RUNNING_LOG §427–§463.**
 - **Trills notated end to end** (§427–§445): spec, glyphs, IR, device; all 69 in the MAIN file (**D41**); `tr` 0.57; every trill right of
@@ -101,28 +103,30 @@ group's first two instances. The render `notation/audio/piece-septet.wav` is lin
 - **Found** (§462): a group on BOTH staves of the grand staff splits — the layout builds beams, clusters and rests per staff system. The
   piano's run alternates staves almost note by note, so this is the run's main problem.
 
-**NEXT UP — HIS DICTATION AT THE WRAP, verbatim in RUNNING_LOG §463 (his order):**
-1. **The piano's groups with ONE beam ABOVE THE TREBLE STAFF; the stems extend down into the bass staff.** Every piano group, the bass four at
-   620.3 included ("we can try doing them all"). Needs a group across the two layout systems. §463 lists the defaults to try.
-2. **Several fours in a row near the end, each with its GC — is it still too crowded?** The last sixteen notes, in fours from 621.654 s;
-   every one crosses the staves, so item 1 comes first.
-3. **If too crowded: "eighth per GC"** — the AI's reading, EIGHT notes per GC; ask him (§463).
-*Then, not yet ordered:* how the 169-note run is cut into fours (its first 26 s are pair-territory by the thresholds) · a `--pairs` flag for
-the six other parts' 46 pairs + 2 triples (the triple's writing: his word) · the go-to-time + HOME in the presentation score (§456, not built).
+**NEXT UP — the morph section (PLAN 2h), his agenda of 2026-09-14.** The beamed group's cross-staff build is DEFERRED to section 3's
+notation at his word (CN-78: max four per GC, 1 · 2 · 4; same staff as normal; across the grand staff = try the beam above the treble, stems
+down into the bass — PLAN 2g.1). **Held decisions, his to make at the build (§464; surface them one at a time when asked):** (2) the header's
+two marks from the data through D23's ladder, or the tuba's fixed niente → `fff` · (3) the drawn floor at 1 for the morph crescendo (the gliss
+is pitch, no floor) · (4) the piano's 44 plucked notes in the section — the section-1 strike device with a plucked mark, or another device ·
+(5) the beating indication — parts only (recommended, as the tuba), or on the score.
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N1** | **► FIRST: his items 1 + 2 (§463)** — build the beam above the treble staff for the piano's groups (a group across both staff systems), rebuild the bass four that way, add the last sixteen notes as four fours; verify headless + on his page | **Opus** (the spec is his dictation + §463's defaults) | fresh session |
-| **N2** | His eye on the end: four per GC, or eight (§463 item 3) — then the run's grouping from 581 s | **Fable** | no |
-| **N3** | The `--pairs` flag for the six parts · the go-to-time + HOME | **Opus** | at the mode change |
-| **N4** | Still his, from before: his ear on the render's sync (§453) · the curve floor at 1, and on the morph crescendo or trills only (§451) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
+| **N1** | **► NOW: his ear on the swapped M2** (Reload · listen from 314 s · R on the notation page) — then the held decisions 2–5 as he asks for them, one at a time (PLAN 2h.1) | **Fable** (his verdicts, a design conversation) | no |
+| **N2** | PLAN 2h.2–2h.4: the tool's septet fixes with checks, M1 then M2 folded into the MAIN file; headless proofs | **Opus** (a written spec: NOTATION_STANDARDS §3 + §464's flags + PLAN 2h) | **yes — clear before it** |
+| **N3** | His eye on the morph pages (the D42 look, the headers, the meters) → the piano's device (2h.5) → journal, D-entries, commit (2h.6) | **Fable** to look · Opus to fix | no |
+| **N4** | Section 3's notation, when reached: the cross-staff beam (2g.1), the fours at the end (2g.2), the run cut into groups (2g.4), `--pairs` (2g.5); the go-to-time + HOME (§456) | **Opus** | fresh session |
+| **N5** | Still his, from before: the render's sync (§453) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 
-**Resume reads for N1:** `docs/NOTATION_STANDARDS.md` §2 · `docs/RUNNING_LOG.md` §462–§463. Nothing else. *For the build, not a read:*
-`notation/lib/layout.js` builds one system per staff (the specs ≈l.424–432, events per system ≈l.615), beam groups ≈l.1282, cluster
-records ≈l.1323, rests ≈l.2160; `tools/notate_section.js` writes the `--cluster` overlays ≈l.900; the piano's GC lands via `GC.systemOf`.
-The MAIN file's build is its `provenance.build` — add to it and rebuild.
+**Resume reads for N1:** `docs/RUNNING_LOG.md` §467 (the swap — what changed, what he must do). Nothing else. **For N2 (Opus, after the clear):**
+`docs/NOTATION_STANDARDS.md` §3 · `docs/PLAN.md` 2h · `docs/RUNNING_LOG.md` §464 (the flags) · `for_seven_tubas/docs/MORPH_NOTATION.md`.
+*For the build, not a read:* `notation/lib/morph_overlays.js` (125 lines — `forPart`: the sampling, the fit, the header value, the per-event
+device; `forGroup`: `layer < 10`) · `tools/notate_morph.js` (the standalone page; `--score piece-s27` default, `layer < 10`) ·
+`tools/notate_section.js` ≈l.1229 (the `--morph` fold; `curveFollower:false`) · `notation/lib/layout.js` ≈l.240–290 + ≈l.549–600 (the header
+items) · `render.js` ≈l.353–404 (`cresccurve` / `glisscurve` through `curvePathD42`) · the `cc7Fade` field on M1's notes (§463's D32). The MAIN
+file's build is its `provenance.build` — add `--morph grp-morph-01 --morph grp-morph-03` to it and rebuild.
 
 **Standing warnings:** ⚠ **CTRL+SHIFT+R detaches the ♪ render** — click it again (his choice A, §460: leave it); a rebuild alone does not,
 the page picks up the new IR by itself · ⚠ **do not press R on the strikes page** (§403; the MAIN file is safe) · **one open composer tab per
@@ -132,8 +136,9 @@ score** (2d.5.8) · the piano never swells (CN-34).
 `bank/passages/4materials · accentedcres01 · accentedcres01-2 · chordcyc01 · chstr02 · section3` · `scores/Sec3.json` ·
 `scores/SeptetSec03-Materials-B/-C/-D.json` · `scores/SeptetSec03-Materialsa.json` · `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` ·
 `scores/piece-septet-v1.32-finalDraft1.0.json` · `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
-**Unsaved working copies** (`node tools/unsaved_check.js`, 8, D17 — his to Save or Reload): **piece-septet** (differs only in the 69 trills'
-`midiSnippet` + the view, §463) · cres-run01 · cres2strike · piano-harmonics-test · Sec3-Materials (never saved) · trill-curve-test ·
+**Unsaved working copies** (`node tools/unsaved_check.js`, D17 — his to Save or Reload): **piece-septet** — he Saved 2026-09-14 08:31 (only the
+trills' snippets + the view had changed, §467); the file was then edited by `swap_m2.js`, so **Reload is pending** (the working copy holds the
+pre-swap M2) · cres-run01 · cres2strike · piano-harmonics-test · Sec3-Materials (never saved) · trill-curve-test ·
 trillBuildTst · zz-ai-1t-walk. **Running:** nothing of the AI's (his :5300 and Reaper).
 
 **Tests:** `node tools/test_septet_notation.js` (86) · `tools/test_trills.js` (92) · `tools/test_identity.js` (20) · `score/tools/check_cresc_panel.js`
@@ -146,8 +151,9 @@ one rule in one path (→ 1q-PRINCIPLE) — §324–351. **6** (2026-09-09) the 
 **4** (2026-09-06 → 08) BEATING (parked), the morph panel, the crescendo suite 1l–1o, D11 — §111–310. **3** (2026-09-04 → 06) the piece to
 #31, the drawer U5–U13b, the trill module 0–3, the curve windows (D18–D21) — §65–110. **2** the strikes drawer and the sandbox. **1** the port.
 
-**Open questions:** Q7 the bass clarinet's bottom B♭1 · "eighth per GC" = eight notes per GC? (§463) · the triple's writing in the six
-parts · does "the same crescendo in several parts" mean both players on every onset (§413, his word first).
+**Open questions:** Q7 the bass clarinet's bottom B♭1 · **the morph's held decisions 2–5 (§464; NEXT UP above)** · the triple's writing in
+the six parts · does "the same crescendo in several parts" mean both players on every onset (§413, his word first). *Closed 2026-09-14:*
+"eighth per GC" — max four, never eight (CN-78).
 
 **Blockers:** none.
 
@@ -601,8 +607,19 @@ sources; verified here only when they bite.)*
   measured, not chosen per passage (section 1 holds one such gap; after 183 s there are 218). *Rejected:* Gould's beam between the grand
   staff's staves — his dictation puts it **above the treble staff, stems down into the bass** (§463, to be built) so the gap where the
   piano's ball lands stays clear; a printed tempo (the scroll carries the time); one mark per head (the tuba's ambient + deviation instead).
-  **Open:** eight per GC if four still crowds (§463) · the triple in the six other parts · a `--pairs`-shaped build flag. Spec:
+  **Open:** ~~eight per GC if four still crowds (§463)~~ · the triple in the six other parts · a `--pairs`-shaped build flag. Spec:
   `docs/NOTATION_STANDARDS.md` §2; build: `--cluster … --gridDiv --restAfter` (`tools/notate_section.js`).
+  **Addendum 2026-09-14 (CN-78, RUNNING_LOG §464):** **max FOUR per GC — 1, 2 or 4, never eight.** A group on one staff: as normal, every rule
+  above. A group on both staves of the grand staff: TRY one beam above the treble staff, the lower notes' stems reaching down into the bass —
+  **designed and built when section 3 is notated, not before** (his "I want to actually figure this out and implement it when we notate
+  section three. Not now").
+- **D44** *(2026-09-14, composer, RUNNING_LOG §464–§465; CN-79)* — **A morph voice whose whole travel is under 20 c is written CRESCENDO-ONLY:**
+  one written pitch, no gliss line, no quarter-tone head, no orange curve — the green crescendo alone (the tuba's BALANCE form); **the build
+  tool alerts every time the rule applies, and he looks at each case.** His: *"ok b for the rule but alert in the future and I want to look at
+  these case by case."* *Why:* the tuba rule ("any gliss is at least a quarter tone; scale is not category") would draw M2's flute — 4 c over
+  116 s, a voice already in tune with the B♭ series the SPECTRAL model focuses on (§465) — as a full-height C→C¼♯ glissando that is not
+  there; the cello's 14 c is a tuning shade. *Rejected:* 10 c (the cello would still get a curve); the tuba rule unchanged. Spec:
+  `docs/NOTATION_STANDARDS.md` §3.
 
 ## §5 Playbooks
 

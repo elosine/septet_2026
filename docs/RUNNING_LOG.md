@@ -12642,3 +12642,156 @@ working copies are the same unsaved list as before (journal §2).
 **Session 10's wrap, one line:** trills decided, built and heard (§427–§453, D41 · D42) → the beamed group decided (§455–§462, **D43**): the
 pair at 43.3 and the bass four at 620.3 built, section 1 complete, the three trill × GC meetings accepted; the cross-staff question
 answered by his dictation above, for next session.
+
+## §464. Session 11 opens (2026-09-14, Fable 5.1): the beamed group's loose ends dictated; the tuba's morph notation read against this piece; eight flags; four decisions held
+
+**His agenda, verbatim (speech-to-text, at `/session-start`):**
+
+> *"I want to shore up some of the loose ends for the multinotes per GC strategy, but then I wanna move on to the morph section. So a few
+> things from the previous session end, I think it'll be max four notes per GC. So one, two, and four notes per GC. I want to beam them if
+> they all fit in one staff, I want to beam them as normal. whatever we were doing before for beams above or stems up or stems down still
+> abides. But if there are cross staff notes in a beam of two or four, then we're gonna try beams at top above the treble, and then stems
+> are reached down into the base clef. But I want to actually figure this out and implement it when we notate section three. Not now. …
+> Please have a look at the tuba. Have a careful look at the tuba morph section. I believe this one will be notated very similar. However,
+> take note that we've update the curve colors from the tuba score. So for the trill colors, the trill curves, I updated the green, and at
+> the same time, I ported the bright orange look color and feel to match the green ones in the trill section. So we haven't had any orange
+> curves in the score so far. … give me your assessment feedback about anything different in this piece for the morph section. any flags,
+> anything that wasn't dealt with in the tuba piece or that might be different for this piece. Let's discuss and then make a plan to
+> notate the morph section."*
+
+**The beamed group, closed as he dictated (CN-78; NOTATION_STANDARDS §2; D43 addendum):** max FOUR notes per GC — groups of 1, 2 or 4, no
+eight (§463 item 3 closed) · all on one staff → beamed as normal, the beam-side and stem rules in force stand · a group on both staves of the
+grand staff → TRY one beam above the treble staff, stems reaching down into the bass · figured out and built **when section 3 is notated,
+not now** (PLAN 2g re-set; journal §2's N1 was this build — withdrawn).
+
+**What was read (targeted):** `for_seven_tubas/docs/MORPH_NOTATION.md` (the settled vocabulary; the port carries `tools/notate_morph.js` and
+`notation/lib/morph_overlays.js` byte-identical) · the tuba RUNNING_LOG day 35 (the morph notation begins; the beating data) and the day-36
+dot regression · CURVE_LOOK.md (D42) · MORPH_NOTES §1–2 · CN-28 · 29 · 37 · 38 · 40 · 43 · the two morphs measured from the saved score ·
+the MAIN IR (307 events without an env: the morph notes, the crescendos, the piano's 44 plucked notes).
+
+**The tuba's vocabulary, in one look:** normal staff and clef · a HEADER at each part's entry (two white full-size heads = the lowest and
+highest written pitch, a gliss line between, any gliss written as at least a quarter tone in the direction of travel; below on the dynamic
+row a drawn niente circle · arrow · end mark) · ONE go line per breath onset, nothing else per breath · two curves per part over the whole
+morph — gliss orange in the top half, crescendo lime in the bottom, each normalised to its own extremes ("the curve is a displacement map;
+scale is not category") · Catmull-Rom through 9–25 anchors, 400 samples · two meters, the follower dot off · committed, never built: the
+beating rate at both ends of the gliss.
+
+**What changed since the tuba:** D42 — one closed path, fill 0.3, 2 px stroke, path opacity 0.3; the tuba's "filled, no border" superseded;
+the colours unchanged. Already wired: `crescCurve` / `glissCurve` carry the D42 look and `render.js` draws `cresccurve` / `glisscurve` items
+through `curvePathD42` (§447) — the first morph page should come out in the new look with no code (to verify by eye). The meters at #2's
+numbers (§448). NOT yet on the morph: 100 samples/s (2f.7; the tool's 400 per morph ≈ 3.4/s over 120 s) and the drawn floor at 1 (his word).
+
+**This piece's morph section, measured (the saved score):**
+
+| | M1 BEATING BLOOM (`grp-morph-01`) | M2 SPECTRAL DRIFT (`grp-morph-03`) |
+|---|---|---|
+| span | 183.003 → ~305 s (META shape 183–295) | 314.000 → ~435 s; entries staggered 0.67 s (Vc · BCl · Vn1 · Va · Fl · Vn2) |
+| parts | six, no piano | six, no piano |
+| breaths per part | 15–16, ~7 s; winds gap ~0.5 s, strings 0.05 s | 14–16 |
+| pairs, by pitch | Fl+Vn2 on A5 · Vn1+Va on D5 · BCl+Vc on C4 | Fl+Vn2 on C4 · Vn1+Va on A3 · BCl+Vc on D2 |
+| the gliss | every voice ±25 c, mirrored → 50 c spread | NOT mirrors: Fl 4 c · Vc 14 c · Vn1 100 · Va 100 · BCl 150 · Vn2 186 c |
+| level | 0.4 → 9.2 of 10, + `cc7Fade` 183.003–200.003 from 0, linear (D32) on the first three breaths of every part | 0.4 → 8.5, no fade |
+| the piano | 44 hand-placed notes, 205.85–427.75 s, 4.5–6.5 s long, `plucked` (some `main`); no harmonics, no cue notes in the score | |
+
+Beating at M1's full spread (50 c): C4 pair ≈ 7.6 Hz · D5 ≈ 17 Hz · A5 ≈ 25 Hz (the tuba's ran 2.06–6.55 Hz).
+
+**Eight flags, as put to him:** (1) the pairs cross families, found by pitch not adjacent lanes — the per-part notation unaffected, any
+"your partner" text must name the player · (2) M2's near-static voices: the tuba rule writes ANY gliss as a quarter tone and fills the
+half-lane — the flute's 4 c would draw as a full-height C→C¼♯ · (3) M1's fade is in CC7, not the level — the tool samples the level only,
+so the drawn crescendo and its meter would start at 4 %, not from nothing; fix: multiply in the fade weight · (4) the header's marks are
+fixed (niente · `fff`, `morph_overlays.js` `endMark: 'fff'`) whatever the data — M2 starts at 0.4/10, peaks 8.5 · (5) the clefs and the bass
+clarinet's written pitch (+M9: sounding C4 → written D5 in its header) — the header emits ordinary items, so it should follow; verify at the
+first build · (6) the META layer: the ported tool takes `layer < 10` as parts (the tuba's META); the septet's is 7 — the same port bug §204
+found in the panel · (7) the piano: nothing in the tuba covers it; its 44 notes carry no device in the IR (no GC, go line or pizz. mark) —
+a device to decide (CN-39 parked a "scattered strikes solo" device) · (8) the beating indication the tuba never built — only M1's C4 pair is
+countable; M2's drifters are not beating pairs; recommended: the performance score / parts, as the tuba did. No collisions: M1 enters 7 s
+after section 1's last event; 9 s between M1's end and M2. The follower dot is already off in the fold.
+
+**The plan's top line (planning method, phase 2):** 1 the septet's morph rules decided → NOTATION_STANDARDS §3 · 2 the tool's septet fixes
+(META layer · 100/s · the fade weight · the header's marks from the data · the no-gliss threshold), with checks · 3 M1 folded into the MAIN
+file (`--morph grp-morph-01` in the recorded build, D41), verified headless, his eye · 4 M2 the same · 5 the piano's notes: the device ·
+6 journal, standards, D-entry. → PLAN 2h.
+
+**DECIDED (1 of 5) — a voice that barely moves:** *"ok b for the rule but alert in the future and I want to look at these case by case"* →
+**no glissando under 20 c** — the part gets one written pitch and the crescendo only; **the tool alerts every time the rule applies**, and he
+looks at each case. *(Rejected: 10 c — the cello's 14 c would still have drawn an orange curve; the tuba rule as it stands.)* **D44.**
+**HELD, to surface later at his word (2–5):** the header's two marks from the data through D23's ladder, or the tuba's fixed niente → fff ·
+the drawn floor at 1 for the morph crescendo (the gliss is pitch, no floor) · the piano's 44 notes: the section-1 strike device with a
+plucked mark, or another device · the beating indication: parts only, or on the score. → journal §2 Open questions.
+
+## §465. Why the flute and the cello barely move in M2 — the SPECTRAL model, and B♭ as its fundamental (2026-09-14, Fable 5.1)
+
+**His question:** *"do you know why the morph generator only gave such a small gliss to those players?"*
+
+**Answer, from the model's definition (`bank/morph_models.json` SPECTRAL; `morph.js` ≈l.1267: "assign each voice its NEAREST free partial,
+nearest-first, so no voice travels further than it must and no two land on the same partial"):** the chord "comes into focus" on one
+fundamental's harmonic series; a voice already near a partial barely moves — by design. **The fundamental fits B♭ in every voice to
+within a cent** (inferred from the fit; his panel then showed it: root `A#2` (46) from the root box — §208's "the root box is also
+SPECTRAL's fundamental"):
+
+| player | starts on | goes to | travel |
+|---|---|---|---|
+| flute | C4 | C (+4 c), the 9th partial | 4 c |
+| cello | D2 | D (−14 c), the 5th | 14 c |
+| violin 1 · viola | A3 | B♭3, the 2nd / 4th | 100 c |
+| bass clarinet | D2 | E (−49 c), the 11th | 150 c |
+| violin 2 | C4 | D (−14 c), the 5th | 186 c |
+
+The pairs share a pitch and a partial is taken once, so in each pair **one player stays, the other travels** to the next free partial —
+the "one static, one drifting" pattern of §464 flag 2. Not a fault. *(Recorded for the paper: the model's rule produces the pair
+asymmetry; the notation rule D44 is what keeps a 4-cent tuning shade from being drawn as a glissando.)*
+
+## §466. M2 against its take: ACT-SPECTRAL-04 is the render, the piece's tail is ~10 s longer on the violins (2026-09-14, Fable 5.1)
+
+**Prompted by:** *"i would like to do c; I think I saved it; look at these files and compare it to what I have now and see if they're the
+same … save file in composer: spectralMorph"* — the panel had recalled ACT-SPECTRAL-04 (SPECTRAL-04 · 111 s · septet-s2c; root A#2, seed
+17, duration 100, release 11; the cast Vc+BCl · Vn1+Va · Fl+Vn2; captured 2026-09-09), and he had inserted it into a new score,
+`scores/spectralMorph.json` (89 notes + the META shape + the marker, at 0).
+
+**Measured (`piece-septet.json` M2 vs the take's 89 notes, rebased):** the flute and the cello identical note for note; the other four
+identical for the first ~100 s; **the tail differs — the piece's M2 has one more note at the end of each violin** (Vn1 @111.44 s for 10.04 s,
+Vn2 @111.12 s for 8.46 s; the piece's M2 runs to 435.5 s, the take to 111.4 s after its start) and the final bends of the last notes on four
+parts differ by a few cents. **No saved take has that tail** (ACT-SPECTRAL-01 · 02 · 03 · 04 all compared: 0 / 0 / 0 / 2 lanes identical) and
+**no `duration` dial reproduces it** (100 · 105 · 108 · 110 · 112 · 115 · 120 tried in the engine: the counts never match the piece's
+16 · 16 · 14 · 15 · 15 · 15). Reading: a dial nudged after the take was saved, or a render never saved as a take. Consequence: a re-render
+from the take shortens the violins by ~10 s — so the swap keeps the piece's four unchanged lines and replaces only the two (§467).
+
+**The engine in node reproduces the take exactly** (`SEP.cast` + `M.render` with the take's `resolvedParams`, `pairs` and palette: all six
+lanes identical to `A.notes`) — the ground for the simulation that follows.
+
+## §467. THE SWAP BUILT — M2's cello seat given to the bass clarinet: simulated in the engine, then written by script; ACT-SPECTRAL-05 (2026-09-14, Fable 5.1)
+
+**His word:** *"tell me what it would look like to swap the base clarinet and the cello in this section. So swap it in the composer score
+and the IR, and then we'll notate that swap"* → the three ways put to him (swap as is · swap and trim a breath off each note · re-render
+with the seats swapped) → *"i would like to do c"* → the reassessment with the engine's numbers → *"Could you walk me through, a, more
+simply, what has to happen, and then what will change from what is currently there now?"* → the walk-through and the changes named → the
+unsaved-edits check at his ask (*"do you know what the recent unsaved changes are"*: the working copy held only the 69 trills' snippets and
+the view — no note added, removed or moved; he Saved at 08:31:55) → *"saved, go"*.
+
+**Simulated first (`scratchpad/sim_swap.js`, then the script's own asserts):** `SEP.swapSeat(pairs, 0, 'a', 1)` → BCl+Vc · Vn1+Va · Fl+Vn2,
+lanes 1,6,3,5,0,4; **the four other lanes render IDENTICALLY** (the deal is per voice, `engineConstants.perVoice: true`); no warnings.
+Before → after: BCl 16 notes, 0.67→113.72 s, gaps 0.45–0.57, travel 149.7 c → **14 notes, 0.00→111.72 s, gaps 0.43–0.56 s (breaths), notes
+5.7–9.6 s under its 10 s ceiling, travel 14.0 c (the holder)**; Vc 15 notes, 0.00→115.47, gaps 0.05, travel 13.9 c → **15 notes, 0.67→115.55 s,
+gaps 0.05–0.06 (bows), travel 148.2 c (the traveller, D2 → E2 −49 c)**. The entry order flips with the seat: the bass clarinet now enters
+first, the cello 0.67 s later.
+
+**Built — `scratchpad/swap_m2.js` on the SAVED file, backups of `piece-septet.json` and `morph_models.json` in the scratchpad first:**
+- the file round-trips byte-exactly through `JSON.stringify` (indent 0; the models file indent 2 + a newline) — asserted, so only the edits change;
+- the conversion is the engine's own `M.toScoreObjects` (the panel's Save-as-ACTUAL / Insert path) — asserted against his own Insert of the
+  take in `spectralMorph.json`: 89/89 objects field for field *(a first hand-written converter failed that check: the engine nudges a node
+  that would land at or before the previous one by 0.001 — the attack point ahead of the grid; the lesson: use the engine's function)*;
+- removed M2's 31 notes on lanes 1 and 6; added the 29 new ones (`wc-3071`…`wc-3099`) at 314.000 + `tStart`, `groupId grp-morph-03`, the
+  marker and META shape untouched; `nextId` 3071 → 3100;
+- **verified from disk:** removed 31 (all M2, lanes 1/6) · added 29 (all M2) · **no other object changed** · top level: only `objects` and
+  `nextId` differ · the 44 piano notes untouched. M2 now: Fl 16 (316.67→432.37) · **BCl 14 (314.00→425.72, gaps 0.43–0.56, 14 c)** · Vn1 14 ·
+  Vn2 15 · Va 15 · **Vc 15 (314.67→429.55, gaps 0.05, 148 c)**;
+- **the take filed: `bank/actuals/ACT-SPECTRAL-05.json`** ("SPECTRAL-05 · 116 s · piece-septet · Vc↔BCl seats swapped"; provenance = 04's
+  with `pairs` swapped, `lanes` 1,6,3,5,0,4, the palette, `captured 2026-09-14`, a note naming the derivation and the placement), listed on
+  the SPECTRAL model's `actuals`.
+
+**His to do:** Reload in the composer (the working copy still holds the pre-swap M2) · listen · R on the notation page rebuilds the IR ·
+the audio render after (RENDER.md). **Not committed until his ear:** no — committed at this wrap by NAMING §1's rule (the piece file at
+every wrap); a dislike is a Restore (D27) or the scratchpad backup.
+
+**For the morph tool's revision (MORPH_NOTES §3):** re-casting a PLACED morph — swap a seat, keep every other line, re-deal only that
+pair's breaths — is exactly what this script did by hand; and a placed morph should remember its dials (§466: M2's tail is not any take).

@@ -1126,7 +1126,8 @@
         "ACT-SPECTRAL-01",
         "ACT-SPECTRAL-02",
         "ACT-SPECTRAL-03",
-        "ACT-SPECTRAL-04"
+        "ACT-SPECTRAL-04",
+        "ACT-SPECTRAL-05"
       ],
       "seededFrom": "bank/morph_recipes.json slot F",
       "tuba": {
