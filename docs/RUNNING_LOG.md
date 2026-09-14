@@ -13969,3 +13969,24 @@ only", the fallback is measured (§511): **10 notes up an octave — 6 in sectio
 answer given:** in professional and new-music ensembles the low-C instrument is the norm, not the exception — the professional standard since
 the 1970s; the contemporary repertoire writes to low C as a matter of course; the low-E♭ instrument is the school and band model. Case-by-case
 only with amateur ensembles or a doubler bringing a second-string instrument.
+
+## §513. The page rule's reach (2i.7) explained to him; the counts (2026-09-14, Fable 5.1)
+
+**Prompted by:** *"whether the one-mark-per-band rule is section 3's alone or the whole piece's ... what is this, lost track"*.
+
+**The history:** section 1's rule is HIS of 2026-09-11 (§401d): *"Every note, every dynamic"* — `dynOnChange` dropped from all five strike
+entries, fff on every strike; the on-change machinery left in `layout.js`, unused, "for the day he wants it back". CN-83 (today) asks section 3
+for one mark per part per band. **Counted in the MAIN IR:** section 1 — 500 strikes, ALL fff; under an on-change rule 7 marks (one per part).
+Section 3 — 932 strikes, one uniform band today (the page shows p); after CN-83's six bands, on-change gives ~42 marks (6 per part), every-strike
+932. The build for section 3 is the existing flag. **The question put:** A two rules by texture (section 1 every strike as he chose; section 3
+on change) · B on-change piece-wide (section 1 falls to 7 fff marks) · C on-change plus a restatement after a long gap (Gould's rest rule),
+one rule for both. The AI's lean: A. His word owed.
+
+## §514. DECIDED: the page rule's reach — section 3 only, D52; ready for the clear (2026-09-14, Fable 5.1)
+
+**His word:** *"A good ; are we ready for clear? A plan is written and even after clear, each agent will know how to proceed."* — D52 (journal §4):
+section 3's strikes on change, section 1 every strike; PLAN 2i.7 marked decided. **The cold-execution check before the clear:** journal §2 names
+the next step (PLAN 2i sitting A: step 1 go-to-time + HOME, then step 2 the D49 audit), the model (Opus; Fable for the audit's verdicts), the
+resume reads (PLAN 2i · §456 item 5 · NITS "THE D49 AUDIT" · NOTATION_STANDARDS §0); PLAN 2i carries all ten steps with sitting and model;
+PLANNER's NOW line agrees; nothing pending blocks. Every doc change of the session committed and pushed. Clear points: at each sitting's end
+(A → B → C → D → E → F, fresh session each) and within sitting A after the fixes.

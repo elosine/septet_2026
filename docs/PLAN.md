@@ -1653,7 +1653,7 @@ player would touch parts, solo, crop and print.
   5. **The piano's run from 581 s cut into groups; the fours at the end** (= 2g.2 · 2g.4) — `todo · sitting D · Opus` — his eye on the crowding.
   6. **`--pairs` for the six other parts** (= 2g.5) — `todo · sitting D · Opus` — 46 pairs · the two triples as groups of three (D51: Vc 488.51 · Va 622.01).
   7. **The page rule for section 3's dynamics** (CN-83) — `todo · sitting E · Opus` — one mark per part where its band changes, on that part's first
-     note in the band; nothing else. **Open:** section 3 only, or the piece (section 1 marks every strike, §1).
+     note in the band; nothing else. **Decided (D52, 2026-09-14):** section 3 only — section 1 keeps its mark on every strike (§401d); two rules by texture.
   8. **The crescendo run as the surge device** (CN-84) — `todo · sitting E · Fable design (short) → Opus` — ppp → fff + arrow · the STANDARD surge
      shape, a template, not the save's curve · the D42 look at 100/s · no floor · "secco" at the curve's end (CN-49; the quartet's text mark) ·
      one player per onset by round robin as the save has it (§509). The performance instructions must say the morph curves are absolute and these are not.

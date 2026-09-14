@@ -113,8 +113,7 @@ holds at each step: the goal first ("N. Title. Result when done: …"), discuss,
 **Resume reads:** PLAN 2i (the top line) — then, for sitting A only: RUNNING_LOG §456 item 5 (the go-to-time ask) · NITS "THE D49 AUDIT" ·
 NOTATION_STANDARDS §0.
 
-**Decisions pending the composer:** the page rule's reach (2i.7:
-section 3 only, or the piece) · (later, the performance instructions) the pedal legend's wording (NITS draft).
+**Decisions pending the composer:** none that block — (later, the performance instructions) the pedal legend's wording (NITS draft).
 
 **Deliberately uncommitted (`git status --short` at this checkpoint) — all his, left alone:** `bank/panel_snapshots.json` (his takes) ·
 `reaper/septet_rack.rpp` (his rack) · `bank/passages/4materials.json` · `accentedcres01.json` · `accentedcres01-2.json` · `chordcyc01.json` ·
@@ -704,6 +703,12 @@ sources; verified here only when they bite.)*
   beam continuing over the last rest, the written 16th = half the gap, one GC on the first. *Why:* both triples are nearly even (Vc 488.51 s
   0.344 · 0.325; Va 622.01 s 0.347 · 0.341), and pair + single would land the single's own GC 0.33 s after the pair's — the crowding the
   rule exists to prevent. *Rejected:* B (that crowding) · C (a change to the music for a notation convenience). Built at PLAN 2g.5.
+- **D52** *(2026-09-14, composer, RUNNING_LOG §513–§514)* — **SECTION 3'S STRIKES TAKE ONE DYNAMIC PER PART PER BAND (on change);
+  SECTION 1 KEEPS ITS MARK ON EVERY STRIKE — two rules, by texture.** His word: *"A good"* to §513's three options. *Why:* section 1 is
+  sparse (500 strikes, all fff; a player should not look back 30 s for the dynamic — his §401d choice stands); section 3 is dense (932
+  strikes in 180 s, six time bands p → fff, CN-83): 932 marks would be clutter, ~42 say everything. *Rejected:* B on-change piece-wide
+  (section 1 would fall to 7 marks) · C on-change + restatement after a long gap (one rule, one more parameter). Built at PLAN 2i.7 with the
+  existing `dynOnChange` machinery (§401d left it in layout, unused); NOTATION_STANDARDS takes the row then.
 
 ## §5 Playbooks
 
