@@ -73,6 +73,8 @@
       if (/^flag-(up|down)\d+$/.test(g)) { const m = g.match(/^flag-(up|down)(\d+)$/); return S.flagN(+m[2], m[1]); }
       if (g.startsWith('artic-')) return S.articulation(g.slice('artic-'.length));
       if (g.startsWith('accidental-')) return S.accidental(g.slice('accidental-'.length));
+      if (g.startsWith('text-')) return S.text(g.slice('text-'.length));       // [2h.5] piece #2's baked 'pizz.'
+      if (g.startsWith('pedal-')) return S.pedal(g.slice('pedal-'.length));    // [2h.5] piece #2's 'Ped.'
       throw new Error('render: unknown glyph item "' + g + '"');
     };
     const stds = glyphs.standards;
@@ -116,6 +118,9 @@
       const hasGc = new Set((sysModel.items || []).filter(x => x.k === 'gc' && x.ev).map(x => x.ev));   // §401h
       const X = (t, dxSs) => view.xOfSeconds(t) + (dxSs || 0) * ssPx;
       const Y = ss => sys.yOfSs(ss);
+      // [§495] an item placed against ANOTHER staff of the same part (the beamed
+      // pair's bass stem reaching the treble beam, its pizz. on the treble row)
+      const sysYOf = key => { try { const s2 = view.system(key); return ss => s2.yOfSs(ss); } catch (e) { return Y; } };
       // class carries the part so a caller can restyle ONE lane without a
       // re-render — the per-part solo dim (day 24). Presentation-neutral:
       // a class attribute adds no ink and no geometry.
@@ -198,7 +203,7 @@
           }
         } else if (it.k === 'glyph') {
           if (!inWin(it.t)) continue;
-          parts.push(Stamps.toSvg((it.scale || it.scaleY) ? Stamps.scaled(boxFor(it.g), it.scale || 1, it.scaleY != null ? it.scaleY : (it.scale || 1)) : boxFor(it.g), { xPx: X(it.t, it.dxSs), yPx: Y(it.ySs), ssPx, align: it.align }));
+          parts.push(Stamps.toSvg((it.scale || it.scaleY) ? Stamps.scaled(boxFor(it.g), it.scale || 1, it.scaleY != null ? it.scaleY : (it.scale || 1)) : boxFor(it.g), { xPx: X(it.t, it.dxSs), yPx: (it.sys ? sysYOf(it.sys) : Y)(it.ySs), ssPx, align: it.align }));
         } else if (it.k === 'rest') {
           // day 23: a rest at LP's own vertical placement — the glyph's topSs
           // is where its bbox top sits above the staff middle line, so the
@@ -223,7 +228,8 @@
         } else if (it.k === 'stem') {
           if (!inWin(it.t)) continue;
           const x = X(it.t, it.dxSs) - (stds.stem.thickness * ssPx) / 2;
-          const yTop = Math.min(Y(it.yA), Y(it.yB)), h = Math.abs(Y(it.yA) - Y(it.yB));
+          const YB = it.sysB ? sysYOf(it.sysB) : Y;   // [§495] the cross-staff stem's far end
+          const yTop = Math.min(Y(it.yA), YB(it.yB)), h = Math.abs(Y(it.yA) - YB(it.yB));
           parts.push('<rect x="' + x.toFixed(2) + '" y="' + yTop.toFixed(2) + '" width="' + (stds.stem.thickness * ssPx).toFixed(2) + '" height="' + h.toFixed(2) + '"/>');
         } else if (it.k === 'dot') {
           if (!inWin(it.t)) continue;
@@ -249,7 +255,7 @@
         } else if (it.k === 'text') {
           if (!inWin(it.t)) continue;
           parts.push('<text x="' + X(it.t, it.dxSs).toFixed(1) + '" y="' + Y(it.ySs).toFixed(1) + '" font-size="' + ((it.size || 1) * ssPx * E.textScale).toFixed(1) +
-            '"' + fontAttr + (it.anchor && it.anchor !== 'start' ? ' text-anchor="' + it.anchor + '"' : '') + ' xml:space="preserve" fill="' + (it.color || o.muted) + '">' + esc(it.text) + '</text>');
+            '"' + fontAttr + (it.anchor && it.anchor !== 'start' ? ' text-anchor="' + it.anchor + '"' : '') + (it.italic ? ' font-style="italic"' : '') + ' xml:space="preserve" fill="' + (it.color || o.muted) + '">' + esc(it.text) + '</text>');
         } else if (it.k === 'attackline') {
           if (!inWin(it.t)) continue;
           // M4: a vertical stroke straddling the pitch position
@@ -499,6 +505,18 @@
           const hook = (O.hookLengthSs || 0.8) * ssPx * (it.dir === 'above' ? 1 : -1);
           parts.push('<line x1="' + xHook.toFixed(2) + '" y1="' + yLine.toFixed(2) + '" x2="' + xHook.toFixed(2) +
             '" y2="' + (yLine + hook).toFixed(2) + '" stroke="#111" stroke-width="' + thick.toFixed(2) + '"/>');
+        } else if (it.k === 'lvslur') {
+          // [2h.5] the let-ring slur (§486): piece #2's baked l.v. crescent —
+          // a filled outline with LilyPond's 0.1 ss stroke. The attachment
+          // line sits at ySs; the crescent rises away from the head ('above')
+          // or is mirrored about that line ('below').
+          if (!inWin(it.t)) continue;
+          const LV = glyphs.letRing;
+          if (!LV) continue;
+          const ax = X(it.t, it.dxSs), ay = Y(it.ySs), ky = it.dir === 'below' ? -1 : 1;
+          parts.push('<g transform="translate(' + ax.toFixed(2) + ',' + (ay - ky * LV.anchors.leftAttach.y * ssPx).toFixed(2) +
+            ') scale(' + ssPx + ',' + (ky * ssPx) + ')"><path d="' + LV.path + '" fill="#111" stroke="#111" stroke-width="' + LV.strokeSs +
+            '" stroke-linejoin="round"/></g>');
         } else if (it.k === 'goline') {
           // dotted vertical at go time, full lane band (piece #1's go-time
           // marker: 0.5 @ 0.4, dasharray 2,2)

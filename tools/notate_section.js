@@ -36,6 +36,9 @@
 //                            dynamic) and only gains a stem to a shared beam. No
 //                            tempo fit, no grid, no rests. Repeatable.
 //   --noGc wc-98[,wc-…]      drop the GC from named objects (per-note device override)
+//   --pairBeam wc-1769,wc-1770  [septet §495] the named notes are ONE beamed pair: stems up to one
+//                            8th beam above the part's top staff, across the grand staff (layout
+//                            pairOf; the look = registry devices.byPairBeam). Repeatable, one pair each.
 //   --bare t0-t1[@part]      CLEAR THE NOTATION, KEEP THE BRICKS: every drawn element off
 //                            for the span (go line, GC + ball, notehead unit, dot, ring bar,
 //                            dynamic). @part optional — bare sweeps every lane by default.
@@ -1060,6 +1063,26 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
     else doc.overlays.push({ id: 'ov-nogc-' + e.id, kind: 'engraving', target: { event: e.id }, value: { device: { gc: false } }, provenance: 'authored' });
     console.log('  noGc: ' + id + ' (' + e.technique + ' at ' + e.onset.toFixed(3) + ') — GC removed, page and ball');
   }
+}
+// --pairBeam wc-1769,wc-1770 (septet §495, PLAN 2h.5 — PLAN 2g.1's cross-staff beam pulled
+// forward): the composer, on the piano's plucked pairs in the morph section: "make those black
+// note heads, 8th beams … stems up above treble". Named by OBJECT ID like --noGc; each occurrence
+// is one pair (or group), written as a device override { pairBeam: 'pb-<first id>' } merged onto
+// whatever overlay the note already carries. The look and the geometry are the registry's and
+// layout's (devices.byPairBeam, layout pairOf) — nothing about the drawing lives here.
+for (let i = 0; i < process.argv.length; i++) {
+  if (process.argv[i] !== '--pairBeam') continue;
+  const ids = String(process.argv[i + 1] || '').split(',').map(v => v.trim()).filter(Boolean);
+  if (ids.length < 2) { console.error('--pairBeam needs two or more object ids (e.g. --pairBeam wc-1769,wc-1770)'); process.exit(2); }
+  const key = 'pb-' + ids[0];
+  for (const id of ids) {
+    const e = doc.events.find(x => x.source.objectId === id);
+    if (!e) { console.error('--pairBeam ' + id + ': no such object in this window/parts'); process.exit(2); }
+    const existing = doc.overlays.find(o => o.kind === 'engraving' && o.target.event === e.id);
+    if (existing) existing.value.device = Object.assign({}, existing.value.device, { pairBeam: key });
+    else doc.overlays.push({ id: 'ov-pairbeam-' + e.id, kind: 'engraving', target: { event: e.id }, value: { device: { pairBeam: key } }, provenance: 'authored' });
+  }
+  console.log('  pairBeam ' + key + ': ' + ids.join(' + '));
 }
 // --bare t0-t1[@part] (day 26): CLEAR THE NOTATION, KEEP THE BRICKS.
 // Composer, setting up Part 3 on CLOUD02-I: *"the bricks are fine, that's

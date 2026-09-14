@@ -22,7 +22,7 @@
   "date": "2026-09-14",
   "tool": "tools/notate_section.js (profile trance) --bricks --trills --trillRate 100",
   "notes": "Derived extraction (B1). Segmentation: DB-6 greedy IOI runs, TOL 0.015 s. Regenerable; authored content belongs in overlays only. TRILLS (PLAN 2f.3): 69 trill zone(s) as env trill; 11 eaten note(s) (mutedBy) not extracted; 0 trill(s) read a flat level. BRICKS MODE: all chunks forced unresolved (working file).",
-  "build": "node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --trillRate 100 --id piece-septet --beamsThrough --rests16 --cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1 --cluster 620.31-620.84@2 --dyn 1 --accents 1,2,3,4 --morph grp-morph-01 --morph grp-morph-03"
+  "build": "node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --trillRate 100 --id piece-septet --beamsThrough --rests16 --cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1 --cluster 620.31-620.84@2 --dyn 1 --accents 1,2,3,4 --morph grp-morph-01 --morph grp-morph-03 --pairBeam wc-1769,wc-1770 --pairBeam wc-1774,wc-1775 --pairBeam wc-1785,wc-1786"
  },
  "events": [
   {
@@ -45106,6 +45106,27 @@
    }
   },
   {
+   "id": "ev-wc-1502",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-1502"
+   },
+   "onset": 205.852,
+   "duration": 6.522999999999996,
+   "pitch": {
+    "midi": 84,
+    "spelled": {
+     "step": "C",
+     "alter": 0,
+     "octave": 6
+    }
+   },
+   "technique": "plucked",
+   "provenance": "derived",
+   "mode": "plain",
+   "vel": 90
+  },
+  {
    "id": "ev-wc-1503",
    "source": {
     "score": "piece-septet",
@@ -45119,27 +45140,6 @@
      "step": "C",
      "alter": 0,
      "octave": 2
-    }
-   },
-   "technique": "plucked",
-   "provenance": "derived",
-   "mode": "plain",
-   "vel": 90
-  },
-  {
-   "id": "ev-wc-1502",
-   "source": {
-    "score": "piece-septet",
-    "objectId": "wc-1502"
-   },
-   "onset": 205.857,
-   "duration": 6.522999999999996,
-   "pitch": {
-    "midi": 84,
-    "spelled": {
-     "step": "C",
-     "alter": 0,
-     "octave": 6
     }
    },
    "technique": "plucked",
@@ -51439,7 +51439,7 @@
     "score": "piece-septet",
     "objectId": "wc-1514"
    },
-   "onset": 269.133,
+   "onset": 269.13,
    "duration": 4.752999999999986,
    "pitch": {
     "midi": 80,
@@ -57121,6 +57121,27 @@
    }
   },
   {
+   "id": "ev-wc-1772",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-1772"
+   },
+   "onset": 339.798,
+   "duration": 0.11899999999997135,
+   "pitch": {
+    "midi": 62,
+    "spelled": {
+     "step": "D",
+     "alter": 0,
+     "octave": 4
+    }
+   },
+   "technique": "plucked",
+   "provenance": "derived",
+   "mode": "plain",
+   "vel": 99
+  },
+  {
    "id": "ev-wc-1773",
    "source": {
     "score": "piece-septet",
@@ -57140,27 +57161,6 @@
    "provenance": "derived",
    "mode": "plain",
    "vel": 94
-  },
-  {
-   "id": "ev-wc-1772",
-   "source": {
-    "score": "piece-septet",
-    "objectId": "wc-1772"
-   },
-   "onset": 339.806,
-   "duration": 0.1190000000000282,
-   "pitch": {
-    "midi": 62,
-    "spelled": {
-     "step": "D",
-     "alter": 0,
-     "octave": 4
-    }
-   },
-   "technique": "plucked",
-   "provenance": "derived",
-   "mode": "plain",
-   "vel": 99
   },
   {
    "id": "ev-wc-1696",
@@ -58347,7 +58347,7 @@
     "score": "piece-septet",
     "objectId": "wc-1777"
    },
-   "onset": 350.312,
+   "onset": 350.296,
    "duration": 0.14400000000000546,
    "pitch": {
     "midi": 62,
@@ -60244,6 +60244,27 @@
    }
   },
   {
+   "id": "ev-wc-1781",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-1781"
+   },
+   "onset": 369.921,
+   "duration": 0.10800000000000409,
+   "pitch": {
+    "midi": 63,
+    "spelled": {
+     "step": "D",
+     "alter": 1,
+     "octave": 4
+    }
+   },
+   "technique": "plucked",
+   "provenance": "derived",
+   "mode": "plain",
+   "vel": 90
+  },
+  {
    "id": "ev-wc-1782",
    "source": {
     "score": "piece-septet",
@@ -60263,27 +60284,6 @@
    "provenance": "derived",
    "mode": "plain",
    "vel": 108
-  },
-  {
-   "id": "ev-wc-1781",
-   "source": {
-    "score": "piece-septet",
-    "objectId": "wc-1781"
-   },
-   "onset": 369.926,
-   "duration": 0.10800000000000409,
-   "pitch": {
-    "midi": 63,
-    "spelled": {
-     "step": "D",
-     "alter": 1,
-     "octave": 4
-    }
-   },
-   "technique": "plucked",
-   "provenance": "derived",
-   "mode": "plain",
-   "vel": 90
   },
   {
    "id": "ev-wc-1719",
@@ -60932,7 +60932,7 @@
     "score": "piece-septet",
     "objectId": "wc-1784"
    },
-   "onset": 375.616,
+   "onset": 375.605,
    "duration": 0.12999999999999545,
    "pitch": {
     "midi": 81,
@@ -63470,6 +63470,27 @@
    }
   },
   {
+   "id": "ev-wc-1789",
+   "source": {
+    "score": "piece-septet",
+    "objectId": "wc-1789"
+   },
+   "onset": 402.473,
+   "duration": 0.18000000000000682,
+   "pitch": {
+    "midi": 51,
+    "spelled": {
+     "step": "D",
+     "alter": 1,
+     "octave": 3
+    }
+   },
+   "technique": "plucked",
+   "provenance": "derived",
+   "mode": "plain",
+   "vel": 100
+  },
+  {
    "id": "ev-wc-1790",
    "source": {
     "score": "piece-septet",
@@ -63489,27 +63510,6 @@
    "provenance": "derived",
    "mode": "plain",
    "vel": 101
-  },
-  {
-   "id": "ev-wc-1789",
-   "source": {
-    "score": "piece-septet",
-    "objectId": "wc-1789"
-   },
-   "onset": 402.474,
-   "duration": 0.18000000000000682,
-   "pitch": {
-    "midi": 51,
-    "spelled": {
-     "step": "D",
-     "alter": 1,
-     "octave": 3
-    }
-   },
-   "technique": "plucked",
-   "provenance": "derived",
-   "mode": "plain",
-   "vel": 100
   },
   {
    "id": "ev-wc-1746",
@@ -64158,7 +64158,7 @@
     "score": "piece-septet",
     "objectId": "wc-1792"
    },
-   "onset": 407.991,
+   "onset": 407.971,
    "duration": 0.16599999999999682,
    "pitch": {
     "midi": 74,
@@ -64944,8 +64944,8 @@
     "score": "piece-septet",
     "objectId": "wc-1796"
    },
-   "onset": 416.666,
-   "duration": 0.16700000000003,
+   "onset": 416.66,
+   "duration": 0.16699999999997317,
    "pitch": {
     "midi": 74,
     "spelled": {
@@ -65978,7 +65978,7 @@
     "score": "piece-septet",
     "objectId": "wc-1800"
    },
-   "onset": 427.754,
+   "onset": 427.745,
    "duration": 0.19499999999999318,
    "pitch": {
     "midi": 38,
@@ -101429,7 +101429,7 @@
    "provenance": "derived"
   },
   {
-   "id": "ch-2-wc-1503",
+   "id": "ch-2-wc-1502",
    "part": 2,
    "span": [
     205.852,
@@ -101438,8 +101438,8 @@
    "class": "fixed-oneshot",
    "strategy": "unresolved",
    "events": [
-    "ev-wc-1503",
-    "ev-wc-1502"
+    "ev-wc-1502",
+    "ev-wc-1503"
    ],
    "provenance": "derived"
   },
@@ -101712,7 +101712,7 @@
    "provenance": "derived"
   },
   {
-   "id": "ch-2-wc-1773",
+   "id": "ch-2-wc-1772",
    "part": 2,
    "span": [
     339.798,
@@ -101721,8 +101721,8 @@
    "class": "fixed-oneshot",
    "strategy": "unresolved",
    "events": [
-    "ev-wc-1773",
-    "ev-wc-1772"
+    "ev-wc-1772",
+    "ev-wc-1773"
    ],
    "provenance": "derived"
   },
@@ -101771,7 +101771,7 @@
    "provenance": "derived"
   },
   {
-   "id": "ch-2-wc-1782",
+   "id": "ch-2-wc-1781",
    "part": 2,
    "span": [
     369.921,
@@ -101780,8 +101780,8 @@
    "class": "fixed-oneshot",
    "strategy": "unresolved",
    "events": [
-    "ev-wc-1782",
-    "ev-wc-1781"
+    "ev-wc-1781",
+    "ev-wc-1782"
    ],
    "provenance": "derived"
   },
@@ -101816,7 +101816,7 @@
    "provenance": "derived"
   },
   {
-   "id": "ch-2-wc-1790",
+   "id": "ch-2-wc-1789",
    "part": 2,
    "span": [
     402.473,
@@ -101825,8 +101825,8 @@
    "class": "fixed-oneshot",
    "strategy": "unresolved",
    "events": [
-    "ev-wc-1790",
-    "ev-wc-1789"
+    "ev-wc-1789",
+    "ev-wc-1790"
    ],
    "provenance": "derived"
   },
@@ -113326,6 +113326,84 @@
      "beamThrough": true,
      "nhArtic": "accent",
      "beamHasArtic": "accent"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-pairbeam-ev-wc-1769",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1769"
+   },
+   "value": {
+    "device": {
+     "pairBeam": "pb-wc-1769"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-pairbeam-ev-wc-1770",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1770"
+   },
+   "value": {
+    "device": {
+     "pairBeam": "pb-wc-1769"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-pairbeam-ev-wc-1774",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1774"
+   },
+   "value": {
+    "device": {
+     "pairBeam": "pb-wc-1774"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-pairbeam-ev-wc-1775",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1775"
+   },
+   "value": {
+    "device": {
+     "pairBeam": "pb-wc-1774"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-pairbeam-ev-wc-1785",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1785"
+   },
+   "value": {
+    "device": {
+     "pairBeam": "pb-wc-1785"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-pairbeam-ev-wc-1786",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1786"
+   },
+   "value": {
+    "device": {
+     "pairBeam": "pb-wc-1785"
     }
    },
    "provenance": "authored"

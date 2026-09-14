@@ -95,6 +95,8 @@
       "nhAnchor": "afterGo",
       "brick": false,
       "ringBar": false,
+      "letRing": false,
+      "chordRules": false,
       "curve": true,
       "cut": false,
       "curveBand": "lane",
@@ -126,10 +128,14 @@
      "strike": {
       "goLine": true,
       "gc": true,
+      "nhAnchor": null,
       "nhUnit": true,
       "nhHead": "filled",
       "chainSide": "headSide",
       "brick": false,
+      "ringBar": false,
+      "letRing": false,
+      "chordRules": false,
       "nhHeadScale": 0.844,
       "nhStem": "flag16",
       "nhStemRule": "flagClear",
@@ -139,9 +145,39 @@
       "nhArtic": "accent",
       "dynMark": "band",
       "dynBesideStem": true
-     }
+     },
+     "_strikeRingBarNote": "PLAN 2h.5 (2026-09-14): byTechnique.main now carries the ring bar for the piano's long ordinary notes in the morph section; a strike merges its env on top, so the env says ringBar false out loud — the piano's strikes keep their look."
     },
     "byTechnique": {
+     "_pianoMorphNote": "PLAN 2h.5 (2026-09-14, RUNNING_LOG §483–§491; the composer's reference CN-82 = piece #2 around 0:50; his spec: 'no gcs, open noteheads for both'): the piano's notes in the morph section carry no env, so `main` and `plucked` reach them and nothing else (every other `main` is a strike or a trill by env — and those envs cancel every field added here out loud: ringBar, letRing, chordRules). The first build (§484 — the tuba's ring bar on main; piece #2's ASR row on plucked: 'Ped.' text, the ✱ at the release, a two-hook bracket) was replaced device by device at his eye: see _mainNote, _chordRulesNote, _pluckedNote.",
+     "main": {
+      "goLine": false,
+      "nhAnchor": "leftEdge",
+      "nhUnit": true,
+      "nhHead": "open",
+      "brick": false,
+      "dynMark": "band",
+      "letRing": true,
+      "chordRules": true
+     },
+     "_leftEdgeNote": "D49 (2026-09-14, RUNNING_LOG §496–§497; piece #4's D59 and D58 promoted to this piece's principles): THE NOTEHEAD'S LEFT EDGE IS THE MOMENT · THE GO LINE MARKS DISPLACEMENT. The morph section's piano devices (main, plucked, byPairBeam) carry no GC, so nothing displaces them: nhAnchor leftEdge puts the head's left edge on its onset and goLine false draws no line — the beamed group's regime (D43). Their pizz. and Ped. left-align to that edge (Gould: technique text and the pedal start at the note); the dynamic stays centred on the head. The strikes keep their go line: they hang before it to clear the GC disc (D58's own case); byEnv.strike says nhAnchor null so the anchor cannot ride the env onto them. The rest of the score is to be audited against the two principles (NITS 2026-09-14).",
+     "_chordRulesNote": "PLAN 2h.5 (2026-09-14, RUNNING_LOG §488–§489, the composer: 'there should just be one dynamic, that entity should be treated as a chord'; his choice A): chordRules on a device makes the part's notes within chordSimulSeconds (engraving.layout, default 0.05) of one onset ONE CHORD across both staves — (1) one band dynamic per chord, drawn by its LOWEST note, centred on that note's column, the band of the chord's loudest member (max vel) — piece #2's placeBelowChord; (2) the let-ring slurs by Gould's chord-tie rule: the top note's above, the bottom note's below, inner notes by the middle-line rule (§486). A single note is unchanged. The strike and trill envs say chordRules false — a strike carries its own dynamic on every note (§400).",
+     "_mainNote": "PLAN 2h.5 (2026-09-14, RUNNING_LOG §485–§486, the composer, on the D2 at 217.55 s): 'Open head, GoLine, and Dynamic. Those are fine. Please get rid of the duration line. And then I want a let ring slur' — the ring bar of the first build (§484) is gone; the let-ring slur is piece #2's l.v. crescent (glyphs.json letRing), placed by layout's letRing rule: 0.15 ss right of the unit's rightmost ink, stackGapSs outside the head's ink, above for a head on or above the middle line, below (mirrored) for one below it; on the chain's side it is the chain's first element. letRingGapSs (engraving.layout) overrides the 0.15.",
+     "plucked": {
+      "goLine": false,
+      "nhAnchor": "leftEdge",
+      "nhUnit": true,
+      "nhHead": "open",
+      "brick": false,
+      "dynMark": "band",
+      "chainSide": "below",
+      "_chainSideNote": "2h.5, seen live: the side-with-room rule (a single-staff lane's) flipped the C2's chain UP into the inter-staff gap, onto the C6's — a piano's Ped. belongs under the bass staff whatever the room. 'below' pins it.",
+      "letRing": true,
+      "chordRules": true,
+      "textAbove": "pizz.",
+      "pedalMark": "Ped"
+     },
+     "_pluckedNote": "PLAN 2h.5 (2026-09-14, RUNNING_LOG §490–§491, the composer: 'they will be same as the plain ones. Let ring, no duration line … chords, one dynamic … bring over the proper pizz. … the right font and text … and the proper pedal marking … same size everything … no rosette … no bracket'; his choice A on the release): plucked = main (go line · open head · one band dynamic per chord · the l.v. slurs by the chord rule) PLUS textAbove — piece #2's baked italic 'pizz.' (glyphs.text), once per onset, above the chord's top note, centred on its column, stackGapSs above the unit's ink or the staff, or 2 × stackGapSs above the top note's slur when that slur is above (piece #2's cluster rule) — and pedalMark — piece #2's Emmentaler 'Ped.' (glyphs.pedal), once per chord under its lowest note, the chain's slot after the dynamic, centred. No release sign: the release is the performance instructions' legend (NITS 2026-09-14). §492–§494: the 0.5 s 'damped' thresholds (letRingMinSeconds / pedalMinSeconds) were his to reject and he did — every plucked onset rings: Ped. once per chord, the slur on every note, the open head kept on a short single pluck; the three close pairs (327.27 · 345.48 · 384.92) are beamed 8ths instead (PLAN 2g.1, the cross-staff beam). columnInk: pizz. and Ped. count as the note column's ink — the column shifts left so the widest of them ends nhGapSs before the go line (his eye, §492); the l.v. slur is exempt.",
      "fortepiano": {
       "goLine": true,
       "gc": true,
@@ -258,7 +294,15 @@
       "instrAlign": "middle"
      },
      "_staccatoNote": "day 23, OPTION B of the layering discussion (Tufte: layering & separation, 1+1=3, position before colour): NO go line for a point-in-time gesture — the GC's impact marker IS the go mark, so a go line was a third encoding of one time; the unit sits BEFORE the go time like every other unit (reading rule: the ink just before the mark is what you play at the mark), with nhGapSs 0.6 so the head clears the marker's left edge (r 0.51 ss) with air; head, dot and ledgers sit under the arc (the ictus hang keeps the arc at 35 %+ height 0.05 s before impact); stem and flag may cross it (composer). Option A (centred on go, marker lightened) rejected: it lightens the datum. nhAnchor 'center' remains available as a device value."
-    }
+    },
+    "byPairBeam": {
+     "nhHead": "filled",
+     "nhHeadScale": 0.844,
+     "nhStemDir": "up",
+     "nhAnchor": "leftEdge",
+     "goLine": false
+    },
+    "_pairBeamNote": "PLAN 2h.5 (2026-09-14, RUNNING_LOG §492–§495; PLAN 2g.1's cross-staff beam pulled forward for the morph section's plucked pairs; the composer: 'make those black note heads, 8th beams … stems up above treble, keep pizz and dynamics on both, ped on first … include let ring slurs on each'; 'two beamed 8ths, no rests'). A note named by notate_section --pairBeam carries device.pairBeam; this look merges over its technique device (layout makeDeviceOf) and the per-note override still wins. layout draws each member's stem UP to ONE 8th beam above the part's TOP staff (the flagged-stem height — the staff edge + flagClearanceSs + an 8th flag — raised for a top-staff member's minimum stem; a bass-staff member's stem is drawn to that height in the top staff's coordinates, render's sysB), the pizz. of every member on one row above the beam (NOTATION_STANDARDS §2: the group's marks on the beam side), the dynamic and Ped. in each member's own below-chain (Ped. on the first member only), the l.v. slur opposite the stem (below). NOTATION_STANDARDS §2's cross-staff design: 'one beam ABOVE the treble staff, the lower notes' stems reaching down into the bass'."
    },
    "_devicesNote": "day 22 (second note, wc-23): DEVICE MEMBERSHIP — which drawn elements an un-notated event carries: curve (needs level samples) · cut (90° back edge) · goLine (dotted go line) · nhUnit (open head + accidental + ledgers + ottava, right-anchored nhGapSs before go) · dynPair (true = the dynPair below; an array = that pair). dynMark (a single engraved mark on the dynamic slot — the glyph key; fp/sfp/sfzp captured day 22 by tools/glyph_probe_dyn_extra.js). Resolved byEnv first, then byTechnique, then a per-item engraving override `device:{...}` on top. The composer works note by note in order; a technique entry is how a settled note's device reaches its siblings. fortepiano = go line + nh-unit only so far (composer: 'Open Notehead unit with GoLine… Let's start with that'). nhHead ('open' | 'filled') and nhStem ('flag8' | 'plain' | absent) arrived day 23 with wc-29 — composer: 'black note head, stem, and I think one flag' — piece #2's GC one-shot convention (pluckedPianoChord: filled head, stem, 8th flag at the locked sizes); stem direction = house rule, per-item `stemDir` overrides.",
    "stackBelow": [

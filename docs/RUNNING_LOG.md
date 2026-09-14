@@ -13256,3 +13256,455 @@ draws three "(slap)" labels at the matching x positions (58.705 s is expected at
 
 **Not done, his by his word:** the audio. `notation/audio/piece-septet.wav` still plays senza vibrato at 58.7 s; he will replace the audio
 before the final demo video (NEXT STEPS N3).
+
+## §483. PLAN 2h.5 opened: the piano's notes in the morphs — his reference read, a mock-up drawn in chat (2026-09-14, Fable 5.1)
+
+**His word:** *"lets look at the piano part for the morphs section; pls surface my recent prompt about where to look"* → CN-82 surfaced. Then:
+*"no need for formal planning convo; please look at these and draw up a mock up here in chat choose a regular example with 2 notes and a
+plucked example with 2 notes from the morph section. no gcs, open noteheads for both"* — and on "rosetta" = the pedal-release rosette ✱:
+*"yes"*. (So the planning method's phase 1 is waived for this item by his word.)
+
+**Read (read-only, both repos):** piece #2's `pluckedPianoChord.js` idiom and `pluckedPianoASRMotif.js` translator headers — the device
+around 0:50 is the ASR motif: the plucked chord as a stem-down 8th with "pizz." above, fff below, "Ped." below; ASR mode adds the release
+glyph `*` (emmentaler pedal-star) at the end time, a two-hook bracket below spanning the duration, Ped. at the bottom of the frame; the
+rosette lines up with the chord's pedal bottom. Piece #4's `notation_instructions/index.html` — the held note's duration bar: begin at the
+go line, hold until the cursor reaches the end of the line (PERFORMANCE_NOTES B3 "ring bars / drawn duration bars").
+
+**The 44 notes, listed from the save (layer 2, 205.85–427.75 s):** two populations — 21 notes at 205.85–298.77 s drawn 2.4–7.3 s long
+(9 plucked, 12 ordinary; the section's first event a plucked C2+C6 chord), and 23 plucked notes at 318.48–427.75 s drawn 0.08–0.20 s
+(pairs 0.01–0.24 s apart). §476's "ringing 4.5–7 s" describes the first population only.
+
+**The examples chosen:** regular = D2 at 217.55 s (4.55 s, vel 55) → D3 at 222.29 s (4.65 s, vel 91) — the only adjacent ordinary pair whose
+rings do not overlap. Plucked = the C2+C6 chord at 205.85 s (6.52 s) → C♯4 at 212.84 s (4.60 s) — the only adjacent plucked onsets in the
+long population (every other plucked pair has an ordinary note between). Two onsets, three heads; said so.
+
+**The mock (SVG in chat):** grand staff, 45 px/s, open heads, no GC, no stems. Regular = piece #4's duration line from the head. Plucked =
+piece #2's device without the stem/flag: "pizz." above the system, "Ped." under the bass staff at the onset, ✱ at the release on Ped.'s
+baseline, the two-hook bracket below spanning onset → release. Dynamics left out (the piano's morph dynamics are undecided; velocities
+55/91 and 90/90/72). Put to him: one duration device for both or the two as drawn · an "ord." mark on the regular notes · the short-drawn
+plucked notes from 318 s.
+
+## §484. PLAN 2h.5 built in the score: the piano's morph devices — `main` the tuba's held note, `plucked` piece #2's pedal row (2026-09-14, Fable 5.1)
+
+**His word, on the chat mock-up:** *"No. Before you generated using the actual SVGs. But if it's easier, just do it in the score, whichever is
+easier."* Then, after asking for the cd and the server command: *"go, server is up, do it in the score"*. So the mock is the build.
+
+**How the devices reach exactly these notes:** a device resolves byTechnique → byEnv → per-item (`layout.js makeDeviceOf`). The 44 notes
+carry no env (extract_core: no srcKind); every other `main` in the piece is a strike (433) or a trill (10) by env. So `byTechnique.main`
+and `byTechnique.plucked` reach the morph section's 12 + 32 and nothing else — with one guard: a strike merges its env ON TOP of the
+technique entry and `byEnv.strike` said nothing about the ring bar, so `main.ringBar:true` would have leaked onto 433 piano strikes.
+`byEnv.strike` now says `ringBar:false` out loud. No `dynOnChange` on either: it would leak into the strikes the same way, and his latest
+rule there is the dynamic on every note (§400).
+
+**The two devices (container.json, `_pianoMorphNote`):** `main` = go line · open head · no brick · the ring bar (`ringBarBreath:false` — a
+piano takes no breath, so the bar is the full drawn length) · band dynamic. `plucked` = go line · open head · no brick · band dynamic ·
+"pizz." in the instruction slot (centred) · `chainSide:'below'` · the PEDAL ROW (`pedal`, `pedalText` "Ped.", `pedalRelease` "✱",
+`pedalMinSeconds` 0.5) · the RING BRACKET (`ringBracket`).
+
+**Engine additions:** `layout.js` — `pedalOwner` (a Map, decided once per part in onset order like `dynShown`/`instrShown`): notes of one
+part whose onsets fall within `pedalSimulSeconds` (0.05) of the first are one chord; the LOWEST owns the row; the row's release is the
+chord's latest end. In the nh-unit chain after the instruction slot: "Ped." (italic, left-justified with the head, technique size), the
+rosette at the release on the same baseline, then the bracket a stack gap + hook below (`hookbracket` item, the ottava's hook length
+0.8), advancing `chainBotY` so an ottava stays outermost. A pedal device writes its instruction ONCE per chord (the owner). `render.js` —
+`italic` on text items; the `hookbracket` kind: a solid path, the ottava's line thickness, hooks toward the staff, clipped to the page
+like the ring bar with a hook only where its end is on the page.
+
+**Two things seen live and corrected before his eye:** (1) the side-with-room rule (a single-staff lane's) flipped the C2's chain UP
+into the inter-staff gap, onto the C6's — "Ped." at y 395.5, the C6's "pizz." at 395.6; `chainSide:'below'` pins a pedal chain under
+its staff. (2) two "pizz." stacked on the chord (one per note) — now one, with the owner.
+
+**Verified in the running page (MAIN file, video view, page 18–19):** the chord at 205.85 s — one "pizz." (1195.7, 493.8), "Ped."
+(1191.4, 504.6) under the bass staff, the bracket `M1189.18 509.58 V515.90 H1920` running off the page and continuing on page 19 to the
+✱ at (361.6, 504.6) = 212.37 s; the C♯4 at 212.84 s — "pizz." / "Ped." between the staves (its own staff is the treble), the bracket
+to the ✱ at 217.44 s; the D2 at 217.55 s — the ring bar (1158→1859 px = 4.55 s, 5.27 px tall) at the head's centre. The short plucks
+(416.66, 427.75 s) draw "pizz." only — under `pedalMinSeconds`, no row. The MAIN IR rebuilt for the geometry check: byte-identical
+(devices are registry-side), GEOMETRY 31 findings as before, none in 200–430 s. Tests: 86 · 174 · 92 · identity all green.
+
+**For his eye:** the C♯4's pedal row sits between the staves (the chain lives under the note's own staff) — piano practice puts Ped. under
+the bass staff always; a rule to pin the pedal row there is one line if he wants it · the dynamics: every note its band mark (the C6 and
+the C2 both) · the short plucks: "pizz." alone · the two duration devices side by side (question (a), §483).
+
+## §485. His eye on the 2h.5 build: "these aren't right" — back up, one device at a time; the ordinary note first, with a let-ring slur from piece #2 (2026-09-14, Fable 5.1)
+
+**His word:** *"Okay. These aren't right. Let's back up a step and just take one at a time. So first, let's do the normal main piano what?
+and we'll do as a single example the d two at two seventeen point five five. Open head. GoLine, and Dynamic. Those are fine. Please get
+rid of the duration line. And then I want a lead ring slur. Please see the two piano, two percussion piece. look at the piano two part at
+around 3:09; please find the standards and the spacing, etcetera, for these from that piece. So we know when... what the spacing is and
+when they're above or below the notes. And please come back to me with the final spec in the chat. and don't draw it in yet. then next the
+one at 269.13, just hold location now and make note to find the stemming."*
+
+**Read as:** (1) `main` (the ordinary piano note in the morph section), the single example D2 at 217.55 s: open head · go line · dynamic
+stay; the ring bar goes; a LET-RING slur (l.v. — "lead ring" heard as let-ring) is added, its standard taken from piece #2's piano 2 part
+around 3:09 — the spacing from the head, the above/below rule. Spec first, in chat; nothing drawn until he says. (2) The plucked device
+(§484) stands aside until the ordinary note is settled — one at a time. (3) HELD FOR LATER: the note at 269.13 s (`wc-1513` G♯2 + `wc-1514`
+G♯5, ordinary, 4.75 s, both vel 90 — a two-staff simultaneity): find the STEMMING for it. Location held; nothing done.
+
+## §486. The let-ring slur, found in piece #2 (read-only) — the spec for the septet's ordinary piano note, put to him before anything is drawn (2026-09-14, Fable 5.1)
+
+**Where 3:09 is in piece #2:** `composer_data/Tester.json` (the newest save) — piano 2 at 187.95 s (`mk-199`, harmonics piano, D1 partial 2
+→ D2) and at 189.31 s (`mk-202`, harmonics piano, B0 partial 2 → B1). Both draw the `pluckedPianoHarmonic` idiom (NOTATION_SYSTEM_PLAN
+§17d.1, locked session 77, 2026-05-23): a filled head (the played key) and a diamond (the sounding partial) on one stem; the let-ring slur
+is the diamond's ornament. That is the only let-ring slur the piece has — the palm-slap cluster idiom (§17e) reuses the same construction.
+
+**The glyph (`engine/glyphs/let_ring_paths.json`, baked by `oracle/probes/bake_let_ring.js` from LilyPond 2.24's default `\laissezVibrer`
+at staff 20, NoteHead −2 — variant 3, a stem-down open diamond; his pick):** a fixed-width crescent, width 1.6159 ss, height 0.3725 ss, a
+stroked open path at 0.1 ss (visual 1.716 × 0.473 ss); origin = the LEFT endpoint (the attachment); anchors leftAttach (0, 0.3725),
+rightTip (1.6159, 0.3725), peak (0.8079, 0) — the curve rises from its two ends. LilyPond's `minimum-length` does not stretch an l.v.
+tie (variants 3/4/5 identical), so one width for every note. Path: `M 0 0.3725 C 0.4135 -0.1242 1.2024 -0.1242 1.6159 0.3725 L 1.6159
+0.3725 C 1.2024 -0.0242 0.4135 -0.0242 0 0.3725 z`.
+
+**The placement as BUILT there (`idioms/pluckedPianoHarmonic.js` 495–508; dimensions `letRing.gapToNotehead` 0.15, `verticalSpacing.
+standardSs` 0.45):** x = the head's right edge + 0.15 ss (left end of the crescent); y = the crescent's attachment line 0.45 ss ABOVE the
+head's top ink, curving up from there — i.e. the slur sits wholly above and to the right of the head, a "parallel ornament" outside the
+chrome chain (the dynamic hangs under the chord and never meets it). The library's own comment ("at the head's centre y") is the LP
+attachment; the idiom moved it above by the composer's session-77 rule (chrome above the diamond).
+
+**Above or below — what the piece knows:** only ABOVE. The idiom has one placement; the probe explored `direction = #UP` as a forcing
+and the composer's spec fixed it above the sounding head. LilyPond's own default, which the glyph was baked from: the tie curves
+OPPOSITE THE STEM — a stem-down note (on or above the middle line) gets it above, a stem-up note (below the middle line) below.
+
+**The spec put to him for the septet's `main` (the D2 at 217.55 s as the example):** device = go line · open head (nh-unit) · band dynamic
+· let-ring slur; NO ring bar, no brick, no GC. Slur glyph = piece #2's crescent verbatim, ported into the septet's glyph registry as a
+stroked path (the first stroked glyph; render draws it like the hook bracket). Horizontal: left end 0.15 ss right of the unit's RIGHTMOST
+INK — the head's right edge, or the ledger line's overhang when the head sits ON a ledger (§401m's rule). Vertical: 0.45 ss (stackGapSs)
+outside the head's ink on the slur's side, the crescent's opening toward the head. Side: the classic tie rule for a stemless head —
+on or above the staff's middle line → above; below it → below (D2, below the bass staff → below; the crescent mirrored). On its side the
+slur is the chain's FIRST element (the articulation slot), so a dynamic on the same side stacks 0.45 past the slur's outer edge instead of
+under it (piece #2 never had the two on one side). Noted, not decided: the head ends 0.25 ss before the go line, so the slur's first
+0.1 ss crosses the dotted go line — the ring bar starts AT the go line, so this is the same ink relation; and a 4.5–7 s ring drawn as a
+1.7 ss crescent says "let ring", not how long — the drawn length is the composer's, in the save, if he ever wants it back.
+
+## §487. The let-ring slur drawn in: `main` = go line · open head · dynamic · l.v. slur; the ring bar gone (2026-09-14, Fable 5.1)
+
+**His word:** *"approved, draw it in"* (the §486 spec).
+
+**Built:** `notation/lib/glyphs.json` — `letRing`, piece #2's crescent verbatim (path, 1.6159 × 0.3725 ss, stroke 0.1, the three anchors,
+provenance). `container.json` — `byTechnique.main`: the ring bar out, `letRing: true` in (`_mainNote`); `byEnv.strike` and `byEnv.trill`
+say `letRing: false`. `layout.js` — the letRing rule right after the chain's reference edges are set: side by `yDraw >= 0` (the middle
+line), x = the unit's rightmost ink + `letRingGapSs` (0.15; the ledger's overhang counted only when the head sits ON a ledger), the
+attachment line `stackGapSs` outside the head's ink on that side, item `lvslur` {dxSs, ySs, dir}; on the chain's side the chain's
+reference edge moves to the slur's outer edge. `render.js` — `lvslur`: the path in a group translated to the attachment point and
+scaled by ssPx, y-mirrored for 'below'; filled and stroked at 0.1 ss, round joins.
+
+**Two leaks caught by the battery, same shape as §484's:** a strike and a trill merge their env on top of `byTechnique.main`, and
+neither env said anything about `letRing` — so the first run put a slur on every piano strike and trill: `test_trills.js` RED (1) and the
+build's GEOMETRY count 42 (was 31), all of it outside the morph span. `letRing: false` in both envs: trills 92 green, GEOMETRY 31, the
+IR byte-identical. The rule, now twice learned: **a new device field on `byTechnique.main` must be cancelled in `byEnv.strike` and
+`byEnv.trill` out loud, or it rides the env.**
+
+**Seen in the page (MAIN file, ZOOM 216.5–222.2 s):** one `lvslur` at the D2 — `translate(468.65, 951.72) scale(15.8, −15.8)`: the
+mirrored ('below') crescent, D2 being below the bass staff's middle line; no ring bar on the page. Tests: 86 · 174 · 92 · identity green.
+
+## §488. "That one will work" — the D2 signed off; the chord question: l.v. slurs on a stemless piano chord, and where its one dynamic goes (2026-09-14, Fable 5.1)
+
+**His word:** *"Okay. That one will work. And then can you tell me for piano cords and, for example, for whole notes, which don't have
+stems. What's the standard for let ring slurs? So for the cord at two sixty nine, would we put a let ring slur on each note? But look it
+up. Tell me what traditional engraving does with whole note cords. And then the cords would just have one dynamic. let's also establish
+where that dynamic should go. So at two sixty nine, there should just be one dynamic that entity should be treated as a cord. I see the
+slurs already in above and below. Let's just verify that that's the way to treat it and decide or establish where the dynamic should go
+in the case of cords, piano cords."*
+
+**Looked up (web, 2026-09-14):** (1) LilyPond 2.24 Notation Reference, Writing rhythms → Ties: "L.v. ties (laissez vibrer) indicate that
+notes must not be damped at the end. It is used in notation for piano, harp and other string and percussion instruments" — its example
+is a WHOLE-NOTE CHORD, `<c' f' g'>1\laissezVibrer`, drawn with an l.v. tie on every note; and "When a tie is applied to a chord, all note
+heads whose pitches match are connected" (partial ties are written inside the chord). (2) Steinberg's Dorico notation reference (tie
+curvature direction), giving Gould's rule: in a tied chord the uppermost tie curves up, the bottommost down, "those in the middle go up
+or down following the usual rules"; even count → "equally split", odd → "the majority of ties curve towards the notehead end"; a chord
+containing one second or unison: the upper note of the second and everything above it curve up, the lower note and everything below
+curve down. The "usual rule" for a stemless head = position against the staff's middle line (LilyPond's tie default, §486). Gould's book
+itself is not online; the rule reached us through Steinberg's page and a MuseScore issue quoting it.
+
+**So the answer put to him:** yes — every note of a let-ring chord carries its own slur (a note without one reads as damped); the outer
+two curve outward (top above, bottom below), inner notes by the middle-line rule, a second splits at the second. At 269.13 s (G♯2 + G♯5):
+G♯5 above, G♯2 below — what the page already shows, now by the chord rule and not by coincidence. The engine's rule to add: a chord =
+the part's notes within pedalSimulSeconds (0.05) of one onset, across both staves; top → above, bottom → below, the rest by position.
+
+**The one dynamic — two placements, both traditional:** (A) BELOW THE CHORD, centred on the chord column under its lowest note — piece
+#2's own rule (`placeBelowChord` at `chordCenterX`, the fff under every plucked chord) and the septet's chain (the D2's dynamic sits
+under its head); (B) BETWEEN THE STAVES, centred in the gap on the chord column — the classical piano convention (a dynamic between the
+staves speaks to both hands). Recommended: (A), one rule for a note and a chord, the reader always finds the dynamic under the lowest
+head; (B) for a chord that spans both staves is the purer piano look and is a per-part rule if he prefers it. The dynamic's band: the
+chord's loudest member (max vel — 269.13 s: both 90).
+
+## §489. "A, draw it in" — the chord rules built: one dynamic under the lowest note, the slurs by Gould's chord rule (2026-09-14, Fable 5.1)
+
+**His word:** *"A, draw it in"*.
+
+**Built:** `container.json` — `chordRules: true` on `main` and `plucked` (`_chordRulesNote`), `chordRules: false` in `byEnv.strike` and
+`byEnv.trill` (the §487 lesson, applied before the battery could catch it: a strike keeps its own dynamic on every note, §400).
+`layout.js` — `chordOf` (a Map, decided once per part in onset order like `pedalOwner`): the part's `chordRules` notes within
+`chordSimulSeconds` (0.05) of one onset, across both staves, are one chord → {top, bottom, maxVel, n}; a lone note is not in the map. In
+the nh-unit: the band dynamic is drawn only by the chord's bottom note, at `bandOf(maxVel)`; the let-ring side is `top → above, bottom →
+below, inner → the middle-line rule`. Nothing new in render.
+
+**Checked:** tests 86 · 174 · 92 · identity green; the MAIN rebuild for the geometry check: 31 findings as before, IR byte-identical. In
+the page (ZOOM 268.4–274.1 s), the chord at 269.13 s: two slurs — the G♯5's `scale(15.8, 15.8)` (above) and the G♯2's `scale(15.8,
+−15.8)` (below) — and ONE dynamic, `mf` (vel 90's band), under the G♯2 on the bass staff's bottom line; nothing under the treble staff
+where the G♯5's own `mf` used to be.
+
+**Open, for his eye:** (a) the chord tolerance 0.05 s — the pair at 345.48/345.67 (0.19 s apart) stays two notes with two dynamics, as
+does 327.27/327.51 (0.24 s); (b) the G♯2 sits ON the bass staff's bottom line, so its slur crosses nothing but the ledger-free space
+below — the inner-note case (a slur inside the staff, crossing a line) has no example in the 44 notes yet.
+
+## §490. "That is good" — the chord signed off; the plucked device: his spec, and the pedal-release question researched (2026-09-14, Fable 5.1)
+
+**His word:** *"Okay. That is good. Now let's move on to the plucked ones. I believe they will be same as the plain ones. Let ring, no
+duration line, etcetera. cords, one dynamic. Can you bring over, though, the proper pits that we used the right font and text, etcetera,
+that we used in the two piano, two percussion? and the proper pedal marking, again, the one we ported from Lillipont that's used in two
+piano percussion. same size everything. and then no Rosetta end of pedal and no bracket. Or, actually, can you research if I do a let
+ring with a pedal? is it assumed that the pedal will be released either at the end of the let ring so when nothing is sounding or when
+the next note comes, or do you have to explicitly say stop pedal? So, for example, my intention is that they would let it ring until it's
+gone, not sounding anymore, or until they have to play another note. But, like, for example, if there's a plucked note and then, say, four
+seconds later, there's a normal note played. I don't want them to hold the pedal over the plate note. They would let those ring by holding
+the key down. and release the pedal before that. then I had already given you a reference time in my original saved prompt. for the two
+piano, two percussion plucked notation."* ("pits" = pizz.; "Lillipont" = LilyPond; "Rosetta" = the rosette ✱; "plate note" = the plain note.)
+
+**Piece #2's pizz. and Ped., found (read-only):** `text_paths.json` "pizz." — a baked path, Crimson Pro Light ITALIC at 1.0998 ss (opentype.js
+render of CrimsonPro-LightItalic.ttf; "LP magstep −6 corpus-confirmed"), 1.8108 × 0.9473 ss, anchor (0.0634, 0.7110) = the baseline-left.
+`pedal_paths.json` "Ped." — the Emmentaler sustain-pedal glyph at SustainPedal font-size −4 (scaleFactor 0.7 baked in), 2.4332 × 1.4 ss,
+origin top-left; "*" 1.0892 × 1.0892 (not wanted). Placement in its plucked chord (`pluckedPianoChord.js` header): pizz. ABOVE the chord's
+highest element, the dynamic 0.45 ss below the chord, Ped. 0.45 ss below the dynamic, all centred on the un-displaced head column
+(`placeBelowChord` at chordCenterX). Where an l.v. slur and an instruction text share the side (the cluster idiom §17e): the text sits
+2 × 0.45 ss above the slur's top — "the slur sits horizontally under the right half of the wide instruction text and reads tight at
+canonical clearance" (his own v3 rule there).
+
+**The pedal-release research (web, 2026-09-14):** LilyPond 2.24, Piano → Piano pedals: the text style is `Ped.` … `*`, "The sustain pedal
+and the una corda pedal use the text style by default", and — the sentence that answers him — "Pedalling to the final bar line is
+indicated by omitting the final pedal off command": a `Ped.` with no release is read as HELD, to the end. The release is always explicit:
+the `*`, the bracket's closing hook, or the next `Ped.` (a re-pedal). Gould's text is not online (the NOTATIO thread discusses her
+pedalling chapter without quoting it; her preference there is the line style for precision). So: NO — the tradition does not let a
+player infer "release when the sound is gone or at the next note"; an unmarked Ped. is held over the next note.
+
+**What his save already says:** every long plucked note's drawn end lands just BEFORE the next ordinary note — 217.44 → 217.55 · 231.63 →
+231.71 · 242.38 → 242.65 · 278.05 → 278.34 · 286.27 → 286.68 (the C2 at 256.55 ends 263.63, the chord at 269.13 is 5.5 s later). The release
+he intends is in the data, note by note.
+
+**The spec put to him:** `plucked` = `main` (go line · open head · one band dynamic per chord under the lowest note · l.v. slurs by the
+chord rule · no ring bar) PLUS: (1) "pizz." — piece #2's baked italic text at 1.0998 ss, once per onset, ABOVE the top head, centred on the
+column, 0.45 ss above the head's ink — or 0.9 ss above the slur's top where the top note's slur is above (piece #2's own rule); (2) "Ped."
+— piece #2's Emmentaler glyph at its size, once per chord, 0.45 ss below the chord's dynamic, centred on the column; (3) no ✱, no bracket;
+the release by a one-line legend in the performance notes ("Ped.: hold until the sound has died or until the next note, whichever comes
+first — never over an ordinary note"), OR the ✱ at the drawn end (his own release points) — his call; (4) the 23 short plucks from 318 s
+(drawn 0.08–0.20 s): pizz. only — no Ped., no l.v. (a 0.1 s pluck is damped, not let ring) — his call.
+
+## §491. "A … good to draw" — the plucked device built: piece #2's pizz. and Ped. ported, the l.v. and chord rules shared with main (2026-09-14, Fable 5.1)
+
+**His word:** *"a make a note pls for when we write the performance instructions; and then good to draw"*. The note: NITS.md 2026-09-14
+"FOR THE PERFORMANCE INSTRUCTIONS" — the pedal legend drafted from his words, plus the l.v. legend line.
+
+**Built:** `glyphs.json` — `text["pizz."]` (piece #2's baked Crimson Pro Light Italic 1.0998 ss path, 1.8108 × 0.9473, anchor baselineLeft)
+and `pedal.Ped` (piece #2's Emmentaler sustain-pedal path, 2.4332 × 1.4), both verbatim with provenance. `stamps.js` — `text(kind)`,
+`pedal(kind)` boxes (centred like a dynamic). `render.js` — `boxFor` families `text-` / `pedal-`; the §484 `hookbracket` kind removed.
+`container.json` — `plucked` rewritten: main's set (go line · open head · band dynamic · `chainSide: below` · `letRing` · `chordRules`)
+plus `textAbove: "pizz."`, `pedalMark: "Ped"`, `letRingMinSeconds` / `pedalMinSeconds` 0.5 (`_pluckedNote`); `_pianoMorphNote` rewritten
+to point at the three device notes. `layout.js` — the §484 `pedalOwner` set and the Ped./✱/bracket row removed (chordOf covers the chord);
+the instruction-once tweak reverted; the l.v. block skips a note under `letRingMinSeconds` and records the slur's top (`lvTopY`) when
+above; "Ped." = a glyph item in the chain after the dynamic, by the chord's bottom note only, not under `pedalMinSeconds`; "pizz." = a
+glyph item above, by the chord's top note only, its bottom `stackGapSs` above the unit's ink or the staff — or 2 × `stackGapSs` above the
+slur's top when the top note's slur is above (piece #2's cluster rule) — advancing `chainTopY` so the range alert and an above-ottava
+stack past it.
+
+**Checked from the engine (the MAIN IR laid out by the test harness's own call, items listed per event):** the chord at 205.85 s — C6
+(treble, y 4, two ledgers): slur above at 4.89, "pizz." centred on its column with its bottom at 6.26 = the slur's top 5.36 + 0.90, NO
+dynamic; C2 (bass, y −4): slur below at −4.89, `dyn-mf` at −6.30 (the chord's one dynamic, vel 90's band), `pedal-Ped` at −7.93. The
+C♯4 at 212.84 s (treble, y −3): sharp, slur below, `dyn-p`, `pedal-Ped`, "pizz." above the staff at 2.92. The short pair at 327.27 /
+327.51 s (0.24 s apart, drawn 0.10 / 0.11 s): each "pizz." above and its own dynamic (mf, f), no slur, no Ped. — damped plucks. Tests
+86 · 174 · 92 · identity green; the MAIN rebuild: GEOMETRY 31 as before, none in 200–430 s, the IR byte-identical. Seen on the page
+(ZOOM 204.9–210.7 s): "pizz." above the C6, `mf` and `Ped.` under the C2.
+
+## §492. His eye on the plucked device (the C♯4 at 212.84 s, an image): the column vs the go line, the close pairs, the missing pedals — a discussion turn, nothing built (2026-09-14, Fable 5.1)
+
+**His word (with a crop of the page at 212.84 s — "pizz." above the staff, ♯ + open head, the slur below-right, "p", "Ped.", the go line
+through the column):** *"can you treat the pizz and ped as part of the note column and give adequat cleaeance to the go line? so the
+image the note column would go to the left, there would be whatever standard space we are using horizontally then the go line ; lv slur
+exempt from note column; at 327.26+327.51 make those black note heads, 8th beams, check in on the exsisting beaming standards, stems up
+above treble, keep pizz and dynamics on both, ped on first(missing on both); And then any close notes like that within a certain threshold?
+should be beamed the same. But can you just give me the survey? I think there's a few of them. I forgot how far apart they are. 2 Go lines
+at three thirty nine point seven nine. go ahead and make those go times of both notes the exact same. So whatever is the soonest. And then
+just one go line, please. And then Is it because you just notated the single one that all of the pedals are missing? Let's discuss this,
+and then I'll give you more feedback."*
+
+**What the image shows and why:** "pizz." (1.81 ss wide) and "Ped." (2.43 ss) are centred on the head column, whose rightmost ink ends
+nhGapSs (0.25) before the go line — so their right halves (0.9 and 1.2 ss from the column centre, against the head's 0.55) cross the go
+line. His fix: the column's rightmost ink = the widest of head · accidental · pizz. · Ped.; the whole column moves left until that ink
+ends the standard gap before the go line; the l.v. slur exempt (it may cross the line, as the ring bar did).
+
+**The survey (the save, piano, 205–428 s; consecutive onsets under 0.5 s apart):** 13 pairs. TEN are chords by the 0.05 s rule (their
+spreads 0.001–0.020 s): 205.85 C2+C6 · 269.13 G♯2+G♯5 · 339.80 D3+D4 (0.008) · 350.30 D♯5+D4 (0.016) · 369.92 D3+D♯4 (0.005) · 375.61
+C♯5+A5 (0.011) · 402.47 D5+D♯3 (0.001) · 407.97 A5+D5 (0.020) · 416.66 D♯4+D5 (0.006) · 427.75 D6+D2 (0.009). THREE are close pairs:
+**327.27 D♯5 → 327.51 D3 (0.245 s)** · **345.48 A4 → 345.67 C♯4 (0.193 s)** · **384.92 D6 → 385.14 D2 (0.216 s)** — all plucked, all
+drawn 0.08–0.20 s, each on both staves. The gap between the two populations is clean (0.020 vs 0.193 s).
+
+**The two go lines at 339.79:** the D3+D4 chord's onsets are 0.008 s apart; the go line is per note, so two lines 0.008 s apart (≈ 1.3 px
+at the video scale — a doubled line). Eight of the ten chords have a spread; every one draws a doubled line at some zoom.
+
+**The missing pedals:** not the single-note build — the §490 rule (4), `pedalMinSeconds` 0.5: a pluck drawn under 0.5 s took no Ped.
+and no slur ("damped"). He wants Ped. on the pair's first note, so the reading was wrong: the short plucks ring (the pedal holds them).
+
+**Put to him (the discussion):** (1) the column rule as he described — the alternative, right-aligning pizz. and Ped. to the head's
+right edge (the head stays close to the go line, the texts hang left), noted; (2) the pair at 327.27: the cross-staff beam is PLAN 2g.1
+(NOTATION_STANDARDS §2: "one beam ABOVE the treble staff, the lower notes' stems reaching down into the bass" — his design, deferred to
+section 3) — building it now for the three pairs is the same build; the pair's rhythm: §2's pair standard is 16th · 16th rest · 16th ·
+16th rest (the beam over the rest) — his "8th beams" read as two beamed 8ths, no rests — to confirm; (3) the go line: one per chord at
+its first onset as an engine rule (all ten chords) vs snapping the save's onsets (the ground truth; his playing) — the rule recommended,
+the snap his call; (4) Ped. on every plucked onset (a chord once, a beamed pair on its first) — the threshold dropped; and whether the
+short plucks and the beamed pairs also carry the l.v. slur.
+
+## §493. His answers: slurs on the beamed pairs too; the 327.27 pair first; all three pairs beamed; the chords snapped to the soonest time (2026-09-14, Fable 5.1)
+
+**His word:** *"for the close ones that are beamed. I forgot also include let ring slurs on each. And let me just see the one at three
+twenty seven point two seven first. and then we'll fill in the rest. All the pairs you identified should be beamed, and then the courts
+should be unified to the the soonest time. And then there's just a bit too much to read. So can you give me a simple, very concise summary
+of what needs to be done in any additional decisions?"* — decided: l.v. slur on each note of a beamed pair · build 327.27 first, his eye,
+then 345.48 and 384.92 · the ten chords' onsets snapped in the SAVE to each chord's earliest (option b, §492) · the reply short.
+
+## §494. His yeses; steps 1–3 built (the column ink, the pedals everywhere, the chords snapped); the beam handed to a written plan (2026-09-14, Fable 5.1)
+
+**His word:** *"1 yes; 2 what is the .5s rule, then 2-5 again"* → explained (§490's damped threshold) → *"2y; 3y does this effect
+ir/composer score?; 4 y; ay, by and they still get the white notehead"*. Decided: the column rule as he described · Ped. on every plucked
+onset · the snap is in the composer save (the ground truth, D9) and the IR follows · the beamed pair = two beamed 8ths, no rests · a
+short single pluck keeps the open head and gets the slur.
+
+**Built:** (1) `container.json` plucked: `columnInk: true`, the two 0.5 s thresholds gone (`_pluckedNote` updated); `layout.js`: `headDx`
+now `let`; after the anchor rule, a `columnInk` device shifts the column left by max(pizz. half-width, Ped. half-width) − the head's
+half-width (0.663 ss for pizz. 1.81 / Ped. 2.43 / head 1.107) — the same for every chord member (device data), not on a trill's
+after-go unit or an anchored unit; the slur exempt. Checked on the C♯4 at 212.84 s: head column −1.743 (was −1.080); Ped.'s right edge
+at −0.53 ss, pizz.'s at −0.84, the ledger's at −0.91 — all before the go line. (2) Every short pluck now carries pizz. · dynamic ·
+Ped. · l.v. (327.27: both notes, pending the pair build). (3) `scores/piece-septet.json`: the ten chords' later notes moved to their
+chord's earliest onset, drawn lengths kept (0.001–0.020 s each; the dry run listed exactly the ten of §492's survey: wc-1502 · 1514 ·
+1772 · 1777 · 1781 · 1784 · 1789 · 1792 · 1796 · 1800); the round-trip guard held; the MAIN IR rebuilt, VALID vs source, 73 lines
+changed (those events' onsets and their chunks). One go line per chord now falls out of the data. **The audio render is one more step
+behind the save** (N3). Tests 86 · 174 · 92 · identity green; GEOMETRY 31.
+
+**Left — step 4, the beamed pair at 327.27 s, THE CROSS-STAFF BEAM (PLAN 2g.1 pulled forward), a written plan for Opus:** the pair
+D♯5 (treble) → D3 (bass), 0.245 s apart, plucked. Spec (his, §492–§494 + NOTATION_STANDARDS §2): filled heads (0.844, the cluster's),
+two beamed 8ths, no rests, ONE beam above the treble staff, both stems up (the D3's stem rising through the inter-staff gap to the
+beam), go line and the rest of the device per note: pizz. and the band dynamic on both, Ped. on the first only, an l.v. slur on each
+(by the middle-line rule per note — a beamed note's slur: the head's side rule stands), no GC (the strikes' beamed groups carry one; his
+"no gcs" for the piano's morph notes stands). Then his eye; then the same for 345.48 (A4 → C♯4, 0.193 s) and 384.92 (D6 → D2,
+0.216 s). Engine facts for the builder: the beamed group today is the `--cluster t0-t1@part` overlay (notate_section → figures.cluster →
+layout's beam groups), laid out PER STAFF — a group on both staves splits (NOTATION_STANDARDS §2, §463); the piano's staff routing is by
+pitch (`2:0` treble / `2:1` bass); the chain (dynamic · Ped.) hangs below each head by `chainSide: below`; the text above (pizz.) is
+placed against `chainTopY`/`inkTopY`, which a stem-up beamed unit must raise past the beam. The recorded MAIN build gains three
+`--cluster` spans (or the engine gains a "pair under 0.4 s in a chordRules device" rule — the standing §2 trigger, automatic) — the
+builder's call, said out loud in the journal.
+
+## §495. The first cross-staff beamed pair built at 327.27 s — `--pairBeam`, the registry's pair look, one beam above the treble (2026-09-14, Opus 5)
+
+**His word:** *"switched to opus, go build the 327.27 beam"* (the §494 plan).
+
+**The builder's call, said out loud:** a named flag, not an automatic rule. He asked to see ONE pair before the rest, and CLAUDE.md's D41 is
+"a new notation rule = a flag added to its recorded build". So `tools/notate_section.js --pairBeam wc-1769,wc-1770` (object ids, like
+`--noGc`; repeatable, one pair per occurrence) writes the device override `{ pairBeam: 'pb-wc-1769' }` on both members, and the MAIN
+file's recorded build now ends `… --morph grp-morph-03 --pairBeam wc-1769,wc-1770`. The existing `--cluster` path was NOT used: it lays
+out per staff (a group on both staves splits, §463) and carries a tempo fit, a grid and rests that a two-8th pair does not need.
+
+**Built:** `container.json` — `devices.byPairBeam` {nhHead filled, nhHeadScale 0.844, nhStemDir up} + `_pairBeamNote`. `layout.js` —
+`makeDeviceOf` merges `byPairBeam` over a pairBeam note's device (its own override still wins); a `pairOf` pre-pass (after `chordOf`)
+groups the members by key, sorts by onset, and fixes the beam line in the TOP staff's coordinates before either staff is laid out: the
+flagged-stem height (2 + flagClearanceSs 0.38 + the 8th flag's height) raised for any top-staff member's minimum stem → 5.388 ss here;
+in the nh-unit, each member's stem goes up from its head to that line (a bass member's `stem` carries `sysB: '2:0'`), its tip is recorded,
+and its pizz. goes on one row above the beam over its own column (`sys: '2:0'` for the bass member) — NOTATION_STANDARDS §2's beam-side
+rule; the l.v. slur takes the tie's classic side for a stemmed note, opposite the stem (below); Ped. only on the pair's first member;
+after all systems, one `beam` item per pair (dir up, one level, level at the line) pushed into the top staff. `render.js` — `sysYOf(key)`;
+a stem's `sysB` and a glyph's `sys` place that end / that glyph against the other staff of the same part.
+
+**Checked:** the engine's items — D♯5 (treble, y 1): filled head 0.844, sharp, slur below (inside the staff), mf + Ped. below the treble
+staff, stem 1.11 → 5.39, pizz. at 6.31; D3 (bass, y 0): filled head, slur below, f below the bass staff, stem 0.11 → 5.39 in the treble
+staff's coordinates, pizz. at 6.31 on the treble row; the beam `pb-wc-1769` in `2:0` from tip to tip at 5.388; no pairBeam warnings. The
+IR's engraving overlays carry the two overrides; VALID vs source. Tests 86 · 174 · 92 · identity green; GEOMETRY 31 as before, none in
+200–430 s. In the running page (ZOOM 326.0–331.8 s): the beam polygon drawn (504.5→580.0 px, one level), the bass stem rising through the
+inter-staff gap to it, "pizz. pizz." above the beam, mf + Ped. under the treble staff, f under the bass staff.
+
+**For his eye:** the two pizz. sit close on one row ("pizz. pizz." — 0.245 s apart is ~4.8 ss at this zoom, each text 1.81 ss) · the
+D♯5's slur lies inside the treble staff (below the head, the stem being up) · then 345.48 (A4 → C♯4) and 384.92 (D6 → D2) are one
+`--pairBeam` each.
+
+## §496. The go line and the head's position — his question on seeing the pair; the record (piece #4's D58/D59, the septet's D43) and the analysis (2026-09-14, Fable 5.1)
+
+**His word:** *"Let's have a discussion about the go line. In the tuba piece, we talked about this when we... I had clusters of notes. So
+there, for the density build section, there were a GC for single onsets. But when the rhythmic density got too much, I would do a single
+GC and then have several notes after that. in a group. At that point, the alignment was the left of each note headed, its respective go
+time. And I think... well, the GC would be at the go time. So here, it feels like I should just have one go line. And even though there's
+no GC, maybe the left note heads lining up with the single go line, and then the second one left of the note head lining up with his
+actual go time. But then to be consistent, I think I should change all the rest. to have the left of the note head line up with the go
+time then. Could you give me analysis or recommendations on this?"* — then: *"We had also talked quite a bit about design principles and
+cited Edward Tufte. etcetera. So let's look into those as well. What's the most design sound approach here?"*
+
+**The record, read (piece #4's D-log, read-only; the septet's journal):**
+- **D59 (2026-08-22):** "ALIGNMENT: THE NOTEHEAD'S LEFT EDGE IS THE MOMENT … adopted as the piece's general principle. Time-space notation
+  (Feldman, Brown, Cage) puts the attack where the head begins; conventional engraving aligns simultaneities on left edges; the composer's
+  scrolling-reader argument says the cursor touches the head as the note starts. Rejected: centre alignment."
+- **D58 (same day):** "THE GO LINE MARKS DISPLACEMENT. A go line belongs on a unit whose head is NOT on its go time (one-shots hang 0.6 ss
+  before, to clear the GC disc; the surge) and on nothing else; a cluster partial with its left edge on its go time gets none." His own
+  words there: "the other go lines are there because the notation doesn't line up with the go time." Rejected: "go lines everywhere (a
+  third 'when' mark at the one place that must not be ambiguous)"; "go lines nowhere (the displaced one-shot unit then floats without its
+  time)."
+- **D60:** the GC ball lands on the lane edge, so a head on its time rarely meets the disc — the reason for the one-shot's displacement
+  is now mostly gone; accepting an overlap was rejected as "1+1=3 at the datum" (Tufte).
+- **The septet's D43 (2026-09-13):** the beamed group — "GC on the first note only · no go line on any note · every head's left edge on
+  its own go time".
+- **The tuba's day-22 nh-unit standard**, inherited by every septet single unit: the unit's rightmost ink nhGapSs (0.25) BEFORE the go
+  line, "the ink just before the mark is what you play at the mark" — so today the septet reads two ways: a lone unit hangs before its
+  line; a beamed group's heads start on their times.
+
+**The principles as this project has used them (Tufte):** position before colour — the head's x must BE the time (D59); 1+1=3 — two
+marks at one datum interfere (a dotted line hugging a head's edge is the artefact); data-ink — a go line on a head that is already on
+its time is a second "when" for one moment; layering & separation — the go line is a lighter layer, which works when it stands 0.6 ss
+from the head (the strikes) and fails when it coincides with the head's edge.
+
+**Analysis:** the morph section's piano notes carry NO GC, so nothing displaces them; under D58/D59 they should sit with the head's
+left edge on the moment and carry no go line — exactly the beamed group's regime (D43), which he has already read and accepted. His
+instinct ("left of the note head line up with the go time") is D59; keeping a go line there is the one thing D58 argues against (the
+line would run along the head's left edge: 1+1=3 at the datum). The strikes stay as they are — displaced 0.6 ss to clear the GC, the go
+line marking that (D58's own case); the trills' after-go units likewise.
+
+**Put to him:** (A) D58/D59 pure for the morph piano: left edge on the moment, no go line — singles, chords and pairs alike; pizz. and
+Ped. left-aligned to the head's left edge (Gould: technique text and the pedal start at the note), the dynamic centred on the head as
+now; the §494 column-ink rule becomes "left-align to the moment" (no line to clear). (B) his: left edge on the moment AND one go line
+per gesture — a cross-lane guide, but D58's rejected "third 'when' mark", and the line touches the head. (C) leave it: the tuba's lone
+unit before its line — inconsistent with D59 and with the pairs. Recommended (A). Cost: the three morph devices only (`nhAnchor:
+leftEdge` exists in the engine — the cluster's anchor — and `goLine: false`); the strikes, trills and morph headers untouched; the
+tests' morph-section assertions, if any, follow.
+
+## §497. D49: the two principles promoted; the morph piano drawn on the moment, no go lines (2026-09-14, Fable 5.1)
+
+**His word:** *"ty, lets promote this The notehead's left edge is the moment, The go line marks displacement as a principle somewhere,
+go ahead and make changes and draw morphs this way, and then make a note, not now, to please check to see if this rule is being violated
+in the septet"* → option (A) of §496.
+
+**Promoted:** PROJECT_JOURNAL §3 P17 and §4 D49; NOTATION_STANDARDS §0 (a new top section, the two principles as a table); NITS
+2026-09-14 "THE D49 AUDIT, owed" — the device-by-device checklist (the strikes' displacement after D60 · the trills · the tuba
+inheritances `fortepiano`/`cuivre`/`ord`/`staccato`/`surge` · the morph headers · the D43 groups).
+
+**Built:** `container.json` — `main`, `plucked`, `byPairBeam`: `nhAnchor: leftEdge`, `goLine: false`; `plucked.columnInk` gone;
+`byEnv.strike`: `nhAnchor: null` (the anchor must not ride the env onto the piano's strikes — the §487 lesson, applied ahead);
+`_leftEdgeNote`. `layout.js` — `chordGeometry` columns a left-edge-anchored chord too (its undisplaced heads' left edges on the moment:
+base = W/2 − the smallest column offset); the §494 column-ink shift removed; `chromeDx(g)`: on a left-edge unit the pizz. and the Ped.
+glyphs start at the head's left edge (the pair's pizz. row and the lone unit's alike); the dynamic centred as before.
+
+**Checked (the engine's items; the MAIN IR rebuilt with the same recorded build):** the chord at 205.85 s — C6 and C2 heads at dx +0.554
+(= the open head's half-width: the left edge on the moment), pizz. at +0.905 (its left edge on the moment), Ped. at +1.217 (likewise),
+mf centred on the head; the D2 at 217.55 s — head +0.554, p centred; the pair at 327.27 s — filled heads at +0.439 (0.844 × the half-width),
+stems at +0.817, the beam moved with them, mf/f centred, Ped. and both pizz. left-aligned to the moment; NO go line on any morph piano
+note — the page at 326.0–331.8 s carries three go lines and all three are other parts' (BCl, Vn1, Vc). Tests 86 · 174 · 92 · identity
+green (none asserted the morph piano's go lines); GEOMETRY 31, none in 200–430 s. Seen in the page: the pair with no dotted lines, the
+heads starting on their times, "pizz." starting over each head's left edge.
+
+## §498. The other two pairs beamed (345.48, 384.92); the up-stem minimum corrected; committed (2026-09-14, Opus 5)
+
+**His word:** *"good, do the other two pairs and commit"* — his eye on 327.27 and on the D49 page: good.
+
+**Built:** the MAIN build gains `--pairBeam wc-1774,wc-1775 --pairBeam wc-1785,wc-1786`. One correction in `layout.js`'s `pairOf`: the
+top-staff member's minimum stem used `stemLenFor` ("a stem outside the staff extends to the middle line"), which is the rule for a stem
+pointing TOWARD the staff; an up-stem on a note above the middle line points away and takes the octave length (3.5). Without it the D6's
+stem would have run 4.5 ss instead of 3.5.
+
+**Checked (engine items):** 345.48 — A4 (treble, y −0.5) + C♯4 (treble, y −3, a ledger): both on ONE staff, stems up to the standard
+beam line 5.388, f + Ped. under the A4, f under the C♯4, slurs below (the C♯4's clears its ledger overhang), both pizz. on the row at 6.31.
+384.92 — D6 (treble, y 4.5, two ledgers) + D2 (bass, y −3.5): the beam line raised to 8.11 by the D6's octave stem; the D2's stem runs
+from the bass through the whole treble staff to it; pizz. row at 9.04; f + Ped. under the treble staff, f under the bass staff. Three
+`pb-` beams in `2:0`; no pairBeam warnings. Tests 86 · 174 · 92 · identity green; GEOMETRY 31, none in 200–430 s. **Seen on the page
+(383.7–389.5 s): the high pair's pizz. row meets the bottom edge of the bass clarinet's curve fill** — the guard does not see a text
+against a neighbouring lane's curve. For his eye: accept · stem the D6 down (the classic side for a note above the staff; the beam
+then below the treble) · an 8va on the D6.

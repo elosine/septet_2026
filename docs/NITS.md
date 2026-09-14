@@ -365,3 +365,27 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   from. The septet's D45 heads carry their own written pitch, so this piece is not affected.
 - **The notation page polls the WHOLE IR every second** (`notation/app/notation.html` `pollChanges`: fetch + string compare, 1 Hz). With M1
   folded the MAIN IR is 3.6 MB (≈ 5.6 MB with M2). Fine on localhost so far; if the page stutters, compare the IR's mtime or a hash instead.
+
+## 2026-09-14 — FOR THE PERFORMANCE INSTRUCTIONS (PLAN 2h.5, RUNNING_LOG §490; the composer: "make a note pls for when we write the performance instructions")
+
+- **The piano's pedal legend.** The plucked notes in the morph section carry `Ped.` with NO release sign (his choice A over the ✱ at each
+  drawn end). The tradition reads an unreleased `Ped.` as held to the end (LilyPond: "Pedalling to the final bar line is indicated by
+  omitting the final pedal off command"), so the instructions must say it. His intention, verbatim: *"they would let it ring until it's
+  gone, not sounding anymore, or until they have to play another note … if there's a plucked note and then, say, four seconds later,
+  there's a normal note played. I don't want them to hold the pedal over the plain note. They would let those ring by holding the key
+  down. and release the pedal before that."* Draft line: **"Ped. (plucked notes): hold until the sound has died away or until the next
+  note, whichever comes first — never over an ordinary note, which rings by the held key."** The drawn end of every long pluck in the
+  save is his release point (each lands just before the next ordinary note) if a ✱ is ever wanted after all.
+- **The l.v. slur's meaning** on the piano's ordinary notes (hold the key, let it ring) and plucked notes (pedal) — one legend line each.
+
+## 2026-09-14 — THE D49 AUDIT, owed (the composer: "make a note, not now, to please check to see if this rule is being violated in the septet")
+
+- **The two principles** (NOTATION_STANDARDS §0): the notehead's left edge is the moment; the go line marks displacement. Applied
+  2026-09-14 to the morph section's piano only. **To check, device by device, in the running page:** (1) the strikes (`byEnv.strike` +
+  the one-shot techniques) — displaced 0.6 ss before the go line to clear the GC disc: justified, but D60 (the ball on the lane edge)
+  removed most of the reason; is the displacement still earning its go line, or could the strikes sit on their time with the GC alone
+  (D58's "the GC's impact marker IS the go mark", the day-23 Option B)? (2) the trills — the after-go unit (§438) is displaced the other
+  way and carries the go line: justified. (3) the tuba inheritances still in `byTechnique` — `fortepiano`, `cuivre`, `ord`, `staccato`,
+  and `byEnv.surge` — every one hangs nhGapSs before a go line with no GC reason (`ord`, `surge`): the D59 violation, if any of them is
+  used in this score (the 2026-09-11 census: `ord` 50 — the flute). (4) the morph headers (D45): heads "in time order" — on their times?
+  (5) the D43 beamed groups: left edge on the time, no go line — compliant by decision; verify on the built ones (43.3 s, 620.3 s).

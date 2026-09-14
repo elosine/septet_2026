@@ -90,6 +90,16 @@ no tool calls beyond the resume reads. Start only on his word. *(At `/session-st
 "(slap)" on the page; tests 86 + 174 pass). **The audio still has the old note** — his to replace before the final demo video (N3).
 The checkpoint below still holds: the next step is 2h.5.
 
+**2h.5 BUILT, same day (Fable 5.1 + Opus 5, RUNNING_LOG §483–§498) — the piano's 44 notes in the morph section, device by device at his
+eye:** ordinary = open head · one band dynamic per chord under its lowest note · l.v. slurs (piece #2's crescent; Gould's chord rule) ·
+no ring bar; plucked = the same + piece #2's baked italic pizz. and Emmentaler Ped. (once per chord, no release sign — the legend, NITS);
+the ten chords' onsets snapped to their earliest in the save; the three close pairs (327.27 · 345.48 · 384.92) beamed across the grand
+staff (`--pairBeam`, filled heads, one 8th beam above the treble); **D49 promoted — the notehead's left edge is the moment, the go line
+marks displacement** (§3 P17, NOTATION_STANDARDS §0): the morph piano sits on its times with no go lines. **Open for his eye:** the
+384.92 pair's pizz. row meets the BCl curve (§498). **Owed:** the D49 audit of the rest of the score (NITS) · the note at 269.13's
+stemming (§485, held) · NOTATION_STANDARDS rows for the morph piano + the plan's 2h.5 close · the audio re-render (N3, now two steps
+behind the save: the bcl slap and the chord snap).
+
 ### CHECKPOINT — 2026-09-14, session 11 (mid-session checkpoint; Opus 5; the clear is for 2h.5 on Fable)
 
 **The task:** PLAN 2h, the morph section's notation. **State: THE MORPHS ARE DONE** — M1 and M2 are in the MAIN notation file
@@ -227,6 +237,12 @@ sources; verified here only when they bite.)*
     never depends on noticing.
 
 ---
+
+17. **The notehead's left edge is the moment; the go line marks displacement** (2026-09-14, D49,
+    RUNNING_LOG §496 — piece #4's D59/D58 promoted here at the composer's word). A head is placed
+    off its time only for a reason (a GC disc to clear, a trill's after-go unit) and then, and
+    only then, carries a go line. Before drawing any new device, ask: is the head on its time? If
+    not, why — and does the go line say so?
 
 ## §4 Decisions
 
@@ -671,6 +687,15 @@ sources; verified here only when they bite.)*
   only M1's C4 pair beats at a countable rate (≈ 7 Hz; D5 ≈ 16, A5 ≈ 22 are roughness); M2's pairs are not mirrors. *Rejected:* a rate at
   each end of the gliss on the score (the tuba's committed-never-built form); deferring. **The piano's notes in the morphs deferred the same
   day** — built after the morphs (PLAN 2h.5).
+- **D49** *(2026-09-14, composer, RUNNING_LOG §496–§497)* — **THE NOTEHEAD'S LEFT EDGE IS THE MOMENT · THE GO LINE MARKS DISPLACEMENT** —
+  piece #4's D59 and D58 promoted to this piece's principles (§3 P17; NOTATION_STANDARDS §0): *"lets promote this … as a principle
+  somewhere, go ahead and make changes and draw morphs this way"*. Applied first to the morph section's piano (`main` · `plucked` ·
+  `byPairBeam`): no GC displaces them, so `nhAnchor: leftEdge`, `goLine: false`; their pizz. and Ped. start at the head's left edge, the
+  dynamic centred; the beamed pair carries no go line (the beamed group's regime, D43). *Why:* his own scrolling-reader argument and the
+  time-space tradition (D59); a go line on a head already on its time is Tufte's 1+1=3 at the datum (D58). *Rejected:* (B) left edge on
+  the moment AND one go line per gesture — the line would run along the head's edge, D58's "third when"; (C) the tuba's lone unit before
+  its line — inconsistent with D59 and with the pairs. **Owed, not now:** the audit of every other device of the score against the two
+  principles (NITS 2026-09-14) — the strikes' and trills' go lines are justified; the surge/fp/ord inheritances are the ones to look at.
 
 ## §5 Playbooks
 

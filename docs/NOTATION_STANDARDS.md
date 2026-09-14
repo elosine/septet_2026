@@ -4,6 +4,13 @@
 (`notation/registry/container.json` · `techniques.json` · `ensemble.json`) is the source; this file is the index. Opened
 2026-09-11 (RUNNING_LOG §401n) after strike 1 → strikes 0–176 s. Add a section per material kind as it is decided.*
 
+## §0 The two principles — promoted 2026-09-14 (D49, RUNNING_LOG §496–§497; piece #4's D59 and D58)
+
+| Principle | What it means on the page | Where it lives |
+|---|---|---|
+| **THE NOTEHEAD'S LEFT EDGE IS THE MOMENT.** | The attack is where the head begins (time-space notation; engraving's left-edge alignment; the scrolling reader: the cursor touches the head as the note starts). A unit sits elsewhere only for a reason — a GC disc to clear (the strikes, 0.6 ss before), a trill's after-go unit. | `nhAnchor: leftEdge` on every device with no such reason (the morph section's piano: `main` · `plucked` · `byPairBeam`); the beamed group (`figures.cluster`) already |
+| **THE GO LINE MARKS DISPLACEMENT.** | A go line belongs on a unit whose head is NOT on its time, and on nothing else — a head on its time carries none (Tufte: a second "when" at one datum is 1+1=3). | `goLine: false` on the same devices; the strikes and trills keep theirs. **Audit owed:** every other device of this score against the two (NITS 2026-09-14) |
+
 ## §1 The strike (section 1's one-shots) — decided 2026-09-11, RUNNING_LOG §399–§401m
 
 | rule | data | decided |

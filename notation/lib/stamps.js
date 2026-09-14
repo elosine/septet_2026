@@ -85,6 +85,20 @@
       return box('artic-' + kind, g.wSs, g.hSs, { center: { x: g.wSs / 2, y: g.hSs / 2 } }, [pathPrim(g.path)]);
     }
 
+    // [2h.5, §491] piece #2's baked instruction texts ('pizz.') and its
+    // sustain-pedal mark ('Ped') — glyphs.text / glyphs.pedal, centred
+    // like a dynamic
+    function text(kind) {
+      const g = G.text && G.text[kind];
+      if (!g) throw new Error('stamps: no text glyph "' + kind + '"');
+      return box('text-' + kind, g.wSs, g.hSs, { center: { x: g.wSs / 2, y: g.hSs / 2 } }, [pathPrim(g.path)]);
+    }
+    function pedal(kind) {
+      const g = G.pedal && G.pedal[kind];
+      if (!g) throw new Error('stamps: no pedal glyph "' + kind + '"');
+      return box('pedal-' + kind, g.wSs, g.hSs, { center: { x: g.wSs / 2, y: g.hSs / 2 } }, [pathPrim(g.path)]);
+    }
+
     function clefBass() {
       const g = G.clef.bass;
       return box('clefBass', g.wSs, g.hSs, g.anchors, [pathPrim(g.path)]);
@@ -158,7 +172,7 @@
       ]);
     }
 
-    return { notehead, noteheadOpen, ottavaText, dynamic, stem, flag8, flagN, rest, articulation, clefBass, clef, bracketTip, brace, accidental, staccatoDot, staffLines, ledgerLine, beamSeg };
+    return { notehead, noteheadOpen, ottavaText, dynamic, stem, flag8, flagN, rest, articulation, text, pedal, clefBass, clef, bracketTip, brace, accidental, staccatoDot, staffLines, ledgerLine, beamSeg };
   }
 
   // Render one placed box to an SVG fragment. Placement: the box's LOCAL
