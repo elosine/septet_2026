@@ -14116,3 +14116,14 @@ whatever comes); a GC-bearing single strike is exempt by D53 and is not re-audit
    touched (NITS).
 
 **PLAN 2i.2 closed. Sitting A done** — the clear point.
+
+## §519. CONFIRMED for section 3: the beamed group's placement stands (2026-09-14, Fable 5.1)
+
+**His word, over the piano's pair at 43.3 on his page (the arc landing on the F♯, the two 16th rests, the accents, the 8va):** *"So this is
+what we're going with, correct? This is not changing. The beamed nodes still have a GC, but both node heads will be aligned, left aligned
+with their go times, and there'll be no go line. And that's how we'll pursue the beamed nodes in section three. Correct?"*
+
+**Yes — unchanged, and the standard for section 3's groups (2i.5 · 2i.6, D43 · D51):** one GC per group, on the FIRST note only
+(`figures.cluster.gc: "first"`); every head's left edge on its own go time (`nhAnchor: leftEdge`); no go line on any member
+(`goLine: false`); the beam says "several notes on one GC" (§457). The single strikes beside them keep D53's regime. Nothing to build for
+this; the registry already carries it.
