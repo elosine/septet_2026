@@ -5136,7 +5136,7 @@
     "objectId": "wc-868"
    },
    "onset": 58.705,
-   "duration": 0.10600000000000165,
+   "duration": 0.64,
    "pitch": {
     "midi": 63,
     "spelled": {
@@ -5145,7 +5145,7 @@
      "octave": 4
     }
    },
-   "technique": "senza_vel",
+   "technique": "slap",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",

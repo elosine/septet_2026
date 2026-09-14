@@ -85,6 +85,11 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
+**After the checkpoint, before 2h.5 (2026-09-14, Opus 5, his word at `/postclear`) — RUNNING_LOG §482:** the bass clarinet at
+**58.7 s (`wc-868`, E♭4) is now a slap tongue** (it was senza vibrato), in the save and the MAIN IR (two IR leaves changed, seen drawn
+"(slap)" on the page; tests 86 + 174 pass). **The audio still has the old note** — his to replace before the final demo video (N3).
+The checkpoint below still holds: the next step is 2h.5.
+
 ### CHECKPOINT — 2026-09-14, session 11 (mid-session checkpoint; Opus 5; the clear is for 2h.5 on Fable)
 
 **The task:** PLAN 2h, the morph section's notation. **State: THE MORPHS ARE DONE** — M1 and M2 are in the MAIN notation file
@@ -137,7 +142,7 @@ drawn at F2 (NITS; §7).
 |---|---|---|---|
 | **N1** | **► NEXT: PLAN 2h.5 — the piano's notes in the morphs: his reference (CN-82) read, the device chosen with him** | **Fable** | **yes — this checkpoint is the clear** |
 | **N2** | Build the chosen piano device, fold it, his eye → 2h.6 the wrap (plan close, journal) | **Opus** | no |
-| **N3** | The audio re-render (M2 is pre-swap in `notation/audio/piece-septet.wav`; RENDER.md) — his capture, the AI's bridge render | his + Opus | no |
+| **N3** | The audio re-render (M2 is pre-swap in `notation/audio/piece-septet.wav`, and the bass clarinet at 58.7 s is still senza vibrato there, §482; RENDER.md) — his capture, the AI's bridge render; before the final demo video | his + Opus | no |
 | **N4** | Section 3's notation, when reached: the cross-staff beam (2g.1), the fours at the end (2g.2), the run cut into groups (2g.4), `--pairs` (2g.5); the go-to-time + HOME (§456) | **Opus** | fresh session |
 | **N5** | Still his, from before: the render's sync (§453) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 

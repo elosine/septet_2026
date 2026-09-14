@@ -13234,3 +13234,25 @@ checked (`test_morph_notation.js` 174) and seen by him. **Left in PLAN 2h:** 2h.
 now, his reference CN-82) · 2h.6 the wrap (the D-entries D44–D48 and NOTATION_STANDARDS §3 are already written; what remains is the
 journal's D-log note for the build and the plan's close) · 2h.7 the practice videos with the beat rates (the performance stage). **Still his,
 unchanged:** the audio render holds the pre-swap M2 (re-render per RENDER.md).
+
+## §482. The bass clarinet at 58.7 s is a slap tongue — one field in the save, the MAIN file rebuilt (2026-09-14, Opus 5)
+
+**His word (at `/postclear`):** *"bcl @ 58.7 is meant to be a slap tongue, fix in ir/composer and notation score, will replace audio before
+producing final demo video"* — then *"go, composer tab is closed"*.
+
+**Found:** `wc-868` (bass clarinet, strike #26 of `grp-strike-26-517a`, 58.705 s, E♭4 = MIDI 63) carried `technique: senza_vel`. The next
+bass clarinet strike, `wc-875` at 59.463 s, is already a slap. E♭4 is inside slap's measured zone (34–65, `bank/technique_ranges.json`), so
+no pitch change was needed. No other object in the save refers to `wc-868`, and piece-septet has no working copy (the file is the only copy).
+
+**Done, in order:** (1) `scores/piece-septet.json`: `senza_vel` → `slap` on `wc-868`, nothing else. The edit script refused to write unless
+a no-op round trip reproduced the file byte for byte; the git diff is that one field. (2) The MAIN IR rebuilt with its recorded
+`provenance.build`, unchanged: "READY · VALID vs source". (3) The new IR diffed leaf by leaf against HEAD: **2 leaves changed, both on
+`ev-wc-868`** — `technique` senza_vel → slap, `duration` 0.106 → 0.64 s (a slap's ring length). The build also printed range warnings (79, the
+flute's tongue ram in section 3) and 31 geometry findings. None is at 58 s, and the IR is otherwise identical to HEAD's, so they are the
+build's standing output, not this change's. (4) Checked in the
+running page (:5300, MAIN file, page 53.2–59.0 s): the served IR has three slaps in that window (54.92 · 57.67 · 58.71 s), and the page
+draws three "(slap)" labels at the matching x positions (58.705 s is expected at x ≈ 1215, drawn centred at 1195). (5) Tests:
+`test_septet_notation.js` 86 pass · `test_morph_notation.js` 174 pass.
+
+**Not done, his by his word:** the audio. `notation/audio/piece-septet.wav` still plays senza vibrato at 58.7 s; he will replace the audio
+before the final demo video (NEXT STEPS N3).
