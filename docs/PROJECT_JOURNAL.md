@@ -85,6 +85,41 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
+### CHECKPOINT — 2026-09-14, session 11 (mid-session checkpoint; Fable 5.1; the clear is for the build on Opus)
+
+**The task:** notate the morph section (PLAN 2h). **State:** the design is DONE — all five decisions closed today (D44–D48, the pitch figure
+D45 settled), the spec written; nothing built yet. M2's D2 pair was re-cast in the saved score (BCl holds, Vc travels; "swap good") and the
+MAIN IR rebuilt from it; the audio render is still pre-swap (re-render when convenient, RENDER.md).
+
+**Latest deliverables:** `docs/NOTATION_STANDARDS.md` §3 (the morph's rules, one row per decision) · `docs/PLAN.md` 2h (the steps) ·
+`scores/piece-septet.json` at 314 s (the swap) · `bank/actuals/ACT-SPECTRAL-05.json` · `docs/images/morph_header_arrow_cents_mock_2026-09-14.svg`
+(the header's look — NOTE: its arrow is superseded by D45 as settled; the cents and the time order stand) · RUNNING_LOG §464–§476.
+
+**The next concrete step — on Opus, after `/postclear`, at his go:** build PLAN 2h.2 in `notation/lib/morph_overlays.js` (+ `tools/notate_morph.js`,
+`tools/notate_section.js` where they share it) per NOTATION_STANDARDS §3, with a check file `tools/test_morph_notation.js` (the tuba batteries
+unchanged; a septet check per rule); then fold M1: add `--morph grp-morph-01` to the MAIN file's recorded build (`provenance.build`, D41),
+rebuild `notation/ir/piece-septet.ir.json`, verify headless (six headers start-left in each part's clef and written pitch, six gliss + six
+cresc overlays with the D42 look, ~94 go lines, no dot, the alert list empty for M1); **stop for his eye on M1's first pages before M2.**
+Then 2h.4 (M2: `--morph grp-morph-03`; the flute and the bass clarinet crescendo-only with the D44 alert). The piano's notes (2h.5) are
+deferred to after the morphs.
+
+**Resume reads:** `docs/NOTATION_STANDARDS.md` §3 · `docs/PLAN.md` 2h · `docs/RUNNING_LOG.md` §464 (the eight flags and the measured morphs).
+Nothing else; the tuba's `for_seven_tubas/docs/MORPH_NOTATION.md` only if a number in the vocabulary is unclear. *Code, not reads:*
+`notation/lib/morph_overlays.js` (125 lines; `forPart` — the sampling, the fit, the header value, the per-event device; `forGroup` — `layer < 10`)
+· `notation/lib/layout.js` ≈l.240–290 + ≈l.549–600 (the header items: lowest-left today → start-left) · `render.js` ≈l.353–404 · the
+`cc7Fade` field on M1's notes · `Core.evalWaveCurve` is 0–1.
+
+**Decisions pending the user:** none. (The piano's device: deferred, chosen after the morphs. His eye on M1's first page decides the no-floor
+drawing, D47 — a flag either way.)
+
+**Deliberately uncommitted (`git status --short` at the checkpoint), all left alone:** `bank/panel_snapshots.json` (his takes) · `reaper/septet_rack.rpp` (his rack) · `bank/passages/4materials.json` (his passage) · `bank/passages/accentedcres01-2.json` (his passage) · `bank/passages/accentedcres01.json` (his passage) · `bank/passages/chordcyc01.json` (his passage) · `bank/passages/chstr02.json` (his passage) · `bank/passages/section3.json` (his passage) · `scores/Sec3.json` (his section-3 sketch) · `scores/SeptetSec03-Materials-B.json` (his section-3 material) · `scores/SeptetSec03-Materials-C.json` (his section-3 material) · `scores/SeptetSec03-Materials-D.json` (his section-3 material) · `scores/SeptetSec03-Materialsa.json` (his section-3 material) · `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` (his named version) · `scores/piece-septet-v1.32-finalDraft1.0.json` (his named version) · `scores/spectralMorph.json` (his save of 2026-09-14 (the SPECTRAL-04 take inserted at 0, for the comparison §466) — his to keep or delete) · `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call) · `tools/oneoff/` (UNKNOWN — look before touching)
+**Unsaved working copies** (D17, `node tools/unsaved_check.js`): piece-septet — he Reloaded after the swap; the app's copy may again differ from the
+file by the trills' snippets and the view only (harmless). The others as listed below. **The pre-swap save** (his Save of 08:31 + the swap
+reverted) exists only as the scratchpad backup `piece-septet.before-swap-2026-09-14T12-37-24-043Z.json`; the swap is reversible from
+ACT-SPECTRAL-04 in any case. The one-off scripts are kept in `tools/oneoff/` (the swap, the header mock).
+
+---
+
 **STATE — 2026-09-14, session 11 in progress (Fable 5.1). Chunk 1 committed: the beamed group closed by his dictation (CN-78), the morph
 section assessed (RUNNING_LOG §464), D44, and M2's D2 pair RE-CAST in the saved score — the bass clarinet holds, the cello travels
 (§467, ACT-SPECTRAL-05).** **His ear: "swap good" (§468). The MAIN IR rebuilt from the recorded build after it; the audio render still holds the
