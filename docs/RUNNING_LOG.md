@@ -14031,3 +14031,52 @@ video · `300` → t 300.00, page 294.50–306.50 · `7:30.5` → t 450.50, page
 the score click already uses while playing. The tab was put back to the zoom view at 210.5 and closed.
 
 **For his try:** reload his notation tab (the page file changed; the ♪ render needs a click again after a reload).
+
+## §517. MEASURED: the D49 audit — every event of the MAIN IR against the two principles; one verdict owed (2026-09-14, Fable 5.1)
+
+**His word:** *"go-to works, switched to Fable, go ahead with step 2"* — PLAN 2i.2, the audit NITS 2026-09-14 owed: *"please check to see if
+this rule is being violated in the septet"*.
+
+**Method (measured, not read):** the MAIN IR (1806 events) laid out headless by the real path (`Layout.layoutSection` with the registry's
+`engraving.layout`, the page's options); for every event, its resolved device (`deviceResolver`), whether a go line item carries its id, and
+its notehead's LEFT EDGE against its onset in ss (matched by part and time). 1 ss = 7.9 px = **49 ms** on the 12 s page. Script in the
+session scratchpad (`d49_audit.js`), not kept — the numbers are here.
+
+| device (events) | head left edge vs its moment | go line | verdict |
+|---|---|---|---|
+| **the single strikes — 1419** (S1 498 · S3 921; every technique, the piano's `main` by env) | **−1.72 ss = 85 ms before** (−2.25 ss = 111 ms with an accidental) | on every one | **the finding — his verdict below** |
+| the beamed groups' members — 6 (43.3 s · 620.3 s) | 0 | none; GC on the first | compliant, as decided (D43 · §457) |
+| the trills — 69 (S1) | +0.38 … +1.18 ss after (19–58 ms) | on every one | compliant: the after-go column is a stated reason (§445; §0's exception) |
+| the morph section's piano — 44 (main 12 · plucked 32, 6 in pairs) | 0 | none | compliant (D49 as built) |
+| the morph breaths — 183 (six parts, M1 + M2) | **no head** (`nhUnit` and `onsetHead` off by the morph override) | one each | compliant in Tufte's sense: the go line is the breath's ONLY time mark; §0's wording assumes a head — a clause owed |
+| the morph headers — 12 | the figure hangs 1.6–7.1 ss BEFORE the first go line ("right to left from the go line", the tuba's spacers) | the first breath's | a legend, not a unit: the section's two pitches read "what you play at the mark"; keep; §0's clause owed |
+| **the crescendo run 526.8–558.9 s — 78** (12 flute `ord` · 66 `senza_vel`, six parts) | ord: −1.36 … −1.63 ss with a go line and NO GC reason (the tuba's provisional day-24 `ord`) · senza_vel: an open head 0.25 ss before, NO go line (the `sustained` family device) | 12 / 0 | **broken both ways today — replaced whole by 2i.8 (the surge device, CN-84): its design must put the head's left edge on the moment, no go line, or state the reason** |
+| the tuba inheritances `fortepiano` · `cuivre` · `staccato` · `byEnv.surge` | — | — | **used by no event**; dead entries carrying the hanging regime (NITS) |
+
+**The finding, in full.** The single strike hangs 0.6 ss before its go line (`nhGapSs: 0.6`, `nhAnchor: null`) — the head's left edge 85 ms
+early on every one of 1419. The stated reason is the GC disc (`_staccatoNote`, day 23: "so the head clears the marker's left edge"). **That
+reason is gone:** the disc sits on the lane edge since D60, and the layout's own day-24 comment says so — *"once the composer moved it ONTO
+the edge (D60) almost nothing collides, and an unconditional push just drags heads away from their own go time — which then reads, under
+D58, as a displacement that is not real"* — yet the device's 0.6 stayed unconditional. Measured: **0 of 999 non-piano strike heads reach the
+disc** (the lowest head ink −5.37 ss; the disc's top −6.0). So under §0: principle 1 broken (displaced with no reason), and the go line is the
+third encoding of one moment (disc + line + the hang) — the tuba's own Option B argument. **The page already carries the other regime:** the
+beamed groups at 43.3 and 620.3 sit on their time with no go line and the GC alone, by his own words (§457: *"noteheads moved so left edge
+is at go time … gc at 43.32 still but no go line"*) — two regimes for one kind of note, 85 ms apart, side by side.
+
+**Also found:** `container.json _staccatoNote` says "NO go line for a point-in-time gesture" while the device says `goLine: true` — the note
+is the day-23 Option B, the device is the tuba's later D59 (displaced → go line); the drift is documentary. · **`tools/export_print.js` lays
+out WITHOUT `ensemble` and `techniques`** (the page passes both, notation.html:271) — the print path would draw the septet with no clefs /
+transposition and without the family devices; a PLAN 2b item, written to NITS now.
+
+**The question put to him (only he can answer — section 1 is his signed-off page):**
+- **A — the single strikes join the beamed groups' regime:** `byEnv.strike` → `nhAnchor: leftEdge`, `goLine: false`; the GC alone marks the
+  moment; every strike's head starts ON its time. One registry edit, one rebuild, section 1 and 3 re-seen (every unit moves 85 ms right; the
+  stack, dot, flag, accent, symbol and text ride the head; the trill's go line keeps its length by geometry, `goLineTopAsGc`). The piano's
+  GC-between-the-staves geometry to be checked at the fix.
+- **B — keep the hang and write the exception:** §0 gains "the strike hangs 0.6 ss before its go line by the tuba's reading rule — a
+  convention, not a collision"; the two regimes stay side by side.
+**The AI's lean: A.** The principle is his, promoted four days after the strikes were signed off; the look already exists on the page; the
+scrolling reader gets the cursor on the head as the note starts; the tuba's day-24 comment named the displacement "not real".
+
+**Not changed yet:** NOTATION_STANDARDS §0's two clauses (the headless breath · the header as a legend) wait for the same word, so §0 is
+rewritten once.

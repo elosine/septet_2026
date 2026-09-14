@@ -380,17 +380,16 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   save is his release point (each lands just before the next ordinary note) if a ✱ is ever wanted after all.
 - **The l.v. slur's meaning** on the piano's ordinary notes (hold the key, let it ring) and plucked notes (pedal) — one legend line each.
 
-## 2026-09-14 — THE D49 AUDIT, owed (the composer: "make a note, not now, to please check to see if this rule is being violated in the septet")
+## ~~2026-09-14 — THE D49 AUDIT, owed~~ — **MEASURED 2026-09-14, RUNNING_LOG §517** (PLAN 2i.2); the verdict on the single strikes his. What it left:
 
-- **The two principles** (NOTATION_STANDARDS §0): the notehead's left edge is the moment; the go line marks displacement. Applied
-  2026-09-14 to the morph section's piano only. **To check, device by device, in the running page:** (1) the strikes (`byEnv.strike` +
-  the one-shot techniques) — displaced 0.6 ss before the go line to clear the GC disc: justified, but D60 (the ball on the lane edge)
-  removed most of the reason; is the displacement still earning its go line, or could the strikes sit on their time with the GC alone
-  (D58's "the GC's impact marker IS the go mark", the day-23 Option B)? (2) the trills — the after-go unit (§438) is displaced the other
-  way and carries the go line: justified. (3) the tuba inheritances still in `byTechnique` — `fortepiano`, `cuivre`, `ord`, `staccato`,
-  and `byEnv.surge` — every one hangs nhGapSs before a go line with no GC reason (`ord`, `surge`): the D59 violation, if any of them is
-  used in this score (the 2026-09-11 census: `ord` 50 — the flute). (4) the morph headers (D45): heads "in time order" — on their times?
-  (5) the D43 beamed groups: left edge on the time, no go line — compliant by decision; verify on the built ones (43.3 s, 620.3 s).
+- **Dead device entries carrying the hanging regime:** `byTechnique.fortepiano` · `cuivre` · `staccato` and `byEnv.surge` are used by no
+  event of this score; `ord` (the tuba's provisional day-24 device: a head hung before a go line, no GC) reaches only the crescendo run's
+  12 flute notes, which 2i.8 re-casts. Retire or re-anchor them when the surge device is designed (2i.8) — not before.
+- **`container.json _staccatoNote` contradicts its device** ("NO go line" vs `goLine: true`): the note is the day-23 Option B, the device
+  the tuba's later D59. Rewrite the note with the strikes' verdict (§517).
+- **FOR PLAN 2b — `tools/export_print.js` lays out without `ensemble` and `techniques`** (the page passes both, `notation.html:271`): the
+  print would draw the septet without clefs / transposition and without the family devices. Carried over from the tuba's single-clef
+  world; fix when the print score is built.
 
 ## 2026-09-14 — the Experiments menu hides a never-saved score (composer: "open which?")
 
