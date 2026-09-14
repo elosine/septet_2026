@@ -12531,3 +12531,42 @@ MAIN notation score", `piece-septet.ir.json` re-fetched 200 by the page's own mt
 Six 404s in the console log predate the load and their URLs had scrolled out of the request buffer (the page polls `/api/composer/mtime`
 every few seconds); every notation resource — container, glyphs, index, the IR, the renders list — loaded 200. The 43.3 pair is on page 5
 (42.5–54.5 s) for his eye.
+
+## §460. "audio gone" after the 43.3 build — the render detaches on a hard reload only; the page's own poll keeps it
+
+**His words, 2026-09-13:** *"audio gone"* → *"thats ok I just had to hit render again, do I do that every time?"*
+
+*(AI — measured on the page code and in the browser pane:)* the ♪ render chip is a one-click ATTACH (`attachAudio`), and the page starts
+every fresh load in MIDI mode — so **CTRL+SHIFT+R drops the render, by design, and the chip must be clicked again.** A rebuilt IR does NOT:
+`pollChanges` (1 Hz) reloads the IR in place (`loadIr`, page and zoom kept) and never touches the transport, so the render stays attached
+while the page picks up a new build by itself within a second — which is what happened after the 43.3 build. The WAV itself: served 200
+by the static route (GET only — a HEAD probe 404s, a red herring), no Content-Length or Range, so the element reports duration
+Infinity; a seek to 42.5 s nonetheless took (currentTime 42.5, readyState 4). Not a fault; noted. Open, his call: make the attach sticky
+across reloads (remember it in the page's localStorage and re-attach on load) — not built.
+
+## §461. "where are we now with the beaming?" — section 1 is COMPLETE under the standard; after 183 s the work is 48 pairs in six parts and ONE 169-note run in the piano
+
+**His word, 2026-09-13:** *"A, leave it for now; where are we now with the beaming?"* (A = the render attach stays a click after a hard reload, §460.)
+
+*(AI — measured at the 0.4 s trigger this time; §455's counts were at 0.6 and 0.36, and the §459/§2 line "21 more in section 1" was
+WRONG — those 21 are 0.42–0.6 s, above the trigger. Corrected here, never edited there.)*
+
+| part | sec 1 gaps <0.4 s | sec 1 <0.25 | after 176 s <0.4 | after <0.25 | runs of consecutive <0.4 gaps | run lengths (notes) |
+|---|---|---|---|---|---|---|
+| Fl | 0 | 0 | 4 | 3 | 4 | 2:4 |
+| BCl | 0 | 0 | 7 | 0 | 7 | 2:7 |
+| **Pno** | **1** (43.3, built) | 0 | **168** | **87** | **1** | **169:1** |
+| Vn1 | 0 | 0 | 10 | 3 | 10 | 2:10 |
+| Vn2 | 0 | 0 | 10 | 2 | 10 | 2:10 |
+| Vla | 0 | 0 | 10 | 1 | 9 | 2:8 · 3:1 |
+| Vc | 0 | 0 | 9 | 3 | 8 | 2:7 · 3:1 |
+| ALL | 1 | 0 | 218 | 99 | | |
+
+**The reading:** (1) **Section 1 is done** — one gap under 0.4 s, the pair at 43.3, built (§459). (2) **After 183 s the six non-piano parts
+hold 46 isolated pairs and two triples** — the pair rule as built, but 48 hand-typed `--cluster` spans is not a method: the trigger should
+be a build flag (`--pairs 0.4`-shaped: every gap under 0.4 s in a part becomes a group, a triple written 16 · 16r · 16 · 16r · 16 · 16r by
+the same rule). (3) **The piano is ONE continuous run of 169 notes, every gap under 0.4 s, 87 of them under 0.25** — the density build
+proper: a long accelerating gesture, not pairs. The four rule (§456) says straight 16ths under 0.25 s, but a run whose gaps SHRINK through
+0.4 → 0.25 → 0.1 changes writing mid-run — the tuba met this with the fitted tempo, `--figures` (cut at the pace changes) and brackets;
+his word was "like the tuba density builds but with some differences." **That is the design conversation next, on Fable; the pairs flag
+is Opus work once the triple's writing is confirmed.**

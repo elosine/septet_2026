@@ -77,5 +77,6 @@ trigger is a gap, not a named span; no tempo mark; every head keeps its dot and 
 | **The three trill × GC arc meetings** (piano @85.35 · Vc @146.06 · BCl @147.78): **accepted, no change** — *"performers can time the gc and start the trill immediately after or cheat if they have to"* | `tools/trill_conflicts.js` still lists them; nothing to build | §456 |
 | **Built so far:** the piano `ev-wc-827` F#6 @43.328 + `ev-wc-832` C#6 @43.605 (gap 0.277 → 16th 0.1385) — in the MAIN file's recorded build | `provenance.build` | §459 |
 
-**Where the counts stand (§455):** section 1 (<176 s) has 22 gaps under 0.6 s, one under 0.36 (this pair), none under 0.24. After 183 s:
-354 · 190 · 92, the piano 237 · 149 · 81.
+**Where the counts stand at the 0.4 s trigger (§461):** **section 1 is complete** — its only gap under 0.4 s is this pair. After 183 s: 218 gaps
+under 0.4 s (99 under 0.25) — 46 isolated pairs and two triples across the six non-piano parts, and the piano's ONE run of 169 notes (168 gaps,
+87 under 0.25), the density build proper, whose writing is the next design conversation.
