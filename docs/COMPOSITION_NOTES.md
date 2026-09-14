@@ -1747,3 +1747,17 @@ cello's seat, so the bass clarinet HOLDS (14 c) with breaths and the cello TRAVE
 pair from its take (option c: "the new set of breaths and bowing"), the other four lines kept exactly as he has them. Built 2026-09-14
 (RUNNING_LOG §465–§467, ACT-SPECTRAL-05); his ear pending; the notation of the swapped M2 follows in PLAN 2h.
 
+---
+
+## CN-80 — 2026-09-14: the morph header's pitch figure — the arrowed natural AND the cents; the standard from here; the tuba's rehearsal and performance scores to follow
+
+> *"Okay. This is good. Let's record this as the standard. And a few things, let's just make a note to revise the morph notation in the
+> tuba piece, but just for the performance slash rehearsal scores when we get to those. And then for this one, let's go ahead and use this
+> notation for the morph sections. and then let's get back to that question list. I think we took care of number one. We might have
+> eliminated some of the other ones along the way, but let me see what's left."* (composer, 2026-09-14, on the mock of RUNNING_LOG §471)
+
+*(AI reading, marked as such:)* D45. The tuba's quarter-tone approximation is replaced by two things at once — an arrow on the nearest
+accidental for the eighth tone (the direction and the grid at a glance) and the exact deviation in cents (the amount) — because M1's
+voices move exactly an eighth tone and a quarter-tone head said twice that. The standard for this piece's morph sections, the next
+pieces, and piece #4's rehearsal and performance scores when they are built; not its presentation score (delivered). The survey that led
+here: RUNNING_LOG §469–§471.

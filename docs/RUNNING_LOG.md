@@ -12915,3 +12915,34 @@ the arrow on the natural (Emmentaler has `accidentals.natural.arrowup/down`; the
 when built) and the cents text (a `text` item at 0.95 ss, centred over the altered head). The end mark `fff` is the tuba's — held decision
 2. **Read back to him with the image; nothing decided.** For the build, if he takes this form: the header overlay carries `acc: naturalArrowUp
 | naturalArrowDown` and `cents: "+25"`, two new glyphs in the registry, one text item in the header's chain.
+
+## §472. DECIDED — D45: the morph header's pitch figure is the arrowed natural + the cents, for this piece and forward; the tuba's rehearsal / performance scores to take it when made (2026-09-14, Fable 5.1)
+
+**His word, on the §471 mock:** *"Okay. This is good. Let's record this as the standard. And a few things, let's just make a note to revise
+the morph notation in the tuba piece, but just for the performance slash rehearsal scores when we get to those. And then for this one,
+let's go ahead and use this notation for the morph sections. and then let's get back to that question list. I think we took care of
+number one. We might have eliminated some of the other ones along the way, but let me see what's left."*
+
+**Decided (D45):** the header's second (altered) head carries **an ordinary accidental with an ARROW for the eighth tone** (Gould / Saariaho
+/ Poppe: the arrow on the nearest sign, ↑ = +25 c) **and the exact deviation in CENTS** as a small number above the altered head (Haas /
+Tenney: the deviation from the written equal-tempered pitch, "+25", "−14"). Both, as the mock shows. The curve stays the displacement map
+(the tuba's principle). D44 stands: under 20 c of travel, crescendo-only. **The tuba's "at least a quarter tone" is superseded** — it wrote
+M1's 25 c twice too big.
+
+**The general rule, the AI's reading of his "this" for travels other than 25 c (recorded; his word if wrong):** the altered head is
+written **to the nearest EIGHTH tone** — the deviation from the written pitch rounded to the nearest 25 c: 0 → no sign beyond the natural,
+±25 → the arrow, ±50 → the quarter-tone sign, ±75 → the quarter-tone sign + arrow — **and the cents number is the exact deviation** from
+that written pitch's equal-tempered value, not the travel. Read on the piece: M1 all six = C♮↑ +25 / C♮↓ −25 (D, A likewise; the bass
+clarinet in written pitch) · M2 Vn2: C4 → **D4 with "−14"** (186 c of travel, the head D, no arrow: 14 is nearer 0 than 25) · BCl-line
+(now the cello): D2 → **E¼♭2 "−49"** (150 c: nearest eighth tone = the quarter-flat, the number −49 against E) · Vn1/Va: A3 → **B♭3 "0"**
+(100 c exactly — a number of 0 is dropped) · Fl, Vc-line (now the bass clarinet): crescendo-only (D44).
+
+**Recorded:** NOTATION_STANDARDS §3 (the row) · journal D45 · PLAN 2h.2 (the build: two glyphs `accidentals.natural.arrowup/down` imported
+from Emmentaler by the GLYPH_SIZING procedure — quarter-tone signs with arrows too if M2's rounding ever lands on ±75 —, `acc` +
+`cents` on the header overlay, a text item in the header chain) · CN-80 (his words) · **the cross-project memory: piece #4's rehearsal and
+performance scores take D45 when they are made** (its presentation score stays as delivered, as D42's note says; the tuba repo is
+read-only from here — the memory is how it gets there).
+
+**The question list after this:** 1 done (D44) · 2 the header's two MARKS (niente circle · end mark) from the data or fixed — still open,
+sharpened by the mock (it shows the tuba's `fff`) · 3 the floor at 1 for the morph crescendo — open · 4 the piano's 44 notes' device — open ·
+5 the beating indication — open (parts only, recommended). None eliminated by D45; D45 settles the PITCH figure, not the marks.

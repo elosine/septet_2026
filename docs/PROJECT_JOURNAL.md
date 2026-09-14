@@ -105,7 +105,8 @@ trills, the beamed group's two instances); `notation/audio/piece-septet.wav` is 
 
 **NEXT UP — the morph section (PLAN 2h), his agenda of 2026-09-14.** The beamed group's cross-staff build is DEFERRED to section 3's
 notation at his word (CN-78: max four per GC, 1 · 2 · 4; same staff as normal; across the grand staff = try the beam above the treble, stems
-down into the bass — PLAN 2g.1). **Held decisions, his to make at the build (§464; surface them one at a time when asked):** (2) the header's
+down into the bass — PLAN 2g.1). **The header's PITCH FIGURE decided 2026-09-14 — D45: the arrowed natural + the cents, both (§471–§472; the standard for all pieces from here; piece #4's
+rehearsal / performance scores take it when made).** **Held decisions, his to make at the build (§464; surface them one at a time when asked):** (2) the header's
 two marks from the data through D23's ladder, or the tuba's fixed niente → `fff` · (3) the drawn floor at 1 for the morph crescendo (the gliss
 is pitch, no floor) · (4) the piano's 44 plucked notes in the section — the section-1 strike device with a plucked mark, or another device ·
 (5) the beating indication — parts only (recommended, as the tuba), or on the score.
@@ -619,6 +620,15 @@ sources; verified here only when they bite.)*
   116 s, a voice already in tune with the B♭ series the SPECTRAL model focuses on (§465) — as a full-height C→C¼♯ glissando that is not
   there; the cello's 14 c is a tuning shade. *Rejected:* 10 c (the cello would still get a curve); the tuba rule unchanged. Spec:
   `docs/NOTATION_STANDARDS.md` §3.
+- **D45** *(2026-09-14, composer, RUNNING_LOG §469–§472; CN-80; the mock `docs/images/morph_header_arrow_cents_mock_2026-09-14.svg`)* —
+  **THE MORPH HEADER'S PITCH FIGURE: the arrowed natural AND the cents, for every piece from here.** The altered head is written to the
+  nearest eighth tone — an ordinary or quarter-tone sign with an arrow for ±25 c, the arrow on the nearest sign (Gould / Saariaho / Poppe) —
+  with the exact deviation in cents above it (Haas / Tenney; "+25", "−14"; a 0 dropped). His: *"This is good. Let's record this as the
+  standard … use this notation for the morph sections."* **Piece #4's rehearsal and performance scores take it when they are made; its
+  presentation score stays as delivered** (his: *"just for the performance slash rehearsal scores when we get to those"*). *Why:* M1's voices
+  travel exactly an eighth tone; the tuba's "at least a quarter tone" wrote that twice too big, and a cents number alone gives no shape
+  at a glance. *Rejected:* the quarter-tone grid alone (the tuba's, "what I'm doing now"); the arrow alone (exact only at 25 c); the cents
+  alone. The curve stays the displacement map; D44 stands. Spec: `docs/NOTATION_STANDARDS.md` §3; build: PLAN 2h.2.
 
 ## §5 Playbooks
 
