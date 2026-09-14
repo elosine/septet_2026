@@ -19,10 +19,10 @@
  },
  "provenance": {
   "createdBy": "tools/notate_section.js (profile trance) --bricks --trills --trillRate 100",
-  "date": "2026-09-13",
+  "date": "2026-09-14",
   "tool": "tools/notate_section.js (profile trance) --bricks --trills --trillRate 100",
   "notes": "Derived extraction (B1). Segmentation: DB-6 greedy IOI runs, TOL 0.015 s. Regenerable; authored content belongs in overlays only. TRILLS (PLAN 2f.3): 69 trill zone(s) as env trill; 11 eaten note(s) (mutedBy) not extracted; 0 trill(s) read a flat level. BRICKS MODE: all chunks forced unresolved (working file).",
-  "build": "node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --trillRate 100 --id piece-septet"
+  "build": "node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --trillRate 100 --id piece-septet --beamsThrough --rests16 --cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1"
  },
  "events": [
   {
@@ -113386,5 +113386,81 @@
    "provenance": "derived"
   }
  ],
- "overlays": []
+ "overlays": [
+  {
+   "id": "ov-cl-1-ev-wc-827",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-827"
+   },
+   "value": {
+    "device": {
+     "goLine": false,
+     "gc": true,
+     "dynBesideStem": false,
+     "dynMark": "band",
+     "nhUnit": true,
+     "nhStem": "beam",
+     "nhAnchor": "leftEdge",
+     "beamGroup": "cl-1a",
+     "clusterId": "cl-1",
+     "beamUnit": 0.13850000000000107,
+     "beamPos": 0,
+     "beamLevels": 2,
+     "beamSubdivision": 4,
+     "rest16Before": true,
+     "ringBar": false,
+     "nhHead": "filled",
+     "nhHeadScale": 0.844,
+     "nhDot": true,
+     "nhDotGapSs": 0.15,
+     "noteUnits": 1,
+     "noteBeams": 2,
+     "beamThrough": true,
+     "beamOverRest": true,
+     "nhArtic": "accent",
+     "beamHasArtic": "accent"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-cl-1-ev-wc-832",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-832"
+   },
+   "value": {
+    "device": {
+     "goLine": false,
+     "gc": false,
+     "dynBesideStem": false,
+     "dynMark": false,
+     "nhUnit": true,
+     "nhStem": "beam",
+     "nhAnchor": "leftEdge",
+     "beamGroup": "cl-1a",
+     "clusterId": "cl-1",
+     "beamUnit": 0.13850000000000107,
+     "beamPos": 2,
+     "beamLevels": 2,
+     "beamSubdivision": 4,
+     "rest16Before": true,
+     "ringBar": false,
+     "nhHead": "filled",
+     "nhHeadScale": 0.844,
+     "nhDot": true,
+     "nhDotGapSs": 0.15,
+     "noteUnits": 1,
+     "noteBeams": 2,
+     "beamThrough": true,
+     "beamOverRest": true,
+     "restAfter": 1,
+     "nhArtic": "accent",
+     "beamHasArtic": "accent"
+    }
+   },
+   "provenance": "authored"
+  }
+ ]
 }

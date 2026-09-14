@@ -95,6 +95,11 @@
 //                            meaning with the stem direction.
 //   --beamThrough 2          beam group N keeps its secondary beam unbroken across rests
 //   --clusterTol <s>         metric tolerance for the cluster fit (default 0.030)
+//   --gridDiv N              [septet §458, THE BEAMED GROUP] the grid N times finer than the fit's:
+//                            a pair 0.277 s apart fits as two 8ths; --gridDiv 2 writes it 16th ·
+//                            16th rest · 16th (the septet's pair rule — a gap under 0.4 s)
+//   --restAfter N            [septet §458] N trailing rest slot(s) after the last member, DRAWN
+//                            (the pair's closing 16th rest; --beamOver then reaches over it)
 //   --prune <id>             remove an IR + its picker entry (git keeps history)
 //
 // Steps: extract (extract_core, same as ir_extract.js) -> validate
@@ -299,7 +304,7 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
   // accents and a tuplet over members it did not have. A modifier before any
   // --cluster is an error, not a default.
   const BOOL_MODS = new Set(['--noGoLine', '--pattern', '--figures', '--ownGrids', '--plain']);
-  const MODS = new Set(['--clusterTol', '--accents', '--dyn', '--beamBreak', '--beamThrough', '--tuplet', '--pickup', '--noGoLine', '--pattern', '--figures', '--ownGrids', '--paceRatio', '--cuts', '--plain', '--rest16', '--restFit', '--beamlets', '--beamOver', '--beamOverLeft', '--bracketSide', '--articSide']);
+  const MODS = new Set(['--clusterTol', '--accents', '--dyn', '--beamBreak', '--beamThrough', '--tuplet', '--pickup', '--noGoLine', '--pattern', '--figures', '--ownGrids', '--paceRatio', '--cuts', '--plain', '--rest16', '--restFit', '--beamlets', '--beamOver', '--beamOverLeft', '--bracketSide', '--articSide', '--gridDiv', '--restAfter']);
   const spans = [];
   for (let i = 0; i < process.argv.length; i++) {
     const a = process.argv[i];
@@ -703,6 +708,22 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
       console.log('    PATTERN (D63' + (plainOnly ? ', --plain: no tuplets' : '') + '): ' + pf.shape + '   worst ' + (pf.worstSeconds * 1000).toFixed(0) + ' ms = ' + pf.heads.toFixed(1) + ' heads' + (pf.coherent ? '' : '  [OVER A HEAD]'));
       if (plainOnly && !pf.coherent) console.log('    --plain: no plain 16th grid holds this gesture within a head — built as asked; the displacement above is the price of saying nothing about the pace');
     }
+    // --gridDiv N (septet, RUNNING_LOG §458 — THE BEAMED GROUP): the grid N times
+    // finer than the fit's. The fit writes a lone pair 0.277 s apart as two 8ths
+    // (or two consecutive 16ths under --plain); the septet's pair rule writes
+    // 16th · 16th rest · 16th · 16th rest, so the unit is HALF the gap. Positions
+    // never move — only the writing; the beat is re-derived by cluster_fit's rule.
+    const gridDiv = parseInt(modVals('gridDiv')[0] || '1', 10);
+    const restAfter = parseInt(modVals('restAfter')[0] || '0', 10);
+    if (gridDiv > 1) {
+      if (perMember || (patTuplets && patTuplets.size) || tuplets.length || fit.tuplet) { console.error('--cluster ' + label + ' --gridDiv: plain grids only (no --figures/--ownGrids, no tuplets)'); process.exit(2); }
+      fit.unit = fit.unit / gridDiv; fit.grid = fit.grid.map(g => g * gridDiv);
+      let m = 1; while (fit.unit * m < 0.5 && m < 16) m *= 2;
+      fit.subdivision = m; fit.beat = fit.unit * m; fit.bpm = 60 / fit.beat;
+      fit.beams = Math.max(1, Math.round(Math.log2(m))); fit.restDur = m * 4; fit.tuplet = null;
+      console.log('    --gridDiv ' + gridDiv + ': the grid ' + gridDiv + 'x finer than the fit — unit ' + (fit.unit * 1000).toFixed(1) + ' ms, the notes on slots ' + fit.grid.join(','));
+    }
+    if (restAfter > 0) console.log('    --restAfter ' + restAfter + ': ' + restAfter + ' trailing rest slot(s) drawn after the last member');
     if (!ownGrids) console.log('  cluster ' + key + ': ' + members.length + ' notes ' + label + ' s, part ' + partOfEvent.get(members[0].id) + ' (' + members.map(e => e.source.objectId).join(' ') + ')');
     if (!ownGrids) console.log('    fit: unit ' + (fit.unit * 1000).toFixed(1) + ' ms · beat ' + fit.beat.toFixed(3) + ' s = ' + fit.bpm.toFixed(1) + ' bpm x ' + fit.subdivision +
       (fit.tuplet ? ('  [' + fit.tuplet + '-tuplet]') : '  [no tuplet]') +
@@ -960,6 +981,7 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
       if (through.has(sub + 1) || (thruHere && !beamlets.has(sub + 1))) dev.beamThrough = true;   // day 23 per group; day 35 the rule (--beamsThrough, scoped), --beamlets the exception
       if (over.has(sub + 1)) dev.beamOverRest = true;
       if (overL.has(sub + 1)) dev.beamOverLeft = true;
+      if (restAfter > 0 && k === members.length - 1) dev.restAfter = restAfter;   // septet §458: the pair's closing rest, drawn
       if (accentAt.has(k + 1)) dev.nhArtic = 'accent';
       if (anyArtic) dev.beamHasArtic = anyArtic;
       doc.overlays.push({ id: 'ov-' + key + '-' + e.id, kind: 'engraving', target: { event: e.id }, value: { device: dev }, provenance: 'authored' });

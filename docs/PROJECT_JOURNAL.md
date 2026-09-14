@@ -85,6 +85,10 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word.
 
+**▶ UPDATE 4, same session (Fable, no clear — his word): THE BEAMED GROUP DECIDED, ITS FIRST INSTANCE BUILT** (RUNNING_LOG §455–§459; `docs/NOTATION_STANDARDS.md` §2). Section 1 has 22 close gaps, one under 0.36 s (§455); the rule: under 0.4 s → 16 · 16r · 16 · 16r beamed, GC on the first only, no go line, every head's left edge on its go time, no tempo mark, one dynamic on the first, every head its dot and accent (§456–§458). **The three GC × trill conflicts: accepted, closed** (§456). Built: the piano pair at 43.3 in the MAIN file's recorded build (`--cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1` after `--beamsThrough --rests16`); two new positional modifiers in `tools/notate_section.js`, the trailing rest drawn by `layout.js`; 86 + 92 green; verified headless (§459). **Waiting on him:** his eye on the 43.3 pair (CTRL+SHIFT+R → MAIN → the page holding 43.3 s) — the accents sit on the beam side, the tuba's row; say if they should stay head-side. **Next, in his order:** the go-to-time + HOME in the presentation score (§456 item 5, NOT built) · the pair rule on the other gaps under 0.4 s · the four rule for the piano after 183 s (design first).
+
+*(Below: CHECKPOINT 2 as written — its first task is done.)*
+
 **▶ CHECKPOINT 2 (mid-session checkpoint) — session 10, 2026-09-13, written on Opus. Nothing in flight; everything committed and pushed.**
 
 **THE FIRST TASK AFTER /postclear — his word: DISCUSS the three GC × trill conflicts AND the general rule for strikes too fast for their
@@ -239,7 +243,7 @@ drawer's swell switch · `docs/NOTATION_STANDARDS.md` §1 when notation resumes 
 | **N1c** | HIS EAR on the chain and the pure-crescendo runs** (§420–§426; the draft is tagged). The AI answers, logs to SWEEP_LIST, journals | **Fable** (composing questions) · **Opus** for any fix | no |
 | **N1** | His verdict on CN-67 in the app (headless-proven only) → then his eye and ear over the 15 pages (the picker, video, SPACE) | **Fable** · **Opus** for any fix | no |
 | **N3** | The 15 geometry touches + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
-| **N4** | **► FIRST after /postclear — DISCUSS the GC × trill conflicts (three) and the rule for strikes too fast for their GCs** (RUNNING_LOG §454; CHECKPOINT 2 above): the data (376 gaps under the arc's 0.6 s, 240 of them the piano's), the tuba's cluster standard as the precedent he names, his differences — planning method, talk first. Then his ear on the render (§453) · the curve floor verdicts | **Fable** to discuss · **Opus** to build | **yes** — he clears now |
+| **N4** | **DONE 2026-09-13 (§455–§459): the beamed-group standard decided; the pair at 43.3 built; the trill conflicts closed.** ► NEXT: his eye on the 43.3 pair → the go-to-time + HOME in the presentation score (§456 item 5) → the pair rule on every gap under 0.4 s (21 more in section 1, 354 after) → the four rule for the piano after 183 s (design first). Then his ear on the render (§453) · the curve floor verdicts | **Opus** for the go-to-time and the wider apply · **Fable** for the four rule's design | at the mode change |
 | **N5** | Still open: the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE, one decision from him) · PLAN 1q proper | **Opus** | no |
 
 **The standing rule:** Fable for the turns where a wrong reading costs a day; Opus for every turn where the plan is already on paper.

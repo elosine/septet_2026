@@ -1327,6 +1327,8 @@
                       // day 29 (--rest16): the silence ending at this position is
                       // written as 16th rests, one per slot
                       if (dev.rest16Before) (cl.rest16At = cl.rest16At || new Set()).add(dev.beamPos);
+                      // septet §458 (--restAfter): trailing rest slot(s) after the last member are DRAWN
+                      if (dev.restAfter) cl.tailPos = Math.max(cl.tailPos != null ? cl.tailPos : -Infinity, dev.beamPos + dev.restAfter);
                       if (dev.noteUnits) cl.covers = (cl.covers || []).concat([[dev.beamPos, dev.beamPos + dev.noteUnits]]);
                       if (dev.tupletGroup) {
                         if (!cl.tuplets) cl.tuplets = new Map();
@@ -2160,7 +2162,7 @@
       for (const [cid, cl] of clusters) {
         if (!cl.unit || !cl.positions.length) continue;
         const filled = new Set(cl.positions);
-        const last = Math.max(...cl.positions), first = Math.min(...cl.positions);
+        const last = Math.max(...cl.positions, cl.tailPos != null ? cl.tailPos : -Infinity), first = Math.min(...cl.positions);
         const t0Grid = cl.anchorT - cl.anchorPos * cl.unit;   // grid position 0 in seconds
         // a note's WRITTEN VALUE covers the units it lasts (day 23): an 8th
         // fills its own gap, so no rest is written there — the cure for
