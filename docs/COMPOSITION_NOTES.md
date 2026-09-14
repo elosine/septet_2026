@@ -1786,3 +1786,38 @@ itself. Purpose-oriented: the threshold is a flag, and a future piece may want t
 `composition_for_two_pianos_and_two_percussion`, around 0:50 of its score: how it wrote plucked (inside-the-piano) notes, the pedal marking,
 the "rosetta" — read as the pedal-release rosette (Ped. … ✱), to confirm with him — and a duration line for the ring. "Maybe dur line from
 tuba": piece #4's duration line as the alternative source for that one element. Nothing looked up yet.
+
+## CN-83 — 2026-09-14: section 3's dynamics — a stepped climb p → fff, even by time; one written mark per step per part
+
+> *"The dynamics will be like this. I want to start at p and then at the end end up at f f f. So I guess in even progression by time, So
+> there'll be so many seconds of p for everybody, and then so many seconds of MP and then MF and then F then FF then FFF at the end. And
+> for the dynamics markings, the notation, let's just give a single dynamic at the beginning of each section. So each section at the
+> beginning will just get a p dynamic on their first note. And then when it switches to MP, they'll get one dynamic for that section,
+> etcetera."* (composer, 2026-09-14, planning section 3's notation after `/postclear`)
+
+*(AI reading, marked as such:)* two things in one. **In the save:** section 3's velocities re-set in six equal time bands — p · mp · mf · f ·
+ff · fff — the same band for every part at any moment ("for everybody"). **On the page:** NOT §1's "dynamic on every strike" — one mark per
+part per band, on that part's first note inside the band; nothing else until the band changes. Whether the page rule is section 3's alone
+or the piece's is not said — held for the plan.
+
+## CN-84 — 2026-09-14: section 3's crescendos — the tuba's surge, ppp→fff with the arrow, the standard shape, zero to max, SECCO at the end
+
+> *"I forgot about the crescendos in the middle part. These will be like the tuba swells at the final section. They'll show the dynamics
+> PPP to FFF with the arrow. and these will have the standard surge shape again from the tuba piece. And let's make sure we're using those
+> drawing standards we discovered, the higher resolution, etcetera. these can go from zero to max. no need for a minimum threshold. So the
+> curves look one way the composer score, but that's because the sound wasn't quite right. these ones will still have the standard surge
+> shape. And I think I have a prompt about this that explains if we need it. Also, we'll need the cecotex. S e c c o. Text. at the end of the
+> curve, see the string quartet and how I did it there."* (composer, 2026-09-14, the same turn)
+
+*(AI reading, marked as such:)* the crescendos in the middle of section 3 take piece #4's **surge** device (`byEnv.surge`: level curve with a
+90° cut · go line · open nh-unit · ppp→fff pair + arrow · no GC, no band mark). **The drawn curve is the STANDARD surge shape, a template —
+not the save's curve** (the save's shape was bent for the sampler's sake, CN-49's listening tests); so unlike the morphs' absolute curve (D46)
+this one is a picture of the intention. Drawn in the D42 look at 100/s, from the lane's floor to its top — **no floor** (D47's rule reaches
+here). **"Secco"** as a text at the curve's end — CN-49's instruction (strings damp at the cut; winds get the word for the shape); the quartet
+(#1) wrote it as a text mark beside the long tone. His earlier prompt on the shape = CN-49 (2026-09-08) and RUNNING_LOG §255 / §263.
+
+## CN-85 — 2026-09-14: CN-78 amended — a triple is one group (1 · 2 · 3 · 4 per GC)
+
+> *"The triples A good;"* (composer, 2026-09-14, to the AI's three options for the two runs of three close strikes — Vc 488.51 s, Va 622.01 s)
+
+*(AI reading, marked as such:)* option A — three allowed, written as the pair with a third unit, one GC. D51; RUNNING_LOG §508 · §510.

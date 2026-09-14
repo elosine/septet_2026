@@ -105,25 +105,25 @@ cross-staff beam · the left-edge chrome · dynFixed) · `render.js` (lvslur · 
 `tools/notate_section.js` (`--pairBeam` · `--ensembleDyn`) · `tools/test_morph_notation.js` (178) · commits 92f3c55 · 5ce9a7d · 9c12c8b ·
 3939d08 + this checkpoint.
 
-**The next concrete step — on Fable, after `/postclear`, at his word:** ask him which chunk is next, from the NEXT STEPS table below —
-**N1 the D49 audit** of the rest of the score (NITS 2026-09-14 "THE D49 AUDIT": device by device, in the running page) · **N2 the audio
-re-render** (his capture, the AI's bridge render, RENDER.md — the render lacks the M2 swap, the bcl slap and the chord snap; before the demo
-video) · **N3 section 3's notation** (PLAN 2g). The AI's lean: N1 first — every page built after it inherits what it finds. The chosen
-chunk names its own reads.
+**The next concrete step — Opus, after a clear:** **PLAN 2i, sitting A = step 1 (go-to-time + HOME, §456 item 5) then step 2 (the D49
+audit — Fable for the verdicts, Opus for the fixes).** His word 2026-09-14: *"top line good"* · *"Sitting A yes, you mean do this first? then
+yes"*. The top line of section 3's notation: ten steps in six sittings, written into PLAN 2i (RUNNING_LOG §505–§511). The planning method
+holds at each step: the goal first ("N. Title. Result when done: …"), discuss, then the sub-steps, then into the plan.
 
-**Resume reads:** nothing beyond §2 — then, for the chosen chunk only: N1 → NITS "THE D49 AUDIT" + NOTATION_STANDARDS §0 · N2 → `docs/RENDER.md`
-· N3 → PLAN 2g.
+**Resume reads:** PLAN 2i (the top line) — then, for sitting A only: RUNNING_LOG §456 item 5 (the go-to-time ask) · NITS "THE D49 AUDIT" ·
+NOTATION_STANDARDS §0.
 
-**Decisions pending the composer:** which chunk next · (later, the performance instructions) the pedal legend's wording (NITS draft).
+**Decisions pending the composer:** Q7 the bass clarinet's bottom (§511: assume low C, or push 10 notes up) · the page rule's reach (2i.7:
+section 3 only, or the piece) · (later, the performance instructions) the pedal legend's wording (NITS draft).
 
 **Deliberately uncommitted (`git status --short` at this checkpoint) — all his, left alone:** `bank/panel_snapshots.json` (his takes) ·
 `reaper/septet_rack.rpp` (his rack) · `bank/passages/4materials.json` · `accentedcres01.json` · `accentedcres01-2.json` · `chordcyc01.json` ·
 `chstr02.json` · `section3.json` (his passages) · `scores/Sec3.json` (his section-3 sketch) · `scores/SeptetSec03-Materials-B.json` · `-C` · `-D` ·
-`scores/SeptetSec03-Materialsa.json` (his section-3 material) · `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` ·
+(`SeptetSec03-Materialsa.json` and the `Sec3-Materials` working copy were empty — removed at his word 2026-09-14, §509) · `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` ·
 `scores/piece-septet-v1.32-finalDraft1.0.json` (his named versions) · `scores/spectralMorph.json` (his save of 2026-09-14, the SPECTRAL-04
 comparison §466 — his to keep or delete) · `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
 **Unsaved working copies** (`node tools/unsaved_check.js`, D17 — his to Save or Reload; piece-septet is clean): cres-run01 · cres2strike ·
-piano-harmonics-test · Sec3-Materials (never saved — the working copy is the only copy) · trill-curve-test · trillBuildTst · zz-ai-1t-walk.
+piano-harmonics-test · trill-curve-test · trillBuildTst · zz-ai-1t-walk.
 **Running:** nothing of the AI's (his :5300 and Reaper; the AI's Browser-pane tab on :5300 only reads).
 
 ---
@@ -141,9 +141,9 @@ the cross-staff beamed pairs · D50 the piano's dynamics from the ensemble · th
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N1** | **► his pick — the D49 audit** of the rest of the score against the two principles (NITS 2026-09-14): the strikes' displacement after D60 · the trills · the tuba inheritances (`ord` · `surge` · `fortepiano` · `cuivre` · `staccato`) · the morph headers · the D43 groups — findings to him, the fixes after his word | **Fable** (the verdicts) → Opus (the fixes) | **yes — this checkpoint is the clear** |
-| **N2** | **or** the audio re-render (the render lacks the M2 swap, the bcl slap at 58.7 s and the chord snap; RENDER.md) — his capture, the AI's bridge render; before the final demo video | his + Opus | yes |
-| **N3** | **or** section 3's notation: the cross-staff beam (2g.1 — the pair version now exists, `--pairBeam`), the fours at the end (2g.2), the run cut into groups (2g.4), `--pairs` (2g.5); the go-to-time + HOME (§456) | **Opus** | fresh session |
+| **N1** | **► PLAN 2i sitting A** — step 1 go-to-time + HOME (§456 item 5) → step 2 the D49 audit (verdicts → fixes; the out-of-range census done, §507) | **Opus** (step 1) → Fable (verdicts) → Opus (fixes) | **yes** |
+| **N2** | **sitting B** — step 3 the save edits in HIS tab: `foldFlute()` over section 3 (79 rams) · the six dynamic bands p → fff (CN-83) · Save · rebuild | Opus + his ear | yes |
+| **N3** | **sitting C** — step 4 the cross-staff group (2g.1), alone · **sitting D** — steps 5–6 the groups and `--pairs` (2g.2 · 2g.4 · 2g.5, D51) · **sitting E** — steps 7–8 the page rule + the surge device (CN-83 · CN-84) · **sitting F** — steps 9–10 re-render, demo video | Opus (Fable for 8's design) | fresh session each |
 | **N4** | Later, noted: the performance instructions — the pedal legend and the l.v. legend (NITS 2026-09-14) · the performance score carries D50 (PLAN 3's acceptance line) | — | — |
 | **N5** | Still his, from before: the render's sync (§453) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 
@@ -698,6 +698,12 @@ sources; verified here only when they bite.)*
   drawn marks moves; PLAN 3 (the performance score) carries it as an acceptance line. *Rejected:* changing the save's velocities (a1 — the
   piano's velocity table has five marks, the rule uses eight, and the recording stays his); a hand-typed table of marks (it would not follow a
   deliberate change to the morph levels, and nothing would say it had gone stale).
+- **D51** *(2026-09-14, composer, RUNNING_LOG §508 · §510)* — **THREE STRIKES UNDER THE TRIGGER ARE ONE GROUP ON ONE GC — the beamed
+  group admits 1 · 2 · 3 · 4 (CN-78's "1, 2 or 4" amended).** His word: *"The triples A good"* to the three options (A three allowed, one
+  GC · B pair + single, two GCs · C change a note). Written as the pair with a third unit — 16th · rest · 16th · rest · 16th · rest, one
+  beam continuing over the last rest, the written 16th = half the gap, one GC on the first. *Why:* both triples are nearly even (Vc 488.51 s
+  0.344 · 0.325; Va 622.01 s 0.347 · 0.341), and pair + single would land the single's own GC 0.33 s after the pair's — the crowding the
+  rule exists to prevent. *Rejected:* B (that crowding) · C (a change to the music for a notation convenience). Built at PLAN 2g.5.
 
 ## §5 Playbooks
 

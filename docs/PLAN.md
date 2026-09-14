@@ -1602,7 +1602,7 @@ player would touch parts, solo, crop and print.
   **When section 3 is notated, his order:** 2g.1 a group on BOTH staves of the grand staff — TRY one beam ABOVE the treble staff, the lower
   notes' stems reaching down into the bass (one group across the two layout systems; §462–§463's defaults) → 2g.2 several fours in a row at
   the end, each with its GC — his eye on the crowding → 2g.4 the run from 581 s cut into groups → 2g.5 a `--pairs` flag for the six other
-  parts (46 pairs, 2 triples). *Why:* his — *"the beams allow players to play several notes on one gc."*
+  parts (46 pairs, 2 triples — a triple is ONE group of three on one GC, D51 2026-09-14). *Why:* his — *"the beams allow players to play several notes on one gc."*
 
 - **2h — Section 2 notated: the morphs** — `planned 2026-09-14 (RUNNING_LOG §464–§467; NOTATION_STANDARDS §3; D44)` — **Result when done:**
   M1 and M2 on the MAIN notation file in the tuba's morph vocabulary with this piece's differences, each part's header in its own clef and
@@ -1636,6 +1636,30 @@ player would touch parts, solo, crop and print.
      Locate the tuba's set in `for_seven_tubas` when reached. His to-do in journal §7.
   *Why:* his — *"I believe this one will be notated very similar"* to the tuba; the differences measured before the build so nothing is
   ported blind (§464). The rules first, then one build from a written spec (AI_METHODOLOGY).
+
+- **2i — Section 3 notated: the strikes, the groups, the crescendos, the dynamics** — `planned 2026-09-14 (RUNNING_LOG §505–§511; the top line his: "top line good")` — **Result when done:**
+  section 3 (444–624 s) on the MAIN notation file with every rule in force: the flute's rams folded (D38), the dynamics stepped p → fff in the
+  save (CN-83) and written once per band per part, every close run grouped (D43 · D51: 1 · 2 · 3 · 4 per GC — the piano's across the grand
+  staff, 2g.1), the crescendo run 526.8–575.0 s as the surge device with "secco" (CN-84), the D49 audit's findings fixed piece-wide, the
+  audio re-rendered, the demo video made. **Six sittings, A–F; one step at a time in the planning method; the builds on Opus after a clear.**
+  1. **Go-to-time + HOME on the notation page** (§456 item 5) — `todo · sitting A · Opus` — a type-a-time control on the video view; HOME → 0.
+  2. **The D49 audit** (NITS 2026-09-14) — `todo · sitting A · Fable verdicts → Opus fixes` — the strikes' displacement after D60 · the trills ·
+     the tuba inheritances (`ord` 55, `surge`, `fortepiano`, `cuivre`, `staccato`) · the morph headers · the built groups. The out-of-range
+     census is done (§507: 79 flute rams, all section 3 → step 3).
+  3. **The save edits, in HIS tab** — `todo · sitting B · Opus + his ear` — (a) `foldFlute()` over section 3 (79 rams, D38, §507) · (b) section
+     3's velocities in six equal time bands p · mp · mf · f · ff · fff, every part (CN-83) — a script, one undo step · Save · rebuild.
+  4. **The cross-staff group** (= 2g.1) — `todo · sitting C, alone, fresh session · Opus from a written spec` — a group of up to four across both
+     staves: one beam above the treble, the bass notes' stems up to it; a group on one staff as normal — the stem rules read from #2 and the tuba first.
+  5. **The piano's run from 581 s cut into groups; the fours at the end** (= 2g.2 · 2g.4) — `todo · sitting D · Opus` — his eye on the crowding.
+  6. **`--pairs` for the six other parts** (= 2g.5) — `todo · sitting D · Opus` — 46 pairs · the two triples as groups of three (D51: Vc 488.51 · Va 622.01).
+  7. **The page rule for section 3's dynamics** (CN-83) — `todo · sitting E · Opus` — one mark per part where its band changes, on that part's first
+     note in the band; nothing else. **Open:** section 3 only, or the piece (section 1 marks every strike, §1).
+  8. **The crescendo run as the surge device** (CN-84) — `todo · sitting E · Fable design (short) → Opus` — ppp → fff + arrow · the STANDARD surge
+     shape, a template, not the save's curve · the D42 look at 100/s · no floor · "secco" at the curve's end (CN-49; the quartet's text mark) ·
+     one player per onset by round robin as the save has it (§509). The performance instructions must say the morph curves are absolute and these are not.
+  9. **The audio re-render** (RENDER.md) — `todo · sitting F · his capture + Opus` — the render is behind the save (M2 swap · bcl slap · chord snap · everything above).
+  10. **The demo video** — `todo · sitting F`.
+  **Also, decided on the way (2026-09-14):** Sec3-Materials was empty and is removed with Materialsa (§509) · Q7 the bass clarinet's bottom — §511, his word owed.
 
 - **2b — Presentation score** *(the title on the cover and in the format entry: **tentative _Scattered Substance_**, CN-64 — confirm with him before either is written)* — print PDF (A3 landscape, format entry + cover + performance
   notes page as in #4) + video (`export_video.js`, Reaper render at fixed BPM, sync proof

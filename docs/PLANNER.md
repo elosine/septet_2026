@@ -5,7 +5,7 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ✦** 2026-09-14, session 11 — **THE MORPH SECTION IS NOTATED, PIANO INCLUDED (PLAN 2h.2–2h.6; §477–§504): D49 (the notehead's left edge is the moment · the go line marks displacement) and D50 (the piano's dynamics from the ensemble) — NEXT, his pick: the D49 audit of the rest of the score · the audio re-render (two steps behind the save) · section 3's notation (PLAN 2g).**
+**NOW ✦** 2026-09-14, session 12 — **SECTION 3'S NOTATION PLANNED (PLAN 2i, RUNNING_LOG §505–§511; his "top line good"): ten steps in six sittings — A go-to-time + HOME then the D49 audit · B the save edits (the flute fold, the six dynamic bands p → fff) · C the cross-staff group · D the groups and `--pairs` (D51: triples allowed) · E the page rule + the surge device with secco · F re-render, demo video. NEXT: sitting A on Opus after a clear.**
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 

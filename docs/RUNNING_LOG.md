@@ -13856,3 +13856,104 @@ GEOMETRY 31, none in 200–430 s. PLAN 3 (the performance score) gains the accep
 **His word:** *"n2 no stems; /checkpoint"* — the chord at 269.13 s (G♯2 + G♯5, ordinary, the stemming held since §485) stays as drawn:
 two open heads, no stems, one dynamic, the slurs by the chord rule. Nothing to build. The morph section's piano is complete (PLAN 2h.5):
 the devices, the chords, the pairs, D49, D50. Checkpoint written in the journal §2 before the clear.
+
+## §505. Section 3's notation planned — his list read back, the order set, four questions answered (2026-09-14, Fable 5.1)
+
+**Prompted by** his `/postclear` argument: *"I want to begin to notate the final section, section three. On my list is to build slash resolve
+the cross staff being notes in the piano ... then drop in the two note beamings or the four note beamings anywhere ... that meet the thresholds
+... carry over the note head placement rule ... an audit of the rest of the piece ... revise the dynamics for the entire section ... tell me if
+there was anything else in previous prompts ... then let's make a plan."* Then, to the AI's two questions: *"The go-to-time + HOME for the
+notation page (§456), listed under N3. first — then audit"* · *"audio rerender just before we are ready to make demo video"* · the dynamics
+scheme (CN-83) · the crescendos (CN-84) · *"sec 3 matls D? if yes that is saved now, if not which one"* · *"there are these out of range
+markings what are these?"* (a screenshot of the flute's tongue-ram strikes at 8va).
+
+**Read back and agreed (planning method, phase 1):** his list maps to PLAN 2g.1 (the cross-staff group) · 2g.2 / 2g.4 / 2g.5 (the groups
+and `--pairs`) · D49 already in force for the beamed group (nothing to carry, only to verify) · the D49 audit (NITS) · the dynamics (a save
+edit + a page rule, CN-83) · the crescendos (CN-84). His "section four" read as section 3, the final section. **Order decided:** §456's
+go-to-time + HOME first · the audit second · the re-render moved to just before the demo video.
+
+**Answered:** (1) **"out of range"** = §400's range alert in `layout.js` — the tongue ram carries a written range (B3–C♯5 fingered); a T.R.
+strike written outside it is marked in red on the page, warned in the console and at extraction; the flagged notes cannot be played as
+written — a decision owed (re-pitch or re-technique), counted in the audit. (2) **Sec3-Materials** is NOT Materials-D: `unsaved_check` —
+*"never saved — the working copy (2026-09-10 13:11) is the only copy"*; A–D and Sec3 are saved files. (3) The three open questions: the
+triple (two runs of three under 0.4 s in the six parts; CN-78 allows 1, 2 or 4) · §413's alternation vs both-on-every-onset for section 1's
+two crescendo runs · Q7 the bass clarinet's bottom (origin not chased this turn). (4) §456 item 5 = a go-to-time control and HOME → 0 on
+the notation page's video view. **The top line follows in the plan (phase 2).**
+
+## §506. "Open which?" — Sec3-Materials is not in the menu, and is empty (2026-09-14, Fable 5.1)
+
+**Prompted by** his screenshot of the Experiments menu: *"open which?"* — looking for the never-saved `Sec3-Materials`.
+
+**Found:** `composer.html` line 3412 hides every `-work` row, so a never-saved score is unreachable from the UI (NITS 2026-09-14). The AI
+copied the work file to `scores/Sec3-Materials.json` to surface it, then counted it: **7 tracks, 0 objects, 771 bytes — empty**. So is the saved
+`SeptetSec03-Materialsa.json` (771 bytes). The copy was removed again. The section-3 material lives in `SeptetSec03-Materials-B` (24 waveCurves) ·
+`-C` (39) · `-D` (623) · `Sec3` (1019) and in the piece itself. **Nothing to open; nothing lost.** The empty work file and the empty `-a` file
+are his to delete. A dead end recorded at full weight: the "never saved — the only copy" warning meant an empty score all along.
+
+## §507. The red "out of range" marks are section 3's unfolded tongue rams — D38 reaches them, the fold was run on 0–183 s only (2026-09-14, Fable 5.1)
+
+**Prompted by:** *"Out of range we settled this in section one. We're gonna fold any notes into the available range ... by Octave. and then
+notate the note the flute player fingers and plays, not the sounding note. But the sounding data should still be in the IR somewhere. Does
+this resolve this? And is this consistent with the decision we made before? in section one."*
+
+**Checked against D38 (§400–§401):** consistent, word for word — the fold into sounding C3–D4 by the smallest drop is a change to the MUSIC
+(`foldFlute()` in HIS tab, one undo step); the page writes the FINGERING (sounding + M7, `techniques.json pizzicato.written transpose 11`);
+the IR keeps the SOUNDING pitch (`pitch.midi`; the +11 is applied at layout from the registry); the alert (range 59–73 written) is the guard.
+**Why the marks:** `foldFlute()` was run for 0–183 s only. **Counted in the MAIN IR:** flute `pizzicato` (the tongue ram) — section 1: 68, all
+in range · section 3: 99 at 453.4–623.1 s, **79 unfolded** (sounding E4–C6; 40 need one octave down, 39 two), 20 already in range. Section 2:
+none. **Resolution:** the same one console line in his tab over section 3 — `foldFlute({ from: 430, to: 700, lo: 48, hi: 62, part: 'Fl',
+technique: 'pizzicato' })` — then Save, then the rebuild; joins the save edits (step 3 of §505's top line). The audit's out-of-range census
+is thereby done: 79, all flute, all section 3.
+
+## §508. The two triples measured: both nearly even (2026-09-14, Fable 5.1)
+
+**Prompted by:** *"The triple. are the gaps pretty even for the 2 runs?"* **Measured in the MAIN IR** (strikes mapped to tracks through the save):
+**Vc @ 488.51 s** — wc-2475 · 2477 · 2479 (G4 · E♭5 · B4), gaps **0.344 · 0.325 s** (6 % apart) · **Va @ 622.01 s** — wc-3057 · 3059 · 3061
+(B3 · C4 · A5), gaps **0.347 · 0.341 s** (2 % apart). Both under the 0.4 s pair trigger, both above 0.25 s. The AI's lean, for his word: admit
+THREE to CN-78's rule (1 · 2 · 3 · 4 per GC) and write a triple as the pair with a third unit — 16th · rest · 16th · rest · 16th · rest, one
+beam, one GC — rather than pair + single, whose single would land its own GC 0.33 s after the pair's: the very crowding the rule exists to
+avoid. Strike counts by part for the record: Vc 172 · Fl 168 · Vn2 168 · BCl 164 · Va 164 · Vn1 163 · Pno 433.
+
+## §509. §413's open question dissolved for section 1 and answered for section 3 by the save itself; the two empty files removed (2026-09-14, Fable 5.1)
+
+**Prompted by:** *"Clarify this more simply and give me the time codes of what you're talking about. I don't quite understand this."* · *"yes remove"*
+(the empty `Sec3-Materials-work.json` and `SeptetSec03-Materialsa.json`, 771 bytes each — removed) · *"Out of range settled?"*
+
+**The question's origin (§426, 2026-09-12):** his *"how to make an accelerating crescendo the same one in several parts"*; the AI explained the
+drawer's route — 34 swells accelerating over 30 s, each swell onset to onset, dealt ROUND ROBIN over Bass Cl. and Vn 1 (the players alternate);
+two placements computed, 146.33–174.90 s and 177.12–240.00 s; and it noted that "the same one in several parts" could instead mean BOTH players
+on every onset (the deprecated chords mode, §413) — never asked. **Checked in `scores/piece-septet.json` today:** NO crescendo objects between
+140 and 250 s — only plain strikes, the trill chain and section 2's material. The two placements were never inserted (or were cut, §425). **For
+section 1 the question is moot.** **Section 3 answers it itself:** the crescendo run IS in the save — group `grp-crun`, 526.8–575.0 s (box to
+578.75), 78 swells over six players by round robin (Va 14 · BCl 14 · Vn1 13 · Vc 13 · Vn2 12 · Fl 12; the piano out), each 3.5 s long, gaps
+2.0 → 0.5 s geometric (steep 0.85), dyn ppp → fff, **secco true**. One player per onset, rotating — the choice was made in the tool. So CN-84's
+hole ("are the crescendos in the save, with secco on?") closes: yes and yes. **Section 3 measured:** 444–624.1 s; strikes main 357 · gettato 193 ·
+bartók 191 · pizzicato (Fl rams) 99 · slap 92; ten group boxes.
+
+**"Out of range settled?"** — decided (D38, §507), not yet executed: 79 rams, one console line in HIS tab over section 3, Save, rebuild. Queued
+with the save edits (step 3), or at once at his word.
+
+## §510. DECIDED: the triple is one group on one GC — D51 (2026-09-14, Fable 5.1)
+
+**His word:** *"The triples A good;"* — to §508's three options. **D51:** the beamed group admits 1 · 2 · 3 · 4 per GC; CN-78's "1, 2 or 4"
+amended. A triple is written as the pair with a third unit (16th · rest · 16th · rest · 16th · rest, one beam over the last rest, the 16th =
+half the gap, one GC on the first). The two: Vc 488.51 s · Va 622.01 s. Built at PLAN 2g.5 (the `--pairs` flag must accept a run of three);
+NOTATION_STANDARDS §2 takes the row then. Journal §4 D51 · PLAN 2g.5 marked.
+
+## §511. Q7 measured — the bass clarinet's bottom; the top line approved and written into PLAN 2i (2026-09-14, Fable 5.1)
+
+**Prompted by:** *"The bass clarinet's bottom is it safe to assume low C? or if not what is the impact, how many notes do we have to push up and
+where"* · *"top line good"* · *"Sitting A yes, you mean do this first? then yes"*.
+
+**Measured (MAIN IR, BCl 217 pitched events; the save agrees):** the lowest sounding note is **B♭1 (MIDI 34) — exactly the low-C instrument's
+bottom (written C3)**; nothing below it, so the piece never asks the impossible. A low-E♭ instrument bottoms at sounding D♭2 (37): **10 events
+sit under it** — all slap tongue but one trill — section 1: 117.14 C2 · 125.19 C2 · 147.63 B1 · 147.78 B1 (the trill) · 152.60 B♭1 · 166.75 B♭1;
+section 3: 509.26 B1 · 610.01 B1 · 615.25 B1 · 620.18 B1. Everything from C♯2 up (C♯2 6 · D2 17 · E♭2 7 · E2 9) is safe on either. **The call**
+(`Tempus-Lab2026_Application_English.pdf`) says only "Clarinet (including bass clarinet)" — no low-C spec. **The sampler** (Xsample, #3's map)
+models the low-C instrument (GUI "low A#0" = B♭1). **The AI's lean:** assume low C — the professional contemporary player's instrument, the
+library's, and the piece stops exactly at its floor — and say so in the performance instructions ("bass clarinet to low C"); if the ensemble
+answers otherwise, the impact is ten notes up an octave in his tab, nine of them slaps whose pitch is secondary. His word owed.
+
+**"Top line good" · "Sitting A yes":** §505's ten steps in six sittings written into **PLAN 2i** (1–10, each with its sitting and model; 4 · 5 · 6 =
+2g.1 · 2g.2/2g.4 · 2g.5), the journal §2 (next step · resume reads · the N-table), PLANNER's NOW line. Sitting A = step 1 (go-to-time + HOME)
+then step 2 (the D49 audit), on Opus after a clear. The planning chunk committed.

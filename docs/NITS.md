@@ -389,3 +389,11 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   and `byEnv.surge` — every one hangs nhGapSs before a go line with no GC reason (`ord`, `surge`): the D59 violation, if any of them is
   used in this score (the 2026-09-11 census: `ord` 50 — the flute). (4) the morph headers (D45): heads "in time order" — on their times?
   (5) the D43 beamed groups: left edge on the time, no go line — compliant by decision; verify on the built ones (43.3 s, 620.3 s).
+
+## 2026-09-14 — the Experiments menu hides a never-saved score (composer: "open which?")
+
+- `composer.html` line 3412 filters every `-work` row out of the menus, so a working copy with no file (D17's "never saved — the working
+  copy is the only copy") appears nowhere in the UI and cannot be reopened from it. Bit today: `Sec3-Materials` (2026-09-10) — which
+  on inspection is EMPTY (7 tracks, 0 objects, 771 bytes; so is the saved `SeptetSec03-Materialsa.json`), so nothing was lost; the
+  work file is his to drop. The fix, when the composer is next touched: list orphans under their base name with a "· never saved"
+  tag, opening the working copy.
