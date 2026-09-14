@@ -1608,13 +1608,14 @@ player would touch parts, solo, crop and print.
   M1 and M2 on the MAIN notation file in the tuba's morph vocabulary with this piece's differences, each part's header in its own clef and
   written pitch, the two curves in the D42 look, the meters riding them; the piano's 44 notes in the section written with a decided device;
   his eye on both pages. **Build on Opus, after a clear, from the written spec (NOTATION_STANDARDS §3 + §464's flags).**
-  1. **The rules decided** — `1 of 5 decided 2026-09-14 (D44: crescendo-only under 20 c, the tool alerts); the pitch figure decided the same day (D45: arrowed natural + cents; its general rule — never a down arrow — his a/b pending, §473); 2 decided (D46: the marks fixed niente → fff, the crescendo curve absolute); 3–5 held at his word (journal §2 Open questions)` — the floor · the piano's device · the beating indication.
+  1. **The rules decided** — `1 of 5 decided 2026-09-14 (D44: crescendo-only under 20 c, the tool alerts); the pitch figure decided and settled the same day (D45: quarter-tone signs, nearest spelling, signed cents from 7 c, no arrow, ties toward the start, heads in time order — §474); 2 decided (D46: the marks fixed niente → fff, the crescendo curve absolute); 3–5 held at his word (journal §2 Open questions)` — the floor · the piano's device · the beating indication.
   2. **The tool's septet fixes, with checks** — `todo` — `morph_overlays.js` / `notate_morph.js`: parts = layers under `tracks.length` (not
      10 — the tuba's META; the panel had the same port bug, §204) · samples at 100/s (2f.7; today 400 per morph) · **the crescendo curve ABSOLUTE
      (D46): `fit('level')` without the min–max normalisation — samples = the drawn level / 10 × the `cc7Fade` weight (D32 — M1's 17 s fade
-     from silence is in CC7, not the level); the header's marks FIXED niente · arrow · `fff` (D46; `endMark: 'fff'` stays)** · the 20 c threshold with the alert (D44) · **the pitch figure per D45: the altered head to the nearest eighth tone — the two
-     arrowed naturals imported from Emmentaler (`accidentals.natural.arrowup/down`, the GLYPH_SIZING procedure), `acc` + `cents` on the
-     header overlay, the cents as a text item over the altered head (§471's mock is the look)** · the clef / written pitch of the header verified for the
+     from silence is in CC7, not the level); the header's marks FIXED niente · arrow · `fff` (D46; `endMark: 'fff'` stays)** · the 20 c threshold with the alert (D44) · **the pitch figure per D45 as settled (§474): the destination head spelled to the
+     nearest QUARTER tone with the simpler sign (never ¾), the signed residual as a `cents` text item over the destination head when
+     |residual| ≥ `--centsMin` (default 7), no arrows, ties at 25 c toward the start, the header laid out START-LEFT in `layout.js` (the
+     tuba's lowest-left order replaced); no new glyphs — the quarter-tone signs exist** · the clef / written pitch of the header verified for the
      bass clarinet. Prove: the tuba batteries unchanged; a septet check per fix.
   3. **M1 folded into the MAIN file** — `todo` — `--morph grp-morph-01` added to the recorded build (D41), rebuilt; headless: six headers,
      six gliss + six cresc overlays, 94 go lines, the dot off; his eye on the page: the D42 look on both curves, the meters, the header.

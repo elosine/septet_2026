@@ -12978,3 +12978,58 @@ the pitch figure states the amount; the meters ride the same absolute samples. D
 
 **Recorded:** journal D46 · NOTATION_STANDARDS §3 (the held row shrinks to 3 · 4 · 5; a D46 row) · PLAN 2h.2 (the cresc overlay: no
 normalisation; `samples = level/10 × fadeWeight`; the header's marks fixed) · §2.
+
+## §474. D45 SETTLED — the pitch figure: quarter-tone signs only, the nearest spelling, a signed cents number written from 7 c, no arrow, ties toward the start, the heads in time order; the tuba's performance scores to take it (2026-09-14, Fable 5.1)
+
+**His words, in order (the discussion §473 → here):**
+
+> *"Tenney and the cents school … So this one is good. Let's just decide whether to make it from standard chromatic accidentals or quarter
+> tone accidentals. what is the general thought consensus about professional instrumentalists and being able to target a quarter tone
+> and then deviate in terms of sense? … I wanna get a sense of what's more legible for contemporary performers. D sharp. +65 c or d 3/4 s
+> + 15c. and then after resolve the direction of travel question"*
+
+> *"lets discuss this more compared to your research, hass hemholtz in particular but if relevant others, I do only want to notate 1/4
+> tones with accidentals not 1/8 tones but it might be more intutive for a performer to gliss to the nearest cents so gliss up to a
+> d1/4sharp-7cents rather than a d+43 cents and then down same down to d -7c rather than d1/4b +43c thoughts and what is being used that
+> is similar?"*
+
+> *"a but Let's add some sort of threshold as well, but this will be purpose oriented. So there may be instances. I haven't used it yet, but
+> there may in the future be instances where the cello, which is e quarter flat minus two cents, might be applicable. So I want them to
+> get as close as they can to that particular pitch even though two cents is very small. However, for this current piece and the morphs in
+> general, I think we should have a threshold. … with regard to beating, is there a just noticeable difference? … let's use a just
+> noticeable difference in terms of beating. … if the just noticeable difference is about seven cents, I know it's frequency dependent,
+> but let's ballpark it. Fan will make the threshold here seven cents. So you wouldn't say e quarter flat minus two cents. but you would
+> say e quarter flat minus eight cents."* → *"7 is fine, now the direction of travel question"* → *"1a and breakdown 2 more simply pls"* →
+> *"2a, and make a note to fix this in the tuba performance scores; then record it and move to decision 3"*
+
+**What was put to him (the AI, from its knowledge — the §469 survey):** the nearest spelling with a signed residual is exactly what Tenney's
+cents school (Lucier, Ablinger, Sabat's cents scores: the nearest 12-EDO pitch, ±50), Helmholtz–Ellis (the comma spelling with the
+smallest residual, the cents above) and Haas (ordinary and quarter-tone signs with the cent deviation as a number; his arrows are sized
+accidentals, not direction flags) all do; an "always up" remainder is used by nobody; with signed cents the arrow only repeats the sign.
+On the grid: quarter-tone signs are fluent for a contemporary ensemble and cap the residual at 25 c, which players read as intonation
+shading of a known landmark; the three-quarter signs are the weak spot (Gould: respell — D¾♯ = E¼♭); chromatic signs push the residual
+to 50 c, the "which pitch is this?" zone (the cello's line: E♭ +48 vs E¼♭ −2). **The JND ballpark given:** pitch against a partner ≈ 5 c
+mid-register; a player's own accuracy on a held tone ±5–10 c; beating is judged as a RATE, its JND ≈ 10 % of the rate, and the rate moves
+by ≈ f / 1700 Hz per cent — so 7 c is 0.3 Hz at D2, 1.1 at C4, 2.4 at D5, 3.6 at A5: clearly audible from C4 up, at the edge at D2; one
+number is a compromise across four octaves and 7 sits where the pitch JND and the player's accuracy both are. 10 offered as the rounder
+alternative; his: 7. **The tie:** 25 c is exactly between C and C¼♯ — toward the start (C +25 / C −25, the mirror pair reads as a
+mirror) or toward the destination (C¼♯ −25 / C¼♭ +25); his: toward the start. **The heads' order:** the tuba's lowest-left / highest-
+right reads a falling voice backwards in time (the §471 mock's bass clarinet: D♮↓ then D); time order = start left, destination right,
+the number on the destination head; his: time order, **and a note to fix the tuba's performance scores.**
+
+**D45 as settled (supersedes §472's form the same day — the arrowed natural is OUT):**
+1. **Quarter-tone accidentals only** — ♮ ♯ ♭ ¼♯ ¼♭ (never ¾: respell to the simpler sign of the next letter). No eighth-tone arrows, no arrows at all.
+2. **The destination head is the NEAREST quarter-tone spelling**, so the residual is within ±25 c.
+3. **The residual as a signed cents number above the destination head — written only when |residual| ≥ 7 c** (`--centsMin 7`, a build
+   flag: purpose-oriented, a future piece may set 0 and ask for "E¼♭ −2"). The JND-of-beating argument above.
+4. **Ties at exactly 25 c spell toward the START** (C +25 / C −25).
+5. **The heads in TIME order:** the start left, the destination right, the gliss line between; the accidental and the number on the
+   destination head. (The tuba's pitch order superseded; the falling voices read forward.)
+6. D44 stands (travel under 20 c → crescendo-only, no figure); D46 stands (the marks fixed niente → fff).
+
+**The piece under it:** M1 — Vc C4 → C +25 · BCl (written) D5 → D −25 · Vn1 D5 → D +25 · Va D5 → D −25 · Fl A5 → A +25 · Vn2 A5 → A −25.
+M2 — Vn2 C4 → D −14 · Vc (the traveller) D2 → E¼♭ (−2 dropped) · Vn1, Va A3 → B♭ · Fl, BCl crescendo-only (D44).
+
+**Recorded:** journal D45 addendum · NOTATION_STANDARDS §3 (the D45 row rewritten, the pending row gone) · PLAN 2h.2 (no new glyphs: the
+quarter-tone signs exist; a `cents` text item; `--centsMin 7`; the header laid out start-left in `layout.js`) · CN-81 (his words) · the
+cross-project memory: **piece #4's rehearsal and performance scores take the settled D45 — the cents and the time order — when made.**

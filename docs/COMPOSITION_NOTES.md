@@ -1761,3 +1761,18 @@ accidental for the eighth tone (the direction and the grid at a glance) and the 
 voices move exactly an eighth tone and a quarter-tone head said twice that. The standard for this piece's morph sections, the next
 pieces, and piece #4's rehearsal and performance scores when they are built; not its presentation score (delivered). The survey that led
 here: RUNNING_LOG §469–§471.
+
+---
+
+## CN-81 — 2026-09-14: the pitch figure settled — quarter-tone signs, the nearest spelling, cents from 7 c, no arrow, ties toward the start, the heads in time order
+
+> *"I do only want to notate 1/4 tones with accidentals not 1/8 tones but it might be more intutive for a performer to gliss to the
+> nearest cents so gliss up to a d1/4sharp-7cents rather than a d+43 cents"* · *"let's use a just noticeable difference in terms of beating
+> … make the threshold here seven cents. So you wouldn't say e quarter flat minus two cents. but you would say e quarter flat minus eight
+> cents."* · *"7 is fine"* · *"1a"* (ties toward the start) · *"2a, and make a note to fix this in the tuba performance scores"* (the heads in
+> time order) (composer, 2026-09-14; RUNNING_LOG §473–§474)
+
+*(AI reading, marked as such:)* the same day's D45 revised to its settled form: the arrowed natural is out; the quarter-tone grid stays,
+the destination spelled to the nearest quarter tone, and the exact residual as a signed cents number once it is 7 c or more — the
+just-noticeable difference of beating, ballparked, chosen over the player's pitch acuity because the players will rehearse the beating
+itself. Purpose-oriented: the threshold is a flag, and a future piece may want the 2-cent case written. The header reads forward in time.
