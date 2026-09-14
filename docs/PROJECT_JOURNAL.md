@@ -83,184 +83,71 @@
 ## §2 Resume Here
 
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
-no tool calls beyond the resume reads. Start only on his word.
+no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-**▶ UPDATE 4, same session (Fable, no clear — his word): THE BEAMED GROUP DECIDED, ITS FIRST INSTANCE BUILT** (RUNNING_LOG §455–§459; `docs/NOTATION_STANDARDS.md` §2). Section 1 has 22 close gaps, one under 0.36 s (§455); the rule: under 0.4 s → 16 · 16r · 16 · 16r beamed, GC on the first only, no go line, every head's left edge on its go time, no tempo mark, one dynamic on the first, every head its dot and accent (§456–§458). **The three GC × trill conflicts: accepted, closed** (§456). Built: the piano pair at 43.3 in the MAIN file's recorded build (`--cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1` after `--beamsThrough --rests16`); two new positional modifiers in `tools/notate_section.js`, the trailing rest drawn by `layout.js`; 86 + 92 green; verified headless (§459). **Waiting on him:** his eye on the 43.3 pair (CTRL+SHIFT+R → MAIN → the page holding 43.3 s) — the accents sit on the beam side, the tuba's row; say if they should stay head-side. **Next, in his order:** the go-to-time + HOME in the presentation score (§456 item 5, NOT built) · the pair rule on the other gaps under 0.4 s · the four rule for the piano after 183 s (design first).
+**STATE — 2026-09-13 late, session 10 ended (Fable 5.1 → Opus 5 for the wrap). Nothing in flight; everything committed and pushed.**
+The MAIN notation file `notation/ir/piece-septet.ir.json` carries every rule in force: the strikes (§1), the 69 trills, and the beamed
+group's first two instances. The render `notation/audio/piece-septet.wav` is linked (♪ render).
 
-**▶ UPDATE 5 (Fable, no clear): accents beam-side · the piano run in FOURS · the run's last four SPLIT by the grand staff (no cross-staff beam in the engine yet — reverted) · the bass four at 620.3 built instead and verified (§462), page 53 for his eye.** The MAIN file carries the pair + that four. **Next: the cross-staff beam, designed on Fable (§462 has the geometry), built on Opus after a clear.**
+**Last session (10 — 2026-09-13, Fable 5.1 + Opus 5) — RUNNING_LOG §427–§463.**
+- **Trills notated end to end** (§427–§445): spec, glyphs, IR, device; all 69 in the MAIN file (**D41**); `tr` 0.57; every trill right of
+  its go line (§452). **D42** the curve look for all pieces; the trill curve at 100 samples/s with a drawn floor at 1 (§446–§451).
+- **The recording** (§453): the composer's own playback captured → MIDI export with trills → rendered through the Reaper bridge → linked.
+- **THE BEAMED GROUP decided — D43** (§455–§458): a gap under 0.4 s → a pair (16 · 16r · 16 · 16r, beam over the last rest); under 0.25 s
+  → four straight 16ths; GC on the first only, no go line, left edges on go times, no tempo mark, one dynamic, accents beam-side. The three
+  trill × GC conflicts accepted, no change. `docs/NOTATION_STANDARDS.md` §2.
+- **Built** (§459, §462): two positional modifiers on `--cluster` (`--gridDiv`, `--restAfter`) + the trailing rest drawn in `layout.js`; the
+  piano pair at 43.3 (page 5) and the bass four at 620.3 (page 53). **Section 1 is complete** under the rule (its one gap under 0.4 s).
+- **Found** (§462): a group on BOTH staves of the grand staff splits — the layout builds beams, clusters and rests per staff system. The
+  piano's run alternates staves almost note by note, so this is the run's main problem.
 
-*(Below: CHECKPOINT 2 as written — its first task is done.)*
-
-**▶ CHECKPOINT 2 (mid-session checkpoint) — session 10, 2026-09-13, written on Opus. Nothing in flight; everything committed and pushed.**
-
-**THE FIRST TASK AFTER /postclear — his word: DISCUSS the three GC × trill conflicts AND the general rule for strikes too fast for their
-GCs** (RUNNING_LOG §454). **Talk first, build after — the planning method** (state and restate: his words, then the AI's reading, one
-question at a time; the data first). His prompt, verbatim:
-
-> *"I want to discuss the three GC conflicts and the general rules/approach to notes that are too fast for subsequent gcs, it will be like
-> the tuba density builds but with some differences. can you cue this up as the first thing post clear"*
-
-**The data, measured (§454)** — a GC falls 0.36 s before its impact and rises 0.24 s after, back to full height:
-
-| gap between successive GCs in one part (the MAIN file, 1432 GCs, 1425 gaps) | all parts | the piano |
-|---|---|---|
-| under **0.6 s** — the arcs overlap (a GC spans 0.36 s before its impact + 0.24 s after, rebound 1 = back to full height) | **376** | 240 |
-| under **0.36 s** — the next arc starts falling before this impact | **191** | 150 |
-| under **0.24 s** — the next arc starts inside this one's rise | **92** | 81 |
-| under **0.15 s** | **1** | 1 |
-
-Every other part: 22–23 gaps under 0.6 s, 4–9 under 0.36 s, 0–3 under 0.24 s.
-
-**The three trill × GC conflicts** (`node tools/trill_conflicts.js --list`, §452): the piano @85.35 s — its `tr` × the rising arm of the
-strike before · Vc @146.06 s — the ottava sign × the strike before · Bass Cl @147.78 s — the right paren × the falling arm of the strike AFTER.
-
-**The tuba precedent he names — "like the tuba density builds but with some differences":** piece #4 notated its density builds with THE
-CLUSTER STANDARD (go line + GC on the first partial only, each head's left edge on its own go time, 16ths beamed through rests), "A GO NEEDS A
-BREATH" and "The GC clearance push is CONDITIONAL". The septet's standing rule for section 1 is the opposite: every strike its own GC, no column,
-no fold (§399). **Ask him what the differences are — do not propose a port.**
-
-**Resume reads:** `C:\Users\jwloy\GitHub\for_seven_tubas\docs\NOTATION_STANDARDS.md` lines 42–122 (the cluster standard → the GC clearance
-push is conditional) · `docs/NOTATION_STANDARDS.md` §1 (lines 1–36, the septet's strike rules). Nothing else.
-
-**Model:** resume on **Fable** (a design conversation, THE RHYTHM); switch to **Opus** for any build.
-
-**Also waiting on him (not first):** his ear on the render (:5300 → CTRL+SHIFT+R → MAIN → ♪ render → SPACE; §453) · his eye on the curve floor
-at 1 · the floor on the morph crescendo, or trills only.
-
-**Deliberately uncommitted — all his:** `bank/panel_snapshots.json` (his takes) · `reaper/septet_rack.rpp` (his rack, saved by Reaper) ·
-`bank/passages/4materials · accentedcres01 · accentedcres01-2 · chordcyc01 · chstr02 · section3` (his passages) · `scores/Sec3.json` ·
-`scores/SeptetSec03-Materials-B/-C/-D.json` · `scores/SeptetSec03-Materialsa.json` (section-3 material) · `scores/piece-septet-v1.31-preDeleteMiddleMorph.json`
-· `scores/piece-septet-v1.32-finalDraft1.0.json` (his named versions) · `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
-Gitignored and generated, not his to worry about: `notation/audio/piece-septet.wav` + `raw/` · `midi/piece-septet.capture.json` · `midi/piece-septet/*.evt` ·
-`reaper/piece-septet_render.rpp`. **Running:** nothing of the AI's (his :5300 and Reaper with the rack tab current; the render tab closed).
-
-*(Below: CHECKPOINT 1 and its three updates, as written — superseded by CHECKPOINT 2 above.)*
-
-**▶ UPDATE 3, same session (Opus): THE RECORDING IS MADE AND LINKED** (RUNNING_LOG §453; the route and its rules: `docs/RENDER.md`). Three commands: `capture_composer_midi.js` (the composer itself, headless, ~13 min) → `export_midi.js --capture …` (checked: trills 2066/2066, 1739 notes, 11 eaten silent) → `render_reaper.js` (the bridge: a copy of the rack in a new tab, parts by name, float render, measured, plain gain). Result: 630.100 s · float +2.0 dBTP → −3 dB → **−1.0 dBTP** · −22.7 LUFS · LRA 14.1 · first sound 3.7 ms after the first onset. Linked: ♪ render ✓ on the MAIN file. The first render stopped on Reaper's MIDI-import prompt — he cleared it; items are now built directly (proven in an empty tab). **Waiting on him: his ear on the sync.** **Re-render after any Save** (the WAV is a snapshot of `piece-septet.json` 02:12).
-
-**▶ UPDATE 2, same session (Opus): EVERY TRILL RIGHT OF ITS GO LINE** (RUNNING_LOG §452) — at his word, the rule moved into the device (`byEnv.trill.nhAnchor afterGo`), the MAIN file rebuilt without `--trillsRight`, 92 green. The measuring is written step by step in TRILL_NOTATION_SPEC §2a. `tools/trill_conflicts.js`: left 28 of 69 trills met ink or a GC arc, right **3** — all GC arcs: the piano @85.35 (`tr` × the arc before) · Vc @146.06 (ottava × the arc before) · Bass Cl @147.78 (right paren × the arc after). **Next: those three, his GC × trill discussion (Fable).**
-
-**▶ UPDATE, same session (Opus): THE TRILL CURVE SHAPE IS BUILT** — 100 samples per second + the drawn floor at 1 (RUNNING_LOG §450–§451). Talked through on Fable (the four scores compared; piece #2 bakes 100/s, the septet froze 101), built on Opus, 91 green, measured on his :5300 page. **Waiting on him:** his eye (CTRL+SHIFT+R → the MAIN file → page 8, the 85.35 s column; page 12, the 132.43 s dip) · the floor on the morph crescendo too, or trills only. The text below is the checkpoint as written.
-
-**▶ CHECKPOINT 1 (mid-session checkpoint, SUPERSEDED — done: the curve shape §451, the column §452, the recording §453) — session 10, 2026-09-13, written on Opus.**
-
-**WAS the first task after /postclear — his word: work out the TRILL CURVE SHAPE with him** (PLAN 2f.7 (b); RUNNING_LOG §444). He wants to
-clear, switch models, and go over the curve shape before anything else. **Talk first, build after — the planning method** (state and
-restate; his words, then the AI's reading, one question at a time). His prompt, verbatim:
-
-> *"can we recalibrate the graphic curve so it doesn't blank out or have too thin a portion at the bottom, let me see what a 1 looks like;
-> so 0=1 graphically and re calibrate 0-max beginning at 1 graphically; so image 1 you see there is just white space for a bit before the
-> graphic curve starts; image 2 the ends/beginning of the curves not so smooth; i3 goes to almost white space, doesn't look like part of the
-> curve"*
-
-**His three images (described — they are not in the files):** (1) the column of seven trills at ~85.35 s: each curve STARTS at level 0, so
-white space shows between the go line and where the green begins · (2) curves between two staves whose beginnings and ends taper to
-hair-thin, uneven slivers · (3) a curve dipping to almost nothing — the A window `wc-952` reads 0.03 at 67.62 s (trills 65.76–68.9 s).
-
-**The AI's reading, to put to him (not decided):** DRAWING ONLY — the composer's curve data and the playback never change. The drawn
-height maps a level v (0–1) to **floor + v × (1 − floor)**, floor = **0.1** = "1" on the composer score's 0–10 scale: 0 draws at a tenth of
-the lane, the top stays at the top ("0–max beginning at 1"). **"Let me see what a 1 looks like" = show him the floor on the page before
-settling it.** Questions only he can answer: (a) the top stays at 10 — yes? (b) every trill curve, and later the morph curves — or trills
-only? (c) image 2's ends: does the floor alone cure them, or does he also want the start and end eased? (d) the meters ride the same drawn
-curve — they would rise from the floor too (the AI's reading: yes, one source).
-
-**Where it would be built (for the build step, not a resume read):** `notation/lib/layout.js → drawnLevelSamples(e, dev)` already transforms
-the DRAWN samples (`curveZero`, `cut`) and feeds both the page and the meters — a device option (e.g. `curveFloor: 0.1`) on
-`container.json → engraving.layout.devices.byEnv.trill`; layout-time, so no IR rebuild — CTRL+SHIFT+R on the main file. `tools/test_trills.js`
-(74 green) gets the checks. The curve wears D42 now (`docs/CURVE_LOOK.md`: limeGreen, fill 0.3, 2 px stroke, path opacity 0.3).
-
-**After the curve shape, his order (PLAN 2f.7 → 2f.9):** his look at the FIVE trills moved RIGHT of their go lines (`--trillsRight 63-68` in
-the main build, §445) → then all of them · the GC × trill conflicts — recommendations, discussion first · **2f.8** the MIDI export learns
-trills (play each trill's saved `midiSnippet`; the `mutedBy` notes silent; §441–§443) · **2f.9** export → he renders in Reaper → the WAV in
-`notation/audio/` → the ♪ render chip (the tuba's route).
-
-**Latest deliverables:** the MAIN notation file `notation/ir/piece-septet.ir.json` (picker "piece-septet · MAIN notation score", D41) ·
-`docs/CURVE_LOOK.md` (D42 — the curves, the meters, #2's pie and line-wedge spec) · `docs/TRILL_NOTATION_SPEC.md` · `docs/GLYPH_SIZING.md`.
-
-**Resume reads:** `docs/RUNNING_LOG.md` §444 (his words + the reading, in full) — and nothing else; `docs/CURVE_LOOK.md` §2 only if he asks
-what the curve wears now.
-
-**Model:** resume on **Fable** — the curve shape is a design conversation (THE RHYTHM); switch to **Opus** for its build.
-
-**Deliberately uncommitted — all his:** `bank/panel_snapshots.json` (takes) · `reaper/septet_rack.rpp` (the rack) · `bank/passages/4materials ·
-accentedcres01 · accentedcres01-2 · chordcyc01 · chstr02 · section3` (his passages) · `scores/Sec3.json` · `scores/SeptetSec03-Materials-B/-C/-D`
-· `scores/SeptetSec03-Materialsa.json` (section-3 material files) · `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` · `scores/piece-septet-
-v1.32-finalDraft1.0.json` (his named versions / backups) · `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
-**Servers:** the AI's :5301 was started and stopped each time; nothing of the AI's is running.
-
-**Session 10 so far (2026-09-13, Fable → Opus), one line:** trills decided (§427–§434) and built — spec, glyphs, IR, device, all 69 in the MAIN file (§435–§440, D41) · `tr` 0.57 (§439) · playback diagnosed, the tuba route chosen (§441–§443) · the column right of the go line on five (§445) · D42 the curve look + meters (§446–§448).
-
-**STATE — 2026-09-12 late, session 9 ended. THE FIRST FULL DRAFT IS TAGGED: `Scattered_Substance-finalDraft_1.0`** (RUNNING_LOG §426;
-CN-73 · CN-74; D39 · D40). `scores/piece-septet.json` — his Save of 2026-09-12 late — is committed at that tag. Nothing in flight; everything pushed.
-
-**Last session (9 — 2026-09-12, Fable 5.1 + Opus 5) — RUNNING_LOG §405–§426.**
-- **The chord-per-onset drawer does the four** (§407) · `banner in turn` from the highlighted strike (§408) · CN-67 the piano in one hand,
-  alternating (§409) · `piano 8va` ±4 · the strip's blue piano rings (§410).
-- **PLAN 1t — THE CHAIN — planned on Fable (§411–§418) and BUILT on Opus (§419):** strikes alternating with crescendos, item by item in
-  the score — **SHIFT+C** the crescendo panel on a selection · **END** = playhead to the selection's latest end · `unison` in the rhythm
-  column · free/busy ticks · the piano block on the plain strike (`count` · `8va` · `hands`). **Chords mode and fill mode deprecated (§413).**
-- **His first pass, all evening:** the fix-now six (§420–§421), then three rule changes as he composed (§422–§424 = **D39**: the next strike
-  is any plain note · `harmony: typed pitches` · `ends: next strike` = the next ATTACK after the onset, for everyone; rule B undone).
-  `check_cresc_panel` 35 · the 86 green. **STRIKES_TOOL §AI + "AFTER THE FIRST HOUR" is the index of every control as it stands.**
-- **§425, at his word:** 49 piano notes cut (333–436 s); the morph **M2 — SPECTRAL DRIFT** + 24 piano notes moved −131 s so its curve
-  starts at 314.0 (now 314 → 428). Backups: `scratchpad/piece-septet.before-425.json` · his `scores/piece-septet-v1.31-preDeleteMiddleMorph.json`.
-- **§426:** an accel run as PURE CRESCENDOS — the drawer's `sound → crescendo`, `% of the gap` 100, `starts on the onset`; round robin
-  over two players lands each swell on the next onset (one player would end 170 ms early); the piano never swells. Then the tag.
-
-**Next up — his ear and eye, in this order:**
-1. **The chain and the crescendo runs in his ears** (:5300, CTRL+SHIFT+R first): `▶ hear`, the ♪s, the untick, the crescendos after `[go]`.
-   The AI answers, logs faults to `docs/SWEEP_LIST.md` (batch, don't fix — unless it blocks), journals as it happens.
-2. **The 15 pages of strikes 0–176 s** (:5300 → `/notation/app/notation.html` → CTRL+SHIFT+R → picker "piece-septet · strikes 0–176 s"
-   → video · SPACE). Then **the next notation session: trills' written look, then the morph curves** — planning method on Fable, build on
-   Opus after a clear.
-3. **N3** — the 15 geometry touches around the piano + the Vn1 spill (§401n): his verdict, then the fix ladder.
-
-**Open at session end (pending his word):** SWEEP **#4** (how the crescendo card closes) · **#10** (`max` counts the piano in) · **#11 · #12**
-(the conflict badge's `hard`/`soft`) — *"forget about the rest for now"* stands · CN-67 in the app (headless-proven only, §409) · whether
-"the same crescendo in several parts" means both players on every onset (`chords (old)` + `crescendo`, deprecated §413 — his word first).
-
-**THE MAIN NOTATION FILE (D41):** `notation/ir/piece-septet.ir.json` — picker "piece-septet · MAIN notation score" (first). Save in the composer,
-then R on this page. A new notation rule = a flag in its build (`provenance.build`) and one rebuild. **R is safe on the main file** (whole piece).
-
-**Standing warnings:** ⚠ **do not press R on the strikes page** (§403: it widens 0–176 s to the whole piece; parked fix = R honours the IR's
-recorded window — the MAIN file does not have this problem) · **one open composer tab per score** (2d.5.8) · the page needs CTRL+SHIFT+R after each build · the piano never swells (CN-34).
-
-**Deliberately uncommitted — all his:** `bank/panel_snapshots.json` (takes) · `bank/passages/4materials · accentedcres01 · accentedcres01-2 ·
-chordcyc01 · chstr02` · `reaper/septet_rack.rpp` · `scores/Sec3.json` · `scores/SeptetSec03-Materials-B/-C/-D/-a.json` ·
-`scores/piece-septet-v1.31-preDeleteMiddleMorph.json` (his backup) · `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
-**Unsaved working copies** (`node tools/unsaved_check.js`, 7): cres-run01 · cres2strike · piano-harmonics-test · Sec3-Materials (never saved) ·
-trill-curve-test · trillBuildTst · zz-ai-1t-walk — **D17: his to Save or Reload, never the AI's to touch.**
-
-**Servers the AI started** (his to keep or kill): #2's :3001 (`pno2perc2-perf-3001`) · the tuba's :5200 (`tubas-5200`) — `.claude/launch.json`.
-**Tests:** `node tools/test_septet_notation.js` (86) · `tools/test_identity.js` (20) · `score/tools/check_cresc_panel.js` (35) · check_fill ·
-check_containers · check_cresc_deck · the tuba battery per `notation/ir/README.md` (the standing REDs unchanged).
-
-*(Session 9's resume reads — SUPERSEDED by the ▶ CHECKPOINT at the top of §2:)* Resume reads: nothing beyond §2. STRIKES_TOOL §AI + "AFTER THE FIRST HOUR" if he asks how a chain control works · §Z · §AD for the
-drawer's swell switch · `docs/NOTATION_STANDARDS.md` §1 when notation resumes · RUNNING_LOG only if a question sends you there.
+**NEXT UP — HIS DICTATION AT THE WRAP, verbatim in RUNNING_LOG §463 (his order):**
+1. **The piano's groups with ONE beam ABOVE THE TREBLE STAFF; the stems extend down into the bass staff.** Every piano group, the bass four at
+   620.3 included ("we can try doing them all"). Needs a group across the two layout systems. §463 lists the defaults to try.
+2. **Several fours in a row near the end, each with its GC — is it still too crowded?** The last sixteen notes, in fours from 621.654 s;
+   every one crosses the staves, so item 1 comes first.
+3. **If too crowded: "eighth per GC"** — the AI's reading, EIGHT notes per GC; ask him (§463).
+*Then, not yet ordered:* how the 169-note run is cut into fours (its first 26 s are pair-territory by the thresholds) · a `--pairs` flag for
+the six other parts' 46 pairs + 2 triples (the triple's writing: his word) · the go-to-time + HOME in the presentation score (§456, not built).
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N1c** | HIS EAR on the chain and the pure-crescendo runs** (§420–§426; the draft is tagged). The AI answers, logs to SWEEP_LIST, journals | **Fable** (composing questions) · **Opus** for any fix | no |
-| **N1** | His verdict on CN-67 in the app (headless-proven only) → then his eye and ear over the 15 pages (the picker, video, SPACE) | **Fable** · **Opus** for any fix | no |
-| **N3** | The 15 geometry touches + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
-| **N4** | **DONE (§455–§462): the beamed-group standard; the pair at 43.3 and the bass four at 620.3 built; section 1 complete; accents beam-side; the trill conflicts closed.** ► NEXT: **the cross-staff beam** — the piano run's groups straddle the two staves (the last four split, §462): the beam between the staves, stems toward it, the ball's line kept clear — design on Fable, build on Opus → how the 169-note run is cut into fours → a `--pairs`-shaped flag for the six parts' 46 pairs + 2 triples → the go-to-time + HOME (§456 item 5) | **Fable** for the cross-staff design · **Opus** to build | **yes** before the build |
-| **N5** | Still open: the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE, one decision from him) · PLAN 1q proper | **Opus** | no |
+| **N1** | **► FIRST: his items 1 + 2 (§463)** — build the beam above the treble staff for the piano's groups (a group across both staff systems), rebuild the bass four that way, add the last sixteen notes as four fours; verify headless + on his page | **Opus** (the spec is his dictation + §463's defaults) | fresh session |
+| **N2** | His eye on the end: four per GC, or eight (§463 item 3) — then the run's grouping from 581 s | **Fable** | no |
+| **N3** | The `--pairs` flag for the six parts · the go-to-time + HOME | **Opus** | at the mode change |
+| **N4** | Still his, from before: his ear on the render's sync (§453) · the curve floor at 1, and on the morph crescendo or trills only (§451) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 
-**The standing rule:** Fable for the turns where a wrong reading costs a day; Opus for every turn where the plan is already on paper.
-Wrap on Opus, always. **Fable's allotment is the one he watches** — fewest round trips, no Fable subagents, minimal resume reads.
+**Resume reads for N1:** `docs/NOTATION_STANDARDS.md` §2 · `docs/RUNNING_LOG.md` §462–§463. Nothing else. *For the build, not a read:*
+`notation/lib/layout.js` builds one system per staff (the specs ≈l.424–432, events per system ≈l.615), beam groups ≈l.1282, cluster
+records ≈l.1323, rests ≈l.2160; `tools/notate_section.js` writes the `--cluster` overlays ≈l.900; the piano's GC lands via `GC.systemOf`.
+The MAIN file's build is its `provenance.build` — add to it and rebuild.
 
-**Earlier sessions, one line each:** **9** (2026-09-12) above. **8** (2026-09-10 → 11) the tools stopped being the work (SWEEP_LIST opened) ·
-phase 2 opened: PLAN 2a (the engine for seven parts) and 2d (notate while composing) built · section 1's strikes notated rule by rule,
-0–176 s on 15 pages · `NOTATION_STANDARDS.md` §1 — §352–§404. **7** (2026-09-09 → 10) the strikes drawer revised overnight at his
-commission (the sound at an onset: note · chord · crescendo, Hear = Insert), then a defect-clearing day whose nine faults were one rule
-wired into one path and not its sibling (→ PLAN 1q-PRINCIPLE) — §324–351. **6** (2026-09-09) the morph's fade found to live in CC7,
-timestamped playback, the note card — §311–323. **5** folded into 6. **4** (2026-09-06 → 08) the BEATING tool (parked), the morph panel
-the tuba way, the crescendo suite 1l–1o, D11's curve channels — §111–310. **3** (2026-09-04 → 06) the piece to #31 / 72 s, the drawer
-U5–U13b, the trill module phases 0–3, the curve windows (D18–D21) — §65–110. **2** the strikes drawer and the sandbox. **1** the port.
+**Standing warnings:** ⚠ **CTRL+SHIFT+R detaches the ♪ render** — click it again (his choice A, §460: leave it); a rebuild alone does not,
+the page picks up the new IR by itself · ⚠ **do not press R on the strikes page** (§403; the MAIN file is safe) · **one open composer tab per
+score** (2d.5.8) · the piano never swells (CN-34).
 
-**Open questions:** Q7 the bass clarinet's bottom B♭1. *(Q1 closed 2026-09-11: no flute doubling, CN-62. Q5 closed 2026-09-11: A3 landscape.)*
+**Deliberately uncommitted — all his:** `bank/panel_snapshots.json` (his takes) · `reaper/septet_rack.rpp` (his rack) ·
+`bank/passages/4materials · accentedcres01 · accentedcres01-2 · chordcyc01 · chstr02 · section3` · `scores/Sec3.json` ·
+`scores/SeptetSec03-Materials-B/-C/-D.json` · `scores/SeptetSec03-Materialsa.json` · `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` ·
+`scores/piece-septet-v1.32-finalDraft1.0.json` · `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
+**Unsaved working copies** (`node tools/unsaved_check.js`, 8, D17 — his to Save or Reload): **piece-septet** (differs only in the 69 trills'
+`midiSnippet` + the view, §463) · cres-run01 · cres2strike · piano-harmonics-test · Sec3-Materials (never saved) · trill-curve-test ·
+trillBuildTst · zz-ai-1t-walk. **Running:** nothing of the AI's (his :5300 and Reaper).
+
+**Tests:** `node tools/test_septet_notation.js` (86) · `tools/test_trills.js` (92) · `tools/test_identity.js` (20) · `score/tools/check_cresc_panel.js`
+(35) · `tools/trill_conflicts.js --list` (3, accepted) · check_fill · check_containers · check_cresc_deck · the tuba battery per `notation/ir/README.md`.
+
+**Earlier sessions, one line each:** **9** (2026-09-12) PLAN 1t the chain built; D39's three rule changes; §425 the cuts and M2 moved; the
+first full draft tagged `Scattered_Substance-finalDraft_1.0` — §405–§426. **8** (2026-09-10 → 11) SWEEP_LIST opened · PLAN 2a + 2d built ·
+section 1's strikes notated, 0–176 s, `NOTATION_STANDARDS.md` §1 — §352–§404. **7** (2026-09-09 → 10) the strikes drawer revised; nine faults,
+one rule in one path (→ 1q-PRINCIPLE) — §324–351. **6** (2026-09-09) the morph's fade in CC7, timestamped playback, the note card — §311–323.
+**4** (2026-09-06 → 08) BEATING (parked), the morph panel, the crescendo suite 1l–1o, D11 — §111–310. **3** (2026-09-04 → 06) the piece to
+#31, the drawer U5–U13b, the trill module 0–3, the curve windows (D18–D21) — §65–110. **2** the strikes drawer and the sandbox. **1** the port.
+
+**Open questions:** Q7 the bass clarinet's bottom B♭1 · "eighth per GC" = eight notes per GC? (§463) · the triple's writing in the six
+parts · does "the same crescendo in several parts" mean both players on every onset (§413, his word first).
 
 **Blockers:** none.
 
@@ -704,6 +591,18 @@ sources; verified here only when they bite.)*
   **Extended the same day (§448) to the meters:** #2's curve follower exactly — 8 px, right edge 3 px left of the cursor, the full-lane
   outline 1.5 px @ 0.8, the fill @ 0.3 drawn first (piece #4's 0.6 superseded). The motive pie and the line-wedge meter recorded as #2's
   spec (CURVE_LOOK §7), not used here.
+- **D43** *(2026-09-13, composer, RUNNING_LOG §455–§463)* — **THE BEAMED GROUP: strikes too close for their own GCs share one.** A gap
+  under **0.4 s** in one part → a pair, written 16th · 16th rest · 16th · 16th rest, the beam carried over the last rest; under **0.25 s**
+  → four straight 16ths; the piano's closing run (169 notes, 581.2–624.0 s) **four at a time**. **GC on the first note only · no go line on
+  any note · every head's left edge on its own go time** (onsets never move) · **no tempo mark** · one dynamic on the first note, every head
+  its dot and accent · **accents on one row on the beam side.** His: *"the beams allow players to play several notes on one gc"*; *"it will
+  be like the tuba density builds but with some differences."* **The three trill × GC arc meetings are accepted** — *"performers can time
+  the gc and start the trill immediately after or cheat if they have to."* *Why a gap trigger and not named spans:* the density is
+  measured, not chosen per passage (section 1 holds one such gap; after 183 s there are 218). *Rejected:* Gould's beam between the grand
+  staff's staves — his dictation puts it **above the treble staff, stems down into the bass** (§463, to be built) so the gap where the
+  piano's ball lands stays clear; a printed tempo (the scroll carries the time); one mark per head (the tuba's ambient + deviation instead).
+  **Open:** eight per GC if four still crowds (§463) · the triple in the six other parts · a `--pairs`-shaped build flag. Spec:
+  `docs/NOTATION_STANDARDS.md` §2; build: `--cluster … --gridDiv --restAfter` (`tools/notate_section.js`).
 
 ## §5 Playbooks
 

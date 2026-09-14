@@ -12605,3 +12605,40 @@ the staves (`GC.systemOf`, §401e), ball radius 5 px ≈ 0.63 ss at the video's 
 group on both staves: the beam between the staves, the upper staff's stems down and the lower's up. A beam centred in the gap would sit on
 the ball's line at the first note's go time; placed with its top ≈2 ss above the bass staff it clears the ball's line by ≈1 ss. Also open:
 where the accents' row goes when the beam is between the staves (the gap is crowded), and the GC arc's height.
+
+## §463. Session 10 ends. His dictation for next session: the piano's groups with ONE beam ABOVE THE TREBLE STAFF, stems down into the bass; several fours in a row near the end, each with its GC; eight per GC if still too crowded
+
+**His words, 2026-09-13, dictated at the wrap (speech-to-text; "travel. trouble. T r e i p l e" is him spelling *treble*):**
+
+> *"I want the beams to be on one side we can try doing them all... above the travel. trouble. T r e i p l e. And then the stems extend
+> down into the bottom base clef. And then towards the end, I want to try several groupings of four in a row. with the GCs to see if it's
+> still too crowded. And if we have to, then we can move to eighth per GC. We'll have to look at it and maybe try to figure something out.
+> So let's take this up next session. and you can know that that's what I wanna do."*
+
+*(AI's reading — for the next session to read back to him before or while building; nothing decided beyond his words:)*
+1. **The cross-staff answer is his, and it is NOT Gould's between-the-staves beam (§462):** the piano's groups take **one beam on ONE side —
+   above the treble staff.** Every stem goes UP to it; a bass-staff note's stem runs from its head up through the gap and the treble staff
+   ("the stems extend down into the bottom bass clef", seen from the beam). It keeps the gap between the staves — where the piano's GC ball
+   lands (§401e) — clear of beams. **"we can try doing them all"** read as every piano group, the all-bass four at 620.3 included (its beam
+   moves from below the bass staff to above the treble) — confirm by eye.
+2. **Then a crowding test near the end: several consecutive fours, each with its own GC** (GC on the first of each four; no go lines; heads
+   left edge on their go times). The last sixteen notes cut into fours from the end: 621.654–622.140 (T T T B) · 622.300–622.775 (B B T B) ·
+   622.931–623.395 (T T T B) · 623.547–624.000 (B T B T); 0.150–0.160 s between one four and the next, so a GC every ≈0.62 s — just over one
+   arc's 0.6 s span. Every one of the four crosses the staves: none can be built until item 1 exists.
+3. **"move to eighth per GC"** read as **EIGHT notes per GC** (two fours under one launch, a GC every ≈1.2 s) if four per GC is still too
+   crowded. The other hearing — an eighth-note per GC — does not fit the run (the notes are 16ths at 0.15 s); ask him.
+
+**Open details for the build (defaults the AI would try, his eye decides):** the beam's height = clear of the highest treble ink by the
+standard stem length · treble notes' stems up from their heads, not down · a bass note's long stem crosses the treble staff's lines and may
+cross a treble head at the same x — it cannot, at left-edge alignment and ≥0.15 s apart (≈3 ss on the 12 s video page), but a ledger line can ·
+the accents' row above the beam (beam side, §462) · the dynamic on the first note, head side · the treble system draws the beam, the bass
+system draws its notes' stems up to it (one group across two layout systems — the engine today builds beam groups per system, §462).
+
+**Also measured at the wrap (D17, `tools/unsaved_check.js`):** `piece-septet`'s working copy (2026-09-14 02:32 UTC) differs from the saved
+file (2026-09-13 02:12) in **the 69 trill zones' `midiSnippet` and the view (zoom, scroll) only** — no note added, removed or moved. The
+MAIN notation file and the render are built from the SAVED file. His to Save or Reload; nothing committed depends on it. Seven other
+working copies are the same unsaved list as before (journal §2).
+
+**Session 10's wrap, one line:** trills decided, built and heard (§427–§453, D41 · D42) → the beamed group decided (§455–§462, **D43**): the
+pair at 43.3 and the bass four at 620.3 built, section 1 complete, the three trill × GC meetings accepted; the cross-staff question
+answered by his dictation above, for next session.
