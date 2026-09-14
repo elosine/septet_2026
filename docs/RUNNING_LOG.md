@@ -12344,3 +12344,32 @@ the rest of the file into the tool mid-edit (caught by the anchor count, nothing
 
 **Also left:** `tools/test_sonify_core.js` and `tools/test_midiplayer.js` still read the TUBA score `piece-s25-finished01` (unported;
 NITS). The render is a snapshot: **re-run the three commands after the next Save** (`docs/RENDER.md`).
+
+## §454. Queued at his word for after the clear: the three GC × trill conflicts, and a general rule for strikes too fast for their GCs
+
+**His word, 2026-09-13, invoking the checkpoint:**
+
+> *"I want to discuss the three GC conflicts and the general rules/approach to notes that are too fast for subsequent gcs, it will be like
+> the tuba density builds but with some differences. can you cue this up as the first thing post clear"*
+
+*(AI — data gathered for the discussion, nothing decided, nothing built:)* the GC's own span, from the registry preset (`render.gc.preset`:
+duration 0.6, descentRatio 60, damping 100): **0.36 s of fall before the impact, 0.24 s of rise after, back to full height.** Counted on the
+MAIN file laid out as the page lays it out, per part:
+
+| gap between successive GCs in one part (the MAIN file, 1432 GCs, 1425 gaps) | all parts | the piano |
+|---|---|---|
+| under **0.6 s** — the arcs overlap (a GC spans 0.36 s before its impact + 0.24 s after, rebound 1 = back to full height) | **376** | 240 |
+| under **0.36 s** — the next arc starts falling before this impact | **191** | 150 |
+| under **0.24 s** — the next arc starts inside this one's rise | **92** | 81 |
+| under **0.15 s** | **1** | 1 |
+
+Every other part: 22–23 gaps under 0.6 s, 4–9 under 0.36 s, 0–3 under 0.24 s.
+
+**The three trill × GC conflicts** (`node tools/trill_conflicts.js --list`, §452): the piano @85.35 s — its `tr` × the rising arm of the
+strike before · Vc @146.06 s — the ottava sign × the strike before · Bass Cl @147.78 s — the right paren × the falling arm of the strike AFTER.
+
+**What "the tuba density builds" were notated with** (piece #4, `docs/NOTATION_STANDARDS.md`): **the cluster standard** — the go line and the
+GC on the FIRST partial only ("the GC only on the first one, so it launches the whole cluster"), every partial's head left edge on its own go
+time, 16ths beamed with rests between; plus "A GO NEEDS A BREATH" (the classification rule) and "The GC clearance push is CONDITIONAL". **The
+septet's standing difference:** section 1's strikes are "every note at its own onset with its own GC — no column, no fold" (§399). The
+discussion is where that meets 0.6 s arcs. Planning method: his words, the reading, one question at a time.

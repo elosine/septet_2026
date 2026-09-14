@@ -87,6 +87,51 @@ no tool calls beyond the resume reads. Start only on his word.
 
 **▶ CHECKPOINT (mid-session checkpoint) — session 10, 2026-09-13, written on Opus. Nothing in flight; everything committed and pushed.**
 
+**▶ CHECKPOINT 2 (mid-session checkpoint) — session 10, 2026-09-13, written on Opus. Nothing in flight; everything committed and pushed.**
+
+**THE FIRST TASK AFTER /postclear — his word: DISCUSS the three GC × trill conflicts AND the general rule for strikes too fast for their
+GCs** (RUNNING_LOG §454). **Talk first, build after — the planning method** (state and restate: his words, then the AI's reading, one
+question at a time; the data first). His prompt, verbatim:
+
+> *"I want to discuss the three GC conflicts and the general rules/approach to notes that are too fast for subsequent gcs, it will be like
+> the tuba density builds but with some differences. can you cue this up as the first thing post clear"*
+
+**The data, measured (§454)** — a GC falls 0.36 s before its impact and rises 0.24 s after, back to full height:
+
+| gap between successive GCs in one part (the MAIN file, 1432 GCs, 1425 gaps) | all parts | the piano |
+|---|---|---|
+| under **0.6 s** — the arcs overlap (a GC spans 0.36 s before its impact + 0.24 s after, rebound 1 = back to full height) | **376** | 240 |
+| under **0.36 s** — the next arc starts falling before this impact | **191** | 150 |
+| under **0.24 s** — the next arc starts inside this one's rise | **92** | 81 |
+| under **0.15 s** | **1** | 1 |
+
+Every other part: 22–23 gaps under 0.6 s, 4–9 under 0.36 s, 0–3 under 0.24 s.
+
+**The three trill × GC conflicts** (`node tools/trill_conflicts.js --list`, §452): the piano @85.35 s — its `tr` × the rising arm of the
+strike before · Vc @146.06 s — the ottava sign × the strike before · Bass Cl @147.78 s — the right paren × the falling arm of the strike AFTER.
+
+**The tuba precedent he names — "like the tuba density builds but with some differences":** piece #4 notated its density builds with THE
+CLUSTER STANDARD (go line + GC on the first partial only, each head's left edge on its own go time, 16ths beamed through rests), "A GO NEEDS A
+BREATH" and "The GC clearance push is CONDITIONAL". The septet's standing rule for section 1 is the opposite: every strike its own GC, no column,
+no fold (§399). **Ask him what the differences are — do not propose a port.**
+
+**Resume reads:** `C:\Users\jwloy\GitHub\for_seven_tubas\docs\NOTATION_STANDARDS.md` lines 42–122 (the cluster standard → the GC clearance
+push is conditional) · `docs/NOTATION_STANDARDS.md` §1 (lines 1–36, the septet's strike rules). Nothing else.
+
+**Model:** resume on **Fable** (a design conversation, THE RHYTHM); switch to **Opus** for any build.
+
+**Also waiting on him (not first):** his ear on the render (:5300 → CTRL+SHIFT+R → MAIN → ♪ render → SPACE; §453) · his eye on the curve floor
+at 1 · the floor on the morph crescendo, or trills only.
+
+**Deliberately uncommitted — all his:** `bank/panel_snapshots.json` (his takes) · `reaper/septet_rack.rpp` (his rack, saved by Reaper) ·
+`bank/passages/4materials · accentedcres01 · accentedcres01-2 · chordcyc01 · chstr02 · section3` (his passages) · `scores/Sec3.json` ·
+`scores/SeptetSec03-Materials-B/-C/-D.json` · `scores/SeptetSec03-Materialsa.json` (section-3 material) · `scores/piece-septet-v1.31-preDeleteMiddleMorph.json`
+· `scores/piece-septet-v1.32-finalDraft1.0.json` (his named versions) · `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
+Gitignored and generated, not his to worry about: `notation/audio/piece-septet.wav` + `raw/` · `midi/piece-septet.capture.json` · `midi/piece-septet/*.evt` ·
+`reaper/piece-septet_render.rpp`. **Running:** nothing of the AI's (his :5300 and Reaper with the rack tab current; the render tab closed).
+
+*(Below: CHECKPOINT 1 and its three updates, as written — superseded by CHECKPOINT 2 above.)*
+
 **▶ UPDATE 3, same session (Opus): THE RECORDING IS MADE AND LINKED** (RUNNING_LOG §453; the route and its rules: `docs/RENDER.md`). Three commands: `capture_composer_midi.js` (the composer itself, headless, ~13 min) → `export_midi.js --capture …` (checked: trills 2066/2066, 1739 notes, 11 eaten silent) → `render_reaper.js` (the bridge: a copy of the rack in a new tab, parts by name, float render, measured, plain gain). Result: 630.100 s · float +2.0 dBTP → −3 dB → **−1.0 dBTP** · −22.7 LUFS · LRA 14.1 · first sound 3.7 ms after the first onset. Linked: ♪ render ✓ on the MAIN file. The first render stopped on Reaper's MIDI-import prompt — he cleared it; items are now built directly (proven in an empty tab). **Waiting on him: his ear on the sync.** **Re-render after any Save** (the WAV is a snapshot of `piece-septet.json` 02:12).
 
 **▶ UPDATE 2, same session (Opus): EVERY TRILL RIGHT OF ITS GO LINE** (RUNNING_LOG §452) — at his word, the rule moved into the device (`byEnv.trill.nhAnchor afterGo`), the MAIN file rebuilt without `--trillsRight`, 92 green. The measuring is written step by step in TRILL_NOTATION_SPEC §2a. `tools/trill_conflicts.js`: left 28 of 69 trills met ink or a GC arc, right **3** — all GC arcs: the piano @85.35 (`tr` × the arc before) · Vc @146.06 (ottava × the arc before) · Bass Cl @147.78 (right paren × the arc after). **Next: those three, his GC × trill discussion (Fable).**
@@ -194,7 +239,7 @@ drawer's swell switch · `docs/NOTATION_STANDARDS.md` §1 when notation resumes 
 | **N1c** | HIS EAR on the chain and the pure-crescendo runs** (§420–§426; the draft is tagged). The AI answers, logs to SWEEP_LIST, journals | **Fable** (composing questions) · **Opus** for any fix | no |
 | **N1** | His verdict on CN-67 in the app (headless-proven only) → then his eye and ear over the 15 pages (the picker, video, SPACE) | **Fable** · **Opus** for any fix | no |
 | **N3** | The 15 geometry touches + the Vn1 spill — his verdict, then the fix ladder | **Opus** | no |
-| **N4** | **► NOW — HIS EAR ON THE RENDER** (RUNNING_LOG §453): :5300 → CTRL+SHIFT+R → the MAIN file → **♪ render** → SPACE; the sync, the trills, the eaten notes gone, the balance. Faults → SWEEP_LIST. Then **the GC × trill conflicts** (three, all GC arcs: `node tools/trill_conflicts.js --list`) — recommendations, discussion first. Also open: his eye on the curve floor at 1, the morph crescendo floor. **Re-render after any Save:** the three commands in `docs/RENDER.md` §1 | **Fable** for his verdicts · **Opus** for a re-render or a fix | **yes** — the recording chunk is done; a good clear point |
+| **N4** | **► FIRST after /postclear — DISCUSS the GC × trill conflicts (three) and the rule for strikes too fast for their GCs** (RUNNING_LOG §454; CHECKPOINT 2 above): the data (376 gaps under the arc's 0.6 s, 240 of them the piano's), the tuba's cluster standard as the precedent he names, his differences — planning method, talk first. Then his ear on the render (§453) · the curve floor verdicts | **Fable** to discuss · **Opus** to build | **yes** — he clears now |
 | **N5** | Still open: the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE, one decision from him) · PLAN 1q proper | **Opus** | no |
 
 **The standing rule:** Fable for the turns where a wrong reading costs a day; Opus for every turn where the plan is already on paper.
