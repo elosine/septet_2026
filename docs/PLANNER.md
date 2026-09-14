@@ -5,7 +5,7 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ✦** 2026-09-13, session 10 ended — **NEXT: THE PIANO'S BEAMED GROUPS ABOVE THE TREBLE STAFF, STEMS DOWN INTO THE BASS; then several fours in a row at the end, each with its GC — too crowded? eight per GC if so** (his dictation, RUNNING_LOG §463; D43; PLAN 2g). Section 1's notation is complete under the rule.
+**NOW ✦** 2026-09-14, session 11 — **THE MORPH SECTION (PLAN 2h): the tool built (§477), M1 folded into the MAIN file (§478) — NEXT: his eye on M1's pages, then M2 (2h.4).** The beamed groups across the grand staff are deferred to section 3's notation (CN-78, PLAN 2g).
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 

@@ -363,3 +363,5 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   `spelled`.** Right only where the part really starts on F2 (BLOOM's T1, the reference page, which is why it looked right); BLOOM's parts
   sit on F2 · B♭2 · E♭3 · A♭3 · D♭4. **Unverified by eye** — whether the tuba's presentation score shows it depends on which page it prints
   from. The septet's D45 heads carry their own written pitch, so this piece is not affected.
+- **The notation page polls the WHOLE IR every second** (`notation/app/notation.html` `pollChanges`: fetch + string compare, 1 Hz). With M1
+  folded the MAIN IR is 3.6 MB (≈ 5.6 MB with M2). Fine on localhost so far; if the page stutters, compare the IR's mtime or a hash instead.

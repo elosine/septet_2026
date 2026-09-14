@@ -13159,3 +13159,29 @@ ledgers, signs, the slanted gliss line, the cents, D44's one head, niente · arr
 and the tangent limit removed → 23 fail; restored → 162. **The batteries:** test_septet_notation 86 · test_trills 92 · test_identity · check_cresc_panel ·
 morph_septet_check — all green; the tuba's test_layout · test_render · test_animobj · ir_validate_battery GREEN on the staging (26 files copied, the
 septet's own `index.json` skipped, the 26 removed after).
+
+## §478. PLAN 2h.3 — M1 folded into the MAIN notation file; verified headless and in the running app; stopped for his eye (2026-09-14, Opus 5)
+
+**Done:** `--morph grp-morph-01` appended to the MAIN file's recorded build (D41) and the build re-run → `notation/ir/piece-septet.ir.json`,
+`provenance.build` now ends `… --morph grp-morph-01`. The pre-fold IR kept as a scratchpad backup. M2 NOT folded (his eye on M1 first).
+
+**Headless (the IR, the layout, the render — the same engine the page uses):**
+- the IR: **6 headers · 6 gliss · 6 cresc overlays · 94 go-line devices** (16 + 15 + 16 + 16 + 15 + 16 = every breath), all on events present;
+  `animated.curveFollower: false` (no dot); `ir_validate --against-source --complete` **VALID** (1806 events, 1164 chunks, 118 overlays).
+- the figures on the page, per part: Fl A5 → A +25 · BCl D5 → D −25 (written) · Vn1 D5 → D +25 · Vn2 A5 → A −25 · Va D5 → D −25 (alto, two
+  ledgers) · Vc C4 → C +25 (bass, one ledger); each: two open heads, the gliss line, the cents over the destination head, niente · arrow · fff;
+  **no alert** for M1.
+- the curves: one `glisscurve` + one `cresccurve` per part from 183.003 s, 11 622–12 183 samples (100/s); nothing else drawn inside M1.
+- layout warnings **79 before, 79 after, none new**; render: no NaN; the six cents texts in the SVG.
+- clearance: section 1's last ink in these parts ends at 175.5–175.6 s; the header reaches ≤ 6.1 ss left of 183.0 s — no collision.
+
+**In the running app (:5300, the Browser pane, page 16 then ZOOM ×2 at 179.7–185.5 s):** the headers sit left of each go line as built;
+the orange gliss bands start at the go line in the top half (the falling voices — BCl, Vn2, Va — at the top of the half-lane, the rising at its
+foot: the displacement map); the green crescendo rises from the baseline (the fade from silence, D32 / D47). **Seen, for his eye:** the cents
+number is drawn in the page's muted text grey at the instruction size — small and light beside the heads.
+
+**Found, not fixed:** the page re-fetches the whole IR every second to detect a change (`notation.html` `pollChanges`, string-compare) —
+3.6 MB/s now, ≈ 5.6 MB/s with M2 → NITS.
+
+**Stopped here for his eye on M1's first pages (PLAN 2h.3):** the D42 look on both curves · the meters · the header (the heads, the cents'
+size and grey) · the no-floor drawing of the fade (D47's flag) · the arc's limited tangents (§477).

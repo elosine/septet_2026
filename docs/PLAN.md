@@ -1619,10 +1619,10 @@ player would touch parts, solo, crop and print.
      |residual| ≥ `--centsMin` (default 7), no arrows, ties at 25 c toward the start, the header laid out START-LEFT in `layout.js` (the
      tuba's lowest-left order replaced); no new glyphs — the quarter-tone signs exist** · the clef / written pitch of the header verified for the
      bass clarinet. Prove: the tuba batteries unchanged; a septet check per fix.
-  3. **M1 folded into the MAIN file** — `todo` — `--morph grp-morph-01` added to the recorded build (D41), rebuilt; headless: six headers,
+  3. **M1 folded into the MAIN file** — `folded 2026-09-14 (RUNNING_LOG §478): verified headless + in the app; WAITING his eye` — `--morph grp-morph-01` added to the recorded build (D41), rebuilt; headless: six headers,
      six gliss + six cresc overlays, 94 go lines, the dot off; his eye on the page: the D42 look on both curves, the meters, the header.
-  4. **M2 the same** — `todo` — `--morph grp-morph-03`; the swapped D2 pair (§467) as it now stands; the flute and the cello crescendo-only
-     with the alert (D44).
+  4. **M2 the same** — `todo` — `--morph grp-morph-03`; the swapped D2 pair (§467) as it now stands; the flute (4 c) and the bass clarinet
+     (14 c, the holder since the swap) crescendo-only with the alert (D44) — measured at the 2h.2 build (§477).
   5. **The piano's 44 notes** — `deferred at his word 2026-09-14 (§476): after the morphs are done` — the device chosen then (the section-1 strike
      device with "pizz." / "ord." marks recommended; 34 onsets, 32 plucked + 12 ordinary, one pair 0.19 s apart under D43).
   6. **Journal, standards, D-entry; commit** — `todo`.
