@@ -22,7 +22,7 @@
   "date": "2026-09-14",
   "tool": "tools/notate_section.js (profile trance) --bricks --trills --trillRate 100",
   "notes": "Derived extraction (B1). Segmentation: DB-6 greedy IOI runs, TOL 0.015 s. Regenerable; authored content belongs in overlays only. TRILLS (PLAN 2f.3): 69 trill zone(s) as env trill; 11 eaten note(s) (mutedBy) not extracted; 0 trill(s) read a flat level. BRICKS MODE: all chunks forced unresolved (working file).",
-  "build": "node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --trillRate 100 --id piece-septet --beamsThrough --rests16 --cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1 --cluster 620.31-620.84@2 --dyn 1 --accents 1,2,3,4 --morph grp-morph-01 --morph grp-morph-03 --pairBeam wc-1769,wc-1770 --pairBeam wc-1774,wc-1775 --pairBeam wc-1785,wc-1786"
+  "build": "node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --trillRate 100 --id piece-septet --beamsThrough --rests16 --cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1 --cluster 620.31-620.84@2 --dyn 1 --accents 1,2,3,4 --morph grp-morph-01 --morph grp-morph-03 --pairBeam wc-1769,wc-1770 --pairBeam wc-1774,wc-1775 --pairBeam wc-1785,wc-1786 --ensembleDyn 205-428@2"
  },
  "events": [
   {
@@ -113338,7 +113338,8 @@
    },
    "value": {
     "device": {
-     "pairBeam": "pb-wc-1769"
+     "pairBeam": "pb-wc-1769",
+     "dynFixed": "f"
     }
    },
    "provenance": "authored"
@@ -113351,7 +113352,8 @@
    },
    "value": {
     "device": {
-     "pairBeam": "pb-wc-1769"
+     "pairBeam": "pb-wc-1769",
+     "dynFixed": "ff"
     }
    },
    "provenance": "authored"
@@ -113364,7 +113366,8 @@
    },
    "value": {
     "device": {
-     "pairBeam": "pb-wc-1774"
+     "pairBeam": "pb-wc-1774",
+     "dynFixed": "f"
     }
    },
    "provenance": "authored"
@@ -113377,7 +113380,8 @@
    },
    "value": {
     "device": {
-     "pairBeam": "pb-wc-1774"
+     "pairBeam": "pb-wc-1774",
+     "dynFixed": "f"
     }
    },
    "provenance": "authored"
@@ -113390,7 +113394,8 @@
    },
    "value": {
     "device": {
-     "pairBeam": "pb-wc-1785"
+     "pairBeam": "pb-wc-1785",
+     "dynFixed": "f"
     }
    },
    "provenance": "authored"
@@ -113403,7 +113408,502 @@
    },
    "value": {
     "device": {
-     "pairBeam": "pb-wc-1785"
+     "pairBeam": "pb-wc-1785",
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1502",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1502"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1503",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1503"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1504",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1504"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "ff"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1505",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1505"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1506",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1506"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1507",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1507"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "ff"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1508",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1508"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "ff"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1509",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1509"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1510",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1510"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "mf"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1511",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1511"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "pp"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1512",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1512"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "mp"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1513",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1513"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1514",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1514"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1515",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1515"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "ff"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1516",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1516"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "ff"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1517",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1517"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1518",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1518"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "mp"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1519",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1519"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "pp"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1520",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1520"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "ppp"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1521",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1521"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "ppp"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1768",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1768"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "pp"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1772",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1772"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1773",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1773"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1776",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1776"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1777",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1777"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1778",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1778"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1781",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1781"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "mf"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1782",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1782"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "mf"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1783",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1783"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1784",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1784"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1789",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1789"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1790",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1790"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "f"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1791",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1791"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "mf"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1792",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1792"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "mf"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1795",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1795"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "mf"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1796",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1796"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "mf"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1799",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1799"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "ppp"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-ensdyn-ev-wc-1800",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-1800"
+   },
+   "value": {
+    "device": {
+     "dynFixed": "ppp"
     }
    },
    "provenance": "authored"

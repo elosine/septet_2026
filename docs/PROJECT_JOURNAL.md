@@ -696,6 +696,17 @@ sources; verified here only when they bite.)*
   the moment AND one go line per gesture — the line would run along the head's edge, D58's "third when"; (C) the tuba's lone unit before
   its line — inconsistent with D59 and with the pairs. **Owed, not now:** the audit of every other device of the score against the two
   principles (NITS 2026-09-14) — the strikes' and trills' go lines are justified; the surge/fp/ord inheritances are the ones to look at.
+- **D50** *(2026-09-14, composer, RUNNING_LOG §501–§503)* — **THE PIANO'S WRITTEN DYNAMIC IN THE MORPH SECTION COMES FROM THE ENSEMBLE,
+  ON THE PAGE ONLY.** His rule: *"if there are three or more at that top dynamic, then the piano will match that top dynamic. If not, then
+  the piano will come in at one under the top dynamic"*; in the one pair whose notes differed, *"make the 2nd note 1 level more than the 1st
+  one"*; **a2** — the save's velocities untouched. The other parts' dynamic = their sounding breath's level × the CC7 fade weight as a D23
+  mark. *Mechanism (his question — "confirm that these will hold … and be ported over to the performance scores … even though I'm not
+  updating the original composer score dynamics"):* the rule is a flag in the MAIN file's recorded build (`--ensembleDyn 205-428@2`, D41),
+  so every rebuild recomputes it from the save; its result is written INTO the IR (`device.dynFixed`), which D9 makes the single source of
+  every downstream score; `tools/test_morph_notation.js` fails if the flag drops out, if the IR stops matching the rule, or if any of the 32
+  drawn marks moves; PLAN 3 (the performance score) carries it as an acceptance line. *Rejected:* changing the save's velocities (a1 — the
+  piano's velocity table has five marks, the rule uses eight, and the recording stays his); a hand-typed table of marks (it would not follow a
+  deliberate change to the morph levels, and nothing would say it had gone stale).
 
 ## §5 Playbooks
 

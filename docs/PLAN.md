@@ -1768,7 +1768,7 @@ player would touch parts, solo, crop and print.
       partial, listed.
     - 2d.6.6 tuba battery once · septet battery green · RUNNING_LOG · 2d marked built.
 
-## 3. Performance score — `deferred` — port #4's modules when they exist there (D2). **Carries D42, the curve look (`docs/CURVE_LOOK.md`), in the rehearsal and performance scores — the composer, 2026-09-13.**
+## 3. Performance score — `deferred` — port #4's modules when they exist there (D2). **Carries D42, the curve look (`docs/CURVE_LOOK.md`), in the rehearsal and performance scores — the composer, 2026-09-13.** **Carries the MAIN IR's engraving overlays as written — D50's `dynFixed` (the morph section's piano dynamics, page-only: the save's velocities are NOT the written dynamic there), the beamed pairs, every other per-note override — the parts are drawn from the IR, never re-derived from the save. Acceptance: the performance score's piano marks in 205–428 s equal `tools/test_morph_notation.js`'s D50 table — the composer, 2026-09-14 (RUNNING_LOG §503).**
 
 ## 4. Submission package — `todo` — form (PDF), bio (½ page), work description (optional
   ½ page), fee €25 + payment PDF, score PDF ≤ A3. Field-by-field record in RUNNING_LOG.

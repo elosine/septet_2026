@@ -13729,3 +13729,124 @@ slur (the numbers) · the chord (one dynamic, Gould's slur rule, the snapped ons
 short plucks) · the beamed pair (heads, beam height rule, pizz. row, the dynamic-on-change rule, Ped. on the first, slurs, the three
 instances, the accepted BCl touch) · the held items. PLAN 2h.5 marked built with its commits; 2h.6 (journal, standards, D-entry) done.
 **Open:** one more morph-section item he will name.
+
+## §501. The morph section's dynamics at every piano onset — a survey, measured from the save (2026-09-14, Opus 5)
+
+**His word:** *"Can you do a survey and produce a table for every piano note in the morph? at its onset time. And for the combination
+ones, you can just do the first one. Can you tell me what the dynamic level is in all the rest of the instruments? at that time. So show
+me the time, the piano dynamic, and then the dynamic in PPP to FFF terms for all the rest of the instruments."*
+
+**Method:** `scores/piece-septet.json`; the piano's 44 notes grouped (onsets within 0.3 s = one row at the first: the ten chords, the three
+pairs) → 31 rows. Piano = the page's mark (`dynamicBands` on recVel — five marks; a chord's loudest member; a pair's first, "→" where the
+second changes). Every other part = the level of the breath sounding at that instant, `evalWaveCurve × the D32 CC7 fade weight` (the
+morph tool's own `lvl`), as a D23 mark (0 = ppp … 1 = fff, eight equal steps, nearest). The raw breath level, not the drawn arc (D47).
+"—" = no breath sounding at that instant. No onset falls inside a fade (every weight 1.000).
+
+| t (s) | Pno | Fl | BCl | Vn1 | Vn2 | Va | Vc |
+|---|---|---|---|---|---|---|---|
+| 205.85 | mf (pizz, chord) | pp | ff | mf | f | f | ff |
+| 212.84 | p (pizz) | f | mf | ff | ff | ff | mp |
+| 217.55 | p (ord) | ff | p | ff | f | f | mp |
+| 222.29 | mf (ord) | ff | f | mp | f | p | f |
+| 227.09 | p (pizz) | mp | ff | mf | ff | f | ff |
+| 231.71 | mf (ord) | ff | ff | ff | ff | ff | ff |
+| 237.63 | mf (pizz) | ff | mf | ff | mp | f | mp |
+| 242.65 | mf (ord) | f | pp | mf | pp | mp | pp |
+| 250.29 | p (ord) | pp | pp | pp | pp | pp | p |
+| 256.55 | p (pizz) | pp | mp | pp | pp | pp | mf |
+| 269.13 | mf (ord, chord) | p | — | mf | mf | f | ff |
+| 274.13 | mf (pizz) | f | f | ff | ff | ff | mf |
+| 278.34 | ppp (ord) | ff | mp | ff | ff | ff | pp |
+| 282.96 | mf (pizz) | ff | mp | f | mf | mf | mf |
+| 286.68 | p (ord) | mf | p | mp | p | mp | mp |
+| 291.34 | ppp (ord) | p | pp | p | pp | pp | pp |
+| 294.07 | ppp (ord) | ppp | ppp | ppp | ppp | ppp | ppp |
+| 298.77 | ppp (ord) | ppp | ppp | ppp | ppp | ppp | ppp |
+| 318.48 | mf (pizz) | pp | pp | pp | pp | pp | pp |
+| 327.27 | mf → f (pizz, pair) | ff | pp | pp | pp | mf | mp |
+| 339.80 | mf (pizz, chord) | f | mf | ff | p | mp | mf |
+| 345.48 | f (pizz, pair) | mp | f | mp | f | ff | mf |
+| 350.30 | mf (pizz, chord) | p | pp | f | ff | mf | ff |
+| 359.00 | f (pizz) | pp | ff | mf | ff | pp | p |
+| 369.92 | f (pizz, chord) | f | pp | pp | pp | f | p |
+| 375.61 | f (pizz, chord) | p | mp | mf | pp | ff | — |
+| 384.92 | f (pizz, pair) | f | ff | f | mf | ff | p |
+| 402.47 | f (pizz, chord) | — | ff | mp | ff | pp | pp |
+| 407.97 | mf (pizz, chord) | f | mp | pp | p | mp | p |
+| 416.66 | mf (pizz, chord) | — | pp | p | pp | f | mf |
+| 427.75 | mf (pizz, chord) | ppp | — | ppp | ppp | ppp | ppp |
+
+**Two scales, said out loud:** the piano's column is its page mark from five velocity bands (ppp · p · mf · f · fff); the others' are
+the eight-step D23 level. They are comparable as words, not as numbers.
+
+## §502. A rule for the piano's dynamic in the morph section, tried on the survey (2026-09-14, Opus 5)
+
+**His word:** *"So let's try this as a rule. And then if you can just redraw the table at a column, the original piano and the new piano.
+Let's say if there are the top dynamic in the ensemble, if there are three or more at that top dynamic, then the piano will meet meet...
+will match that top dynamic. If not, then the piano will come in at One under the top dynamic. So on the first one, the piano will be one
+f. The second one, the piano will be two f's. The third one, the piano will just be one f. The fourth one, one f as well. The fifth one,
+two f's. The sixth one, two f's, etcetera."*
+
+**The rule as computed:** at each piano onset, the loudest mark among the six other parts (the §501 marks, eight-step scale; "—" not
+counted); three or more parts at it → the piano takes it; otherwise one step under it; never under ppp. **His six worked examples all
+reproduce** (205.85 f · 212.84 ff · 217.55 f · 222.29 f · 227.09 ff · 231.71 ff).
+
+| t (s) | Pno now | Pno new | top × n |
+|---|---|---|---|
+| 205.85 | mf (pizz, chord) | f | ff × 2 |
+| 212.84 | p (pizz) | ff | ff × 3 |
+| 217.55 | p (ord) | f | ff × 2 |
+| 222.29 | mf (ord) | f | ff × 1 |
+| 227.09 | p (pizz) | ff | ff × 3 |
+| 231.71 | mf (ord) | ff | ff × 6 |
+| 237.63 | mf (pizz) | f | ff × 2 |
+| 242.65 | mf (ord) | mf | f × 1 |
+| 250.29 | p (ord) | pp | p × 1 |
+| 256.55 | p (pizz) | mp | mf × 1 |
+| 269.13 | mf (ord, chord) | f | ff × 1 |
+| 274.13 | mf (pizz) | ff | ff × 3 |
+| 278.34 | ppp (ord) | ff | ff × 4 |
+| 282.96 | mf (pizz) | f | ff × 1 |
+| 286.68 | p (ord) | mp | mf × 1 |
+| 291.34 | ppp (ord) | pp | p × 2 |
+| 294.07 | ppp (ord) | ppp | ppp × 6 |
+| 298.77 | ppp (ord) | ppp | ppp × 6 |
+| 318.48 | mf (pizz) | pp | pp × 6 |
+| 327.27 | mf → f (pizz, pair) | f | ff × 1 |
+| 339.80 | mf (pizz, chord) | f | ff × 1 |
+| 345.48 | f (pizz, pair) | f | ff × 1 |
+| 350.30 | mf (pizz, chord) | f | ff × 2 |
+| 359.00 | f (pizz) | f | ff × 2 |
+| 369.92 | f (pizz, chord) | mf | f × 2 |
+| 375.61 | f (pizz, chord) | f | ff × 1 |
+| 384.92 | f (pizz, pair) | f | ff × 2 |
+| 402.47 | f (pizz, chord) | f | ff × 2 |
+| 407.97 | mf (pizz, chord) | mf | f × 1 |
+| 416.66 | mf (pizz, chord) | mf | f × 1 |
+| 427.75 | mf (pizz, chord) | ppp | ppp × 5 |
+
+**Nothing applied.** Open for him: where the result lives — the page only, or the save's velocities too (the sound; the piano's velocity
+table has five marks, the rule's results use eight) · the pairs' second notes (the rule at their own onset, shown only if it changes, or the
+first note's mark held).
+
+## §503. D50 built: the ensemble rule in the MAIN build, the marks in the IR, three guards; one rebuild refused by the schema (2026-09-14, Opus 5)
+
+**His word:** *"a2, b I think it's just the one that has a different dynamic. make the 2nd note 1 level more than the 1st one; And just
+confirm that these will hold in the notation score and be ported over to the performance scores when we make them even though I'm not
+updating the original composer score dynamics. And tell me what mechanism will assure this."*
+
+**Built:** `notation/lib/ensemble_dyn.js` (new — the rule, one copy: `levelMark` · `ruleOf` · `marksFor`, the pair's second note +1 where
+its band differed) · `tools/notate_section.js --ensembleDyn t0-t1@part` → `device.dynFixed` merged onto each note's engraving overlay;
+the MAIN build now ends `… --pairBeam wc-1785,wc-1786 --ensembleDyn 205-428@2` · `layout.js`: a `dynFixed` wins over the velocity band,
+the chord's bottom note draws its own `dynFixed`, the pair compares the members' written marks · `tools/test_morph_notation.js`: three D50
+guards (the recorded flag · every IR `dynFixed` = the rule computed now from the save · the 32 drawn marks = the approved table) → 178 pass;
+**proven red** against the previous commit's IR (no flag; drawn mf · p · p · mf · p · mf …).
+
+**A dead end, at the same weight:** the first rebuild wrote the new overlays with `provenance: 'derived'`; the IR schema allows only
+`authored` / `authored-override` on overlays (P3 — the schema is a gate), so validation failed and the tool DELETED the MAIN IR, as designed.
+Restored at once from the last commit (`git checkout -- notation/ir/piece-septet.ir.json`, 1806 events, the three-pair build — nothing else
+changed in it since), the provenance set to `authored` (as `--noGc` writes), rebuilt: VALID vs source.
+
+**Checked:** 44 notes, 31 onsets; drawn marks — 205.85 f · 212.84 ff · 217.55 f · 222.29 f · 227.09 ff · 231.71 ff · … · 327.27 f · 327.51 ff ·
+345.48 f (nothing on 345.67) · 384.92 f (nothing on 385.14) · 427.75 ppp — the §502 table exactly. Tests 86 · 178 · 92 · identity green;
+GEOMETRY 31, none in 200–430 s. PLAN 3 (the performance score) gains the acceptance line; NOTATION_STANDARDS §3 the D50 row; journal D50.

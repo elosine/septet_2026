@@ -466,7 +466,9 @@
           const baseL = o.stemLen != null ? o.stemLen : 3.5;
           beamY = Math.max(beamY, y - attDy + (y < 0 ? stemLenFor(y, baseL) : baseL));
         }
-        const info = { key, first: list[0].id, members: list.map(e => ({ id: e.id, vel: e.vel })), topKey, beamY, tips: new Map() };
+        const info = { key, first: list[0].id, topKey, beamY, tips: new Map(),
+          // each member's written mark — the D50 fixed one when the build wrote it, else its velocity's band
+          members: list.map(e => { const d = deviceOf(e); return { id: e.id, mark: d.dynFixed || (Number.isFinite(e.vel) ? bandOf(e.vel) : null) }; }) };
         for (const e of list) pairOf.set(e.id, info);
       }
     }
@@ -1204,7 +1206,7 @@
                 let markKey = null;
                 if (dev.dynMark === 'band') {
                   if (Number.isFinite(e.vel)) {
-                    markKey = bandOf(e.vel);
+                    markKey = dev.dynFixed || bandOf(e.vel);   // [D50] a mark the build fixed from the ensemble wins over the velocity
                     if (dev.dynOnChange && !dynShown.has(e.id)) markKey = null;   // [§400] same band as the part's last mark: nothing drawn
                   } else if (e.mode === 'plain') warnings.push('nh-unit ' + e.id + ': plain-mode event carries no vel (pre-amendment-5 extraction — re-extract) — no mark drawn');
                   // no mode = not a captured note: nothing to band, no mark, no noise
@@ -1219,10 +1221,10 @@
                 if (pairC && dev.dynMark === 'band' && markKey) {
                   const iP = pairC.members.findIndex(mm => mm.id === e.id);
                   const prevP = iP > 0 ? pairC.members[iP - 1] : null;
-                  if (prevP && Number.isFinite(prevP.vel) && bandOf(prevP.vel) === markKey) markKey = null;
+                  if (prevP && prevP.mark === markKey) markKey = null;
                 }
                 if (chordC && dev.dynMark === 'band' && markKey) {
-                  markKey = e.id === chordC.bottom ? (chordC.maxVel != null ? bandOf(chordC.maxVel) : markKey) : null;
+                  markKey = e.id === chordC.bottom ? (dev.dynFixed || (chordC.maxVel != null ? bandOf(chordC.maxVel) : markKey)) : null;
                 }
                 const markG = markKey && glyphs.dynamic ? glyphs.dynamic[markKey] : null;
                 if (markKey && !markG) warnings.push('nh-unit ' + e.id + ': dynamic glyph "' + markKey + '" missing — mark not drawn');

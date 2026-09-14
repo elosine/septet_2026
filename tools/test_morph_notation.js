@@ -174,5 +174,30 @@ ok(byPart(B2, 6).dest.residual === -2 && byPart(B2, 6).heads[1].cents === null, 
   ok(!(model.warnings || []).some(w => /header/.test(w)), 'no header overlay unconsumed');
 }
 
+// ---- D50 (§503): the piano's written dynamics in the morph section come from the ENSEMBLE, page only ----
+// Three guards, so the marks cannot silently go: (1) the MAIN file's recorded build carries the rule, so R
+// recomputes it; (2) the IR's overlays equal the rule computed now from the save (one copy: ensemble_dyn.js);
+// (3) the drawn marks equal the table the composer approved on 2026-09-14 — a save edit that moves any of
+// them fails here and is looked at, never absorbed.
+{
+  const EDyn = require(path.join(ROOT, 'notation', 'lib', 'ensemble_dyn.js'));
+  const ir = J('notation/ir/piece-septet.ir.json');
+  ok(/--ensembleDyn 205-428@2/.test(ir.provenance.build || ''), 'D50: the MAIN build records --ensembleDyn 205-428@2');
+  const res = EDyn.marksFor(score.objects, { part: 2, t0: 205, t1: 428, others: [0, 1, 3, 4, 5, 6], bands: C.engraving.layout.dynamicBands });
+  const devOf = new Map(ir.overlays.filter(o => o.kind === 'engraving').map(o => [o.target.event, (o.value && o.value.device) || {}]));
+  const pno = ir.events.filter(e => e.source && res.marks.has(e.source.objectId));
+  ok(pno.length === 44, 'D50: all 44 piano notes of the morph section found in the IR (got ' + pno.length + ')');
+  ok(pno.every(e => (devOf.get(e.id) || {}).dynFixed === res.marks.get(e.source.objectId)), 'D50: every IR dynFixed equals the rule computed from the save now');
+  const model = Layout.layoutSection(ir, glyphs, Object.assign({ frameParts: PARTS, ensemble: ens, techniques: tech }, C.engraving.layout));
+  const drawn = [];
+  for (const s of model.systems) if (s.part === 2) for (const it of s.items) if (it.k === 'glyph' && /^dyn-/.test(it.g) && it.t >= 205 && it.t <= 428.5) drawn.push(it.t.toFixed(2) + ' ' + it.g.slice(4));
+  drawn.sort();
+  const FROZEN = ['205.85 f', '212.84 ff', '217.55 f', '222.29 f', '227.09 ff', '231.71 ff', '237.63 f', '242.65 mf', '250.29 pp', '256.55 mp',
+    '269.13 f', '274.13 ff', '278.34 ff', '282.96 f', '286.68 mp', '291.34 pp', '294.07 ppp', '298.77 ppp', '318.48 pp', '327.27 f', '327.51 ff',
+    '339.80 f', '345.48 f', '350.30 f', '359.00 f', '369.92 mf', '375.61 f', '384.92 f', '402.47 f', '407.97 mf', '416.66 mf', '427.75 ppp'];
+  ok(JSON.stringify(drawn) === JSON.stringify(FROZEN), 'D50: the drawn piano marks equal the approved table (32: one per onset, the 327.51 ff, no mark on 345.67 / 385.14)' +
+    (JSON.stringify(drawn) === JSON.stringify(FROZEN) ? '' : ' — got ' + drawn.join(' · ')));
+}
+
 console.log('test_morph_notation: ' + pass + ' pass, ' + fail + ' fail');
 process.exit(fail ? 1 : 0);

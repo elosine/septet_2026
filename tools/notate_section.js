@@ -1084,6 +1084,31 @@ for (let i = 0; i < process.argv.length; i++) {
   }
   console.log('  pairBeam ' + key + ': ' + ids.join(' + '));
 }
+// --ensembleDyn t0-t1@part (septet D50, §503): the part's notes in the span take their WRITTEN dynamic from
+// the ensemble at each onset (notation/lib/ensemble_dyn.js — the composer's rule), not from their velocity.
+// Written into the IR as a device override { dynFixed: mark } merged onto the note's overlay, so the page,
+// every rebuild (R re-runs this recorded build) and every score made from the IR carry it; the save's
+// velocities stay as they are (page only — his choice).
+for (let i = 0; i < process.argv.length; i++) {
+  if (process.argv[i] !== '--ensembleDyn') continue;
+  const m = String(process.argv[i + 1] || '').match(/^([\d.]+)-([\d.]+)@(\d+)$/);
+  if (!m) { console.error('--ensembleDyn needs t0-t1@part (e.g. --ensembleDyn 205-428@2)'); process.exit(2); }
+  const EDyn = require(path.join(ROOT, 'notation', 'lib', 'ensemble_dyn.js'));
+  const edPart = +m[3];
+  const bands = (JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'registry', 'container.json'), 'utf8')).engraving.layout.dynamicBands);
+  const others = (typeof metaLayer === 'number' ? [...Array(metaLayer).keys()] : [0, 1, 2, 3, 4, 5, 6]).filter(L => L !== edPart);
+  const res = EDyn.marksFor(score.objects, { part: edPart, t0: +m[1], t1: +m[2], others, bands });
+  let n = 0;
+  for (const [objId, mark] of res.marks) {
+    const e = doc.events.find(x => x.source.objectId === objId);
+    if (!e) continue;
+    const existing = doc.overlays.find(o => o.kind === 'engraving' && o.target.event === e.id);
+    if (existing) existing.value.device = Object.assign({}, existing.value.device, { dynFixed: mark });
+    else doc.overlays.push({ id: 'ov-ensdyn-' + e.id, kind: 'engraving', target: { event: e.id }, value: { device: { dynFixed: mark } }, provenance: 'authored' });   // overlayProv: authored | authored-override (the schema)
+    n++;
+  }
+  console.log('  ensembleDyn ' + m[0] + ': ' + n + ' notes, ' + res.rows.length + ' onsets — ' + res.rows.map(r => r.t.toFixed(2) + ' ' + r.mark).join(' · '));
+}
 // --bare t0-t1[@part] (day 26): CLEAR THE NOTATION, KEEP THE BRICKS.
 // Composer, setting up Part 3 on CLOUD02-I: *"the bricks are fine, that's
 // what I want to see, just the bricks. It's the GC notation that's
