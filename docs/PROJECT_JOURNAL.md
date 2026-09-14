@@ -87,8 +87,8 @@ no tool calls beyond the resume reads. Start only on his word. *(At `/session-st
 
 **STATE — 2026-09-14, session 11 in progress (Fable 5.1). Chunk 1 committed: the beamed group closed by his dictation (CN-78), the morph
 section assessed (RUNNING_LOG §464), D44, and M2's D2 pair RE-CAST in the saved score — the bass clarinet holds, the cello travels
-(§467, ACT-SPECTRAL-05).** **His ear pending: Reload in the composer, listen to M2 from 314 s; R on the notation page** (the MAIN IR and the
-render still hold the pre-swap M2). The MAIN file `notation/ir/piece-septet.ir.json` otherwise carries every rule in force (strikes §1, the 69
+(§467, ACT-SPECTRAL-05).** **His ear: "swap good" (§468). The MAIN IR rebuilt from the recorded build after it; the audio render still holds the
+pre-swap M2 (re-render when convenient, RENDER.md).** The MAIN file `notation/ir/piece-septet.ir.json` otherwise carries every rule in force (strikes §1, the 69
 trills, the beamed group's two instances); `notation/audio/piece-septet.wav` is the pre-swap render (re-render after his ear, RENDER.md).
 
 **Last session (10 — 2026-09-13, Fable 5.1 + Opus 5) — RUNNING_LOG §427–§463.**
@@ -114,13 +114,13 @@ is pitch, no floor) · (4) the piano's 44 plucked notes in the section — the s
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N1** | **► NOW: his ear on the swapped M2** (Reload · listen from 314 s · R on the notation page) — then the held decisions 2–5 as he asks for them, one at a time (PLAN 2h.1) | **Fable** (his verdicts, a design conversation) | no |
+| **N1** | ~~his ear on the swapped M2~~ **"swap good" (§468)** → **► NOW: the held decisions 2–5 as he asks for them, one at a time (PLAN 2h.1)**; M1 measured (§468) | **Fable** (his verdicts, a design conversation) | no |
 | **N2** | PLAN 2h.2–2h.4: the tool's septet fixes with checks, M1 then M2 folded into the MAIN file; headless proofs | **Opus** (a written spec: NOTATION_STANDARDS §3 + §464's flags + PLAN 2h) | **yes — clear before it** |
 | **N3** | His eye on the morph pages (the D42 look, the headers, the meters) → the piano's device (2h.5) → journal, D-entries, commit (2h.6) | **Fable** to look · Opus to fix | no |
 | **N4** | Section 3's notation, when reached: the cross-staff beam (2g.1), the fours at the end (2g.2), the run cut into groups (2g.4), `--pairs` (2g.5); the go-to-time + HOME (§456) | **Opus** | fresh session |
 | **N5** | Still his, from before: the render's sync (§453) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 
-**Resume reads for N1:** `docs/RUNNING_LOG.md` §467 (the swap — what changed, what he must do). Nothing else. **For N2 (Opus, after the clear):**
+**Resume reads for N1:** `docs/NOTATION_STANDARDS.md` §3 (the held decisions' row) · `docs/RUNNING_LOG.md` §468 (M1 measured). Nothing else. **For N2 (Opus, after the clear):**
 `docs/NOTATION_STANDARDS.md` §3 · `docs/PLAN.md` 2h · `docs/RUNNING_LOG.md` §464 (the flags) · `for_seven_tubas/docs/MORPH_NOTATION.md`.
 *For the build, not a read:* `notation/lib/morph_overlays.js` (125 lines — `forPart`: the sampling, the fit, the header value, the per-event
 device; `forGroup`: `layer < 10`) · `tools/notate_morph.js` (the standalone page; `--score piece-s27` default, `layer < 10`) ·
@@ -137,8 +137,7 @@ score** (2d.5.8) · the piano never swells (CN-34).
 `scores/SeptetSec03-Materials-B/-C/-D.json` · `scores/SeptetSec03-Materialsa.json` · `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` ·
 `scores/piece-septet-v1.32-finalDraft1.0.json` · `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
 **Unsaved working copies** (`node tools/unsaved_check.js`, D17 — his to Save or Reload): **piece-septet** — he Saved 2026-09-14 08:31 (only the
-trills' snippets + the view had changed, §467); the file was then edited by `swap_m2.js`, so **Reload is pending** (the working copy holds the
-pre-swap M2) · cres-run01 · cres2strike · piano-harmonics-test · Sec3-Materials (never saved) · trill-curve-test ·
+trills' snippets + the view had changed, §467); the file was then edited by `swap_m2.js`, he Reloaded and heard it ("swap good", §468) · cres-run01 · cres2strike · piano-harmonics-test · Sec3-Materials (never saved) · trill-curve-test ·
 trillBuildTst · zz-ai-1t-walk. **Running:** nothing of the AI's (his :5300 and Reaper).
 
 **Tests:** `node tools/test_septet_notation.js` (86) · `tools/test_trills.js` (92) · `tools/test_identity.js` (20) · `score/tools/check_cresc_panel.js`

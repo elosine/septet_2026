@@ -12795,3 +12795,47 @@ every wrap); a dislike is a Restore (D27) or the scratchpad backup.
 
 **For the morph tool's revision (MORPH_NOTES §3):** re-casting a PLACED morph — swap a seat, keep every other line, re-deal only that
 pair's breaths — is exactly what this script did by hand; and a placed morph should remember its dials (§466: M2's tail is not any take).
+
+## §468. "swap good" — and M1 BEATING BLOOM measured the M2 way: the model's rule, every voice ±25 c, three mirror pairs across families, the take it came from (2026-09-14, Fable 5.1)
+
+**His word:** *"swap good; can you give me the same analysis for the m1 bloom as you did for this one earlier"* — the swapped M2 (§467)
+accepted by ear; the MAIN IR rebuilt from the recorded build at once (below), the audio render left for later.
+
+**The model (`bank/morph_models.json` BLOOM, M1):** *"Unison pairs splitting apart. Beating grows from zero"* — `target.cents 25,
+direction alternate`: each pair starts in unison and opens symmetrically, **seat a bends UP, seat b DOWN**, by up to 25 c each. No
+fundamental, no partials: the target is a distance, not a pitch. The septet's stock set (51·51 56·56 61·61) was replaced by his: **C4 · C4 ·
+D5 · D5 · A5 · A5** — the take's label says where from: *"strikes #29 · 44.77 s"*, the chord of strike 29. Dials bias 0.3 · spread 0.35 ·
+depth 1 · dyn swell 0.42; carrier **span 44** (the stock 40 — the "·dialled" of the marker), segLen 8, duration 100, **release 12**; seed 11.
+
+**Voice by voice (the saved score, M1 = `grp-morph-01`, 183.003 → 299–305 s):**
+
+| player | seat | key | direction | travel | farthest from the start | breaths | gaps |
+|---|---|---|---|---|---|---|---|
+| flute | 3a | A5 (`ord`) | up | 24.7 c | +44 s | 16 | 0.43–0.56 s |
+| violin 2 | 3b | A5 | down | 24.9 c | +37 s | 16 | 0.05 s |
+| violin 1 | 2a | D5 | up | 24.9 c | +41 s | 16 | 0.05 s |
+| viola | 2b | D5 | down | 24.9 c | +39 s | 15 | 0.05 s |
+| cello | 1a | C4 | up | 25.0 c | +32 s | 16 | 0.05 s |
+| bass clarinet | 1b | C4 | down | 24.9 c | +97 s | 15 | 0.44–0.56 s |
+
+Every voice the same distance; the level 0.4 → 9.2 of 10 on all six; the **17 s CC7 fade from silence** (183.003 → 200.003, linear, D32) on
+the first three breaths of every part.
+
+**The pairs, by pitch — three mirrors across families:** Fl+Vn2 on A5 (mirror correlation **−0.77**, the flute's `ord` voice the least
+exact) · Vn1+Va on D5 (**−0.97**) · BCl+Vc on C4 (**−0.97**). **The gesture is not one opening: the pairs open, close and open again** —
+spread 0 c → 42–47 c at +40 s → 13 c at +60 s → 7 c at +80 s → 42 c at +100 s (the C4 pair: 24 → 36 → 4 → 18 → 43) — so "farthest from
+the start" lands at +32–44 s for five voices and +97 s for the bass clarinet. The tuba's BLOOM did the same (its gliss "reverses",
+§464's day-35 reading): a displacement map, normalised to its extremes, draws it without a special case.
+
+**Beating at max spread:** C4 pair 48 c → **≈ 7.2 Hz** · D5 48 c → **≈ 16 Hz** · A5 42.5 c → **≈ 22 Hz**. The tuba's five pairs ran
+2.06–6.55 Hz and it judged 6.55 "over the edge" of countable; here only the C4 pair is near a pulse, the two upper pairs are roughness —
+which is the texture he dialled ("opens upward"). For the beating indication (held decision 5): the same verdict as M2 — the parts, if
+anywhere.
+
+**The take:** M1 IS a saved take — **ACT-BLOOM-06** (and its re-save 07: "BLOOM-07 · 112 s · strikes #29 · septet 02", captured 2026-09-09):
+**all six lanes identical** note for note. Unlike M2 (§466), a re-render of M1 from its take would reproduce it exactly.
+
+**For the notation (PLAN 2h):** every voice travels 25 c, so D44 (crescendo-only under 20 c) applies to none — six orange curves, each
+header a quarter-tone head in its direction (the tuba's "at least one quarter tone"): the up-voices A5 → A¼♯5, D5 → D¼♯5, C4 → C¼♯4;
+the down-voices A¼♭5 → A5, D¼♭5 → D5, C¼♭4 → C4 (the lowest pitch left, the altered head the one that is not the start). The bass
+clarinet's header in written pitch (+M9): D5 / D¼♭5. The fade decides the header's first mark (niente is true here) — held decision 2.
