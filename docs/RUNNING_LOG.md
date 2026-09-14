@@ -12887,3 +12887,31 @@ tone" overshoots by two; M2's travellers (100 · 150 · 186 c) are semitone-scal
 beat rate at the ends (the tuba's parked indication) is the perceptual form — for a beating texture the player hears the rate, not the
 cents. The curve itself stays the displacement map (the tuba's principle). Three options on the table for the header: the quarter-tone
 grid as the tuba (his "what I'm doing now") · an eighth-tone arrow where the travel is under 50 c · a cent number beside the head.
+
+## §470. The arrow and the cents, spelled out at his ask — the arrow sits on the NEAREST sign, the number needs no arrow (2026-09-14, Fable 5.1)
+
+**His word:** *"so with the arrow c to c+1/8 would be c gliss to cqs + down arrow? or c to c + up arrow? and the cents would that notation
+include arrow so c gliss c-uparrow-+25c?"*
+
+**Answered (the conventions, Gould / Saariaho / Poppe for the arrow; Tenney / Haas / Helmholtz–Ellis for the cents):** the arrow modifies
+the nearest ordinary sign, chosen so the arrow is the SMALLEST correction — C + an eighth tone is **C♮↑** (a natural with an up arrow; SMuFL
+`accidentalNaturalArrowUp`), never a quarter-sharp with a down arrow, though the arithmetic is the same. So M1's headers would read C → C♮↑
+(up voices) and C♮↓ → C (down voices); on the 48-EDO reading the arrow is exactly 25 c. **The cents number is complete on its own** — the
+sign gives the pitch class, the number the deviation, "+25" implies up — so the minimal form is C → C with "+25" over or beside the second
+head; Haas often writes BOTH (the arrow for the direction at a glance, the number for the amount), and Helmholtz–Ellis puts cent numbers
+beside comma arrows the same way. C → C↑ +25 is a legitimate combination, not a requirement. On the quarter-tone grid M2's travellers land
+within 2 c anyway: 150 c = E¼♭ (D2 → E¼♭2), 148 c ≈ E¼♭, 186 c → D −14 c (the grid says D; an arrow would say −25; only the number says −14).
+
+## §471. A mock of M1's header with BOTH the arrowed natural and the cents, in the engine's own glyphs (2026-09-14, Fable 5.1)
+
+**His word:** *"how about one of the m1 parts using both arrow and cents"*
+
+**Made:** `docs/images/morph_header_arrow_cents_mock_2026-09-14.svg` (the script in the session scratchpad, `mock_header.js`) — the cello
+(C4 rising: C → C♮↑ with "+25" above the altered head, the heads on the first ledger line above the bass staff) and the bass clarinet in
+written pitch (D5 falling: D♮↓ → D with "−25" above the first head). Everything is the engine's: Emmentaler paths from `glyphs.json`
+placed by `Stamps.toSvg`, the day-35 header geometry from `layout.js` (heads · gliss line · accidental · the dynamic row niente · arrow ·
+end mark, in ss offsets from the go line), and the first stretch of the two curves in the D42 look. **Drawn by hand, not the engine's:**
+the arrow on the natural (Emmentaler has `accidentals.natural.arrowup/down`; the glyph would be imported by the GLYPH_SIZING procedure
+when built) and the cents text (a `text` item at 0.95 ss, centred over the altered head). The end mark `fff` is the tuba's — held decision
+2. **Read back to him with the image; nothing decided.** For the build, if he takes this form: the header overlay carries `acc: naturalArrowUp
+| naturalArrowDown` and `cents: "+25"`, two new glyphs in the registry, one text item in the header's chain.
