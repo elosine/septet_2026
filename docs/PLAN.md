@@ -1634,6 +1634,8 @@ player would touch parts, solo, crop and print.
   7. **The practice videos with the beat rates (D48)** — `later, the performance stage` — a set for this piece like the tuba's: the players see
      the beating speed and hear it in isolation; BLOOM first, SPECTRAL his to think about (M1 at full spread: C4 ≈ 7 Hz · D5 ≈ 16 · A5 ≈ 22).
      Locate the tuba's set in `for_seven_tubas` when reached. His to-do in journal §7.
+     **His idea for SPECTRAL, tbd (RUNNING_LOG §515):** the origin tone alone for some seconds, then the destination tone; where the rest of the
+     ensemble holds a beating reference, the isolated demo plays only that instrument, or a couple.
   *Why:* his — *"I believe this one will be notated very similar"* to the tuba; the differences measured before the build so nothing is
   ported blind (§464). The rules first, then one build from a written spec (AI_METHODOLOGY).
 
@@ -1664,6 +1666,9 @@ player would touch parts, solo, crop and print.
 - **2b — Presentation score** *(the title on the cover and in the format entry: **tentative _Scattered Substance_**, CN-64 — confirm with him before either is written)* — print PDF (A3 landscape, format entry + cover + performance
   notes page as in #4) + video (`export_video.js`, Reaper render at fixed BPM, sync proof
   as #4's PHASE 5). **Deadline-bound: 2026-10-15.**
+  **The order, his (2026-09-14, RUNNING_LOG §515):** after the demo video (2i.10) → the performance instructions (NITS list) → the print score.
+  **The Tempus copy only:** a link to the demo video at the top — the call takes a print score only (PLAN 4), so the score tells them the video
+  exists. The practice videos (2h.7) go with the performance materials, BLOOM at least.
 - **2c — Parts** — only if selected; due ~2026-10-29.
 
 - **2d — Notate while composing** — `built 2026-09-11 (RUNNING_LOG §391–396) — proven on copies; the live walk on piece-septet is his (journal §2)` (planned RUNNING_LOG §389–390) — **Result when done:** he

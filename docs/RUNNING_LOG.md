@@ -13990,3 +13990,23 @@ the next step (PLAN 2i sitting A: step 1 go-to-time + HOME, then step 2 the D49 
 resume reads (PLAN 2i · §456 item 5 · NITS "THE D49 AUDIT" · NOTATION_STANDARDS §0); PLAN 2i carries all ten steps with sitting and model;
 PLANNER's NOW line agrees; nothing pending blocks. Every doc change of the session committed and pushed. Clear points: at each sitting's end
 (A → B → C → D → E → F, fresh session each) and within sitting A after the fixes.
+
+## §515. NOTED: after the demo video — the performance instructions, then the print score; the Tempus copy links the video; the practice videos (2026-09-14, Opus 5)
+
+**His word, at the postclear:** *"pls make a note that after the video, I want to write the performance instructions and then generate the
+print score. and that will include, just for the tempus submission, a link to the demo video at the top, I think they only want me to submit a
+print score, so I need to tell them there about the demo video, also will include acoustic beating practice videos at least for the bloom and
+need to think about if there is an equivalent for the spectral maybe generate the origin tone for some seconds and then the destination tone
+and then if there is a beating reference within the rest of the ensemble, use only that instrument or a couple in the full isolated demo, tbd"*
+
+**Recorded (his, nothing decided beyond the order):**
+1. **The order after PLAN 2i.10 (the demo video):** the performance instructions → the print score (2b).
+2. **The Tempus copy of the print score only:** a link to the demo video at the top. His reading: the call takes a print score only, so the
+   score itself is where the jury learns the video exists. (PLAN 4's record of the call agrees: "score PDF ≤ A3", no video field.)
+3. **The practice videos (2h.7, D48)** go with the performance materials — BLOOM at least.
+4. **SPECTRAL — his idea, tbd:** the origin tone alone for some seconds, then the destination tone; where the rest of the ensemble holds a
+   beating reference, the isolated demo plays only that instrument, or a couple.
+
+**The AI's reading (not put to him):** item 4 is the spectral morph's analogue of BLOOM's beat-rate video — the player hears the start and the
+goal, then the pitch against the one partner that makes the beat audible, rather than the whole texture. Open when reached: how long "some
+seconds" is; which partner is the reference per part (a table from the save's M1 pitches). Written into PLAN 2b and 2h.7; journal §2 N4.
