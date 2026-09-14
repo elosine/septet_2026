@@ -584,8 +584,10 @@
           const accGap = o.accGap || 0.25;
           const LL = (glyphs.standards || {}).ledgerLine, ledgerFrac = (LL && LL.lengthFraction) || 0.25;
           const accOf = k => (k ? glyphs.accidental[k] : null);
+          let lowInk = Infinity;                              // the lowest ink of the heads and their ledgers
           const drawHead = (hd, cx) => {
             const y = posOf(hd.spelled);
+            lowInk = Math.min(lowInk, y - (HEAD.hSs || 1) / 2, ...ledgersFor(y));
             items.push({ k: 'glyph', g: 'notehead-open', t: h.t, dxSs: cx, ySs: y, align: 'center', scale: hs });
             for (const Lg of ledgersFor(y)) items.push({ k: 'ledger', t: h.t, dxSs: cx, ySs: Lg, wSs: hw });
             const ag = accOf(hd.acc);
@@ -611,9 +613,14 @@
           } else {
             drawHead(hdS, x - rightInk(hdS) - hw / 2);          // D44: one pitch, no gliss line
           }
-          items.push({ k: 'niente', t: h.t, dxSs: cirC, ySs: y, diaSs: HD.circleDiaSs, thickSs: A.thickSs });
-          items.push({ k: 'dynarrow', t: h.t, dx0Ss: arrL, dx1Ss: arrR, ySs: y, headSs: A.headSs, thickSs: A.thickSs });
-          items.push({ k: 'glyph', g: 'dyn-' + h.endMark, t: h.t, dxSs: markC, ySs: y, align: 'center' });
+          // the dynamic figure on the house row — or, where the heads hang below the staff far enough to
+          // reach it (M2: the flute's C4, the bass clarinet's written E3, Vn1's A3), a standard spacer
+          // under the lowest head or ledger: a dynamic goes below the lowest note (the collision seen on
+          // the page, RUNNING_LOG §479)
+          const yDyn = Math.min(y, lowInk - A.gapSs - (mg.hSs || 1) / 2);
+          items.push({ k: 'niente', t: h.t, dxSs: cirC, ySs: yDyn, diaSs: HD.circleDiaSs, thickSs: A.thickSs });
+          items.push({ k: 'dynarrow', t: h.t, dx0Ss: arrL, dx1Ss: arrR, ySs: yDyn, headSs: A.headSs, thickSs: A.thickSs });
+          items.push({ k: 'glyph', g: 'dyn-' + h.endMark, t: h.t, dxSs: markC, ySs: yDyn, align: 'center' });
           continue;
         }
         // the header's accidental follows the gliss DIRECTION — quarterSharp

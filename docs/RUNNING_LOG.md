@@ -13185,3 +13185,34 @@ number is drawn in the page's muted text grey at the instruction size — small 
 
 **Stopped here for his eye on M1's first pages (PLAN 2h.3):** the D42 look on both curves · the meters · the header (the heads, the cents'
 size and grey) · the no-floor drawing of the fade (D47's flag) · the arc's limited tangents (§477).
+
+## §479. His eye on M1: "good"; PLAN 2h.4 — M2 folded; the two D44 alerts; a collision seen only in the app (low heads into the dynamic row), fixed and checked (2026-09-14, Opus 5)
+
+**His word on M1's pages:** *"ok m1 good, proceed to m2"* → PLAN 2h.3 closed as built: the D42 look, the meters, the headers (the small grey
+cents included), the fade from the baseline without a floor (D47's flag — closed by his "good"), the limited arc (§477).
+
+**Done:** `--morph grp-morph-03` appended to the MAIN build after M1's → `provenance.build` ends `--morph grp-morph-01 --morph grp-morph-03`.
+The build said: `--morph grp-morph-03: 6 parts, 89 go-line events, 16 curve/header overlays (displacement 4/14/100/186/99/148 c)` and
+**two ALERT lines (D44), as the rule asks, for his case-by-case look:**
+- *part 0 (flute) travels 4.0 c (under 20) — written crescendo-only, one pitch* → the header: C4, niente → fff
+- *part 1 (bass clarinet) travels 14.0 c (under 20) — written crescendo-only, one pitch* → the header: written E3 (sounding D2), niente → fff
+
+The IR: 6 headers · **4** gliss · 6 cresc · 89 go lines (16 + 14 + 14 + 15 + 15 + 15) · VALID (223 overlays) · 5.2 MB. The figures: Vn1 A3 → B♭3 ·
+Va A3 → B♭3 (alto, in the staff) · Vn2 C4 → D4 −14 · Vc D2 → E¼♭2 (−2 unwritten). Four slanted gliss lines (a half-space rise over the line).
+Layout warnings 79 → 79. *(The build's 80 `range:` lines are section 3's flute tongue rams at 453 s on — the §400 alert, not the fold.)*
+
+**Seen in the app, not in the headless numbers (ZOOM ×2, 312.7–318.5 s):** where the heads hang below the staff they ran INTO the header's
+dynamic figure, which sits on the fixed house row (`dynY` −4.6 ss): the bass clarinet's E3 (three ledgers, lowest ink −5.94 ss) drawn through
+the `fff`; Vn1's A3 (−4.44) on the arrow; the flute's C4 touching. M1 never showed it — its heads are all at or above the middle of the
+staff, and the tuba's all drew at F2. **The rule applied (engraving convention: a dynamic goes below the lowest note):** the header's
+dynamic figure stays on the house row, or drops to a standard spacer (0.45 ss) under the heads' lowest ink when that is lower — BCl −6.88,
+Vn1 −5.38, Vc −4.88; the rest, and all of M1, unchanged at −4.6. The `fff`'s foot at −7.37 ss stays inside the lane (≈ −8.7). *Rejected:* the
+dynamic figure moved left of the pitch figure (breaks the dictated order under the heads); one lowered row for the whole morph (moves
+parts that have room). **The AI's call — an engraving collision, not a musical decision.**
+
+**Checks:** `test_morph_notation.js` **174 pass** (+12: every header's dynamic row clears its heads' lowest ink by the spacer, or sits on the
+house row); **proven red** — the house row forced → 3 fail (BCl, Vn1, Vc); restored → 174. test_trills 92 · test_septet_notation 86 green. Seen
+again in the app after a reload: the three figures clear.
+
+**Stopped for his eye on M2's pages (page 27, 306.5 s →):** the two crescendo-only voices (D44 — his case-by-case look) · the four travellers'
+figures and slanted lines · the dropped dynamic rows.

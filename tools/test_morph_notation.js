@@ -162,6 +162,14 @@ ok(byPart(B2, 6).dest.residual === -2 && byPart(B2, 6).heads[1].cents === null, 
         tag + ': ' + (cents ? 'the cents ' + cents + ' over the destination head, clear of the staff' : 'no cents'));
     } else ok(gl.length === 0 && txt.length === 0, tag + ': D44 — one head, no gliss line, no cents');
     ok(it.some(i => i.k === 'niente') && it.some(i => i.k === 'dynarrow') && it.some(i => i.g === 'dyn-fff'), tag + ': niente · arrow · fff (D46)');
+    // §479: the dynamic figure never meets the heads — on the house row, or a standard spacer under the lowest head or ledger
+    {
+      const L = C.engraving.layout, gap = (L.dynArrow && L.dynArrow.gapSs) || 0.45, fffH = glyphs.dynamic.fff.hSs;
+      const low = Math.min(...heads.map(h => h.ySs - glyphs.notehead.open.hSs / 2), ...it.filter(i => i.k === 'ledger').map(i => i.ySs));
+      const dy = it.find(i => i.g === 'dyn-fff').ySs, same = it.filter(i => i.k === 'niente' || i.k === 'dynarrow').every(i => i.ySs === dy);
+      ok(same && dy <= L.dynY + 1e-9 && dy + fffH / 2 <= low - gap + 1e-9 && (dy === L.dynY || Math.abs(dy + fffH / 2 - (low - gap)) < 1e-9),
+        tag + ': the dynamic row at ' + dy.toFixed(2) + ' ss clears the heads\' lowest ink ' + low.toFixed(2) + ' (house row ' + L.dynY + ')');
+    }
   }
   ok(!(model.warnings || []).some(w => /header/.test(w)), 'no header overlay unconsumed');
 }

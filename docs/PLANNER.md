@@ -5,7 +5,7 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ✦** 2026-09-14, session 11 — **THE MORPH SECTION (PLAN 2h): the tool built (§477), M1 folded into the MAIN file (§478) — NEXT: his eye on M1's pages, then M2 (2h.4).** The beamed groups across the grand staff are deferred to section 3's notation (CN-78, PLAN 2g).
+**NOW ✦** 2026-09-14, session 11 — **THE MORPH SECTION (PLAN 2h): the tool built (§477), M1 in the MAIN file and "good" (§478–§479), M2 folded (§479) — NEXT: his eye on M2's pages (the two D44 cases), then the piano's notes (2h.5).** The beamed groups across the grand staff are deferred to section 3's notation (CN-78, PLAN 2g).
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 
