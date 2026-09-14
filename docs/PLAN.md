@@ -1608,7 +1608,7 @@ player would touch parts, solo, crop and print.
   M1 and M2 on the MAIN notation file in the tuba's morph vocabulary with this piece's differences, each part's header in its own clef and
   written pitch, the two curves in the D42 look, the meters riding them; the piano's 44 notes in the section written with a decided device;
   his eye on both pages. **Build on Opus, after a clear, from the written spec (NOTATION_STANDARDS §3 + §464's flags).**
-  1. **The rules decided** — `1 of 5 decided 2026-09-14 (D44: crescendo-only under 20 c, the tool alerts); the pitch figure decided and settled the same day (D45: quarter-tone signs, nearest spelling, signed cents from 7 c, no arrow, ties toward the start, heads in time order — §474); 2 decided (D46: the marks fixed niente → fff, the crescendo curve absolute); 3 decided (D47: no floor, the arc through the breath peaks, 100/s); 4–5 held at his word (journal §2 Open questions)` — the piano's device · the beating indication.
+  1. **The rules decided** — `1 of 5 decided 2026-09-14 (D44: crescendo-only under 20 c, the tool alerts); the pitch figure decided and settled the same day (D45: quarter-tone signs, nearest spelling, signed cents from 7 c, no arrow, ties toward the start, heads in time order — §474); 2 decided (D46: the marks fixed niente → fff, the crescendo curve absolute); 3 decided (D47: no floor, the arc through the breath peaks, 100/s); 4 DEFERRED to after the morphs (the piano's device, 2h.5); 5 decided (D48: the rates to the practice videos, nothing on the score) — ALL CLOSED 2026-09-14`.
   2. **The tool's septet fixes, with checks** — `todo` — `morph_overlays.js` / `notate_morph.js`: parts = layers under `tracks.length` (not
      10 — the tuba's META; the panel had the same port bug, §204) · samples at 100/s (2f.7; today 400 per morph) · **the crescendo curve ABSOLUTE
      (D46) and drawn THROUGH THE BREATH PEAKS (D47): `fit('level')` replaced — one anchor per breath at its loudest point (the level,
@@ -1623,8 +1623,12 @@ player would touch parts, solo, crop and print.
      six gliss + six cresc overlays, 94 go lines, the dot off; his eye on the page: the D42 look on both curves, the meters, the header.
   4. **M2 the same** — `todo` — `--morph grp-morph-03`; the swapped D2 pair (§467) as it now stands; the flute and the cello crescendo-only
      with the alert (D44).
-  5. **The piano's 44 notes** — `todo` — the device from step 1, built and verified.
+  5. **The piano's 44 notes** — `deferred at his word 2026-09-14 (§476): after the morphs are done` — the device chosen then (the section-1 strike
+     device with "pizz." / "ord." marks recommended; 34 onsets, 32 plucked + 12 ordinary, one pair 0.19 s apart under D43).
   6. **Journal, standards, D-entry; commit** — `todo`.
+  7. **The practice videos with the beat rates (D48)** — `later, the performance stage` — a set for this piece like the tuba's: the players see
+     the beating speed and hear it in isolation; BLOOM first, SPECTRAL his to think about (M1 at full spread: C4 ≈ 7 Hz · D5 ≈ 16 · A5 ≈ 22).
+     Locate the tuba's set in `for_seven_tubas` when reached. His to-do in journal §7.
   *Why:* his — *"I believe this one will be notated very similar"* to the tuba; the differences measured before the build so nothing is
   ported blind (§464). The rules first, then one build from a written spec (AI_METHODOLOGY).
 

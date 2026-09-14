@@ -109,20 +109,21 @@ down into the bass — PLAN 2g.1). **The header's PITCH FIGURE decided and settl
 a signed cents number from 7 c, no arrow, ties toward the start, the heads in time order; all pieces from here, piece #4's rehearsal / performance
 scores take it when made.** **Held decisions, his to make at the build (§464; surface them one at a time when asked):** ~~(2) the header's
 two marks~~ **decided — D46: fixed niente → fff, the crescendo curve absolute on that scale (§473)**  · ~~(3) the floor~~ **decided — D47: no floor on the
-morph, the arc through the breath peaks, 100/s (§475)** · (4) the piano's 44 plucked notes in the section — the section-1 strike device with a plucked mark, or another device ·
-(5) the beating indication — parts only (recommended, as the tuba), or on the score.
+morph, the arc through the breath peaks, 100/s (§475)** · ~~(4) the piano's notes~~ **deferred to after the morphs (§476; PLAN 2h.5)** · ~~(5) the beating
+indication~~ **decided — D48: nothing on the score, the rates to the practice videos (§476).** **ALL FIVE CLOSED 2026-09-14 — the spec is
+complete: NOTATION_STANDARDS §3 + PLAN 2h + §464's flags. Next: the build on Opus, after a clear.**
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N1** | ~~his ear on the swapped M2~~ **"swap good" (§468)** → **► NOW: the held decisions 2–5 as he asks for them, one at a time (PLAN 2h.1)**; M1 measured (§468) | **Fable** (his verdicts, a design conversation) | no |
-| **N2** | PLAN 2h.2–2h.4: the tool's septet fixes with checks, M1 then M2 folded into the MAIN file; headless proofs | **Opus** (a written spec: NOTATION_STANDARDS §3 + §464's flags + PLAN 2h) | **yes — clear before it** |
+| **N1** | ~~his ear on the swapped M2~~ "swap good" (§468) → ~~the held decisions~~ **all five closed (D44–D48, §464–§476)** | Fable | — |
+| **N2** | **► NEXT: PLAN 2h.2–2h.4** — the tool's septet fixes with checks (META layer · the header start-left · the pitch figure per D45 · the crescendo arc through the breath peaks, absolute, × fade, no floor, 100/s · the gliss fit at 100/s · the D44 alert), then M1 and M2 folded into the MAIN file; headless proofs; his eye | **Opus** (the spec is written: NOTATION_STANDARDS §3 · PLAN 2h · RUNNING_LOG §464 flags) | **yes — clear before it; `/checkpoint` on Opus first** |
 | **N3** | His eye on the morph pages (the D42 look, the headers, the meters) → the piano's device (2h.5) → journal, D-entries, commit (2h.6) | **Fable** to look · Opus to fix | no |
 | **N4** | Section 3's notation, when reached: the cross-staff beam (2g.1), the fours at the end (2g.2), the run cut into groups (2g.4), `--pairs` (2g.5); the go-to-time + HOME (§456) | **Opus** | fresh session |
 | **N5** | Still his, from before: the render's sync (§453) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 
-**Resume reads for N1:** `docs/NOTATION_STANDARDS.md` §3 (the held decisions' row) · `docs/RUNNING_LOG.md` §468 (M1 measured). Nothing else. **For N2 (Opus, after the clear):**
+**Resume reads for N2 (Opus, after the clear):**
 `docs/NOTATION_STANDARDS.md` §3 · `docs/PLAN.md` 2h · `docs/RUNNING_LOG.md` §464 (the flags) · `for_seven_tubas/docs/MORPH_NOTATION.md`.
 *For the build, not a read:* `notation/lib/morph_overlays.js` (125 lines — `forPart`: the sampling, the fit, the header value, the per-event
 device; `forGroup`: `layer < 10`) · `tools/notate_morph.js` (the standalone page; `--score piece-s27` default, `layer < 10`) ·
@@ -655,6 +656,11 @@ sources; verified here only when they bite.)*
   0–5 % between M1's breaths, and D46 wants the height to be the level reached. *Rejected:* the trills' floor on the morphs (a 7 px band
   where there is nothing); the raw per-breath level (9–16 humps per part; the tuba's principle is one arc per part). His eye on M1's first
   page decides; the floor stays a flag. Spec: NOTATION_STANDARDS §3; build: PLAN 2h.2.
+- **D48** *(2026-09-14, composer, RUNNING_LOG §476)* — **NO BEATING INDICATION ON THE SCORE; THE RATES GO TO THE PRACTICE VIDEOS.** A set
+  for this piece like the tuba's — *"they can see the speed and hear it in isolation"* — BLOOM first, SPECTRAL his to think about. *Why:*
+  only M1's C4 pair beats at a countable rate (≈ 7 Hz; D5 ≈ 16, A5 ≈ 22 are roughness); M2's pairs are not mirrors. *Rejected:* a rate at
+  each end of the gliss on the score (the tuba's committed-never-built form); deferring. **The piano's notes in the morphs deferred the same
+  day** — built after the morphs (PLAN 2h.5).
 
 ## §5 Playbooks
 
@@ -757,6 +763,10 @@ cut mid-way — write patch scripts to the scratchpad, splice by exact anchor, a
 *(The composer's own to-dos and reminders. Reviewed at every session end.)*
 
 **Active:**
+- **Practice videos for the morphs, with the beating speed** *(composer, 2026-09-14, D48: "lets locate the hz notate to the practice videos,
+  I'll make a similar set like the [tuba's] was for this piece as well. So at least for the bloom section, I'll have to think about the
+  spectral section. But this way, they can see the speed and hear it in isolation.")* — at the performance stage (PLAN 2h.7); the tuba's set
+  as the model.
 - **The title — tentative: _Scattered Substance_** *(2026-09-11, CN-64; used unqualified in the draft tag name 2026-09-12, CN-74)*. Confirm or change before the cover and the
   Tempus format entry are written (PLAN 2b authoring). Written down in CN-64, PLANNER and PLAN 2b.
 - Decide piccolo vs bass flute when the music asks (Q1); confirm that library is installed.

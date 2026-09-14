@@ -13076,3 +13076,28 @@ the tuba's principle: one arc per part).
 
 **Recorded:** journal D47 · NOTATION_STANDARDS §3 (the held row shrinks to 4 · 5; a D47 row) · PLAN 2h.2 (the build: `fit('level')` →
 the breath-peak envelope, absolute, ×fade, 100/s; no floor) · §2.
+
+## §476. Decision 4 DEFERRED (the piano's notes in the morphs — after the morphs); DECIDED 5 — D48: no beating indication on the score, the rates go to the PRACTICE VIDEOS; the morph notation's top line (2026-09-14, Fable 5.1)
+
+**Decision 4, put to him:** the piano's 44 notes in the morph section, measured — 34 onsets (20 in M1, 24 in M2, some two-note chords), 32
+plucked inside the piano + 12 ordinary, ringing 4.5–7 s, onsets 5–20 s apart but one pair 0.19 s apart (D43 territory), plain heads in the IR
+today; (a) the section-1 strike device with "pizz." / "ord." text marks (recommended), (b) a long-note device (undecided anywhere yet),
+(c) CN-39's solo device. **His word:** *"lets defer the piano sections in the morphs; we'll build these after the morphs are done; next"* →
+PLAN 2h.5 stays, after 2h.3–2h.4; the choice made then.
+
+**Decision 5, put to him:** the tuba's committed-never-built beat rate at both ends of the gliss; here only M1's C4 pair is a countable pulse
+(≈ 7 Hz; D5 ≈ 16, A5 ≈ 22 — roughness above ~10 Hz); M2's pairs are not mirrors (one holds, one drifts to a partial), the beating incidental.
+**His word:** *"a, lets locate the hz notate to the practice videos, I'll make a similar set like the two was for this piece as well. So at
+least for the bloom section, I'll have to think about the spectral section. But this way, they can see the speed and hear it in isolation."*
+**D48:** **nothing on the score.** The beat rates live in the PRACTICE VIDEOS — a set for this piece like the tuba's (the players see the
+speed and hear it in isolation), BLOOM first; SPECTRAL his to think about. *(The tuba's set: its "training material on the full beating
+curve" / practice videos — locate them in `for_seven_tubas` when the item is reached; PLAN 1f step 8's held item and CN-33 are the
+septet's own earlier mentions.)* → journal §7 (his to-do), PLAN 2h.7.
+
+**The five decisions, closed today:** 1 D44 (crescendo-only under 20 c, the tool alerts) · the pitch figure D45 settled (quarter-tone
+signs, nearest spelling, cents from 7 c, no arrow, ties toward the start, time order) · 2 D46 (the marks fixed niente → fff, the crescendo
+absolute) · 3 D47 (no floor, the arc through the breath peaks, 100/s) · 4 deferred · 5 D48 (the rates to the practice videos).
+
+**The top line to notate the morph section (given at his ask; PLAN 2h):** 1 the standards in — done today · 2 the tool's septet fixes, with
+checks (Opus, after a clear) · 3 M1 folded into the MAIN file, headless proofs, his eye · 4 M2 the same · 5 fixes from his eye; journal,
+D-entries, commit · 6 later: the piano's notes (deferred) · 7 the practice videos with the rates, at the performance stage.
