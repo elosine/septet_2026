@@ -67,15 +67,15 @@ trigger is a gap, not a named span; no tempo mark; every head keeps its dot and 
 | rule | data | decided |
 |---|---|---|
 | **Trigger, the pair:** two successive strikes in ONE part under **0.4 s** apart → one beamed group, written **16th · 16th rest · 16th · 16th rest** (rhythmically 8ths); the written 16th = half the gap; **the beam runs on over the last rest**; each rest's left edge on its own slot time (D61) | `--cluster t0-t1@part --gridDiv 2 --restAfter 1 --beamOver 1` after the day-35 defaults `--beamsThrough --rests16` (`tools/notate_section.js`) | §456 · §457 |
-| **Trigger, the four:** gaps under **0.25 s** → four beamed 16ths, straight, no rests. **NOT YET BUILT** — the piano after 183 s (237 close gaps, 81 inside the previous arc's rise); runs longer than four and shrinking gaps still to be designed | — | §455 · §456 |
+| **Trigger, the four:** gaps under **0.25 s** → four beamed 16ths, straight, no rests; the piano's run written **four notes at a time**. First instance built: the bass four at 620.3 (§462). **Open:** a group on BOTH staves of the grand staff — the engine splits it per staff today; a cross-staff beam is the next design (§462) · how the run's 169 notes are cut into fours | `--cluster t0-t1@part --dyn 1 --accents 1,2,3,4` | §456 · §462 |
 | **GC on the FIRST note only**, at its own onset | `figures.cluster.gc: "first"` | §457 |
 | **No go line on any note of the group** — nothing is displaced | `figures.cluster.goLine: false` | §457 |
 | **Every head's LEFT EDGE on its own go time.** Onsets never move; the spatial score stays millisecond-true | `figures.cluster.nhAnchor: "leftEdge"` | §457 |
 | **No tempo mark** — the spatial position carries the time; the beam only groups | inherent: a cluster prints none | §458 |
 | **Dynamics:** one mark on the first note (its band); every head keeps its staccato dot and its accent; a later head in a different band gets its own mark | `--dyn 1 --accents 1,2…`; `figures.cluster.nhDot` | §458 |
-| Head, dot, stem, beam: the cluster's — filled head 0.844, dot at the tight gap, one stem direction for the group, the accents on one row on the beam side (the tuba's) | `figures.cluster` · `layout.js` beamHasArtic | §458 |
+| Head, dot, stem, beam: the cluster's — filled head 0.844, dot at the tight gap, one stem direction for the group, **the accents on one row on the beam side** (his "accent beam side fine", §462) | `figures.cluster` · `layout.js` beamHasArtic | §458 · §462 |
 | **The three trill × GC arc meetings** (piano @85.35 · Vc @146.06 · BCl @147.78): **accepted, no change** — *"performers can time the gc and start the trill immediately after or cheat if they have to"* | `tools/trill_conflicts.js` still lists them; nothing to build | §456 |
-| **Built so far:** the piano `ev-wc-827` F#6 @43.328 + `ev-wc-832` C#6 @43.605 (gap 0.277 → 16th 0.1385) — in the MAIN file's recorded build | `provenance.build` | §459 |
+| **Built so far:** the pair — piano `ev-wc-827` F#6 @43.328 + `ev-wc-832` C#6 @43.605 (gap 0.277 → 16th 0.1385); the four — piano bass G3 · B3 · C#3 · D#3 @620.316–620.825 (gaps 0.17, ♩ 88). Both in the MAIN file's recorded build | `provenance.build` | §459 · §462 |
 
 **Where the counts stand at the 0.4 s trigger (§461):** **section 1 is complete** — its only gap under 0.4 s is this pair. After 183 s: 218 gaps
 under 0.4 s (99 under 0.25) — 46 isolated pairs and two triples across the six non-piano parts, and the piano's ONE run of 169 notes (168 gaps,

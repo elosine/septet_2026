@@ -22,7 +22,7 @@
   "date": "2026-09-14",
   "tool": "tools/notate_section.js (profile trance) --bricks --trills --trillRate 100",
   "notes": "Derived extraction (B1). Segmentation: DB-6 greedy IOI runs, TOL 0.015 s. Regenerable; authored content belongs in overlays only. TRILLS (PLAN 2f.3): 69 trill zone(s) as env trill; 11 eaten note(s) (mutedBy) not extracted; 0 trill(s) read a flat level. BRICKS MODE: all chunks forced unresolved (working file).",
-  "build": "node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --trillRate 100 --id piece-septet --beamsThrough --rests16 --cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1"
+  "build": "node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --trillRate 100 --id piece-septet --beamsThrough --rests16 --cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1 --cluster 620.31-620.84@2 --dyn 1 --accents 1,2,3,4"
  },
  "events": [
   {
@@ -113456,6 +113456,150 @@
      "beamThrough": true,
      "beamOverRest": true,
      "restAfter": 1,
+     "nhArtic": "accent",
+     "beamHasArtic": "accent"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-cl-2-ev-wc-2385",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-2385"
+   },
+   "value": {
+    "device": {
+     "goLine": false,
+     "gc": true,
+     "dynBesideStem": false,
+     "dynMark": "band",
+     "nhUnit": true,
+     "nhStem": "beam",
+     "nhAnchor": "leftEdge",
+     "beamGroup": "cl-2a",
+     "clusterId": "cl-2",
+     "beamUnit": 0.17000000000000282,
+     "beamPos": 0,
+     "beamLevels": 2,
+     "beamSubdivision": 4,
+     "rest16Before": true,
+     "ringBar": false,
+     "nhHead": "filled",
+     "nhHeadScale": 0.844,
+     "nhDot": true,
+     "nhDotGapSs": 0.15,
+     "noteUnits": 1,
+     "noteBeams": 2,
+     "beamThrough": true,
+     "nhArtic": "accent",
+     "beamHasArtic": "accent"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-cl-2-ev-wc-2386",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-2386"
+   },
+   "value": {
+    "device": {
+     "goLine": false,
+     "gc": false,
+     "dynBesideStem": false,
+     "dynMark": false,
+     "nhUnit": true,
+     "nhStem": "beam",
+     "nhAnchor": "leftEdge",
+     "beamGroup": "cl-2a",
+     "clusterId": "cl-2",
+     "beamUnit": 0.17000000000000282,
+     "beamPos": 1,
+     "beamLevels": 2,
+     "beamSubdivision": 4,
+     "rest16Before": true,
+     "ringBar": false,
+     "nhHead": "filled",
+     "nhHeadScale": 0.844,
+     "nhDot": true,
+     "nhDotGapSs": 0.15,
+     "noteUnits": 1,
+     "noteBeams": 2,
+     "beamThrough": true,
+     "nhArtic": "accent",
+     "beamHasArtic": "accent"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-cl-2-ev-wc-2387",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-2387"
+   },
+   "value": {
+    "device": {
+     "goLine": false,
+     "gc": false,
+     "dynBesideStem": false,
+     "dynMark": false,
+     "nhUnit": true,
+     "nhStem": "beam",
+     "nhAnchor": "leftEdge",
+     "beamGroup": "cl-2a",
+     "clusterId": "cl-2",
+     "beamUnit": 0.17000000000000282,
+     "beamPos": 2,
+     "beamLevels": 2,
+     "beamSubdivision": 4,
+     "rest16Before": true,
+     "ringBar": false,
+     "nhHead": "filled",
+     "nhHeadScale": 0.844,
+     "nhDot": true,
+     "nhDotGapSs": 0.15,
+     "noteUnits": 1,
+     "noteBeams": 2,
+     "beamThrough": true,
+     "nhArtic": "accent",
+     "beamHasArtic": "accent"
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-cl-2-ev-wc-2388",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-2388"
+   },
+   "value": {
+    "device": {
+     "goLine": false,
+     "gc": false,
+     "dynBesideStem": false,
+     "dynMark": false,
+     "nhUnit": true,
+     "nhStem": "beam",
+     "nhAnchor": "leftEdge",
+     "beamGroup": "cl-2a",
+     "clusterId": "cl-2",
+     "beamUnit": 0.17000000000000282,
+     "beamPos": 3,
+     "beamLevels": 2,
+     "beamSubdivision": 4,
+     "rest16Before": true,
+     "ringBar": false,
+     "nhHead": "filled",
+     "nhHeadScale": 0.844,
+     "nhDot": true,
+     "nhDotGapSs": 0.15,
+     "noteUnits": 1,
+     "noteBeams": 2,
+     "beamThrough": true,
      "nhArtic": "accent",
      "beamHasArtic": "accent"
     }

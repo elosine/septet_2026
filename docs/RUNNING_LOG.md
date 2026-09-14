@@ -12570,3 +12570,38 @@ proper: a long accelerating gesture, not pairs. The four rule (§456) says strai
 0.4 → 0.25 → 0.1 changes writing mid-run — the tuba met this with the fitted tempo, `--figures` (cut at the pace changes) and brackets;
 his word was "like the tuba density builds but with some differences." **That is the design conversation next, on Fable; the pairs flag
 is Opus work once the triple's writing is confirmed.**
+
+## §462. DECIDED: accents beam-side; the piano run in FOURS. TRIED: the run's last four — SPLIT by the grand staff (a cross-staff beam is needed). BUILT instead: the bass four at 620.3, the four rule's first instance
+
+**His word, 2026-09-13:**
+
+> *"accent beam side fine; 2 probably 4 notes at a time, can we do the last 4 notes of the piano to see how that looks"*
+
+**Decided:** the group's accents stay on one row on the beam side (as the 43.3 pair shows them) · the piano's run is written **four notes at a
+time** (his "probably" — to be seen).
+
+**The run (§461), measured closer:** 169 notes, **581.207 → 624.000 s** (the end of the piece), gaps shrinking evenly 0.399 → 0.150 s; **the
+gap crosses 0.25 s at 607.27 s** — so by §456's two thresholds the first 26 s of the run are pair-territory (0.25–0.4) and the last 17 s
+four-territory. Registers alternate between the staves throughout: same-staff runs of 4+ notes are just seven —
+T8 @590.5 · B6 @593.9 · T5 @596.4 · T4 @606.0 · **B4 @615.1 · T6 @618.4 · B4 @620.3** (the last three under 0.25 s).
+
+**The last four tried — `--cluster 623.54-624.01@2 --dyn 1 --accents 1,2,3,4`:** G2 @623.547 · G#5 @623.699 · B1 @623.850 · A#5 @624.000,
+gaps 0.152/0.151/0.150; the fit clean (unit 151.2 ms, ♩ 99.2, max err 0.8 ms, four 16ths). **Laid out WRONG:** the piano is TWO systems in
+the layout (2 = treble, 3 = bass; `layout.js` filters each system's events by `staffOfEv`, and beam groups, clusters and rests are built
+per system) — so the bass system got G2 + B1 with their own two-level beam, the GC on G2, and a 16th REST at slot 1 where G#5 lives; the
+treble system got G#5 + A#5 with a second beam and a rest at slot 2 where B1 lives. Two half-beams, two spurious rests. **A beam across the
+two staves of the grand staff does not exist in the engine yet.** Reverted from the MAIN build — the file carries only proven rules.
+
+**Built instead, at the same rule (his "to see how that looks"): the nearest same-staff four to the end — the BASS four at 620.3:**
+`--cluster 620.31-620.84@2 --dyn 1 --accents 1,2,3,4` → G3 @620.316 · B3 @620.487 · C#3 @620.657 · D#3 @620.825 (gaps 0.171/0.170/0.168;
+fit unit 170.0 ms, ♩ 88.2, max err 1.0 ms, four straight 16ths). **Verified headless, system 3:** `gc` on G3 only, no `goline`, all four heads
+`dxSs 0.4389` (left edge on the go time), stems down to one beam at −5.22 with the second level at −4.41 through all four tips, **no rests**,
+four accents on one row at −6.09 (beam side), `dyn-p` on the first only (vel 70 = the p band); the treble system holds nothing of the
+group; the next note (A4 @620.993, 0.163 s on, treble) is a plain strike with its own GC — the run continues past the island. Tests 86 + 92
+green. **On page 53 (618.5–630.5 s) for his eye.**
+
+**For the cross-staff design (the next conversation):** the inter-staff gap is 6 ss (§401k); the piano's GC ball lands ON the line between
+the staves (`GC.systemOf`, §401e), ball radius 5 px ≈ 0.63 ss at the video's 7.9 px/ss; a two-level beam is ≈1.3 ss tall. Gould's rule for a
+group on both staves: the beam between the staves, the upper staff's stems down and the lower's up. A beam centred in the gap would sit on
+the ball's line at the first note's go time; placed with its top ≈2 ss above the bass staff it clears the ball's line by ≈1 ss. Also open:
+where the accents' row goes when the beam is between the staves (the gap is crowded), and the GC arc's height.
