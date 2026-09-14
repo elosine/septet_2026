@@ -13719,3 +13719,13 @@ previous member's; the 384.92 pair's pizz. row touching the bass clarinet's curv
 equals the previous member's band draws no dynamic. `container.json` `_pairBeamNote` carries the rule. **Checked (engine items):** 327.27 —
 mf (D♯5) and f (D3) both drawn (the band changes); 345.48 — f on the A4 only; 384.92 — f on the D6 only; Ped. on each pair's first as
 before. The IR byte-identical (a layout rule); tests 86 · 174 · 92 · identity green; GEOMETRY 31, none in 200–430 s.
+
+## §500. The morph piano written into the standards; PLAN 2h.5 and 2h.6 marked (2026-09-14, Opus 5)
+
+**His word:** *"do the standards rows commit, push and check back in, one more thing to do for morph section"*.
+
+**Done:** NOTATION_STANDARDS §3 — the deferred row replaced by six: the D49 regime for the section's piano · the ordinary note and its l.v.
+slur (the numbers) · the chord (one dynamic, Gould's slur rule, the snapped onsets) · the plucked note (pizz., Ped., the release legend, the
+short plucks) · the beamed pair (heads, beam height rule, pizz. row, the dynamic-on-change rule, Ped. on the first, slurs, the three
+instances, the accepted BCl touch) · the held items. PLAN 2h.5 marked built with its commits; 2h.6 (journal, standards, D-entry) done.
+**Open:** one more morph-section item he will name.

@@ -1623,11 +1623,13 @@ player would touch parts, solo, crop and print.
      six gliss + six cresc overlays, 94 go lines, the dot off; his eye on the page: the D42 look on both curves, the meters, the header.
   4. **M2 the same** — `done 2026-09-14 (RUNNING_LOG §479–§481): two D44 alerts (Fl, BCl); low heads cleared off the dynamic row; his eye — "m2 good"` — `--morph grp-morph-03`; the swapped D2 pair (§467) as it now stands; the flute (4 c) and the bass clarinet
      (14 c, the holder since the swap) crescendo-only with the alert (D44) — measured at the 2h.2 build (§477).
-  5. **The piano's 44 notes** — `deferred at his word 2026-09-14 (§476): after the morphs are done` — the device chosen then (the section-1 strike
-     device with "pizz." / "ord." marks recommended; 34 onsets, 32 plucked + 12 ordinary, one pair 0.19 s apart under D43).
-     **HIS REFERENCE (CN-82, §480): piece #2's score around 0:50 — its plucked notes, the pedal mark, the rosette (✱, to confirm) and the
-     duration line; maybe the duration line from piece #4.** Read those first when this step opens.
-  6. **Journal, standards, D-entry; commit** — `todo`.
+  5. **The piano's 44 notes** — `built 2026-09-14 (RUNNING_LOG §483–§499), device by device at his eye; committed 92f3c55 · 5ce9a7d` — the
+     ordinary note (open head, dynamic, piece #2's l.v. slur), the chord (one dynamic, slurs by Gould's rule, onsets snapped in the save), the
+     plucked note (+ piece #2's pizz. and Ped., the release a legend), the three beamed pairs across the grand staff (`--pairBeam`); D49 promoted
+     (the notehead's left edge is the moment · the go line marks displacement). NOTATION_STANDARDS §3. *Held:* the chord at 269.13's stemming ·
+     the D49 audit of the rest of the score (NITS). **One more morph-section item from him, 2026-09-14 — to be named.**
+     *(The opening reference, kept: CN-82 — piece #2's score around 0:50, the plucked notes, the pedal mark, the rosette, the duration line.)*
+  6. **Journal, standards, D-entry; commit** — `done 2026-09-14: D49; NOTATION_STANDARDS §0 + §3 rows; RUNNING_LOG §483–§500`.
   7. **The practice videos with the beat rates (D48)** — `later, the performance stage` — a set for this piece like the tuba's: the players see
      the beating speed and hear it in isolation; BLOOM first, SPECTRAL his to think about (M1 at full spread: C4 ≈ 7 Hz · D5 ≈ 16 · A5 ≈ 22).
      Locate the tuba's set in `for_seven_tubas` when reached. His to-do in journal §7.
