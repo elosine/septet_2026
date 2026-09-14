@@ -13708,3 +13708,14 @@ from the bass through the whole treble staff to it; pizz. row at 9.04; f + Ped. 
 (383.7–389.5 s): the high pair's pizz. row meets the bottom edge of the bass clarinet's curve fill** — the guard does not see a text
 against a neighbouring lane's curve. For his eye: accept · stem the D6 down (the classic side for a note above the staff; the beam
 then below the treble) · an 8va on the D6.
+
+## §499. In a beamed pair, a dynamic only where it changes; the BCl-fill touch accepted (2026-09-14, Opus 5)
+
+**His word:** *"345.48 only new dynamic if it changed, so just 1 f here on the first one; same with 384.9; otherwise good; ok to touch bcl
+fill; fix, please, and then check back in."* — decided: within a beamed pair a member draws its band dynamic only if it differs from the
+previous member's; the 384.92 pair's pizz. row touching the bass clarinet's curve fill stays (option (a), §498); the pairs otherwise good.
+
+**Built:** `layout.js` — `pairOf` records the members in onset order with their velocities; in the nh-unit, a pair member whose band
+equals the previous member's band draws no dynamic. `container.json` `_pairBeamNote` carries the rule. **Checked (engine items):** 327.27 —
+mf (D♯5) and f (D3) both drawn (the band changes); 345.48 — f on the A4 only; 384.92 — f on the D6 only; Ped. on each pair's first as
+before. The IR byte-identical (a layout rule); tests 86 · 174 · 92 · identity green; GEOMETRY 31, none in 200–430 s.

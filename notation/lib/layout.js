@@ -466,7 +466,7 @@
           const baseL = o.stemLen != null ? o.stemLen : 3.5;
           beamY = Math.max(beamY, y - attDy + (y < 0 ? stemLenFor(y, baseL) : baseL));
         }
-        const info = { key, first: list[0].id, topKey, beamY, tips: new Map() };
+        const info = { key, first: list[0].id, members: list.map(e => ({ id: e.id, vel: e.vel })), topKey, beamY, tips: new Map() };
         for (const e of list) pairOf.set(e.id, info);
       }
     }
@@ -1214,6 +1214,13 @@
                 // the other members draw none. A lone note keeps its own band.
                 const chordC = chordOf.get(e.id) || null;
                 const pairC = pairOf.get(e.id) || null;   // [§495] a member of a beamed pair
+                // [§499] IN A BEAMED PAIR, A DYNAMIC ONLY WHERE IT CHANGES (the composer: "only new dynamic if it
+                // changed, so just 1 f here on the first one"): a member whose band equals the previous member's draws none
+                if (pairC && dev.dynMark === 'band' && markKey) {
+                  const iP = pairC.members.findIndex(mm => mm.id === e.id);
+                  const prevP = iP > 0 ? pairC.members[iP - 1] : null;
+                  if (prevP && Number.isFinite(prevP.vel) && bandOf(prevP.vel) === markKey) markKey = null;
+                }
                 if (chordC && dev.dynMark === 'band' && markKey) {
                   markKey = e.id === chordC.bottom ? (chordC.maxVel != null ? bandOf(chordC.maxVel) : markKey) : null;
                 }
