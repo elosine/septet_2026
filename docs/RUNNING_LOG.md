@@ -12839,3 +12839,51 @@ anywhere.
 header a quarter-tone head in its direction (the tuba's "at least one quarter tone"): the up-voices A5 → A¼♯5, D5 → D¼♯5, C4 → C¼♯4;
 the down-voices A¼♭5 → A5, D¼♭5 → D5, C¼♭4 → C4 (the lowest pitch left, the altered head the one that is not the start). The bass
 clarinet's header in written pitch (+M9): D5 / D¼♭5. The fade decides the header's first mark (niente is true here) — held decision 2.
+
+## §469. His question: the notation standards for pitches finer than a quarter tone — a survey from the AI's knowledge (not verified against the scores named), and what it says for the morph headers (2026-09-14, Fable 5.1)
+
+**His word:** *"what notation standards are out there for notes between quarter tones, can you give a survey, murail uses mostly quarter
+tone approximations, what I'm doing now, the rest of groupe itineraire? Kaja sariahio? haas? I think h partch uses ratios (not that one),
+esra simms? others or general notation/engraving standards?"*
+
+**The answer given (from memory; attributions marked where less sure; the point for the piece at the end):**
+- **The quarter-tone grid (24-EDO), the mainstream:** the Stein–Zimmermann accidentals (a sharp with one stroke = quarter-sharp, three
+  strokes = three-quarter-sharp; a reversed flat = quarter-flat; flat + reversed flat = three-quarter-flat) — Stone 1980 and Gould 2011
+  recommend them; SMuFL encodes them; LilyPond has them natively. Murail, Grisey and the rest of l'Itinéraire (Dufourt, Levinas) write
+  spectral pitches to the nearest quarter tone, with a front-matter note that they approximate a spectrum; Grisey and Murail add arrows
+  where a quarter tone is too coarse. Ferneyhough, Xenakis, Lutosławski (where microtonal) likewise on the quarter-tone grid.
+- **Arrows = "slightly higher / lower" (≈ an eighth tone, or as defined):** Saariaho — quarter-tone signs plus arrowed accidentals for the
+  finer inflections (Lichtbogen, Nymphéa); Scelsi's + / − and arrows; the Polish school's arrows (Penderecki); Enno Poppe writes true
+  eighth tones (48-EDO) with arrows; Gould treats an arrow as an eighth tone unless the composer's table says otherwise.
+- **Sixth- and twelfth-tone grids (36 / 72-EDO):** Hába (his own signs, 1920s); Wyschnegradsky (quarter-tone pianos, his own arrowed
+  accidentals; sixth and twelfth tones too); **Ezra Sims and Joseph Maneri — 72-EDO, the twelfth tone (16.7 c)**: arrows for a twelfth,
+  combined signs for a sixth and a quarter (Maneri–Van Duyne 1986; Julia Werntz carries it); 72-EDO lands within 3 c of 11-limit just
+  intonation, which is why they chose it. Klaus Huber: third tones (18-EDO) with his own accidentals. Carrillo's "Sonido 13": no
+  accidentals — the pitches numbered 0–95 (sixteenth tones) on a staff.
+- **Ratios and just intonation:** Partch — ratios and instrument tablatures (43 tones, 11-limit), no staff accidentals; **Ben Johnston** —
+  staff notation from a 5-limit C base with comma accidentals (+ / − the syntonic comma 21.5 c; 7 and its inversion the septimal 48.8 c;
+  ↑ ↓ the undecimal 53 c; 13 …), the string quartets; **Extended Helmholtz–Ellis (Sabat & von Schweinitz, 2004; revised 2020)** — the
+  comma arrows on the ordinary accidentals, a septimal flag, the undecimal quarter-tone sign, cent numbers where wanted; SMuFL has it;
+  Sabat, von Schweinitz, Catherine Lamb, Thomas Nicholson, Taylor Brook use it; **Sagittal** (Secor & Keenan, 2004) — one arrow-flag
+  system for every EDO and JI, more used in the microtonal community than on concert scores.
+- **Cents on a 12-EDO staff — the general-purpose tool:** the ordinary accidental with a deviation number (+14, −31) above or beside the
+  head, an arrow optional — Tenney (Critical Band, the Spectral CANONs), Lucier, Ablinger; **Haas** — natural-harmonic chords and just
+  intervals written with cent deviations and arrows (in vain, the quartets), and twelfth-tone pianos in limited approximations (six
+  pianos a twelfth tone apart, each in ordinary notation); Radulescu (I believe) partial numbers and ratios of a fundamental in his
+  spectral scordatura works; Ligeti's late works reach the microtones through natural harmonics (the Hamburg Concerto's horns), not signs.
+- **The engraving references:** Gould, Behind Bars (2011) — the quarter-tone set, arrows, a table of accidentals in the front matter,
+  accidentals on every note in microtonal music; Read, 20th-Century Microtonal Notation (1990) — the survey of the systems; Stone, Music
+  Notation in the Twentieth Century (1980) — the Ghent 1974 recommendations; SMuFL — Stein–Zimmermann, Gould arrows, Sims, Johnston,
+  Helmholtz–Ellis, Sagittal, Wyschnegradsky, Persian and Turkish sets all encoded (Bravura); LilyPond quarter tones native, the rest via
+  ekmelily. Persian koron / sori and the Turkish 53-comma system are the other living traditions.
+- **The distinction that matters for a player:** absolute (a ratio, or cents against 12-EDO — found by ear against a reference, by
+  beating) versus a grid (quarter, eighth, twelfth tones — found by a fingerboard position) versus a harmonic (Haas, Ligeti, Sciarrino —
+  found by the string).
+
+**What it says for the morph headers (put to him, not decided; feeds the held decisions of §464):** M1's voices travel **exactly 25 c —
+an eighth tone** — so an ARROWED natural (Saariaho / Gould: ↑ = an eighth tone up) would be exact where the tuba's "at least a quarter
+tone" overshoots by two; M2's travellers (100 · 150 · 186 c) are semitone-scale and read fine on the quarter-tone grid; M2's 4 c and
+14 c are under D44's line. A cent number at the header's second head (+25, +150) is the general-purpose form and costs one glyph. The
+beat rate at the ends (the tuba's parked indication) is the perceptual form — for a beating texture the player hears the rate, not the
+cents. The curve itself stays the displacement map (the tuba's principle). Three options on the table for the header: the quarter-tone
+grid as the tuba (his "what I'm doing now") · an eighth-tone arrow where the travel is under 50 c · a cent number beside the head.
