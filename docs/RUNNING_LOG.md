@@ -12946,3 +12946,35 @@ read-only from here — the memory is how it gets there).
 **The question list after this:** 1 done (D44) · 2 the header's two MARKS (niente circle · end mark) from the data or fixed — still open,
 sharpened by the mock (it shows the tuba's `fff`) · 3 the floor at 1 for the morph crescendo — open · 4 the piano's 44 notes' device — open ·
 5 the beating indication — open (parts only, recommended). None eliminated by D45; D45 settles the PITCH figure, not the marks.
+
+## §473. The arrow rule read back (his amendment: never a down arrow — pending his a/b); DECIDED 2 of 5 — D46: the header's marks are FIXED niente → fff, and the crescendo curve is ABSOLUTE against that scale (2026-09-14, Fable 5.1)
+
+**His word on the pitch figure's general rule (the D45 record's reading questioned):** *"Maybe we weren't thorough enough here. Let's shore
+this up. So I think that is correct. It shouldn't... what you surfaced earlier. It shouldn't... be a down arrow. So the performer needs to
+know about how much deviation from a destination note. So let's say it's c to d sharp plus sixteen cents. … You'd see the c. You'd see
+the glissando line. You'd see the d quarter sharp and then an arrow up and plus sixteen cents. Correct? but you wouldn't ever see a
+downward arrow. So if it's, like, c to d minus five cents, you would see instead a c glissando line, d quarter flat plus twenty cents. Is
+this correct? Is this what we have currently, or do we need to amend the standard? or am I reading it wrong"*
+
+**Read back to him:** what D45 recorded was the AI's reading — the nearest EIGHTH tone, the arrow = ±25 c up or down, a signed number
+("D −14"). His is a different rule: **the head is the quarter-tone pitch AT OR BELOW the target, always an UP arrow, always a PLUS number
+0–49 c** — one operation for the player, always upward, never a down arrow. One correction: D −5 c is D quarter-flat **+45**, not +20 (a
+quarter tone is 50 c). The cost named: a pitch a hair below a grid pitch is written from the pitch a quarter tone lower with a big
+remainder — Vn2's D −14 → D¼♭ ↑ +36; the cello's E¼♭ −2 → E♭ ↑ +48; M1 identical either way (C♮↑ +25). Put as (a) his rule (recommended
+— it is what he asked for and the awkward cases in this piece are two) or (b) the signed rule as recorded. **His answer pending** (his next
+message went to decision 2).
+
+**DECIDED 2 of 5 — his word:** *"2. is fixed niente to fff; lets keep this as the standard for the morphs until further notice so if the
+swell goes from niente to mf the curve will only go up that high, somewhere past 1/2 max curve height but the header will still show
+niente to fff"*
+
+**D46:** the header's two marks are **FIXED — the niente circle · arrow · `fff` on every part of every morph**, the tuba's figure, until
+further notice. **And the crescendo curve is ABSOLUTE against that scale:** the header is the legend of the bottom half-lane — bottom =
+niente, top = fff — and the curve's height is the sound's level on it, NOT normalised to its own peak (the tuba normalised each curve to
+fill its half; superseded for the crescendo). A morph that peaks at mf rises a little past half the lane and stops there; the header still
+reads niente → fff. *(AI's reading, marked: the level scale is D23's — 0 = ppp … 1 = fff on the curve, the drawn 0–10 — with the CC7 fade
+weight multiplied in (D32) so M1 starts from nothing; the GLISS curve stays the tuba's displacement map, normalised to its extremes, since
+the pitch figure states the amount; the meters ride the same absolute samples. Decision 3, the floor, now acts on an absolute curve.)*
+
+**Recorded:** journal D46 · NOTATION_STANDARDS §3 (the held row shrinks to 3 · 4 · 5; a D46 row) · PLAN 2h.2 (the cresc overlay: no
+normalisation; `samples = level/10 × fadeWeight`; the header's marks fixed) · §2.

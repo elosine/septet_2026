@@ -106,9 +106,10 @@ trills, the beamed group's two instances); `notation/audio/piece-septet.wav` is 
 **NEXT UP — the morph section (PLAN 2h), his agenda of 2026-09-14.** The beamed group's cross-staff build is DEFERRED to section 3's
 notation at his word (CN-78: max four per GC, 1 · 2 · 4; same staff as normal; across the grand staff = try the beam above the treble, stems
 down into the bass — PLAN 2g.1). **The header's PITCH FIGURE decided 2026-09-14 — D45: the arrowed natural + the cents, both (§471–§472; the standard for all pieces from here; piece #4's
-rehearsal / performance scores take it when made).** **Held decisions, his to make at the build (§464; surface them one at a time when asked):** (2) the header's
-two marks from the data through D23's ladder, or the tuba's fixed niente → `fff` · (3) the drawn floor at 1 for the morph crescendo (the gliss
-is pitch, no floor) · (4) the piano's 44 plucked notes in the section — the section-1 strike device with a plucked mark, or another device ·
+rehearsal / performance scores take it when made).** **Held decisions, his to make at the build (§464; surface them one at a time when asked):** ~~(2) the header's
+two marks~~ **decided — D46: fixed niente → fff, the crescendo curve absolute on that scale (§473)** · **the pitch figure's general rule — his
+amendment (never a down arrow; head at or below + up arrow + plus cents) vs the signed rule: his a/b pending (§473)** · (3) the drawn floor at 1
+for the morph crescendo (now on an absolute curve; the gliss is pitch, no floor) · (4) the piano's 44 plucked notes in the section — the section-1 strike device with a plucked mark, or another device ·
 (5) the beating indication — parts only (recommended, as the tuba), or on the score.
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
@@ -629,6 +630,15 @@ sources; verified here only when they bite.)*
   travel exactly an eighth tone; the tuba's "at least a quarter tone" wrote that twice too big, and a cents number alone gives no shape
   at a glance. *Rejected:* the quarter-tone grid alone (the tuba's, "what I'm doing now"); the arrow alone (exact only at 25 c); the cents
   alone. The curve stays the displacement map; D44 stands. Spec: `docs/NOTATION_STANDARDS.md` §3; build: PLAN 2h.2.
+  **Open on D45 (§473):** the general rule for travels other than 25 c — his amendment (never a down arrow: the head at or below on the
+  quarter-tone grid, an up arrow, a plus number 0–49) or the signed rule the AI first recorded; his a/b pending.
+- **D46** *(2026-09-14, composer, RUNNING_LOG §473)* — **THE MORPH HEADER'S DYNAMIC FIGURE IS FIXED — niente circle · arrow · `fff` on every
+  part of every morph — AND THE CRESCENDO CURVE IS ABSOLUTE ON THAT SCALE.** The header is the legend of the bottom half-lane (bottom =
+  niente, top = fff); the curve's height is the sound's level on it, not normalised to its own peak: *"if the swell goes from niente to mf
+  the curve will only go up that high, somewhere past 1/2 max curve height but the header will still show niente to fff."* Until further
+  notice. *Why:* one legend for every morph, the curve then tells the truth about the amount. *Rejected:* the marks from the data through
+  the ladder (put to him as the recommendation); the tuba's per-curve normalisation of the crescendo (kept for the gliss, whose amount the
+  pitch figure states). The level scale is D23's, the D32 fade weight multiplied in (AI's reading, marked). Spec: NOTATION_STANDARDS §3.
 
 ## §5 Playbooks
 
