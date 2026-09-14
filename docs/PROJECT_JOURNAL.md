@@ -140,8 +140,8 @@ the cross-staff beamed pairs · D50 the piano's dynamics from the ensemble · th
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N1** | **► PLAN 2i sitting A** — ~~step 1 go-to-time + HOME~~ BUILT (§516, "go-to works") → **step 2 the D49 audit MEASURED (§517): his verdict on the single strikes owed (A join the beamed groups' regime — left edge on the moment, no go line, GC alone · B keep + write the exception); then the fix** — `byEnv.strike` → `nhAnchor: leftEdge`, `goLine: false`; rebuild (the recorded build); §0 rewritten with the two clauses (the headless breath · the header as legend) and the verdict; `_staccatoNote` rewritten; tests; his eye on sections 1 and 3 | his word → **Opus** (the fix) | no (switch model) |
-| **N2** | **sitting B** — step 3 the save edits in HIS tab: `foldFlute()` over section 3 (79 rams) · the six dynamic bands p → fff (CN-83) · Save · rebuild | Opus + his ear | yes |
+| **N1** | ~~**PLAN 2i sitting A**~~ **DONE 2026-09-14** — step 1 go-to-time + HOME built (§516, "go-to works") · step 2 the D49 audit measured and closed by D53 (§517–§518): the single strikes stay; §0 scoped; nothing on the page moved | — | — |
+| **N2** | **► sitting B** — step 3 the save edits in HIS tab: `foldFlute()` over section 3 (79 rams) · the six dynamic bands p → fff (CN-83) · Save · rebuild | Opus + his ear | **yes — wrap on Opus: `/checkpoint` · `/clear` · `/postclear`** |
 | **N3** | **sitting C** — step 4 the cross-staff group (2g.1), alone · **sitting D** — steps 5–6 the groups and `--pairs` (2g.2 · 2g.4 · 2g.5, D51) · **sitting E** — steps 7–8 the page rule + the surge device (CN-83 · CN-84) · **sitting F** — steps 9–10 re-render, demo video | Opus (Fable for 8's design) | fresh session each |
 | **N4** | Later, noted — **the order after the demo video (his, §515):** the performance instructions (the pedal + l.v. legends, bcl to low C — NITS 2026-09-14) → the print score (2b; the Tempus copy links the demo video at the top) · the practice videos, BLOOM at least, SPECTRAL tbd (2h.7) · the performance score carries D50 (PLAN 3's acceptance line) | — | — |
 | **N5** | Still his, from before: the render's sync (§453) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
@@ -709,6 +709,14 @@ sources; verified here only when they bite.)*
   strikes in 180 s, six time bands p → fff, CN-83): 932 marks would be clutter, ~42 say everything. *Rejected:* B on-change piece-wide
   (section 1 would fall to 7 marks) · C on-change + restatement after a long gap (one rule, one more parameter). Built at PLAN 2i.7 with the
   existing `dynOnChange` machinery (§401d left it in layout, unused); NOTATION_STANDARDS takes the row then.
+- **D53** *(2026-09-14, composer, RUNNING_LOG §517–§518)* — **THE SINGLE STRIKES STAY AS THEY ARE: head before the go line and the GC,
+  the go line, the GC — by the reading rule, not by any collision; the two principles (D49) are SCOPED to units without a GC.** His word:
+  *"the single strikes GCs should remain as they are … the one plus one equals three rule from Tufte. So if a performer is looking at the GC
+  hit the go time, they don't need to also see the notation at the same time."* *Why:* the audit (§517) found the strikes' reason on record
+  ("to clear the disc") gone since D60 (0 of 999 heads reach it) and the beamed groups on their time — but the placement is his reading
+  convention, and the rule was misread as a mandate over it: *"Somehow that rule was misconstrued … I don't want it to affect the audits the
+  way it has."* *Rejected:* A the single strikes join the beamed groups' regime (every strike 85 ms right, both pages re-seen) · C the tuba's
+  original Option B (drop the go line, keep the hang). NOTATION_STANDARDS §0 carries the scope line; the audit is not repeated over strikes.
 
 ## §5 Playbooks
 

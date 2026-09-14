@@ -1647,11 +1647,10 @@ player would touch parts, solo, crop and print.
   1. **Go-to-time + HOME on the notation page** (§456 item 5) — `built 2026-09-14 (RUNNING_LOG §516), proven in the running page; his try owed` — a type-a-time control on the video view; HOME → 0.
      The bar's **go** box (seconds or m:ss, ENTER; clamped to the material; the page turns, the playhead lands, playing or paused) and a ⌂
      button, in the video and zoom views · the HOME key → time 0 in the video view; the zoom view's HOME keeps its day-23 meaning (page start).
-  2. **The D49 audit** (NITS 2026-09-14) — `MEASURED 2026-09-14 (RUNNING_LOG §517): one finding — the 1419 single strikes hang 85 ms before
-     their moment with a go line, for a reason D60 removed (0 of 999 heads reach the disc), while the beamed groups sit on their time; his
-     verdict owed (A join the groups' regime · B keep + write the exception) → the fix on Opus: one registry edit, rebuild, his eye on
-     sections 1 and 3. Compliant: trills, the morph piano, the groups; the morph breaths and headers by reading (§0 clauses owed). The
-     crescendo run (78) breaks both ways today and is 2i.8's to replace.` — the strikes' displacement after D60 · the trills ·
+  2. **The D49 audit** (NITS 2026-09-14) — `DONE 2026-09-14 (RUNNING_LOG §517–§518): measured over all 1806 events; one finding — the 1419
+     single strikes hang 85 ms before their moment for a reason D60 removed — CLOSED BY D53: they stay, by the reading rule (Tufte 1+1=3), and
+     §0 is scoped to units without a GC. Compliant: the trills, the morph piano, the groups, the morph breaths and headers by reading. Left:
+     the crescendo run (78) is 2i.8's to place; the dead tuba devices, the print exporter's missing ensemble/techniques, the _staccatoNote drift → NITS.` — the strikes' displacement after D60 · the trills ·
      the tuba inheritances (`ord` 55, `surge`, `fortepiano`, `cuivre`, `staccato`) · the morph headers · the built groups. The out-of-range
      census is done (§507: 79 flute rams, all section 3 → step 3).
   3. **The save edits, in HIS tab** — `todo · sitting B · Opus + his ear` — (a) `foldFlute()` over section 3 (79 rams, D38, §507) · (b) section

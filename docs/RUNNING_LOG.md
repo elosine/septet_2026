@@ -14080,3 +14080,39 @@ scrolling reader gets the cursor on the head as the note starts; the tuba's day-
 
 **Not changed yet:** NOTATION_STANDARDS §0's two clauses (the headless breath · the header as a legend) wait for the same word, so §0 is
 rewritten once.
+
+## §518. DECIDED: the single strikes stay as they are — D53; the two principles scoped so the audit cannot misfire again (2026-09-14, Fable 5.1)
+
+**His word, after two explanations (the first: "this doesn't make sense to me because I need them. I'm using GCs for all of these, no? …
+we decided that the notation was B to the left of the GC and the go line. Is this not still the case?"; the second asked for the discrepancy
+"more clearly and simply"):**
+
+> *"Okay, I think the single strikes GCs should remain as they are. And I think this was the one plus one equals three rule from Tufte. So
+> if a performer is looking at the GC hit the go time, they don't need to also see the notation at the same time. That's visually confusing,
+> something like that. In any case, I don't want to spend too much time trying to work out the rule right. Somehow that rule was
+> misconstrued. So let's just, whatever, reword it or depreciate it or just not worry about it. I don't want to have to rewrite these rules
+> right now. And I probably won't get it right, but I don't want it to affect the audits the way it has in this pass. So we'll just leave
+> those, but then tell me more simply what's left. If I don't move any of the strikes, then what are the other, the other things the audit
+> revealed?"*
+
+**Decided — D53 (journal §4):** the single strikes keep the tuba regime — head before the go line and the GC, the go line, the GC. **His
+reason, not the disc:** Tufte's 1+1=3 — the player watches the GC land on the go time; the notation is read BEFORE it, not at the same spot.
+The reason on record changes from "to clear the disc" to "the reading rule"; nothing on the page moves.
+
+**The rule, scoped rather than rewritten (his: "reword it or depreciate it … I don't want it to affect the audits"):** one scope line added
+to NOTATION_STANDARDS §0 — the two principles govern units WITHOUT a GC (the morph section's piano, the beamed groups' non-first members,
+whatever comes); a GC-bearing single strike is exempt by D53 and is not re-audited. The morph breaths (a go line, no head) and the headers
+(a legend before the line) are named there as compliant by reading. §0's prose is otherwise untouched.
+
+**What is left, with the strikes untouched — nothing to do today:**
+1. **The crescendo run 526.8–558.9 s (78 notes)** — drawn wrong both ways today (the flute's 12: a hung head + go line, no GC; the other
+   66: a bare open head slightly before its time, no go line). **2i.8 replaces the whole device** (the surge, CN-84); its design puts the
+   head where D53's reading rule or D49 says, stated at the design.
+2. **Four dead device entries** from the tuba (`fortepiano` · `cuivre` · `staccato` · `byEnv.surge`) — used by nothing; retire or re-anchor
+   at 2i.8 (NITS).
+3. **`tools/export_print.js` lays out without `ensemble` and `techniques`** — the septet's clefs, transposition and family devices would be
+   missing from the print; a PLAN 2b fix (NITS).
+4. **A registry note contradicts its device** (`_staccatoNote` "no go line" vs `goLine: true`) — documentary; rewrite when the file is next
+   touched (NITS).
+
+**PLAN 2i.2 closed. Sitting A done** — the clear point.
