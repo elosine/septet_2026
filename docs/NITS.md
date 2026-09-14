@@ -368,6 +368,8 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 
 ## 2026-09-14 — FOR THE PERFORMANCE INSTRUCTIONS (PLAN 2h.5, RUNNING_LOG §490; the composer: "make a note pls for when we write the performance instructions")
 
+- **The bass clarinet to low C** (Q7 closed 2026-09-14, RUNNING_LOG §512): one line in the instrumentation — the piece's lowest note is
+  B♭1, the low-C instrument's floor; the call names no requirement; the low-C model is the professional norm.
 - **The piano's pedal legend.** The plucked notes in the morph section carry `Ped.` with NO release sign (his choice A over the ✱ at each
   drawn end). The tradition reads an unreleased `Ped.` as held to the end (LilyPond: "Pedalling to the final bar line is indicated by
   omitting the final pedal off command"), so the instructions must say it. His intention, verbatim: *"they would let it ring until it's

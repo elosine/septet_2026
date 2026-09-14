@@ -13957,3 +13957,15 @@ answers otherwise, the impact is ten notes up an octave in his tab, nine of them
 **"Top line good" · "Sitting A yes":** §505's ten steps in six sittings written into **PLAN 2i** (1–10, each with its sitting and model; 4 · 5 · 6 =
 2g.1 · 2g.2/2g.4 · 2g.5), the journal §2 (next step · resume reads · the N-table), PLANNER's NOW line. Sitting A = step 1 (go-to-time + HOME)
 then step 2 (the D49 audit), on Opus after a clear. The planning chunk committed.
+
+## §512. Q7 CLOSED: the bass clarinet to low C is assumed; the call does not specify (2026-09-14, Fable 5.1)
+
+**His word:** *"The call only specifies 'Clarinet (including bass clarinet)' with no low-C requirement, so that answers Q7 and I was just
+inquiring in general in a professional ensemble is it reasonable to expect the bcl to have low c extension or is this more rare or case by case?"*
+
+**Conclusion:** the piece assumes a low-C bass clarinet (its lowest note, B♭1, is that instrument's floor; nothing below). The performance
+instructions state "bass clarinet to low C" (NITS, the performance-instructions list). **Nothing moves.** If an ensemble ever answers "low E♭
+only", the fallback is measured (§511): **10 notes up an octave — 6 in section 1, 4 in section 3**, nine slaps and one trill. **The general
+answer given:** in professional and new-music ensembles the low-C instrument is the norm, not the exception — the professional standard since
+the 1970s; the contemporary repertoire writes to low C as a matter of course; the low-E♭ instrument is the school and band model. Case-by-case
+only with amateur ensembles or a doubler bringing a second-string instrument.

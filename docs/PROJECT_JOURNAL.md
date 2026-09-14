@@ -113,7 +113,7 @@ holds at each step: the goal first ("N. Title. Result when done: …"), discuss,
 **Resume reads:** PLAN 2i (the top line) — then, for sitting A only: RUNNING_LOG §456 item 5 (the go-to-time ask) · NITS "THE D49 AUDIT" ·
 NOTATION_STANDARDS §0.
 
-**Decisions pending the composer:** Q7 the bass clarinet's bottom (§511: assume low C, or push 10 notes up) · the page rule's reach (2i.7:
+**Decisions pending the composer:** the page rule's reach (2i.7:
 section 3 only, or the piece) · (later, the performance instructions) the pedal legend's wording (NITS draft).
 
 **Deliberately uncommitted (`git status --short` at this checkpoint) — all his, left alone:** `bank/panel_snapshots.json` (his takes) ·
@@ -164,7 +164,7 @@ one path (→ 1q-PRINCIPLE) — §324–351. **6** (2026-09-09) the morph's fade
 (2026-09-06 → 08) BEATING (parked), the morph panel, the crescendo suite 1l–1o, D11 — §111–310. **3** (2026-09-04 → 06) the piece to #31, the
 drawer U5–U13b, the trill module 0–3, the curve windows (D18–D21) — §65–110. **2** the strikes drawer and the sandbox. **1** the port.
 
-**Open questions:** Q7 the bass clarinet's bottom B♭1 · the triple's writing in the six parts · does "the same crescendo in several parts"
+**Open questions:** *(closed 2026-09-14 — Q7 the bass clarinet's bottom: low C assumed, §512 · the triple's writing: D51)* · does "the same crescendo in several parts"
 mean both players on every onset (§413, his word first) · the piano's device in the morphs (2h.5). *Closed 2026-09-14:* "eighth per GC" — max
 four (CN-78) · the morph's five held decisions (D44–D48, §464–§476).
 
