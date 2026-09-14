@@ -13850,3 +13850,9 @@ changed in it since), the provenance set to `authored` (as `--noGc` writes), reb
 **Checked:** 44 notes, 31 onsets; drawn marks — 205.85 f · 212.84 ff · 217.55 f · 222.29 f · 227.09 ff · 231.71 ff · … · 327.27 f · 327.51 ff ·
 345.48 f (nothing on 345.67) · 384.92 f (nothing on 385.14) · 427.75 ppp — the §502 table exactly. Tests 86 · 178 · 92 · identity green;
 GEOMETRY 31, none in 200–430 s. PLAN 3 (the performance score) gains the acceptance line; NOTATION_STANDARDS §3 the D50 row; journal D50.
+
+## §504. The chord at 269.13 s: no stems — the last held item of the morph piano closed; checkpoint (2026-09-14, Opus 5)
+
+**His word:** *"n2 no stems; /checkpoint"* — the chord at 269.13 s (G♯2 + G♯5, ordinary, the stemming held since §485) stays as drawn:
+two open heads, no stems, one dynamic, the slurs by the chord rule. Nothing to build. The morph section's piano is complete (PLAN 2h.5):
+the devices, the chords, the pairs, D49, D50. Checkpoint written in the journal §2 before the clear.

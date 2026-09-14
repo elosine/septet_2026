@@ -5,7 +5,7 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ✦** 2026-09-14, session 11 — **THE MORPHS ARE DONE (PLAN 2h.2–2h.4): both in the MAIN file, both "good" (§477–§481) — NEXT: the piano's 44 notes in the morph section (2h.5; his reference CN-82).** The beamed groups across the grand staff are deferred to section 3's notation (CN-78, PLAN 2g).
+**NOW ✦** 2026-09-14, session 11 — **THE MORPH SECTION IS NOTATED, PIANO INCLUDED (PLAN 2h.2–2h.6; §477–§504): D49 (the notehead's left edge is the moment · the go line marks displacement) and D50 (the piano's dynamics from the ensemble) — NEXT, his pick: the D49 audit of the rest of the score · the audio re-render (two steps behind the save) · section 3's notation (PLAN 2g).**
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 

@@ -85,46 +85,36 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-**After the checkpoint, before 2h.5 (2026-09-14, Opus 5, his word at `/postclear`) — RUNNING_LOG §482:** the bass clarinet at
-**58.7 s (`wc-868`, E♭4) is now a slap tongue** (it was senza vibrato), in the save and the MAIN IR (two IR leaves changed, seen drawn
-"(slap)" on the page; tests 86 + 174 pass). **The audio still has the old note** — his to replace before the final demo video (N3).
-The checkpoint below still holds: the next step is 2h.5.
+### CHECKPOINT — 2026-09-14, session 11, late (mid-session checkpoint; Opus 5; the morph section finished)
 
-**2h.5 BUILT, same day (Fable 5.1 + Opus 5, RUNNING_LOG §483–§498) — the piano's 44 notes in the morph section, device by device at his
-eye:** ordinary = open head · one band dynamic per chord under its lowest note · l.v. slurs (piece #2's crescent; Gould's chord rule) ·
-no ring bar; plucked = the same + piece #2's baked italic pizz. and Emmentaler Ped. (once per chord, no release sign — the legend, NITS);
-the ten chords' onsets snapped to their earliest in the save; the three close pairs (327.27 · 345.48 · 384.92) beamed across the grand
-staff (`--pairBeam`, filled heads, one 8th beam above the treble); **D49 promoted — the notehead's left edge is the moment, the go line
-marks displacement** (§3 P17, NOTATION_STANDARDS §0): the morph piano sits on its times with no go lines. **Open for his eye:** the
-384.92 pair's pizz. row meets the BCl curve (§498). **Owed:** the D49 audit of the rest of the score (NITS) · the note at 269.13's
-stemming (§485, held) · NOTATION_STANDARDS rows for the morph piano + the plan's 2h.5 close · the audio re-render (N3, now two steps
-behind the save: the bcl slap and the chord snap).
+**The task:** PLAN 2h, the morph section's notation. **State: DONE, PIANO INCLUDED** — everything is in the MAIN notation file
+(`notation/ir/piece-septet.ir.json`, VALID vs source; its `provenance.build` ends `--morph grp-morph-01 --morph grp-morph-03 --pairBeam
+wc-1769,wc-1770 --pairBeam wc-1774,wc-1775 --pairBeam wc-1785,wc-1786 --ensembleDyn 205-428@2`) and signed off by his eye, item by item.
+Since the last checkpoint (RUNNING_LOG §482–§504): the bass clarinet at 58.7 s is a slap tongue (save + IR, §482) · **PLAN 2h.5, the piano's
+44 notes** (NOTATION_STANDARDS §3): ordinary = open head · one band dynamic per chord under its lowest note · piece #2's l.v. slur by Gould's
+chord rule; plucked = the same + piece #2's baked italic pizz. and Emmentaler Ped. (once per chord, no release sign — a legend owed in the
+performance instructions, NITS); the ten chords' onsets snapped to their earliest in the SAVE; the three close pairs beamed across the grand
+staff (filled heads, one 8th beam above the treble, a dynamic only where it changes); the chord at 269.13 no stems · **D49 promoted** — the
+notehead's left edge is the moment · the go line marks displacement (§3 P17, NOTATION_STANDARDS §0): the morph piano sits on its times, no
+go lines · **D50** — the piano's written dynamics from the ensemble rule (three or more at the top → match, else one under), page only,
+the save's velocities untouched, guarded by `test_morph_notation` (the recorded flag · IR = the rule now · the 32 drawn marks frozen).
 
-### CHECKPOINT — 2026-09-14, session 11 (mid-session checkpoint; Opus 5; the clear is for 2h.5 on Fable)
+**Latest deliverables:** `notation/lib/ensemble_dyn.js` (new, D50's rule) · `notation/lib/layout.js` (lvslur · chordOf · pairOf + the
+cross-staff beam · the left-edge chrome · dynFixed) · `render.js` (lvslur · `sys`/`sysB`) · `stamps.js` + `glyphs.json` (letRing · text
+"pizz." · pedal "Ped") · `container.json` (`main` · `plucked` · `byPairBeam` · the strike/trill envs cancelling every new field) ·
+`tools/notate_section.js` (`--pairBeam` · `--ensembleDyn`) · `tools/test_morph_notation.js` (178) · commits 92f3c55 · 5ce9a7d · 9c12c8b ·
+3939d08 + this checkpoint.
 
-**The task:** PLAN 2h, the morph section's notation. **State: THE MORPHS ARE DONE** — M1 and M2 are in the MAIN notation file
-(`notation/ir/piece-septet.ir.json`, its `provenance.build` ends `--morph grp-morph-01 --morph grp-morph-03`), built to D44–D48 and the
-§479 dynamic row, checked (`tools/test_morph_notation.js` 174 pass), and **signed off by his eye: "ok m1 good" · "m2 good"** (§479, §481).
-Left in 2h: **2h.5 the piano's 44 notes in the morph section** · 2h.6 the wrap · 2h.7 the practice videos (the performance stage).
+**The next concrete step — on Fable, after `/postclear`, at his word:** ask him which chunk is next, from the NEXT STEPS table below —
+**N1 the D49 audit** of the rest of the score (NITS 2026-09-14 "THE D49 AUDIT": device by device, in the running page) · **N2 the audio
+re-render** (his capture, the AI's bridge render, RENDER.md — the render lacks the M2 swap, the bcl slap and the chord snap; before the demo
+video) · **N3 section 3's notation** (PLAN 2g). The AI's lean: N1 first — every page built after it inherits what it finds. The chosen
+chunk names its own reads.
 
-**Latest deliverables (this session, RUNNING_LOG §477–§481):** `notation/lib/morph_overlays.js` (the septet's rules, opt-in; the tuba's
-output frozen in `tools/fixtures/morph_notation_baseline.json` and unchanged) · `notation/lib/layout.js` (the D45 header; the dynamic row
-under low heads) · `render.js` (the slanted gliss line) · `tools/notate_section.js --morph` / `tools/notate_morph.js` (the septet options,
-the ALERT lines, `--centsMin`) · `tools/test_morph_notation.js` · CN-82 (his reference for the piano) · NOTATION_STANDARDS §3 (+ the
-dynamic-row row). **The AI's two calls inside his decisions, both seen by him:** the breath-peak arc's tangents limited (plain Catmull-Rom
-sagged 8.4 %) · the header's dynamic figure dropped under heads below the staff.
+**Resume reads:** nothing beyond §2 — then, for the chosen chunk only: N1 → NITS "THE D49 AUDIT" + NOTATION_STANDARDS §0 · N2 → `docs/RENDER.md`
+· N3 → PLAN 2g.
 
-**The next concrete step — on Fable, after `/postclear`, at his go:** open PLAN 2h.5 — choose the notation device for the piano's 44 notes
-in the morph section (205.85–427.75 s; 34 onsets, 32 plucked + 12 ordinary, ringing 4.5–7 s, one pair 0.19 s apart). **Start from his
-reference (CN-82):** locate piece #2's score around 0:50 in `composition_for_two_pianos_and_two_percussion` (read-only) — its plucked
-notes, the pedal mark, the "rosetta" (read as the pedal-release rosette ✱ — confirm with him) and the duration line; then piece #4's duration
-line as the alternative for that element. Put what was found to him against §476's option (a) (the section-1 strike device with "pizz." /
-"ord." marks), one topic at a time (the planning method); the build after his choice goes to Opus.
-
-**Resume reads:** `docs/PLAN.md` 2h.5 · `docs/RUNNING_LOG.md` §476 (the piano's notes measured; the three options) · `docs/COMPOSITION_NOTES.md`
-CN-82. Nothing else until the step names it.
-
-**Decisions pending the composer:** the piano's device (2h.5) · "rosetta" = the pedal rosette? (confirm at 2h.5).
+**Decisions pending the composer:** which chunk next · (later, the performance instructions) the pedal legend's wording (NITS draft).
 
 **Deliberately uncommitted (`git status --short` at this checkpoint) — all his, left alone:** `bank/panel_snapshots.json` (his takes) ·
 `reaper/septet_rack.rpp` (his rack) · `bank/passages/4materials.json` · `accentedcres01.json` · `accentedcres01-2.json` · `chordcyc01.json` ·
@@ -144,16 +134,17 @@ piano-harmonics-test · Sec3-Materials (never saved — the working copy is the 
 nearest spelling, cents from 7 c, no arrow, ties toward the start, time order) · D46 niente → fff fixed, the crescendo absolute · D47 no floor,
 the arc through the breath peaks, 100/s · D48 the beat rates to the practice videos; the piano's notes deferred (§476) · **built and folded,
 both morphs "good"** (§477–§481). **Found for him in piece #4 (read-only there):** its morph headers carry no pitch — every header head is
-drawn at F2 (NITS; §7).
+drawn at F2 (NITS; §7). **Then (§482–§504):** the bcl slap at 58.7 · the morph section's piano, device by device (2h.5) · D49 promoted ·
+the cross-staff beamed pairs · D50 the piano's dynamics from the ensemble · the morph section complete.
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N1** | **► NEXT: PLAN 2h.5 — the piano's notes in the morphs: his reference (CN-82) read, the device chosen with him** | **Fable** | **yes — this checkpoint is the clear** |
-| **N2** | Build the chosen piano device, fold it, his eye → 2h.6 the wrap (plan close, journal) | **Opus** | no |
-| **N3** | The audio re-render (M2 is pre-swap in `notation/audio/piece-septet.wav`, and the bass clarinet at 58.7 s is still senza vibrato there, §482; RENDER.md) — his capture, the AI's bridge render; before the final demo video | his + Opus | no |
-| **N4** | Section 3's notation, when reached: the cross-staff beam (2g.1), the fours at the end (2g.2), the run cut into groups (2g.4), `--pairs` (2g.5); the go-to-time + HOME (§456) | **Opus** | fresh session |
+| **N1** | **► his pick — the D49 audit** of the rest of the score against the two principles (NITS 2026-09-14): the strikes' displacement after D60 · the trills · the tuba inheritances (`ord` · `surge` · `fortepiano` · `cuivre` · `staccato`) · the morph headers · the D43 groups — findings to him, the fixes after his word | **Fable** (the verdicts) → Opus (the fixes) | **yes — this checkpoint is the clear** |
+| **N2** | **or** the audio re-render (the render lacks the M2 swap, the bcl slap at 58.7 s and the chord snap; RENDER.md) — his capture, the AI's bridge render; before the final demo video | his + Opus | yes |
+| **N3** | **or** section 3's notation: the cross-staff beam (2g.1 — the pair version now exists, `--pairBeam`), the fours at the end (2g.2), the run cut into groups (2g.4), `--pairs` (2g.5); the go-to-time + HOME (§456) | **Opus** | fresh session |
+| **N4** | Later, noted: the performance instructions — the pedal legend and the l.v. legend (NITS 2026-09-14) · the performance score carries D50 (PLAN 3's acceptance line) | — | — |
 | **N5** | Still his, from before: the render's sync (§453) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 
 **Standing warnings:** ⚠ **CTRL+SHIFT+R detaches the ♪ render** — click it again (his choice A, §460: leave it); a rebuild of the IR alone does
@@ -161,7 +152,7 @@ not, the page picks up the new IR by itself — **but a change to `notation/lib/
 page** (§403; the MAIN file is safe) · **one open composer tab per score** (2d.5.8) · the piano never swells (CN-34) · the MAIN IR is 5.2 MB
 and the page re-fetches it every second (NITS).
 
-**Tests:** `node tools/test_morph_notation.js` (174) · `tools/test_septet_notation.js` (86) · `tools/test_trills.js` (92) · `tools/test_identity.js` (20) ·
+**Tests:** `node tools/test_morph_notation.js` (178 — incl. the three D50 guards) · `tools/test_septet_notation.js` (86) · `tools/test_trills.js` (92) · `tools/test_identity.js` (20) ·
 `score/tools/check_cresc_panel.js` (35) · `tools/morph_septet_check.js` · `tools/trill_conflicts.js --list` (3, accepted) · check_fill ·
 check_containers · check_cresc_deck · the tuba battery per `notation/ir/README.md` (stage only files the septet lacks — its `index.json` exists).
 

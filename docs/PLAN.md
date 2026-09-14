@@ -1626,8 +1626,9 @@ player would touch parts, solo, crop and print.
   5. **The piano's 44 notes** — `built 2026-09-14 (RUNNING_LOG §483–§499), device by device at his eye; committed 92f3c55 · 5ce9a7d` — the
      ordinary note (open head, dynamic, piece #2's l.v. slur), the chord (one dynamic, slurs by Gould's rule, onsets snapped in the save), the
      plucked note (+ piece #2's pizz. and Ped., the release a legend), the three beamed pairs across the grand staff (`--pairBeam`); D49 promoted
-     (the notehead's left edge is the moment · the go line marks displacement). NOTATION_STANDARDS §3. *Held:* the chord at 269.13's stemming ·
-     the D49 audit of the rest of the score (NITS). **One more morph-section item from him, 2026-09-14 — to be named.**
+     (the notehead's left edge is the moment · the go line marks displacement). NOTATION_STANDARDS §3. **Then D50 (§501–§503, 3939d08): the piano's
+     written dynamics from the ensemble rule, page only.** The chord at 269.13: no stems (§504). *Owed elsewhere:* the D49 audit of the rest
+     of the score (NITS).
      *(The opening reference, kept: CN-82 — piece #2's score around 0:50, the plucked notes, the pedal mark, the rosette, the duration line.)*
   6. **Journal, standards, D-entry; commit** — `done 2026-09-14: D49; NOTATION_STANDARDS §0 + §3 rows; RUNNING_LOG §483–§500`.
   7. **The practice videos with the beat rates (D48)** — `later, the performance stage` — a set for this piece like the tuba's: the players see
