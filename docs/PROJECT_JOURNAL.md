@@ -85,8 +85,6 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word.
 
-**▶ CHECKPOINT (mid-session checkpoint) — session 10, 2026-09-13, written on Opus. Nothing in flight; everything committed and pushed.**
-
 **▶ CHECKPOINT 2 (mid-session checkpoint) — session 10, 2026-09-13, written on Opus. Nothing in flight; everything committed and pushed.**
 
 **THE FIRST TASK AFTER /postclear — his word: DISCUSS the three GC × trill conflicts AND the general rule for strikes too fast for their
@@ -138,7 +136,9 @@ Gitignored and generated, not his to worry about: `notation/audio/piece-septet.w
 
 **▶ UPDATE, same session (Opus): THE TRILL CURVE SHAPE IS BUILT** — 100 samples per second + the drawn floor at 1 (RUNNING_LOG §450–§451). Talked through on Fable (the four scores compared; piece #2 bakes 100/s, the septet froze 101), built on Opus, 91 green, measured on his :5300 page. **Waiting on him:** his eye (CTRL+SHIFT+R → the MAIN file → page 8, the 85.35 s column; page 12, the 132.43 s dip) · the floor on the morph crescendo too, or trills only. The text below is the checkpoint as written.
 
-**THE FIRST TASK AFTER /postclear — his word: work out the TRILL CURVE SHAPE with him** (PLAN 2f.7 (b); RUNNING_LOG §444). He wants to
+**▶ CHECKPOINT 1 (mid-session checkpoint, SUPERSEDED — done: the curve shape §451, the column §452, the recording §453) — session 10, 2026-09-13, written on Opus.**
+
+**WAS the first task after /postclear — his word: work out the TRILL CURVE SHAPE with him** (PLAN 2f.7 (b); RUNNING_LOG §444). He wants to
 clear, switch models, and go over the curve shape before anything else. **Talk first, build after — the planning method** (state and
 restate; his words, then the AI's reading, one question at a time). His prompt, verbatim:
 
