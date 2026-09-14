@@ -85,7 +85,13 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### STATE — 2026-09-14, session 11 (Opus 5): M1 "good" (his eye); M2 FOLDED (2h.4) — waiting his eye on M2's pages
+### STATE — 2026-09-14, session 11 (Opus 5): THE MORPHS ARE DONE — M1 and M2 "good" (§479, §481)
+
+- **Both morphs notated in the MAIN file and signed off by his eye.** Left in 2h: **2h.5 the piano's 44 notes** (his reference CN-82: piece
+  #2 around 0:50 — plucked notes, pedal, rosette, duration line; maybe #4's duration line) · 2h.6 wrap · 2h.7 practice videos (later).
+- **Next: 2h.5 on Fable, after a clear** (a design choice — the device). Still his: the audio re-render (pre-swap M2).
+
+### (earlier) M1 "good"; M2 FOLDED (2h.4)
 
 - **M1: his word "ok m1 good, proceed to m2"** (§479) — 2h.3 closed; D47's floor flag closed with it.
 - **M2 folded** (§479): `--morph grp-morph-01 --morph grp-morph-03` in the MAIN build; 4 gliss + 6 cresc, 89 go lines; **two D44 alerts — Fl
@@ -172,7 +178,7 @@ complete: NOTATION_STANDARDS §3 + PLAN 2h + §464's flags. Next: the build on O
 | # | Step | Model | Clear first? |
 |---|---|---|---|
 | **N1** | ~~his ear on the swapped M2~~ "swap good" (§468) → ~~the held decisions~~ **all five closed (D44–D48, §464–§476)** | Fable | — |
-| **N2** | ~~2h.2 built (§477) · 2h.3 M1 folded, "good" (§478–§479) · 2h.4 M2 folded (§479)~~ **► NOW: his eye on M2's pages (the two D44 cases)** — the tool's septet fixes with checks (META layer · the header start-left · the pitch figure per D45 · the crescendo arc through the breath peaks, absolute, × fade, no floor, 100/s · the gliss fit at 100/s · the D44 alert), then M1 and M2 folded into the MAIN file; headless proofs; his eye | **Opus** (the spec is written: NOTATION_STANDARDS §3 · PLAN 2h · RUNNING_LOG §464 flags) | **yes — clear before it; `/checkpoint` on Opus first** |
+| **N2** | ~~2h.2 built (§477) · 2h.3 M1 "good" (§478–§479) · 2h.4 M2 "good" (§479–§481)~~ **DONE — the morphs are notated.** **► NEXT: 2h.5 the piano's notes (CN-82), Fable, after a clear** — the tool's septet fixes with checks (META layer · the header start-left · the pitch figure per D45 · the crescendo arc through the breath peaks, absolute, × fade, no floor, 100/s · the gliss fit at 100/s · the D44 alert), then M1 and M2 folded into the MAIN file; headless proofs; his eye | **Opus** (the spec is written: NOTATION_STANDARDS §3 · PLAN 2h · RUNNING_LOG §464 flags) | **yes — clear before it; `/checkpoint` on Opus first** |
 | **N3** | His eye on the morph pages (the D42 look, the headers, the meters) → the piano's device (2h.5) → journal, D-entries, commit (2h.6) | **Fable** to look · Opus to fix | no |
 | **N4** | Section 3's notation, when reached: the cross-staff beam (2g.1), the fours at the end (2g.2), the run cut into groups (2g.4), `--pairs` (2g.5); the go-to-time + HOME (§456) | **Opus** | fresh session |
 | **N5** | Still his, from before: the render's sync (§453) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |

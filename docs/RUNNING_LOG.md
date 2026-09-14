@@ -13223,3 +13223,14 @@ figures and slanted lines · the dropped dynamic rows.
 dur line from tuba"* → CN-82 (verbatim), PLAN 2h.5 (the reference named). **Not acted on** — "for later"; nothing read in piece #2 or #4 yet.
 The AI's reading of "rosetta": the pedal-release rosette (✱) — to confirm with him at 2h.5. The earlier recommendation (§476: the section-1
 strike device with "pizz." / "ord." marks) stands beside it as one option, now with his reference to weigh.
+
+## §481. His eye on M2: "good" — THE MORPHS ARE DONE (PLAN 2h.2–2h.4); what is left of 2h (2026-09-14, Opus 5)
+
+**His word:** *"m2 good morphs done?"* → PLAN 2h.4 closed. His "good" covers the two D44 cases the build alerted (the flute, 4 c; the bass
+clarinet, 14 c — both written crescendo-only), the four travellers' figures and slanted lines, and the lowered dynamic rows (§479).
+
+**The answer put to him:** yes — both morphs are notated in the MAIN file under every rule decided today (D44–D48 + the §479 dynamic row),
+checked (`test_morph_notation.js` 174) and seen by him. **Left in PLAN 2h:** 2h.5 the piano's 44 notes in the morph section (deferred to
+now, his reference CN-82) · 2h.6 the wrap (the D-entries D44–D48 and NOTATION_STANDARDS §3 are already written; what remains is the
+journal's D-log note for the build and the plan's close) · 2h.7 the practice videos with the beat rates (the performance stage). **Still his,
+unchanged:** the audio render holds the pre-swap M2 (re-render per RENDER.md).
