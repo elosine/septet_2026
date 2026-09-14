@@ -14210,3 +14210,44 @@ old engine (18 fail)**. Batteries green: morph 178 · septet 86 · trills 92 · 
 
 **For his eye:** zoom or video at **581** and **623.5**. Then step 5 cuts the run into groups (his "fours at the end", the pair rule before
 607.27). A page reload is needed — `notation/lib/layout.js` changed.
+
+## §522. BUILT: PLAN 2i.5–2i.6 — every close run in section 3 grouped by one rule flag, `--groups 444-624.1` (2026-09-14, Opus 5)
+
+**His word:** *"good go for D"* (after the top line: step 5 the piano run cut into groups — pairs before 607 s, fours after · step 6 the six
+other parts' 46 pairs + 2 triples).
+
+**Measured first (the MAIN IR, strikes from 444 s):** Fl 4 pairs · BCl 7 · Vn1 10 · Vn2 10 · Va 8 + the triple 622.01 · Vc 7 + the triple 488.51
+(PLAN's 46 + 2 exactly) · the piano ONE run of 169 notes 581.21 → 624.00 · 12 of the six parts' pairs have a gap under 0.25 s · no
+simultaneous strikes in any part. No grouping flag existed: every group so far was a hand-typed `--cluster` span.
+
+**The builder's call, said out loud — a rule flag, not ~110 spans.** D41 is "a new notation rule = a flag added to its recorded build"; the
+rule IS the standard (NOTATION_STANDARDS §2), so it is one flag, and the recorded build stays readable. `tools/notate_section.js --groups t0-t1`:
+every run of strikes in one part with successive onsets under 0.4 s, starting in the span → groups, expanded into ordinary `--cluster`
+spans (so the tempo fit, grids, rests, beams and the cross-staff layout of §521 are the same code). **The cutting, the AI's defaults (his eye
+decides, all in the report):**
+- a run of 2 or 3 → one group, the pair's writing (16th · rest per note, beam over the last rest; D51 for three) — **a pair with a gap under
+  0.25 s keeps the pair's writing** (a pair is a pair);
+- a longer run → **fours cut from its END** over the stretch whose every gap is under 0.25 s (his "fours at the end"; §463's reading), then
+  **pairs from its start**; an odd pair stretch closes with a **triple** (D51); a lone note stays single;
+- every head keeps its accent; **no dynamic on any group** — section 3's marks are the page rule's (D52, step 7);
+- a group overlapping an explicit `--cluster` of its part is an error (never a silent double).
+The recorded build loses its three hand spans in section 3 (620.31 four · 581.21 pair · 623.54 four) and gains `--groups 444-624.1`; section
+1's 43.3 pair stays explicit.
+
+**Result (READY, VALID vs source):** part 0: 4 pairs · 1: 7 · 3: 10 · 4: 10 · 5: 8 + 1 triple · 6: 7 + 1 triple · **the piano: 39 pairs (581.21 →
+605.76) · a triple at 606.27 · 22 fours (607.02 → 624.00)** = 169 notes. **The fours cut from the end land on the bass four at 620.32 that he
+saw on 2026-09-13 — unchanged, one staff, stems down.** 41 of the piano's 62 groups cross the staves (§521's layout); none left anything in
+the bass system; no beam-group warnings. The running page (video at 488.6 · 590 · 606.3 · 615 · 622.5): drawn, no page errors (the one 404
+is the absent optional `choices` file).
+
+**The build's geometry check, section 3:** 60 flags — 5 in 444–581, **55 in the run** — the piano's beams and accent rows above the treble
+meeting Vn1's marks below its staff (beam/fff 10 · accent/accent 13 · beam/accent 6 · …) and BCl's. Many of the `fff`/`f` ones are the
+every-strike band marks that step 7 reduces to one per band. Crowding for his eye; the tuba's fix ladder when he has looked.
+
+**Guard:** `tools/test_cross_staff.js` now finds groups by TIME (ids renumber per build) and adds the rule: the counts per part, the piano's
+order 2×39 · 3 · 4×22, all 169 notes 581.21 → 624.00, every four's gaps under 0.25, D51's two triples, every group's gaps under 0.4, no
+group dynamic, every accent kept — 52 pass. Batteries green: morph 178 · septet 86 · trills 92 · identity · step-dynamics 15.
+
+**For his eye:** reload the notation page; the run from **581** (pairs), **606.3** (the triple, then the fours), **615–624** (the fours, the
+crowding), **488.5** (Vc triple), **622** (Va triple). Open: the crowding verdicts · whether the pairs' GCs every ~0.5–0.8 s and the fours'
+every ~0.6–1.0 s read.

@@ -337,6 +337,62 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
   // Without this a span in an all-parts file claims all ten lanes at once.
   const partOfEvent = new Map();
   for (const c of doc.chunks) for (const evId of c.events) partOfEvent.set(evId, c.part);
+  // [PLAN 2i.5–2i.6] --groups t0-t1 — THE BEAMED-GROUP RULE AS ONE FLAG (NOTATION_STANDARDS §2: D43 · CN-78 · D51; RUNNING_LOG §522).
+  // Every run of STRIKES in one part whose successive onsets are under 0.4 s apart, starting inside the span, is written as groups:
+  //   a run of 2 or 3 → one group, the pair's writing (16th · rest per note, the beam carried over the last rest — §456, D51's triple);
+  //   a longer run → FOURS cut from its END over the stretch whose every gap is under 0.25 s (straight 16ths, the four rule — "the
+  //   fours at the end"), then PAIRS from its start over the rest; an odd pair stretch closes with a TRIPLE (D51); one note stays single.
+  // Every head keeps its accent. No dynamic is written on a group: section 3's marks are the page rule's (D52, PLAN 2i.7).
+  // The groups become ordinary --cluster spans after the explicit ones; one overlapping an explicit --cluster of its part is an error.
+  {
+    const gi = process.argv.indexOf('--groups');
+    if (gi >= 0) {
+      const gm = String(process.argv[gi + 1] || '').match(/^([\d.]+)-([\d.]+)$/);
+      if (!gm) { console.error('--groups needs t0-t1 (e.g. --groups 444-624.1)'); process.exit(2); }
+      const G0 = parseFloat(gm[1]), G1 = parseFloat(gm[2]), PAIR = 0.4, FOUR = 0.25, EPS = 0.005;
+      const explicit = spans.slice();
+      const seq = k => Array.from({ length: k }, (_, i) => i + 1).join(',');
+      const byPart = new Map();
+      for (const e of doc.events) {
+        if (e.env !== 'strike') continue;
+        const p = partOfEvent.get(e.id);
+        if (!byPart.has(p)) byPart.set(p, []);
+        byPart.get(p).push(e);
+      }
+      const said = [];
+      for (const [p, list] of [...byPart].sort((a, b) => a[0] - b[0])) {
+        list.sort((a, b) => a.onset - b.onset);
+        const runs = [];
+        let cur = [list[0]];
+        for (let i = 1; i < list.length; i++) {
+          if (list[i].onset - list[i - 1].onset < PAIR) cur.push(list[i]);
+          else { runs.push(cur); cur = [list[i]]; }
+        }
+        runs.push(cur);
+        const count = { 2: 0, 3: 0, 4: 0 };
+        for (const run of runs) {
+          const n = run.length;
+          if (n < 2 || run[0].onset < G0 - 1e-9 || run[0].onset > G1 + 1e-9) continue;
+          let k = n - 1;                                   // the under-0.25 stretch is run[k .. n-1]
+          while (k > 0 && run[k].onset - run[k - 1].onset < FOUR) k--;
+          const fours = n > 3 ? Math.floor((n - k) / 4) : 0;
+          const headEnd = n - 4 * fours;
+          const groups = [];
+          for (let i = 0; headEnd - i >= 2;) { const take = headEnd - i === 3 ? 3 : 2; groups.push({ g: run.slice(i, i + take), four: false }); i += take; }
+          for (let j = headEnd; j < n; j += 4) groups.push({ g: run.slice(j, j + 4), four: true });
+          for (const { g, four } of groups) {
+            const sp = [+(g[0].onset - EPS).toFixed(3), +(g[g.length - 1].onset + EPS).toFixed(3), p];
+            const clash = explicit.find(x => (x.sp[2] === null || x.sp[2] === p) && x.sp[0] <= sp[1] && sp[0] <= x.sp[1]);
+            if (clash) { console.error('--groups: the group ' + sp[0] + '-' + sp[1] + '@' + p + ' overlaps the explicit --cluster ' + clash.sp[0] + '-' + clash.sp[1] + ' — drop one'); process.exit(2); }
+            spans.push({ sp, mods: four ? [['--accents', '1,2,3,4']] : [['--gridDiv', '2'], ['--restAfter', '1'], ['--beamOver', '1'], ['--accents', seq(g.length)]] });
+            count[g.length]++;
+          }
+        }
+        if (count[2] + count[3] + count[4]) said.push('part ' + p + ': ' + count[2] + ' pairs · ' + count[3] + ' triples · ' + count[4] + ' fours');
+      }
+      console.log('  --groups ' + G0 + '-' + G1 + ': ' + (said.join(' | ') || 'no runs under ' + PAIR + ' s'));
+    }
+  }
   // THE DAY-35 CLUSTER-WRITING DEFAULTS (global, db2 onward — the composer, on
   // db2: "when sixteenth notes are all beamed together like this, go ahead and
   // use full double beams... get rid of the beamlets", and "I'd rather have

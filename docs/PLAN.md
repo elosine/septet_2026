@@ -1660,8 +1660,9 @@ player would touch parts, solo, crop and print.
   4. **The cross-staff group** (= 2g.1) — `BUILT 2026-09-14 (RUNNING_LOG §521): the cluster laid out whole in the treble system, one beam above it,
      every stem up, rests and accents beam-side; tried on 581.21 (pair) and 623.55 (four); test_cross_staff 38, red on the old engine; his eye owed` — a group of up to four across both
      staves: one beam above the treble, the bass notes' stems up to it; a group on one staff as normal — the stem rules read from #2 and the tuba first.
-  5. **The piano's run from 581 s cut into groups; the fours at the end** (= 2g.2 · 2g.4) — `todo · sitting D · Opus` — his eye on the crowding.
-  6. **`--pairs` for the six other parts** (= 2g.5) — `todo · sitting D · Opus` — 46 pairs · the two triples as groups of three (D51: Vc 488.51 · Va 622.01).
+  5. **The piano's run from 581 s cut into groups; the fours at the end** (= 2g.2 · 2g.4) — `BUILT 2026-09-14 (RUNNING_LOG §522): --groups 444-624.1 —
+     39 pairs · a triple at 606.27 · 22 fours from 607.02 (cut from the end, landing on the 620.32 four); 41 groups cross the staves; 55 crowding flags in the run; his eye owed` — his eye on the crowding.
+  6. **`--pairs` for the six other parts** (= 2g.5) — `BUILT 2026-09-14 (§522), by the same --groups rule: 46 pairs + D51's two triples; no group dynamics (step 7's); his eye owed` — 46 pairs · the two triples as groups of three (D51: Vc 488.51 · Va 622.01).
   7. **The page rule for section 3's dynamics** (CN-83) — `todo · sitting E · Opus` — one mark per part where its band changes, on that part's first
      note in the band; nothing else. **Decided (D52, 2026-09-14):** section 3 only — section 1 keeps its mark on every strike (§401d); two rules by texture.
      **First, found at step 3 (§520):** `dynamicBands` has no mp or ff — section 3 draws 37 → ppp · 55 → p · 72 → p · 90 → mf · 109 → f · 127 → fff today;

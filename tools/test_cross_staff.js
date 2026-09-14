@@ -22,11 +22,14 @@ const TRE = sys('2:0'), BAS = sys('2:1');
 const clusterOf = new Map();
 for (const ov of ir.overlays) if (ov.kind === 'engraving' && ov.value && ov.value.device && ov.value.device.clusterId) clusterOf.set(ov.target.event, ov.value.device.clusterId);
 const members = cl => [...clusterOf].filter(([, c]) => c === cl).map(([ev]) => ir.events.find(e => e.id === ev)).sort((a, b) => a.onset - b.onset);
+// the group whose first member is the piano's note at t (ids renumber with every build; the times do not)
+const partOfEv = new Map(); for (const c of ir.chunks) for (const id of c.events || []) partOfEv.set(id, c.part);
+const clusterAt = t => { const e = ir.events.find(x => partOfEv.get(x.id) === 2 && Math.abs(x.onset - t) < 0.002); return e ? clusterOf.get(e.id) : null; };
 const C2C = 4 + C.engraving.layout.grandStaff.interStaffGapSs;
 
 const CROSS = [
-  { cl: 'cl-3', what: 'the pair at 581.21 (E6 → C♯3)', n: 2, rests: 2 },
-  { cl: 'cl-4', what: 'the four at 623.55 (G2 · G♯5 · B1 · A♯5)', n: 4, rests: 0 },
+  { cl: clusterAt(581.207), what: 'the pair at 581.21 (E6 → C♯3)', n: 2, rests: 2 },
+  { cl: clusterAt(623.547), what: 'the four at 623.55 (G2 · G♯5 · B1 · A♯5)', n: 4, rests: 0 },
 ];
 for (const X of CROSS) {
   const ms = members(X.cl), ids = new Set(ms.map(e => e.id));
@@ -58,12 +61,34 @@ for (const X of CROSS) {
 }
 // one staff = as normal: the bass four at 620.3 stays in the bass system, stems down
 {
-  const ms = members('cl-2'), ids = new Set(ms.map(e => e.id));
+  const ms = members(clusterAt(620.316)), ids = new Set(ms.map(e => e.id));
   const stems = BAS.items.filter(it => it.k === 'stem' && ids.has(it.ev));
   ok(stems.length === 4 && stems.every(s => s.attach === 'down'), 'the bass four at 620.3: four stems down in the bass system, as before');
   ok(!TRE.items.some(it => ids.has(it.ev)), 'the bass four at 620.3: nothing in the treble system');
 }
-ok(!model.warnings.some(w => /beam group .*cl-[34]/.test(w)), 'no beam-group warnings for the two groups');
+ok(!model.warnings.some(w => /beam group /.test(w)), 'no beam-group warnings anywhere');
+
+// ---- [2i.5–2i.6] --groups 444-624.1: the rule as built (RUNNING_LOG §522) ----
+{
+  const S3 = [...new Set(clusterOf.values())].map(cl => members(cl)).filter(ms => ms[0].onset >= 444);
+  const byPart = p => S3.filter(ms => partOfEv.get(ms[0].id) === p);
+  const sizes = p => byPart(p).map(ms => ms.length);
+  const want = { 0: [4, 0, 0], 1: [7, 0, 0], 3: [10, 0, 0], 4: [10, 0, 0], 5: [8, 1, 0], 6: [7, 1, 0], 2: [39, 1, 22] };
+  for (const p of Object.keys(want).map(Number)) {
+    const s = sizes(p), got = [2, 3, 4].map(n => s.filter(x => x === n).length);
+    ok(got.join() === want[p].join(), 'part ' + p + ': pairs · triples · fours = ' + want[p].join(' · ') + ' (got ' + got.join(' · ') + ')');
+  }
+  const pno = byPart(2).sort((a, b) => a[0].onset - b[0].onset);
+  ok(pno.map(ms => ms.length).join('') === '2'.repeat(39) + '3' + '4'.repeat(22), 'the piano run: pairs from 581.21, the triple, then fours to the end');
+  ok(pno.flat().length === 169 && Math.abs(pno[0][0].onset - 581.207) < 0.002 && Math.abs(pno[pno.length - 1][3].onset - 624) < 0.002, 'the piano run: all 169 notes, 581.21 → 624.00');
+  ok(pno.filter(ms => ms.length === 4).every(ms => ms.slice(1).every((e, i) => e.onset - ms[i].onset < 0.25)), 'every four: every gap under 0.25 s');
+  const triples = S3.filter(ms => ms.length === 3 && partOfEv.get(ms[0].id) !== 2).map(ms => partOfEv.get(ms[0].id) + '@' + ms[0].onset.toFixed(2)).sort();
+  ok(triples.join() === '5@622.01,6@488.51', 'D51\'s two triples: Va 622.01 · Vc 488.51 (got ' + triples.join(' ') + ')');
+  ok(S3.every(ms => ms.slice(1).every((e, i) => e.onset - ms[i].onset < 0.4)), 'every group: every gap under 0.4 s');
+  const dyn = new Set([...ir.overlays].filter(ov => ov.kind === 'engraving' && ov.value.device && ov.value.device.clusterId && ov.value.device.dynMark).map(ov => ov.target.event));
+  ok(S3.every(ms => ms.every(e => !dyn.has(e.id))), 'no dynamic written on a section-3 group (the page rule\'s, D52 · 2i.7)');
+  ok(S3.every(ms => { const acc = ms.map(e => ir.overlays.find(ov => ov.kind === 'engraving' && ov.target.event === e.id).value.device.nhArtic); return acc.every(a => a === 'accent'); }), 'every head in a group keeps its accent');
+}
 
 console.log((fail ? 'FAIL' : 'PASS') + ' — test_cross_staff: ' + pass + ' pass, ' + fail + ' fail');
 process.exit(fail ? 1 : 0);
