@@ -22,7 +22,7 @@
   "date": "2026-09-14",
   "tool": "tools/notate_section.js (profile trance) --bricks --trills --trillRate 100",
   "notes": "Derived extraction (B1). Segmentation: DB-6 greedy IOI runs, TOL 0.015 s. Regenerable; authored content belongs in overlays only. TRILLS (PLAN 2f.3): 69 trill zone(s) as env trill; 11 eaten note(s) (mutedBy) not extracted; 0 trill(s) read a flat level. BRICKS MODE: all chunks forced unresolved (working file).",
-  "build": "node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --trillRate 100 --id piece-septet --beamsThrough --rests16 --cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1 --cluster 620.31-620.84@2 --dyn 1 --accents 1,2,3,4 --morph grp-morph-01 --morph grp-morph-03 --pairBeam wc-1769,wc-1770 --pairBeam wc-1774,wc-1775 --pairBeam wc-1785,wc-1786 --ensembleDyn 205-428@2"
+  "build": "node tools/notate_section.js --score piece-septet --profile trance --bricks --trills --trillRate 100 --beamsThrough --rests16 --cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1 --cluster 620.31-620.84@2 --dyn 1 --accents 1,2,3,4 --morph grp-morph-01 --morph grp-morph-03 --pairBeam wc-1769,wc-1770 --pairBeam wc-1774,wc-1775 --pairBeam wc-1785,wc-1786 --ensembleDyn 205-428@2 --id piece-septet --all"
  },
  "events": [
   {
@@ -66013,7 +66013,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2053",
@@ -66035,7 +66035,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2054",
@@ -66057,7 +66057,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2055",
@@ -66079,7 +66079,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2056",
@@ -66101,7 +66101,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2057",
@@ -66123,7 +66123,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2058",
@@ -66145,7 +66145,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2059",
@@ -66167,7 +66167,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2410",
@@ -66176,20 +66176,20 @@
     "objectId": "wc-2410"
    },
    "onset": 453.4,
-   "duration": 0.44,
+   "duration": 0.38,
    "pitch": {
-    "midi": 72,
+    "midi": 60,
     "spelled": {
      "step": "C",
      "alter": 0,
-     "octave": 5
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2060",
@@ -66211,7 +66211,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2061",
@@ -66233,7 +66233,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2411",
@@ -66255,7 +66255,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2062",
@@ -66277,7 +66277,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2412",
@@ -66299,7 +66299,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2063",
@@ -66321,7 +66321,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2413",
@@ -66343,7 +66343,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2064",
@@ -66365,7 +66365,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2414",
@@ -66387,7 +66387,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2415",
@@ -66396,20 +66396,20 @@
     "objectId": "wc-2415"
    },
    "onset": 459.06,
-   "duration": 0.38,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 75,
+    "midi": 51,
     "spelled": {
      "step": "D",
      "alter": 1,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2065",
@@ -66431,7 +66431,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2416",
@@ -66440,20 +66440,20 @@
     "objectId": "wc-2416"
    },
    "onset": 460.094,
-   "duration": 0.43,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 79,
+    "midi": 55,
     "spelled": {
      "step": "G",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2066",
@@ -66475,7 +66475,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2417",
@@ -66497,7 +66497,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2067",
@@ -66519,7 +66519,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2481",
@@ -66541,7 +66541,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2418",
@@ -66563,7 +66563,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2068",
@@ -66585,7 +66585,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2419",
@@ -66607,7 +66607,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2482",
@@ -66629,7 +66629,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2069",
@@ -66651,7 +66651,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2420",
@@ -66673,7 +66673,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2483",
@@ -66695,7 +66695,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2070",
@@ -66717,7 +66717,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2421",
@@ -66739,7 +66739,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2484",
@@ -66761,7 +66761,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2071",
@@ -66783,7 +66783,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2422",
@@ -66805,7 +66805,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2485",
@@ -66827,7 +66827,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2423",
@@ -66849,7 +66849,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2072",
@@ -66871,7 +66871,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2424",
@@ -66880,20 +66880,20 @@
     "objectId": "wc-2424"
    },
    "onset": 467.356,
-   "duration": 0.44,
+   "duration": 0.38,
    "pitch": {
-    "midi": 72,
+    "midi": 60,
     "spelled": {
      "step": "C",
      "alter": 0,
-     "octave": 5
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2486",
@@ -66915,7 +66915,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2073",
@@ -66937,7 +66937,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2425",
@@ -66959,7 +66959,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2487",
@@ -66981,7 +66981,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2074",
@@ -67003,7 +67003,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2426",
@@ -67025,7 +67025,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2488",
@@ -67047,7 +67047,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2427",
@@ -67056,20 +67056,20 @@
     "objectId": "wc-2427"
    },
    "onset": 469.665,
-   "duration": 0.42,
+   "duration": 0.0999999999999659,
    "pitch": {
-    "midi": 83,
+    "midi": 59,
     "spelled": {
      "step": "B",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2075",
@@ -67091,7 +67091,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2428",
@@ -67113,7 +67113,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2489",
@@ -67135,7 +67135,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2076",
@@ -67157,7 +67157,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2429",
@@ -67166,20 +67166,20 @@
     "objectId": "wc-2429"
    },
    "onset": 471.094,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 78,
+    "midi": 54,
     "spelled": {
      "step": "F",
      "alter": 1,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2490",
@@ -67201,7 +67201,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2430",
@@ -67223,7 +67223,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2077",
@@ -67245,7 +67245,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2491",
@@ -67267,7 +67267,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2431",
@@ -67289,7 +67289,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2078",
@@ -67311,7 +67311,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2432",
@@ -67333,7 +67333,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2492",
@@ -67355,7 +67355,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2433",
@@ -67377,7 +67377,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2493",
@@ -67399,7 +67399,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 37
   },
   {
    "id": "ev-wc-2079",
@@ -67421,7 +67421,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2434",
@@ -67443,7 +67443,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2494",
@@ -67465,7 +67465,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2435",
@@ -67474,20 +67474,20 @@
     "objectId": "wc-2435"
    },
    "onset": 474.906,
-   "duration": 0.38,
+   "duration": 0.0999999999999659,
    "pitch": {
-    "midi": 75,
+    "midi": 51,
     "spelled": {
      "step": "D",
      "alter": 1,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2080",
@@ -67509,7 +67509,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2436",
@@ -67531,7 +67531,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2495",
@@ -67553,7 +67553,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2437",
@@ -67575,7 +67575,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2081",
@@ -67597,7 +67597,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2496",
@@ -67619,7 +67619,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2438",
@@ -67641,7 +67641,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2497",
@@ -67663,7 +67663,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2439",
@@ -67672,20 +67672,20 @@
     "objectId": "wc-2439"
    },
    "onset": 477.096,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 78,
+    "midi": 54,
     "spelled": {
      "step": "F",
      "alter": 1,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2082",
@@ -67707,7 +67707,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2440",
@@ -67716,20 +67716,20 @@
     "objectId": "wc-2440"
    },
    "onset": 477.605,
-   "duration": 0.38,
+   "duration": 0.0999999999999659,
    "pitch": {
-    "midi": 75,
+    "midi": 51,
     "spelled": {
      "step": "D",
      "alter": 1,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2498",
@@ -67751,7 +67751,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2441",
@@ -67773,7 +67773,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2083",
@@ -67795,7 +67795,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2499",
@@ -67817,7 +67817,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2442",
@@ -67839,7 +67839,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2500",
@@ -67861,7 +67861,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2443",
@@ -67883,7 +67883,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2084",
@@ -67905,7 +67905,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2444",
@@ -67927,7 +67927,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2501",
@@ -67949,7 +67949,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2445",
@@ -67958,20 +67958,20 @@
     "objectId": "wc-2445"
    },
    "onset": 479.931,
-   "duration": 0.43,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 79,
+    "midi": 55,
     "spelled": {
      "step": "G",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2085",
@@ -67993,7 +67993,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2502",
@@ -68015,7 +68015,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2446",
@@ -68024,20 +68024,20 @@
     "objectId": "wc-2446"
    },
    "onset": 480.357,
-   "duration": 0.44,
+   "duration": 0.0999999999999659,
    "pitch": {
-    "midi": 68,
+    "midi": 56,
     "spelled": {
      "step": "G",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2447",
@@ -68059,7 +68059,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2503",
@@ -68081,7 +68081,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2086",
@@ -68103,7 +68103,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2448",
@@ -68125,7 +68125,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2504",
@@ -68147,7 +68147,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2449",
@@ -68169,7 +68169,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2450",
@@ -68178,20 +68178,20 @@
     "objectId": "wc-2450"
    },
    "onset": 481.938,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 70,
+    "midi": 58,
     "spelled": {
      "step": "A",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2505",
@@ -68213,7 +68213,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2087",
@@ -68235,7 +68235,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2451",
@@ -68257,7 +68257,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2506",
@@ -68279,7 +68279,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2452",
@@ -68301,7 +68301,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2453",
@@ -68310,20 +68310,20 @@
     "objectId": "wc-2453"
    },
    "onset": 483.006,
-   "duration": 0.43,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 79,
+    "midi": 55,
     "spelled": {
      "step": "G",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2507",
@@ -68345,7 +68345,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2088",
@@ -68367,7 +68367,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2454",
@@ -68389,7 +68389,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2508",
@@ -68411,7 +68411,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2455",
@@ -68420,20 +68420,20 @@
     "objectId": "wc-2455"
    },
    "onset": 483.668,
-   "duration": 0.49,
+   "duration": 0.0999999999999659,
    "pitch": {
-    "midi": 71,
+    "midi": 59,
     "spelled": {
      "step": "B",
      "alter": 0,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2456",
@@ -68455,7 +68455,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2509",
@@ -68477,7 +68477,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2089",
@@ -68499,7 +68499,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2457",
@@ -68521,7 +68521,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2510",
@@ -68543,7 +68543,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2458",
@@ -68565,7 +68565,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2459",
@@ -68574,20 +68574,20 @@
     "objectId": "wc-2459"
    },
    "onset": 484.879,
-   "duration": 0.38,
+   "duration": 0.0999999999999659,
    "pitch": {
-    "midi": 64,
+    "midi": 52,
     "spelled": {
      "step": "E",
      "alter": 0,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2511",
@@ -68609,7 +68609,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2090",
@@ -68631,7 +68631,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2460",
@@ -68653,7 +68653,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2512",
@@ -68675,7 +68675,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2461",
@@ -68697,7 +68697,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2462",
@@ -68719,7 +68719,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2513",
@@ -68741,7 +68741,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2463",
@@ -68763,7 +68763,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2091",
@@ -68785,7 +68785,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2464",
@@ -68807,7 +68807,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2514",
@@ -68829,7 +68829,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2465",
@@ -68851,7 +68851,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2515",
@@ -68873,7 +68873,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2466",
@@ -68895,7 +68895,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2467",
@@ -68917,7 +68917,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2092",
@@ -68939,7 +68939,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2516",
@@ -68961,7 +68961,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2468",
@@ -68983,7 +68983,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2469",
@@ -68992,20 +68992,20 @@
     "objectId": "wc-2469"
    },
    "onset": 487.346,
-   "duration": 0.42,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 83,
+    "midi": 59,
     "spelled": {
      "step": "B",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2517",
@@ -69027,7 +69027,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2470",
@@ -69049,7 +69049,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2471",
@@ -69071,7 +69071,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2518",
@@ -69093,7 +69093,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2093",
@@ -69115,7 +69115,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2472",
@@ -69124,20 +69124,20 @@
     "objectId": "wc-2472"
    },
    "onset": 487.955,
-   "duration": 0.38,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 66,
+    "midi": 54,
     "spelled": {
      "step": "F",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2473",
@@ -69159,7 +69159,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2519",
@@ -69181,7 +69181,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2474",
@@ -69203,7 +69203,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2475",
@@ -69225,7 +69225,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2520",
@@ -69247,7 +69247,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2476",
@@ -69269,7 +69269,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2094",
@@ -69291,7 +69291,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2521",
@@ -69313,7 +69313,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2477",
@@ -69335,7 +69335,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2478",
@@ -69357,7 +69357,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2522",
@@ -69379,7 +69379,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2479",
@@ -69401,7 +69401,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2523",
@@ -69423,7 +69423,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2095",
@@ -69445,7 +69445,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2524",
@@ -69467,7 +69467,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2525",
@@ -69489,7 +69489,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2526",
@@ -69511,7 +69511,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2527",
@@ -69533,7 +69533,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2096",
@@ -69555,7 +69555,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2528",
@@ -69577,7 +69577,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2529",
@@ -69599,7 +69599,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2530",
@@ -69621,7 +69621,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2097",
@@ -69643,7 +69643,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2531",
@@ -69665,7 +69665,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2532",
@@ -69687,7 +69687,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2533",
@@ -69709,7 +69709,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2534",
@@ -69731,7 +69731,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2098",
@@ -69753,7 +69753,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2535",
@@ -69775,7 +69775,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2536",
@@ -69797,7 +69797,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2537",
@@ -69819,7 +69819,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2538",
@@ -69841,7 +69841,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2539",
@@ -69863,7 +69863,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2099",
@@ -69885,7 +69885,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2540",
@@ -69907,7 +69907,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2541",
@@ -69929,7 +69929,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2542",
@@ -69951,7 +69951,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2543",
@@ -69973,7 +69973,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2544",
@@ -69995,7 +69995,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2545",
@@ -70017,7 +70017,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2100",
@@ -70039,7 +70039,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2546",
@@ -70061,7 +70061,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2101",
@@ -70083,7 +70083,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2102",
@@ -70105,7 +70105,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2103",
@@ -70127,7 +70127,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2104",
@@ -70149,7 +70149,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2105",
@@ -70171,7 +70171,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2548",
@@ -70193,7 +70193,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2106",
@@ -70215,7 +70215,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2549",
@@ -70237,7 +70237,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2107",
@@ -70259,7 +70259,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2550",
@@ -70268,20 +70268,20 @@
     "objectId": "wc-2550"
    },
    "onset": 501.066,
-   "duration": 0.4,
+   "duration": 0.39,
    "pitch": {
-    "midi": 74,
+    "midi": 62,
     "spelled": {
      "step": "D",
      "alter": 0,
-     "octave": 5
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2108",
@@ -70303,7 +70303,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2551",
@@ -70325,7 +70325,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2109",
@@ -70347,7 +70347,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2552",
@@ -70369,7 +70369,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2597",
@@ -70391,7 +70391,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2110",
@@ -70413,7 +70413,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2553",
@@ -70435,7 +70435,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2598",
@@ -70457,7 +70457,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 55
   },
   {
    "id": "ev-wc-2111",
@@ -70479,7 +70479,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2554",
@@ -70501,7 +70501,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2599",
@@ -70523,7 +70523,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2555",
@@ -70545,7 +70545,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2112",
@@ -70567,7 +70567,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2600",
@@ -70589,7 +70589,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2556",
@@ -70598,20 +70598,20 @@
     "objectId": "wc-2556"
    },
    "onset": 505.497,
-   "duration": 0.38,
+   "duration": 0.0999999999999659,
    "pitch": {
-    "midi": 66,
+    "midi": 54,
     "spelled": {
      "step": "F",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2113",
@@ -70633,7 +70633,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2601",
@@ -70655,7 +70655,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2557",
@@ -70664,20 +70664,20 @@
     "objectId": "wc-2557"
    },
    "onset": 506.177,
-   "duration": 0.38,
+   "duration": 0.0999999999999659,
    "pitch": {
-    "midi": 80,
+    "midi": 56,
     "spelled": {
      "step": "G",
      "alter": 1,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2114",
@@ -70699,7 +70699,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2602",
@@ -70721,7 +70721,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2558",
@@ -70743,7 +70743,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2603",
@@ -70765,7 +70765,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2115",
@@ -70787,7 +70787,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2559",
@@ -70809,7 +70809,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2604",
@@ -70831,7 +70831,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2560",
@@ -70853,7 +70853,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2116",
@@ -70875,7 +70875,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2605",
@@ -70897,7 +70897,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2561",
@@ -70919,7 +70919,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2117",
@@ -70941,7 +70941,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2606",
@@ -70963,7 +70963,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2562",
@@ -70985,7 +70985,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2607",
@@ -71007,7 +71007,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2118",
@@ -71029,7 +71029,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2563",
@@ -71038,20 +71038,20 @@
     "objectId": "wc-2563"
    },
    "onset": 509.938,
-   "duration": 0.38,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 64,
+    "midi": 52,
     "spelled": {
      "step": "E",
      "alter": 0,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2608",
@@ -71073,7 +71073,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2564",
@@ -71095,7 +71095,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2119",
@@ -71117,7 +71117,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2565",
@@ -71139,7 +71139,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2609",
@@ -71161,7 +71161,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2120",
@@ -71183,7 +71183,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2566",
@@ -71192,20 +71192,20 @@
     "objectId": "wc-2566"
    },
    "onset": 511.629,
-   "duration": 0.45,
+   "duration": 0.0999999999999659,
    "pitch": {
-    "midi": 77,
+    "midi": 53,
     "spelled": {
      "step": "F",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2610",
@@ -71227,7 +71227,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2567",
@@ -71249,7 +71249,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2611",
@@ -71271,7 +71271,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2121",
@@ -71293,7 +71293,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2568",
@@ -71315,7 +71315,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2612",
@@ -71337,7 +71337,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2122",
@@ -71359,7 +71359,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2569",
@@ -71368,20 +71368,20 @@
     "objectId": "wc-2569"
    },
    "onset": 513.205,
-   "duration": 0.45,
+   "duration": 0.09999999999990905,
    "pitch": {
-    "midi": 77,
+    "midi": 53,
     "spelled": {
      "step": "F",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2613",
@@ -71403,7 +71403,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2570",
@@ -71425,7 +71425,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2614",
@@ -71447,7 +71447,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2123",
@@ -71469,7 +71469,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2571",
@@ -71491,7 +71491,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2615",
@@ -71513,7 +71513,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2572",
@@ -71522,20 +71522,20 @@
     "objectId": "wc-2572"
    },
    "onset": 514.674,
-   "duration": 0.38,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 64,
+    "midi": 52,
     "spelled": {
      "step": "E",
      "alter": 0,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2124",
@@ -71557,7 +71557,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2616",
@@ -71579,7 +71579,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2573",
@@ -71601,7 +71601,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2617",
@@ -71623,7 +71623,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2125",
@@ -71645,7 +71645,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2574",
@@ -71667,7 +71667,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2618",
@@ -71689,7 +71689,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2575",
@@ -71711,7 +71711,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2126",
@@ -71733,7 +71733,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2619",
@@ -71755,7 +71755,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2576",
@@ -71777,7 +71777,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2620",
@@ -71799,7 +71799,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2577",
@@ -71808,20 +71808,20 @@
     "objectId": "wc-2577"
    },
    "onset": 516.904,
-   "duration": 0.46,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 81,
+    "midi": 57,
     "spelled": {
      "step": "A",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2127",
@@ -71843,7 +71843,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2621",
@@ -71865,7 +71865,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2578",
@@ -71887,7 +71887,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2622",
@@ -71909,7 +71909,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2579",
@@ -71931,7 +71931,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2128",
@@ -71953,7 +71953,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2580",
@@ -71975,7 +71975,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2623",
@@ -71997,7 +71997,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2581",
@@ -72006,20 +72006,20 @@
     "objectId": "wc-2581"
    },
    "onset": 518.51,
-   "duration": 0.44,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 68,
+    "midi": 56,
     "spelled": {
      "step": "G",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2624",
@@ -72041,7 +72041,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2129",
@@ -72063,7 +72063,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2582",
@@ -72085,7 +72085,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2625",
@@ -72107,7 +72107,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2583",
@@ -72129,7 +72129,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2626",
@@ -72151,7 +72151,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2130",
@@ -72173,7 +72173,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2584",
@@ -72195,7 +72195,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2627",
@@ -72217,7 +72217,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2585",
@@ -72239,7 +72239,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2628",
@@ -72261,7 +72261,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2131",
@@ -72283,7 +72283,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2586",
@@ -72305,7 +72305,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2629",
@@ -72327,7 +72327,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2587",
@@ -72349,7 +72349,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2630",
@@ -72371,7 +72371,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2132",
@@ -72393,7 +72393,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2588",
@@ -72415,7 +72415,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2631",
@@ -72437,7 +72437,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2589",
@@ -72446,20 +72446,20 @@
     "objectId": "wc-2589"
    },
    "onset": 521.302,
-   "duration": 0.38,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 80,
+    "midi": 56,
     "spelled": {
      "step": "G",
      "alter": 1,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2632",
@@ -72481,7 +72481,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2590",
@@ -72503,7 +72503,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2133",
@@ -72525,7 +72525,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2633",
@@ -72547,7 +72547,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2591",
@@ -72569,7 +72569,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2592",
@@ -72591,7 +72591,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2634",
@@ -72613,7 +72613,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2134",
@@ -72635,7 +72635,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2593",
@@ -72657,7 +72657,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2635",
@@ -72679,7 +72679,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2594",
@@ -72701,7 +72701,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2636",
@@ -72723,7 +72723,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2595",
@@ -72745,7 +72745,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2135",
@@ -72767,7 +72767,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2637",
@@ -72789,7 +72789,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2136",
@@ -72811,7 +72811,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2137",
@@ -72833,7 +72833,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2138",
@@ -72855,7 +72855,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2139",
@@ -72877,7 +72877,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2140",
@@ -72899,7 +72899,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2639",
@@ -73045,7 +73045,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2640",
@@ -73191,7 +73191,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2143",
@@ -73213,7 +73213,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2641",
@@ -73359,7 +73359,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2681",
@@ -73505,7 +73505,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2642",
@@ -73651,7 +73651,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2643",
@@ -73921,7 +73921,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2148",
@@ -73943,7 +73943,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2644",
@@ -74213,7 +74213,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2645",
@@ -74359,7 +74359,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 72
   },
   {
    "id": "ev-wc-2684",
@@ -74505,7 +74505,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2646",
@@ -74651,7 +74651,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2685",
@@ -74921,7 +74921,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2686",
@@ -75067,7 +75067,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2648",
@@ -75213,7 +75213,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2687",
@@ -75483,7 +75483,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2157",
@@ -75505,7 +75505,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2688",
@@ -75775,7 +75775,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2689",
@@ -76045,7 +76045,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2160",
@@ -76067,7 +76067,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2652",
@@ -76337,7 +76337,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2653",
@@ -76607,7 +76607,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2654",
@@ -76753,7 +76753,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2692",
@@ -76899,7 +76899,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2655",
@@ -77169,7 +77169,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2656",
@@ -77315,7 +77315,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2694",
@@ -77585,7 +77585,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2695",
@@ -77731,7 +77731,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2658",
@@ -78001,7 +78001,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2659",
@@ -78147,7 +78147,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2697",
@@ -78417,7 +78417,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2698",
@@ -78563,7 +78563,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2661",
@@ -78833,7 +78833,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2662",
@@ -78979,7 +78979,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2700",
@@ -79249,7 +79249,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2701",
@@ -79519,7 +79519,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2702",
@@ -79789,7 +79789,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2703",
@@ -80059,7 +80059,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2704",
@@ -80329,7 +80329,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2180",
@@ -80351,7 +80351,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2668",
@@ -80621,7 +80621,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2669",
@@ -80891,7 +80891,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2670",
@@ -81161,7 +81161,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2671",
@@ -81431,7 +81431,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2672",
@@ -81701,7 +81701,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2673",
@@ -81971,7 +81971,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2674",
@@ -82241,7 +82241,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2675",
@@ -82511,7 +82511,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2676",
@@ -82781,7 +82781,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2677",
@@ -83175,7 +83175,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2715",
@@ -83569,7 +83569,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2717",
@@ -83715,7 +83715,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2193",
@@ -83737,7 +83737,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2194",
@@ -83759,7 +83759,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2195",
@@ -83781,7 +83781,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2196",
@@ -83803,7 +83803,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2719",
@@ -83812,20 +83812,20 @@
     "objectId": "wc-2719"
    },
    "onset": 561.12,
-   "duration": 0.46,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 81,
+    "midi": 57,
     "spelled": {
      "step": "A",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2902",
@@ -83847,7 +83847,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2197",
@@ -83869,7 +83869,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2720",
@@ -83891,7 +83891,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2903",
@@ -83913,7 +83913,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2198",
@@ -83935,7 +83935,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2721",
@@ -83957,7 +83957,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2904",
@@ -83979,7 +83979,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2199",
@@ -84001,7 +84001,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2722",
@@ -84023,7 +84023,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2200",
@@ -84045,7 +84045,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2905",
@@ -84067,7 +84067,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2723",
@@ -84089,7 +84089,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2201",
@@ -84111,7 +84111,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 90
   },
   {
    "id": "ev-wc-2906",
@@ -84133,7 +84133,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2724",
@@ -84142,20 +84142,20 @@
     "objectId": "wc-2724"
    },
    "onset": 564.171,
-   "duration": 0.46,
+   "duration": 0.09999999999990905,
    "pitch": {
-    "midi": 65,
+    "midi": 53,
     "spelled": {
      "step": "F",
      "alter": 0,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2202",
@@ -84177,7 +84177,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2203",
@@ -84199,7 +84199,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2907",
@@ -84221,7 +84221,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2725",
@@ -84243,7 +84243,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2204",
@@ -84265,7 +84265,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2726",
@@ -84274,20 +84274,20 @@
     "objectId": "wc-2726"
    },
    "onset": 565.361,
-   "duration": 0.38,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 64,
+    "midi": 52,
     "spelled": {
      "step": "E",
      "alter": 0,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2908",
@@ -84309,7 +84309,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2205",
@@ -84331,7 +84331,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2727",
@@ -84353,7 +84353,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2206",
@@ -84375,7 +84375,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2909",
@@ -84397,7 +84397,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2728",
@@ -84419,7 +84419,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2207",
@@ -84441,7 +84441,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2910",
@@ -84463,7 +84463,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2729",
@@ -84472,20 +84472,20 @@
     "objectId": "wc-2729"
    },
    "onset": 567.114,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 70,
+    "midi": 58,
     "spelled": {
      "step": "A",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2208",
@@ -84507,7 +84507,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2911",
@@ -84529,7 +84529,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2209",
@@ -84551,7 +84551,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2730",
@@ -84573,7 +84573,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2210",
@@ -84595,7 +84595,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2912",
@@ -84617,7 +84617,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2731",
@@ -84639,7 +84639,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2211",
@@ -84661,7 +84661,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2732",
@@ -84670,20 +84670,20 @@
     "objectId": "wc-2732"
    },
    "onset": 568.829,
-   "duration": 0.4,
+   "duration": 0.39,
    "pitch": {
-    "midi": 74,
+    "midi": 62,
     "spelled": {
      "step": "D",
      "alter": 0,
-     "octave": 5
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2913",
@@ -84705,7 +84705,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2212",
@@ -84727,7 +84727,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2733",
@@ -84749,7 +84749,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2213",
@@ -84771,7 +84771,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2914",
@@ -84793,7 +84793,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2734",
@@ -84815,7 +84815,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2214",
@@ -84837,7 +84837,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2915",
@@ -84859,7 +84859,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2215",
@@ -84881,7 +84881,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2735",
@@ -84903,7 +84903,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2916",
@@ -84925,7 +84925,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2216",
@@ -84947,7 +84947,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2736",
@@ -84969,7 +84969,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2217",
@@ -84991,7 +84991,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2917",
@@ -85013,7 +85013,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2737",
@@ -85022,20 +85022,20 @@
     "objectId": "wc-2737"
    },
    "onset": 571.607,
-   "duration": 0.46,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 81,
+    "midi": 57,
     "spelled": {
      "step": "A",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2218",
@@ -85057,7 +85057,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2738",
@@ -85079,7 +85079,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2918",
@@ -85101,7 +85101,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2219",
@@ -85123,7 +85123,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2739",
@@ -85145,7 +85145,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2220",
@@ -85167,7 +85167,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2919",
@@ -85189,7 +85189,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2221",
@@ -85211,7 +85211,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2740",
@@ -85220,20 +85220,20 @@
     "objectId": "wc-2740"
    },
    "onset": 573.227,
-   "duration": 0.4,
+   "duration": 0.45,
    "pitch": {
-    "midi": 73,
+    "midi": 61,
     "spelled": {
      "step": "C",
      "alter": 1,
-     "octave": 5
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2920",
@@ -85255,7 +85255,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2222",
@@ -85277,7 +85277,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2741",
@@ -85299,7 +85299,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2223",
@@ -85321,7 +85321,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2921",
@@ -85343,7 +85343,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2742",
@@ -85365,7 +85365,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2224",
@@ -85387,7 +85387,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2922",
@@ -85409,7 +85409,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2743",
@@ -85418,20 +85418,20 @@
     "objectId": "wc-2743"
    },
    "onset": 574.812,
-   "duration": 0.44,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 68,
+    "midi": 56,
     "spelled": {
      "step": "G",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2225",
@@ -85453,7 +85453,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2923",
@@ -85475,7 +85475,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2744",
@@ -85497,7 +85497,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2226",
@@ -85519,7 +85519,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2227",
@@ -85541,7 +85541,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2745",
@@ -85563,7 +85563,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2924",
@@ -85585,7 +85585,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2228",
@@ -85607,7 +85607,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2746",
@@ -85616,20 +85616,20 @@
     "objectId": "wc-2746"
    },
    "onset": 576.363,
-   "duration": 0.38,
+   "duration": 0.09999999999990905,
    "pitch": {
-    "midi": 64,
+    "midi": 52,
     "spelled": {
      "step": "E",
      "alter": 0,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2925",
@@ -85651,7 +85651,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2229",
@@ -85673,7 +85673,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2747",
@@ -85695,7 +85695,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2230",
@@ -85717,7 +85717,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2926",
@@ -85739,7 +85739,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2748",
@@ -85761,7 +85761,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2231",
@@ -85783,7 +85783,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2927",
@@ -85805,7 +85805,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2749",
@@ -85814,20 +85814,20 @@
     "objectId": "wc-2749"
    },
    "onset": 577.881,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 78,
+    "midi": 54,
     "spelled": {
      "step": "F",
      "alter": 1,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2232",
@@ -85849,7 +85849,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2928",
@@ -85871,7 +85871,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2233",
@@ -85893,7 +85893,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2750",
@@ -85915,7 +85915,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2234",
@@ -85937,7 +85937,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2929",
@@ -85959,7 +85959,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2751",
@@ -85981,7 +85981,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2235",
@@ -86003,7 +86003,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2752",
@@ -86025,7 +86025,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2930",
@@ -86047,7 +86047,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2236",
@@ -86069,7 +86069,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2753",
@@ -86091,7 +86091,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2931",
@@ -86113,7 +86113,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2237",
@@ -86135,7 +86135,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2754",
@@ -86144,20 +86144,20 @@
     "objectId": "wc-2754"
    },
    "onset": 580.34,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 70,
+    "midi": 58,
     "spelled": {
      "step": "A",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2238",
@@ -86179,7 +86179,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2932",
@@ -86201,7 +86201,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2239",
@@ -86223,7 +86223,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2755",
@@ -86245,7 +86245,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2933",
@@ -86267,7 +86267,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2240",
@@ -86289,7 +86289,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2756",
@@ -86311,7 +86311,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2241",
@@ -86333,7 +86333,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2934",
@@ -86355,7 +86355,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2757",
@@ -86377,7 +86377,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2242",
@@ -86399,7 +86399,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2935",
@@ -86421,7 +86421,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2758",
@@ -86430,20 +86430,20 @@
     "objectId": "wc-2758"
    },
    "onset": 582.244,
-   "duration": 0.38,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 64,
+    "midi": 52,
     "spelled": {
      "step": "E",
      "alter": 0,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2243",
@@ -86465,7 +86465,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2759",
@@ -86487,7 +86487,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2936",
@@ -86509,7 +86509,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2244",
@@ -86531,7 +86531,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2760",
@@ -86553,7 +86553,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2245",
@@ -86575,7 +86575,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2937",
@@ -86597,7 +86597,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2246",
@@ -86619,7 +86619,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2761",
@@ -86628,20 +86628,20 @@
     "objectId": "wc-2761"
    },
    "onset": 583.637,
-   "duration": 0.4,
+   "duration": 0.45,
    "pitch": {
-    "midi": 73,
+    "midi": 61,
     "spelled": {
      "step": "C",
      "alter": 1,
-     "octave": 5
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2938",
@@ -86663,7 +86663,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2247",
@@ -86685,7 +86685,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2762",
@@ -86707,7 +86707,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2248",
@@ -86729,7 +86729,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2939",
@@ -86751,7 +86751,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2763",
@@ -86773,7 +86773,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2249",
@@ -86795,7 +86795,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2940",
@@ -86817,7 +86817,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2764",
@@ -86839,7 +86839,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2250",
@@ -86861,7 +86861,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2941",
@@ -86883,7 +86883,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2765",
@@ -86892,20 +86892,20 @@
     "objectId": "wc-2765"
    },
    "onset": 585.447,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 78,
+    "midi": 54,
     "spelled": {
      "step": "F",
      "alter": 1,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2251",
@@ -86927,7 +86927,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2252",
@@ -86949,7 +86949,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2766",
@@ -86971,7 +86971,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2942",
@@ -86993,7 +86993,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2253",
@@ -87015,7 +87015,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2767",
@@ -87037,7 +87037,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2943",
@@ -87059,7 +87059,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2254",
@@ -87081,7 +87081,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2768",
@@ -87103,7 +87103,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2944",
@@ -87125,7 +87125,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2255",
@@ -87147,7 +87147,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2769",
@@ -87156,20 +87156,20 @@
     "objectId": "wc-2769"
    },
    "onset": 587.207,
-   "duration": 0.46,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 81,
+    "midi": 57,
     "spelled": {
      "step": "A",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2256",
@@ -87191,7 +87191,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2945",
@@ -87213,7 +87213,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2770",
@@ -87235,7 +87235,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2257",
@@ -87257,7 +87257,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2946",
@@ -87279,7 +87279,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2258",
@@ -87301,7 +87301,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2771",
@@ -87310,20 +87310,20 @@
     "objectId": "wc-2771"
    },
    "onset": 588.068,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 70,
+    "midi": 58,
     "spelled": {
      "step": "A",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2259",
@@ -87345,7 +87345,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2947",
@@ -87367,7 +87367,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2772",
@@ -87389,7 +87389,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2260",
@@ -87411,7 +87411,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2948",
@@ -87433,7 +87433,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2773",
@@ -87442,20 +87442,20 @@
     "objectId": "wc-2773"
    },
    "onset": 588.916,
-   "duration": 0.46,
+   "duration": 0.09999999999990905,
    "pitch": {
-    "midi": 81,
+    "midi": 57,
     "spelled": {
      "step": "A",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2261",
@@ -87477,7 +87477,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2774",
@@ -87499,7 +87499,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2949",
@@ -87521,7 +87521,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2262",
@@ -87543,7 +87543,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2775",
@@ -87565,7 +87565,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2263",
@@ -87587,7 +87587,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2950",
@@ -87609,7 +87609,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2776",
@@ -87620,18 +87620,18 @@
    "onset": 590.167,
    "duration": 0.38,
    "pitch": {
-    "midi": 84,
+    "midi": 60,
     "spelled": {
      "step": "C",
      "alter": 0,
-     "octave": 6
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2264",
@@ -87653,7 +87653,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2951",
@@ -87675,7 +87675,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2265",
@@ -87697,7 +87697,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2777",
@@ -87719,7 +87719,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2952",
@@ -87741,7 +87741,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2266",
@@ -87763,7 +87763,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2778",
@@ -87785,7 +87785,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2267",
@@ -87807,7 +87807,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2953",
@@ -87829,7 +87829,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2779",
@@ -87838,20 +87838,20 @@
     "objectId": "wc-2779"
    },
    "onset": 591.39,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 70,
+    "midi": 58,
     "spelled": {
      "step": "A",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2268",
@@ -87873,7 +87873,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2954",
@@ -87895,7 +87895,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2780",
@@ -87917,7 +87917,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2269",
@@ -87939,7 +87939,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2955",
@@ -87961,7 +87961,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2781",
@@ -87983,7 +87983,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2270",
@@ -88005,7 +88005,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2271",
@@ -88027,7 +88027,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2782",
@@ -88049,7 +88049,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2956",
@@ -88071,7 +88071,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2272",
@@ -88093,7 +88093,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2783",
@@ -88102,20 +88102,20 @@
     "objectId": "wc-2783"
    },
    "onset": 592.981,
-   "duration": 0.46,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 81,
+    "midi": 57,
     "spelled": {
      "step": "A",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2957",
@@ -88137,7 +88137,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2273",
@@ -88159,7 +88159,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2784",
@@ -88181,7 +88181,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2958",
@@ -88203,7 +88203,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2274",
@@ -88225,7 +88225,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2785",
@@ -88247,7 +88247,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2275",
@@ -88269,7 +88269,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2959",
@@ -88291,7 +88291,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 109
   },
   {
    "id": "ev-wc-2786",
@@ -88313,7 +88313,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2276",
@@ -88335,7 +88335,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2960",
@@ -88357,7 +88357,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2277",
@@ -88379,7 +88379,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2787",
@@ -88401,7 +88401,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2961",
@@ -88423,7 +88423,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2278",
@@ -88445,7 +88445,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2788",
@@ -88454,20 +88454,20 @@
     "objectId": "wc-2788"
    },
    "onset": 594.907,
-   "duration": 0.44,
+   "duration": 0.09999999999990905,
    "pitch": {
-    "midi": 68,
+    "midi": 56,
     "spelled": {
      "step": "G",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2279",
@@ -88489,7 +88489,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2962",
@@ -88511,7 +88511,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2789",
@@ -88533,7 +88533,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2280",
@@ -88555,7 +88555,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2790",
@@ -88577,7 +88577,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2963",
@@ -88599,7 +88599,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2281",
@@ -88621,7 +88621,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2791",
@@ -88632,18 +88632,18 @@
    "onset": 596.029,
    "duration": 0.38,
    "pitch": {
-    "midi": 84,
+    "midi": 60,
     "spelled": {
      "step": "C",
      "alter": 0,
-     "octave": 6
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2964",
@@ -88665,7 +88665,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2282",
@@ -88687,7 +88687,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2792",
@@ -88709,7 +88709,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2283",
@@ -88731,7 +88731,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2965",
@@ -88753,7 +88753,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2284",
@@ -88775,7 +88775,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2793",
@@ -88797,7 +88797,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2966",
@@ -88819,7 +88819,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2285",
@@ -88841,7 +88841,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2794",
@@ -88850,20 +88850,20 @@
     "objectId": "wc-2794"
    },
    "onset": 597.128,
-   "duration": 0.44,
+   "duration": 0.09999999999990905,
    "pitch": {
-    "midi": 68,
+    "midi": 56,
     "spelled": {
      "step": "G",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2967",
@@ -88885,7 +88885,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2286",
@@ -88907,7 +88907,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2795",
@@ -88929,7 +88929,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2287",
@@ -88951,7 +88951,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2968",
@@ -88973,7 +88973,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2796",
@@ -88995,7 +88995,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2288",
@@ -89017,7 +89017,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2969",
@@ -89039,7 +89039,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2797",
@@ -89061,7 +89061,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2289",
@@ -89083,7 +89083,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2970",
@@ -89105,7 +89105,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2798",
@@ -89114,20 +89114,20 @@
     "objectId": "wc-2798"
    },
    "onset": 598.556,
-   "duration": 0.44,
+   "duration": 0.09999999999990905,
    "pitch": {
-    "midi": 68,
+    "midi": 56,
     "spelled": {
      "step": "G",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2290",
@@ -89149,7 +89149,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2291",
@@ -89171,7 +89171,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2799",
@@ -89193,7 +89193,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2971",
@@ -89215,7 +89215,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2292",
@@ -89237,7 +89237,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2800",
@@ -89259,7 +89259,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2972",
@@ -89281,7 +89281,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2293",
@@ -89303,7 +89303,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2801",
@@ -89312,20 +89312,20 @@
     "objectId": "wc-2801"
    },
    "onset": 599.601,
-   "duration": 0.46,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 81,
+    "midi": 57,
     "spelled": {
      "step": "A",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2973",
@@ -89347,7 +89347,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2294",
@@ -89369,7 +89369,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2802",
@@ -89391,7 +89391,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2295",
@@ -89413,7 +89413,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2974",
@@ -89435,7 +89435,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2803",
@@ -89444,20 +89444,20 @@
     "objectId": "wc-2803"
    },
    "onset": 600.285,
-   "duration": 0.46,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 81,
+    "midi": 57,
     "spelled": {
      "step": "A",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2296",
@@ -89479,7 +89479,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2975",
@@ -89501,7 +89501,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2297",
@@ -89523,7 +89523,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2804",
@@ -89545,7 +89545,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2976",
@@ -89567,7 +89567,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2298",
@@ -89589,7 +89589,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2805",
@@ -89611,7 +89611,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2299",
@@ -89633,7 +89633,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2977",
@@ -89655,7 +89655,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2806",
@@ -89677,7 +89677,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2300",
@@ -89699,7 +89699,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2978",
@@ -89721,7 +89721,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2807",
@@ -89743,7 +89743,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2301",
@@ -89765,7 +89765,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2979",
@@ -89787,7 +89787,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2808",
@@ -89796,20 +89796,20 @@
     "objectId": "wc-2808"
    },
    "onset": 601.952,
-   "duration": 0.46,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 65,
+    "midi": 53,
     "spelled": {
      "step": "F",
      "alter": 0,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2302",
@@ -89831,7 +89831,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2809",
@@ -89853,7 +89853,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2980",
@@ -89875,7 +89875,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2303",
@@ -89897,7 +89897,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2304",
@@ -89919,7 +89919,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2810",
@@ -89928,20 +89928,20 @@
     "objectId": "wc-2810"
    },
    "onset": 602.603,
-   "duration": 0.38,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 64,
+    "midi": 52,
     "spelled": {
      "step": "E",
      "alter": 0,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2981",
@@ -89963,7 +89963,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2305",
@@ -89985,7 +89985,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2811",
@@ -90007,7 +90007,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2982",
@@ -90029,7 +90029,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2306",
@@ -90051,7 +90051,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2812",
@@ -90060,20 +90060,20 @@
     "objectId": "wc-2812"
    },
    "onset": 603.244,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 78,
+    "midi": 54,
     "spelled": {
      "step": "F",
      "alter": 1,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2983",
@@ -90095,7 +90095,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2307",
@@ -90117,7 +90117,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2813",
@@ -90139,7 +90139,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2308",
@@ -90161,7 +90161,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2984",
@@ -90183,7 +90183,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2814",
@@ -90205,7 +90205,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2309",
@@ -90227,7 +90227,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2985",
@@ -90249,7 +90249,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2815",
@@ -90271,7 +90271,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2310",
@@ -90293,7 +90293,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2986",
@@ -90315,7 +90315,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2311",
@@ -90337,7 +90337,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2816",
@@ -90359,7 +90359,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2312",
@@ -90381,7 +90381,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2987",
@@ -90403,7 +90403,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2817",
@@ -90425,7 +90425,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2313",
@@ -90447,7 +90447,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2988",
@@ -90469,7 +90469,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2818",
@@ -90491,7 +90491,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2314",
@@ -90513,7 +90513,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2989",
@@ -90535,7 +90535,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2819",
@@ -90544,20 +90544,20 @@
     "objectId": "wc-2819"
    },
    "onset": 605.417,
-   "duration": 0.46,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 81,
+    "midi": 57,
     "spelled": {
      "step": "A",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2315",
@@ -90579,7 +90579,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2990",
@@ -90601,7 +90601,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2820",
@@ -90623,7 +90623,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2316",
@@ -90645,7 +90645,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2317",
@@ -90667,7 +90667,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2821",
@@ -90689,7 +90689,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2991",
@@ -90711,7 +90711,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2318",
@@ -90733,7 +90733,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2822",
@@ -90742,20 +90742,20 @@
     "objectId": "wc-2822"
    },
    "onset": 606.315,
-   "duration": 0.44,
+   "duration": 0.09999999999990905,
    "pitch": {
-    "midi": 68,
+    "midi": 56,
     "spelled": {
      "step": "G",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2992",
@@ -90777,7 +90777,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2319",
@@ -90799,7 +90799,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2823",
@@ -90821,7 +90821,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2993",
@@ -90843,7 +90843,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2320",
@@ -90865,7 +90865,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2824",
@@ -90874,20 +90874,20 @@
     "objectId": "wc-2824"
    },
    "onset": 606.903,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 77,
+    "midi": 53,
     "spelled": {
      "step": "F",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2994",
@@ -90909,7 +90909,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2321",
@@ -90931,7 +90931,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2825",
@@ -90953,7 +90953,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2322",
@@ -90975,7 +90975,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2995",
@@ -90997,7 +90997,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2826",
@@ -91019,7 +91019,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2323",
@@ -91041,7 +91041,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2996",
@@ -91063,7 +91063,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2324",
@@ -91085,7 +91085,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2827",
@@ -91107,7 +91107,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2997",
@@ -91129,7 +91129,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2325",
@@ -91151,7 +91151,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2828",
@@ -91162,18 +91162,18 @@
    "onset": 608.054,
    "duration": 0.38,
    "pitch": {
-    "midi": 84,
+    "midi": 60,
     "spelled": {
      "step": "C",
      "alter": 0,
-     "octave": 6
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2998",
@@ -91195,7 +91195,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2326",
@@ -91217,7 +91217,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2829",
@@ -91239,7 +91239,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2327",
@@ -91261,7 +91261,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2999",
@@ -91283,7 +91283,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2830",
@@ -91294,18 +91294,18 @@
    "onset": 608.618,
    "duration": 0.38,
    "pitch": {
-    "midi": 84,
+    "midi": 60,
     "spelled": {
      "step": "C",
      "alter": 0,
-     "octave": 6
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2328",
@@ -91327,7 +91327,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3000",
@@ -91349,7 +91349,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2831",
@@ -91371,7 +91371,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2329",
@@ -91393,7 +91393,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3001",
@@ -91415,7 +91415,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2832",
@@ -91437,7 +91437,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2330",
@@ -91459,7 +91459,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3002",
@@ -91481,7 +91481,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2331",
@@ -91503,7 +91503,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2833",
@@ -91512,20 +91512,20 @@
     "objectId": "wc-2833"
    },
    "onset": 609.448,
-   "duration": 0.4,
+   "duration": 0.39,
    "pitch": {
-    "midi": 74,
+    "midi": 62,
     "spelled": {
      "step": "D",
      "alter": 0,
-     "octave": 5
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2332",
@@ -91547,7 +91547,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2834",
@@ -91569,7 +91569,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3003",
@@ -91591,7 +91591,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2333",
@@ -91613,7 +91613,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2835",
@@ -91635,7 +91635,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3004",
@@ -91657,7 +91657,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2334",
@@ -91679,7 +91679,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2836",
@@ -91688,20 +91688,20 @@
     "objectId": "wc-2836"
    },
    "onset": 610.26,
-   "duration": 0.46,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 81,
+    "midi": 57,
     "spelled": {
      "step": "A",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3005",
@@ -91723,7 +91723,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2335",
@@ -91745,7 +91745,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2837",
@@ -91767,7 +91767,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3006",
@@ -91789,7 +91789,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2336",
@@ -91811,7 +91811,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2838",
@@ -91833,7 +91833,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2337",
@@ -91855,7 +91855,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3007",
@@ -91877,7 +91877,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2338",
@@ -91899,7 +91899,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2839",
@@ -91921,7 +91921,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3008",
@@ -91943,7 +91943,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2339",
@@ -91965,7 +91965,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2840",
@@ -91987,7 +91987,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3009",
@@ -92009,7 +92009,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2340",
@@ -92031,7 +92031,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2841",
@@ -92040,20 +92040,20 @@
     "objectId": "wc-2841"
    },
    "onset": 611.575,
-   "duration": 0.4,
+   "duration": 0.45,
    "pitch": {
-    "midi": 73,
+    "midi": 61,
     "spelled": {
      "step": "C",
      "alter": 1,
-     "octave": 5
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3010",
@@ -92075,7 +92075,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2341",
@@ -92097,7 +92097,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2842",
@@ -92119,7 +92119,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2342",
@@ -92141,7 +92141,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3011",
@@ -92163,7 +92163,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2843",
@@ -92174,18 +92174,18 @@
    "onset": 612.088,
    "duration": 0.38,
    "pitch": {
-    "midi": 84,
+    "midi": 60,
     "spelled": {
      "step": "C",
      "alter": 0,
-     "octave": 6
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2343",
@@ -92207,7 +92207,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3012",
@@ -92229,7 +92229,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2844",
@@ -92251,7 +92251,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2344",
@@ -92273,7 +92273,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3013",
@@ -92295,7 +92295,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2845",
@@ -92317,7 +92317,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2345",
@@ -92339,7 +92339,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3014",
@@ -92361,7 +92361,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2346",
@@ -92383,7 +92383,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2846",
@@ -92405,7 +92405,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3015",
@@ -92427,7 +92427,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2347",
@@ -92449,7 +92449,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2847",
@@ -92471,7 +92471,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2348",
@@ -92493,7 +92493,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3016",
@@ -92515,7 +92515,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2848",
@@ -92526,18 +92526,18 @@
    "onset": 613.339,
    "duration": 0.38,
    "pitch": {
-    "midi": 84,
+    "midi": 60,
     "spelled": {
      "step": "C",
      "alter": 0,
-     "octave": 6
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2349",
@@ -92559,7 +92559,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3017",
@@ -92581,7 +92581,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2849",
@@ -92603,7 +92603,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2350",
@@ -92625,7 +92625,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3018",
@@ -92647,7 +92647,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2850",
@@ -92669,7 +92669,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2351",
@@ -92691,7 +92691,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3019",
@@ -92713,7 +92713,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2851",
@@ -92735,7 +92735,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2352",
@@ -92757,7 +92757,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3020",
@@ -92779,7 +92779,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2353",
@@ -92801,7 +92801,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2852",
@@ -92823,7 +92823,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2354",
@@ -92845,7 +92845,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3021",
@@ -92867,7 +92867,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2853",
@@ -92876,20 +92876,20 @@
     "objectId": "wc-2853"
    },
    "onset": 614.546,
-   "duration": 0.4,
+   "duration": 0.45,
    "pitch": {
-    "midi": 73,
+    "midi": 61,
     "spelled": {
      "step": "C",
      "alter": 1,
-     "octave": 5
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2355",
@@ -92911,7 +92911,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3022",
@@ -92933,7 +92933,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2854",
@@ -92955,7 +92955,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2356",
@@ -92977,7 +92977,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3023",
@@ -92999,7 +92999,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2855",
@@ -93021,7 +93021,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2357",
@@ -93043,7 +93043,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3024",
@@ -93065,7 +93065,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2856",
@@ -93087,7 +93087,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2358",
@@ -93109,7 +93109,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2857",
@@ -93118,20 +93118,20 @@
     "objectId": "wc-2857"
    },
    "onset": 615.481,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 70,
+    "midi": 58,
     "spelled": {
      "step": "A",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3025",
@@ -93153,7 +93153,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2359",
@@ -93175,7 +93175,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2360",
@@ -93197,7 +93197,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2858",
@@ -93219,7 +93219,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3026",
@@ -93241,7 +93241,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2361",
@@ -93263,7 +93263,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2859",
@@ -93285,7 +93285,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3027",
@@ -93307,7 +93307,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2362",
@@ -93329,7 +93329,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2860",
@@ -93338,20 +93338,20 @@
     "objectId": "wc-2860"
    },
    "onset": 616.164,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 70,
+    "midi": 58,
     "spelled": {
      "step": "A",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3028",
@@ -93373,7 +93373,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2363",
@@ -93395,7 +93395,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2861",
@@ -93417,7 +93417,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3029",
@@ -93439,7 +93439,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2364",
@@ -93461,7 +93461,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2862",
@@ -93483,7 +93483,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3030",
@@ -93505,7 +93505,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2365",
@@ -93527,7 +93527,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2863",
@@ -93549,7 +93549,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3031",
@@ -93571,7 +93571,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2366",
@@ -93593,7 +93593,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2864",
@@ -93615,7 +93615,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2367",
@@ -93637,7 +93637,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3032",
@@ -93659,7 +93659,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2368",
@@ -93681,7 +93681,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2865",
@@ -93703,7 +93703,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3033",
@@ -93725,7 +93725,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2369",
@@ -93747,7 +93747,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2866",
@@ -93758,18 +93758,18 @@
    "onset": 617.488,
    "duration": 0.38,
    "pitch": {
-    "midi": 84,
+    "midi": 60,
     "spelled": {
      "step": "C",
      "alter": 0,
-     "octave": 6
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3034",
@@ -93791,7 +93791,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2370",
@@ -93813,7 +93813,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2867",
@@ -93835,7 +93835,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3035",
@@ -93857,7 +93857,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2371",
@@ -93879,7 +93879,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2868",
@@ -93901,7 +93901,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3036",
@@ -93923,7 +93923,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2372",
@@ -93945,7 +93945,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2869",
@@ -93967,7 +93967,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3037",
@@ -93989,7 +93989,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2373",
@@ -94011,7 +94011,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2870",
@@ -94020,20 +94020,20 @@
     "objectId": "wc-2870"
    },
    "onset": 618.339,
-   "duration": 0.38,
+   "duration": 0.09999999999990905,
    "pitch": {
-    "midi": 64,
+    "midi": 52,
     "spelled": {
      "step": "E",
      "alter": 0,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2374",
@@ -94055,7 +94055,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3038",
@@ -94077,7 +94077,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2871",
@@ -94099,7 +94099,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2375",
@@ -94121,7 +94121,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3039",
@@ -94143,7 +94143,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2376",
@@ -94165,7 +94165,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2872",
@@ -94174,20 +94174,20 @@
     "objectId": "wc-2872"
    },
    "onset": 618.756,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 77,
+    "midi": 53,
     "spelled": {
      "step": "F",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3040",
@@ -94209,7 +94209,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2377",
@@ -94231,7 +94231,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2873",
@@ -94253,7 +94253,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3041",
@@ -94275,7 +94275,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2378",
@@ -94297,7 +94297,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2874",
@@ -94319,7 +94319,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3042",
@@ -94341,7 +94341,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2379",
@@ -94363,7 +94363,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2875",
@@ -94385,7 +94385,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3043",
@@ -94407,7 +94407,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2380",
@@ -94429,7 +94429,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2876",
@@ -94451,7 +94451,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3044",
@@ -94473,7 +94473,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2381",
@@ -94495,7 +94495,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2877",
@@ -94504,20 +94504,20 @@
     "objectId": "wc-2877"
    },
    "onset": 619.771,
-   "duration": 0.45,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 70,
+    "midi": 58,
     "spelled": {
      "step": "A",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3045",
@@ -94539,7 +94539,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2382",
@@ -94561,7 +94561,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2878",
@@ -94583,7 +94583,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2383",
@@ -94605,7 +94605,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3046",
@@ -94627,7 +94627,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2384",
@@ -94649,7 +94649,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2879",
@@ -94671,7 +94671,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3047",
@@ -94693,7 +94693,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2385",
@@ -94715,7 +94715,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2880",
@@ -94724,20 +94724,20 @@
     "objectId": "wc-2880"
    },
    "onset": 620.363,
-   "duration": 0.38,
+   "duration": 0.09999999999990905,
    "pitch": {
-    "midi": 64,
+    "midi": 52,
     "spelled": {
      "step": "E",
      "alter": 0,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3048",
@@ -94759,7 +94759,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2386",
@@ -94781,7 +94781,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2881",
@@ -94803,7 +94803,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3049",
@@ -94825,7 +94825,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2387",
@@ -94847,7 +94847,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3050",
@@ -94869,7 +94869,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2882",
@@ -94891,7 +94891,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2388",
@@ -94913,7 +94913,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3051",
@@ -94935,7 +94935,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2883",
@@ -94944,20 +94944,20 @@
     "objectId": "wc-2883"
    },
    "onset": 620.942,
-   "duration": 0.46,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 81,
+    "midi": 57,
     "spelled": {
      "step": "A",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2389",
@@ -94979,7 +94979,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3052",
@@ -95001,7 +95001,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2884",
@@ -95010,20 +95010,20 @@
     "objectId": "wc-2884"
    },
    "onset": 621.133,
-   "duration": 0.44,
+   "duration": 0.09999999999990905,
    "pitch": {
-    "midi": 68,
+    "midi": 56,
     "spelled": {
      "step": "G",
      "alter": 1,
-     "octave": 4
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2390",
@@ -95045,7 +95045,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3053",
@@ -95067,7 +95067,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2885",
@@ -95089,7 +95089,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2391",
@@ -95111,7 +95111,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3054",
@@ -95133,7 +95133,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2392",
@@ -95155,7 +95155,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2886",
@@ -95177,7 +95177,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2393",
@@ -95199,7 +95199,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3055",
@@ -95221,7 +95221,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2887",
@@ -95243,7 +95243,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2394",
@@ -95265,7 +95265,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3056",
@@ -95287,7 +95287,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2888",
@@ -95309,7 +95309,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2395",
@@ -95331,7 +95331,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3057",
@@ -95353,7 +95353,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2889",
@@ -95362,20 +95362,20 @@
     "objectId": "wc-2889"
    },
    "onset": 622.064,
-   "duration": 0.46,
+   "duration": 0.10000000000002274,
    "pitch": {
-    "midi": 81,
+    "midi": 57,
     "spelled": {
      "step": "A",
      "alter": 0,
-     "octave": 5
+     "octave": 3
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2396",
@@ -95397,7 +95397,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3058",
@@ -95419,7 +95419,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2890",
@@ -95441,7 +95441,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2397",
@@ -95463,7 +95463,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3059",
@@ -95485,7 +95485,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2891",
@@ -95507,7 +95507,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2398",
@@ -95529,7 +95529,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3060",
@@ -95551,7 +95551,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2892",
@@ -95562,18 +95562,18 @@
    "onset": 622.607,
    "duration": 0.38,
    "pitch": {
-    "midi": 84,
+    "midi": 60,
     "spelled": {
      "step": "C",
      "alter": 0,
-     "octave": 6
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2399",
@@ -95595,7 +95595,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3061",
@@ -95617,7 +95617,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2400",
@@ -95639,7 +95639,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2893",
@@ -95661,7 +95661,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3062",
@@ -95683,7 +95683,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2401",
@@ -95705,7 +95705,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2894",
@@ -95727,7 +95727,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3063",
@@ -95749,7 +95749,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2402",
@@ -95771,7 +95771,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2895",
@@ -95780,20 +95780,20 @@
     "objectId": "wc-2895"
    },
    "onset": 623.139,
-   "duration": 0.4,
+   "duration": 0.39,
    "pitch": {
-    "midi": 74,
+    "midi": 62,
     "spelled": {
      "step": "D",
      "alter": 0,
-     "octave": 5
+     "octave": 4
     }
    },
    "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3064",
@@ -95815,7 +95815,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2403",
@@ -95837,7 +95837,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2896",
@@ -95859,7 +95859,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3065",
@@ -95881,7 +95881,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2404",
@@ -95903,7 +95903,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2897",
@@ -95925,7 +95925,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3066",
@@ -95947,7 +95947,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2405",
@@ -95969,7 +95969,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2898",
@@ -95991,7 +95991,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3067",
@@ -96013,7 +96013,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2406",
@@ -96035,7 +96035,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2899",
@@ -96057,7 +96057,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3068",
@@ -96079,7 +96079,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2407",
@@ -96101,7 +96101,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2408",
@@ -96123,7 +96123,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-3069",
@@ -96145,7 +96145,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   },
   {
    "id": "ev-wc-2900",
@@ -96167,7 +96167,7 @@
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
-   "vel": 70
+   "vel": 127
   }
  ],
  "chunks": [

@@ -1653,14 +1653,18 @@ player would touch parts, solo, crop and print.
      the crescendo run (78) is 2i.8's to place; the dead tuba devices, the print exporter's missing ensemble/techniques, the _staccatoNote drift → NITS.` — the strikes' displacement after D60 · the trills ·
      the tuba inheritances (`ord` 55, `surge`, `fortepiano`, `cuivre`, `staccato`) · the morph headers · the built groups. The out-of-range
      census is done (§507: 79 flute rams, all section 3 → step 3).
-  3. **The save edits, in HIS tab** — `todo · sitting B · Opus + his ear` — (a) `foldFlute()` over section 3 (79 rams, D38, §507) · (b) section
-     3's velocities in six equal time bands p · mp · mf · f · ff · fff, every part (CN-83) — a script, one undo step · Save · rebuild.
+  3. **The save edits, in HIS tab** — `DONE 2026-09-14 (RUNNING_LOG §520): 79 of 99 rams folded, 0 out of range · 932 strikes stepped p 37 · mp 55 ·
+     mf 72 · f 90 · ff 109 · fff 127 (the score's own eight-step scale), 30 s bands from 444 s · his ear, "ok good saved" · MAIN rebuilt, batteries green`
+     — (a) `foldFlute()` over section 3 (79 rams, D38, §507) · (b) section
+     3's velocities in six equal time bands p · mp · mf · f · ff · fff, every part (CN-83) — `stepDynamics()` in `note_card.js`, one undo step · Save · rebuild.
   4. **The cross-staff group** (= 2g.1) — `todo · sitting C, alone, fresh session · Opus from a written spec` — a group of up to four across both
      staves: one beam above the treble, the bass notes' stems up to it; a group on one staff as normal — the stem rules read from #2 and the tuba first.
   5. **The piano's run from 581 s cut into groups; the fours at the end** (= 2g.2 · 2g.4) — `todo · sitting D · Opus` — his eye on the crowding.
   6. **`--pairs` for the six other parts** (= 2g.5) — `todo · sitting D · Opus` — 46 pairs · the two triples as groups of three (D51: Vc 488.51 · Va 622.01).
   7. **The page rule for section 3's dynamics** (CN-83) — `todo · sitting E · Opus` — one mark per part where its band changes, on that part's first
      note in the band; nothing else. **Decided (D52, 2026-09-14):** section 3 only — section 1 keeps its mark on every strike (§401d); two rules by texture.
+     **First, found at step 3 (§520):** `dynamicBands` has no mp or ff — section 3 draws 37 → ppp · 55 → p · 72 → p · 90 → mf · 109 → f · 127 → fff today;
+     align the table to the eight-step scale so the marks read p · mp · mf · f · ff · fff (section 1, the morph piano, the trills unaffected — check).
   8. **The crescendo run as the surge device** (CN-84) — `todo · sitting E · Fable design (short) → Opus` — ppp → fff + arrow · the STANDARD surge
      shape, a template, not the save's curve · the D42 look at 100/s · no floor · "secco" at the curve's end (CN-49; the quartet's text mark) ·
      one player per onset by round robin as the save has it (§509). The performance instructions must say the morph curves are absolute and these are not.

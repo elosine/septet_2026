@@ -14127,3 +14127,36 @@ with their go times, and there'll be no go line. And that's how we'll pursue the
 (`figures.cluster.gc: "first"`); every head's left edge on its own go time (`nhAnchor: leftEdge`); no go line on any member
 (`goLine: false`); the beam says "several notes on one GC" (§457). The single strikes beside them keep D53's regime. Nothing to build for
 this; the registry already carries it.
+
+## §520. BUILT and SAVED: PLAN 2i.3 — section 3's rams folded, its strikes stepped p → fff; the MAIN file rebuilt (2026-09-14, Opus 5)
+
+**His word:** *"ok go for sitting b, not clearing at this point, but please report the top line again at end of build"* · after the two
+console lines: the output pasted · after listening: *"ok good saved"*.
+
+**Measured first (the save, before any edit):** section 3's 932 strikes ALL at `recVel` 70, curve height 5.5 (§513's "one uniform band, the
+page shows p"); section 1's 511 at 127 / 10. The strikes per 30 s band from 444 s: 64 · 139 · 121 · 60 · 190 · 358; four strikes sit exactly on
+an edge (444 · 624 ×3). Non-strikes in the window: the crescendo run's 78 swells (`grp-crun`, CN-84) and the META boxes — left alone.
+
+**The velocity scale — the score's own, not a new one:** `Cresc.dynHeight` (NAMING §2.9, ppp … fff in eight equal steps on 0–10), the
+velocity height/10 × 127 — the rule `crescStrikes().set` already writes a dynamic by. **p 37 · mp 55 · mf 72 · f 90 · ff 109 · fff 127.** So
+the note card names each band correctly. *Rejected:* the notation's five-band table (`dynamicBands` ppp ≤45 · p ≤75 · mf ≤100 · f ≤118 · fff)
+as the source — it has no mp or ff, and it is the page's reading of velocity, not the composer's scale.
+
+**Built (`score/public/note_card.js`):** `stepDynamics({ from: 444, to: 624, dyns: [p … fff] })` beside `foldFlute` — every strike
+(srcKind `strike`) in the window, every part, to its equal time band's height and velocity; ONE undo step; an edge takes the later band, the
+window's last instant stays in the last; anything not a strike untouched; a second run changes nothing. **`tools/test_step_dynamics.js`**
+(13 on a copy through the real `note_card.js` + `cresc.js`; `--save` adds 2 on the save itself).
+
+**Run in HIS tab (reloaded first — piece-septet was clean):** `foldFlute({ from: 430, to: 700, lo: 48, hi: 62, part: 'Fl', technique:
+'pizzicato' })` → *79 of 99 moved, 0 stuck* (§507's count exactly) · `stepDynamics()` → *932 strikes, 932 changed · p 444–474 vel 37 ×64 · mp
+×139 · mf ×121 · f ×60 · ff ×190 · fff ×358* · he listened at the band edges · **Save.**
+
+**Proven:** `test_step_dynamics --save` 15/15 · the MAIN IR rebuilt through R's own endpoint (`/api/notation/refresh/piece-septet`, the
+recorded build, 575 ms, VALID vs source, 1806 events) · in the IR: section 3's strike velocities 37 ×64 · 55 ×139 · 72 ×121 · 90 ×60 · 109 ×190
+· 127 ×358 · the 99 rams written 62–73, **0 out of range** (the red marks gone) · batteries green: test_morph_notation 178 · test_septet_notation
+86 · test_trills 92 · test_identity · check_cresc_panel.
+
+**Left for step 7 (found here, measured):** the page reads velocity through the five-band table, so section 3 today draws **37 → ppp · 55 → p ·
+72 → p · 90 → mf · 109 → f · 127 → fff** on every strike. 2i.7 must align `dynamicBands` to the eight-step scale (bands centred on 37 · 55 · 72 · 90
+· 109 · 127, pp and ppp below) before the on-change rule, so the page writes p mp mf f ff fff. Unaffected by that change: section 1 (all 127 =
+fff), the morph piano (D50's `dynFixed`), the trills (`sfz`). **The render is behind the save again** — step 9.

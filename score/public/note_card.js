@@ -400,4 +400,41 @@
             (stuck ? ' · ' + stuck + ' cannot fold' : '') + ' · one undo step · unsaved until Save', 'color:#e8cf9a');
         return { moved: moves.length, of: notes.length, stuck, ids: moves.map(m => m.x.id) };
     };
+
+    // stepDynamics (PLAN 2i.3, CN-83 — the composer, 2026-09-14: "I want to start at p and then at the end end up at f f f. So I guess in
+    // even progression by time"): every STRIKE in the window (srcKind 'strike'), every part, set to the dynamic of its equal time band, on
+    // the score's own scale — Cresc.dynHeight (NAMING §2.9: ppp … fff in eight equal steps), the velocity height/10 × 127, the strike's
+    // flat curve at that height (as crescStrikes().set writes a dynamic). ONE undo step. A strike ON a band edge takes the later band;
+    // the window's last instant stays in the last band. Anything that is not a strike (the crescendo run's swells, CN-84) is untouched.
+    //   stepDynamics()                                                  444–624 s · p mp mf f ff fff · 30 s each
+    //   stepDynamics({ from: 444, to: 624, dyns: ['p', 'mp', 'mf', 'f', 'ff', 'fff'] })
+    root.stepDynamics = function (o) {
+        o = o || {};
+        const Cp = C(), CRe = CR();
+        if (!Cp || !CRe || !CRe.dynHeight) return null;
+        const from = o.from != null ? +o.from : 444, to = o.to != null ? +o.to : 624;
+        const dyns = o.dyns || ['p', 'mp', 'mf', 'f', 'ff', 'fff'];
+        const hs = dyns.map(d => CRe.dynHeight(d));
+        if (!dyns.length || hs.some(h => h == null) || !(to > from)) { console.warn('[stepDynamics] needs from < to and dyns from ' + CRe.DYN.join(' ')); return null; }
+        const w = (to - from) / dyns.length, EPS = 1e-6;
+        const notes = Cp.objects.filter(x => x.type === 'waveCurve' && x.srcKind === 'strike' && x.startSeconds >= from - EPS && x.startSeconds <= to + EPS);
+        if (!notes.length) { console.log('[stepDynamics] no strikes in ' + from + '–' + to + ' s'); return { of: 0, changed: 0, bands: [] }; }
+        const bands = dyns.map((d, i) => ({ dyn: d, from: from + i * w, to: from + (i + 1) * w, height: hs[i], vel: Math.max(1, Math.min(127, Math.round(hs[i] / 10 * 127))), n: 0 }));
+        Cp.pushUndoState();
+        let changed = 0;
+        for (const x of notes) {
+            const b = bands[Math.max(0, Math.min(bands.length - 1, Math.floor((x.startSeconds - from + EPS) / w)))];
+            b.n++;
+            if (x.recVel !== b.vel || (x.nodes || []).some(nd => nd.y !== b.height)) changed++;
+            (x.nodes || []).forEach(nd => { nd.y = b.height; });
+            x.recVel = b.vel;
+            Cp.renderWaveCurve(x);
+        }
+        Cp.markDirty();
+        if (CARD.wc && notes.indexOf(CARD.wc) >= 0) CARD.paint();
+        console.log('%c[stepDynamics] ' + notes.length + ' strikes, ' + changed + ' changed · ' +
+            bands.map(b => b.dyn + ' ' + b.from.toFixed(0) + '–' + b.to.toFixed(0) + ' s vel ' + b.vel + ' ×' + b.n).join(' · ') +
+            ' · one undo step · unsaved until Save', 'color:#e8cf9a');
+        return { of: notes.length, changed, bands };
+    };
 })(typeof window !== 'undefined' ? window : this);

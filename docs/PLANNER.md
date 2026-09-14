@@ -5,7 +5,7 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ✦** 2026-09-14, session 12 — **SECTION 3'S NOTATION PLANNED (PLAN 2i, RUNNING_LOG §505–§511; his "top line good"): ten steps in six sittings — A go-to-time + HOME then the D49 audit · B the save edits (the flute fold, the six dynamic bands p → fff) · C the cross-staff group · D the groups and `--pairs` (D51: triples allowed) · E the page rule + the surge device with secco · F re-render, demo video. NEXT: sitting A on Opus after a clear.**
+**NOW ✦** 2026-09-14, session 12 — **SECTION 3'S NOTATION PLANNED (PLAN 2i, RUNNING_LOG §505–§511; his "top line good"): ten steps in six sittings — A go-to-time + HOME then the D49 audit · B the save edits (the flute fold, the six dynamic bands p → fff) · C the cross-staff group · D the groups and `--pairs` (D51: triples allowed) · E the page rule + the surge device with secco · F re-render, demo video. NEXT: sitting A on Opus after a clear.** · **2026-09-14 later: sitting A DONE (go-to-time §516 · the D49 audit closed by D53 §517–§518) · sitting B DONE (§520: rams folded, section 3 stepped p → fff, saved, rebuilt). NEXT: sitting C — the cross-staff group (2i.4 = 2g.1), Opus, fresh session.**
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 
