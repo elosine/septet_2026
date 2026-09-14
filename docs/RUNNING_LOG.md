@@ -14160,3 +14160,53 @@ recorded build, 575 ms, VALID vs source, 1806 events) · in the IR: section 3's 
 72 → p · 90 → mf · 109 → f · 127 → fff** on every strike. 2i.7 must align `dynamicBands` to the eight-step scale (bands centred on 37 · 55 · 72 · 90
 · 109 · 127, pp and ppp below) before the on-change rule, so the page writes p mp mf f ff fff. Unaffected by that change: section 1 (all 127 =
 fff), the morph piano (D50's `dynFixed`), the trills (`sfz`). **The render is behind the save again** — step 9.
+
+## §521. BUILT: PLAN 2i.4 — the cross-staff group; tried on the run's first pair (581.21) and last four (623.55) (2026-09-14, Opus 5)
+
+**His word:** *"no clear good to go sitting c"* · then, to the goal and the design read back (§463's dictation, §464, today's §519) with three
+defaults — the pair's rests on the treble staff · the dynamic under the first note's own staff · the try-out groups 581.21 and 623.55 —
+*"go, build it"*.
+
+**Measured first:** every cross-staff group in the piece is in ONE place — the piano's closing run, 575.37 → 624.00 s (gaps 0.43 → 0.15 s;
+under 0.4 s from 581.21, under 0.25 s from 607.27), changing staff almost every note, pitches E♭1 … C8. The tuba-inherited engine lays a
+part out ONE SYSTEM PER STAFF (`layout.js`: each system filters its events by `staffOfEv`; beam groups, clusters and rests are built per
+system), which is why §462's last-four try came out as two half-beams and two spurious rests. The existing cross-staff code, the morph
+section's `--pairBeam` (§495), draws one 8th beam and per-note chrome but no rests, second beam level, accent row or GC — it does not carry
+the strikes' beamed group.
+
+**The builder's call, said out loud — the cluster path, not a second pair path.** A cluster (`notate_section --cluster`) whose members sit
+on both staves of a grand staff is laid out WHOLE in the part's top staff system, so its beam group, its rests, its accent row and its
+dynamics are built once, by the same code as every other beamed group. Each lower-staff member's own ink is computed against ITS staff
+(its clef, its ledgers, its ottava, its chain) and then moved by the distance between the staves' middle lines, 4 + `grandStaff.interStaffGapSs`
+= 10 ss — the number `coords.withStaves` places the staves at. Every y field of every item the member pushed moves, and its beam tip; the
+stem's head end moves, its beam end is set in the top staff's coordinates. *Rejected:* laying the bass members in the bass system and
+flushing a shared beam after both systems (the pair's route) — the cluster's flush (levelling, the stack, the wide-register repair, rests,
+brackets) is one per-system block of ~400 lines, and a second copy of it would be two rules for one device.
+
+**Built (`notation/lib/layout.js`):** a `crossOf` pre-pass (a multi-staff part's cluster with members on ≥2 staves) · the gesture's
+direction forced UP · the system filter puts every member in the top staff · per member: `posOf` from its own staff's clef, a flush that
+moves its items and tip by its offset (at the next member and after the walk, so a `continue` cannot skip it), the stem's beam end in top-staff
+terms · `grp.cross`: **its accent row and brackets never flip to the head side** — the wide-register repair (day 31) flipped the accents
+BELOW THE BASS STAFF on the first build (`ySs −12.14` / `−16.14`), because the beam over a high treble note left no lane room above; the far
+edge of the grand staff is not "room". **Proven:** the whole MAIN layout **byte-identical** before and after the engine change with no
+cross-staff cluster in the file (sha1 486e4d00…); then the two clusters added to the recorded build:
+`--cluster 581.20-581.61@2 --gridDiv 2 --restAfter 1 --beamOver 1 --dyn 1 --accents 1,2 --cluster 623.54-624.01@2 --dyn 1 --accents 1,2,3,4`
+(cl-3 · cl-4; VALID vs source).
+
+**As laid out (headless) and drawn (the running page, zoom at 581.5 and 623, geometry read off the SVG):**
+- **581.21, the pair** E6 (treble, two ledgers) → C♯3 (bass): one beam group, two levels at +6.61 / +5.80 ss (the E6's stem at the 2.5 ss
+  minimum sets it), carried over the trailing rest to 581.805; both stems up to it — the C♯3's from the bass staff through the gap
+  (268.6 px at 15.8 px/ss); the two 16th rests on the treble staff; the accents on one row at +7.34; the GC on the E6 only; no go lines;
+  `f` under the treble staff (vel 109 — the five-band table's name, §520).
+- **623.55, the four** G2 · G♯5 · B1 · A♯5 (bass · treble · bass · treble): one group, beam +5.61 / +4.80; four stems up, the B1's from below the
+  bass staff (two ledgers); accents on one row at +6.34; the GC on G2; no rests; `fff` under the bass staff.
+- **The bass system holds nothing of either group.** The bass four at 620.3 (cl-2, one staff) is unchanged: stems down, in the bass system.
+- **The build's geometry check:** at 623.55 the piano's beam meets Vn1's accent and `fff` in the band between the lanes (0.47 / 0.41 ss), and
+  BCl's accent meets the piano's accent row (0.52 ss) — the crowding his eye judges; the tuba's fix ladder applies at step 5.
+
+**Guard:** `tools/test_cross_staff.js` — 38 on the MAIN file (one group, levels, every stem on the beam, each stem from its own staff, left edges,
+the accent row above, the GC first only, no go line, the rests, nothing in the bass system, the one-staff four unchanged); **proven red on the
+old engine (18 fail)**. Batteries green: morph 178 · septet 86 · trills 92 · identity · step-dynamics 15.
+
+**For his eye:** zoom or video at **581** and **623.5**. Then step 5 cuts the run into groups (his "fours at the end", the pair rule before
+607.27). A page reload is needed — `notation/lib/layout.js` changed.

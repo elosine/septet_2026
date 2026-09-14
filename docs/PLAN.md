@@ -1657,7 +1657,8 @@ player would touch parts, solo, crop and print.
      mf 72 · f 90 · ff 109 · fff 127 (the score's own eight-step scale), 30 s bands from 444 s · his ear, "ok good saved" · MAIN rebuilt, batteries green`
      — (a) `foldFlute()` over section 3 (79 rams, D38, §507) · (b) section
      3's velocities in six equal time bands p · mp · mf · f · ff · fff, every part (CN-83) — `stepDynamics()` in `note_card.js`, one undo step · Save · rebuild.
-  4. **The cross-staff group** (= 2g.1) — `todo · sitting C, alone, fresh session · Opus from a written spec` — a group of up to four across both
+  4. **The cross-staff group** (= 2g.1) — `BUILT 2026-09-14 (RUNNING_LOG §521): the cluster laid out whole in the treble system, one beam above it,
+     every stem up, rests and accents beam-side; tried on 581.21 (pair) and 623.55 (four); test_cross_staff 38, red on the old engine; his eye owed` — a group of up to four across both
      staves: one beam above the treble, the bass notes' stems up to it; a group on one staff as normal — the stem rules read from #2 and the tuba first.
   5. **The piano's run from 581 s cut into groups; the fours at the end** (= 2g.2 · 2g.4) — `todo · sitting D · Opus` — his eye on the crowding.
   6. **`--pairs` for the six other parts** (= 2g.5) — `todo · sitting D · Opus` — 46 pairs · the two triples as groups of three (D51: Vc 488.51 · Va 622.01).

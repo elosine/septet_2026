@@ -473,6 +473,32 @@
       }
     }
 
+    // [PLAN 2i.4] THE CROSS-STAFF GROUP (the composer, 2026-09-13, §463: "I want the beams to be on one side ... above the
+    // treble. And then the stems extend down into the bottom bass clef"; §464: "if there are cross staff notes in a beam of two
+    // or four, then we're gonna try beams at top above the treble"). A beamed cluster (notate_section --cluster) whose members sit
+    // on BOTH staves of a grand staff was split by the one-system-per-staff walk — two half-beams and two spurious rests (§462).
+    // Such a cluster is laid out WHOLE in the part's TOP staff system: its beam group, rests, accent row and dynamics are built
+    // once there, every stem goes UP to one beam above the top staff, and each lower-staff member's own ink (head, ledgers,
+    // accidental, dot, chain, ottava, the stem's head end) is computed against ITS staff and then moved by the fixed distance
+    // between the staves' middle lines (4 + grandStaff.interStaffGapSs — coords.withStaves places the staves at exactly that).
+    // A cluster on one staff is untouched.
+    const crossOf = new Map();   // member event id -> { staff, yOff }
+    {
+      const byCl = new Map();
+      for (const e of ir.events || []) {
+        const d = deviceOf(e);
+        if (!d.clusterId || d.nhStem !== 'beam' || nStavesOf(pcOfEv(e)) < 2) continue;
+        const k = partOfEv.get(e.id) + '|' + d.clusterId;
+        if (!byCl.has(k)) byCl.set(k, []);
+        byCl.get(k).push(e);
+      }
+      const c2c = 4 + ((o.grandStaff && o.grandStaff.interStaffGapSs) || 6);
+      for (const list of byCl.values()) {
+        if (new Set(list.map(staffOfEv)).size < 2) continue;
+        for (const e of list) crossOf.set(e.id, { staff: staffOfEv(e), yOff: -staffOfEv(e) * c2c });
+      }
+    }
+
     // BEAM GROUP DIRECTION (day 24): ONE direction per group, decided by the
     // member FURTHEST from the middle line (Gould), ties up — this vocabulary
     // keeps its GC objects under the staff, so up is the house side. Found
@@ -494,18 +520,20 @@
       const th = 2 + ((glyphs.standards.ottava && glyphs.standards.ottava.ledgerLineThreshold) || 3);
       const far = new Map();    // gesture key -> {y}
       const gkOf = new Map();   // beamGroup -> gesture key
+      const upGk = new Set();   // [2i.4] a cross-staff gesture: its beam above the top staff, every stem up
       for (const e of ir.events) {
         const d = deviceOf(e);
         if (!d.beamGroup || d.nhStem !== 'beam') continue;
         const gk = d.clusterId || d.beamGroup;
         gkOf.set(d.beamGroup, gk);
+        if (crossOf.has(e.id)) upGk.add(gk);
         let y = posOfEv(e);
         while (y > th) y -= 3.5;
         while (y < -th) y += 3.5;
         const cur = far.get(gk);
         if (!cur || Math.abs(y) > Math.abs(cur.y) + 1e-9 || (Math.abs(Math.abs(y) - Math.abs(cur.y)) <= 1e-9 && y < cur.y)) far.set(gk, { y });
       }
-      for (const [bg, gk] of gkOf) groupDir.set(bg, far.get(gk).y > 0 ? 'down' : 'up');
+      for (const [bg, gk] of gkOf) groupDir.set(bg, upGk.has(gk) || far.get(gk).y <= 0 ? 'up' : 'down');
     }
 
     // frameParts (day 22, the collapse): when given, EVERY listed lane gets
@@ -755,7 +783,7 @@
         const evsAll = c.events.map(id => evById.get(id));
         const evs = !spec.multi ? evsAll
           : isStream ? (streamStaff(evsAll) === spec.staff ? evsAll : [])
-          : evsAll.filter(e => staffOfEv(e) === spec.staff);
+          : evsAll.filter(e => (crossOf.has(e.id) ? 0 : staffOfEv(e)) === spec.staff);   // [2i.4] a cross-staff group lives in the top staff
         if (!evs.length) continue;
         const metric = isStream && c.strategy === 'simple-bar';
         // THE CHUNK GC'S TICK — moved out of the stream branch, day 36. The
@@ -770,7 +798,24 @@
           for (const d of c.devices || []) if (d.kind === 'gc') items.push({ k: 'tick', t: d.at, ySs: o.tickY });
         if (!isStream) {
           const chordGeo = chordGeometry(evs);   // [2a.4] empty unless this is a chord
+          // [2i.4] a lower-staff member of a cross-staff group is laid out against its OWN staff, then every item it pushed
+          // (and its beam tip, with the ink extents the group's rows read) moves by that staff's offset into the top staff's
+          // coordinates. Flushed at the next member and after the walk, so a `continue` in the unit cannot skip it.
+          const posOfSys = posOf;
+          let xPend = null;
+          const xFlush = () => {
+            if (!xPend) return;
+            const d = xPend.yOff;
+            const sh = it => { for (const k of Object.keys(it)) if (k[0] === 'y' && typeof it[k] === 'number') it[k] += d; };
+            for (let i = xPend.i0; i < items.length; i++) sh(items[i]);
+            if (xPend.tip) for (const k of ['ySs', 'headTopYSs', 'headBotYSs', 'accTopYSs', 'accBotYSs']) if (typeof xPend.tip[k] === 'number') xPend.tip[k] += d;
+            xPend = null;
+          };
           for (const e of evs) {
+            xFlush();
+            const XO = crossOf.get(e.id);
+            if (XO && XO.yOff) xPend = { i0: items.length, yOff: XO.yOff, tip: null };
+            const posOf = XO ? (sp => staffPos(sp, clefOf(pcOfEv(e), XO.staff))) : posOfSys;
             const CG = chordGeo.get(e.id);
             // [2a.4] a chord is drawn at ONE time, its first onset: heads, ledgers,
             // accidentals, go line and marks all at tU. The brick (and the ring
@@ -1443,6 +1488,7 @@
                       beamY = Math.min(beamY, CSb.laneHalfSs - (TP.paddingSs + TP.hookLengthSs + capAbove));
                     }
                     yEnd = stemDir === 'up' ? beamY : -beamY;
+                    if (XO) yEnd -= XO.yOff;   // [2i.4] the beam line is the top staff's; this stem is measured from its own staff
                     const key = dev.beamGroup || 'beam';
                     if (!beamGroups.has(key)) beamGroups.set(key, { dir: stemDir, tips: [], through: !!dev.beamThrough, over: !!dev.beamOverRest, overLeft: !!dev.beamOverLeft });
                     const grp = beamGroups.get(key);
@@ -1466,6 +1512,8 @@
                     // one beam, 16ths two, so the beam pattern itself shows
                     // which notes are close and which are apart)
                     const tipRef = grp.tips[grp.tips.length - 1];
+                    if (xPend && XO) xPend.tip = tipRef;
+                    if (XO) grp.cross = true;   // [2i.4] its rows never flip to the head side — that is the far staff
                     beamTip = tipRef;
                     tipRef.beams = dev.noteBeams || 1;
                     tipRef.tup = dev.tupletGroup || null;   // day 29: over/overLeft anchor to bracket rests
@@ -1756,6 +1804,7 @@
               }
             }
           }
+          xFlush();   // [2i.4] the walk's last member
           prevTempoLabel = null;
           continue;
         }
@@ -2037,8 +2086,8 @@
                     const headOuter = Math.abs(headIn) + usedHead + r.need;
                     const beamOuter = Math.abs(yLevel) + usedBeam + r.need;
                     const maxOver = o.bracketOverflowMaxSs != null ? o.bracketOverflowMaxSs : 1.3;
-                    const toHead = headOuter <= lane + 1e-9
-                      || (beamOuter > lane + maxOver + 1e-9 && headOuter <= beamOuter);
+                    const toHead = !g.cross && (headOuter <= lane + 1e-9
+                      || (beamOuter > lane + maxOver + 1e-9 && headOuter <= beamOuter));
                     if (toHead) {
                       const y0 = headIn - sgn * usedHead;
                       st.bracketY = y0 - sgn * r.lineOff;
@@ -2058,7 +2107,9 @@
                   // per-mark against their own column, below.
                   if (r.kind === 'dyn') { st.dynPerMark = true; continue; }
                   const beamBase = Math.abs(yLevel) + usedBeam;
-                  if (beamBase + r.need <= lane + 1e-9) {  // fits on the beam side
+                  // [2i.4] a cross-staff group keeps its rows on the beam side (§462 "accent beam side") even past the lane
+                  // edge: its head side is the lower staff's far edge, not room; the geometry check reports any spill
+                  if (g.cross || beamBase + r.need <= lane + 1e-9) {  // fits on the beam side
                     const y0 = sgn * beamBase;
                     st.articY = y0 + sgn * r.centreOff;
                     usedBeam += r.need;
