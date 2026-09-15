@@ -1112,3 +1112,16 @@ it; the take must be written at Insert, not only at "Save as ACTUAL"; (2) **a pe
 pull-downs act on the next Generate, not on what is placed. Also seen: the SPECTRAL model's "nearest free partial" makes a shared-pitch
 pair asymmetric (one holds, one travels) — the tool could say which seat holds before the render (§465).
 
+### 2026-09-14 — for Lake George: morph TO a beating pattern, then HOLD it and play sparse figures inside it (CN-86)
+
+> *"Note for Lake George piece, use the morph to get to a certain beating pattern and then hold and play figures there. Sparse figures that
+> still evoke the beating. see Salvatore Sciarrino - Raffigurar Narciso al fonte"* (composer, 2026-09-14)
+
+*AI reading (not the composer's words):* what the all-purpose tool would need for this. (1) **A destination chosen by its BEATING** — the
+target named as a beating pattern (the rates per pair, the beats per second already the beating panel's axis), not only as pitches, with the
+morph solving the pitches that produce it. (2) **An arrive-and-hold shape** — the morph's end becomes a sustain of a chosen length with the
+beating stable, its breaths and bows re-dealt across the hold (the septet's breaths are dealt over a moving morph). (3) **Room for figures over
+the hold** — the held pattern exported as a reference (its rates and pitches) that a figure tool can read, so the figures can be written to
+"evoke the beating": rhythms at or related to the beat rates, pitches from the beating pairs. The septet's morphs only travel; none of this
+exists yet.
+

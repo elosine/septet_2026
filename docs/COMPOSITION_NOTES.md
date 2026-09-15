@@ -1821,3 +1821,16 @@ here). **"Secco"** as a text at the curve's end — CN-49's instruction (strings
 > *"The triples A good;"* (composer, 2026-09-14, to the AI's three options for the two runs of three close strikes — Vc 488.51 s, Va 622.01 s)
 
 *(AI reading, marked as such:)* option A — three allowed, written as the pair with a third unit, one GC. D51; RUNNING_LOG §508 · §510.
+
+## CN-86 — 2026-09-14: LAKE GEORGE (piece #6) — the morph ARRIVES at a beating pattern and HOLDS; sparse figures played there that still evoke the beating; after Sciarrino's *Raffigurar Narciso al fonte*
+
+> *"Note for Lake George piece, use the morph to get to a certain beating pattern and then hold and play figures there. Sparse figures that
+> still evoke the beating. see Salvatore Sciarrino - Raffigurar Narciso al fonte"* (composer, 2026-09-14, typed mid-session, septet section 3's notation)
+
+*(AI reading, marked as such:)* a new use of the morph for piece #6: not a journey from one sonority to another and out, but a journey TO a
+destination whose beating is the point — then the morph stops moving and the sonority is held, and figures are played INSIDE it. The figures
+are sparse, and they keep the beating audible or implied (their own rates, spacing or pitches pointing at the held pattern rather than
+covering it). Three things it joins: **CN-42** (the rondo whose refrain is a morph — this could be what a refrain does once it arrives) ·
+**CN-51** (a counterpoint of timbres after Sciarrino — the same composer, now a specific work as the reference) · **CN-31** (the sparse
+pointillistic multitempo writing — a candidate for the figures). The reference to study when piece #6 opens: Sciarrino, *Raffigurar Narciso
+al fonte*. For the morph tool's revision: MORPH_NOTES §3, same date.
