@@ -14319,3 +14319,20 @@ Vc 4 + 1 · piano 39·1·22 untouched · triples unchanged from §523 · `test_s
 
 **Next in the notation score (his question):** the four held piano items of §523, on Opus, planning method first — the one thing only he
 can answer is the reading of (3) and (4): singles before 587.32, pairs 587.32–611.72, fours from 611.72.
+
+## §525. HELD: the Bartók-pizz sign and the accent collide under a Vn2 pair (520.68); his ask for the list and the rollout (2026-09-14, Fable 5.1)
+
+**His word (with a screenshot of the notation page at 520.68, Vn2):** *"520.68 vln 2 vert spacing for bartokpizz and accent; and the
+dynamics changes are comming yes? list changes for me and breif rollout"*.
+
+**What the screenshot shows (AI's reading):** a Vn2 pair (two sixteenths, beam above, rests between) — under the first head (F#5) the
+Bartók-pizz sign then the accent, stacked with no clear gap; under the second head (below the staff) the accent and the sign overlap
+outright. The page's dynamic at the top reads "p" — at 520.68 the strike is in the mf band (velocity 72), which the five-band table still
+names "p" (§520's "left for step 7").
+
+**Read back to him as the fifth held item:** the accent nearest the head, the Bartók sign beyond it, one fixed gap, on the side away
+from the beam — never overlapping. Unverified in the code; Opus reads `layout.js` before building.
+
+**Answered:** yes, the dynamics changes are PLAN 2i step 7, next after the held items — (a) the bands renamed to the eight-step scale
+(37 p · 55 mp · 72 mf · 90 f · 109 ff · 127 fff), (b) one mark per part where its band changes, reaching group members (D52). The list
+and rollout given in the chat are copied into §2's thread.
