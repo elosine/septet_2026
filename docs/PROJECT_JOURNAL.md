@@ -85,61 +85,59 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### CHECKPOINT — 2026-09-14, session 12 (mid-session checkpoint; Opus 5; PLAN 2i sittings A–D done, E next)
+### CHECKPOINT — 2026-09-14, session 12 (mid-session checkpoint #2; Opus 5; PLAN 2i steps 1–7 built, step 8 next)
 
-**The task:** PLAN 2i, section 3's notation (444–624 s) — ten steps in six sittings. **State: steps 1–6 built** (RUNNING_LOG §515–§522), all
-in the MAIN notation file `notation/ir/piece-septet.ir.json` (VALID vs source; its `provenance.build` now ends `… --ensembleDyn 205-428@2
---groups 444-624.1`; R on the page re-runs it). His eye is OWED on sittings C and D. In one line each:
-- **A** — go-to-time box + ⌂ + HOME → 0 on the notation page (§516, "go-to works") · the D49 audit measured over all 1806 events and closed
-  by **D53**: the single strikes keep head-before-GC + go line + GC (Tufte's 1+1=3, his reading rule); NOTATION_STANDARDS §0 is scoped to
-  units without a GC (§517–§518) · the beamed group confirmed as section 3's standard (§519).
-- **B** — in HIS tab and saved: `foldFlute` over section 3 (79 rams, 0 out of range) · `stepDynamics()` (new, `score/public/note_card.js`)
-  set section 3's 932 strikes to six 30 s bands from 444 s, **p 37 · mp 55 · mf 72 · f 90 · ff 109 · fff 127** on the score's own eight-step
-  scale (§520). **The page still names them through the five-band table: 37 ppp · 55 p · 72 p · 90 mf · 109 f · 127 fff** — step 7's first job.
-- **C** — the cross-staff group (`layout.js` `crossOf`): a cluster on both piano staves is laid out whole in the treble system — one beam
-  above the treble, every stem up, rests and the accent row beam-side (never flipped to the far staff), the lower staff's ink moved by
-  4 + interStaffGapSs; the whole layout byte-identical without one (§521).
-- **D** — `tools/notate_section.js --groups t0-t1`, the grouping rule as one flag: runs of a part's strikes under 0.4 s → 2 or 3 = one group
-  (pair writing); longer = fours from the END over the under-0.25 s stretch, pairs from the start, an odd leftover a triple; accents kept; **no
-  dynamic on any group** (step 7's). Result: the piano 39 pairs · triple 606.27 · 22 fours (landing on the approved 620.32 four); the six parts
-  46 pairs + D51's two triples; 41 groups cross staves; **55 geometry flags in the run** (§522).
+**The task:** PLAN 2i, section 3's notation (444–624 s). **State: steps 1–7 built**, all in the MAIN notation file
+`notation/ir/piece-septet.ir.json` (VALID; `provenance.build` now ends `… --ensembleDyn 205-428@2 --groups 444-624.1 --groupCuts 2@587.32,611.72
+--max16 --dynOnChange 444-624.1`; R on the page re-runs it). Since checkpoint #1 (RUNNING_LOG §523–§529):
+- **His note moves** (§523–§524) — 17 strikes moved between parts in HIS tab, two rounds (he named `piece-septet-v1.33-preSec3NoteMoves` first);
+  round 1's 8 re-articulated to the new part's technique · 5 rams that landed in the flute folded into C3–D4 · his BCl at 618.16 → G3.
+- **E1** (§525–§527) — the piano cut by HIS times (§526 "a"): singles 581.21–586.96 · pairs from 587.32 · triple 611.05 · fours from 611.72 ·
+  an ottava on a group's beam side sends the group's accents below their notes and clears the beam by the house gap · a member's own chain
+  (technique sign, text, ottava) clears its group accent, the accent nearest (his Vn2 at 520.68).
+- **§528** — `--max16`: nothing written shorter than a 16th, anywhere (his general rule); the piano pairs 607.27–611.50 had become 32nds.
+- **E2 = step 7** (§529) — `dynamicBands` = the score's eight steps · `--dynOnChange 444-624.1` · **42 marks, six per part, p mp mf f ff fff,
+  each on the part's first strike in the band**, group members included · "changes" measured against the part's last WRITTEN dynamic, so a
+  surge's end mark will count (idle until step 8; tested synthetically). Nothing outside section 3 moved (measured item by item).
 
-**Latest deliverables:** `notation/app/notation.html` (go-to) · `score/public/note_card.js` (`stepDynamics`) · `notation/lib/layout.js`
-(`crossOf`, `grp.cross`) · `tools/notate_section.js` (`--groups`) · `tools/test_step_dynamics.js` (15 with `--save`) · `tools/test_cross_staff.js`
-(52, red on the old engine) · the saved `scores/piece-septet.json` · the MAIN IR · CN-86 (Lake George) · commits 127d1cb · a5252db · 7af362a ·
-4ec99ee · a1afe96 · e855422 · cbd805f · 17852bb + this checkpoint.
+**Latest deliverables:** `tools/notate_section.js` (`--groupCuts` · `--max16` · `--dynOnChange`) · `notation/lib/layout.js` (`clearChrome` · the
+beam-side ottava pass · the in-force on-change walk) · `notation/registry/container.json` (eight bands) · `tools/test_cross_staff.js` (73) ·
+`docs/NOTATION_STANDARDS.md` §2 (four new rows) · the saved `scores/piece-septet.json` · the MAIN IR · commits c1c021b · 5199eda · 572643d · ac20df6 ·
+46393df · 62ff909 · 83624d1 + this checkpoint.
 
-**The next concrete step — Opus, after a clear:** FIRST ask whether he has looked at the run (581 · 606.3 · 615–624 · 488.5 · 622) and take
-any crowding verdict before building. THEN **PLAN 2i step 7, the page rule for section 3's dynamics**, in the planning method (goal line →
-his word → build): (a) re-cut `engraving.layout.dynamicBands` in `notation/registry/container.json` so the eight-step velocities name
-themselves (37 p · 55 mp · 72 mf · 90 f · 109 ff · 127 fff, with pp and ppp below) — prove section 1 (all 127 = fff), the morph piano (D50's
-`dynFixed`) and the trills (`sfz`) unchanged; (b) section 3 only (D52): one band mark per part where its band changes, on that part's first
-note in the band — the `dynOnChange` machinery already in `layout.js` (the `dynShown` pre-pass ~line 356, the gate ~line 1255), scoped to
-444–624, and it must reach group members, which carry no mark today (§522); (c) rebuild via R's endpoint, batteries, his eye. Step 8 (the
-surge device, CN-84) is a short design on **Fable** before its Opus build.
+**The next concrete step — on FABLE, after a clear:** FIRST ask whether he has reloaded the notation page (F5 — not CTRL+SHIFT+R, which
+detaches the ♪ render) and looked — E1's spots: 520.3 Vn2 · 581–587 the new piano singles · 592.9 · 602.0 · 607–613 · 616.7 · 622.5 Pno · 601.9 Va ·
+487.8 Vc jeté · 623.7 Vn2; E2's marks: 444 · 474–478 · 504–507 · 534 · 561–566 · 594–596. Take any verdict (a fix is Opus work, no clear). THEN
+**PLAN 2i step 8, the crescendo run as the surge device — a SHORT design in the planning method** (`/plan-item`: the goal line → his word →
+the sub-steps → written into PLAN), for an Opus build after it. The material: 78 crescendo notes 526.79–558.90 in the six non-piano parts
+(technique senza_vel / ord, no velocity, no env — today they draw no dynamic). The planned shape: ppp → fff + arrow · the STANDARD surge shape as
+a template, not the save's curve · the D42 look at 100/s · no floor · "secco" at the curve's end · one player per onset by round robin, as the
+save has it · the performance instructions must say the morph curves are absolute and these are not. The on-change rule already reads a
+written end mark (§529).
 
-**Resume reads:** PLAN 2i steps 7–8 · RUNNING_LOG §520's last paragraph ("Left for step 7") · §522's cutting defaults · journal §4 D52.
+**Resume reads:** PLAN 2i step 8 · COMPOSITION_NOTES CN-84 and CN-49 · RUNNING_LOG §509 · journal §4 D42.
 
-**Decisions pending the composer:** his eye on sittings C–D — the crowding in the run (55 flags: the piano's beams/accents above the treble
-against Vn1's marks), the GC density (pairs every ~0.5–0.8 s, fours ~0.6–1.0 s) · §522's defaults (a two-note run under 0.25 s keeps the pair
-writing; groups carry no dynamic until step 7) · later: the pedal legend's wording (NITS).
+**Decisions pending the composer:** his eye on E1 and E2 (above) · two AI calls he may overturn, each a small change: (a) an ottava on the beam
+side moves the WHOLE group's accents below their notes, not only that note's (§527) · (b) a mark after a written dynamic compares against that
+dynamic (§529) · the accents in an ottava group sit under the treble staff however high the note (the per-mark floor) · later: the pedal
+legend's wording (NITS).
 
-**Deliberately uncommitted (`git status --short` at this checkpoint — identical to session 11's) — all his, left alone:** `bank/panel_snapshots.json` (his takes) ·
+**Deliberately uncommitted (`git status --short` at this checkpoint) — all his, left alone:** `bank/panel_snapshots.json` (his takes) ·
 `reaper/septet_rack.rpp` (his rack) · `bank/passages/4materials.json` · `accentedcres01.json` · `accentedcres01-2.json` · `chordcyc01.json` ·
 `chstr02.json` · `section3.json` (his passages) · `scores/Sec3.json` (his section-3 sketch) · `scores/SeptetSec03-Materials-B.json` · `-C` · `-D` ·
-(`SeptetSec03-Materialsa.json` and the `Sec3-Materials` working copy were empty — removed at his word 2026-09-14, §509) · `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` ·
-`scores/piece-septet-v1.32-finalDraft1.0.json` · `scores/piece-septet-v1.33-preSec3NoteMoves.json` (his named versions) · `scores/spectralMorph.json` (his save of 2026-09-14, the SPECTRAL-04
-comparison §466 — his to keep or delete) · `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
+`scores/piece-septet-v1.31-preDeleteMiddleMorph.json` · `-v1.32-finalDraft1.0.json` · `-v1.33-preSec3NoteMoves.json` (his named versions; v1.33 =
+his save-point before the note moves) · `scores/spectralMorph.json` (his save, the SPECTRAL-04 comparison §466 — his to keep or delete) ·
+`scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
 **Unsaved working copies** (`node tools/unsaved_check.js`, D17 — his to Save or Reload; piece-septet is clean): cres-run01 · cres2strike ·
 piano-harmonics-test · trill-curve-test · trillBuildTst · zz-ai-1t-walk.
 **Running:** nothing of the AI's (his :5300 and Reaper; every AI Browser-pane tab opened this session was closed).
 
 ---
 
-**Session 12 in one look (2026-09-14, Opus 5 ⇄ Fable 5.1) — RUNNING_LOG §515–§522.** His note on the order after the demo video (performance
+**Session 12 in one look (2026-09-14, Opus 5 ⇄ Fable 5.1) — RUNNING_LOG §515–§529.** His note on the order after the demo video (performance
 instructions → print score, the Tempus copy links the video; practice videos, §515) · PLAN 2i sittings A–D: go-to-time · the D49 audit and
 **D53** · the save edits (folded, stepped p → fff) · the cross-staff group · `--groups` · CN-86 for Lake George (the morph arrives at a beating
-pattern and holds; after Sciarrino's *Raffigurar Narciso al fonte*).
+pattern and holds; after Sciarrino's *Raffigurar Narciso al fonte*) · his note moves, re-articulated and folded (§523–§524) · E1: the piano cut by his times, the ottava and accent rules (§525–§527) · `--max16` (§528) · E2 = step 7, the dynamics once per band per part (§529).
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
 
@@ -160,7 +158,7 @@ not, the page picks up the new IR by itself — **but a change to `notation/lib/
 page** (§403; the MAIN file is safe) · **one open composer tab per score** (2d.5.8) · the piano never swells (CN-34) · the MAIN IR is 5.2 MB
 and the page re-fetches it every second (NITS).
 
-**Tests:** `node tools/test_morph_notation.js` (178 — incl. the three D50 guards) · `tools/test_cross_staff.js` (52 — the cross-staff layout + the `--groups` rule) · `tools/test_step_dynamics.js --save` (15) · `tools/test_septet_notation.js` (86) · `tools/test_trills.js` (92) · `tools/test_identity.js` (20) ·
+**Tests:** `node tools/test_morph_notation.js` (178 — incl. the three D50 guards) · `tools/test_cross_staff.js` (73 — the cross-staff layout · `--groups`/`--groupCuts` · the ottava and chain rules · `--max16` · section 3's dynamics) · `tools/test_step_dynamics.js --save` (15) · `tools/test_septet_notation.js` (86) · `tools/test_trills.js` (92) · `tools/test_identity.js` (20) ·
 `score/tools/check_cresc_panel.js` (35) · `tools/morph_septet_check.js` · `tools/trill_conflicts.js --list` (3, accepted) · check_fill ·
 check_containers · check_cresc_deck · the tuba battery per `notation/ir/README.md` (stage only files the septet lacks — its `index.json` exists).
 
