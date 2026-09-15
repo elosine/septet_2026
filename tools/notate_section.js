@@ -1204,6 +1204,30 @@ for (let i = 0; i < process.argv.length; i++) {
   }
   console.log('  ensembleDyn ' + m[0] + ': ' + n + ' notes, ' + res.rows.length + ' onsets — ' + res.rows.map(r => r.t.toFixed(2) + ' ' + r.mark).join(' · '));
 }
+// [PLAN 2i.7, §529] --dynOnChange t0-t1 — THE PAGE RULE FOR A SECTION'S DYNAMICS (CN-83; D52, section 3 only: "one mark per part where
+// its band changes, on that part's first note in the band; nothing else" — section 1 keeps a mark on every strike, §401d). Every STRIKE
+// starting in the span gets `dynMark: 'band'` + `dynOnChange` on its device — a beamed group's members too, whose cluster writing
+// carries no mark (§522) — and layout.js's on-change pass decides, per part in onset order, which of them show their band. The
+// velocities are the save's (stepDynamics, §520); the marks are the registry's eight-step dynamicBands.
+{
+  const di = process.argv.indexOf('--dynOnChange');
+  if (di >= 0) {
+    const dm = String(process.argv[di + 1] || '').match(/^([\d.]+)-([\d.]+)$/);
+    if (!dm) { console.error('--dynOnChange needs t0-t1 (e.g. --dynOnChange 444-624.1)'); process.exit(2); }
+    const D0 = parseFloat(dm[1]), D1 = parseFloat(dm[2]);
+    let n = 0, inGroups = 0;
+    for (const e of doc.events) {
+      if (e.env !== 'strike' || e.onset < D0 - 1e-9 || e.onset > D1 + 1e-9) continue;
+      const existing = doc.overlays.find(o => o.kind === 'engraving' && o.target.event === e.id);
+      if (existing) {
+        if (existing.value.device && existing.value.device.clusterId) inGroups++;
+        existing.value.device = Object.assign({}, existing.value.device, { dynMark: 'band', dynOnChange: true });
+      } else doc.overlays.push({ id: 'ov-dynchg-' + e.id, kind: 'engraving', target: { event: e.id }, value: { device: { dynMark: 'band', dynOnChange: true } }, provenance: 'authored' });
+      n++;
+    }
+    console.log('  --dynOnChange ' + D0 + '-' + D1 + ': ' + n + ' strikes on the rule (' + inGroups + ' of them group members)');
+  }
+}
 // --bare t0-t1[@part] (day 26): CLEAR THE NOTATION, KEEP THE BRICKS.
 // Composer, setting up Part 3 on CLOUD02-I: *"the bricks are fine, that's
 // what I want to see, just the bricks. It's the GC notation that's

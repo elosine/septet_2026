@@ -14444,3 +14444,58 @@ subdivision over 4 · no rest shorter than a 16th and no third beam level on the
 a 16th, 0 third-level beams; 607.2–611.7 holds 25 16th rests and 24 beam items.
 
 **His to do:** nothing to reload for this one (only the IR changed; the page picks it up) — but §527's reload still stands if not done.
+
+## §529. BUILT: PLAN 2i.7 (sitting E2) — section 3's dynamics: the eight-step bands, one mark per part where its band changes (2026-09-14, Opus 5)
+
+**His word:** *"no clear, good for e2"* — after §528. The step as planned (PLAN 2i.7, D52): *"one mark per part where its band changes, on
+that part's first note in the band; nothing else"*, section 3 only; first align `dynamicBands` to the eight-step scale (§520).
+
+**Measured first:**
+- **The page's marks today:** section 3 drew a mark on EVERY strike — 707 marks — through the five-band table: 64 ppp · 235 p · 60 mf ·
+  170 f · 178 fff (37 → ppp, 55 and 72 both → p, 90 → mf, 109 → f). Section 1: 499 fff + 69 sfz. Section 2: 44 (the morph piano's
+  ensemble marks, D50, and its neighbours). Group members carried none (their cluster device `dynMark: false`, §522).
+- **The score's own scale** (`Cresc.dynHeight` × 127 / 10): ppp 0 · pp 18 · p 37 · mp 55 · mf 72 · f 90 · ff 109 · fff 127; section 3's
+  strikes use exactly six of these (64 · 139 · 121 · 60 · 190 · 358).
+- **Who reads the table:** the page (`layout.js` bandOf) and the build's `--ensembleDyn` (the morph piano, D50). With the eight-step table,
+  laid out and recomputed: **only section 3's marks change** (ppp→p 64 · p→mp 118 · p→mf 117 · mf→f 60 · f→ff 170); section 1, section 2
+  and all 44 D50 marks identical. glyphs.dynamic has all eight.
+- **No registry device marks on change** (§401d took section 1 to a mark on every strike); the `dynOnChange` pass in layout.js was idle.
+- **Section 3's other events:** the crescendo run's 78 notes (526.79–558.90, no velocity, no env) write no dynamic today — step 8 gives them
+  their ppp → fff.
+
+**Built:**
+1. **`notation/registry/container.json` `dynamicBands` = eight steps**, each max the midpoint to the next: ≤9 ppp · ≤27 pp · ≤46 p · ≤63 mp ·
+   ≤81 mf · ≤99 f · ≤118 ff · ≤127 fff (the note records the five-band table it replaces).
+2. **`tools/notate_section.js --dynOnChange t0-t1`**: every strike starting in the span gets `dynMark: 'band'` + `dynOnChange` on its device —
+   group members included (225 of the 932), overriding the cluster's "no mark". Appended to the recorded build: `… --max16 --dynOnChange
+   444-624.1`.
+3. **`layout.js`, the on-change pass — the part's last WRITTEN dynamic (AI's reading of "where its band changes", within D52):** from a
+   part's first on-change note, a note of the same part that writes a dynamic of its own (a surge's pair — its end mark · a literal mark · a
+   band mark off the rule) sets what is in force; the next on-change note shows its band unless that very band is in force. Why: after step 8,
+   a crescendo run ending fff followed by an mf strike must say mf again, and one ending on the band already in force must not repeat it. The
+   walk starts empty at the part's first on-change note, so a section's first note always shows its mark. Today no section-3 note writes
+   such a dynamic, so this part of the rule is idle until step 8 — tested synthetically.
+
+**Result — every part, six marks, p · mp · mf · f · ff · fff, each on the part's first strike in the band (42):**
+Fl 453.40 · 474.91 · 505.50 · 561.12 · 564.17 · 594.91 — BCl 463.24 · 475.48 · 506.60 · 561.86 · 564.75 · 594.40 — Pno 444.00 · 474.07 · 504.06 ·
+534.45 · 564.17 · 594.20 — Vn1 462.07 · 477.65 · 504.43 · 562.59 · 566.15 · 594.83 — Vn2 454.60 · 475.48 · 504.80 · 562.35 · 564.77 · 594.14 —
+Va 464.38 · 474.71 · 505.89 · 561.12 · 564.03 · 595.68 — Vc 455.76 · 474.32 · 504.09 · 561.74 · 565.95 · 594.53. (The winds' and strings' f
+arrives late, 561–563, because they are silent through the crescendo run; ff follows 2–4 s later.)
+
+**Measured after:** section 3 — 666 per-strike marks gone, one mark added on a group member, the instruction texts (320) and ottavas (124)
+moved into the freed dynamic slot · **outside 444–624.5 every item identical** against the committed engine + five-band table + §528's file
+(6162 items) · no mark within 0.15 ss of its own column's ink · the build's band flags **72 → 32, none new**.
+
+**Guards:** `tools/test_cross_staff.js` 66 → **73** — the table is the eight-step scale · the build carries `--dynOnChange 444-624.1` · all 932
+section-3 strikes on the rule and nothing outside · every part's six marks on its first strike per band (42) · the rule reaches a group
+member · **the dynamic in force after a written one** (a synthetic ppp → fff / ppp → f pair on Va's first crescendo note: its next strike
+561.12 shows f / f / nothing — red on the committed engine). §522's "no dynamic on a group" check re-worded: no cluster-written mark, only
+the rule's. Batteries: septet 86 · morph 178 (D50 guards) · trills 92 · identity · step_dynamics --save 15 · check_cresc_panel ·
+morph_septet_check · trill_conflicts 3 — green. **Piece #4's batteries on a fresh staging (26 files, removed after): test_layout ·
+test_render (snapshots stable) · test_animobj · test_splice · ir_validate_battery GREEN.**
+
+**Verified in the running app** (:5300, a fresh tab, closed after): the served registry's bands ppp … fff, the IR build ending
+`--dynOnChange 444-624.1`, the engine with the in-force walk; laid out in-page the same 42 marks per part; section 1's 499 fff unchanged.
+
+**His eye owed:** RELOAD the notation page (F5 — a `notation/lib` and registry change) — section 3's marks at 444 · 474–478 · 504–507 · 534 ·
+561–563 · 564–566 · 594–596, and the lighter look with no mark on every strike. **The render is behind** (step 9).

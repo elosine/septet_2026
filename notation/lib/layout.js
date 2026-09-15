@@ -353,20 +353,37 @@
     // dynOnChange draws its mark only where the band differs from the last
     // band-marked note of the SAME PART, in onset order. Decided once here,
     // before any unit is placed, so chunk order cannot change the answer.
+    // [§529, PLAN 2i.7] ...measured against THE PART'S LAST WRITTEN DYNAMIC, not only its last on-change mark: from the part's
+    // first on-change note on, a note of the same part that writes a dynamic of its own — a surge's pair (its END mark), a literal
+    // mark (sfz), a band mark outside the rule — sets what is in force, so the next on-change note shows its band unless that very
+    // band is already in force. (Section 3's crescendo run, once it writes ppp → fff, is followed by the band it lands in.) The walk
+    // starts at the part's first on-change note with nothing in force, so a section's first note always shows its mark; a part with
+    // no on-change note is not walked.
     const dynShown = new Set();
     {
+      const writtenDynOf = (d, e) => d.dynPair ? (Array.isArray(d.dynPair) ? d.dynPair : (o.dynPair || ['ppp', 'fff']))[1]
+        : d.dynMark === 'band' ? (Number.isFinite(e.vel) ? (d.dynFixed || bandOf(e.vel)) : null)
+        : (typeof d.dynMark === 'string' ? d.dynMark : null);
       const byPart = new Map();
       for (const e of ir.events || []) {
         const d = deviceOf(e);
-        if (d.dynMark !== 'band' || !d.dynOnChange || !Number.isFinite(e.vel)) continue;
+        const onCh = d.dynMark === 'band' && !!d.dynOnChange && Number.isFinite(e.vel);
+        const w = onCh ? (d.dynFixed || bandOf(e.vel)) : writtenDynOf(d, e);
+        if (!onCh && !w) continue;
         const p = partOfEv.get(e.id);
         if (!byPart.has(p)) byPart.set(p, []);
-        byPart.get(p).push(e);
+        byPart.get(p).push({ e, onCh, w });
       }
       for (const list of byPart.values()) {
-        list.sort((a, b) => a.onset - b.onset);
+        list.sort((a, b) => a.e.onset - b.e.onset);
+        const i0 = list.findIndex(x => x.onCh);
+        if (i0 < 0) continue;
         let last = null;
-        for (const e of list) { const m = bandOf(e.vel); if (m !== last) { dynShown.add(e.id); last = m; } }
+        for (let i = i0; i < list.length; i++) {
+          const x = list[i];
+          if (!x.onCh) { last = x.w; continue; }
+          if (x.w !== last) { dynShown.add(x.e.id); last = x.w; }
+        }
       }
     }
     // [§400] instruction text ON CHANGE (Gould: a technique instruction is

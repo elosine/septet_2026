@@ -322,27 +322,39 @@
    "stackGapSs": 0.45,
    "dynamicBands": [
     {
-     "max": 45,
+     "max": 9,
      "mark": "ppp"
     },
     {
-     "max": 75,
+     "max": 27,
+     "mark": "pp"
+    },
+    {
+     "max": 46,
      "mark": "p"
     },
     {
-     "max": 100,
+     "max": 63,
+     "mark": "mp"
+    },
+    {
+     "max": 81,
      "mark": "mf"
     },
     {
-     "max": 118,
+     "max": 99,
      "mark": "f"
+    },
+    {
+     "max": 118,
+     "mark": "ff"
     },
     {
      "max": 127,
      "mark": "fff"
     }
    ],
-   "_dynamicBandsNote": "day 23 (composer: yes to 'the ladder, the named dynamics, ppp to fff, and the velocity conversion'): THE ONE-SHOT DYNAMIC = one marking from five WIDE bands, middle collapsed (ppp · p · mf · f · fff), looked up from the event's captured velocity (IR `vel`, amendment 5). Thresholds PROVISIONAL — equal-ish widths over the used range — until the SI2 tuba velocity→dB ladder is measured (DYNAMICS_FRAMEWORK.md §7); section-1 census under these: staccato 4/66/277/221/131 of 699. Device dynMark 'band' resolves here; a literal mark (e.g. 'sfzp') bypasses the table.",
+   "_dynamicBandsNote": "2026-09-14 (PLAN 2i.7, RUNNING_LOG §529 — the score's own EIGHT-step scale, Cresc.dynHeight × 127 / 10: ppp 0 · pp 18 · p 37 · mp 55 · mf 72 · f 90 · ff 109 · fff 127; each band's max = the midpoint to the next step, so a velocity names the step it was set to — section 3's stepped strikes read p · mp · mf · f · ff · fff, not §520's ppp · p · p · mf · f · fff). Measured on the whole MAIN file: only section 3's marks change; section 1 (fff, sfz), section 2 and the morph piano's 44 ensemble marks (D50) are identical. The five-band table it replaces: ≤45 ppp · ≤75 p · ≤100 mf · ≤118 f · ≤127 fff. EARLIER: day 23 (composer: yes to 'the ladder, the named dynamics, ppp to fff, and the velocity conversion'): THE ONE-SHOT DYNAMIC = one marking from five WIDE bands, middle collapsed (ppp · p · mf · f · fff), looked up from the event's captured velocity (IR `vel`, amendment 5). Thresholds PROVISIONAL — equal-ish widths over the used range — until the SI2 tuba velocity→dB ladder is measured (DYNAMICS_FRAMEWORK.md §7); section-1 census under these: staccato 4/66/277/221/131 of 699. Device dynMark 'band' resolves here; a literal mark (e.g. 'sfzp') bypasses the table.",
    "flagClearanceSs": 0.38,
    "chainAboveGapSs": 0.3,
    "_chainAboveGapNote": "day 23: when the chain sits ABOVE a flagged stem-up unit it goes BETWEEN the staff and the flag (composer: 'let's see if we can get the dynamic above the staff and below the bottom of the flag'); the flag-clear stem rule then clears the chain, and this tighter gap (vs the 0.45 house standard) is the air on each side of the mark in that slot.",

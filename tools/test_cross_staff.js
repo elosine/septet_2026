@@ -92,7 +92,8 @@ ok(!model.warnings.some(w => /beam group /.test(w)), 'no beam-group warnings any
   ok(triples.join() === '3@620.56,5@622.01,5@623.20,6@488.51', 'the triples outside the piano (D51\'s writing): Vn1 620.56 · Va 622.01 · Va 623.20 · Vc 488.51 (got ' + triples.join(' ') + ')');
   ok(S3.every(ms => ms.slice(1).every((e, i) => e.onset - ms[i].onset < 0.4)), 'every group: every gap under 0.4 s');
   const dyn = new Set([...ir.overlays].filter(ov => ov.kind === 'engraving' && ov.value.device && ov.value.device.clusterId && ov.value.device.dynMark).map(ov => ov.target.event));
-  ok(S3.every(ms => ms.every(e => !dyn.has(e.id))), 'no dynamic written on a section-3 group (the page rule\'s, D52 · 2i.7)');
+  // [§529] superseded by the page rule (2i.7): a group carries no --dyn mark of its own — its members are on --dynOnChange (below)
+  ok(S3.every(ms => ms.every(e => !dyn.has(e.id) || ir.overlays.find(ov => ov.kind === 'engraving' && ov.target.event === e.id).value.device.dynOnChange)), 'no cluster-written dynamic on a section-3 group — only the page rule\'s (D52 · 2i.7)');
   ok(S3.every(ms => { const acc = ms.map(e => ir.overlays.find(ov => ov.kind === 'engraving' && ov.target.event === e.id).value.device.nhArtic); return acc.every(a => a === 'accent'); }), 'every head in a group keeps its accent');
 }
 
@@ -166,6 +167,51 @@ ok(!model.warnings.some(w => /beam group /.test(w)), 'no beam-group warnings any
   const pn = [...new Set(clusterOf.values())].map(cl => members(cl)).filter(ms => partOfEv.get(ms[0].id) === 2 && ms[0].onset >= 607.2 && ms[0].onset < 611.6 && ms.length <= 3);
   const devOf = id => ir.overlays.find(ov => ov.kind === 'engraving' && ov.target.event === id).value.device;
   ok(pn.length === 9 && pn.every(ms => ms.every(e => devOf(e.id).noteBeams === 2 && devOf(e.id).beamSubdivision === 4)), 'the piano pairs 607.27–611.50: 9 groups, every note a 16th (' + pn.length + ' groups)');
+}
+
+// ---- [PLAN 2i.7, §529] section 3's dynamics: the eight-step bands, one mark per part where its band changes ----
+{
+  const BANDS = C.engraving.layout.dynamicBands;
+  const bandOf = v => (BANDS.find(b => v <= b.max) || BANDS[BANDS.length - 1]).mark;
+  ok(BANDS.map(b => b.mark).join() === 'ppp,pp,p,mp,mf,f,ff,fff' && [37, 55, 72, 90, 109, 127].map(bandOf).join() === 'p,mp,mf,f,ff,fff' && bandOf(0) === 'ppp' && bandOf(18) === 'pp',
+    'dynamicBands = the eight-step scale: 37 p · 55 mp · 72 mf · 90 f · 109 ff · 127 fff (ppp 0 · pp 18)');
+  ok(/ --dynOnChange 444-624\.1( |$)/.test(ir.provenance.build), 'the recorded build carries --dynOnChange 444-624.1');
+  const devOf = id => { const ov = ir.overlays.find(o => o.kind === 'engraving' && o.target.event === id); return ov ? ov.value.device : {}; };
+  const S3s = ir.events.filter(e => e.env === 'strike' && e.onset >= 444 && e.onset <= 624.1);
+  ok(S3s.length === 932 && S3s.every(e => devOf(e.id).dynMark === 'band' && devOf(e.id).dynOnChange === true), 'all 932 section-3 strikes on the rule, group members included (' + S3s.filter(e => devOf(e.id).dynOnChange).length + ')');
+  ok(!ir.events.some(e => (e.onset < 444 || e.onset > 624.1) && devOf(e.id).dynOnChange), 'no note outside section 3 on the rule (D52: section 1 keeps a mark on every strike)');
+  const bandT = t => ['p', 'mp', 'mf', 'f', 'ff', 'fff'][Math.max(0, Math.min(5, Math.floor((t - 444 + 1e-6) / 30)))];
+  let total = 0, onGroups = 0, badParts = [];
+  for (let p = 0; p < 7; p++) {
+    const st = S3s.filter(e => partOfEv.get(e.id) === p).sort((a, b) => a.onset - b.onset);
+    const want = []; let last = null;
+    for (const e of st) { const b = bandOf(e.vel); if (b !== last) { want.push(e.onset.toFixed(2) + ' ' + b); last = b; } }
+    const marks = model.systems.filter(S => String(S.key).split(':')[0] === String(p)).flatMap(S => S.items)
+      .filter(it => it.k === 'glyph' && /^dyn-/.test(it.g) && it.t >= 444 && it.t <= 624.5).map(it => it.t.toFixed(2) + ' ' + it.g.slice(4)).sort((a, b) => parseFloat(a) - parseFloat(b));
+    total += marks.length;
+    onGroups += marks.filter(mk => st.some(e => e.onset.toFixed(2) === mk.split(' ')[0] && clusterOf.has(e.id))).length;
+    if (want.join('|') !== marks.join('|') || marks.map(mk => mk.split(' ')[1]).join() !== 'p,mp,mf,f,ff,fff') badParts.push(p + ': ' + marks.join(' · '));
+  }
+  ok(badParts.length === 0 && total === 42, 'every part: six marks, p mp mf f ff fff, each on its first strike in the band — 42 in all (' + total + (badParts.length ? '; ' + badParts.join(' | ') : '') + ')');
+  ok(onGroups >= 1, 'the rule reaches group members: ' + onGroups + ' of the 42 marks on a beamed note');
+  // the rule after a written dynamic (for 2i.8's surge): a crescendo note that WRITES a dynamic sets it in force. Va's next strike after its
+  // first crescendo note is 561.12, the first of the f band: with nothing written it shows f · after a written ppp → fff it still shows f
+  // (the band changed) · after a written ppp → f it shows nothing (f already in force)
+  {
+    const irX = JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'ir', 'piece-septet.ir.json'), 'utf8'));
+    const partX = new Map(); for (const c of irX.chunks) for (const id of c.events || []) partX.set(id, c.part);
+    const cres = irX.events.filter(e => e.env !== 'strike' && partX.get(e.id) === 5 && e.onset >= 520 && e.onset < 560).sort((a, b) => a.onset - b.onset)[0];
+    const nextStrike = irX.events.filter(e => e.env === 'strike' && partX.get(e.id) === 5 && cres && e.onset > cres.onset).sort((a, b) => a.onset - b.onset)[0];
+    const markAt = (M, e) => { const it = M.systems.find(S => String(S.key) === '5').items.find(x => x.k === 'glyph' && /^dyn-/.test(x.g) && Math.abs(x.t - e.onset) < 1e-6); return it ? it.g.slice(4) : null; };
+    const withPair = pr => {
+      const J = JSON.parse(JSON.stringify(irX));
+      J.overlays.push({ id: 'ov-test-surge', kind: 'engraving', target: { event: cres.id }, value: { device: { dynPair: pr } }, provenance: 'authored' });
+      return markAt(Layout.layoutSection(J, glyphs, Object.assign({ m4AttackLines: false, frameParts: ens.parts.map(p => p.part), ensemble: ens, techniques: T }, C.engraving.layout)), nextStrike);
+    };
+    const none = markAt(model, nextStrike), toFff = withPair(['ppp', 'fff']), toF = withPair(['ppp', 'f']);
+    ok(cres && nextStrike && bandOf(nextStrike.vel) === 'f' && none === 'f' && toFff === 'f' && toF === null,
+      'the dynamic in force after a written one (Va ' + (cres && cres.onset.toFixed(2)) + ' → ' + (nextStrike && nextStrike.onset.toFixed(2)) + '): nothing written → ' + none + ' · ppp→fff → ' + toFff + ' · ppp→f → ' + (toF || 'none'));
+  }
 }
 
 console.log((fail ? 'FAIL' : 'PASS') + ' — test_cross_staff: ' + pass + ' pass, ' + fail + ' fail');
