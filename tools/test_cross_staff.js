@@ -73,7 +73,8 @@ ok(!model.warnings.some(w => /beam group /.test(w)), 'no beam-group warnings any
   const S3 = [...new Set(clusterOf.values())].map(cl => members(cl)).filter(ms => ms[0].onset >= 444);
   const byPart = p => S3.filter(ms => partOfEv.get(ms[0].id) === p);
   const sizes = p => byPart(p).map(ms => ms.length);
-  const want = { 0: [4, 0, 0], 1: [7, 0, 0], 3: [10, 0, 0], 4: [10, 0, 0], 5: [8, 1, 0], 6: [7, 1, 0], 2: [39, 1, 22] };
+  // re-pinned 2026-09-14 after his nine note moves at 616.8-623.2 s (RUNNING_LOG §523): Fl 3 pairs · Vn1 7 + a triple · Va 6 + 2 · Vc 4 + 1
+  const want = { 0: [3, 0, 0], 1: [7, 0, 0], 3: [7, 1, 0], 4: [10, 0, 0], 5: [6, 2, 0], 6: [4, 1, 0], 2: [39, 1, 22] };
   for (const p of Object.keys(want).map(Number)) {
     const s = sizes(p), got = [2, 3, 4].map(n => s.filter(x => x === n).length);
     ok(got.join() === want[p].join(), 'part ' + p + ': pairs · triples · fours = ' + want[p].join(' · ') + ' (got ' + got.join(' · ') + ')');
@@ -83,7 +84,7 @@ ok(!model.warnings.some(w => /beam group /.test(w)), 'no beam-group warnings any
   ok(pno.flat().length === 169 && Math.abs(pno[0][0].onset - 581.207) < 0.002 && Math.abs(pno[pno.length - 1][3].onset - 624) < 0.002, 'the piano run: all 169 notes, 581.21 → 624.00');
   ok(pno.filter(ms => ms.length === 4).every(ms => ms.slice(1).every((e, i) => e.onset - ms[i].onset < 0.25)), 'every four: every gap under 0.25 s');
   const triples = S3.filter(ms => ms.length === 3 && partOfEv.get(ms[0].id) !== 2).map(ms => partOfEv.get(ms[0].id) + '@' + ms[0].onset.toFixed(2)).sort();
-  ok(triples.join() === '5@622.01,6@488.51', 'D51\'s two triples: Va 622.01 · Vc 488.51 (got ' + triples.join(' ') + ')');
+  ok(triples.join() === '3@620.56,5@622.01,5@623.20,6@488.51', 'the triples outside the piano (D51\'s writing): Vn1 620.56 · Va 622.01 · Va 623.20 · Vc 488.51 (got ' + triples.join(' ') + ')');
   ok(S3.every(ms => ms.slice(1).every((e, i) => e.onset - ms[i].onset < 0.4)), 'every group: every gap under 0.4 s');
   const dyn = new Set([...ir.overlays].filter(ov => ov.kind === 'engraving' && ov.value.device && ov.value.device.clusterId && ov.value.device.dynMark).map(ov => ov.target.event));
   ok(S3.every(ms => ms.every(e => !dyn.has(e.id))), 'no dynamic written on a section-3 group (the page rule\'s, D52 · 2i.7)');

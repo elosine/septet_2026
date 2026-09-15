@@ -14251,3 +14251,51 @@ group dynamic, every accent kept — 52 pass. Batteries green: morph 178 · sept
 **For his eye:** reload the notation page; the run from **581** (pairs), **606.3** (the triple, then the fours), **615–624** (the fours, the
 crowding), **488.5** (Vc triple), **622** (Va triple). Open: the crowding verdicts · whether the pairs' GCs every ~0.5–0.8 s and the fours'
 every ~0.6–1.0 s read.
+
+## §523. DONE: his nine note moves after 616.8 s — the moved strikes re-articulated to their new part, three flute rams folded, the MAIN file rebuilt; four piano notation items HELD (2026-09-14, Fable 5.1)
+
+**What prompted it — his words, at `/postclear`:** *"for the piano when there needs to be an ottava, let's move the accent below the note so
+there's room for the ottava above. And make sure the ottava clears the beam, even if it protrudes into the lane above. For the piano, let's
+start the eighth note beaming, the two to a beam at 587.32. And let's start the four grouping at 611.72. hold these I want to move some
+notes, lets do that first, move in composer score and save? I'm moving notes from one part to another"* — then *"how do I make sure I can
+come back here, the current state of the score? Do I do a named version now?"* (answered: yes, Name version first; he named
+`piece-septet-v1.33-preSec3NoteMoves`) — then, after his moves and Save: *"617.88 I moved a few notes after this time, but I didn't change
+the articulation. They didn't go back to that instrument's default articulation. Bartok pits, slap tongue, pizzicato on the flute, etc. Can
+you look at the notes in the ensemble past this time and see which ones don't have the proper articulation and then switch them? save
+file is current"*.
+
+**The four HELD items (his, verbatim above; queued before PLAN 2i step 7, Opus):** (1) piano: when a note needs an ottava, the accent goes
+below the note, the ottava above · (2) the ottava clears the beam, even if it protrudes into the lane above · (3) piano beaming two to a
+beam starts at 587.32 · (4) piano fours start at 611.72. *AI's reading, unverified against the run:* (3) and (4) are piano-only time
+thresholds on the `--groups` rule — singles before 587.32, pairs only between 587.32 and 611.72, fours from 611.72.
+
+**Measured first (the save, `scores/piece-septet.json`, 1885 objects):** section 3's strike techniques by part — Fl `pizzicato` 97 ·
+BCl `slap` 93 · Pno `main` 357 · Vn1/Vn2 `bartok_vel` 89/99 · Va/Vc `gettato_vel` 91/98 — and 86 off-default notes: **78 are the
+crescendo surge (526.79–558.90, `senza_vel`/`ord`, `cc7Abs`+`velAbs`, "cresc surge 5× ppp→fff … swell strike") — the device, left alone**;
+the other **8 are strikes at 616.83–623.20 carrying the destination instrument's BASE technique** (`senza_vel` on strings, `ord` on the
+flute), not the source part's articulation — so the composer's move gives a note the new instrument's plain technique, not the
+passage's. Two of the eight lie before his "617.88" (616.83 Fl, 617.49 Vc), same signature; included.
+
+**The moves themselves (v1.33 vs the save — 9 objects changed `layer`, nothing else in the file changed):**
+616.83 wc-2863 Vc→Fl 72 · 617.49 wc-2866 Fl→Vc 60 · 618.13 wc-2869 Vc→Vn2 65 · 618.16 wc-3037 Vn1→BCl **79→67 (his pitch change; already
+`slap`)** · 619.37 wc-2875 Vc→Fl 74 · 620.56 wc-3049 Va→Vn1 **49→61 (his)** · 620.94 wc-2883 Fl→Vn2 57 · 621.70 wc-2887 Vn2→Fl 77 ·
+623.20 wc-3064 Vn1→Va 61.
+
+**Done, on the file (his tab untouched — he must Reload; snapshots `piece-septet.preArticFix.json` / `.preFold.json` in the AI's
+scratchpad, plus his v1.33):**
+1. **8 techniques switched** to the part's section-3 articulation: wc-2863/2875/2887 `ord`→`pizzicato` · wc-2869/2883/3049
+   `senza_vel`→`bartok_vel` · wc-2866/3064 `senza_vel`→`gettato_vel`. The save is one line of JSON; the diff is exactly those strings
+   (+25 bytes). Verified: 932 section-3 strikes, 0 off-default, the 78 surge notes untouched.
+2. **The fold rule re-applied** (`foldFlute` 430–700, C3–D4, the same call as §507 — the three notes that landed in the flute were outside
+   the section's bass-flute range): wc-2863 72→60 · wc-2875 74→62 · wc-2887 77→53. `sonifyNote` only. 100 rams now, 0 stuck.
+3. **The MAIN file rebuilt** with the recorded build (unchanged flags, `… --groups 444-624.1`); the IR carries the new techniques and
+   pitches at every one of the nine (checked event by event). The page picks the IR up by itself.
+4. **Batteries:** septet 86 · morph 178 · trills 92 · identity green unchanged. **Two tests pinned the pre-move score and went red on his
+   moves, not on the fix — re-pinned:** `test_cross_staff` (Fl 3 pairs, Vn1 7 + a triple at 620.56, Va 6 + triples 622.01 and 623.20,
+   Vc 4 + 488.51; the piano's 39·1·22 untouched) · `test_step_dynamics --save` (100 rams). Both green after.
+
+**Flag for him (his pitch, his call):** the BCl note at 618.16 (wc-3037) he set to **G4 (67)** — the Xsample slap-tongue zone is
+**34–65 (up to F4)**, sample lengths stop at 65; the build warns "no slap sample length for midi 67", playback has no slap sample there.
+Drop it to F4 or below, or leave it.
+
+**Not done:** the four held items (Opus, next) · PLAN 2i step 7 (after them).
