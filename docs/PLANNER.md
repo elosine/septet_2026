@@ -5,7 +5,7 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ✦** 2026-09-14, session 12 checkpoint #2 — **SECTION 3'S NOTATION (PLAN 2i): steps 1–7 built (§515–§529 — go-to-time · D53 · folded + stepped and saved · his note moves · the cross-staff group · every close run grouped, the piano cut by his times · the ottava/accent rules · nothing shorter than a 16th · the dynamics once per band per part); his eye owed on E1 and E2. NEXT: step 8, the crescendo run as the surge device — a short design on Fable, then the Opus build; then sitting F (re-render, demo video).**
+**NOW ✦** 2026-09-15 (past midnight of session 12), checkpoint #3 — **SECTION 3'S NOTATION (PLAN 2i): steps 1–7 built (§515–§529); step 8 DESIGNED (§530, D54) — the crescendo run's 78 swells as the tuba's surge device: the STANDARD surge as a template (the tool's ratio-5 exponential, not the save's bent curve) · 100/s · no floor · ppp → fff + arrow · "sempre secco" once per part · the meter rides it. NEXT: the Opus build, PLAN 2i.8.1–8.5 after a clear (the test first, red on the old engine) → his eye (526.8 Va · the middle · 557–559) → 8.6–8.7 → sitting F (re-render, demo video). His eye still owed on E1 and E2.**
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 

@@ -85,59 +85,52 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### CHECKPOINT — 2026-09-14, session 12 (mid-session checkpoint #2; Opus 5; PLAN 2i steps 1–7 built, step 8 next)
+### CHECKPOINT — 2026-09-15 (past midnight of session 12), checkpoint #3; Fable 5.1; PLAN 2i.8 DESIGNED (§530, D54) — the Opus build next
 
-**The task:** PLAN 2i, section 3's notation (444–624 s). **State: steps 1–7 built**, all in the MAIN notation file
-`notation/ir/piece-septet.ir.json` (VALID; `provenance.build` now ends `… --ensembleDyn 205-428@2 --groups 444-624.1 --groupCuts 2@587.32,611.72
---max16 --dynOnChange 444-624.1`; R on the page re-runs it). Since checkpoint #1 (RUNNING_LOG §523–§529):
-- **His note moves** (§523–§524) — 17 strikes moved between parts in HIS tab, two rounds (he named `piece-septet-v1.33-preSec3NoteMoves` first);
-  round 1's 8 re-articulated to the new part's technique · 5 rams that landed in the flute folded into C3–D4 · his BCl at 618.16 → G3.
-- **E1** (§525–§527) — the piano cut by HIS times (§526 "a"): singles 581.21–586.96 · pairs from 587.32 · triple 611.05 · fours from 611.72 ·
-  an ottava on a group's beam side sends the group's accents below their notes and clears the beam by the house gap · a member's own chain
-  (technique sign, text, ottava) clears its group accent, the accent nearest (his Vn2 at 520.68).
-- **§528** — `--max16`: nothing written shorter than a 16th, anywhere (his general rule); the piano pairs 607.27–611.50 had become 32nds.
-- **E2 = step 7** (§529) — `dynamicBands` = the score's eight steps · `--dynOnChange 444-624.1` · **42 marks, six per part, p mp mf f ff fff,
-  each on the part's first strike in the band**, group members included · "changes" measured against the part's last WRITTEN dynamic, so a
-  surge's end mark will count (idle until step 8; tested synthetically). Nothing outside section 3 moved (measured item by item).
+**The task:** PLAN 2i, section 3's notation (444–624 s). **State: steps 1–7 built (§515–§529); step 8 DESIGNED** — his *"good, write it in and prep for
+clear"*. **No code changed since checkpoint #2**; the MAIN notation file `notation/ir/piece-septet.ir.json` is VALID and unchanged (`provenance.build`
+ends `… --groups 444-624.1 --groupCuts 2@587.32,611.72 --max16 --dynOnChange 444-624.1`). His eye is STILL owed on E1 and E2 (below).
 
-**Latest deliverables:** `tools/notate_section.js` (`--groupCuts` · `--max16` · `--dynOnChange`) · `notation/lib/layout.js` (`clearChrome` · the
-beam-side ottava pass · the in-force on-change walk) · `notation/registry/container.json` (eight bands) · `tools/test_cross_staff.js` (73) ·
-`docs/NOTATION_STANDARDS.md` §2 (four new rows) · the saved `scores/piece-septet.json` · the MAIN IR · commits c1c021b · 5199eda · 572643d · ac20df6 ·
-46393df · 62ff909 · 83624d1 + this checkpoint.
+**Latest deliverable:** the design — PLAN 2i.8 (Result when done + sub-steps 8.1–8.7, each with its file and line) · journal §4 D54 · RUNNING_LOG §530
+(the measurements the build needs) · PLANNER's NOW line · this checkpoint · one commit, pushed.
 
-**The next concrete step — on FABLE, after a clear:** FIRST ask whether he has reloaded the notation page (F5 — not CTRL+SHIFT+R, which
-detaches the ♪ render) and looked — E1's spots: 520.3 Vn2 · 581–587 the new piano singles · 592.9 · 602.0 · 607–613 · 616.7 · 622.5 Pno · 601.9 Va ·
-487.8 Vc jeté · 623.7 Vn2; E2's marks: 444 · 474–478 · 504–507 · 534 · 561–566 · 594–596. Take any verdict (a fix is Opus work, no clear). THEN
-**PLAN 2i step 8, the crescendo run as the surge device — a SHORT design in the planning method** (`/plan-item`: the goal line → his word →
-the sub-steps → written into PLAN), for an Opus build after it. The material: 78 crescendo notes 526.79–558.90 in the six non-piano parts
-(technique senza_vel / ord, no velocity, no env — today they draw no dynamic). The planned shape: ppp → fff + arrow · the STANDARD surge shape as
-a template, not the save's curve · the D42 look at 100/s · no floor · "secco" at the curve's end · one player per onset by round robin, as the
-save has it · the performance instructions must say the morph curves are absolute and these are not. The on-change rule already reads a
-written end mark (§529).
+**The next concrete step — on OPUS, after a clear: BUILD PLAN 2i.8 sub-steps 8.1–8.5 exactly as written, the test (8.4) FIRST, red on the old engine.**
+8.1 the tag in `extract_core.js` (`properties.cresc.shape` → `ev.env = 'surge'`, `ev.secco`) · 8.2 the registry switch `curveTemplate: 'surge'` on
+byEnv.surge and the template in `layout.js drawnLevelSamples` (the tool's ratio-5 exponential through `sonify_core.evalWaveCurve`, 100/s never fewer
+than 101, then the cut; no curveZero, no curveFloor; the IR untouched) · 8.3 "sempre secco" as a `text` item at the curve's end of each part's FIRST
+swell, `clearChrome` · 8.4 the test · 8.5 rebuild MAIN (R re-runs the recorded build, no new flag), verify in the running page (a fresh tab, closed after),
+then **his eye after F5** at 526.8 (Va, the first) · the middle · 557–559 (gaps 0.5 s), with the meter playing — and E1/E2's spots if he has not seen them.
+Then 8.6–8.7 on Opus (the two standards rows · the two instructions lines on the NITS list · §531 · commit + push). Then **sitting F** (9 the re-render,
+10 the demo video) on Fable to direct. The facts (the 78, their durations, the bent vs the standard samples at tenths, the meter path, the room, the
+on-change knock-on): §530.
 
-**Resume reads:** PLAN 2i step 8 · COMPOSITION_NOTES CN-84 and CN-49 · RUNNING_LOG §509 · journal §4 D42.
+**Resume reads:** PLAN 2i.8 (sub-steps 8.1–8.7) · RUNNING_LOG §530 · journal §4 D54 · `docs/CURVE_LOOK.md` (the density rule, 100/s) · the code the
+sub-steps name: `notation/lib/extract_core.js` ~420–460 · `notation/lib/layout.js` `drawnLevelSamples` (~2807–2836) and the dynPair block (~1699–1720) ·
+`notation/registry/container.json` byEnv.surge (~119–126) · `score/public/cresc.js` 25–80 (`segmentFor`) · `notation/lib/animobj.js` ~310–325 ·
+`tools/test_cross_staff.js` (the test pattern: red on the old engine, item-by-item "nothing else moved").
 
-**Decisions pending the composer:** his eye on E1 and E2 (above) · two AI calls he may overturn, each a small change: (a) an ottava on the beam
-side moves the WHOLE group's accents below their notes, not only that note's (§527) · (b) a mark after a written dynamic compares against that
-dynamic (§529) · the accents in an ottava group sit under the treble staff however high the note (the per-mark floor) · later: the pedal
-legend's wording (NITS).
+**Decisions pending the composer:** his eye on E1 and E2 — E1's spots: 520.3 Vn2 · 581–587 the piano singles · 592.9 · 602.0 · 607–613 · 616.7 · 622.5
+Pno · 601.9 Va · 487.8 Vc jeté · 623.7 Vn2; E2's marks: 444 · 474–478 · 504–507 · 534 · 561–566 · 594–596 (F5, not CTRL+SHIFT+R) · the AI calls he may
+overturn, each a small change: (a) an ottava on the beam side moves the WHOLE group's accents below their notes (§527) · (b) a mark after a written
+dynamic compares against that dynamic (§529) · (c) the surge template as a registry switch, not a build flag (§530) · (d) the IR's `env`/`secco` tags
+derived from the save (§530) · the accents in an ottava group sit under the treble staff however high the note · later: the pedal legend's wording (NITS).
 
-**Deliberately uncommitted (`git status --short` at this checkpoint) — all his, left alone:** `bank/panel_snapshots.json` (his takes) ·
+**Deliberately uncommitted (`git status --short` at this checkpoint, unchanged since #2) — all his, left alone:** `bank/panel_snapshots.json` (his takes) ·
 `reaper/septet_rack.rpp` (his rack) · `bank/passages/4materials.json` · `accentedcres01.json` · `accentedcres01-2.json` · `chordcyc01.json` ·
 `chstr02.json` · `section3.json` (his passages) · `scores/Sec3.json` (his section-3 sketch) · `scores/SeptetSec03-Materials-B.json` · `-C` · `-D` ·
 `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` · `-v1.32-finalDraft1.0.json` · `-v1.33-preSec3NoteMoves.json` (his named versions; v1.33 =
 his save-point before the note moves) · `scores/spectralMorph.json` (his save, the SPECTRAL-04 comparison §466 — his to keep or delete) ·
 `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
-**Unsaved working copies** (`node tools/unsaved_check.js`, D17 — his to Save or Reload; piece-septet is clean): cres-run01 · cres2strike ·
-piano-harmonics-test · trill-curve-test · trillBuildTst · zz-ai-1t-walk.
-**Running:** nothing of the AI's (his :5300 and Reaper; every AI Browser-pane tab opened this session was closed).
+**Unsaved working copies** (`node tools/unsaved_check.js`, D17 — his to Save or Reload; piece-septet is clean; the list as at checkpoint #2, not re-run at #3):
+cres-run01 · cres2strike · piano-harmonics-test · trill-curve-test · trillBuildTst · zz-ai-1t-walk.
+**Running:** nothing of the AI's (his :5300 and Reaper; no Browser-pane tab was opened in this stretch).
 
 ---
 
-**Session 12 in one look (2026-09-14, Opus 5 ⇄ Fable 5.1) — RUNNING_LOG §515–§529.** His note on the order after the demo video (performance
+**Session 12 in one look (2026-09-14, Opus 5 ⇄ Fable 5.1) — RUNNING_LOG §515–§530.** His note on the order after the demo video (performance
 instructions → print score, the Tempus copy links the video; practice videos, §515) · PLAN 2i sittings A–D: go-to-time · the D49 audit and
 **D53** · the save edits (folded, stepped p → fff) · the cross-staff group · `--groups` · CN-86 for Lake George (the morph arrives at a beating
-pattern and holds; after Sciarrino's *Raffigurar Narciso al fonte*) · his note moves, re-articulated and folded (§523–§524) · E1: the piano cut by his times, the ottava and accent rules (§525–§527) · `--max16` (§528) · E2 = step 7, the dynamics once per band per part (§529).
+pattern and holds; after Sciarrino's *Raffigurar Narciso al fonte*) · his note moves, re-articulated and folded (§523–§524) · E1: the piano cut by his times, the ottava and accent rules (§525–§527) · `--max16` (§528) · E2 = step 7, the dynamics once per band per part (§529) · step 8 DESIGNED on Fable past midnight, 2026-09-15 (§530, D54): the surge template, "sempre secco" once per part.
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
 
@@ -149,7 +142,7 @@ pattern and holds; after Sciarrino's *Raffigurar Narciso al fonte*) · his note 
 | **N3b** | ~~**sitting D**~~ **BUILT 2026-09-14** (§522) — `--groups 444-624.1`: the piano 39 pairs · triple 606.27 · 22 fours; the six parts 46 pairs + 2 triples; **his eye owed** on 581 · 606.3 · 615–624 (55 crowding flags) · 488.5 · 622 | — | — |
 | **N3b2** | ~~**his note moves, 488–623 s**~~ **DONE 2026-09-14 (Fable, §523–§524)** — 17 strikes moved between parts in his tab in two rounds (v1.33 named first) · round 1's 8 re-articulated to their new part (round 2's came through right) · 5 flute rams folded into C3–D4 · the BCl 618.16 dropped to G3 by him · MAIN rebuilt · two tests re-pinned (Fl 2 pairs · Vn1 5 + 1 · Vn2 8 · Va 4 + 2 · Vc 4 + 1 · 101 rams) · **HIS TO DO: Reload his composer tab** (the file changed under it again) · **SITTING E1 BUILT 2026-09-14 (Opus, §527):** (1) the piano cut by time — 16 singles 581.21–586.96 · 41 pairs from 587.32 · triple 611.05 · 17 fours from 611.72 (`--groupCuts 2@587.32,611.72` in the recorded build) · (2)+(3) a beam-side ottava sends its group's accents below their notes and clears the beam by the house gap (24 such ottavas, 0 crowding; was 20) · (4) a member's chain clears its group accent, accent nearest (5 collisions → 0; Vn2 520.32/520.65 sign at −6.01 under the accent at −4.64) · nothing outside section 3 moved · band flags 74 → 72 · **+ §528: `--max16` — no value shorter than a 16th anywhere (his rule); the piano pairs 607.27–611.50 were 32nds, now 16ths** · batteries green incl. the tuba snapshots · verified in the running page · **his eye owed: RELOAD the notation page (F5 — not CTRL+SHIFT+R) · look at 520.3 (Vn2) · 587 (the first pair) · 592.9 · 602.0 · 611–613 · 616.7 · 622.5 (Pno) · 601.9 (Va) · 487.8 (Vc jeté) · 623.7 (Vn2)** · **then clear → E2 = step 7 the dynamics** | **Opus** | **yes — clear before E2** |
 | **N3c** | ~~**sitting E1 · §528 · E2**~~ **BUILT 2026-09-14 (Opus, §527–§529)** — E2 = step 7: `dynamicBands` the eight steps · `--dynOnChange 444-624.1` · **42 marks, six per part p mp mf f ff fff, each on the part's first strike in the band** (was a mark on every strike: 707) · group members reached · "changes" against the part's last WRITTEN dynamic, so 8's surge end marks will count · nothing outside section 3 moved · band flags 72 → 32 · test_cross_staff 73 · tuba batteries green · verified in the page · **his eye owed after F5 (notation/lib + registry changed)** — the marks at 444 · 474–478 · 504–507 · 534 · 561–566 · 594–596, and E1's spots | — | — |
-| **N3d** | **► step 8 — the crescendo run as the surge device** (CN-84, PLAN 2i.8): ppp → fff + arrow · the STANDARD surge shape as a template, not the save's curve · the D42 look at 100/s · no floor · "secco" at the curve's end (CN-49) · one player per onset by round robin (§509) · the performance instructions must say the morph curves are absolute and these are not. **A short design on Fable first** (read: PLAN 2i.8 · CN-84 · CN-49 · §509), then the Opus build. The on-change rule is already waiting for its end marks (§529) · **then sitting F** — steps 9–10 re-render, demo video | **Fable** (design) → Opus (build) | **yes — clear before the design** |
+| **N3d** | ~~**step 8 — the design**~~ **DESIGNED 2026-09-15 (Fable, §530, D54)** — the 78 swells as the tuba's surge device · the STANDARD surge as a template (the tool's ratio-5 exponential, not the save's bent curve) · 100/s · no floor · ppp → fff + arrow · "sempre secco" once per part at its first swell (his "b") · the meter rides it (drawnOf) · the sound and the IR's samples untouched · **► the Opus build, PLAN 2i.8.1–8.5 exactly as written — the test FIRST, red on the old engine** · then his eye after F5 (526.8 Va · the middle · 557–559, the meter playing) · then 8.6–8.7 · **then sitting F** — steps 9–10 re-render, demo video (Fable to direct) | **Opus** (build) → Fable (F) | **yes — clear before the build** |
 | **N4** | Later, noted — **the order after the demo video (his, §515):** the performance instructions (the pedal + l.v. legends, bcl to low C — NITS 2026-09-14) → the print score (2b; the Tempus copy links the demo video at the top) · the practice videos, BLOOM at least, SPECTRAL tbd (2h.7) · the performance score carries D50 (PLAN 3's acceptance line) | — | — |
 | **N5** | Still his, from before: the render's sync (§453) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 
@@ -734,6 +727,16 @@ sources; verified here only when they bite.)*
   CC/control probe protocol with scope tags (`engine` / `group` / `patch`). Reuse as written.
 - **Composer-score save files:** #4's `docs/SAVE_FILES.md` + `NAMING.md` (piece menu,
   working copies, "Save as next", variants, restore). Reuse as written once 0b lands.
+- **D54** *(2026-09-15, composer, RUNNING_LOG §530)* — **THE CRESCENDO RUN'S SWELLS DRAW THE STANDARD SURGE SHAPE, NOT THE SAVE'S CURVE; "SEMPRE
+  SECCO" ONCE PER PART.** The 78 swells (526.8–559.4 s, six parts in rotation, the piano out) wear the tuba's surge device; the drawn curve is the
+  crescendo tool's own ratio-5 surge as a TEMPLATE — at 100/s, no floor, the 90° cut at the note end, ppp → fff + arrow — a picture of the
+  intention, unlike the morphs' absolute curve (D46). The IR keeps the save's curve (bent for the sampler's ear, CN-49's listening tests), so the
+  sound is untouched: the substitution is a drawing rule on the device. His: CN-84 *"these ones will still have the standard surge shape"* · the
+  word ONCE per part at its first swell — *"b"* — over the AI's lean of every swell (the animated score shows one window; 78 small words). The
+  performance instructions must say: secco = the strings damp at the cut, the winds take the word for the shape; the morph curves are absolute,
+  these show the shape. *Why the template, not the save:* the save's shape serves the sampler, the page serves the player. *Rejected:* the word on
+  every swell · re-baking the template into the IR's samples (the IR would lie about the sound) · a build flag (the rule is the device's look, not a
+  section's). Build: PLAN 2i.8 (8.1–8.7); the meter rides the template by D50's one source.
 
 ---
 

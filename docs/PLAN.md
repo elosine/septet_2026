@@ -1667,9 +1667,30 @@ player would touch parts, solo, crop and print.
      note in the band; nothing else. **Decided (D52, 2026-09-14):** section 3 only — section 1 keeps its mark on every strike (§401d); two rules by texture.
      **First, found at step 3 (§520):** `dynamicBands` has no mp or ff — section 3 draws 37 → ppp · 55 → p · 72 → p · 90 → mf · 109 → f · 127 → fff today;
      align the table to the eight-step scale so the marks read p · mp · mf · f · ff · fff (section 1, the morph piano, the trills unaffected — check).
-  8. **The crescendo run as the surge device** (CN-84) — `todo · sitting E · Fable design (short) → Opus` — ppp → fff + arrow · the STANDARD surge
-     shape, a template, not the save's curve · the D42 look at 100/s · no floor · "secco" at the curve's end (CN-49; the quartet's text mark) ·
-     one player per onset by round robin as the save has it (§509). The performance instructions must say the morph curves are absolute and these are not.
+  8. **The crescendo run as the surge device** (CN-84) — `DESIGNED 2026-09-15 (RUNNING_LOG §530, D54; his "good, write it in") · sitting E3 · the Opus build after a clear` —
+     **Result when done:** the 78 swells (526.8–559.4 s; Fl 12 · BCl 14 · Vn1 13 · Vn2 12 · Va 14 · Vc 13; the piano out) wear the tuba's surge look on the MAIN file: the
+     drawn shape is the STANDARD surge — the crescendo tool's ratio-5 exponential (`segmentFor('surge', 5)`), NOT the save's sampler-bent curve — at 100/s never fewer than 101,
+     D42 lime, from the lane floor with no floor lift, the 90° cut at the note end, go line and open nh-unit, no GC, ppp → fff + arrow, and "sempre secco" at the curve's end
+     of each part's FIRST swell (D54). The sound and the IR's level samples untouched — the substitution is a rule on the device. Nothing outside 526–560 s moves. A test
+     proves the 78 and matches the template against the tuba's db1 surges; the tuba batteries stay green. The performance-instructions list gains two lines.
+     Two AI calls, his to overturn: the template is a registry switch on the device (piece-wide, like dynPair), not a build flag · the IR carries `env: 'surge'` + `secco: true`
+     derived from the save (D9). The facts (durations, the bent vs standard samples, the meter path, the room): RUNNING_LOG §530.
+     - **8.1 The tag** — `notation/lib/extract_core.js` (~437, `if (o.envShape) ev.env = …`): a save object with `properties.cresc.shape` and no `envShape` → `ev.env = 'surge'`
+       (the family name), and `ev.secco = true` when `properties.cresc.secco` is. Tuba saves carry `envShape` and no cresc family → nothing moves there (the `else if` order).
+     - **8.2 The template** — `notation/registry/container.json` byEnv.surge gets `curveTemplate: 'surge'`; `notation/lib/layout.js drawnLevelSamples` (~2815): where the device
+       carries it, the drawn samples are the tool's ratio-5 surge (one exponential segment, slope 0.40 — `score/public/cresc.js segmentFor`) sampled through the same curve
+       math (`sonify_core.evalWaveCurve`) at 100/s, never fewer than 101, then the cut as today; no curveZero, no curveFloor. The IR untouched; the meter rides it through
+       `drawnOf` (`animobj.js` ~323) for free.
+     - **8.3 The word** — the first event with `secco` in each part → a `text` item "sempre secco" at the curve's end (the cut edge), on the chain band, clearing chrome by E1's
+       rules (`clearChrome`). Six texts; none after.
+     - **8.4 The test, FIRST, red on the old engine** — `tools/test_surge_run.js` (or rows in `test_cross_staff.js`): 78 events `env: 'surge'` · the template's samples match the
+       tuba's `db1.ir.json` surge samples within tolerance · first sample 0 (no floor) · the cut lands on the note end · 78 pairs + arrows · six texts, one per part, on its first
+       swell · nothing outside 526–560 s moved, item by item · crowding flags counted · the tuba batteries green.
+     - **8.5 Rebuild MAIN and look** — R re-runs the recorded build (no new flag); F5 on the page (`notation/lib` and the registry change); verified in the running page; his eye
+       at 526.8 (Va, the first) · the middle · 557–559 (gaps 0.5 s), with the meter playing.
+     - **8.6 The standards and the instructions** — two rows in `docs/NOTATION_STANDARDS.md` §2 (the template rule · secco once per part) · two lines on the NITS
+       performance-instructions list (secco: the strings damp at the cut, the winds take the word for the shape · the morph curves are absolute, these show the shape).
+     - **8.7 The record** — D54 (done at the design) · RUNNING_LOG §531 (the build) · this step marked · commit + push.
   9. **The audio re-render** (RENDER.md) — `todo · sitting F · his capture + Opus` — the render is behind the save (M2 swap · bcl slap · chord snap · everything above).
   10. **The demo video** — `todo · sitting F`.
   **Also, decided on the way (2026-09-14):** Sec3-Materials was empty and is removed with Materialsa (§509) · Q7 the bass clarinet's bottom — §511, his word owed.

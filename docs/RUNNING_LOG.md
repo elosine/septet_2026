@@ -14499,3 +14499,59 @@ test_render (snapshots stable) · test_animobj · test_splice · ir_validate_bat
 
 **His eye owed:** RELOAD the notation page (F5 — a `notation/lib` and registry change) — section 3's marks at 444 · 474–478 · 504–507 · 534 ·
 561–563 · 564–566 · 594–596, and the lighter look with no mark on every strike. **The render is behind** (step 9).
+
+## §530. DESIGNED: PLAN 2i.8 — the crescendo run as the surge device: the STANDARD surge as a template, no floor, ppp → fff + arrow, "sempre secco" once per part, the meter rides it (2026-09-15, past midnight of session 12, Fable 5.1)
+
+**Prompted by:** *"B, go to the step 8 design"* (over first giving his eye to E1/E2) · to the goal line and the one question put to him: *"b; and the
+curves will have the curve meter with the cursor?"* · *"good, write it in and prep for clear"*. The planning method: the data first, the goal line, one
+question only he could answer, then the sub-steps, then this write.
+
+**Measured (the MAIN IR · `scores/piece-septet.json` · the tuba's IR):**
+- **78 swells, 526.79–558.90 s** (the last ends 559.36), six parts in rotation: Fl 12 · BCl 14 · Vn1 13 · Vn2 12 · Va 14 · Vc 13; the piano out. Technique
+  senza_vel 66 · ord 12.
+- **Durations 0.30–1.28 s, median 0.74** — 62 under 1 s, 10 under 0.5 s. NOT the 3.5 s of §509's reading of the run's parameters: the run's
+  `lengthMode: 'gap'` ends each swell 0.17 s before the ensemble's next onset (§255's rule) and the gaps close 2.0 → 0.5 s, so the swells shorten
+  with the run (first five 1.21 · 1.18 · 0.98 · 1.28 · 1.13; last five 0.48 · 0.47 · 0.48 · 0.30 · 0.46).
+- **In the save** each swell is a waveCurve with `properties.cresc = {shape 'surge', ratio 5, slope 0.4, threshold 0.68, dynLo 0, dynHi 10, peak 'cliff',
+  end 'swell', secco true}`, technique senza_vel or ord, in the passage groups (`grp-psg-…-5`, `-6`) — and NO `envShape`. The run's box (`wc-1810`,
+  `groupId: 'grp-crun'`, 575–578.75 s) holds the run's parameters (gap0 2 · gapN 0.5 · steep 0.85 · len 3.5 · dyn ppp→fff · secco · players
+  [1,6,5,4,3,0] · rhythm take:cresAccel01).
+- **In the IR** the extractor reads only `envShape` (`extract_core.js` ~437), so each event carries `level.samples` (the save's curve, 101) but no `env`
+  and no `vel`: the tuba's surge device (`byEnv.surge`: curve · cut · goLine · nhUnit · dynPair · dynMark false — ported intact, `layout.js` 160/320,
+  registry line 119) never fires. Today they draw as plain long notes with no dynamic.
+- **The baked curve is the sampler-bent surge** (CN-49's listening tests): at tenths 0 · 0 · 0.0004 · 0.003 · 0.011 · 0.032 · 0.082 · 0.173 · 0.334 ·
+  0.600 · 1 — under 10 % for 60 % of the span. **The tuba's drawn surge** (`for_seven_tubas/notation/ir/db1.ir.json`, 27 surges, 1.13–4.35 s, median
+  2.58): 0 · 0.051 · 0.109 · 0.177 · 0.255 · 0.345 · 0.449 · 0.569 · 0.708 · 0.868 · (the peak, then the cut) — the gentle exponential, i.e. the crescendo
+  tool's own STANDARD surge (`score/public/cresc.js` `segmentFor('surge', 5)`: model exponential, slope 0.40, ratio = e^(4·slope) ≈ 5, §263) with no
+  threshold bend. That is the template.
+- **The floor:** `drawnLevelSamples` (`layout.js` ~2815) applies curveZero, the cut, then curveFloor, each opt-in per device; the surge device carries
+  neither curveZero nor curveFloor — no floor already; D47's rule reaches it with nothing to do.
+- **The meter (his question):** `animobj.js` ~323 emits a curveMeter for EVERY event that carries level samples, riding `drawnOf(e)` = layout's
+  `drawnLevelSamples` (D50, one source for the page and the follower). So the 78 have a meter TODAY, riding the bent curve; a template substituted in
+  that one function moves the page and the meter together, with the cursor. Verified in the code path; the running-page proof is the build's.
+- **Room:** the pair + arrow (start mark on the head column · gap 0.45 · arrow 2.0 · gap 0.45 · end mark, `layout.js` ~1699) ≈ 8 ss wide (estimate);
+  each part's swells sit ≥ 3 s apart (six players in rotation), so the pair fits its own part; the 139 strikes in 526–576 s (the piano included;
+  passages `-7`, `-8`) are the collision risk the crowding test measures. **The on-change rule (§529) will re-state a strike's band mark after a
+  swell's written fff** — expected, by his §529 decision; more marks in 526–560.
+
+**The goal line — his "good":** written into PLAN 2i.8 (Result when done + 8.1–8.7).
+
+**DECIDED — his (b): "sempre secco" ONCE per part**, at its first swell in the run, at the curve's end, plus the instructions page — over (a) the word
+on every swell (the AI's lean: the animated score shows one window at a time and the player reads locally; 78 small words; the crowding test
+would judge). **D54.**
+
+**Two AI calls, his to overturn:** the template is a registry switch on the surge device (piece-wide, like dynPair) — not a new build flag; the
+recorded build is unchanged and R re-runs it · the IR carries `env: 'surge'` and `secco: true` derived from the save (D9); the level samples stay the
+save's — the sound and the IR are the truth of what sounds, the template is a drawing rule.
+
+**The sub-steps** (PLAN 2i.8; the build on Opus after a clear, the test first): 8.1 the tag (extractor) · 8.2 the template (registry switch +
+`drawnLevelSamples`, sampled through `sonify_core.evalWaveCurve` at 100/s never fewer than 101, then the cut) · 8.3 the word (a `text` item at the
+curve's end of each part's first swell, `clearChrome`) · 8.4 the test, red on the old engine (78 tagged · template ≈ db1 within tolerance · first
+sample 0 · the cut on the note end · 78 pairs · six texts · nothing outside 526–560 moved · crowding counted · tuba batteries) · 8.5 rebuild + F5 +
+his eye (526.8 Va · the middle · 557–559, the meter playing) · 8.6 NOTATION_STANDARDS §2 two rows + the NITS instructions list two lines · 8.7 the record.
+
+**Rejected:** re-baking the template into the IR's `level.samples` (the IR would lie about the sound, and the extractor would need a tuba/septet
+distinction it has no business making) · a `--surge` build flag (the rule is the device's look, not a section's) · the word on every swell (his
+call, above).
+
+**Nothing built; no code changed.** Checkpoint #3 written for the clear.
