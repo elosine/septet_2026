@@ -153,5 +153,20 @@ ok(!model.warnings.some(w => /beam group /.test(w)), 'no beam-group warnings any
   ok(nCol >= 200 && badCol === 0, 'section 3: every technique symbol on its accent\'s side sits past the accent by the house gap (' + nCol + ' columns, ' + badCol + ' not)');
 }
 
+// ---- [§528] --max16: no written value shorter than a 16th, anywhere in the MAIN file ----
+{
+  ok(/ --max16( |$)/.test(ir.provenance.build), 'the recorded build carries --max16 (R keeps the rule)');
+  const devs = ir.overlays.filter(ov => ov.kind === 'engraving' && ov.value && ov.value.device).map(ov => ov.value.device);
+  const short = devs.filter(d => (d.noteBeams || 0) > 2 || (d.beamLevels || 0) > 2 || (d.beamSubdivision || 0) > 4);
+  ok(short.length === 0, 'no 32nds: no device with more than 2 beams or a subdivision over 4 (' + short.length + ')');
+  const all = model.systems.flatMap(S => S.items);
+  const rest32 = all.filter(it => it.k === 'rest' && it.dur > 16), beam3 = all.filter(it => it.k === 'beam' && /-b3/.test(String(it.group)));
+  ok(rest32.length === 0 && beam3.length === 0, 'no 32nds on the page: no rest shorter than a 16th, no third beam level (' + rest32.length + ' rests, ' + beam3.length + ' beams)');
+  // the piano's pairs at 607.27–611.50 (his "the notes turned into 30-second notes"): 16ths
+  const pn = [...new Set(clusterOf.values())].map(cl => members(cl)).filter(ms => partOfEv.get(ms[0].id) === 2 && ms[0].onset >= 607.2 && ms[0].onset < 611.6 && ms.length <= 3);
+  const devOf = id => ir.overlays.find(ov => ov.kind === 'engraving' && ov.target.event === id).value.device;
+  ok(pn.length === 9 && pn.every(ms => ms.every(e => devOf(e.id).noteBeams === 2 && devOf(e.id).beamSubdivision === 4)), 'the piano pairs 607.27–611.50: 9 groups, every note a 16th (' + pn.length + ' groups)');
+}
+
 console.log((fail ? 'FAIL' : 'PASS') + ' — test_cross_staff: ' + pass + ' pass, ' + fail + ' fail');
 process.exit(fail ? 1 : 0);

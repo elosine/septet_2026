@@ -448,6 +448,7 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
   };
   const allThrough = scopedFlag('beamsThrough');
   const allRests16 = scopedFlag('rests16');
+  const max16 = process.argv.includes('--max16');   // [§528] no written value shorter than a 16th (see the fit, below)
   const scopeWord = s => !s ? '' : (s.t0 === -Infinity ? 'every beam group' : 'clusters starting in ' + s.t0 + '-' + (s.t1 === Infinity ? '' : s.t1) + ' s');
   if (allThrough) console.log('  --beamsThrough: second beams run through rests on ' + scopeWord(allThrough));
   if (allRests16) console.log('  --rests16: every silence as 16th rests, one per slot, on ' + scopeWord(allRests16));
@@ -808,6 +809,17 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
       fit.beams = Math.max(1, Math.round(Math.log2(m))); fit.restDur = m * 4; fit.tuplet = null;
       console.log('    --gridDiv ' + gridDiv + ': the grid ' + gridDiv + 'x finer than the fit — unit ' + (fit.unit * 1000).toFixed(1) + ' ms, the notes on slots ' + fit.grid.join(','));
     }
+    // [2i, §528] --max16 — NO WRITTEN VALUE SHORTER THAN A 16TH (the composer 2026-09-14, the piano at 607–611: "the notes turned into
+    // 30-second notes. Could we make them all sixteenths? And just as a general rule, no one should turn into 30-second notes. Just keep
+    // them to sixteenths"). The beat rule (cluster_fit's, and --gridDiv's above) doubles the subdivision until the beat is conductable
+    // (>= 0.5 s), so a unit under 0.125 s wrote 32nds — 3 beams, 1/32 rests. Measured: the 19 piano pair notes 607.27–611.50, whose gaps
+    // fall under 0.25 s (the pair's unit = half the gap). A cluster prints no tempo mark (§458), so the beat only sets the note value:
+    // capped at 4, the same grid writes 16ths and 16th rests. Positions never move — only the writing. cluster_fit.js is piece #4's and
+    // stays as it is; the rule is this flag on the septet's recorded build.
+    if (max16 && !fit.tuplet && fit.subdivision > 4) {
+      console.log('    --max16: subdivision ' + fit.subdivision + ' -> 4 (unit ' + (fit.unit * 1000).toFixed(1) + ' ms written as 16ths, not 1/' + (fit.subdivision * 4) + ')');
+      fit.subdivision = 4; fit.beat = fit.unit * 4; fit.bpm = 60 / fit.beat; fit.beams = 2; fit.restDur = 16;
+    }
     if (restAfter > 0) console.log('    --restAfter ' + restAfter + ': ' + restAfter + ' trailing rest slot(s) drawn after the last member');
     if (!ownGrids) console.log('  cluster ' + key + ': ' + members.length + ' notes ' + label + ' s, part ' + partOfEvent.get(members[0].id) + ' (' + members.map(e => e.source.objectId).join(' ') + ')');
     if (!ownGrids) console.log('    fit: unit ' + (fit.unit * 1000).toFixed(1) + ' ms · beat ' + fit.beat.toFixed(3) + ' s = ' + fit.bpm.toFixed(1) + ' bpm x ' + fit.subdivision +
@@ -1060,6 +1072,7 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
         dev.noteUnits = durUnits[k];
         dev.noteBeams = rings ? 1 : beamsFor(durUnits[k], pm ? pm.sub : null);   // a ringing note takes the primary beam only
       }
+      if (max16 && dev.noteBeams > 2) console.warn('  !! --max16: ' + e.id + ' @' + e.onset.toFixed(2) + ' is still written with ' + dev.noteBeams + ' beams (a tuplet or figure path the cap does not reach) — say how to write it');
       if (tuplets.length || (patTuplets && patTuplets.size) || ptp) dev.beamHasTuplet = true;
       if (bracketSide) dev.bracketSide = bracketSide;
       if (articSide) dev.articSide = articSide;

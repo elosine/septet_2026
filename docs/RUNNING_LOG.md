@@ -14409,3 +14409,38 @@ notes; 16 piano singles before 587.32.
 
 **His eye owed:** RELOAD the notation page (a `notation/lib` change; F5, not CTRL+SHIFT+R) — 520.3 Vn2 · 587 the first pair · 592.9 · 602.0 ·
 611–613 · 616.7 · 622.5 the piano · 601.9 Va · 487.8 Vc jeté · 623.7 Vn2.
+
+## §528. BUILT: no written value shorter than a 16th — `--max16` on the MAIN build; the piano's pairs at 607–611 back to 16ths (2026-09-14, Opus 5)
+
+**His word:** *"607 to 611 In the piano, the notes turned into 30-second notes. Could we make them all sixteenths? And just as a general
+rule, no one should turn into 30-second notes. Just keep them to sixteenths."*
+
+**Measured first (the MAIN file after §527):** **19 devices wrote 32nds — all piano, 607.27 → 611.50**: the last 8 pairs and the triple of
+the pairs stretch (noteBeams 3, beamLevels 3, beamSubdivision 8); on the page 19 rests of 1/32 and 9 third-level beams. Nothing else in the
+piece. **Cause:** the pair writing (`--gridDiv 2`) halves the gap for its unit, then doubles the subdivision until the beat is "conductable"
+(≥ 0.5 s, cluster_fit's BEAT_MIN, up to 16). From 607.27 the gaps fall under 0.25 s, the unit under 0.125 s, so the subdivision lands on 8
+= 32nds. §526's cut moved these notes from fours (unit = the gap, 16ths) into pairs, which is why they appeared now. The same doubling lives
+in `notation/lib/cluster_fit.js` for every cluster (none writes 32nds today: the fours' gaps are ≥ 0.15 s).
+
+**Decided (AI, within his rule):** a flag on the septet's recorded build, not a change to `cluster_fit.js` — that module is piece #4's engine,
+under its snapshot batteries, where 32nds may be right. A cluster prints no tempo mark (§458), so the beat only sets the written value;
+capping the subdivision at 4 writes the same grid as 16ths and 16th rests. Positions never move.
+
+**Built:** `tools/notate_section.js --max16` (global): after the fit and `--gridDiv`, a plain grid (no tuplet) whose subdivision is over 4 is
+written at 4 — 2 beams, 1/16 rests — and logged per cluster; any member still written with more than 2 beams (a tuplet or figure path the
+cap cannot reach) is flagged `!!` with its time. Appended to the recorded build: `… --groupCuts 2@587.32,611.72 --max16`.
+
+**Measured after:** 9 clusters capped · **devices changed: exactly the 19**, only `noteBeams`/`beamLevels`/`beamSubdivision` · every event
+and onset identical · 0 devices with a 32nd anywhere · the page (content diff against §527's layout): only 607.27 → 611.61 changes, in the
+treble and bass systems — 32nd beams and rests out, 16th beams and rests in; nothing else moved · band flags 72, unchanged. `layout.js` not
+touched, so piece #4's snapshot batteries were not re-staged.
+
+**Guards:** `tools/test_cross_staff.js` 62 → **66** — the recorded build carries `--max16` · no device with more than 2 beams or a
+subdivision over 4 · no rest shorter than a 16th and no third beam level on the page · the piano's 9 groups 607.27–611.50 all 16ths. Against
+§527's build: 19 rests of 1/32 and 9 third-level beams — red. Batteries: septet 86 · morph 178 · trills 92 · identity · step_dynamics --save 15
+— green.
+
+**Verified in the running app** (:5300, a fresh tab, closed after): the page's IR build ends `--max16`; laid out in-page, 0 rests shorter than
+a 16th, 0 third-level beams; 607.2–611.7 holds 25 16th rests and 24 beam items.
+
+**His to do:** nothing to reload for this one (only the IR changed; the page picks it up) — but §527's reload still stands if not done.
