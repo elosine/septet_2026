@@ -85,37 +85,46 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### CHECKPOINT — 2026-09-14, session 11, late (mid-session checkpoint; Opus 5; the morph section finished)
+### CHECKPOINT — 2026-09-14, session 12 (mid-session checkpoint; Opus 5; PLAN 2i sittings A–D done, E next)
 
-**The task:** PLAN 2h, the morph section's notation. **State: DONE, PIANO INCLUDED** — everything is in the MAIN notation file
-(`notation/ir/piece-septet.ir.json`, VALID vs source; its `provenance.build` ends `--morph grp-morph-01 --morph grp-morph-03 --pairBeam
-wc-1769,wc-1770 --pairBeam wc-1774,wc-1775 --pairBeam wc-1785,wc-1786 --ensembleDyn 205-428@2`) and signed off by his eye, item by item.
-Since the last checkpoint (RUNNING_LOG §482–§504): the bass clarinet at 58.7 s is a slap tongue (save + IR, §482) · **PLAN 2h.5, the piano's
-44 notes** (NOTATION_STANDARDS §3): ordinary = open head · one band dynamic per chord under its lowest note · piece #2's l.v. slur by Gould's
-chord rule; plucked = the same + piece #2's baked italic pizz. and Emmentaler Ped. (once per chord, no release sign — a legend owed in the
-performance instructions, NITS); the ten chords' onsets snapped to their earliest in the SAVE; the three close pairs beamed across the grand
-staff (filled heads, one 8th beam above the treble, a dynamic only where it changes); the chord at 269.13 no stems · **D49 promoted** — the
-notehead's left edge is the moment · the go line marks displacement (§3 P17, NOTATION_STANDARDS §0): the morph piano sits on its times, no
-go lines · **D50** — the piano's written dynamics from the ensemble rule (three or more at the top → match, else one under), page only,
-the save's velocities untouched, guarded by `test_morph_notation` (the recorded flag · IR = the rule now · the 32 drawn marks frozen).
+**The task:** PLAN 2i, section 3's notation (444–624 s) — ten steps in six sittings. **State: steps 1–6 built** (RUNNING_LOG §515–§522), all
+in the MAIN notation file `notation/ir/piece-septet.ir.json` (VALID vs source; its `provenance.build` now ends `… --ensembleDyn 205-428@2
+--groups 444-624.1`; R on the page re-runs it). His eye is OWED on sittings C and D. In one line each:
+- **A** — go-to-time box + ⌂ + HOME → 0 on the notation page (§516, "go-to works") · the D49 audit measured over all 1806 events and closed
+  by **D53**: the single strikes keep head-before-GC + go line + GC (Tufte's 1+1=3, his reading rule); NOTATION_STANDARDS §0 is scoped to
+  units without a GC (§517–§518) · the beamed group confirmed as section 3's standard (§519).
+- **B** — in HIS tab and saved: `foldFlute` over section 3 (79 rams, 0 out of range) · `stepDynamics()` (new, `score/public/note_card.js`)
+  set section 3's 932 strikes to six 30 s bands from 444 s, **p 37 · mp 55 · mf 72 · f 90 · ff 109 · fff 127** on the score's own eight-step
+  scale (§520). **The page still names them through the five-band table: 37 ppp · 55 p · 72 p · 90 mf · 109 f · 127 fff** — step 7's first job.
+- **C** — the cross-staff group (`layout.js` `crossOf`): a cluster on both piano staves is laid out whole in the treble system — one beam
+  above the treble, every stem up, rests and the accent row beam-side (never flipped to the far staff), the lower staff's ink moved by
+  4 + interStaffGapSs; the whole layout byte-identical without one (§521).
+- **D** — `tools/notate_section.js --groups t0-t1`, the grouping rule as one flag: runs of a part's strikes under 0.4 s → 2 or 3 = one group
+  (pair writing); longer = fours from the END over the under-0.25 s stretch, pairs from the start, an odd leftover a triple; accents kept; **no
+  dynamic on any group** (step 7's). Result: the piano 39 pairs · triple 606.27 · 22 fours (landing on the approved 620.32 four); the six parts
+  46 pairs + D51's two triples; 41 groups cross staves; **55 geometry flags in the run** (§522).
 
-**Latest deliverables:** `notation/lib/ensemble_dyn.js` (new, D50's rule) · `notation/lib/layout.js` (lvslur · chordOf · pairOf + the
-cross-staff beam · the left-edge chrome · dynFixed) · `render.js` (lvslur · `sys`/`sysB`) · `stamps.js` + `glyphs.json` (letRing · text
-"pizz." · pedal "Ped") · `container.json` (`main` · `plucked` · `byPairBeam` · the strike/trill envs cancelling every new field) ·
-`tools/notate_section.js` (`--pairBeam` · `--ensembleDyn`) · `tools/test_morph_notation.js` (178) · commits 92f3c55 · 5ce9a7d · 9c12c8b ·
-3939d08 + this checkpoint.
+**Latest deliverables:** `notation/app/notation.html` (go-to) · `score/public/note_card.js` (`stepDynamics`) · `notation/lib/layout.js`
+(`crossOf`, `grp.cross`) · `tools/notate_section.js` (`--groups`) · `tools/test_step_dynamics.js` (15 with `--save`) · `tools/test_cross_staff.js`
+(52, red on the old engine) · the saved `scores/piece-septet.json` · the MAIN IR · CN-86 (Lake George) · commits 127d1cb · a5252db · 7af362a ·
+4ec99ee · a1afe96 · e855422 · cbd805f · 17852bb + this checkpoint.
 
-**The next concrete step — Opus, after a clear:** **PLAN 2i, sitting A = step 1 (go-to-time + HOME, §456 item 5) then step 2 (the D49
-audit — Fable for the verdicts, Opus for the fixes).** His word 2026-09-14: *"top line good"* · *"Sitting A yes, you mean do this first? then
-yes"*. The top line of section 3's notation: ten steps in six sittings, written into PLAN 2i (RUNNING_LOG §505–§511). The planning method
-holds at each step: the goal first ("N. Title. Result when done: …"), discuss, then the sub-steps, then into the plan.
+**The next concrete step — Opus, after a clear:** FIRST ask whether he has looked at the run (581 · 606.3 · 615–624 · 488.5 · 622) and take
+any crowding verdict before building. THEN **PLAN 2i step 7, the page rule for section 3's dynamics**, in the planning method (goal line →
+his word → build): (a) re-cut `engraving.layout.dynamicBands` in `notation/registry/container.json` so the eight-step velocities name
+themselves (37 p · 55 mp · 72 mf · 90 f · 109 ff · 127 fff, with pp and ppp below) — prove section 1 (all 127 = fff), the morph piano (D50's
+`dynFixed`) and the trills (`sfz`) unchanged; (b) section 3 only (D52): one band mark per part where its band changes, on that part's first
+note in the band — the `dynOnChange` machinery already in `layout.js` (the `dynShown` pre-pass ~line 356, the gate ~line 1255), scoped to
+444–624, and it must reach group members, which carry no mark today (§522); (c) rebuild via R's endpoint, batteries, his eye. Step 8 (the
+surge device, CN-84) is a short design on **Fable** before its Opus build.
 
-**Resume reads:** PLAN 2i (the top line) — then, for sitting A only: RUNNING_LOG §456 item 5 (the go-to-time ask) · NITS "THE D49 AUDIT" ·
-NOTATION_STANDARDS §0.
+**Resume reads:** PLAN 2i steps 7–8 · RUNNING_LOG §520's last paragraph ("Left for step 7") · §522's cutting defaults · journal §4 D52.
 
-**Decisions pending the composer:** none that block — (later, the performance instructions) the pedal legend's wording (NITS draft).
+**Decisions pending the composer:** his eye on sittings C–D — the crowding in the run (55 flags: the piano's beams/accents above the treble
+against Vn1's marks), the GC density (pairs every ~0.5–0.8 s, fours ~0.6–1.0 s) · §522's defaults (a two-note run under 0.25 s keeps the pair
+writing; groups carry no dynamic until step 7) · later: the pedal legend's wording (NITS).
 
-**Deliberately uncommitted (`git status --short` at this checkpoint) — all his, left alone:** `bank/panel_snapshots.json` (his takes) ·
+**Deliberately uncommitted (`git status --short` at this checkpoint — identical to session 11's) — all his, left alone:** `bank/panel_snapshots.json` (his takes) ·
 `reaper/septet_rack.rpp` (his rack) · `bank/passages/4materials.json` · `accentedcres01.json` · `accentedcres01-2.json` · `chordcyc01.json` ·
 `chstr02.json` · `section3.json` (his passages) · `scores/Sec3.json` (his section-3 sketch) · `scores/SeptetSec03-Materials-B.json` · `-C` · `-D` ·
 (`SeptetSec03-Materialsa.json` and the `Sec3-Materials` working copy were empty — removed at his word 2026-09-14, §509) · `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` ·
@@ -123,18 +132,14 @@ NOTATION_STANDARDS §0.
 comparison §466 — his to keep or delete) · `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
 **Unsaved working copies** (`node tools/unsaved_check.js`, D17 — his to Save or Reload; piece-septet is clean): cres-run01 · cres2strike ·
 piano-harmonics-test · trill-curve-test · trillBuildTst · zz-ai-1t-walk.
-**Running:** nothing of the AI's (his :5300 and Reaper; the AI's Browser-pane tab on :5300 only reads).
+**Running:** nothing of the AI's (his :5300 and Reaper; every AI Browser-pane tab opened this session was closed).
 
 ---
 
-**Session 11 in one look (2026-09-14, Fable 5.1 → Opus 5) — RUNNING_LOG §464–§481.** The beamed group's loose ends closed by his dictation
-(CN-78; the cross-staff build deferred to section 3, PLAN 2g) · the morph section assessed against the tuba (§464) · M2's D2 pair re-cast,
-"swap good" (§467–§468) · the five morph decisions: D44 crescendo-only under 20 c + alert · D45 the pitch figure (quarter-tone signs, the
-nearest spelling, cents from 7 c, no arrow, ties toward the start, time order) · D46 niente → fff fixed, the crescendo absolute · D47 no floor,
-the arc through the breath peaks, 100/s · D48 the beat rates to the practice videos; the piano's notes deferred (§476) · **built and folded,
-both morphs "good"** (§477–§481). **Found for him in piece #4 (read-only there):** its morph headers carry no pitch — every header head is
-drawn at F2 (NITS; §7). **Then (§482–§504):** the bcl slap at 58.7 · the morph section's piano, device by device (2h.5) · D49 promoted ·
-the cross-staff beamed pairs · D50 the piano's dynamics from the ensemble · the morph section complete.
+**Session 12 in one look (2026-09-14, Opus 5 ⇄ Fable 5.1) — RUNNING_LOG §515–§522.** His note on the order after the demo video (performance
+instructions → print score, the Tempus copy links the video; practice videos, §515) · PLAN 2i sittings A–D: go-to-time · the D49 audit and
+**D53** · the save edits (folded, stepped p → fff) · the cross-staff group · `--groups` · CN-86 for Lake George (the morph arrives at a beating
+pattern and holds; after Sciarrino's *Raffigurar Narciso al fonte*).
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
 
@@ -144,7 +149,7 @@ the cross-staff beamed pairs · D50 the piano's dynamics from the ensemble · th
 | **N2** | ~~**sitting B**~~ **DONE 2026-09-14** (§520) — step 3: 79 rams folded · 932 strikes stepped p 37 → fff 127 (`stepDynamics()`, note_card.js) · his ear, saved · MAIN rebuilt, batteries green | — | — |
 | **N3** | ~~**sitting C**~~ **BUILT 2026-09-14** (§521) — step 4 the cross-staff group: one beam above the treble, tried at 581.21 and 623.55; **his eye owed** (reload the notation page) | — | — |
 | **N3b** | ~~**sitting D**~~ **BUILT 2026-09-14** (§522) — `--groups 444-624.1`: the piano 39 pairs · triple 606.27 · 22 fours; the six parts 46 pairs + 2 triples; **his eye owed** on 581 · 606.3 · 615–624 (55 crowding flags) · 488.5 · 622 | — | — |
-| **N3c** | **► sitting E** — step 7 the page rule: FIRST align `dynamicBands` to the eight-step scale (§520), then one mark per part per band (D52), reaching the group members too (no group carries a mark, §522) · step 8 the crescendo run as the surge device (CN-84; Fable for the short design) · then the crowding pass on the run if he asks · **sitting F** — steps 9–10 re-render, demo video | Opus (Fable for 8's design) | **yes — wrap on Opus: `/checkpoint` · `/clear` · `/postclear`** |
+| **N3c** | **► sitting E** — first his eye on C–D (any crowding verdict) · step 7 the page rule: FIRST align `dynamicBands` to the eight-step scale (§520), then one mark per part per band (D52), reaching the group members too (no group carries a mark, §522) · step 8 the crescendo run as the surge device (CN-84; Fable for the short design) · **sitting F** — steps 9–10 re-render, demo video | **Opus** (step 7) → Fable (8's design) → Opus (8's build) | **checkpointed 2026-09-14 — `/clear` · `/postclear` on Opus** |
 | **N4** | Later, noted — **the order after the demo video (his, §515):** the performance instructions (the pedal + l.v. legends, bcl to low C — NITS 2026-09-14) → the print score (2b; the Tempus copy links the demo video at the top) · the practice videos, BLOOM at least, SPECTRAL tbd (2h.7) · the performance score carries D50 (PLAN 3's acceptance line) | — | — |
 | **N5** | Still his, from before: the render's sync (§453) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 
@@ -153,11 +158,13 @@ not, the page picks up the new IR by itself — **but a change to `notation/lib/
 page** (§403; the MAIN file is safe) · **one open composer tab per score** (2d.5.8) · the piano never swells (CN-34) · the MAIN IR is 5.2 MB
 and the page re-fetches it every second (NITS).
 
-**Tests:** `node tools/test_morph_notation.js` (178 — incl. the three D50 guards) · `tools/test_septet_notation.js` (86) · `tools/test_trills.js` (92) · `tools/test_identity.js` (20) ·
+**Tests:** `node tools/test_morph_notation.js` (178 — incl. the three D50 guards) · `tools/test_cross_staff.js` (52 — the cross-staff layout + the `--groups` rule) · `tools/test_step_dynamics.js --save` (15) · `tools/test_septet_notation.js` (86) · `tools/test_trills.js` (92) · `tools/test_identity.js` (20) ·
 `score/tools/check_cresc_panel.js` (35) · `tools/morph_septet_check.js` · `tools/trill_conflicts.js --list` (3, accepted) · check_fill ·
 check_containers · check_cresc_deck · the tuba battery per `notation/ir/README.md` (stage only files the septet lacks — its `index.json` exists).
 
-**Earlier sessions, one line each:** **10** (2026-09-13) trills notated end to end (D41, D42); the recording (§453); the beamed group D43 built;
+**Earlier sessions, one line each:** **11** (2026-09-14) the morph section notated — D44–D48 the morph rules, both morphs folded, the piano's
+44 notes (2h.5), D49 promoted, D50 the piano's dynamics from the ensemble; section 3's notation planned (PLAN 2i, D51, D52, Q7) — §464–§514.
+**10** (2026-09-13) trills notated end to end (D41, D42); the recording (§453); the beamed group D43 built;
 section 1 complete — §427–§463. **9** (2026-09-12) PLAN 1t the chain built; D39's three rule changes; §425 the cuts and M2 moved; the first full
 draft tagged `Scattered_Substance-finalDraft_1.0` — §405–§426. **8** (2026-09-10 → 11) SWEEP_LIST opened · PLAN 2a + 2d built · section 1's
 strikes notated, 0–176 s, `NOTATION_STANDARDS.md` §1 — §352–§404. **7** (2026-09-09 → 10) the strikes drawer revised; nine faults, one rule in
