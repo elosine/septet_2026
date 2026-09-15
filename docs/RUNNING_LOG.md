@@ -14336,3 +14336,10 @@ from the beam — never overlapping. Unverified in the code; Opus reads `layout.
 **Answered:** yes, the dynamics changes are PLAN 2i step 7, next after the held items — (a) the bands renamed to the eight-step scale
 (37 p · 55 mp · 72 mf · 90 f · 109 ff · 127 fff), (b) one mark per part where its band changes, reaching group members (D52). The list
 and rollout given in the chat are copied into §2's thread.
+
+## §526. DECIDED: the piano's beaming in section 3 — singles before 587.32, pairs 587.32–611.72, fours from 611.72 (2026-09-14, Fable 5.1)
+
+**His word:** *"a"* — to the question (§523's reading of his held items 3 and 4, put as A/B): the ~17 piano notes between the run's start
+(581.21) and 587.32, beamed in pairs today, **become single notes; no beams before 587.32**; 587.32 to 611.72 pairs only; fours only from
+611.72. The triple at 606.27 therefore falls inside the pairs-only stretch — Opus decides its writing by the pairs rule (a pair + a single,
+or the D51 triple) and reports it. This is sitting E1's item 1; the flag is the `--groups` rule's, piano only.
