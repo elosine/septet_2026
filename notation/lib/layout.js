@@ -808,7 +808,7 @@
             const d = xPend.yOff;
             const sh = it => { for (const k of Object.keys(it)) if (k[0] === 'y' && typeof it[k] === 'number') it[k] += d; };
             for (let i = xPend.i0; i < items.length; i++) sh(items[i]);
-            if (xPend.tip) for (const k of ['ySs', 'headTopYSs', 'headBotYSs', 'accTopYSs', 'accBotYSs']) if (typeof xPend.tip[k] === 'number') xPend.tip[k] += d;
+            if (xPend.tip) for (const k of ['ySs', 'headTopYSs', 'headBotYSs', 'accTopYSs', 'accBotYSs', 'headY']) if (typeof xPend.tip[k] === 'number') xPend.tip[k] += d;
             xPend = null;
           };
           for (const e of evs) {
@@ -1580,6 +1580,9 @@
                   const tp = tps.length && Math.abs(tps[tps.length - 1].t - e.onset) < 1e-9 ? tps[tps.length - 1] : null;
                   if (tp) {
                     tp.headTopYSs = inkTopY; tp.headBotYSs = inkBotY;
+                    // [2i E1, §527] which side of the note a group accent lands on (clearChrome) — NOT enumerable: beam items carry
+                    // their tips, and the saved model must stay byte-identical where nothing moved
+                    Object.defineProperty(tp, 'headY', { value: yDraw, writable: true, enumerable: false, configurable: true });
                     // day 33: the accidental's ink, kept SEPARATE from
                     // headTopYSs (whose consumers are approved as-is) — the
                     // bracket-above policy must clear sharps ("brackets
@@ -1608,6 +1611,19 @@
                 // flipped sfzp had landed across ledgers -3/-4). Above a
                 // flagged stem-up unit the reference is the staff top, the
                 // flag having been lifted over the chain by the stem rule.
+                // [2i E1, §527] a BEAMED member's own chrome is recorded on its beam tip — the item, its side of the note, its ink
+                // top/bottom relative to the item's ySs — so the group pass, which places the accents after every note is built,
+                // can move the chain clear of them and re-place a beam-side ottava (clearChrome, below the beam drawing)
+                const chromeTip = (() => {
+                  if (!dev.beamGroup || !beamGroups.has(dev.beamGroup)) return null;
+                  const tps = beamGroups.get(dev.beamGroup).tips;
+                  return tps.length && Math.abs(tps[tps.length - 1].t - e.onset) < 1e-9 ? tps[tps.length - 1] : null;
+                })();
+                const recChrome = (it, side, dt, db) => {
+                  if (!chromeTip) return;
+                  if (!chromeTip.chrome) Object.defineProperty(chromeTip, 'chrome', { value: [], writable: true, enumerable: false, configurable: true });   // not serialized (headY)
+                  chromeTip.chrome.push({ it, side, dt, db });
+                };
                 const refBot = Math.min(inkBotY, -STAFF_EDGE);
                 const refTop = (chainAbove && underFlag) ? refTop0 : Math.max(inkTopY, STAFF_EDGE);
                 let chainBotY = refBot;   // grows downward as chrome stacks
@@ -1660,6 +1676,7 @@
                 if (symInChain) {
                   const yS = placeChain(symH);
                   items.push(Object.assign({ k: 'glyph', g: 'artic-' + dev.techSymbol, t: tU, dxSs: headDx, ySs: yS, align: 'center' }, symK !== 1 ? { scale: symK } : {}));
+                  recChrome(items[items.length - 1], chainAbove ? 'above' : 'below', symH / 2, -symH / 2);
                 }
 
                 // DYNAMIC PAIR + ARROW (the surge's hairpin replacement):
@@ -1680,6 +1697,7 @@
                   const x0 = headDx + g1.wSs / 2 + A.gapSs;
                   items.push({ k: 'dynarrow', t: tU, dx0Ss: x0, dx1Ss: x0 + A.lenSs, ySs: yDyn, headSs: A.headSs, thickSs: A.thickSs });
                   items.push({ k: 'glyph', g: 'dyn-' + m2, t: tU, dxSs: x0 + A.lenSs + A.gapSs + g2.wSs / 2, ySs: yDyn, align: 'center' });
+                  for (let q = items.length - 3; q < items.length; q++) recChrome(items[q], chainAbove ? 'above' : 'below', pairG.h / 2, -pairG.h / 2);
                 }
 
                 // SINGLE DYNAMIC MARK (wc-23, day 22 — composer: "let's go with
@@ -1700,6 +1718,7 @@
                     dxMark = stemLeft - gapStem - markG.wSs / 2;
                   }
                   items.push({ k: 'glyph', g: 'dyn-' + markKey, t: tU, dxSs: dxMark, ySs: yDyn, align: 'center' });
+                  recChrome(items[items.length - 1], chainAbove ? 'above' : 'below', markG.hSs / 2, -markG.hSs / 2);
                 }
 
                 // [§400] the instruction text, after the dynamic (the chain's
@@ -1710,6 +1729,7 @@
                   const al = alRaw === 'end' || alRaw === 'middle' ? alRaw : 'start';   // §401b: the composer — tongue ram right-justified (clear of the GC), (slap) / jeté centred
                   const dxT = al === 'end' ? headDx + nhO.wSs / 2 : al === 'middle' ? headDx : headDx - nhO.wSs / 2;
                   items.push({ k: 'text', t: tU, dxSs: dxT, ySs: yT - instrEm / 2 + instrEm * 0.2, text: instrTxt, size: TS.technique, color: '#000', anchor: al });
+                  recChrome(items[items.length - 1], chainAbove ? 'above' : 'below', instrEm * 0.8, -instrEm * 0.2);
                 }
                 // [2h.5, §490–§491] "Ped." — piece #2's Emmentaler sustain-pedal
                 // glyph, once per chord (the chord's lowest note draws it, like
@@ -1723,6 +1743,7 @@
                   else {
                     const yP = placeChain(PG.hSs);
                     items.push({ k: 'glyph', g: 'pedal-' + dev.pedalMark, t: tU, dxSs: chromeDx(PG), ySs: yP, align: 'center' });
+                    recChrome(items[items.length - 1], chainAbove ? 'above' : 'below', PG.hSs / 2, -PG.hSs / 2);
                   }
                 }
                 // [§400] THE TECHNIQUE SYMBOL — ABOVE THE UNIT (the composer,
@@ -1733,6 +1754,7 @@
                   const yS = Math.max(chainTopY, inkTopY) + stackGap + symH / 2;
                   chainTopY = yS + symH / 2;
                   items.push(Object.assign({ k: 'glyph', g: 'artic-' + dev.techSymbol, t: tU, dxSs: headDx, ySs: yS, align: 'center' }, symK !== 1 ? { scale: symK } : {}));
+                  recChrome(items[items.length - 1], 'above', symH / 2, -symH / 2);
                 }
                 // [2h.5, §490–§491] THE TEXT ABOVE ("pizz." — piece #2's baked
                 // italic, glyphs.text): once per onset, above the chord's TOP
@@ -1763,6 +1785,7 @@
                     let yBot = Math.max(chainTopY, inkTopY) + stackGap;
                     if (lvTopY != null) yBot = Math.max(yBot, lvTopY + 2 * stackGap);
                     items.push({ k: 'glyph', g: 'text-' + dev.textAbove, t: tU, dxSs: chromeDx(TG), ySs: yBot + TG.hSs / 2, align: 'center' });
+                    recChrome(items[items.length - 1], 'above', TG.hSs / 2, -TG.hSs / 2);
                     chainTopY = yBot + TG.hSs;
                   }
                 }
@@ -1772,6 +1795,7 @@
                   const yB = Math.max(chainTopY, inkTopY) + stackGap;
                   chainTopY = yB + emA;
                   items.push({ k: 'text', t: tU, dxSs: headDx - nhO.wSs / 2, ySs: yB, text: writtenOut, size: TS.technique, color: '#c00' });
+                  recChrome(items[items.length - 1], 'above', emA, 0);
                 }
 
                 if (octShift !== 0) {
@@ -1800,6 +1824,15 @@
                     dx1Ss: headDx + (TPG ? TPG.right : nhO.wSs / 2 + (ledgers.length ? ledgerExt : 0)) + (o.ottavaEndGapSs != null ? o.ottavaEndGapSs : ((O.endPadSs != null) ? O.endPadSs : 0)),   // [§445] a trill: the bracket runs over the neighbour group too (the ottava transposes it)
                     ySs: lineY, dir: above ? 'above' : 'below', label, ev: e.id,
                   });
+                  // [2i E1, §527] the bracket's ink about its line: the hook (toward the staff) and the label, whose baseline
+                  // sits lineAttachAboveBaselineSs under the line (render.js)
+                  if (chromeTip) {
+                    const lgO = glyphs.ottavaText && glyphs.ottavaText[label];
+                    const labTop = -(O.lineAttachAboveBaselineSs != null ? O.lineAttachAboveBaselineSs : 0.32) + (lgO ? lgO.hSs : 0);
+                    const labBot = -(O.lineAttachAboveBaselineSs != null ? O.lineAttachAboveBaselineSs : 0.32);
+                    recChrome(items[items.length - 1], above ? 'above' : 'below', above ? labTop : hook, above ? -hook : labBot);
+                    Object.defineProperty(chromeTip, 'ottava', { value: items[items.length - 1], writable: true, enumerable: false, configurable: true });
+                  }
                 }
               }
             }
@@ -1924,6 +1957,23 @@
       // stem — no beam, and a warning: the composer's cluster caught a
       // single note)
       const cl16 = g => { const c = clusters.get(g.gridId); return c ? (c.sub || 4) * 4 : 16; };
+      // [2i E1, §527] THE NOTE'S OWN CHROME CLEARS ITS GROUP'S ACCENT (the composer 2026-09-14 on Vn2 at 520.68: "vert spacing for
+      // bartokpizz and accent"). Two placers write one column: the note, against its own ink (the technique symbol, a dynamic, the
+      // instruction, the ottava), and afterwards the group, whose accent row or per-mark accent never saw them — measured at 520.65:
+      // the snap-pizz sign and the accent overlapping by 0.69 ss; at 520.32 the sign between the note and its accent. The column
+      // standard's order is the rule (stackBelow: articulation first): the accent nearest the note, the chain outside it. So the
+      // member's chrome on the accent's side moves outward, all of it by one amount (its own stacking kept), until its inner edge is
+      // the house gap past the accent. Chrome that already clears does not move.
+      const clearChrome = (tp, yA, aH) => {
+        if (!tp || !tp.chrome || tp.headY == null) return;
+        const above = yA > tp.headY;
+        const mine = tp.chrome.filter(c => c.side === (above ? 'above' : 'below'));
+        if (!mine.length) return;
+        const gapC = o.stackGapSs != null ? o.stackGapSs : 0.45;
+        const inner = above ? Math.min(...mine.map(c => c.it.ySs + c.db)) : Math.max(...mine.map(c => c.it.ySs + c.dt));
+        const d = (above ? yA + aH / 2 + gapC : yA - aH / 2 - gapC) - inner;
+        if (above ? d > 1e-9 : d < -1e-9) for (const c of mine) c.it.ySs += d;
+      };
       for (const [key, g] of beamGroups) {
         // A LONE NOTE IN A BEAM GROUP OF ITS OWN (day 29, composer, on T2's
         // seventh partial — the one note after two groups of three): "let's
@@ -1941,6 +1991,15 @@
           else { warnings.push('beam group "' + key + '" has 1 note(s) — no beam drawn'); continue; }
         } else if (g.tips.length < 2) { warnings.push('beam group "' + key + '" has ' + g.tips.length + ' note(s) — no beam drawn'); continue; }
         g.tips.sort((a, b) => a.t - b.t);
+        // [2i E1, §527] AN OTTAVA ON THE BEAM SIDE (the composer 2026-09-14, the piano in section 3: "when there needs to be an
+        // ottava, let's move the accent below the note so there's room for the ottava above. And make sure the ottava clears the
+        // beam, even if it protrudes into the lane above"). Measured before: every such bracket had been placed by its note against
+        // the note's own ink, before the group levelled its beam — 15ma lines at 6.47 under a beam at 6.61 and an accent row at 7.33.
+        // So: the group's accents go to the HEAD side, each against its own note (the day-33 per-mark law, through the same dictated-
+        // side path a --articSide takes), and the bracket is re-placed past everything the group keeps on the beam side (the ottava
+        // pass after the dynamics row, below). A dictated --articSide still wins.
+        g.ottBeam = g.tips.filter(tp => tp.ottava && tp.ottava.dir === (g.dir === 'up' ? 'above' : 'below'));
+        if (g.ottBeam.length && g.artics && g.artics.length && !g.articSide) g.articSide = g.dir === 'up' ? 'below' : 'above';
         // A BEAM IS FLAT, AND IT IS THE GROUP'S, NOT THE NOTE'S (day 24).
         // Each note computes its beam height from ITS OWN technique's flag
         // (the one-shots' flag16), so a group of one technique is level by
@@ -2410,6 +2469,7 @@
               : g.stack.articY != null ? g.stack.articY
               : (g.dir === 'up' ? beamTop + g.stack.articCentre : beamTop - g.stack.articCentre);
             items.push({ k: 'glyph', g: 'artic-' + a.kind, t: a.t, dxSs: a.dxSs, ySs: y, align: 'center' });
+            clearChrome(g.tips.find(tp => Math.abs(tp.t - a.t) < 1e-6), y, aG.hSs);
           }
         }
         // THE DYNAMICS ROW above the beam (day 24): every member's mark on ONE
@@ -2442,6 +2502,34 @@
             const y = base + g.stack.dynCentre;
             for (const d of g.dyns) items.push({ k: 'glyph', g: 'dyn-' + d.key, t: d.t, dxSs: d.dxSs, ySs: y, align: 'center' });
           }
+        }
+        // [2i E1, §527] THE BEAM-SIDE OTTAVA, RE-PLACED once the beam and its rows are final: the hook the house gap (standardGapSs,
+        // session 77) past the outermost of the beam · an accent row left on this side · a tuplet bracket's numeral · a dynamics row
+        // — the whole group's, not the note's column, since the label widens leftward over its neighbours at the renderer's zoom.
+        // No lane clamp: "even if it protrudes into the lane above" (the geometry check still measures it).
+        if (g.ottBeam && g.ottBeam.length) {
+          const Ob = glyphs.standards.ottava || {};
+          const stdB = Ob.standardGapSs || 0.45, hookB = Ob.hookLengthSs || 0.8;
+          const up = g.dir === 'up', beamY = g.tips[0].ySs, S = g.stack || {};
+          const past = y => up ? y > beamY : y < beamY;
+          const far = (a, b) => up ? Math.max(a, b) : Math.min(a, b);
+          let ext = beamY;
+          const aHg = g.artics && g.artics.length ? Math.max(...g.artics.map(a => (glyphs.articulation[a.kind] || { hSs: 0 }).hSs)) : 0;
+          if (aHg && !S.articPerMark) {
+            const yA = S.articY != null ? S.articY : (up ? beamY + S.articCentre : beamY - S.articCentre);
+            if (past(yA)) ext = far(ext, up ? yA + aHg / 2 : yA - aHg / 2);
+          }
+          if (S.bracketY != null && past(S.bracketY)) {
+            const TPo = Object.assign({ numeralSizeSs: 1.2348, numeralBaselineBelowSs: 0.41, numeralCapFactor: 0.7 }, o.tuplet || {});
+            const capO = TPo.numeralSizeSs * TPo.numeralCapFactor - TPo.numeralBaselineBelowSs;
+            ext = far(ext, up ? S.bracketY + capO : S.bracketY - capO);
+          }
+          if (g.dyns && g.dyns.length && !S.dynPerMark) {
+            const dH = Math.max(...g.dyns.map(d => d.hSs));
+            const yD = S.dynY != null ? S.dynY : (S.dynCentre != null ? beamY + S.dynCentre : null);
+            if (yD != null && past(yD)) ext = far(ext, up ? yD + dH / 2 : yD - dH / 2);
+          }
+          for (const tp of g.ottBeam) tp.ottava.ySs = up ? ext + stdB + hookB : ext - stdB - hookB;
         }
       }
       // RESTS (day 23, composer: "let's put in any rests that are necessary...

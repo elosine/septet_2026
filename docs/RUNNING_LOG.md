@@ -14343,3 +14343,69 @@ and rollout given in the chat are copied into §2's thread.
 (581.21) and 587.32, beamed in pairs today, **become single notes; no beams before 587.32**; 587.32 to 611.72 pairs only; fours only from
 611.72. The triple at 606.27 therefore falls inside the pairs-only stretch — Opus decides its writing by the pairs rule (a pair + a single,
 or the D51 triple) and reports it. This is sitting E1's item 1; the flag is the `--groups` rule's, piano only.
+
+## §527. BUILT: PLAN 2i sitting E1 — the piano cut by time; a beam-side ottava clears its beam with the accents below the notes; a member's chain clears its group's accent (2026-09-14, Opus 5)
+
+**His word:** *"go E1"* (after §525's list and §526's *"a"*). The four items, his words in §523 and §525.
+
+**Measured first (the MAIN file as of 5199eda, the page's layout):**
+- **The piano's run:** 169 strikes 581.21 → 624.00. The gap before 587.32 is 0.37 s, into 611.72 0.222 s. Cut at his times: **16 notes
+  before 587.32 · 85 notes 587.32 → 611.50 · 68 notes 611.72 → 624.00** — 85 odd, so 41 pairs + a closing triple at 611.05; 68 = exactly
+  17 fours, every gap in them under 0.25 (max 0.221). The bass four at 620.32 still starts a four.
+- **The ottavas:** 24 in section-3 groups sit on the BEAM side (all piano 8va/15ma over stem-up groups, plus the viola's 8va at 601.93). The
+  per-note builder placed each against its own ink BEFORE the group levelled its beam: **15ma lines at 6.47 under beams at 6.61 and accent
+  rows at 7.33; 20 of 24 hooks within the house gap of the beam, 23 groups with an accent past the beam.** The head-side ottavas (8vb under
+  stem-up groups) had no conflict.
+- **The sign and the accent (Vn2 at 520.32 / 520.65, his screenshot):** the pair's accent row had flipped to the head side (the day-31
+  wide-register repair: F#5 over a beam at 5.61). Two placers, neither consulting the other: the note's chain put the snap-pizz sign at −2.94
+  (the first note, above the staff — sign BETWEEN the note and its accent) and at −4.87 (the second, ledger below — **overlapping the accent at
+  −4.64 by 0.69 ss**). Section 3 had **5** such columns under the house gap (Vn1 620.56 · 621.30, Vn2 520.65 · 620.94 · 624.00).
+
+**Built:**
+1. **`tools/notate_section.js --groupCuts P@t1,t2`** (repeatable, refines `--groups`): in that part's runs, every note before t1 single ·
+   t1 → t2 pairs from the start (odd → closing triple, D51) · from t2 fours from the start (a leftover would be warned and written by the pair
+   rule; a gap ≥ 0.25 inside the fours warned). The other parts keep the gap rule. Appended to the recorded build: `… --groups 444-624.1
+   --groupCuts 2@587.32,611.72` — R on the page re-runs it.
+2. **`notation/lib/layout.js`, the group pass — the beam-side ottava:** a group with an ottava on its beam side gets its accents on the head
+   side (`g.articSide` set before the stack, so it takes the existing dictated path: the day-33 per-mark law, each accent the medium gap off
+   its own note's ink, floored at the staff edge); after the dynamics row, each such bracket is re-placed with its hook the house gap
+   (standardGapSs 0.45) past the outermost of the beam · an accent row still on that side · a bracket numeral · a dynamics row — the group's
+   whole stack, not the note's column, because the renderer widens the label leftward over the neighbours at a zoom the layout cannot see. No
+   lane clamp (his "even if it protrudes"). A dictated `--articSide` still wins.
+3. **`layout.js` — `clearChrome`, the column order in a group:** every beamed member records its own chrome on its beam tip (technique
+   symbol, dynamic pair or mark, instruction text, pedal, text above, range alert, ottava — with each item's ink top/bottom about its ySs;
+   **non-enumerable**, since beam items serialize their tips and the model must stay byte-identical where nothing moved — the first run without
+   that showed every section-3 beam "changed"). When the group draws an accent, the member's chrome on the accent's side moves outward by
+   one amount until its inner edge is the house gap past the accent. Also pushes an 8vb below a now-head-side accent (item 2's side effect).
+   The cross-staff shift carries the tip's head height too.
+
+**Rejected on the way:** (a) *moving only the ottava note's own accent* (the literal "the accent below the note") — in a four the other
+three accents stay on a row above the beam, the bracket must clear that row anyway (its label spans neighbours), so no room is gained and one
+group reads with accents on both sides; the whole group's accents go below instead, one side per gesture (Gould's alignment). (b) *clearing
+only the neighbours whose accent overlaps the bracket horizontally* — the layout has no time scale (coords.js owns it), so it would be a guess
+at one zoom. (c) *the band checker's own layout call for the item checks* — it lays out without the ensemble (the piano not a grand staff), so
+it cannot see these groups; the item checks use the page's options.
+
+**Measured after (committed engine vs edited — the item diff on 5199eda's IR, before the rebuild; the counts below it on the rebuilt IR):**
+- **Changed items: section 3 only** — Pno 74 accents · 33 ottavas · Vn1 3 signs · Vn2 6 signs · Va 1 accent + 1 ottava + 2 jeté texts ·
+  Vc 2 jeté texts (487.76 and 488.15, pushed above their accents to 6.19 — near the lane edge). **Nothing before 444 s moved.**
+- Beam-side ottavas crowding their beam **20 → 0**, accents past such a beam **23 → 0**. Same-side sign/accent columns under the house gap
+  **5 → 0** (32 remaining "sign nearer" columns are all opposite sides: accent beam side, sign head side — no conflict).
+- The build's cross-lane band flags **74 → 72** (gone: T2 accent @616.83 × T3 accent, T3 accent @619.94 × T4 fff); none new.
+- Vn2's snap at 623.66 now −7.51 (its accent row lower there) — about 1 ss into the band below the lane; not flagged by the band check.
+- Treble notes in an ottava group carry their accent at −2.72, under the treble staff (the per-mark floor), however high the note.
+
+**Guards:** `tools/test_cross_staff.js` 52 → **62**, re-pinned where it pinned §522's cut (the cross pair 581.21 → 588.76 E6 → G3; the piano
+39·1·22 → 41·1·17; 169 → 153 grouped + 16 singles) and a new block — the 592.89 pair (15ma hook ≥ 0.45 past the beam, both accents below
+their notes), the 602.02 pair (8vb outside the low note's accent), section 3's every beam-side ottava, Vn2 520.32/520.65, section 3's every
+same-side sign column. **Red on the committed engine: 7 fails.** Batteries: septet 86 · morph 178 · trills 92 · identity · step_dynamics
+--save 15 · check_cresc_panel · morph_septet_check · trill_conflicts 3 (accepted) — all green. **Piece #4's batteries on the staging (26
+files, removed after): test_layout · test_render (snapshots stable) · test_animobj · test_splice · ir_validate_battery GREEN.**
+
+**Verified in the running app** (:5300, a fresh Browser-pane tab, closed after; no screenshot — the pane was hidden): the page loaded the
+edited engine (`clearChrome` present) and the rebuilt file (build ends `--groupCuts 2@587.32,611.72`); laid out in-page: Vn2 520.32/520.65
+accents −4.64, signs −6.01 (gap 0.46); Pno 592.89 15ma at 7.86 over the beam at 6.61 (hook 7.06), accents −2.72 and −11.64 under their
+notes; 16 piano singles before 587.32.
+
+**His eye owed:** RELOAD the notation page (a `notation/lib` change; F5, not CTRL+SHIFT+R) — 520.3 Vn2 · 587 the first pair · 592.9 · 602.0 ·
+611–613 · 616.7 · 622.5 the piano · 601.9 Va · 487.8 Vc jeté · 623.7 Vn2.

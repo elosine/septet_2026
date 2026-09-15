@@ -346,10 +346,22 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
   // The groups become ordinary --cluster spans after the explicit ones; one overlapping an explicit --cluster of its part is an error.
   {
     const gi = process.argv.indexOf('--groups');
+    if (gi < 0 && process.argv.includes('--groupCuts')) { console.error('--groupCuts refines --groups — add --groups t0-t1'); process.exit(2); }
     if (gi >= 0) {
       const gm = String(process.argv[gi + 1] || '').match(/^([\d.]+)-([\d.]+)$/);
       if (!gm) { console.error('--groups needs t0-t1 (e.g. --groups 444-624.1)'); process.exit(2); }
       const G0 = parseFloat(gm[1]), G1 = parseFloat(gm[2]), PAIR = 0.4, FOUR = 0.25, EPS = 0.005;
+      // [2i E1] --groupCuts P@t1,t2 (repeatable) — one part's stretches set BY TIME instead of by the gaps (the composer 2026-09-14,
+      // the piano: "let's start the eighth note beaming, the two to a beam at 587.32. And let's start the four grouping at 611.72";
+      // RUNNING_LOG §526 his "a" = singles before t1). In that part's runs: every note before t1 stays single · t1 to t2 = pairs from
+      // the start, an odd stretch closing with a triple (D51) · from t2 = fours from the start. The other parts keep the gap rule.
+      const cutsOf = new Map();
+      process.argv.forEach((a, i) => {
+        if (a !== '--groupCuts') return;
+        const cm = String(process.argv[i + 1] || '').match(/^(\d+)@([\d.]+),([\d.]+)$/);
+        if (!cm || !(parseFloat(cm[2]) < parseFloat(cm[3]))) { console.error('--groupCuts needs P@t1,t2 with t1 < t2 (e.g. --groupCuts 2@587.32,611.72)'); process.exit(2); }
+        cutsOf.set(+cm[1], [parseFloat(cm[2]), parseFloat(cm[3])]);
+      });
       const explicit = spans.slice();
       const seq = k => Array.from({ length: k }, (_, i) => i + 1).join(',');
       const byPart = new Map();
@@ -373,13 +385,27 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
         for (const run of runs) {
           const n = run.length;
           if (n < 2 || run[0].onset < G0 - 1e-9 || run[0].onset > G1 + 1e-9) continue;
-          let k = n - 1;                                   // the under-0.25 stretch is run[k .. n-1]
-          while (k > 0 && run[k].onset - run[k - 1].onset < FOUR) k--;
-          const fours = n > 3 ? Math.floor((n - k) / 4) : 0;
-          const headEnd = n - 4 * fours;
           const groups = [];
-          for (let i = 0; headEnd - i >= 2;) { const take = headEnd - i === 3 ? 3 : 2; groups.push({ g: run.slice(i, i + take), four: false }); i += take; }
-          for (let j = headEnd; j < n; j += 4) groups.push({ g: run.slice(j, j + 4), four: true });
+          const pairsOver = (a, b) => { for (let i = a; b - i >= 2;) { const take = b - i === 3 ? 3 : 2; groups.push({ g: run.slice(i, i + take), four: false }); i += take; } };
+          const cuts = cutsOf.get(p);
+          if (cuts) {
+            const at = t => { const i = run.findIndex(e => e.onset >= t - EPS); return i < 0 ? n : i; };
+            const i1 = at(cuts[0]), i2 = Math.max(i1, at(cuts[1]));
+            pairsOver(i1, i2);
+            const left = (n - i2) % 4;
+            for (let j = i2; j + 4 <= n; j += 4) groups.push({ g: run.slice(j, j + 4), four: true });
+            if (left) { console.warn('  --groupCuts ' + p + ': ' + left + ' note(s) after the last four at ' + run[n - left].onset.toFixed(2) + ' — written by the pair rule'); pairsOver(n - left, n); }
+            const wide = run.slice(i2).findIndex((e, j) => j > 0 && e.onset - run[i2 + j - 1].onset >= FOUR);
+            if (wide >= 0) console.warn('  --groupCuts ' + p + ': a gap of ' + FOUR + ' s or more inside the fours at ' + run[i2 + wide].onset.toFixed(2));
+            said.push('part ' + p + ' cut by time: ' + i1 + ' single(s) before ' + cuts[0] + ' · pairs ' + cuts[0] + '–' + cuts[1] + ' · fours from ' + cuts[1]);
+          } else {
+            let k = n - 1;                                   // the under-0.25 stretch is run[k .. n-1]
+            while (k > 0 && run[k].onset - run[k - 1].onset < FOUR) k--;
+            const fours = n > 3 ? Math.floor((n - k) / 4) : 0;
+            const headEnd = n - 4 * fours;
+            pairsOver(0, headEnd);
+            for (let j = headEnd; j < n; j += 4) groups.push({ g: run.slice(j, j + 4), four: true });
+          }
           for (const { g, four } of groups) {
             const sp = [+(g[0].onset - EPS).toFixed(3), +(g[g.length - 1].onset + EPS).toFixed(3), p];
             const clash = explicit.find(x => (x.sp[2] === null || x.sp[2] === p) && x.sp[0] <= sp[1] && sp[0] <= x.sp[1]);
