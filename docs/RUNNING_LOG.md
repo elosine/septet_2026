@@ -14299,3 +14299,23 @@ scratchpad, plus his v1.33):**
 Drop it to F4 or below, or leave it.
 
 **Not done:** the four held items (Opus, next) · PLAN 2i step 7 (after them).
+
+## §524. DONE: his second round of moves (8 more, 488–616 s) — techniques came through right this time; two flute rams folded; MAIN rebuilt (2026-09-14, Fable 5.1)
+
+**His word:** *"ok the moves are saved what next in the notation score?"* — the save was newer than commit c1c021b, so it was checked before
+answering.
+
+**Measured (commit c1c021b vs his save):** 8 more objects changed `layer`, one changed pitch, nothing else: 488.15 wc-2473 Fl→Vc ·
+491.18 wc-2529 Va→Vn1 · 607.77 wc-2827 Vn2→Vc · 609.14 wc-3001 Va→BCl · 611.05 wc-2839 Vc→Fl (65) · 613.27 wc-3016 Vn1→Va ·
+614.07 wc-2851 Vn2→Fl (66) · 616.18 wc-3028 Vn1→Va · and **618.16 wc-3037 BCl 67→55 (G4→G3, his answer to §523's flag; inside the slap
+zone now).** **This round every moved note arrived with its new part's section-3 technique** (pizzicato→gettato, gettato→slap …) — unlike
+round 1 (§523), where the eight arrived with the base technique. Not investigated (the difference may be his Reload of the fixed file
+first, or the way he moved them); noted for the composer-app's revision. §523's 8 fixes intact; 932 strikes, 0 off-default.
+
+**Done, on the file (he must Reload again):** the two notes that landed in the flute were outside C3–D4 — `foldFlute` (the §507 call)
+moved wc-2839 65→53 and wc-2851 66→54, `sonifyNote` only; 101 rams, 0 stuck · MAIN rebuilt with the recorded build (VALID vs source) ·
+the two pinned tests re-pinned to the new counts and green: `test_cross_staff` Fl 2 pairs · Vn1 5 + the triple 620.56 · Vn2 8 · Va 4 + 2 ·
+Vc 4 + 1 · piano 39·1·22 untouched · triples unchanged from §523 · `test_step_dynamics --save` 101 rams.
+
+**Next in the notation score (his question):** the four held piano items of §523, on Opus, planning method first — the one thing only he
+can answer is the reading of (3) and (4): singles before 587.32, pairs 587.32–611.72, fours from 611.72.

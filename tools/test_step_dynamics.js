@@ -15,7 +15,7 @@ const DYNS = ['p', 'mp', 'mf', 'f', 'ff', 'fff'];
 const VEL = { p: 37, mp: 55, mf: 72, f: 90, ff: 109, fff: 127 };   // Cresc.dynHeight × 127 / 10, rounded
 const bandOf = t => DYNS[Math.max(0, Math.min(5, Math.floor((t - FROM + 1e-6) / W)))];
 const isS3Strike = x => x.type === 'waveCurve' && x.srcKind === 'strike' && x.startSeconds >= FROM - 1e-6 && x.startSeconds <= TO + 1e-6;
-// 100 rams since his moves of 2026-09-14 (two out, three in — the three folded into C3–D4; RUNNING_LOG §523)
+// 101 rams since his moves of 2026-09-14 in two rounds (three out, five in — the five folded into C3–D4; RUNNING_LOG §523–§524)
 const isFlRam = x => x.type === 'waveCurve' && x.layer === 0 && x.technique === 'pizzicato' && x.startSeconds >= 430;
 
 function load() { return JSON.parse(fs.readFileSync(path.join(ROOT, 'scores', 'piece-septet.json'), 'utf8')); }
@@ -36,7 +36,7 @@ function load() { return JSON.parse(fs.readFileSync(path.join(ROOT, 'scores', 'p
 
   const alreadyFolded = score.objects.filter(isFlRam).every(x => x.sonifyNote >= 48 && x.sonifyNote <= 62);
   const f = ctx.foldFlute({ from: 430, to: 700, lo: 48, hi: 62, part: 'Fl', technique: 'pizzicato' });
-  ok(f && f.of === 100 && f.stuck === 0, 'foldFlute over section 3: 100 flute rams, none stuck (got ' + (f && f.of) + ', stuck ' + (f && f.stuck) + ')');
+  ok(f && f.of === 101 && f.stuck === 0, 'foldFlute over section 3: 101 flute rams, none stuck (got ' + (f && f.of) + ', stuck ' + (f && f.stuck) + ')');
   ok(f && f.moved === (alreadyFolded ? 0 : 79), 'foldFlute moves ' + (alreadyFolded ? '0 (the save is already folded)' : '79 (§507)') + ' — got ' + (f && f.moved));
   ok(score.objects.filter(isFlRam).every(x => x.sonifyNote >= 48 && x.sonifyNote <= 62), 'every section-3 ram now sounds inside C3–D4 (48..62)');
 
@@ -62,7 +62,7 @@ if (process.argv.includes('--save')) {
   const off = S3.filter(x => x.recVel !== VEL[bandOf(x.startSeconds)]);
   ok(S3.length === 932 && !off.length, 'THE SAVE: 932 section-3 strikes at their band velocity (' + off.length + ' off' + (off.length ? ', e.g. ' + off.slice(0, 3).map(x => x.id + '@' + x.startSeconds + ' vel ' + x.recVel).join(' · ') : '') + ')');
   const rams = score.objects.filter(isFlRam), out = rams.filter(x => x.sonifyNote < 48 || x.sonifyNote > 62);
-  ok(rams.length === 100 && !out.length, 'THE SAVE: 100 section-3 rams inside C3–D4 (' + out.length + ' outside)');
+  ok(rams.length === 101 && !out.length, 'THE SAVE: 101 section-3 rams inside C3–D4 (' + out.length + ' outside)');
 }
 
 console.log((fail ? 'FAIL' : 'PASS') + ' — ' + pass + ' pass, ' + fail + ' fail');

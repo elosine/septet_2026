@@ -73,8 +73,8 @@ ok(!model.warnings.some(w => /beam group /.test(w)), 'no beam-group warnings any
   const S3 = [...new Set(clusterOf.values())].map(cl => members(cl)).filter(ms => ms[0].onset >= 444);
   const byPart = p => S3.filter(ms => partOfEv.get(ms[0].id) === p);
   const sizes = p => byPart(p).map(ms => ms.length);
-  // re-pinned 2026-09-14 after his nine note moves at 616.8-623.2 s (RUNNING_LOG §523): Fl 3 pairs · Vn1 7 + a triple · Va 6 + 2 · Vc 4 + 1
-  const want = { 0: [3, 0, 0], 1: [7, 0, 0], 3: [7, 1, 0], 4: [10, 0, 0], 5: [6, 2, 0], 6: [4, 1, 0], 2: [39, 1, 22] };
+  // re-pinned 2026-09-14 after his 17 note moves in two rounds, 488-623 s (RUNNING_LOG §523-§524): Fl 2 pairs · Vn1 5 + a triple · Vn2 8 · Va 4 + 2 · Vc 4 + 1
+  const want = { 0: [2, 0, 0], 1: [7, 0, 0], 3: [5, 1, 0], 4: [8, 0, 0], 5: [4, 2, 0], 6: [4, 1, 0], 2: [39, 1, 22] };
   for (const p of Object.keys(want).map(Number)) {
     const s = sizes(p), got = [2, 3, 4].map(n => s.filter(x => x === n).length);
     ok(got.join() === want[p].join(), 'part ' + p + ': pairs · triples · fours = ' + want[p].join(' · ') + ' (got ' + got.join(' · ') + ')');
