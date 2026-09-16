@@ -62,6 +62,10 @@ const rd = p => JSON.parse(fs.readFileSync(path.join(ROOT, p), 'utf8'));
 const glyphs = rd('notation/lib/glyphs.json');
 const pageRules = rd('notation/registry/page_rules.json');
 const C = rd('notation/registry/container.json');
+// [PLAN 2k, D55 / M5 — 2026-09-16] the ensemble, REALIZED: this export is the presentation score (a full score read together), so the
+// bass clarinet is in C on a bass clef (registry realizations.video-jury.ensemble); the working page keeps the default B♭ treble.
+const ens = rd('notation/registry/ensemble.json');
+const T = rd('notation/registry/techniques.json');
 const ir = rd(path.join('notation', 'ir', irId + '.ir.json'));
 let score = null;
 try { score = rd(path.join('scores', ir.source.score + '.json')); } catch (e) { score = null; }
@@ -72,7 +76,7 @@ try { score = rd(path.join('scores', ir.source.score + '.json')); } catch (e) { 
 const FRAME_PARTS = (arg('parts', '') || '').split(',').filter(Boolean).map(Number);
 if (!FRAME_PARTS.length) FRAME_PARTS.push(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
 const model = Layout.layoutSection(ir, glyphs, Object.assign(
-  { m4AttackLines: false, frameParts: FRAME_PARTS },
+  { m4AttackLines: false, frameParts: FRAME_PARTS, ensemble: Layout.ensembleFor(ens, (C.realizations || {})['video-jury']), techniques: T },
   (C.engraving && C.engraving.layout) || {}));
 
 // ------------------------------------------------- the app's video geometry

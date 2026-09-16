@@ -15128,3 +15128,46 @@ stem, layout's ordinary beam end); every other pair keeps D61's writing (the res
 is unchanged and R re-runs it. Guard: `test_cross_staff` — the four closing pairs carry neither `restAfter` nor `beamOverRest` and keep
 `rest16Before` on the second note; the other 68 pairs keep `restAfter 1` + `beamOverRest`. NOTATION_STANDARDS §2's 2 + 1 row carries the
 writing.
+
+## §552. BUILT: PLAN 2k — the transposing-instrument mechanism: the pitch form per realization; the presentation's bass clarinet in C on a bass clef; the morph headers made re-spellable; the exporters take the realized ensemble — and what the print proof found (2026-09-16, session 13, Fable 5.1)
+
+**Prompted by:** *"all good, lets move on to 2k no need for clear/model change"* (his eye on 2j's fixes, then 2k on Fable).
+
+**Built, in the plan's order (2k.1–2k.5, 2k.7):**
+- **The registry:** `container.json realizations.video-jury.ensemble.parts.bass_clarinet { clef: bass, transpose: 0 }` + the pitch-form note
+  (D55 / M5). The video-jury realization IS the presentation — the jury's video, and the print score, which borrows the block (export_print
+  reads `realizations['video-jury']` for its lanes). `ensemble.json` keeps the default (treble, +14 — §382) for the working page, the
+  sectional and individual scores and any part.
+- **The layout:** `Layout.ensembleFor(ens, realization)` — a COPY of the ensemble with the realization's part overrides (clef, transpose);
+  no override = the ensemble itself; an unknown part id throws. The IR is untouched (D9).
+- **The exporters:** `export_video.js` and `export_print.js` now pass `ensemble: Layout.ensembleFor(ens, realizations['video-jury'])` and
+  `techniques` to layout. **Found on the way: neither exporter passed the ensemble or the techniques at all** — they laid the septet out as
+  the tuba (one bass staff per part, sounding pitch, no grand staff, no written transposition). So the presentation score was un-adapted
+  before 2k; the pitch form rides on the adaptation's first line.
+- **The morph headers re-spellable (a gap the guard found):** the D45 figure's two heads were baked at build in WRITTEN pitch (the bass
+  clarinet's C4 sounding stored as D5); under the C realization they still drew at D5 — 7 ss up a bass clef, the one head beyond two ledgers.
+  Now `morph_overlays.js` spells the heads through a shared `spellHeads(startQ, destQ, dir, tq)` and the header records its SOUNDING
+  quarter-tone grid (`q`), the direction and the transposition it was written at (`writtenAt`); `layout.js` re-spells a header only when
+  the part's realized transposition differs from `writtenAt` (the residual cents kept), so the default page draws the baked heads byte for
+  byte and the C page draws C4 at +3. MAIN rebuilt: all 12 headers carry `q`/`dir`/`writtenAt`; the page unchanged.
+- **The C page proven on MAIN (the guard):** the bass clarinet's 203 heads within two ledger lines (max |ySs| 4.5 — F4 above the second
+  ledger; B♭1 below it), its system's clef bass, every other system item-identical to the default layout, no new warning; the default
+  resolver unchanged (B♭2 → written C4). `test_septet_notation` **101** (was 88): both forms, the override's scope, the C page.
+- **The front matter:** two lines on the NITS performance-instructions list — *"Score in C. The bass clarinet sounds as written."* · *"Bass
+  clarinet in B♭ (treble clef), sounding a major ninth lower."* NOTATION_STANDARDS §0b (the rule, its data, its guard).
+
+**The print proof and what it showed (2k.4, one page):** `export_print.js --ir piece-septet --htmlOnly --at 100` renders (57 pages for 625 s,
+11.41 s/page) — and the page has **six systems, sys-p0 · p1 · p3 · p4 · p5 · p6: no piano at all** (the grand staff's systems are keyed 2:0 /
+2:1; the static page keys the frame by part) and **no part labels**; the video exporter's frame still defaults to the tuba's ten parts. The
+clef itself is a stamp path with no marker, so the bass clef on the print page is proven through the model (the guard's `sys.clef === 'bass'`
+and the positions), not by reading the HTML. **Noted in PLAN 2b as its first job** — the frame, the lanes, the labels, the grand staff —
+before any presentation page is judged. Not 2k's to fix.
+
+**Guards:** septet 101 · morph 178 · surge 30 · cross-staff 79 · trills 92 · identity 20 · step_dynamics --save 15 · morph_septet_check ·
+piece #4's five batteries on a fresh staging (26 files, removed after) GREEN. The recorded build unchanged (no new flag); MAIN VALID.
+
+**Later versions (2k.6):** the sectional, individual and part exporters take the default; the full ensemble rehearsal score takes the
+presentation override; the performance score (PLAN 3) decides its own form at its design — M5 stands over all of them.
+
+**Decided:** nothing new — D55 built as written. **One AI call, his to overturn:** the presentation override lives on `video-jury` (which
+print borrows) rather than a new `presentation` realization key — one block, two exporters; a rename is a one-line move when 2b adapts them.

@@ -64,6 +64,38 @@ const pos = Layout.positionResolver(ens);
   eq(pos(0, 72).ySs, 0.5, 1e-12, 'flute: C5 in treble, sounding = written');
 }
 
+// ---- [PLAN 2k, D55 / M5 — 2026-09-16] the pitch form per REALIZATION: the presentation (video-jury, and print through it) shows the bass ----
+// clarinet in C on a bass clef; the default (the page, sectionals, individual scores, parts) stays B♭ treble, a major ninth up
+{
+  const C0 = JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'registry', 'container.json'), 'utf8'));
+  const Tq = JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'registry', 'techniques.json'), 'utf8'));
+  const rz = (C0.realizations || {})['video-jury'];
+  const ensC = Layout.ensembleFor(ens, rz), posC = Layout.positionResolver(ensC);
+  const bcC = ensC.parts.find(p => p.id === 'bass_clarinet'), bcD = ens.parts.find(p => p.id === 'bass_clarinet');
+  ok(bcC && bcC.clef === 'bass' && !bcC.transpose, 'presentation: the bass clarinet on a bass clef, no transposition (registry realizations.video-jury.ensemble)');
+  eq(posC(1, 50).ySs, 0, 1e-12, 'presentation: sounding D3 on the bass middle line — written = sounding');
+  eq(posC(1, 65).ySs, 4.5, 1e-12, 'presentation: F4, the top of the part, above the second ledger line');
+  eq(posC(1, 36).ySs, -4, 1e-12, 'presentation: C2 on the second ledger line below');
+  ok(Math.abs(posC(1, 34).ySs + 4.75) <= 0.25, 'presentation: the low B♭1 just under it (' + posC(1, 34).ySs + ')');
+  ok(bcD && bcD.clef === 'treble' && bcD.transpose === 14, 'the default stays B♭ treble, +M9 (§382)');
+  eq(pos(1, 46).ySs, -3, 1e-12, 'the default resolver unchanged: sounding B♭2 written C4');
+  ok(JSON.stringify(Layout.ensembleFor(ens, {})) === JSON.stringify(ens) && Layout.ensembleFor(ens, null) === ens, 'no override = the ensemble itself');
+  ok(ensC.parts.filter(p => p.id !== 'bass_clarinet').every((p, i) => JSON.stringify(p) === JSON.stringify(ens.parts.filter(q => q.id !== 'bass_clarinet')[i])), 'the other six parts untouched by the override');
+  // the C page, proven on MAIN: only the bass clarinet's system moves; every head within two ledger lines; the clef; no new warning
+  const irM = JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'ir', 'piece-septet.ir.json'), 'utf8'));
+  const glM = JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'lib', 'glyphs.json'), 'utf8'));
+  const base = Object.assign({ m4AttackLines: false, frameParts: ens.parts.map(p => p.part), techniques: Tq }, C0.engraving.layout);
+  const mB = Layout.layoutSection(irM, glM, Object.assign({}, base, { ensemble: ens })), mC = Layout.layoutSection(irM, glM, Object.assign({}, base, { ensemble: ensC }));
+  const sysOf = (M, k) => M.systems.find(s => String(s.key) === String(k));
+  const same = mB.systems.filter(S => String(S.key).split(':')[0] !== '1').every(S => JSON.stringify(S.items) === JSON.stringify(sysOf(mC, S.key).items));
+  ok(same, 'presentation: nothing outside the bass clarinet moves (every other system item-identical)');
+  const heads = sysOf(mC, 1).items.filter(it => it.k === 'glyph' && /^notehead/.test(it.g));
+  const maxY = heads.length ? Math.max(...heads.map(h => Math.abs(h.ySs))) : NaN;
+  ok(heads.length > 200 && maxY <= 5, 'presentation: every bass clarinet head within two ledger lines (' + heads.length + ' heads, max |ySs| ' + maxY + ')');
+  ok(sysOf(mC, 1).clef === 'bass' && sysOf(mB, 1).clef === 'treble', 'the system clef: bass in the presentation, treble by default');
+  ok(mC.warnings.length === mB.warnings.length, 'no new layout warning under the override (' + mC.warnings.length + ' vs ' + mB.warnings.length + ')');
+}
+
 // ---- 2a.1 the container: ensemble order, groups, lanes and staves ----
 ok(JSON.stringify(ens.parts.map(p => p.id)) === JSON.stringify(['flute', 'bass_clarinet', 'piano', 'violin1', 'violin2', 'viola', 'cello']), 'D10 order: flute · bass clarinet · piano · strings');
 ok(JSON.stringify(ens.groups.map(g => g.kind + ':' + g.parts.join(','))) === JSON.stringify(['bracket:0,1', 'brace:2', 'bracket:3,4,5,6']), 'D10 groups: winds bracket · piano brace · strings bracket');
@@ -312,5 +344,5 @@ ok(JSON.stringify(ens.groups.map(g => g.kind + ':' + g.parts.join(','))) === JSO
 }
 
 console.log(pass + ' passed, ' + fail + ' failed');
-console.log(fail ? 'SEPTET-NOTATION RED: ' + fail + ' failure(s)' : 'SEPTET-NOTATION GREEN: clefs · written pitch · grand staff · D10 groups · #2 chord columns · simultaneities · techniques · piece-septet end to end · percussive strikes (2j.5)');
+console.log(fail ? 'SEPTET-NOTATION RED: ' + fail + ' failure(s)' : 'SEPTET-NOTATION GREEN: clefs · written pitch · grand staff · D10 groups · #2 chord columns · simultaneities · techniques · piece-septet end to end · percussive strikes (2j.5) · the pitch form per realization (2k)');
 process.exit(fail ? 1 : 0);

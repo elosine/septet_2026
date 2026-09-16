@@ -19,6 +19,12 @@ letter: the trills (the after-go column, §445) · the morph breaths (a go line 
 morph headers (a legend hanging before the first go line, the tuba's "what you play at the mark"). The crescendo run 526.8–558.9 s is 2i.8's
 to place. The audit's numbers: §517.
 
+## §0b The pitch form is a property of the realization — decided 2026-09-16 (D55 / M5, RUNNING_LOG §541–§542; built §552)
+
+| Rule | Where it lives | § |
+|---|---|---|
+| **A full score read together is in C; a score read by one player is transposed.** The presentation score (print + the jury's video) and the full ensemble rehearsal score show the bass clarinet at sounding pitch on a **bass clef** (its range B♭1–F4 within two ledger lines each side, no clef change); the working page, the sectional scores, the individual rehearsal scores and any part show it **in B♭ on a treble clef, a major ninth up** (§382's French form — the registry default). The IR is always sounding (D9); the shift is one override per realization applied at layout to a COPY of the ensemble, never a second IR. Every later version declares its form before it is built (M5); the performance score (PLAN 3, one shared display) decides its own at its design | `ensemble.json` part 1 (`clef: treble · transpose: 14`, the default) · `container.json realizations.video-jury.ensemble.parts.bass_clarinet {clef bass · transpose 0}` (the presentation; print borrows the block) · `layout.js ensembleFor(ens, realization)` · `export_video.js` / `export_print.js` pass the realized ensemble · guard `tools/test_septet_notation.js` (both forms; on MAIN only the bass clarinet's system moves) · the front-matter lines on the NITS instructions list | D55 · M5 · §541 · §552 |
+
 ## §1 The strike (section 1's one-shots) — decided 2026-09-11, RUNNING_LOG §399–§401m
 
 | rule | data | decided |

@@ -42,6 +42,15 @@
     "_sparseNote": "day 22 (fix B): when an IR carries fewer parts than fill the frame, each lane is capped at this height and the band is centered vertically — single-part experiment IRs stop inflating one lane to the whole frame. Full 10-part material computes lanes below the cap and is untouched (the jury frame stays exactly PP-2)."
    },
    "transport": "local-audio",
+   "ensemble": {
+    "_pitchFormNote": "PLAN 2k, D55 / M5 (the composer 2026-09-16, RUNNING_LOG §541–§542 · §552): THE PITCH FORM IS A PROPERTY OF THE REALIZATION. This realization is the PRESENTATION — the jury's video, and the print score, which borrows this block — a full score read together, so it is in C: the bass clarinet at sounding pitch on a bass clef (its range B♭1–F4 sits within two ledger lines each side). The registry ensemble's default (ensemble.json: B♭, treble, a major ninth up — §382's French form) stays for the working page, the sectional and individual scores and any part. Applied by layout.ensembleFor(ens, realization) — a copy; the IR is always sounding (D9). The full ensemble rehearsal score, when it exists, takes the same override; the performance score (PLAN 3) decides its own form at its design.",
+    "parts": {
+     "bass_clarinet": {
+      "clef": "bass",
+      "transpose": 0
+     }
+    }
+   },
    "_derived": "lanePx = (1080 - 16 - 36) / 10 = 102.8 · air above+below staff ≈ 35.6 px per side at staff 31.6",
    "_status": "header decided ('no header at all — akin to the paper score'); lane numbers provisional pending the vertical-stress proof (ledgers, accents, dynamics, hairpins)"
   },

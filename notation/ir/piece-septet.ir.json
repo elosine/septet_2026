@@ -155539,7 +155539,13 @@
       "cents": "+25"
      }
     ],
-    "travelC": 24.7
+    "travelC": 24.7,
+    "q": [
+     162,
+     162
+    ],
+    "dir": 1,
+    "writtenAt": 0
    },
    "provenance": "authored"
   },
@@ -179349,7 +179355,13 @@
       "cents": "−25"
      }
     ],
-    "travelC": 24.9
+    "travelC": 24.9,
+    "q": [
+     120,
+     120
+    ],
+    "dir": -1,
+    "writtenAt": 14
    },
    "provenance": "authored"
   },
@@ -204143,7 +204155,13 @@
       "cents": "+25"
      }
     ],
-    "travelC": 24.9
+    "travelC": 24.9,
+    "q": [
+     148,
+     148
+    ],
+    "dir": 1,
+    "writtenAt": 0
    },
    "provenance": "authored"
   },
@@ -228431,7 +228449,13 @@
       "cents": "−25"
      }
     ],
-    "travelC": 24.9
+    "travelC": 24.9,
+    "q": [
+     162,
+     162
+    ],
+    "dir": -1,
+    "writtenAt": 0
    },
    "provenance": "authored"
   },
@@ -253083,7 +253107,13 @@
       "cents": "−25"
      }
     ],
-    "travelC": 24.9
+    "travelC": 24.9,
+    "q": [
+     148,
+     148
+    ],
+    "dir": -1,
+    "writtenAt": 0
    },
    "provenance": "authored"
   },
@@ -276899,7 +276929,13 @@
       "cents": "+25"
      }
     ],
-    "travelC": 25
+    "travelC": 25,
+    "q": [
+     120,
+     120
+    ],
+    "dir": 1,
+    "writtenAt": 0
    },
    "provenance": "authored"
   },
@@ -288897,7 +288933,13 @@
       "acc": null
      }
     ],
-    "travelC": 4
+    "travelC": 4,
+    "q": [
+     120,
+     null
+    ],
+    "dir": 1,
+    "writtenAt": 0
    },
    "provenance": "authored"
   },
@@ -300496,7 +300538,13 @@
       "acc": null
      }
     ],
-    "travelC": 14
+    "travelC": 14,
+    "q": [
+     76,
+     null
+    ],
+    "dir": -1,
+    "writtenAt": 14
    },
    "provenance": "authored"
   },
@@ -324932,7 +324980,13 @@
       "cents": null
      }
     ],
-    "travelC": 100
+    "travelC": 100,
+    "q": [
+     114,
+     116
+    ],
+    "dir": 1,
+    "writtenAt": 0
    },
    "provenance": "authored"
   },
@@ -348586,7 +348640,13 @@
       "cents": "−14"
      }
     ],
-    "travelC": 185.6
+    "travelC": 185.6,
+    "q": [
+     120,
+     124
+    ],
+    "dir": 1,
+    "writtenAt": 0
    },
    "provenance": "authored"
   },
@@ -372614,7 +372674,13 @@
       "cents": null
      }
     ],
-    "travelC": 99.5
+    "travelC": 99.5,
+    "q": [
+     114,
+     116
+    ],
+    "dir": 1,
+    "writtenAt": 0
    },
    "provenance": "authored"
   },
@@ -396022,7 +396088,13 @@
       "cents": null
      }
     ],
-    "travelC": 148.2
+    "travelC": 148.2,
+    "q": [
+     76,
+     79
+    ],
+    "dir": 1,
+    "writtenAt": 0
    },
    "provenance": "authored"
   },

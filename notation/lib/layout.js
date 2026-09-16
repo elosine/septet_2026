@@ -29,9 +29,11 @@
   // [2i.8] sonify_core.js + cresc.js — the curve template (drawnLevelSamples): the same curve math playback uses and
   // the crescendo tool's STANDARD segment. The page loads both AFTER layout.js, so the browser looks them up on root at
   // call time; node requires them here.
-  if (typeof module === 'object' && module.exports) module.exports = factory(require('./chord_column.js'), require('../../score/public/sonify_core.js'), require('../../score/public/cresc.js'), null);
-  else root.NotationLayout = factory(root.NotationChordColumn, null, null, root);
-})(typeof self !== 'undefined' ? self : this, function (ChordColumn, SonifyCoreIn, CrescIn, rootIn) {
+  // [2k] morph_overlays.js — the D45 header's spelling (spellHeads), called again when a realization writes a part at another
+  // transposition; the page never needs it (it draws the default form), so the browser looks it up on root at call time too.
+  if (typeof module === 'object' && module.exports) module.exports = factory(require('./chord_column.js'), require('../../score/public/sonify_core.js'), require('../../score/public/cresc.js'), null, require('./morph_overlays.js'));
+  else root.NotationLayout = factory(root.NotationChordColumn, null, null, root, null);
+})(typeof self !== 'undefined' ? self : this, function (ChordColumn, SonifyCoreIn, CrescIn, rootIn, MorphOverlaysIn) {
 
   const STEP_IDX = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, B: 6 };
   const MIDDLE_BASS = 3 * 7 + 1; // D3 — the bass staff's middle line
@@ -75,6 +77,22 @@
   // a note on the upper staff at or above splitMidi, on the lower below it.
   function partCfgOf(ens, part) {
     return (ens && ens.parts && ens.parts.find(p => p.part === part)) || null;
+  }
+  // [PLAN 2k, D55 / M5 — the composer 2026-09-16, RUNNING_LOG §541–§542 · §552] THE PITCH FORM IS A PROPERTY OF THE REALIZATION.
+  // A realization (registry `realizations.<name>`) may carry `ensemble.parts.<id>` overrides — clef, transpose — applied to a COPY
+  // of the ensemble before layout: the presentation score (print + the jury's video) shows the bass clarinet at sounding pitch on a
+  // bass clef; the working page, the sectional and individual scores and any part keep the registry's default (B♭, treble, a major
+  // ninth up). The IR is always sounding (D9); nothing but this copy changes. No override = the ensemble itself, untouched.
+  function ensembleFor(ens, rz) {
+    const ov = rz && rz.ensemble && rz.ensemble.parts;
+    if (!ens || !ov) return ens;
+    const out = JSON.parse(JSON.stringify(ens));
+    for (const id of Object.keys(ov)) {
+      const pc = out.parts.find(p => p.id === id);
+      if (!pc) throw new Error('realization override for an unknown part "' + id + '"');
+      for (const k of Object.keys(ov[id])) if (!k.startsWith('_')) pc[k] = ov[id][k];
+    }
+    return out;
   }
   function nStavesOf(pc) { return (pc && pc.staves && pc.staves.length) || 1; }
   function staffIdxOf(pc, midi) {
@@ -293,7 +311,9 @@
           oneHead: !!(ov.value && ov.value.oneHead),
           spelled: (ov.value && ov.value.spelled) || { step: 'F', alter: 0, octave: 2 },
           // [PLAN 2h.2] D45's figure: the heads in TIME order, each its own WRITTEN pitch and sign
-          figure: ov.value && ov.value.figure, heads: ov.value && ov.value.heads }); continue;
+          figure: ov.value && ov.value.figure, heads: ov.value && ov.value.heads,
+          // [2k, D55] the sounding grid, the direction and the transposition the heads were written at — for a realization's re-spelling
+          q: ov.value && ov.value.q, dir: ov.value && ov.value.dir, writtenAt: ov.value && ov.value.writtenAt }); continue;
       }
       if (ov.kind === 'dynamic' && tgt.event) {
         const e = evById.get(tgt.event);
@@ -726,6 +746,18 @@
         // quarter-tone sign, ledger lines where the pitch needs them, the gliss line from head to
         // head, the signed cents number centred over the destination head. Right to left from the
         // go line with the tuba's spacers; the dynamic figure below is unchanged (D46).
+        // [PLAN 2k, D55 / M5 — 2026-09-16] a realization that writes this part at ANOTHER transposition than the header was built at
+        // (the presentation's bass clarinet in C, against the default B♭ treble) re-spells the figure from the header's SOUNDING grid
+        // through the builder's own spellHeads; the residual cents stay. The default form draws the baked heads untouched.
+        {
+          const pcH = partCfgOf(ENS, h.part), trH = (pcH && pcH.transpose) || 0;
+          const MO = MorphOverlaysIn || (rootIn && rootIn.MorphOverlays) || null;
+          if (h.figure === 'D45' && Array.isArray(h.q) && trH !== (h.writtenAt || 0) && MO && MO.spellHeads) {
+            const re = MO.spellHeads(h.q[0], h.q[1], h.dir || 1, 2 * trH);
+            if (re[1] && h.heads && h.heads[1]) re[1].cents = h.heads[1].cents;
+            h.heads = re;
+          }
+        }
         if (h.figure === 'D45' && Array.isArray(h.heads) && h.heads.length) {
           const accGap = o.accGap || 0.25;
           const LL = (glyphs.standards || {}).ledgerLine, ledgerFrac = (LL && LL.lengthFraction) || 0.25;
@@ -2877,5 +2909,5 @@
     return smp;
   }
 
-  return { layoutSection, deviceResolver, drawnLevelSamples, staffPosBass, staffPos, spellMidi, positionResolver, ledgersFor, dotYFor, stemLenFor };
+  return { layoutSection, deviceResolver, drawnLevelSamples, staffPosBass, staffPos, spellMidi, positionResolver, ensembleFor, ledgersFor, dotYFor, stemLenFor };
 });

@@ -185,6 +185,20 @@
     return { part, tones, T0, T1, G, L, baseMidi, spelled, extent, qSteps, acc, overlays };
   }
 
+  // D45's two heads from the SOUNDING quarter-tone grid at a transposition (tq, in quarter tones): the start, and the destination,
+  // whose plain spelling on the altered start's own line takes a natural. [PLAN 2k] shared with layout.js, which re-spells a header
+  // for a realization written at another transposition.
+  function spellHeads(startQ, destQ, dir, tq) {
+    const h1 = spellQ(startQ + tq, dir);
+    const heads = [{ spelled: h1.spelled, acc: h1.acc }];
+    if (destQ != null) {
+      const h2 = spellQ(destQ + tq, dir);
+      const cancel = !h2.acc && h1.acc && h2.spelled.step === h1.spelled.step && h2.spelled.octave === h1.spelled.octave;
+      heads.push({ spelled: h2.spelled, acc: cancel ? 'natural' : h2.acc, cents: null });
+    }
+    return heads;
+  }
+
   // THE SEPTET'S PART (PLAN 2h.2). The events, the go lines and the overlay kinds are the
   // tuba's; what differs is decided in NOTATION_STANDARDS §3, one rule per block below.
   function forPartSeptet(tones, part, idBase, S, T0, T1) {
@@ -207,20 +221,16 @@
     if (!glissOn) alerts.push('D44: part ' + part + ' travels ' + extent.toFixed(1) + ' c (under ' + S.noGlissUnderC + ') — written crescendo-only, one pitch; his to look at (NOTATION_STANDARDS §3)');
 
     // D45: the pitch figure in TIME order, spelled on the quarter-tone grid in WRITTEN pitch
-    const tq = 2 * ((S.transposeOf && S.transposeOf(part)) || 0);
+    const trS = (S.transposeOf && S.transposeOf(part)) || 0, tq = 2 * trS;
     const start = nearestGrid(startC, startC);
     if (Math.abs(start.residual) >= S.centsMin) alerts.push('D45: part ' + part + ' starts ' + signed(start.residual) + ' c off the quarter-tone grid — the header writes no residual on the start');
-    const h1 = spellQ(start.grid / 50 + tq, dir);
-    const heads = [{ spelled: h1.spelled, acc: h1.acc }];
     let dest = null;
-    if (glissOn) {
-      dest = nearestGrid(dir > 0 ? hi : lo, startC);
-      const h2 = spellQ(dest.grid / 50 + tq, dir);
-      // a plain destination on the altered start's own line cancels the sign
-      const cancel = !h2.acc && h1.acc && h2.spelled.step === h1.spelled.step && h2.spelled.octave === h1.spelled.octave;
-      heads.push({ spelled: h2.spelled, acc: cancel ? 'natural' : h2.acc,
-        cents: Math.abs(dest.residual) >= S.centsMin ? signed(dest.residual) : null });
-    }
+    if (glissOn) dest = nearestGrid(dir > 0 ? hi : lo, startC);
+    // [PLAN 2k, D55 — 2026-09-16] the heads are spelled from the SOUNDING grid through spellHeads — the function layout.js calls again
+    // when a realization writes the part at another transposition (the presentation's bass clarinet in C); the header records the
+    // sounding grid (q, in quarter tones), the direction and the transposition it was written at (writtenAt)
+    const heads = spellHeads(start.grid / 50, dest ? dest.grid / 50 : null, dir, tq);
+    if (dest) heads[1].cents = Math.abs(dest.residual) >= S.centsMin ? signed(dest.residual) : null;
 
     // D46 + D47: THE CRESCENDO — absolute (the level itself, 0-1, the D32 fade weight multiplied in),
     // drawn through ONE ANCHOR PER BREATH at its loudest point, the ends anchored where the sound
@@ -249,7 +259,7 @@
         value: { samples: cresc, fit: (A.length) + ' breath-peak anchors, absolute (D46, D47); ' + ns + ' intervals' },
         provenance: 'authored' },
       { id: 'ov-header-' + pfx, kind: 'header', target: { part, t: T0 },
-        value: { figure: 'D45', endMark: 'fff', oneHead: !glissOn, heads, travelC: +extent.toFixed(1) }, provenance: 'authored' },
+        value: { figure: 'D45', endMark: 'fff', oneHead: !glissOn, heads, travelC: +extent.toFixed(1), q: [start.grid / 50, dest ? dest.grid / 50 : null], dir, writtenAt: trS }, provenance: 'authored' },
     ];
     if (glissOn) overlays.unshift(
       { id: 'ov-gliss-' + pfx, kind: 'gliss', target: { part, span: [T0, T1] },
@@ -279,5 +289,5 @@
     return want.map(p => forPart(objects, groupId, p, idBase || groupId, opts)).filter(Boolean);
   }
 
-  return { forPart, forGroup, crom, cromTimed, tangentsTimed, spellQ, nearestGrid, SEPTET, LADDER };
+  return { forPart, forGroup, crom, cromTimed, tangentsTimed, spellQ, spellHeads, nearestGrid, SEPTET, LADDER };
 }));
