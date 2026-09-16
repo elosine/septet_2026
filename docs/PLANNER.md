@@ -5,7 +5,7 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ✦** 2026-09-16 (session 13, Fable) — **SECTION 3'S NOTATION (PLAN 2i): steps 1–8 DONE (§515–§536)** — the crescendo run's 78 swells wear the tuba's surge on MAIN (the STANDARD surge as a registry template, ppp → fff + arrow, "sempre secco" once per part; his eye "good"; the run stays secco, §535) · the standards rows and the instruction lines written (8.6) · every battery green. **NEXT: SITTING F — 9 the audio re-render (PLAN 2i.9, RENDER.md §1: his capture → export → Reaper → ♪ render), then 10 the demo video (2i.10). Opus runs the route, Fable directs; CLEAR before F.** His eye still owed on E1 and E2 (section 3's earlier spots).
+**NOW ✦** 2026-09-16 (session 13, Fable) — **SECTION 3'S NOTATION (PLAN 2i): steps 1–8 DONE (§515–§536)** — the crescendo run's 78 swells wear the tuba's surge on MAIN (the STANDARD surge as a registry template, ppp → fff + arrow, "sempre secco" once per part; his eye "good"; the run stays secco, §535) · the standards rows and the instruction lines written (8.6) · every battery green. **► NOW: PLAN 2j THE PROOFING PASS (his eye, all parts, opened 2026-09-16, §537) — his notes collected in PLAN 2j verbatim as given, fixed all together when he says the pass is done (the save → R → his eye). THEN SITTING F — 9 the audio re-render (PLAN 2i.9, RENDER.md §1: his capture → export → Reaper → ♪ render), then 10 the demo video (2i.10). Opus runs the route, Fable directs; CLEAR before F.** E1 and E2's spots fold into the proofing pass.
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 

@@ -14762,3 +14762,22 @@ surge curves the shape only, the pair states the levels).
 export → the Reaper render → `notation/audio/piece-septet.wav` → ♪ render; §453's numbers to compare against), then step 10 the demo video
 (2i.10). THE RHYTHM: a mode change — from building the notation to executing a written pipeline — so **clear before F; Opus runs the route,
 Fable directs**; the capture and Reaper are his.
+
+## §537. PLAN 2j opened — the proofing pass, all parts: his notes collected as given, fixed together at the end, before the re-render; note 1, the flute's tongue ram at 59.55 dropped to `ord` (2026-09-16, Fable 5.1)
+
+**His words:** *"I'm proofing the notation in all the parts. You can add this as the current step in the plan. And then please collect the notes
+I'll give. And then you could fix them all at the end of the proofing. At 59.55. in the flute, the TR should be given to the flute and this fixed
+in the audio. And I guess the composer score. Somehow the tongue ram got dropped off there."*
+
+**Done:** PLAN 2j "The proofing pass, all parts" — `► CURRENT` — inserted after 2i, with the collection rule (verbatim, dated, in order; the AI's
+reading marked and separate; nothing fixed until he says the pass is done) and the ordering: 2j's fixes land in the save BEFORE sitting F, so
+the re-render (2i.9) carries them. Journal §2 and PLANNER's NOW line follow. E1 and E2's owed spots fold into this pass.
+
+**Note 1, looked up (not fixed):** the note is there — `wc-877`, flute (layer 0), 59.561 s, a 0.072 s strike with a captured note, technique
+**`ord`**, sounding F4 (65), and so on the page an ordinary strike unit with no "tongue ram" and no written transposition. The flute's
+neighbouring tongue rams: 59.016 and 63.066 (six between 50 and 70 s: 55.67 · 59.02 · 63.07 · 65.76 · 67.89 · 68.80). So the technique was lost,
+not the note. **The fix, when the pass closes:** technique → `pizzicato` (the flute's tongue ram, techniques.json) through the note card, the
+pitch folded into the tongue ram's sounding window C3–D4 (`foldFlute`, D38; F4 is outside it — written = sounding + 11, fingering B3–C♯5), the
+captured note re-taken as the card does on a technique change; Save → R. The audio follows at the re-render — no separate audio fix.
+
+**Decided:** nothing new; the collection is open.

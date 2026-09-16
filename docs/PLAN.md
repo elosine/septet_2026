@@ -1695,6 +1695,11 @@ player would touch parts, solo, crop and print.
   10. **The demo video** — `todo · sitting F`.
   **Also, decided on the way (2026-09-14):** Sec3-Materials was empty and is removed with Materialsa (§509) · Q7 the bass clarinet's bottom — §511, his word owed.
 
+- **2j — The proofing pass, all parts** — `► CURRENT · doing 2026-09-16 (his: "I'm proofing the notation in all the parts … collect the notes I'll give … fix them all at the end of the proofing") · RUNNING_LOG §537 · BEFORE sitting F — the fixes land in the save, so the re-render carries them` —
+  **Result when done:** every note below is fixed in the save (his tab, or a script through the note card's own paths so a strike's captured note follows its technique), MAIN rebuilt (R), his eye on each spot again; only then sitting F (2i.9–2i.10). **Nothing is fixed until he says the pass is done.**
+  **The notes — verbatim, dated, in the order given; the AI's reading marked and kept separate:**
+  1. **2026-09-16 · flute · 59.55** — *"At 59.55. in the flute, the TR should be given to the flute and this fixed in the audio. And I guess the composer score. Somehow the tongue ram got dropped off there."* — *(AI, looked up, not fixed:)* the note is there — `wc-877`, flute, 59.561 s, a 0.072 s strike with a captured note, technique **`ord`**, sounding F4 (65); the flute's neighbouring tongue rams sit at 59.016 and 63.066. The fix: technique → `pizzicato` (the flute's tongue ram) on the note card, the pitch folded into the tongue ram's sounding window C3–D4 (`foldFlute`, D38 — F4 is outside it; written = sounding + 11), the captured note re-taken as the card does on a technique change; Save → R. The audio follows at the re-render (2i.9).
+
 - **2b — Presentation score** *(the title on the cover and in the format entry: **tentative _Scattered Substance_**, CN-64 — confirm with him before either is written)* — print PDF (A3 landscape, format entry + cover + performance
   notes page as in #4) + video (`export_video.js`, Reaper render at fixed BPM, sync proof
   as #4's PHASE 5). **Deadline-bound: 2026-10-15.**
