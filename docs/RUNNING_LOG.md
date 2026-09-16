@@ -15362,3 +15362,11 @@ tuba's was); its timeline identical to the scratch copy the running render uses.
 **Read (the AI's):** the right-source figures are codec loss, not error — the wide frames lose more than the close-ups (1.2–2.1 % vs 0.46 %)
 because yuv420p halves the chroma of thin magenta lines and the wide shot carries more of them at a smaller scale (625 s: 32 781 magenta px;
 30 s: 20 057); the wrong-source controls sit 5–30× higher. **Open: his eye on the film** (the fourth check, as in #4).
+
+## §563. His eye on the film: "video good" — archived as the submission copy; PLAN 2i.10 DONE, sitting F closed (2026-09-16, Opus 5)
+
+**His word:** *"video good, archive it as the submission copy"* — the fourth PHASE 5 check. **Archived** as piece #4's were:
+`notation/video/approved/2026-09-16-submission/` — `V-CUT.mp4` (`cmp` byte-identical to the render; sha256 48ecf4e3…ea9d; gitignored, on this
+machine only — README says back it up) · `cut-list-seed53.json` (`cmp` identical to `notation/video/cut-list.json`) · `README.md` (what made
+it: the save `bc54cdc`, the WAV and its sha256, the frame, the 1.85× groups, seed 53, cross 5, the tail hold, the command, the measurements).
+**PLAN 2i closed through step 10** — sitting F done. Next in his order (§515): the performance instructions, then the print score (2b).
