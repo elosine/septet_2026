@@ -14968,3 +14968,22 @@ the END — a small addition to `notate_section` (today the fours are cut from t
 → on the middle pair's 0.50 s gap: *"no then 2+1 , 2+1"* — DECIDED: each Va three as a pair and a single GC — 622.01·622.36 + 622.70 · 623.20·623.52 + 623.84. Into PLAN 2j.4.
 *"vn1 at 620 leave it"* — DECIDED: the Vn1 three stays. All five threes ruled on (Vc 2+2+1 · Pno 2s, 4s, last single · Vn1 stays · Va 2+1, 2+1); asked for any others: there are none — the five are the piece's every group of three (measured §545).
 **Correction, his (same day):** *"sorry vn1 at 620 2+1"* — the Vn1 three becomes the pair 620.56·620.93 and the single 621.30 with its own GC (supersedes "leave it" above). So every three in the piece is now 2+1 except the piano's (2s, 4s, the last note single).
+
+## §546. Proofing note 5 — a rule: every strike in the six parts is percussive outside the morph and surge sections; audited — 14 offenders, all in section 1 (2026-09-16, Fable 5.1)
+
+**His words:** *"vln1 36.28 missing bartok pizz; 49.67 same, actually for all the 6 instruments -piano they should all have the same percussive
+articulations except for morph and surge sections"*
+
+**Measured (the MAIN IR, `techniques.json` families):** 999 strikes in the six non-piano parts outside the morph (205–428 s) and surge
+(526–560 s) windows. Percussive: BCl slap 166 · Fl tongue ram 169 · Vn1 Bartók 157 · Vn2 Bartók 164 · Va jeté 159 · Vc jeté 170. **Not
+percussive: 14** — 13 strings on `senza_vel` and the flute's `ord` at 59.56 (note 1): Va 36.13 · Vn1 36.25 · Va 43.10 · Vn2 43.33 · Vn2 49.52 ·
+Va 49.63 · Vn1 49.68 · Va 58.87 · Fl 59.56 · Vn1 114.44 · Vn1 119.67 · Va 120.98 · Vc 123.34 · Vn2 167.90. His two (36.28, 49.67) are the Vn1
+36.25 and 49.68. Section 3's strikes: none missing. So the lapses are section 1's, in its first three minutes, mostly in the clusters at 36 ·
+43 · 49 and the pairs at 114–123.
+
+**Collected as PLAN 2j.5, not fixed.** The fix: each takes its PART's own articulation (Vn1/Vn2 Bartók · Va/Vc jeté — the part's 159/170
+others; Bartók there only if he says · the flute's tongue ram, folded, note 1), through the note card's technique path so the captured
+note is re-taken; Save → R; the re-render carries the sound. **A rule for NOTATION_STANDARDS §1 and a guard row** (0 sustained-family strikes
+in the six parts outside those windows) so it cannot recur silently.
+
+**Decided:** nothing new; the collection is open.
