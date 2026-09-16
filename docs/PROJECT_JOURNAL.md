@@ -85,35 +85,34 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### CHECKPOINT — 2026-09-15 (past midnight of session 12), checkpoint #3; Fable 5.1; PLAN 2i.8 DESIGNED (§530, D54) — the Opus build next
+### STATE — 2026-09-16 (session 13), Fable 5.1; PLAN 2i.8.1–8.5 BUILT (§531) — HIS EYE next, then 8.6–8.7
 
-**The task:** PLAN 2i, section 3's notation (444–624 s). **State: steps 1–7 built (§515–§529); step 8 DESIGNED** — his *"good, write it in and prep for
-clear"*. **No code changed since checkpoint #2**; the MAIN notation file `notation/ir/piece-septet.ir.json` is VALID and unchanged (`provenance.build`
-ends `… --groups 444-624.1 --groupCuts 2@587.32,611.72 --max16 --dynOnChange 444-624.1`). His eye is STILL owed on E1 and E2 (below).
+**The task:** PLAN 2i, section 3's notation (444–624 s). **State: steps 1–7 built (§515–§529); step 8 BUILT 8.1–8.5 (§531)** — on Fable at his *"go"*
+(the Opus routing was flagged; his call). The MAIN notation file `notation/ir/piece-septet.ir.json` is VALID, rebuilt by the recorded build unchanged
+(`provenance.build` ends `… --max16 --dynOnChange 444-624.1`): only `env: 'surge'` + `secco: true` on the 78 swells changed; overlays, chunks and the
+build line identical. **Code changed (committed with §531):** `extract_core.js` (the tag) · `schema/ir_v0.schema.json` (`secco`, amendment 9) ·
+`registry/container.json` (byEnv.surge `curveTemplate`) · `lib/layout.js` (the template in `drawnLevelSamples` · "sempre secco" once per part · the UMD
+takes sonify_core + cresc) · `app/notation.html` (loads `/cresc.js`) · `tools/test_surge_run.js` (new, 29) · `tools/test_cross_staff.js` (two re-pins, 73).
+His eye is STILL owed on E1 and E2 (below).
 
-**Latest deliverable:** the design — PLAN 2i.8 (Result when done + sub-steps 8.1–8.7, each with its file and line) · journal §4 D54 · RUNNING_LOG §530
-(the measurements the build needs) · PLANNER's NOW line · this checkpoint · one commit, pushed.
+**Latest deliverable:** the build — RUNNING_LOG §531 · the 78 swells on the page as the tuba's surge (the STANDARD template, 100/s, from 0, the cut on
+the note end, ppp → fff + arrow, "sempre secco" at each part's first swell's cut edge) · every battery green incl. piece #4's · verified in the running
+page · one commit, pushed.
 
-**The next concrete step — on OPUS, after a clear: BUILD PLAN 2i.8 sub-steps 8.1–8.5 exactly as written, the test (8.4) FIRST, red on the old engine.**
-8.1 the tag in `extract_core.js` (`properties.cresc.shape` → `ev.env = 'surge'`, `ev.secco`) · 8.2 the registry switch `curveTemplate: 'surge'` on
-byEnv.surge and the template in `layout.js drawnLevelSamples` (the tool's ratio-5 exponential through `sonify_core.evalWaveCurve`, 100/s never fewer
-than 101, then the cut; no curveZero, no curveFloor; the IR untouched) · 8.3 "sempre secco" as a `text` item at the curve's end of each part's FIRST
-swell, `clearChrome` · 8.4 the test · 8.5 rebuild MAIN (R re-runs the recorded build, no new flag), verify in the running page (a fresh tab, closed after),
-then **his eye after F5** at 526.8 (Va, the first) · the middle · 557–559 (gaps 0.5 s), with the meter playing — and E1/E2's spots if he has not seen them.
-Then 8.6–8.7 on Opus (the two standards rows · the two instructions lines on the NITS list · §531 · commit + push). Then **sitting F** (9 the re-render,
-10 the demo video) on Fable to direct. The facts (the 78, their durations, the bent vs the standard samples at tenths, the meter path, the room, the
-on-change knock-on): §530.
+**The next concrete step — HIS EYE, after F5 on the notation page (not CTRL+SHIFT+R; `notation/lib` and the registry changed):** 526.8 (Va, the first
+swell) · the middle (~540–550) · 557–559 (gaps 0.5 s), with the meter playing — the shape, the pair, the word's place (the cut edge, its own row after
+the pair) · and E1/E2's spots if not yet seen. **Then 8.6–8.7 (small; Opus or Fable):** two rows in `docs/NOTATION_STANDARDS.md` §2 (the template
+rule · secco once per part) · two lines on the NITS performance-instructions list (the 2026-09-14 section) · PLAN 2i.8 marked done · commit + push.
+**Then sitting F** (9 the re-render, 10 the demo video) on Fable to direct.
 
-**Resume reads:** PLAN 2i.8 (sub-steps 8.1–8.7) · RUNNING_LOG §530 · journal §4 D54 · `docs/CURVE_LOOK.md` (the density rule, 100/s) · the code the
-sub-steps name: `notation/lib/extract_core.js` ~420–460 · `notation/lib/layout.js` `drawnLevelSamples` (~2807–2836) and the dynPair block (~1699–1720) ·
-`notation/registry/container.json` byEnv.surge (~119–126) · `score/public/cresc.js` 25–80 (`segmentFor`) · `notation/lib/animobj.js` ~310–325 ·
-`tools/test_cross_staff.js` (the test pattern: red on the old engine, item-by-item "nothing else moved").
+**Resume reads:** this §2 · PLAN 2i.8 (the status line and 8.6–8.7) · RUNNING_LOG §531 only if a verdict of his needs the numbers.
 
 **Decisions pending the composer:** his eye on E1 and E2 — E1's spots: 520.3 Vn2 · 581–587 the piano singles · 592.9 · 602.0 · 607–613 · 616.7 · 622.5
 Pno · 601.9 Va · 487.8 Vc jeté · 623.7 Vn2; E2's marks: 444 · 474–478 · 504–507 · 534 · 561–566 · 594–596 (F5, not CTRL+SHIFT+R) · the AI calls he may
 overturn, each a small change: (a) an ottava on the beam side moves the WHOLE group's accents below their notes (§527) · (b) a mark after a written
 dynamic compares against that dynamic (§529) · (c) the surge template as a registry switch, not a build flag (§530) · (d) the IR's `env`/`secco` tags
-derived from the save (§530) · the accents in an ottava group sit under the treble staff however high the note · later: the pedal legend's wording (NITS).
+derived from the save (§530) · (e) "sempre secco" on its own chain row at the cut edge, running rightward from the cliff (§531) · the accents in an
+ottava group sit under the treble staff however high the note · later: the pedal legend's wording (NITS).
 
 **Deliberately uncommitted (`git status --short` at this checkpoint, unchanged since #2) — all his, left alone:** `bank/panel_snapshots.json` (his takes) ·
 `reaper/septet_rack.rpp` (his rack) · `bank/passages/4materials.json` · `accentedcres01.json` · `accentedcres01-2.json` · `chordcyc01.json` ·
@@ -123,9 +122,11 @@ his save-point before the note moves) · `scores/spectralMorph.json` (his save, 
 `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
 **Unsaved working copies** (`node tools/unsaved_check.js`, D17 — his to Save or Reload; piece-septet is clean; the list as at checkpoint #2, not re-run at #3):
 cres-run01 · cres2strike · piano-harmonics-test · trill-curve-test · trillBuildTst · zz-ai-1t-walk.
-**Running:** nothing of the AI's (his :5300 and Reaper; no Browser-pane tab was opened in this stretch).
+**Running:** nothing of the AI's (his :5300 and Reaper; the AI's Browser-pane tab for §531's page proof was closed after).
 
 ---
+
+**Session 13 in one look (2026-09-16, Fable 5.1) — RUNNING_LOG §531.** Postclear at his "go" (on Fable, the Opus routing flagged): PLAN 2i.8.1–8.5 built as written, the test first — the tag + schema amendment 9, the template as a registry switch, the word once per part, MAIN rebuilt, page-verified, every battery green.
 
 **Session 12 in one look (2026-09-14, Opus 5 ⇄ Fable 5.1) — RUNNING_LOG §515–§530.** His note on the order after the demo video (performance
 instructions → print score, the Tempus copy links the video; practice videos, §515) · PLAN 2i sittings A–D: go-to-time · the D49 audit and
@@ -142,7 +143,7 @@ pattern and holds; after Sciarrino's *Raffigurar Narciso al fonte*) · his note 
 | **N3b** | ~~**sitting D**~~ **BUILT 2026-09-14** (§522) — `--groups 444-624.1`: the piano 39 pairs · triple 606.27 · 22 fours; the six parts 46 pairs + 2 triples; **his eye owed** on 581 · 606.3 · 615–624 (55 crowding flags) · 488.5 · 622 | — | — |
 | **N3b2** | ~~**his note moves, 488–623 s**~~ **DONE 2026-09-14 (Fable, §523–§524)** — 17 strikes moved between parts in his tab in two rounds (v1.33 named first) · round 1's 8 re-articulated to their new part (round 2's came through right) · 5 flute rams folded into C3–D4 · the BCl 618.16 dropped to G3 by him · MAIN rebuilt · two tests re-pinned (Fl 2 pairs · Vn1 5 + 1 · Vn2 8 · Va 4 + 2 · Vc 4 + 1 · 101 rams) · **HIS TO DO: Reload his composer tab** (the file changed under it again) · **SITTING E1 BUILT 2026-09-14 (Opus, §527):** (1) the piano cut by time — 16 singles 581.21–586.96 · 41 pairs from 587.32 · triple 611.05 · 17 fours from 611.72 (`--groupCuts 2@587.32,611.72` in the recorded build) · (2)+(3) a beam-side ottava sends its group's accents below their notes and clears the beam by the house gap (24 such ottavas, 0 crowding; was 20) · (4) a member's chain clears its group accent, accent nearest (5 collisions → 0; Vn2 520.32/520.65 sign at −6.01 under the accent at −4.64) · nothing outside section 3 moved · band flags 74 → 72 · **+ §528: `--max16` — no value shorter than a 16th anywhere (his rule); the piano pairs 607.27–611.50 were 32nds, now 16ths** · batteries green incl. the tuba snapshots · verified in the running page · **his eye owed: RELOAD the notation page (F5 — not CTRL+SHIFT+R) · look at 520.3 (Vn2) · 587 (the first pair) · 592.9 · 602.0 · 611–613 · 616.7 · 622.5 (Pno) · 601.9 (Va) · 487.8 (Vc jeté) · 623.7 (Vn2)** · **then clear → E2 = step 7 the dynamics** | **Opus** | **yes — clear before E2** |
 | **N3c** | ~~**sitting E1 · §528 · E2**~~ **BUILT 2026-09-14 (Opus, §527–§529)** — E2 = step 7: `dynamicBands` the eight steps · `--dynOnChange 444-624.1` · **42 marks, six per part p mp mf f ff fff, each on the part's first strike in the band** (was a mark on every strike: 707) · group members reached · "changes" against the part's last WRITTEN dynamic, so 8's surge end marks will count · nothing outside section 3 moved · band flags 72 → 32 · test_cross_staff 73 · tuba batteries green · verified in the page · **his eye owed after F5 (notation/lib + registry changed)** — the marks at 444 · 474–478 · 504–507 · 534 · 561–566 · 594–596, and E1's spots | — | — |
-| **N3d** | ~~**step 8 — the design**~~ **DESIGNED 2026-09-15 (Fable, §530, D54)** — the 78 swells as the tuba's surge device · the STANDARD surge as a template (the tool's ratio-5 exponential, not the save's bent curve) · 100/s · no floor · ppp → fff + arrow · "sempre secco" once per part at its first swell (his "b") · the meter rides it (drawnOf) · the sound and the IR's samples untouched · **► the Opus build, PLAN 2i.8.1–8.5 exactly as written — the test FIRST, red on the old engine** · then his eye after F5 (526.8 Va · the middle · 557–559, the meter playing) · then 8.6–8.7 · **then sitting F** — steps 9–10 re-render, demo video (Fable to direct) | **Opus** (build) → Fable (F) | **yes — clear before the build** |
+| **N3d** | ~~**step 8 — the design**~~ **DESIGNED 2026-09-15 (Fable, §530, D54)** — the 78 swells as the tuba's surge device · the STANDARD surge as a template (the tool's ratio-5 exponential, not the save's bent curve) · 100/s · no floor · ppp → fff + arrow · "sempre secco" once per part at its first swell (his "b") · the meter rides it (drawnOf) · the sound and the IR's samples untouched · **BUILT 8.1–8.5 2026-09-16 (Fable, §531)** — test_surge_run 29 (red 17 on the old engine) · MAIN rebuilt (only env/secco changed) · band flags 32 unchanged · knock-on 0 · batteries green incl. piece #4 · **► HIS EYE after F5** (526.8 Va · the middle · 557–559, the meter playing; the word at the cut edge) · then 8.6–8.7 (small) · **then sitting F** — steps 9–10 re-render, demo video (Fable to direct) | his eye · then Fable or Opus | no |
 | **N4** | Later, noted — **the order after the demo video (his, §515):** the performance instructions (the pedal + l.v. legends, bcl to low C — NITS 2026-09-14) → the print score (2b; the Tempus copy links the demo video at the top) · the practice videos, BLOOM at least, SPECTRAL tbd (2h.7) · the performance score carries D50 (PLAN 3's acceptance line) | — | — |
 | **N5** | Still his, from before: the render's sync (§453) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 

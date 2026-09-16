@@ -116,13 +116,15 @@
       }
      },
      "_trillNote": "PLAN 2f.4 (2026-09-13, RUNNING_LOG §438; docs/TRILL_NOTATION_SPEC.md): the TRILL is the tuba's surge with a trill on it — the open nh-unit (no stem, no brick, no ring bar), the parenthesised neighbour after it (trillPitch: LilyPond's pitched-trill group measured by tools/fixtures/lp_probes/trill.ly — group padding 0.30, parens at font-size −4 = 0.63, inner padding 0.42, the neighbour head and accidental at 0.794 of the house, accidental gap 0.20, no naturals), the whole column nhGapSs (0.25) before the go line; the go line at the onset with the strikes' length (goLineTopAsGc — §401h) and NO GC (the composer: 'no gc for trills, they are too close to the other gcs for percussive notes'); `tr` = the technique-symbol slot above (glyphs.articulation.trill at 0.70, GLYPH_SIZING Ornaments — the pedal's factor), the strikes' symbol-above rule; sfz on every attack by the tuba's below-chain and side-with-room rule (chainSide deliberately UNSET: a device chainSide would disable the room test); the level curve over the exact span in the envCurve colour, never peak-cut, over the part's whole lane (curveBand). The level is the composer score's own trill reference (IR amendment 8).",
+     "_surgeTemplateNote": "PLAN 2i.8 (2026-09-15, RUNNING_LOG §530, D54): curveTemplate — the device draws the STANDARD shape of its family (cresc.js segmentFor: the ratio-5 exponential, slope 0.40 — the look of the tuba's db1 surges) in place of the event's own level samples, sampled through sonify_core.evalWaveCurve at CURVE_LOOK §2a's density (100/s, never fewer than 101), then the cut; no curveZero, no curveFloor. Why: the septet's crescendo run (78 swells, 526.8–559.4 s) SOUNDS through the sampler-bent surge (CN-49's listening tests: under 10 % for 60 % of the span), which drawn reads as silence then a spike; the IR keeps the bent samples as the truth of what sounds (D9), and the template is a drawing rule on the device — piece-wide, like dynPair, not a build flag. The meters ride it (drawnOf, D50).",
      "surge": {
       "curve": true,
       "cut": true,
       "goLine": true,
       "nhUnit": true,
       "dynPair": true,
-      "dynMark": false
+      "dynMark": false,
+      "curveTemplate": "surge"
      },
      "_strikeNote": "RUNNING_LOG §400 (2026-09-11): a note the strikes tool wrote (the score's srcKind 'strike' → IR env 'strike', extract_core) is a STRIKE whatever its technique, and wears the section's strike look — the tuba staccato unit with the accent, fff on change. The piano's `main` is a strike here and a long note elsewhere, which is why the look rides the env, not the technique; the one-shot techniques carry the same look in byTechnique plus their own symbol/text.",
      "strike": {

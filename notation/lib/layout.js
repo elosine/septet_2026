@@ -26,9 +26,12 @@
 (function (root, factory) {
   // [2a.4] chord_column.js — the chord rules (optional in the browser: a page
   // that has not loaded it draws each chord note on its own, as before)
-  if (typeof module === 'object' && module.exports) module.exports = factory(require('./chord_column.js'));
-  else root.NotationLayout = factory(root.NotationChordColumn);
-})(typeof self !== 'undefined' ? self : this, function (ChordColumn) {
+  // [2i.8] sonify_core.js + cresc.js — the curve template (drawnLevelSamples): the same curve math playback uses and
+  // the crescendo tool's STANDARD segment. The page loads both AFTER layout.js, so the browser looks them up on root at
+  // call time; node requires them here.
+  if (typeof module === 'object' && module.exports) module.exports = factory(require('./chord_column.js'), require('../../score/public/sonify_core.js'), require('../../score/public/cresc.js'), null);
+  else root.NotationLayout = factory(root.NotationChordColumn, null, null, root);
+})(typeof self !== 'undefined' ? self : this, function (ChordColumn, SonifyCoreIn, CrescIn, rootIn) {
 
   const STEP_IDX = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, B: 6 };
   const MIDDLE_BASS = 3 * 7 + 1; // D3 — the bass staff's middle line
@@ -392,6 +395,9 @@
     // instrText, when a device carries it, is drawn on every note. Decided
     // once here, per part in onset order, like the dynamic above.
     const instrShown = new Set();
+    // [2i.8, D54 — his (b)] "sempre secco" ONCE PER PART: the part's first secco event (the crescendo run's first swell in
+    // that part) carries the word; the instructions page carries the rest. Decided here, per part in onset order, like the two above.
+    const seccoShown = new Set();
     {
       const byPart = new Map();
       for (const e of ir.events || []) {
@@ -403,6 +409,8 @@
         list.sort((a, b) => a.onset - b.onset);
         let last = null;
         for (const e of list) { if (e.technique !== last) instrShown.add(e.id); last = e.technique; }
+        const firstSecco = list.find(e => e.secco);
+        if (firstSecco) seccoShown.add(firstSecco.id);
       }
     }
     // [2h.5, §488–§489] THE CHORD (the composer: "that entity should be treated
@@ -1748,6 +1756,18 @@
                   items.push({ k: 'text', t: tU, dxSs: dxT, ySs: yT - instrEm / 2 + instrEm * 0.2, text: instrTxt, size: TS.technique, color: '#000', anchor: al });
                   recChrome(items[items.length - 1], chainAbove ? 'above' : 'below', instrEm * 0.8, -instrEm * 0.2);
                 }
+                // [PLAN 2i.8, RUNNING_LOG §530, D54 — the composer's (b)] "sempre secco" ONCE PER PART, on the part's FIRST
+                // secco swell (the crescendo run, 526.8–559.4 s): the strings damp at the cut, the winds take the word for the
+                // shape; the instructions page carries the rest. The chain's instruction slot, after the pair — its own row, so
+                // the shortest swell's pair (≈ 6 ss from the head column) never meets it — left-justified on the CUT EDGE
+                // (t = the note end, the curve's 90° back edge): the pair states the levels at the head, the word sits where
+                // the cliff is. Recorded as chrome like the instruction above it.
+                if (e.secco && seccoShown.has(e.id)) {
+                  const secEm = TS.technique * (o.textEmScale != null ? o.textEmScale : 1.3);
+                  const ySec = placeChain(secEm);
+                  items.push({ k: 'text', t: e.onset + e.duration, dxSs: 0, ySs: ySec - secEm / 2 + secEm * 0.2, text: 'sempre secco', size: TS.technique, color: '#000', anchor: 'start', ev: e.id });
+                  recChrome(items[items.length - 1], chainAbove ? 'above' : 'below', secEm * 0.8, -secEm * 0.2);
+                }
                 // [2h.5, §490–§491] "Ped." — piece #2's Emmentaler sustain-pedal
                 // glyph, once per chord (the chord's lowest note draws it, like
                 // the dynamic), the chain's slot after the dynamic, centred on
@@ -2812,8 +2832,31 @@
   // page (measured day 40: up to ~10% of lane height). render.js draws these
   // samples; animobj rides them via the injected drawnOf (the deviceOf
   // pattern, D50 — no second copy of the rules).
+  // [PLAN 2i.8, RUNNING_LOG §530, D54 — 2026-09-15] THE CURVE TEMPLATE. A device may draw the STANDARD shape of its
+  // family in place of the event's own samples: `curveTemplate: 'surge'` (registry byEnv.surge) = the crescendo tool's
+  // ratio-5 exponential (cresc.js segmentFor — slope 0.40; the look of the tuba's db1 surges), one segment 0 → 1, sampled
+  // through the SAME curve math playback uses (sonify_core.evalWaveCurve) at CURVE_LOOK §2a's density: 100 samples per
+  // second, never fewer than 101. Why: the septet's crescendo run sounds through the sampler-bent surge (CN-49's
+  // listening tests — under 10 % for 60 % of the span), which drawn reads as silence then a spike; the IR keeps the bent
+  // samples as the truth of what sounds (D9) and the template is a drawing rule on the device. The cut and the floors
+  // below apply to the template as they would to any samples; the meters ride the result (drawnOf, D50).
+  const TEMPLATE_RATE = 100;
+  let templateWarned = false;
+  function templateSamples(name, duration) {
+    const SCo = SonifyCoreIn || (rootIn && rootIn.SonifyCore) || null;
+    const Cr = CrescIn || (rootIn && rootIn.Cresc) || null;
+    if (!SCo || !Cr) {
+      if (!templateWarned && typeof console !== 'undefined') { templateWarned = true; console.warn('layout: curveTemplate "' + name + '" needs sonify_core.js and cresc.js on the page — the event\'s own samples drawn instead'); }
+      return null;
+    }
+    const seg = Cr.segmentFor(name);   // the family's STANDARD ratio (cresc.js STANDARD)
+    const wc = { nodes: [{ pos: 0, y: 0 }, { pos: 1, y: 10 }], segments: [{ model: seg.model, slope: seg.slope }] };
+    const n = Math.max(101, Math.round((+duration || 0) * TEMPLATE_RATE) + 1);
+    return Array.from({ length: n }, (_, i) => +SCo.evalWaveCurve(wc, i / (n - 1)).toFixed(4));
+  }
   function drawnLevelSamples(e, dev) {
     let smp = (e.level && e.level.samples) || [];
+    if (dev && dev.curveTemplate && smp.length >= 2) smp = templateSamples(dev.curveTemplate, e.duration) || smp;
     if (dev && dev.curveZero) {
       const lo = Math.min(...smp), hi = Math.max(...smp);
       if (hi > lo) smp = smp.map(v => +((v - lo) * hi / (hi - lo)).toFixed(5));

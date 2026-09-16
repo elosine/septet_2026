@@ -5,7 +5,7 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ✦** 2026-09-15 (past midnight of session 12), checkpoint #3 — **SECTION 3'S NOTATION (PLAN 2i): steps 1–7 built (§515–§529); step 8 DESIGNED (§530, D54) — the crescendo run's 78 swells as the tuba's surge device: the STANDARD surge as a template (the tool's ratio-5 exponential, not the save's bent curve) · 100/s · no floor · ppp → fff + arrow · "sempre secco" once per part · the meter rides it. NEXT: the Opus build, PLAN 2i.8.1–8.5 after a clear (the test first, red on the old engine) → his eye (526.8 Va · the middle · 557–559) → 8.6–8.7 → sitting F (re-render, demo video). His eye still owed on E1 and E2.**
+**NOW ✦** 2026-09-16 (session 13, Fable) — **SECTION 3'S NOTATION (PLAN 2i): steps 1–7 built (§515–§529); step 8 BUILT 8.1–8.5 (§531) — the crescendo run's 78 swells wear the tuba's surge on MAIN: the STANDARD surge as a template (a registry switch, `byEnv.surge.curveTemplate`; the tool's ratio-5 exponential through sonify_core, 100/s, from 0, the cut on the note end) · ppp → fff + arrow · "sempre secco" once per part at its first swell's cut edge · the IR's samples untouched (env + secco tagged, schema amendment 9) · test_surge_run 29 (red 17 on the old engine) · test_cross_staff 73 · every battery green incl. piece #4's · band flags 32 unchanged. NEXT: HIS EYE after F5 (526.8 Va · the middle · 557–559, the meter playing; the word's place) → 8.6–8.7 (two standards rows · two NITS instruction lines · the step marked done) → sitting F (re-render, demo video). His eye still owed on E1 and E2.**
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 

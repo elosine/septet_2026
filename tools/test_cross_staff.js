@@ -182,12 +182,14 @@ ok(!model.warnings.some(w => /beam group /.test(w)), 'no beam-group warnings any
   ok(!ir.events.some(e => (e.onset < 444 || e.onset > 624.1) && devOf(e.id).dynOnChange), 'no note outside section 3 on the rule (D52: section 1 keeps a mark on every strike)');
   const bandT = t => ['p', 'mp', 'mf', 'f', 'ff', 'fff'][Math.max(0, Math.min(5, Math.floor((t - 444 + 1e-6) / 30)))];
   let total = 0, onGroups = 0, badParts = [];
+  // [2i.8, §531] the crescendo run's 78 swells each WRITE a pair (ppp → fff, the surge device) — those marks are the pair's, not the band rule's
+  const surgeT = new Set(ir.events.filter(e => e.env === 'surge').map(e => e.onset.toFixed(6)));
   for (let p = 0; p < 7; p++) {
     const st = S3s.filter(e => partOfEv.get(e.id) === p).sort((a, b) => a.onset - b.onset);
     const want = []; let last = null;
     for (const e of st) { const b = bandOf(e.vel); if (b !== last) { want.push(e.onset.toFixed(2) + ' ' + b); last = b; } }
     const marks = model.systems.filter(S => String(S.key).split(':')[0] === String(p)).flatMap(S => S.items)
-      .filter(it => it.k === 'glyph' && /^dyn-/.test(it.g) && it.t >= 444 && it.t <= 624.5).map(it => it.t.toFixed(2) + ' ' + it.g.slice(4)).sort((a, b) => parseFloat(a) - parseFloat(b));
+      .filter(it => it.k === 'glyph' && /^dyn-/.test(it.g) && it.t >= 444 && it.t <= 624.5 && !surgeT.has(it.t.toFixed(6))).map(it => it.t.toFixed(2) + ' ' + it.g.slice(4)).sort((a, b) => parseFloat(a) - parseFloat(b));
     total += marks.length;
     onGroups += marks.filter(mk => st.some(e => e.onset.toFixed(2) === mk.split(' ')[0] && clusterOf.has(e.id))).length;
     if (want.join('|') !== marks.join('|') || marks.map(mk => mk.split(' ')[1]).join() !== 'p,mp,mf,f,ff,fff') badParts.push(p + ': ' + marks.join(' · '));
@@ -195,12 +197,13 @@ ok(!model.warnings.some(w => /beam group /.test(w)), 'no beam-group warnings any
   ok(badParts.length === 0 && total === 42, 'every part: six marks, p mp mf f ff fff, each on its first strike in the band — 42 in all (' + total + (badParts.length ? '; ' + badParts.join(' | ') : '') + ')');
   ok(onGroups >= 1, 'the rule reaches group members: ' + onGroups + ' of the 42 marks on a beamed note');
   // the rule after a written dynamic (for 2i.8's surge): a crescendo note that WRITES a dynamic sets it in force. Va's next strike after its
-  // first crescendo note is 561.12, the first of the f band: with nothing written it shows f · after a written ppp → fff it still shows f
-  // (the band changed) · after a written ppp → f it shows nothing (f already in force)
+  // LAST swell (557.95 — [2i.8, §531] every swell now writes its pair, so the last one is the dynamic in force) is 561.12, the first of the
+  // f band: with nothing else written it shows f (the registry pair ends fff) · after a written ppp → fff it still shows f (the band changed)
+  // · after a written ppp → f it shows nothing (f already in force)
   {
     const irX = JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'ir', 'piece-septet.ir.json'), 'utf8'));
     const partX = new Map(); for (const c of irX.chunks) for (const id of c.events || []) partX.set(id, c.part);
-    const cres = irX.events.filter(e => e.env !== 'strike' && partX.get(e.id) === 5 && e.onset >= 520 && e.onset < 560).sort((a, b) => a.onset - b.onset)[0];
+    const cres = irX.events.filter(e => e.env !== 'strike' && partX.get(e.id) === 5 && e.onset >= 520 && e.onset < 560).sort((a, b) => a.onset - b.onset).slice(-1)[0];
     const nextStrike = irX.events.filter(e => e.env === 'strike' && partX.get(e.id) === 5 && cres && e.onset > cres.onset).sort((a, b) => a.onset - b.onset)[0];
     const markAt = (M, e) => { const it = M.systems.find(S => String(S.key) === '5').items.find(x => x.k === 'glyph' && /^dyn-/.test(x.g) && Math.abs(x.t - e.onset) < 1e-6); return it ? it.g.slice(4) : null; };
     const withPair = pr => {

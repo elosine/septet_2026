@@ -434,6 +434,20 @@
       // mode ('plain' = captured note, 'ks' = keyswitched sample; curve
       // mode = omitted default). Notation devices + tooltips consume these.
       if (o.envShape) ev.env = o.envShape;
+      // [PLAN 2i.8, RUNNING_LOG §530, D54 — 2026-09-15] a CRESCENDO-TOOL swell: the
+      // save's `properties.cresc` names the family (shape 'surge' = the STANDARD,
+      // cresc.js) and the object carries no envShape. Its env is the family name,
+      // so the registry's byEnv.surge (the tuba's surge device) reaches it; `secco`
+      // is the cliff's performing technique (CN-49: the strings damp at the cut,
+      // the winds take the word) — IR amendment 9. Both derived from the save (D9).
+      // The level samples below stay the save's own sampler-bent curve: the
+      // STANDARD shape the page draws is the device's rule (layout.js
+      // drawnLevelSamples curveTemplate), not the IR's. Tuba saves carry envShape
+      // and no cresc: nothing moves there (the else-if order).
+      else if (o.properties && o.properties.cresc && o.properties.cresc.shape) {
+        ev.env = o.properties.cresc.shape;
+        if (o.properties.cresc.secco) ev.secco = true;
+      }
       // [§400, 2026-09-11] a note the STRIKES tool wrote (composer.html srcKind
       // 'strike') is a strike whatever its technique — the piano's `main` is
       // a strike here and a long note elsewhere. The registry's byEnv.strike

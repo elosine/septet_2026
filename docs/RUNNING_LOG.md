@@ -14555,3 +14555,70 @@ distinction it has no business making) · a `--surge` build flag (the rule is th
 call, above).
 
 **Nothing built; no code changed.** Checkpoint #3 written for the clear.
+
+## §531. BUILT: PLAN 2i.8.1–8.5 — the crescendo run as the surge device: the tag, the template, the word, the test (red 17 → green 29), MAIN rebuilt, verified in the running page (2026-09-16, session 13, Fable 5.1)
+
+**Prompted by:** the checkpoint's next step (§530) and his *"go"* after the postclear playback — on Fable, not Opus. The routing was flagged
+first ("(a) switch to Opus now, then say go — recommended · (b) stay on Fable and build here"); his *"go"* with no switch = (b), taken as
+his decision. The build followed PLAN 2i.8 as written, the test first.
+
+**Built, in the plan's order:**
+- **8.4 FIRST — `tools/test_surge_run.js`** (new, 29 checks). The 78 are found by what they ARE in the save (curve-mode events in the six
+  parts inside 526–560), never by the tag under test. Checks: env surge + secco on all 78 and on nothing else · the registry switch
+  (`byEnv.surge.curveTemplate`), the recorded build carrying no template flag · the template = `cresc.js segmentFor('surge')`:
+  exponential, slope 0.40, ratio 5 · every drawn curve at 100/s never fewer than 101 (n = max(101, round(dur × 100) + 1)), from 0,
+  rising to 1 at its LAST sample (the cut kept every sample — the peak IS the note end), every sample within 2e-4 of the template
+  through `sonify_core.evalWaveCurve` · the IR's own samples still the bent curve (sample 30 < 0.02) · the meter path
+  (`drawnLevelSamples(e, device)` = the page's samples, one source) · the template against the tuba's 27 db1 surges, cut-normalised
+  at tenths, within 0.05 · 78 pairs ppp → fff on one row + 78 arrows · no GC, a go line on each · six "sempre secco" texts, one per
+  part, left-justified on the cut edge of the part's first swell · nothing outside the run moved, item by item, every system (the same
+  engine over the IR with the 78 untagged, versus as built) · the §529 knock-on counted, never a removal. **Red on the old engine: 17
+  fails, 12 pass** (the 12 = the facts of the IR: the 78, their parts, 526.79 → 559.36, durations 0.30–1.28).
+- **8.1 the tag** — `extract_core.js` ~437: a save object with `properties.cresc.shape` and no `envShape` → `ev.env = properties.cresc.shape`
+  and `ev.secco = true` from `properties.cresc.secco`; the else-if sits between `envShape` and srcKind 'strike', so tuba saves (envShape,
+  no cresc) are untouched. **A hair off the written line:** the design said `ev.env = 'surge'` "(the family name)"; built as the derived
+  value — 'surge' for every one of the 78 (cresc.js's STANDARD), and D9 holds if a `line` or `bloom` crescendo ever appears (it would then
+  need its own byEnv entry, and would draw plain until it had one — nothing silently wears the surge). **The schema:** `secco` (boolean,
+  optional) added to the event definition — **IR amendment 9**; the validator's `additionalProperties: false` would have refused the tag.
+- **8.2 the template** — `container.json` byEnv.surge `curveTemplate: "surge"` (+ `_surgeTemplateNote`, the why) · `layout.js
+  drawnLevelSamples`: a first step, `templateSamples(name, duration)` — `Cresc.segmentFor(name)` at the family's STANDARD ratio, one
+  segment (0, 0) → (1, 10) through `SonifyCore.evalWaveCurve`, n = max(101, round(dur × 100) + 1); then curveZero / cut / curveFloor
+  exactly as before (the surge device carries neither floor; the cut finds the peak at the last sample and keeps everything). The IR is
+  untouched. layout.js's UMD now takes `sonify_core.js` and `cresc.js`: node requires them; the page looks them up on root at call time
+  (both load after layout.js) — `notation.html` gains `<script src="/cresc.js">`; a page without them warns once and draws the event's
+  own samples. The meter rides the result through `drawnOf` (notation.html 822) for free — no animobj change.
+- **8.3 the word** — `layout.js`: `seccoShown` = each part's first secco event, decided per part in onset order beside `instrShown`;
+  in the nh-unit chain, after the instruction slot: a `text` "sempre secco" at t = onset + duration (the cut edge), anchor start, the
+  technique size at the instruction em, on ITS OWN chain row (placeChain) and recorded as chrome (recChrome). Its own row, not the
+  pair's: the shortest swell (0.30 s ≈ 6 ss at the video's 20 ss/s) puts the pair's end mark at the cut edge.
+- **8.5 the rebuild** — the recorded build re-run unchanged (what R does): VALID, 1806 events · 1163 chunks · 1195 overlays. Before/after:
+  only `env` (78) and `secco` (78) changed on the events; overlays and chunks byte-identical; the build line identical. **The build's
+  cross-lane band flags: 32, unchanged from §529 — none in 526–560, the 20 in 560–624.1 as before.** **The §529 knock-on: 0 new band
+  marks** — each part's next strike after its last swell is 561.1–562.6, the first of the f band, already marked; a written fff then f
+  is a change, so the f mark stays and nothing is added. (The design expected more marks; the run's swells stand alone in their parts,
+  so there is no strike between them to re-mark.)
+- **Verified in the running page** (a fresh Browser-pane tab on his :5300, closed after): the page holds the new IR (78 env surge;
+  ev-wc-2639 secco) and the new layout.js (the template code present); Cresc and SonifyCore on the page, all 15 scripts 200;
+  `drawnLevelSamples` on the first swell (Va 526.79, 1.21 s): 122 samples, 0 → 1, sample 30 = 0.1232 where the IR's is 0.0027.
+
+**Guards:** test_surge_run 29 · **test_cross_staff 73** after two re-pins forced by the build — (1) the 42-marks count now excludes the
+pairs' glyphs (78 × 2 at the swells' onsets; they are the pair's marks, not the band rule's); (2) the "dynamic in force after a written
+one" probe moves from Va's FIRST swell to its LAST (557.95 → 561.12): every swell now writes a pair, so the last one is the dynamic in
+force — nothing else written → f · ppp→fff → f · ppp→f → none, exactly §529's semantics · septet 86 · trills 92 · morph 178 · identity 20 ·
+step_dynamics --save 15 · check_cresc_panel · morph_septet_check · trill_conflicts 3 (accepted) — all green · **piece #4's batteries on a
+fresh staging (26 files, removed after): test_layout · test_render (snapshots stable) · test_animobj · test_splice · ir_validate_battery
+GREEN.**
+
+**Measured:** "sempre secco" at Fl 533.86 · BCl 529.18 · Vn1 530.17 · Vn2 532.84 · Va 528.00 · Vc 531.61 (each part's first swell's cut
+edge) · the template against db1 at tenths: worst 0.039 (ev-wc-2390 at 0.7 — the tuba's drawn surges are a hair steeper early; the
+tolerance 0.05 was set from this measurement, not before it) · the template at tenths 0 · 0.044 · 0.095 · 0.156 · 0.227 · 0.310 · 0.408 ·
+0.522 · 0.657 · 0.815 · 1 against §530's db1 reading 0 · 0.051 · 0.109 · 0.177 · 0.255 · 0.345 · 0.449 · 0.569 · 0.708 · 0.868 · peak.
+
+**Rejected on the way:** a heredoc-written test (the shell mangled the quoting; the file was written by the editor instead — no
+consequence) · nothing else; the design held.
+
+**His eye owed (F5 on the notation page — `notation/lib` and the registry changed; not CTRL+SHIFT+R):** 526.8 (Va, the first) · the middle
+(~540–550) · 557–559 (gaps 0.5 s), with the meter playing — the shape, the pair, the word's place; and E1/E2's spots if not yet seen.
+**One call his to overturn:** the word on its own chain row at the cut edge, running rightward from the cliff (anchor start) — the
+alternative, right-aligned ending at the cut edge, would run back under the curve. **Then 8.6–8.7** (the two standards rows · the two
+instructions lines on the NITS list · the step marked done · commit + push).
