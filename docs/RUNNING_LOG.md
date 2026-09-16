@@ -14743,3 +14743,22 @@ evidence, no diagnosis). His pattern on Vn1 is the first data point. It matters 
 is unaffected.
 
 **The listening copy `scores/zz-ai-run-nosecco.json`** (§534) is now spent — deletable, his call; left in place.
+
+## §536. DONE: PLAN 2i.8 — his eye "surge run in notation score good"; 8.6 the standards rows and the instructions lines; 8.7 the record; on into sitting F (2026-09-16, Fable 5.1)
+
+**His words:** *"surge run in notation score good, good to move on through 2 and into f"* — the eye on §531's build (526.8 Va · the middle ·
+557–559, the word at the cut edge), approved as built; the run secco (§535).
+
+**8.6 — the standards and the instructions:** `docs/NOTATION_STANDARDS.md` §2 gains two rows — the crescendo run as the SURGE device with the
+STANDARD surge as a template (a device rule, piece-wide; a `line` or `bloom` swell would need its own byEnv entry) · "sempre secco" once per
+part at the cut edge of the part's first secco swell; the CN-77 row in the trills table marked built by the same template. `docs/NITS.md`
+performance-instructions list gains two lines — the secco legend with a draft line ("each swell ends dead at its peak — strings: damp the
+string at the cut; winds: stop the sound at the peak, no decay") · the curves' two meanings (the morph section's curves absolute, the run's
+surge curves the shape only, the pair states the levels).
+
+**8.7 — the record:** D54 stood as designed; PLAN 2i.8 marked DONE; journal §2 → sitting F; PLANNER's NOW line; this entry; commit + push.
+
+**Handoff — SITTING F:** step 9 the audio re-render (PLAN 2i.9; RENDER.md §1's three commands on his machine: the capture ~13 min → the checked
+export → the Reaper render → `notation/audio/piece-septet.wav` → ♪ render; §453's numbers to compare against), then step 10 the demo video
+(2i.10). THE RHYTHM: a mode change — from building the notation to executing a written pipeline — so **clear before F; Opus runs the route,
+Fable directs**; the capture and Reaper are his.

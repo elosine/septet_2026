@@ -379,6 +379,13 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   note, whichever comes first — never over an ordinary note, which rings by the held key."** The drawn end of every long pluck in the
   save is his release point (each lands just before the next ordinary note) if a ✱ is ever wanted after all.
 - **The l.v. slur's meaning** on the piano's ordinary notes (hold the key, let it ring) and plucked notes (pedal) — one legend line each.
+- **"sempre secco" (the crescendo run, 526.8–559.4 s; D54, RUNNING_LOG §531 — added 2026-09-16):** written once per part at its first
+  swell, so the legend must carry the meaning for each family — the swell ends DEAD at its peak, nothing rings past the cliff: **the
+  strings damp the string at the cut (a finger, or bow pressure); the winds take the word for the shape and stop the sound at the peak,
+  no decay.** Draft line: **"sempre secco (the crescendo swells): each swell ends dead at its peak — strings: damp the string at the
+  cut; winds: stop the sound at the peak, no decay."**
+- **The curves' two meanings, one legend line each (§531):** the morph section's curves are ABSOLUTE dynamics (height = the level,
+  ppp … fff, D23 · D50); the crescendo run's surge curves show the SHAPE only — the pair ppp → fff states the levels.
 
 ## ~~2026-09-14 — THE D49 AUDIT, owed~~ — **MEASURED 2026-09-14, RUNNING_LOG §517** (PLAN 2i.2); the verdict on the single strikes his. What it left:
 

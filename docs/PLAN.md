@@ -1667,7 +1667,7 @@ player would touch parts, solo, crop and print.
      note in the band; nothing else. **Decided (D52, 2026-09-14):** section 3 only — section 1 keeps its mark on every strike (§401d); two rules by texture.
      **First, found at step 3 (§520):** `dynamicBands` has no mp or ff — section 3 draws 37 → ppp · 55 → p · 72 → p · 90 → mf · 109 → f · 127 → fff today;
      align the table to the eight-step scale so the marks read p · mp · mf · f · ff · fff (section 1, the morph piano, the trills unaffected — check).
-  8. **The crescendo run as the surge device** (CN-84) — `DESIGNED 2026-09-15 (RUNNING_LOG §530, D54; his "good, write it in") · BUILT 8.1–8.5 2026-09-16 (Fable, RUNNING_LOG §531): test_surge_run 29, red 17 on the old engine · MAIN rebuilt by the recorded build, only env/secco changed (schema amendment 9) · band flags 32 unchanged, knock-on 0 · batteries green incl. piece #4's · verified in the running page · HIS EYE owed (526.8 Va · the middle · 557–559, the meter playing; the word at the cut edge) · then 8.6–8.7` —
+  8. **The crescendo run as the surge device** (CN-84) — `DONE 2026-09-16 (Fable, RUNNING_LOG §530 the design · §531 the build · §536 the close): test_surge_run 29, red 17 on the old engine · MAIN rebuilt by the recorded build, only env/secco changed (schema amendment 9) · band flags 32 unchanged, knock-on 0 · batteries green incl. piece #4's · verified in the running page · his eye "surge run in notation score good" · the run stays secco (his ear, §535) · 8.6 NOTATION_STANDARDS §2 two rows + NITS two instruction lines · 8.7 the record` —
      **Result when done:** the 78 swells (526.8–559.4 s; Fl 12 · BCl 14 · Vn1 13 · Vn2 12 · Va 14 · Vc 13; the piano out) wear the tuba's surge look on the MAIN file: the
      drawn shape is the STANDARD surge — the crescendo tool's ratio-5 exponential (`segmentFor('surge', 5)`), NOT the save's sampler-bent curve — at 100/s never fewer than 101,
      D42 lime, from the lane floor with no floor lift, the 90° cut at the note end, go line and open nh-unit, no GC, ppp → fff + arrow, and "sempre secco" at the curve's end
@@ -1691,7 +1691,7 @@ player would touch parts, solo, crop and print.
      - **8.6 The standards and the instructions** — two rows in `docs/NOTATION_STANDARDS.md` §2 (the template rule · secco once per part) · two lines on the NITS
        performance-instructions list (secco: the strings damp at the cut, the winds take the word for the shape · the morph curves are absolute, these show the shape).
      - **8.7 The record** — D54 (done at the design) · RUNNING_LOG §531 (the build) · this step marked · commit + push.
-  9. **The audio re-render** (RENDER.md) — `todo · sitting F · his capture + Opus` — the render is behind the save (M2 swap · bcl slap · chord snap · everything above).
+  9. **The audio re-render** (RENDER.md) — `► NEXT — sitting F (his "good to move on through 2 and into f", 2026-09-16, §536) · his capture + Reaper, Opus runs the route, Fable directs · clear before it` — the render is behind the save (M2 swap · bcl slap · chord snap · everything above).
   10. **The demo video** — `todo · sitting F`.
   **Also, decided on the way (2026-09-14):** Sec3-Materials was empty and is removed with Materialsa (§509) · Q7 the bass clarinet's bottom — §511, his word owed.
 
