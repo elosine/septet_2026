@@ -398,3 +398,21 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   on inspection is EMPTY (7 tracks, 0 objects, 771 bytes; so is the saved `SeptetSec03-Materialsa.json`), so nothing was lost; the
   work file is his to drop. The fix, when the composer is next touched: list orphans under their base name with a "· never saved"
   tag, opening the working copy.
+
+## 2026-09-16 — SECCO IN MIDI: the cut is not reliable in the composer's own playback (his ear, RUNNING_LOG §535) — for the next time secco is realised in MIDI
+
+- **His words (2026-09-16), on the A/B of the crescendo run in `piece-septet` (§534):** *"there was a problem with the midi in the composer
+  score secco; the main save file, piece-septet, for example the vln1 1st swell secco, next 2 ring, 4th secco; Let's not address this now,
+  but maybe take a note that the next time we want to realize Seco in MIDI, we have to address this. Probably something to do with the uh,
+  tolerances of CC7 onsets, offsets, etc."* **His decision: the run stays secco; no change to the save or the notation.**
+- **What is known (AI, not diagnosed — no clear evidence, no diagnosis):** every one of the 78 swells carries `secco: true` and the
+  captured playback of 2026-09-13 holds all 78 cuts (CC7 0 on the swell's slot 10 ms before its note-off, `seccoCut`, §534) — so the
+  MESSAGE is sent every time; what he hears ringing is after it. Candidates to measure first, not to assume: the slot rotation (CN-50,
+  §266 — the pool of curve channels per port; a cut slot revived by the next event's pre-arm CC7 on the same channel), the 10 ms lead
+  (`SECCO_LEAD_MS`) against the sampler's own release, the `toleranceS: 2` default in `cresc.js` (provisional, never measured — the
+  measuring score `scores/cresc-secco-test.json`, §265), and Kontakt's CC7 smoothing on those Xsample string patches (SAMPLER_QUIRKS,
+  piece #3). The pattern he heard — Vn1: cut · ring · ring · cut — is the first data point; the next step is a capture of Vn1's four
+  swells with the CC7 stream and the audio side by side.
+- **Where it matters:** the render (§453 and 2i.9's re-render) and the composer's playback; the notation is unaffected (its `secco`
+  tag and "sempre secco" come from the save, §531). The notation page's own live MIDI has NO secco at all (the tuba's player never
+  learned the cut, §534) — a separate, known gap, working-loop only.

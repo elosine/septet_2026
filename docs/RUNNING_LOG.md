@@ -14622,3 +14622,124 @@ consequence) · nothing else; the design held.
 **One call his to overturn:** the word on its own chain row at the cut edge, running rightward from the cliff (anchor start) — the
 alternative, right-aligned ending at the cut edge, would run back under the curve. **Then 8.6–8.7** (the two standards rows · the two
 instructions lines on the NITS list · the step marked done · commit + push).
+
+## §532. Three questions after the surge build: the bricks in the final · a surge "how-to" · the MIDI in the notation page — inherited, exclusive with the render by construction (2026-09-16, Fable 5.1)
+
+**His words:** *"the bricks won't make it in the final notation correct?, do we have some sort of document or template that indicates how to
+do surges moving forward? And then can you explain to me the status of the MIDI in the notation score? So I think in the tuba score, we
+only had the audio. And then I didn't realize that. And I asked AI to add MIDI to the septet notation score. And then I realized that we
+could attach a audio and we then attached the audio. We rendered it and attached it. But we continue to have this MIDI capability. So I
+just want to double back and see if there were any risks or any additional unnecessary overhead to have this MIDI capability. And then
+to help me understand in the most simplest and concise terms, how to manage the sort of playback and reload situation. So I wanted to
+hear the original rendered audio and I clicked render. So now if I just want to hear the MIDI, is that possible? Without both."*
+
+*(AI — read from the code and the docs, nothing run:)*
+
+- **The bricks: correct, they are scaffolding.** `--bricks` in the recorded build keeps every chunk unresolved so the page shows the
+  parachute bricks (the working loop, day 23); the page's "bricks" checkbox is a look toggle (`render.js hideBricks`); the print and
+  video exporter draws through `static_page.js` with `hideBricks: true` — **D4 "bricks off", inherited from the tuba**, whose final
+  video and print came from the same kind of `--bricks` MAIN DRAFT with the bricks hidden. Nothing else changes between the page and
+  the final.
+- **The surge how-to lives in two places, by side.** Composer side — making one: `docs/CRESCENDO.md` (§3 the object, §5 secco, §6 the
+  C key / the card / the harmony bar; the STANDARD = surge ratio 5, named §263). Notation side — how one is drawn: the tuba's
+  `NOTATION_STANDARDS.md` row (level curve + 90° cut · go line · open nh-unit · ppp→fff pair + arrow · no GC, no band mark) and, since
+  §531, the registry's `_surgeTemplateNote`. **The septet's own two rows are 8.6, still owed.** The rule moving forward: any
+  crescendo-tool swell anywhere in the piece wears the surge look on the next build with no flag — the extractor tags it by its family
+  name; a `line` or `bloom` swell would need its own byEnv entry and draws plain until it has one.
+- **The MIDI was inherited, not added.** The notation page's live-MIDI player is the tuba's (`midiplayer.js`, ported byte-exact at 0g,
+  RUNNING_LOG §10962); the tuba's working loop was "bricks and the midi sound all the way through" (day 23), with the audio render as
+  the SECOND timebase. What the septet added was the fix that made it sound here at all: the loopMIDI port names are case-exact and the
+  player looked them up lowercased (§10980). His memory of "audio only" in the tuba is the presentation, not the page.
+- **Risk and overhead: small, and none to the notation.** (1) The page asks for Web MIDI access once per load (a browser prompt the
+  first time). (2) A player is compiled per score × solo set × IR on first play — a moment of CPU, cached after. (3) MIDI is the
+  DEFAULT on every fresh load, so a reload drops the render and the rack sounds instead — §460's "audio gone", his choice A (leave it).
+  (4) With the rack down, one error line ("MIDI ports not found"), no sound, nothing else. The IR is derived from the save either way;
+  the MIDI player never writes anything. The one real cost is the reload trap, already accepted.
+- **Exclusive by construction — never both.** Clicking ♪ render slaves the clock to the WAV and UNCHECKS the MIDI box (flushing the
+  rack); ticking the MIDI box DETACHES the render (chip back to "♪ render") and frees the clock. So: hear the MIDI only = tick the MIDI
+  box. Hear the render only = click the chip. SPACE plays, a click on the score seeks. A rebuild (R, or a Save) is picked up within a
+  second with the render still attached; only a page reload drops it. Solo works under MIDI, not under the render.
+
+**Decided:** nothing new — his three questions answered from the code; the surge standards rows remain 8.6's.
+
+## §533. "Did I undo something useful?" — the duration lines he removed were the bricks: hidden per device by a registry flag, never deleted; the IR keeps every duration (2026-09-16, Fable 5.1)
+
+**His words:** *"I didn't realize what bricks were earlier. And I think I instructed AI not to include duration lines, which were actually just the
+bricks. So I just want to make sure I didn't undo something that would have been useful to have. So for example, it's fine to have bricks as
+long as it doesn't make it in the notation. And I don't know if part of the notation process up to this point just deleted the bricks instead
+of hid them."*
+
+*(AI — measured on the registry and the MAIN layout:)*
+
+- **What he removed, and where it lives:** two instructions — §401b (*"the short notes with gcs don't have duration lines, take note and
+  remove them from strike 1"*) → `brick: false` on `byEnv.strike` and the four strike techniques (gettato_vel · bartok_vel · slap ·
+  pizzicato); D49 (*"rid of the duration line. And then I want a lead ring slur"*) → `brick: false` on `byTechnique.main` / `.plucked`
+  and on the morph section's per-note overlays. Plus `byEnv.trill` (the trill's curve spans the note). **Eight registry entries and the
+  morph overlays; all look flags.** Nothing was deleted: the IR carries every event's duration as before, the `--bricks` build flag is
+  still in the recorded build, the page's "bricks" checkbox and the exporter's `hideBricks: true` (D4) are untouched. Flip the eight
+  flags and every brick returns to the page; the final never shows them either way.
+- **On the page today: 78 bricks of 1806 events — the surges only** (the tuba's surge device keeps the brick under the curve; the final
+  hides it). Strikes 1432 · trills 69 · the morph long notes 151 · the piano's main/plucked 44 · the ord 32: 0 bricks, by the flags above.
+- **Was anything useful lost? No.** The parachute brick does two jobs in the working loop: (a) it marks material NOT YET notated
+  ("unhandled material renders as parachute bricks by design"); (b) it is a duration bar with a hover tooltip naming the note. On a
+  settled device (a) is moot — the device IS the notation — and (b) is either meaningless (a strike is a fixed one-shot: its length is
+  the sample's, and the GC + flag say so) or carried by the device itself (the curve's span on a surge or trill; the l.v. slur on the
+  morph piano). The only thing gone with them is the hover name on those notes — a convenience, not data.
+- **His rule stands as a PAGE rule too:** "a short note with a GC has no duration line" (§401b, STANDING). If he ever wants the bricks
+  back on the page as scaffolding for everything, it is one registry edit and his call; nothing recommended now.
+
+**Decided:** nothing to undo; leave the flags as they are.
+
+## §534. The run's secco, to his ear: the rendered WAV IS the secco version (78 cuts inside it); the notation page's MIDI has no secco at all; the A/B set up as a no-secco listening copy in a second composer tab (2026-09-16, Fable 5.1)
+
+**His words:** *"now I want to hear the surge section using the original audio, the one that got rendered in the audio file attached to the
+notation score. And I believe it's the same audio that's in the composer score or that MIDI. But I'm not 100% so just confirm that. But I
+want to hear that type of crescendo with secco and without secco. So currently it's the rendered audio and the one I think is in the
+composer score, I believe is without secco. And so I want to A, B that, and then that same type of crescendo sound with secco, not the one
+currently inscribed as MIDI into the notation score. Those ones didn't really turn out as far as audio. So I want to do this the simplest
+way possible without disrupting the current state of affairs in terms of the notation score and the composer score, unless of course I
+decide to change from secco to non-secco, but I want to hear it first."*
+
+*(AI — measured on the capture, the saves and the code; nothing played:)*
+
+- **Confirmed: the WAV is the composer's own playback.** `notation/audio/piece-septet.wav` (2026-09-13 19:53) was rendered from
+  `midi/piece-septet.capture.json` — composer.html run headless, its MIDI sends recorded (RENDER.md row 1) — of `piece-septet.json` as
+  saved 02:12 that day, through the rack in Reaper. The same engine his tab plays live; the WAV is that playback, offline, as of that save.
+- **His belief corrected: the WAV has SECCO.** The 78 swells were secco in the 02:12 save (v1.32 finalDraft1.0, 02:10: 78/78) and the
+  capture carries the cut: **78 CC7 = 0 messages in 526–560**, each 10 ms before its swell's note-off (Va 526.79: CC7 65 → … → 127 at
+  528.00, CC7 0 at 527.990, note-off 528.000; BCl: CC7 0 at 529.172, note-off 529.182 — composer.html `seccoCut`, SECCO_LEAD_MS 10).
+  Today's save is the same: 78/78 secco, the run box `wc-1810` crescRun.secco true. So both his references — the WAV and his composer
+  tab — are the secco version. There has never been a rendered or saved non-secco version of the run.
+- **The notation page's MIDI is the odd one out — and the one he heard.** `notation/lib/midiplayer.js` and `sonify_core.js` contain no
+  secco at all (the tuba's player, ported at 0g, predates the septet's cut; RENDER.md row 1 lists the secco cut among the rules the shared
+  computation never learned). So the swells through the notation page's live MIDI ring past their cliff — *"didn't really turn out"* — and
+  are a reference for neither side. (Noted for NITS: the page's MIDI is a working-loop convenience, not the sound; the render is.)
+- **The A/B, the simplest way:** the composer app's playback skips the cut when `properties.cresc.secco === false` (composer.html 11305),
+  per object — so a COPY of the save with the 78 flags flipped plays the run non-secco through the same rack, live, with nothing in
+  `piece-septet.json` or the notation touched. Written: **`scores/zz-ai-run-nosecco.json`** — piece-septet as saved 2026-09-15 01:18, the
+  78 swells `secco: false`, the run box to match, `metadata.name` + a note; 1885 objects, nothing else changed; listed by the composer's
+  Experiments menu; deletable. **A = his tab (piece-septet, secco) · B = a second tab on the copy** (a different score, so 2d.5.8 allows
+  it); both from ~525 s, the same rack. The WAV (♪ render on the notation page, seek to 526) is a third hearing of A, offline.
+- **If he chooses non-secco:** the change is the 78 flags in HIS tab (a script over the save, or the crescendo card per swell) → Save →
+  R on the notation page; the IR's `secco` tags and the six "sempre secco" texts vanish by the same rule (§531), the surge look stays.
+  Not done — his ear first.
+
+**Decided:** nothing yet — the listening is his. **Pending his ear:** secco or not, for the run.
+
+## §535. His ear on the A/B: the run stays SECCO — and the composer's own secco is unreliable in MIDI (Vn1: cut · ring · ring · cut), noted for later, not addressed (2026-09-16, Fable 5.1)
+
+**His words:** *"so I think there was a problem with the midi in the composer score secco; the main save file, piece-septet, for example
+the vln1 1st swell secco, next 2 ring, 4th secco; Let's not address this now, but maybe take a note that the next time we want to realize
+Seco in MIDI, we have to address this. Probably something to do with the uh, tolerances of CC7 onsets, offsets, etc. But I have enough
+information to make my decision. Let's go ahead and keep it seco, so no changes for now. Check in one more time, and then we'll move on."*
+
+**DECIDED — his: the crescendo run stays secco.** No change to `piece-septet.json`, the IR, or the page; §531's build stands as is (the
+78 `secco` tags, the six "sempre secco" texts, the surge look).
+
+**Noted, not addressed — NITS 2026-09-16 "SECCO IN MIDI":** the cut message is sent every time (all 78 in the capture, §534), so what
+rings is after it; the candidates to MEASURE first — the slot rotation (CN-50), the 10 ms lead against the sampler's release, the
+never-measured `toleranceS`, Kontakt's CC7 smoothing on the Xsample strings — are listed there as candidates, not a diagnosis (no clear
+evidence, no diagnosis). His pattern on Vn1 is the first data point. It matters to the render and the composer's playback; the notation
+is unaffected.
+
+**The listening copy `scores/zz-ai-run-nosecco.json`** (§534) is now spent — deletable, his call; left in place.
