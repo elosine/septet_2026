@@ -71,12 +71,15 @@ let score = null;
 try { score = rd(path.join('scores', ir.source.score + '.json')); } catch (e) { score = null; }
 
 // day 40 (demo videos): --parts 0,1 renders a subset of lanes through the
-// sparse-lane path (PP fix B). DEFAULT = all ten, the jury frame, unchanged —
-// confinement proven by a byte-identical default probe frame.
+// sparse-lane path (PP fix B). DEFAULT = the jury frame: every part.
+// [PLAN 2i.10.1, the septet frame — 2026-09-16, RUNNING_LOG §558] the frame's parts, weights and staves come from the ensemble
+// registry exactly as notation.html fills FRAME_PARTS at init (the probe of §556 drew the tuba's T1–T10 and no piano).
+const ENS = Layout.ensembleFor(ens, (C.realizations || {})['video-jury']);
+const ensPart = p => (ENS && ENS.parts.find(q => q.part === p)) || null;
 const FRAME_PARTS = (arg('parts', '') || '').split(',').filter(Boolean).map(Number);
-if (!FRAME_PARTS.length) FRAME_PARTS.push(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+if (!FRAME_PARTS.length) FRAME_PARTS.push(...(ENS ? ENS.parts.map(p => p.part) : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
 const model = Layout.layoutSection(ir, glyphs, Object.assign(
-  { m4AttackLines: false, frameParts: FRAME_PARTS, ensemble: Layout.ensembleFor(ens, (C.realizations || {})['video-jury']), techniques: T },
+  { m4AttackLines: false, frameParts: FRAME_PARTS, ensemble: ENS, techniques: T },
   (C.engraving && C.engraving.layout) || {}));
 
 // ------------------------------------------------- the app's video geometry
@@ -89,26 +92,44 @@ const H = (C.frame && C.frame.heightPx) || 1080;
 const pageSeconds = (C.timeScale && C.timeScale.defaults && C.timeScale.defaults.trance) || 12;
 let topPad = lanes.padTopPx / H, botPad = lanes.padBotPx / H;
 const gap = lanes.gapPx / H;
-let lanePx = ((1 - topPad - botPad - gap * (FRAME_PARTS.length - 1)) / FRAME_PARTS.length) * H;
+// [2a.1 on the page] lanes WEIGHTED by the ensemble (the piano's grand staff = 2): lanePx is one weight unit, each lane's staff
+// scale follows its weight, and a multi-staff part's staves are placed at the registry's inter-staff gap
+const weights = ENS ? FRAME_PARTS.map(p => (ensPart(p) && ensPart(p).weight) || 1) : lanes.weights;
+const units = ENS ? weights.reduce((a, b) => a + b, 0) : FRAME_PARTS.length;
+let lanePx = ((1 - topPad - botPad - gap * (FRAME_PARTS.length - 1)) / units) * H;
 if (lanes.sparseCapPx && lanePx > lanes.sparseCapPx) {
   lanePx = lanes.sparseCapPx;
-  const content = (lanePx * FRAME_PARTS.length + lanes.gapPx * (FRAME_PARTS.length - 1)) / H;
+  const content = (lanePx * units + lanes.gapPx * (FRAME_PARTS.length - 1)) / H;
   topPad = botPad = Math.max(0, (1 - content) / 2);
 }
-const systems = Coords.systemsForParts(FRAME_PARTS, { topPad, botPad, gap, weights: lanes.weights });
+let systems = Coords.systemsForParts(FRAME_PARTS, { topPad, botPad, gap, weights });
 const ssPerSystem = lanePx / (((C.staff && C.staff.staffHeightPx) || 31.6) / 4);
+if (ENS) {
+  systems.forEach((s, i) => { s.ssPerSystem = ssPerSystem * weights[i]; });
+  const gs = ((C.engraving || {}).layout || {}).grandStaff;
+  systems = Coords.withStaves(systems, p => (ensPart(p) && ensPart(p).staves && ensPart(p).staves.length) || 1,
+    gs && gs.interStaffGapSs > 0 ? { interStaffGapSs: gs.interStaffGapSs } : undefined);
+}
 // Z is the ZOOM FACTOR, not a mode flag. It was gated on viewMode==='zoom',
 // which made a CUT render its V-TOP/V-BOT halves from an UNZOOMED 1080-tall
 // frame — 63 zoom segments instead of 129, and the close-ups would have been
 // the top half of the wide shot. Caught by a dry run before any pixels.
-const Z = zoomZ || ((C.realizations || {})['zoom-working'] || {}).zoomZ || 2;
+// [2i.10.2] the septet cut renders its close-ups at the registry's video-cut zoom (1.85: the strings fit a 1080 frame)
+const CUT_RZ = (C.realizations || {})['video-cut'] || null;
+const Z = zoomZ || (CUT_RZ && CUT_RZ.zoomZ) || ((C.realizations || {})['zoom-working'] || {}).zoomZ || 2;
 const pages = Splice.planPages(ir, pageRules, pageSeconds);
 const srcEnd = ir.source.window[1];
 
+// [§404 on the page] THE BUFFER AFTER THE CLEF: each page's window opens page_rules.musicStartBufferSs staff spaces early (never before
+// the IR's start), so the page — and its turn, at window[1] — runs that much earlier, as renderContainerView draws it
+const bufSs = pageRules.musicStartBufferSs || 0;
+const pxPerSecPage = (W - ((C.prefatory && C.prefatory.gutterPx) || 0)) / pageSeconds;
+const bufSec = bufSs > 0 && ssPerSystem > 0 ? bufSs * (lanePx / ssPerSystem) / pxPerSecPage : 0;
+const pageT0Of = i => Math.max(ir.source.window[0], pages[i].t0 - bufSec);
 function baseCfgFor(pageIdx) {
-  const p = pages[pageIdx];
+  const t0 = pageT0Of(pageIdx);
   return {
-    widthPx: W, heightPx: H, window: [p.t0, p.t0 + pageSeconds],
+    widthPx: W, heightPx: H, window: [t0, t0 + pageSeconds],
     gutterPx: (C.prefatory && C.prefatory.gutterPx) || 0, systems, ssPerSystem,
   };
 }
@@ -156,7 +177,7 @@ function buildSegments(mode) {
     }
   } else {
     for (let i = 0; i < pages.length; i++) {
-      const end = Math.min(pages[i].t0 + pageSeconds, srcEnd);
+      const end = Math.min(pageT0Of(i) + pageSeconds, srcEnd);   // [2i.10.1] the buffered window turns at its own end
       if (end <= tCur) continue;
       out.push({ t0: tCur, t1: end, view: Coords.makeView(baseCfgFor(i)),
         reshow: pages[i].reshow, ownsEnd: i === pages.length - 1 });
@@ -183,7 +204,7 @@ function staticSvg(i, list) {
   const seg = (list || segments)[i];
   return StaticPage.staticPageSvg({
     model, view: seg.view, glyphs, C, srcEnd,
-    reshow: seg.reshow, ownsEnd: seg.ownsEnd,
+    reshow: seg.reshow, ownsEnd: seg.ownsEnd, ensemble: ENS,   // [2i.10.1] the labels, brackets and brace
   });
 }
 
@@ -261,7 +282,10 @@ function pageFor(i, mode) {
   if (i !== c.idx) { c.px = raster(staticSvg(i, list), 'white').px; c.idx = i; pageRasters++; }
   return { px: c.px, view: list[i].view };
 }
-function frameRGBA(t, mode) {
+function frameRGBA(tIn, mode) {
+  // [2i.10.5] past the material's end the picture HOLDS (the cursor at the end, as the page rests when its playback stops) while the
+  // audio's tail rings: the septet render runs 5.1 s past the IR (624.0 last note · 625 material · 630.1 WAV) — render with --t1 <WAV length>
+  const t = Math.min(tIn, srcEnd);
   const m = mode || viewMode;
   const list = segsOf(m);
   const { px, view } = pageFor(segAtIn(list, t), m);
@@ -272,6 +296,36 @@ function frameRGBA(t, mode) {
 function cropRows(px, y0, h) {
   const rowBytes = W * 4;
   return px.subarray(y0 * rowBytes, (y0 + h) * rowBytes);
+}
+// [PLAN 2i.10.2 — 2026-09-16, RUNNING_LOG §558] THE CLOSE-UPS AS GROUPS (registry realizations.video-cut.halves). The tuba's fixed
+// y = 1080 split works for ten equal lanes; the septet's are unequal (it fell 58 px inside Vn1). Each close-up is a group of parts:
+// its lanes are centred in the frame, and every row outside the group — above its top neighbour's lane bottom, or from its own lane
+// bottom down — is paper. The zoom master's geometry is page-invariant (only the window moves), so the rows are fixed for the film.
+const HALVES = (() => {
+  const hv = CUT_RZ && CUT_RZ.halves;
+  if (!hv) return null;
+  const zv = Coords.makeView(Coords.zoomCfg(baseCfgFor(0), Z, pageT0Of(0)));
+  const MH = Math.round(H * Z);
+  const ext = Object.entries(hv).map(([name, ps]) => {
+    const ss = zv.systems.filter(s => ps.includes(s.part));
+    if (!ss.length) throw new Error('video-cut half ' + name + ' names no drawn part');
+    return { name, top: Math.min(...ss.map(s => s.yTopPx)), bot: Math.max(...ss.map(s => s.yBotPx)) };
+  }).sort((a, b) => a.top - b.top);
+  const out = {};
+  ext.forEach((e, i) => {
+    out[e.name] = { lo: i === 0 ? 0 : Math.ceil(ext[i - 1].bot), hi: i === ext.length - 1 ? MH : Math.ceil(e.bot),
+      y0: Math.round((e.top + e.bot) / 2 - H / 2), top: e.top, bot: e.bot };
+  });
+  return out;
+})();
+function cropHalf(px, h) {
+  const rowBytes = W * 4, MH = px.length / rowBytes, out = Buffer.alloc(H * rowBytes, 255);
+  for (let y = 0; y < H; y++) {
+    const sy = h.y0 + y;
+    if (sy < h.lo || sy >= h.hi || sy < 0 || sy >= MH) continue;
+    out.set(px.subarray(sy * rowBytes, (sy + 1) * rowBytes), y * rowBytes);
+  }
+  return out;
 }
 
 // ---------------------------------------------------------------- dump mode
@@ -296,10 +350,11 @@ if (probes.length) {
   let PNG = null;
   try { PNG = require('pngjs').PNG; } catch (e) { PNG = null; }
   for (const t of probes) {
-    const rgba = frameRGBA(t);
-    const name = irId + '_' + viewMode + '_t' + t.toFixed(3).replace('.', '-');
+    const half = arg('half');   // [2i.10.2] --half V-TOP|V-BOT: probe a close-up as the cut draws it
+    const rgba = half ? srcBuf(half, t) : frameRGBA(t);
+    const name = irId + '_' + (half || viewMode) + '_t' + t.toFixed(3).replace('.', '-');
     if (PNG) {
-      const p = new PNG({ width: W, height: viewMode === 'zoom' ? H * Z : H });
+      const p = new PNG({ width: W, height: !half && viewMode === 'zoom' ? Math.round(H * Z) : H });
       rgba.copy(p.data);
       fs.writeFileSync(path.join(probeDir, name + '.png'), PNG.sync.write(p));
     } else {
@@ -396,7 +451,7 @@ function blendAt(k) {
 function srcBuf(src, t) {
   if (src === 'V-MAIN') return frameRGBA(t, 'video');
   const full = frameRGBA(t, 'zoom');
-  return cropRows(full, src === 'V-BOT' ? H : 0, H);   // the y=1080 gap, measured
+  return HALVES ? cropHalf(full, HALVES[src]) : cropRows(full, src === 'V-BOT' ? H : 0, H);   // the tuba: the y=1080 gap, measured
 }
 // linear cross-dissolve; w is the weight of B. Both buffers are opaque RGBA, so
 // the alpha bytes lerp 255->255 and stay 255. +0.5 rounds instead of truncating,

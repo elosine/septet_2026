@@ -51,6 +51,8 @@
     // render.js reads `(opts && opts.markers) || []`, so an absent key and an
     // undefined one are the same thing — the video path stays byte-identical.
     if (o.markers) opts.markers = o.markers;
+    // [septet 2i.10.1] the ensemble registry (labels, brackets, the grand staff brace) — absent = the tuba page, byte-identical
+    if (o.ensemble) opts.ensemble = o.ensemble;
     const svg = Render.renderSection(o.model, view, o.glyphs, opts);
 
     // the system TERMINAL barline, exactly as notation.html appends it

@@ -58,6 +58,14 @@
    "zoomZ": 2,
    "_status": "provisional, DEFERRED — Z is a pure view parameter (PP-6 invariant holds at any Z); adjust freely once the zoom window exists (V1)"
   },
+  "video-cut": {
+   "zoomZ": 1.85,
+   "halves": {
+    "V-TOP": [0, 1, 2],
+    "V-BOT": [3, 4, 5, 6]
+   },
+   "_note": "septet PLAN 2i.10.2 (2026-09-16, RUNNING_LOG §558): THE DEMO VIDEO'S CLOSE-UPS. The tuba cut the 2x master at y = 1080 (ten equal lanes, five each); the septet's lanes are unequal (the piano 1.576), so y = 1080 fell 58 px inside Vn1 and the four strings at 2x (1122 px) could not fit a 1080 frame. Each close-up is a GROUP of parts: winds + piano on top, the strings below; the zoom master is rendered at zoomZ, the group's lanes are centred in the 1080 frame and every row outside the group (the other group, the gap past its lane edge) is paper. zoomZ 1.85 = the strings' measured ink (y 508-1075 of the wide frame, 568 px) x 1.85 = 1051 px, ~15 px to spare at each edge; 1080 x 1.85 = 1998 exactly. The sweep: 12 / 1.85 = 6.5 s per close-up window (the tuba's 6)."
+  },
   "print-letter": {
    "_status": "DEFERRED to V5 — Letter landscape adopted (PP-4); margins/staff-mm are data, decided against the one printed page V5's gate requires anyway"
   },

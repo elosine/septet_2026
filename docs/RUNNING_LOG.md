@@ -15242,3 +15242,98 @@ clipped at 24-bit (+1.9); one gain, no second render — rule 8 held.
 **Linked:** `/api/notation/renders` lists `piece-septet.wav`; the WAV served 200 `audio/wav`. **Not verified in his page:** a notation tab
 open on the old render holds the old audio — F5, the MAIN file, ♪ render. **His ear owed:** the sync · the piano's section-2 dynamics
 (2j.3) · the morph notes starting at their composed pitch (2j.7) · the surge run in tune (2j.8).
+
+## §555. His ear on the re-render: "render good" — step 9 closed; on to step 10, the demo video (2026-09-16, session 13, Opus 5)
+
+**His word:** *"render good. on to video"* — after F5 → MAIN → ♪ render, the listen asked for at §554 (the sync · 2j.3 the piano's section-2
+dynamics · 2j.7 the morph notes' starting pitch · 2j.8 the surge run in tune). Also at his word ("a"): his 16:03 save committed as the
+render's source (`bc54cdc`). PLAN 2i.9 closed.
+
+## §556. Step 10, the demo video — the probe before any build: the video exporter still draws the tuba's frame (2026-09-16, session 13, Opus 5)
+
+**Prompted by:** his *"on to video"* (§555). PLAN 2b already carried §552's finding (read from the code): the exporters' frame, lanes, labels
+and grand staff are the tuba's. Before proposing a build, one frame rendered to see it rather than infer it.
+
+**The probe:** `node tools/export_video.js --ir piece-septet --view video --probe 300` (scratchpad, not the repo) — one page raster, page 25.
+**What the frame draws (1920 × 1080):** TEN lanes labelled **T1 … T10** (the tuba's labels) · T1 treble (the flute) · T2 **bass clef** (the
+bass clarinet in C — 2k's realization reached the exporter) · **lane 3 blank: no piano, no grand staff** · T4 · T5 treble, T6 alto, T7 bass
+(the strings, their curves and morph bars drawn) · **T8 · T9 · T10: three empty bass staves for parts the septet does not have** · the
+playhead at 300 s. Cause, in the code: `FRAME_PARTS` defaults to `0…9` ("all ten, the jury frame"); `Coords.systemsForParts` gives one lane
+per part, so the piano's two systems (2:0 / 2:1) never get lanes; `pageSeconds` is the tuba's `timeScale.defaults.trance` (12).
+
+**So step 10 is not a run of an existing route** — the exporter must first be brought to the septet's frame (as the page he approves on
+screen draws it: `notation.html renderContainerView`). Put to him before any build.
+
+## §557. The demo video's shape, his word: close-ups too, a NEW random selection, the tuba video's transitions (2026-09-16, session 13, Opus 5)
+
+**His word** (answering §556's a/b/c — the AI had recommended (a), one wide frame): *"I want the demo video to include portions close up as
+well; is this the question? and a new random selection for the close up sections and incorporating the transitions we used in the tuba
+video"* — so (b), with two specifics.
+
+**What the tuba video did (piece #4, read for this — VIDEO_BUILD_PLAN D1–D5 and "THE CUT LIST", RUNNING_LOG day 36):**
+- **The cut:** `tools/make_cut.js` (the septet's copy is byte-identical) — seeded, reproducible; D5 *"randomized, ~25–33 % of the running
+  time in ~20–30 s segments, spaced out"*; wide for a 40 s lead and a 45 s tail; ≥ 25 s wide between; never three of one close-up in a row;
+  frame indices as well as seconds (a frame-for-frame splice under the untouched WAV). Seeds were compared by WHERE the close-ups land
+  against the piece's section map; his pick **seed 71** (`approved/2026-08-31-submission/cut-list-seed71.json`).
+- **The close-ups:** the top or bottom half of the frame at 2× (V-TOP / V-BOT, cropped from a 1920 × 2160 ZOOM-MASTER); the cut = V-CUT.
+- **The transitions:** a 5-frame **cross-dissolve** centred on each boundary (`--fade 5 --fadeMode cross`) — his pick from four clips
+  (hard · cross 8 · dip 8 · dip 5), over the AI's argued-for dip; no frame inserted or dropped.
+
+**Not yet settled (the planning method, restated to him before the top line):** the septet's section map for the balance · the halves (what
+the top and bottom close-ups hold with a grand staff in the frame) · all of it after the frame build (§556).
+
+## §558. BUILT 2i.10.1–2i.10.2: the video's septet frame, proven against his page; the close-ups as groups at 1.85× (2026-09-16, session 13, Opus 5)
+
+**His word, the top line approved:** *"good run thru as much as you can independantly"* — PLAN 2i.10's six steps written into the plan.
+
+**2i.10.1 THE FRAME.** `tools/export_video.js` now mirrors `notation.html renderContainerView` for an ensemble: `FRAME_PARTS` from the
+ensemble (realized: `video-jury`), lanes WEIGHTED (the piano 1.576 — not 2; a lane is one weight unit), each lane's staff scale × its weight,
+`Coords.withStaves` at the registry's grand-staff gap, the §404 buffer after the clef (`page_rules.musicStartBufferSs` 4.2 → the window opens
+early and the turn comes at its own end); `static_page.js` passes the ensemble to `renderSection` (labels, brackets, the brace) — an absent key
+keeps the tuba page byte-identical. **The probe after:** Fl · BCl (bass clef, in C) · Pno grand staff + brace · Vn1 · Vn2 · Va · Vc, labels,
+the winds' and strings' brackets. **Proven against his page** (the Browser pane, :5300, the MAIN file, video view — the AI's tab, closed
+after): the page's own meta *"page 50/54 · 572.4–584.4 s"* = the exporter's segment 49 window 572.38–584.38; both SVGs normalised through
+DOMParser/XMLSerializer and compared group by group — **page 50 and page 1: sys-p0 · p2 (the grand staff, 203 163 chars) · p3 · p4 · p5 · p6
+IDENTICAL; the furniture outside the systems (brackets, brace, end bar) IDENTICAL; sys-p1 differs at its clef** — by design (D55: the page
+is the working B♭ treble, the video the presentation's C bass clef).
+
+**2i.10.2 THE CLOSE-UPS — the tuba's split does not fit.** The tuba cut its 2× master at y = 1080 (ten equal lanes, five and five). The
+septet at 2×: Fl 16–291 · BCl 299–573 · Pno 581–1014 · **Vn1 1022–1296** · … · Vc 1869–2144 — y = 1080 falls 58 px inside Vn1, and the
+four strings (1122 px) cannot fit a 1080 frame at 2× at all. **Measured, the wide frame (16 moments, 36–622 s, full-height lines excluded):**
+the piano's ink ends at y ≤ 506 (its lane bottom 506.9), Vn1's starts at y ≥ 508; the frame's ink spans 7–1075. The strings' ink = 568 px.
+**Decided (the AI's, a look detail under D1's "accept it"):** each close-up is a GROUP — `realizations.video-cut.halves` V-TOP = Fl · BCl ·
+Pno, V-BOT = the strings — at **zoomZ 1.85** (568 × 1.85 = 1051 px; 1080 × 1.85 = 1998 exactly); the group's lanes centred in the frame, every
+row outside the group (above the upper group's lane bottom / from its own lane bottom down) paper. **Rejected:** Z = 2 with the strings
+cropped (loses the cello's GC dots at the lane bottom); a zoom per group (two masters, two sweep speeds); resampling the crop (blur).
+The sweep: 12 / 1.85 = 6.5 s per close-up window (the tuba 6).
+**Proven:** the 1.85× master at the same 16 moments — row 938 (the partition) empty in all 16; the piano's ink at 120 s ends at row 937;
+Vn1's at 49.6 s starts at 939; the master's ink 14–1990 of 1998 → V-BOT 14–15 px of paper top and bottom, V-TOP ~78 px. Two probes of each
+half (`--half V-TOP|V-BOT`, new) looked at: the groups whole, the brace and brackets whole, no ink sliced.
+
+## §559. 2i.10.3 THE CUT: the septet's sections in make_cut.js; 300 seeds scanned; two give two close-ups in every section (2026-09-16, Opus 5)
+
+**The map (measured from the save, the tuba's hard-coded map replaced):** SECTION 1 0.61–183.00 (first strike → M1's marker) · M1 BEATING
+BLOOM 183.00–304.80 (marker → last morph note) · M2 SPECTRAL DRIFT 314.00–435.50 · SECTION 3 444.00–624.00. `--dur` default 630.1 (the render).
+**The rules unchanged (his "a new random selection"):** frac 0.29 · 20–30 s · lead 40 · tail 45 · gap 25 · never three of a kind.
+**The scan, seeds 1–300:** 240 give 7 close-ups, 59 give 8, 1 gives 6 · 168 meet "S1 ≥ 2 · M1 ≥ 1 · M2 ≥ 1 · S3 ≥ 2 · top/bottom within one
+· 25–33 %" · 47 of those with no close-up across a section boundary · **2 give exactly two per section and 4/4:** **seed 53** (30.1 %; every
+section one top + one bottom; wide 56 s at the start, 63 s at the end; gaps ≥ 27 s) and **seed 72** (29.9 %; S1 two bottoms, M1 two tops;
+closes wide 90 s). The tuba's lesson held: the counts separate the seeds only by WHERE they land. **His pick owed** (cheap only before the render).
+
+## §560. 2i.10.4 THE TRANSITIONS checked on septet frames; 2i.10.5 the render started on seed 53, the picture holding through the audio's tail (2026-09-16, Opus 5)
+
+**The transitions (his "incorporating the transitions we used in the tuba video" = piece #4's final `--fade 5 --fadeMode cross`):** two
+5.5 s clips at seed 53's cuts, with the render's audio — wide → V-BOT at 56.27 s, V-TOP → wide at 146.75 s (scratch, sent to him). Both
+1920 × 1080, 5.500 s, audio 5.482 s. Frames 78–88 around the first cut (the cut = frame 83): ink per pixel 9.5 · 9.4 · 9.5 · 9.4 · 9.0 · 8.7 ·
+8.4 · 8.5 · 8.0 · 8.0 · 8.0; saturated-magenta pixels 1822 · 1836 · 1824 · **1654 · 34 · 13 · 69 · 1310** · 1426 … — the blend spans frames
+81–85, the two cursors and arcs mixing at half weight in its middle (the doubling his tuba pick accepted), exactly five frames, centred.
+
+**Found on the way — the audio's tail would have been cut.** The exporter muxes `-shortest` and renders to the material's end (625 s); the
+septet WAV runs to 630.1 s (the last note 624.0 + the render's 6 s tail). **Fixed:** `frameRGBA` holds the picture at the material's end (the
+cursor resting at the end, as the page rests when playback stops) and the render passes `--t1 630.1` — the film is the WAV's length and the
+last ring is heard. (The tuba lost 0.5 s the same way — 751.42 vs 751.92 — too little to notice.)
+
+**The render, started in the background on seed 53** (his pick still owed; machine time only — a different pick re-renders):
+`export_video.js --ir piece-septet --view video --fps 30 --cut <scratch>/cut53.json --fade 5 --fadeMode cross --t1 630.1 --audio
+notation/audio/piece-septet.wav --out notation/video/renders/piece-septet-V-CUT-seed53.mp4`. Clip speed ~25 fps → ~13 min for 18 903 frames.
+**Guards:** `test_septet_notation` 101 green after the registry's new `video-cut` realization.

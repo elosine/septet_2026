@@ -4,7 +4,7 @@
 // 25-33% of the time in like around 20-30 second segments, spaced out").
 //
 //   node tools/make_cut.js [--seed N] [--frac 0.29] [--min 20] [--max 30]
-//                          [--dur 751.92] [--lead 40] [--tail 45] [--gap 25]
+//                          [--dur 630.1] [--lead 40] [--tail 45] [--gap 25]
 //                          [--fps 30] [--out notation/video/cut-list.json]
 //
 // SEEDED, so a cut can be reproduced or re-rolled by changing one number.
@@ -20,7 +20,7 @@ const SEED = +arg('seed', 7);
 const FRAC = +arg('frac', 0.29);      // share of the running time in close-up
 const MIN = +arg('min', 20);          // segment length bounds, seconds
 const MAX = +arg('max', 30);
-const DUR = +arg('dur', 751.92);      // the master WAV's length
+const DUR = +arg('dur', 630.1);       // the master WAV's length — the septet render of 2026-09-16 (RENDER.md §4; the tuba's was 751.92)
 const LEAD = +arg('lead', 40);        // stay wide at the start
 const TAIL = +arg('tail', 45);        // stay wide at the end
 const GAP = +arg('gap', 25);          // minimum wide stretch between close-ups
@@ -39,12 +39,12 @@ function rng(a) {
 const rand = rng(SEED);
 
 // the piece's sections, for reporting WHERE each close-up lands
+// [septet PLAN 2i.10.3 — 2026-09-16, RUNNING_LOG §559] the septet's sections, measured from the save: section 1 from its first strike
+// to M1's marker; M1 and M2 from their markers to their last morph note; section 3 from its first strike (444) to its last (624). The
+// tuba's map (the opening gesture … TRANCE, to 751.42) lives in piece #4's copy.
 const SECTIONS = [
-  [2.00, 34.65, 'opening gesture'], [36.19, 46.40, 'clouds I/D'],
-  [48.05, 52.46, 'octave long tones'], [55.94, 80.03, 'density build 2'],
-  [81.75, 110.62, 'INT2 blasts'], [113.00, 135.34, 'density build 3'],
-  [141.39, 258.03, 'BLOOM'], [259.56, 381.91, 'CONVERGENCE'],
-  [386.68, 495.27, 'BALANCE'], [499.83, 751.42, 'TRANCE'],
+  [0.61, 183.00, 'SECTION 1'], [183.00, 304.80, 'M1 BEATING BLOOM'],
+  [314.00, 435.50, 'M2 SPECTRAL DRIFT'], [444.00, 624.00, 'SECTION 3'],
 ];
 const where = (a, b) => {
   const hit = SECTIONS.filter(s => b > s[0] && a < s[1]).map(s => s[2]);
