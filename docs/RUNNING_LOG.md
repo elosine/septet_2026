@@ -14781,3 +14781,103 @@ pitch folded into the tongue ram's sounding window C3–D4 (`foldFlute`, D38; F4
 captured note re-taken as the card does on a technique change; Save → R. The audio follows at the re-render — no separate audio fix.
 
 **Decided:** nothing new; the collection is open.
+
+## §538. For the proofing pass: where the notation page's MIDI differs from the render — the trills are not the only place; the map by section (2026-09-16, Fable 5.1)
+
+**His words:** *"And is the trill section the only place where the MIDI audio, and this is in the notation score, where the MIDI audio differs
+from the rendered audio? Because I can't, I want to solo. And so I'm using the MIDI audio to do that. But I'll listen to the rendered audio if
+the MIDI audio doesn't represent what's in there."*
+
+*(AI — from §442's measurement of 2026-09-13, unchanged since; plus §534's secco finding:)* **No — the trills are one of four places.** The
+page's player (`midiplayer.js`, the tuba's) and the composer's own playback (what the render is) differ on:
+1. **The trills** (69 zones) — the page: silent.
+2. **The notes a trill ate** (11, `mutedBy`) — the page: they SOUND; the composer and the render: silent.
+3. **The crescendo run's 78 swells** (526.8–559.4) — the page: velocity 100, the anchor-scale CC7, and NO secco cut (§534); the render:
+   the pinned velocity, CC7 on the swell's own range 65–127, the cut 10 ms before the end. A different loudness shape and a ringing end.
+4. **The morph sections' held notes** (185) — the page: velocity 100; the render: the measured remap (`heldVel`). The pitch bends are the
+   same on both (the bend stream was ported).
+5. Timing: the page sends at screen-frame time (~16 ms steps); the render is sample-exact. Audible in the trills only.
+**The same on both: the plain strikes** (1432 today, `recVel`, CC7 127, the score's own lengths, §401g) — the bulk of every part.
+
+**The map for soloing:** section 1's strikes and section 3's strikes, groups and the piano's run — the MIDI is faithful, solo freely · the
+trills (section 1), the two morph sections (loudness), the crescendo run — switch to ♪ render (no solo there; the page's clock follows the WAV).
+
+**Decided:** nothing — a pointer to §442 for the pass; the gaps stay working-loop gaps (the render is the sound, §443).
+
+## §539. Proofing note 2 — "sempre secco" to the top, at the tip of the crescendo's end, a small gap right of the curve's edge (2026-09-16, Fable 5.1)
+
+**His words:** *"lets move sempre secco text to the top for all parts, so it will be at the tip of the crescendo end and lets add some horiz space
+between the right edge of curve and left edge of text (the s of sempre), just the small gap worth"*
+
+**Collected as PLAN 2j.2, not fixed** (the pass's rule). *(AI's reading, marked:)* the word leaves the chain below the note and sits at the cut
+edge's TOP — the surge's sharp top-right corner, full lane height at the note end — with its "s" the small gap right of the edge's stroke; every
+part's first swell alike. Two things to settle on the page at fix time, not now: which "small gap" (the house 0.45 ss, the chain's own, or the
+tighter 0.25) · the vertical anchor against the tip (hanging just under it, or centred on it and half into the lane above — his earlier allowance
+for the ottava). The fix touches `layout.js` (the §531 block, off `placeChain`), `test_surge_run.js` (re-pinned), NOTATION_STANDARDS §2's row.
+This overturns §531's call (e) — the word on its own chain row below — as the design allowed.
+
+## §540. Note 2 settled: the gap is the staccato-dot gap (0.15 ss); the text top-justified on the crescendo's top (2026-09-16, Fable 5.1)
+
+**His words:** *"the standard small gap we are using, the gap between notehead and staccato dot; text top justified with the top of the crescendo"*
+
+**DECIDED — his:** the "sempre secco" text's left edge sits **0.15 ss** (`nhDotGapSs`, the notehead-to-staccato-dot gap — the same 0.15 the
+dynamic keeps from a stem) right of the cut edge's stroke; its **top edge on the curve's top** at the cut edge, so the word hangs just under the
+tip. PLAN 2j.2 updated; the two open readings of §539 closed. Fixed with the rest when the pass closes.
+
+## §541. The bass clarinet's transposition: the standard (a score in C is normal for new music; the part in B♭ treble), and what a C presentation score with a B♭ part would take — the data and the top line, nothing built (2026-09-16, Fable 5.1)
+
+**His words:** *"Can you give me feedback as to the transposition standard for bass clarinet in a full score? Is it generally notated in C in the
+full score with bass clef? Or do they keep the transposition transposed version in the full score, like an orchestral score? Or is it not one way
+or the other standard? And then if it is C, then could you just do an analysis of what would need to be done to make the bass clarinet C in the
+notated presentation score and any full score manifestations, but B flat treble clef in parts, like the bass clarinet's own part in a rehearsal
+score or sectionals or individual practice scores."*
+
+**The standard (AI, from the literature — not one way):** the orchestral tradition is a TRANSPOSED score (each staff as its player reads it: bass
+clarinet in B♭, treble clef, sounding a major ninth lower — the French notation; the German bass-clef form, sounding a second lower, is the
+older alternative). The prevailing practice in new music since the mid-20th century is a SCORE IN C (Partitur in C) with transposed parts,
+stated on the front matter ("score in C" · "bass clarinet sounds as written" or, where an octave is taken for readability, "sounds an octave
+lower"). Both are correct; contemporary ensembles and their conductors read C. For a Tempus Konnex submission a score in C is the natural form.
+
+**The data, measured:**
+- Today the bass clarinet is written in B♭ treble clef everywhere — his choice 2026-09-11 (§382): `ensemble.json` part 1 `clef: treble`,
+  `transpose: 14`; the IR stays sounding (D9); the shift is ONE function at layout (`writtenOf`), spelled from the written note; the trill's
+  neighbour and the morph headers take the written pitch through the same path. One number in one place.
+- Sounding range in the save: B♭1 (34) … F4 (65), 211 notes; 65 at or above C4, none above G4. In C on a bass clef: at most two ledger lines
+  above the staff (C4 the first, E4 the second, F4 the space above) — no clef changes needed; the low C (B♭1 sounding, §512) is the
+  staff's first ledger below.
+- The exporters (print, video) lay out with the same registry ensemble; no per-realization transposition exists; parts (2c) are not built.
+- **The fact that decides the shape:** in this piece the players READ the animated full score (the delivery format, PLAN 3 the performance
+  score; the practice videos 2h.7 per player). So "full score" splits by WHO READS IT: the presentation score (print + the jury's video) is
+  read by the jury and a conductor → C; the performance score, the practice videos and any part are read by the player → B♭ treble.
+  The working notation page is the composer's — either, by a toggle.
+
+**The top line (a candidate plan item, not written into the plan until his word):**
+1. The decision, recorded: presentation = C, bass clef; performance / practice / parts = B♭ treble (supersedes §382 as the only form).
+2. The registry: the bass clarinet's `transpose` + `clef` become per-REALIZATION — the default (the page, performance, practice, parts) B♭
+   treble; the `realizations.<presentation>` entry overrides to 0 / bass; the exporters pass that ensemble to layout.
+3. The C page proven: ledgers ≤ 2 above, the low B♭1 below; the trill neighbours and the morph headers re-spelled from C (same function).
+4. Guards: `test_septet_notation`'s written-pitch rows both ways; the print exporter's proof.
+5. The front matter: "score in C; the bass clarinet sounds as written" · the part: "in B♭, sounding a major ninth lower" (NITS instructions).
+6. Parts (2c, only if selected): the default realization — nothing extra.
+Cost: small — the plumbing of one override plus tests and docs; the transposition itself is already one number.
+
+**Decided:** nothing — his word on the top line first; the fix, if any, belongs after the proofing pass, before the presentation score (2b).
+
+## §542. DECIDED (D55): the pitch form per realization — C for the presentation score and the full ensemble rehearsal score, transposed for the sectional and individual scores; PLAN 2k after the proofing pass; the mechanism a standing requirement for every later version (2026-09-16, Fable 5.1)
+
+**His words:** *"yes, add it to the plan after the proofing pass; and then make a note to add this as a requirement slash consideration when we
+get around to producing the additional versions of the score, e.g. the rehearsal ensemble score and then the sectional scores and then the
+individual rehearsal scores. And by this as a requirement, I mean the whole transposing instrument mechanism. So if the piece is including a
+transposition mechanism, the standards and rules we need in place so that we can display a full score in C, i.e. the presentation score and
+the full ensemble rehearsal score. And then the other ones in the transposition."*
+
+**Written:** **PLAN 2k — The bass clarinet in C: the transposing-instrument mechanism** (`todo · after 2j, before 2b`) with §541's top line,
+refined by his split: C = the presentation score + the full ensemble rehearsal score; transposed (B♭ treble) = the sectional scores, the
+individual rehearsal scores, parts; the working page stays B♭ · **journal §4 D55** · **PLAN's standing mandates: M5** (every score version
+declares its pitch form; the mechanism in place before the first of them) · PLAN 3's header carries it · journal §2 N3g · PLANNER.
+
+**Noted as open, not decided:** the performance score the players read in concert (PLAN 3) — one shared display; its form is PLAN 3's design
+question (the reader rule says the bass clarinet's lane would be transposed while the rest is sounding; a per-lane form in one display is the
+mechanism's hardest case and the reason it is a requirement, not a switch).
+
+**Decided:** D55. Nothing built.
