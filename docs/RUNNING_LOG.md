@@ -15014,3 +15014,29 @@ well before it's routed and used at the next breath."*
 is, the candidates are the CC7 map's range for the strings' curve channels and the fade weight — measured before touched.
 
 **Decided:** nothing new; the collection is open.
+
+**His word on note 6, same day:** *"again not worth too much time/effort, if you confirm that the render midi is correct then no need to test I'll trust the audio render will be ok"* — confirmed from the capture (§547): the render's CC7 follows the curve on rotating, pre-armed channels. Note 6 CLOSED, no fix, no test. Note 7 (§548) is the opposite case — the render's MIDI is NOT right at the note boundaries (the bend after the note-on) — and stays open for the small fix.
+
+## §548. Proofing note 7 — the morph sections' pitch "jumps": the composed line is continuous; the render starts each new note at its nominal pitch and bends it 1–16 ms later — 62 blips, none pre-armed (2026-09-16, Fable 5.1)
+
+**His words:** *"same with pitch, there are jumps in m2 for vln 1 at 340.24 in the midi, maybe others"*
+
+**Measured (the save's `morphBend` breakpoints, the MAIN IR, the render's capture):**
+- **The composition is continuous.** At Vn1 340.20 → 340.25 the line goes A3 + 61.6 c → B♭3 − 38.1 c: the same sounding pitch (57.616 →
+  57.619), re-spelled because the travel crossed the semitone's midpoint. Over all 101 morph note boundaries in the six parts (gap under
+  0.1 s) the largest composed discontinuity is 0.7 c. Nothing to fix in the score.
+- **The render breaks it at the note-on.** The composer's playback pre-arms the new note's channel 0.15 s ahead with CC0 (the bank) and CC7
+  (the level) — but not with the pitch bend. So the note starts at its nominal pitch and the first bend message follows on the next tick:
+  Vn1 340.25 — note-on 340.252 on ch 3, bend 4949 (−38 c) at 340.267, 15 ms later. The previous note's tail keeps its own bend on its own
+  channel (ch 2, +61.6 c), which is right.
+- **62 of the 101 boundaries start with an initial bend over 10 c; in the capture every one of them gets its bend AFTER the note-on
+  (1–16 ms), none before.** The largest: Vn2 348.86 (−75 c) · Vn2 391.38 (−64 c) · Va 328.69 (−60 c) · Vn2 407.82 (+54 c) · Vn2 340.96 (−53 c) ·
+  Va 346.77 (+50 c) · Vn2 357.31 (+46 c) · Vn1 340.25 (−38 c). A blip of that size for one tick at each — his "jumps".
+- The page's MIDI (`midiplayer.js`) has the same order (bend on the tick after the note-on), so he heard it there too; but unlike note 6,
+  this one is in the render.
+
+**Collected as PLAN 2j.7, not fixed.** The fix: pre-arm the bend with the CC0/CC7 pre-arm — the new channel takes the note's initial bend
+value at −0.15 s (composer.html's prearm, `tickCurvePlayback`; the same line in `midiplayer.js`); a check in `export_midi.js` that every
+morph note-on is preceded by its channel's bend. No change to the save; the re-render (2i.9) carries it.
+
+**Decided:** nothing new; the collection is open.
