@@ -15040,3 +15040,29 @@ value at −0.15 s (composer.html's prearm, `tickCurvePlayback`; the same line i
 morph note-on is preceded by its channel's bend. No change to the save; the re-render (2i.9) carries it.
 
 **Decided:** nothing new; the collection is open.
+
+## §549. Proofing note 8 — the surge run IS out of tune in the render: the morph sections' pitch bends are never reset, ten channels still bent at 526 s, 45 of the 78 swells start on a bent channel (2026-09-16, Fable 5.1)
+
+**His words:** *"also the surge section, sounds maybe out of tune or could be my ear, this is the render; lets check and make sure the pitch
+bend is being reset after the morph section"*
+
+**Measured (the render's capture, every bend message tracked per port and channel):**
+- **The reset never happens at a note's exit.** Of the 212 morph-section note-offs (205–430 s), **0** are followed by a bend-to-centre on
+  that channel. The composer's playback (`tickCurvePlayback`) centres a bent channel only in its flush — pause, stop, end — never when the
+  bent note ends; the capture is one continuous run, so nothing ever flushed.
+- **At 526.0 s ten curve channels still carry a morph bend:** Va ch2 11667 (**+84 c**) · BassCl ch3 11034 (**+69 c**) · BassCl ch4 10533
+  (**+57 c**) · Vn1 ch2 9301 (**+27 c**) · Va ch3 8688 (+12 c) · Vn2 ch3 8699 (+12 c) · Vn1 ch3 8363 (+4 c) · Vn2 ch4 8276 (+2 c) · Fluteb
+  ch4 8233 (+1 c) · Fluteb ch6 8274 (+2 c) — cents through the measured range (`BEND_RANGE_CENTS` 199; per instrument `bendRangeSt` ≈ 1.99).
+- **45 of the 78 swells start on a channel with a leftover bend** — the run rotates through those very channels (D11's pool): Va 526.79
+  +84 c · BassCl 528.00 +69 c · Vn1 529.18 +27 c · Va 531.46 +12 c · Vn2 531.61 +12 c · BassCl 532.56 +57 c · BassCl 536.71 +69 c · Vn1 537.69
+  +27 c … The viola's first swell, the one his eye approved on the page, sounds nearly a semitone sharp in the render. His ear was right.
+- The strikes are untouched: ch 1 (MAIN) never carries a bend. At the end of the capture two channels remain bent (Fluteb ch4, ch6).
+- The page's `midiplayer.js` DOES centre at a bent note's exit (its "residue cure", line ~105), so the page's MIDI would not show this — a
+  case where the page is right and the render wrong, the reverse of note 6.
+
+**Collected as PLAN 2j.8, not fixed.** The fix: the residue cure at note exit in composer.html — a bent note's note-off sends 0xE0 centre on
+its channel (the page's line, ported back); with note 7's pre-arm it is one small change in the same block. A check in `export_midi.js`:
+no note-on on a channel whose bend is off-centre unless the note itself carries a bend. No change to the save; the re-render (2i.9)
+carries it, and the check proves it without a listening test.
+
+**Decided:** nothing new; the collection is open.
