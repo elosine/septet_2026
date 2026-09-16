@@ -85,7 +85,7 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### STATE — 2026-09-16 (session 13), Fable 5.1; PLAN 2j FIXED and approved (§537–§551) · PLAN 2k BUILT (§552) — ► SITTING F next: 9 the audio re-render, 10 the demo video (clear before it; Opus runs, Fable directs)
+### CHECKPOINT — 2026-09-16 (session 13), checkpoint #4 *(mid-session checkpoint)*; Fable 5.1; PLAN 2j FIXED and approved (§537–§551) · PLAN 2k BUILT (§552) — ► SITTING F next: 9 the audio re-render, 10 the demo video — resume on OPUS (runs the route), Fable to direct
 
 **The task:** PLAN 2i, section 3's notation (444–624 s). **State: steps 1–8 DONE (§515–§536)** — step 8 built on Fable at his *"go"*, his eye
 *"surge run in notation score good"*, the run stays secco (his ear, §535). The MAIN notation file `notation/ir/piece-septet.ir.json` is VALID, rebuilt by the recorded build unchanged
@@ -116,22 +116,23 @@ Fable directs; **clear before F** (mode change: execution of a written pipeline)
 
 **Resume reads:** this §2 · for F: `docs/RENDER.md` §1–§4 · PLAN 2i.9–2i.10 · RUNNING_LOG §453 (the first render, the numbers to compare against).
 
-**Decisions pending the composer:** his eye on E1 and E2 — E1's spots: 520.3 Vn2 · 581–587 the piano singles · 592.9 · 602.0 · 607–613 · 616.7 · 622.5
-Pno · 601.9 Va · 487.8 Vc jeté · 623.7 Vn2; E2's marks: 444 · 474–478 · 504–507 · 534 · 561–566 · 594–596 (F5, not CTRL+SHIFT+R) · the AI calls he may
-overturn, each a small change: (a) an ottava on the beam side moves the WHOLE group's accents below their notes (§527) · (b) a mark after a written
-dynamic compares against that dynamic (§529) · (c) the surge template as a registry switch, not a build flag (§530) · (d) the IR's `env`/`secco` tags
-derived from the save (§530) · (e) "sempre secco" on its own chain row at the cut edge, running rightward from the cliff (§531) · the accents in an
-ottava group sit under the treble staff however high the note · later: the pedal legend's wording (NITS).
+**Decisions pending the composer:** none blocking — he proofed every part and approved the fixes (§551 "all good"; E1/E2's spots were in that
+pass). AI calls he may still overturn, each a small change: the ppp velocity written as 9, not 0 (§550) · the presentation's pitch-form override
+living on the `video-jury` realization, which print borrows, rather than a new `presentation` key (§552) · the cover title *Scattered Substance*
+stays tentative (CN-64) · later: the pedal legend's wording (NITS). **Heard only at the re-render (his ear then):** the piano's section-2
+dynamics at their marks (2j.3), the morph notes' pre-armed bends and the surge run back in tune (2j.7 · 2j.8) — the export's check (e) proves
+the last two before a note is heard. **Open for PLAN 3:** the performance score's own pitch form (D55).
 
-**Deliberately uncommitted (`git status --short` at this checkpoint, unchanged since #2) — all his, left alone:** `bank/panel_snapshots.json` (his takes) ·
+**Deliberately uncommitted (`git status --short` at checkpoint #4) — all his, left alone, plus one AI copy:** `scores/zz-ai-run-nosecco.json` (the AI's
+no-secco listening copy for §534's A/B — spent; deletable, his call) · `bank/panel_snapshots.json` (his takes) ·
 `reaper/septet_rack.rpp` (his rack) · `bank/passages/4materials.json` · `accentedcres01.json` · `accentedcres01-2.json` · `chordcyc01.json` ·
 `chstr02.json` · `section3.json` (his passages) · `scores/Sec3.json` (his section-3 sketch) · `scores/SeptetSec03-Materials-B.json` · `-C` · `-D` ·
 `scores/piece-septet-v1.31-preDeleteMiddleMorph.json` · `-v1.32-finalDraft1.0.json` · `-v1.33-preSec3NoteMoves.json` (his named versions; v1.33 =
 his save-point before the note moves) · `scores/spectralMorph.json` (his save, the SPECTRAL-04 comparison §466 — his to keep or delete) ·
 `scores/zz-ai-1t-walk.json` (the AI's 1t walk copy — deletable, his call).
-**Unsaved working copies** (`node tools/unsaved_check.js`, D17 — his to Save or Reload; piece-septet is clean; the list as at checkpoint #2, not re-run at #3):
-cres-run01 · cres2strike · piano-harmonics-test · trill-curve-test · trillBuildTst · zz-ai-1t-walk.
-**Running:** nothing of the AI's (his :5300 and Reaper; the AI's Browser-pane tab for §531's page proof was closed after).
+**Unsaved working copies** (`node tools/unsaved_check.js`, re-run at checkpoint #4 — D17, his to Save or Reload; piece-septet is clean, his tab Reloaded on
+the §550 save): cres-run01 · cres2strike · piano-harmonics-test · trill-curve-test · trillBuildTst · zz-ai-1t-walk — the same six as at #2.
+**Running:** nothing of the AI's (his :5300 and Reaper; the Browser pane is closed — the AI's tabs for the §531 and §550 page proofs were closed after).
 
 ---
 
@@ -155,7 +156,7 @@ pattern and holds; after Sciarrino's *Raffigurar Narciso al fonte*) · his note 
 | **N3d** | ~~**step 8 — the design**~~ **DESIGNED 2026-09-15 (Fable, §530, D54)** — the 78 swells as the tuba's surge device · the STANDARD surge as a template (the tool's ratio-5 exponential, not the save's bent curve) · 100/s · no floor · ppp → fff + arrow · "sempre secco" once per part at its first swell (his "b") · the meter rides it (drawnOf) · the sound and the IR's samples untouched · **BUILT 8.1–8.5 2026-09-16 (Fable, §531)** — test_surge_run 29 (red 17 on the old engine) · MAIN rebuilt (only env/secco changed) · band flags 32 unchanged · knock-on 0 · batteries green incl. piece #4 · his eye 2026-09-16 *"surge run in notation score good"* · 8.6–8.7 done (§536) · the run stays secco (his ear, §535) | — | — |
 | **N3f** | ~~**PLAN 2j THE PROOFING PASS**~~ **FIXED 2026-09-16 (Fable, §550)** — eight notes collected (§537–§549), seven fixed in one pass: the save (14 techniques · 29 velocities), the page (the word at the top · the run 2s → 4s → the last alone · every three 2 + 1, D56), the playback (the bend pre-armed · centred at exit · export check (e)); MAIN rebuilt, every battery green, the page proven · **► HIS EYE owed (F5 + Reload his composer tab)**. Note 1: flute 59.55, the tongue ram dropped to `ord` · note 2: "sempre secco" to the top, 0.15 right of the cut edge (§539–§540) · note 3: the piano's section-2 velocities to their D50 marks — 29 of 44 off-band (§544) · note 4: the piano's 2-3-4 at 611 → 42 pairs · 17 fours from 611.50 · the last note its own GC, his (c) recommended; the other triples his ear (§545, CN-87) — all five ruled: 2+1 everywhere but the piano · note 5: every strike in the six parts percussive outside the morph/surge windows — 14 offenders in section 1, listed (§546); Va/Vc jeté, the trills by env · note 6: the violin's morph dynamics — the page's MIDI is the known gap (velocity 100), the render's capture follows the curve on rotating channels; his ear on ♪ render owed (§547) · note 7: pitch blips at the morph note boundaries — IN the render: 62 note-ons whose bend arrives 1–16 ms late; pre-arm the bend (§548) · note 8: the surge run out of tune IN the render — no morph note-off ever centres its bend, ten channels still bent at 526 s (Va +84 c), 45 of 78 swells start bent; the residue cure at note exit (§549) | Fable collects · Opus fixes | no |
 | **N3g** | ~~**PLAN 2k**~~ **BUILT 2026-09-16 (Fable, §552)** — the pitch form per realization: `realizations.video-jury.ensemble` (the presentation, print borrows it) · `Layout.ensembleFor` · both exporters take the realized ensemble + techniques · the morph headers re-spellable · the C page proven on MAIN · septet 101 · the front-matter lines · §0b · FOUND for 2b: the print page has no piano and no labels | — | — |
-| **N3e** | **SITTING F, after 2j** — 9 the audio re-render (PLAN 2i.9, RENDER.md §1: his capture ~13 min → export, checked → the Reaper render → ♪ render on the page; the §453 numbers to compare against) · 10 the demo video (2i.10, `export_video.js`, the sync proof) — his *"good to move on through 2 and into f"* | **Opus** runs the route · Fable directs · his capture + Reaper | **yes — clear before F** |
+| **N3e** | **► SITTING F — next, after this clear** — 9 the audio re-render (PLAN 2i.9, RENDER.md §1: his capture ~13 min → export, checked → the Reaper render → ♪ render on the page; the §453 numbers to compare against) · 10 the demo video (2i.10, `export_video.js`, the sync proof) — his *"good to move on through 2 and into f"* | **Opus** runs the route · Fable directs · his capture + Reaper | **yes — clear before F** |
 | **N4** | Later, noted — **the order after the demo video (his, §515):** the performance instructions (the pedal + l.v. legends, bcl to low C — NITS 2026-09-14) → the print score (2b; the Tempus copy links the demo video at the top) · the practice videos, BLOOM at least, SPECTRAL tbd (2h.7) · the performance score carries D50 (PLAN 3's acceptance line) | — | — |
 | **N5** | Still his, from before: the render's sync (§453) · the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 
