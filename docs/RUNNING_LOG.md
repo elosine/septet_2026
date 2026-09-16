@@ -15114,3 +15114,17 @@ inline scripts compile.
 the re-render (2i.9).
 
 **Rejected on the way:** nothing — every fix went in as collected. **One AI choice, his to overturn:** ppp velocity 9 rather than 0.
+
+## §551. His eye on the fixes, first verdict: the four closing pairs of the 2 + 1s written 16th · 16th rest · 16th, the beam flush on the last note — the other pairs unchanged (2026-09-16, Fable 5.1)
+
+**His words:** *"adjust the beaming only for the 2+1 ones, The 2 + 1s: 488.5 Vc · 620.6 Vn1 · 622.0 and 623.2 Va., cut the last rest and the
+extended beams so Sixteenth note, sixteenth rest, sixteenth note, and beams flush with the last sixteenth note beam. but leave the other 2s
+groupings"* — and, before it, on the Reload: *"so go to composer tab no ctrl r, just reload button?"* — yes: the app's Reload re-reads the file;
+a browser reload reopens the autosaved working copy (the old state) and a later Save from there would overwrite the fixes.
+
+**Built:** in `notate_section --groups`, the pair that closes a three (the `--threes 2+1` branch) is flagged `closesThree` and its cluster
+takes only `--gridDiv 2 --accents 1,2` — no `--restAfter 1` (no trailing 16th rest), no `--beamOver 1` (the beam ends on the last note's
+stem, layout's ordinary beam end); every other pair keeps D61's writing (the rest after, the beam over it). No new flag — the recorded build
+is unchanged and R re-runs it. Guard: `test_cross_staff` — the four closing pairs carry neither `restAfter` nor `beamOverRest` and keep
+`rest16Before` on the second note; the other 68 pairs keep `restAfter 1` + `beamOverRest`. NOTATION_STANDARDS §2's 2 + 1 row carries the
+writing.

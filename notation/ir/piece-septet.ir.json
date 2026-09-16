@@ -120187,7 +120187,6 @@
      "noteUnits": 1,
      "noteBeams": 2,
      "beamThrough": true,
-     "beamOverRest": true,
      "nhArtic": "accent",
      "beamHasArtic": "accent",
      "dynOnChange": true
@@ -120225,8 +120224,6 @@
      "noteUnits": 1,
      "noteBeams": 2,
      "beamThrough": true,
-     "beamOverRest": true,
-     "restAfter": 1,
      "nhArtic": "accent",
      "beamHasArtic": "accent",
      "dynOnChange": true
@@ -121188,7 +121185,6 @@
      "noteUnits": 1,
      "noteBeams": 2,
      "beamThrough": true,
-     "beamOverRest": true,
      "nhArtic": "accent",
      "beamHasArtic": "accent",
      "dynOnChange": true
@@ -121226,8 +121222,6 @@
      "noteUnits": 1,
      "noteBeams": 2,
      "beamThrough": true,
-     "beamOverRest": true,
-     "restAfter": 1,
      "nhArtic": "accent",
      "beamHasArtic": "accent",
      "dynOnChange": true
@@ -121265,7 +121259,6 @@
      "noteUnits": 1,
      "noteBeams": 2,
      "beamThrough": true,
-     "beamOverRest": true,
      "nhArtic": "accent",
      "beamHasArtic": "accent",
      "dynOnChange": true
@@ -121303,8 +121296,6 @@
      "noteUnits": 1,
      "noteBeams": 2,
      "beamThrough": true,
-     "beamOverRest": true,
-     "restAfter": 1,
      "nhArtic": "accent",
      "beamHasArtic": "accent",
      "dynOnChange": true
@@ -121419,7 +121410,6 @@
      "noteUnits": 1,
      "noteBeams": 2,
      "beamThrough": true,
-     "beamOverRest": true,
      "nhArtic": "accent",
      "beamHasArtic": "accent",
      "dynOnChange": true
@@ -121457,8 +121447,6 @@
      "noteUnits": 1,
      "noteBeams": 2,
      "beamThrough": true,
-     "beamOverRest": true,
-     "restAfter": 1,
      "nhArtic": "accent",
      "beamHasArtic": "accent",
      "dynOnChange": true

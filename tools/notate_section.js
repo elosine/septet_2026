@@ -391,7 +391,9 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
           const n = run.length;
           if (n < 2 || run[0].onset < G0 - 1e-9 || run[0].onset > G1 + 1e-9) continue;
           const groups = [];
-          const pairsOver = (a, b) => { for (let i = a; b - i >= 2;) { const take = b - i === 3 && THREES !== '2+1' ? 3 : 2; groups.push({ g: run.slice(i, i + take), four: false }); i += take; } };
+          // [2j.9 — the composer 2026-09-16] the pair that CLOSES a three (2 + 1) is written 16th · 16th rest · 16th with the beam ending flush
+          // on the last note's stem — no trailing rest, no run-on beam; every other pair keeps D61's writing (the rest after, the beam over it)
+          const pairsOver = (a, b) => { for (let i = a; b - i >= 2;) { const three = b - i === 3; const take = three && THREES !== '2+1' ? 3 : 2; groups.push({ g: run.slice(i, i + take), four: false, closesThree: three && THREES === '2+1' }); i += take; } };
           const cuts = cutsOf.get(p);
           if (cuts) {
             const at = t => { const i = run.findIndex(e => e.onset >= t - EPS); return i < 0 ? n : i; };
@@ -411,11 +413,13 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
             pairsOver(0, headEnd);
             for (let j = headEnd; j < n; j += 4) groups.push({ g: run.slice(j, j + 4), four: true });
           }
-          for (const { g, four } of groups) {
+          for (const { g, four, closesThree } of groups) {
             const sp = [+(g[0].onset - EPS).toFixed(3), +(g[g.length - 1].onset + EPS).toFixed(3), p];
             const clash = explicit.find(x => (x.sp[2] === null || x.sp[2] === p) && x.sp[0] <= sp[1] && sp[0] <= x.sp[1]);
             if (clash) { console.error('--groups: the group ' + sp[0] + '-' + sp[1] + '@' + p + ' overlaps the explicit --cluster ' + clash.sp[0] + '-' + clash.sp[1] + ' — drop one'); process.exit(2); }
-            spans.push({ sp, mods: four ? [['--accents', '1,2,3,4']] : [['--gridDiv', '2'], ['--restAfter', '1'], ['--beamOver', '1'], ['--accents', seq(g.length)]] });
+            spans.push({ sp, mods: four ? [['--accents', '1,2,3,4']]
+              : closesThree ? [['--gridDiv', '2'], ['--accents', '1,2']]                                                    // [2j.9] no --restAfter, no --beamOver
+              : [['--gridDiv', '2'], ['--restAfter', '1'], ['--beamOver', '1'], ['--accents', seq(g.length)]] });
             count[g.length]++;
           }
         }

@@ -95,12 +95,18 @@ ok(!model.warnings.some(w => /beam group /.test(w)), 'no beam-group warnings any
   {
     // [2j.4] the four other threes as 2 + 1: the pair's first two notes grouped, the third a single
     const S21 = [[3, 620.56, 621.30], [5, 622.01, 622.70], [5, 623.20, 623.84], [6, 488.51, 489.18]];
-    let good = 0;
+    let good = 0, flush = 0;
+    const devOf2 = id => { const ov = ir.overlays.find(o => o.kind === 'engraving' && o.target.event === id); return ov ? ov.value.device : {}; };
     for (const [p, t0, t3] of S21) {
       const a = ir.events.find(e => partOfEv.get(e.id) === p && Math.abs(e.onset - t0) < 0.006), c = ir.events.find(e => partOfEv.get(e.id) === p && Math.abs(e.onset - t3) < 0.006);
       if (a && c && clusterOf.has(a.id) && members(clusterOf.get(a.id)).length === 2 && !clusterOf.has(c.id)) good++;
+      // [2j.9, his 2026-09-16] the closing pair is 16th · 16th rest · 16th: no trailing rest, the beam flush on the last note (no run-on)
+      if (a && clusterOf.has(a.id)) { const ms = members(clusterOf.get(a.id)); if (ms.length === 2 && ms.every(e => !devOf2(e.id).restAfter && !devOf2(e.id).beamOverRest) && devOf2(ms[1].id).rest16Before) flush++; }
     }
     ok(good === 4, 'the four threes are 2 + 1 — Vn1 620.56 · Va 622.01 · Va 623.20 · Vc 488.51: a pair and a single GC (got ' + good + ')');
+    ok(flush === 4, 'each closing pair written 16th · 16th rest · 16th, the beam flush on the last note — no trailing rest, no run-on beam (got ' + flush + ')');
+    const otherPairs = S3.filter(ms => ms.length === 2 && !S21.some(([p, t0]) => partOfEv.get(ms[0].id) === p && Math.abs(ms[0].onset - t0) < 0.006));
+    ok(otherPairs.length === 72 - 4 && otherPairs.every(ms => devOf2(ms[1].id).restAfter === 1 && devOf2(ms[1].id).beamOverRest), 'every other pair keeps D61\'s writing — the rest after, the beam over it (' + otherPairs.length + ' pairs)');
   }
   const pSingles = ir.events.filter(e => e.env === 'strike' && partOfEv.get(e.id) === 2 && e.onset >= 581.2 && e.onset < 587.3);
   ok(pSingles.length === 16 && pSingles.every(e => !clusterOf.has(e.id)), 'the piano run: the 16 notes 581.21 → 586.96 are singles, no beam (his "a", §526) (got ' + pSingles.filter(e => !clusterOf.has(e.id)).length + ' of ' + pSingles.length + ')');
