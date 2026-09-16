@@ -5,6 +5,10 @@
 The animated presentation score of the septet — the wide shot with close-ups — for the Tempus Lab call (deadline 2026-10-15; the Tempus
 copy of the print score links it). PLAN 2i.10, RUNNING_LOG §556–§563.
 
+## Online
+
+**https://youtu.be/x8EZ3B1EvbE** — his upload of `V-CUT.mp4` (given 2026-09-16, RUNNING_LOG §564). The link the Tempus copy of the print score carries (PLAN 2b).
+
 ## The file
 
 **`V-CUT.mp4`** — the watch/submit file. 1920 × 1080 · 30 fps · h264 crf 16 + aac 256 k · **18 903 frames = 630.100 s** · 53.8 MB.

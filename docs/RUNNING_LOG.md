@@ -15370,3 +15370,10 @@ because yuv420p halves the chroma of thin magenta lines and the wide shot carrie
 machine only — README says back it up) · `cut-list-seed53.json` (`cmp` identical to `notation/video/cut-list.json`) · `README.md` (what made
 it: the save `bc54cdc`, the WAV and its sha256, the frame, the 1.85× groups, seed 53, cross 5, the tail hold, the command, the measurements).
 **PLAN 2i closed through step 10** — sitting F done. Next in his order (§515): the performance instructions, then the print score (2b).
+
+## §564. The demo video online (2026-09-16, Opus 5)
+
+**His word:** *"this is the link to the demo video https://youtu.be/x8EZ3B1EvbE"* — his upload of the archived `V-CUT.mp4` (§563). Recorded in
+the archive README, PLAN 2i.10 and the journal: it is the link the Tempus copy of the print score carries at the top (his order, §515; PLAN 2b).
+Also this sitting, no decision yet: the cover's ensemble statement discussed (CN-64's title) — the AI recommended *"for flute, bass clarinet,
+piano and string quartet"* (the doublings in the instrumentation list inside); his word open.
