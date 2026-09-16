@@ -106,7 +106,7 @@ ok(!model.warnings.some(w => /beam group /.test(w)), 'no beam-group warnings any
     ok(good === 4, 'the four threes are 2 + 1 — Vn1 620.56 · Va 622.01 · Va 623.20 · Vc 488.51: a pair and a single GC (got ' + good + ')');
     ok(flush === 4, 'each closing pair written 16th · 16th rest · 16th, the beam flush on the last note — no trailing rest, no run-on beam (got ' + flush + ')');
     const otherPairs = S3.filter(ms => ms.length === 2 && !S21.some(([p, t0]) => partOfEv.get(ms[0].id) === p && Math.abs(ms[0].onset - t0) < 0.006));
-    ok(otherPairs.length === 72 - 4 && otherPairs.every(ms => devOf2(ms[1].id).restAfter === 1 && devOf2(ms[1].id).beamOverRest), 'every other pair keeps D61\'s writing — the rest after, the beam over it (' + otherPairs.length + ' pairs)');
+    ok(otherPairs.length === 72 && otherPairs.every(ms => devOf2(ms[1].id).restAfter === 1 && devOf2(ms[1].id).beamOverRest), 'every other pair keeps D61\'s writing — the rest after, the beam over it (' + otherPairs.length + ' of 76 pairs)');
   }
   const pSingles = ir.events.filter(e => e.env === 'strike' && partOfEv.get(e.id) === 2 && e.onset >= 581.2 && e.onset < 587.3);
   ok(pSingles.length === 16 && pSingles.every(e => !clusterOf.has(e.id)), 'the piano run: the 16 notes 581.21 → 586.96 are singles, no beam (his "a", §526) (got ' + pSingles.filter(e => !clusterOf.has(e.id)).length + ' of ' + pSingles.length + ')');
