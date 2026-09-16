@@ -14881,3 +14881,28 @@ question (the reader rule says the bass clarinet's lane would be transposed whil
 mechanism's hardest case and the reason it is a requirement, not a switch).
 
 **Decided:** D55. Nothing built.
+
+## §543. His question on the two dynamic regimes (every strike marked before section 3; on change from 444 s): clear on its face by convention; no "sempre"; one instructions line recommended, his call (2026-09-16, Fable 5.1)
+
+**His words:** *"can you give me some feedback about the changing dynamic notation strategy? So in before section three, every GC style one shot
+was given its own dynamic. And then beginning section three, we state it once at the beginning and then every time again when it changes, but
+not every single one shot. Is this clear on its face? Or do we mention something in the performance instructions? Or does it need some sort
+of, in section three, every dynamic, new dynamic, it needs some sort of siempre or something like that."*
+
+*(AI's feedback — notation practice, no measurement:)*
+- **Section 3's rule IS the ordinary convention:** a dynamic holds until the next one. Nothing has to be said for a player to read it so.
+- **Section 1's rule is the marked exception:** a mark on every attack is the pointillist / percussion convention — each strike its own event
+  with its own level (its captured velocity, §401d). A player reads that as "each attack as marked", and, arriving at section 3 where the
+  marks thin out, falls back on the ordinary rule without being told. The two regimes do not contradict; the first is the stricter case of
+  the second.
+- **"sempre" would be the wrong word:** "sempre f" says "keep this, do not drift" over a long stretch; on every change it becomes clutter and
+  implies the other marks did NOT hold. The piece already uses "sempre" once, for a technique (sempre secco), where it belongs.
+- **The one cheap insurance:** a line on the performance-instructions page — the page already carries the piece's conventions (the pedal,
+  the l.v. slur, secco, the two kinds of curve). Draft: **"Dynamics: in the opening (to 176 s) every strike carries its own mark; from 444 s a
+  dynamic holds until the next one. In the morph sections the curves are the dynamics."** Recommended; nothing on the page changes.
+- Noted for completeness: section 2 is a third regime (the ensemble marks at 205–428 and the morphs' absolute curves, D50), so the line
+  names all three in one breath.
+
+**Decided:** nothing — his word on the line; if yes it goes on the NITS performance-instructions list beside the others.
+
+**His word, same day:** *"yes add the line to the instructions list"* — added to the NITS performance-instructions list beside the pedal, l.v., secco and curve lines.

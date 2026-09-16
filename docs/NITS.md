@@ -386,6 +386,9 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   cut; winds: stop the sound at the peak, no decay."**
 - **The curves' two meanings, one legend line each (§531):** the morph section's curves are ABSOLUTE dynamics (height = the level,
   ppp … fff, D23 · D50); the crescendo run's surge curves show the SHAPE only — the pair ppp → fff states the levels.
+- **The dynamic regimes (his "yes", 2026-09-16, RUNNING_LOG §543):** the opening marks every strike (§401d, pointillist); section 3 marks on
+  change (D52); the morph sections' curves are the dynamics. Draft line: **"Dynamics: in the opening (to 176 s) every strike carries its own
+  mark; from 444 s a dynamic holds until the next one. In the morph sections the curves are the dynamics."** No "sempre" anywhere on the page.
 
 ## ~~2026-09-14 — THE D49 AUDIT, owed~~ — **MEASURED 2026-09-14, RUNNING_LOG §517** (PLAN 2i.2); the verdict on the single strikes his. What it left:
 
