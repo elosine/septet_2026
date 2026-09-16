@@ -296,6 +296,21 @@ ok(JSON.stringify(ens.groups.map(g => g.kind + ':' + g.parts.join(','))) === JSO
   }
 }
 
+// ---- [PLAN 2j.5, RUNNING_LOG §546 — the composer 2026-09-16] every strike in the six parts is its part's PERCUSSIVE articulation ----
+// outside the morph sections (205–428) and the surge run (526–560); the trills themselves are ord / senza vib (env 'trill', not strikes)
+{
+  const irM = JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'ir', 'piece-septet.ir.json'), 'utf8'));
+  const Tq = JSON.parse(fs.readFileSync(path.join(ROOT, 'notation', 'registry', 'techniques.json'), 'utf8')).techniques;
+  const partM = new Map(); for (const c of irM.chunks) for (const id of c.events || []) partM.set(id, c.part);
+  const inMorph = t => t >= 205 && t <= 428, inSurge = t => t >= 526 && t <= 560;
+  const strikes = irM.events.filter(e => e.env === 'strike' && partM.get(e.id) !== 2 && !inMorph(e.onset) && !inSurge(e.onset));
+  const bad = strikes.filter(e => (Tq[e.technique] || {}).family !== 'oneshot');
+  ok(strikes.length >= 990 && bad.length === 0, 'every strike in the six parts outside the morph and surge windows is percussive (' + strikes.length + ' strikes; ' + bad.length + ' not' + (bad.length ? ': ' + bad.slice(0, 5).map(e => partM.get(e.id) + '@' + e.onset.toFixed(2) + ' ' + e.technique).join(' · ') : '') + ')');
+  const ART = { 3: 'bartok_vel', 4: 'bartok_vel', 5: 'gettato_vel', 6: 'gettato_vel', 0: 'pizzicato', 1: 'slap' };
+  const off = strikes.filter(e => e.technique !== ART[partM.get(e.id)]);
+  ok(off.length === 0, 'each part keeps ONE percussive articulation — Vn Bartók · Va/Vc jeté · Fl tongue ram · BCl slap (' + off.length + ' other)');
+}
+
 console.log(pass + ' passed, ' + fail + ' failed');
-console.log(fail ? 'SEPTET-NOTATION RED: ' + fail + ' failure(s)' : 'SEPTET-NOTATION GREEN: clefs · written pitch · grand staff · D10 groups · #2 chord columns · simultaneities · techniques · piece-septet end to end');
+console.log(fail ? 'SEPTET-NOTATION RED: ' + fail + ' failure(s)' : 'SEPTET-NOTATION GREEN: clefs · written pitch · grand staff · D10 groups · #2 chord columns · simultaneities · techniques · piece-septet end to end · percussive strikes (2j.5)');
 process.exit(fail ? 1 : 0);

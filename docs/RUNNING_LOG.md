@@ -15066,3 +15066,51 @@ no note-on on a channel whose bend is off-centre unless the note itself carries 
 carries it, and the check proves it without a listening test.
 
 **Decided:** nothing new; the collection is open.
+
+## §550. FIXED: the proofing pass (PLAN 2j.1–2j.5, 2j.7–2j.8) — the save, the page, the playback; MAIN rebuilt, every battery green, the page proven; his eye owed (2026-09-16, session 13, Fable 5.1)
+
+**Prompted by:** *"proof done, lets see the full list of issues to correct, just top line as bullets, and then move to fixes, no clear/model switch
+necessary"* — the pass closed on eight notes (2j.6 closed without a fix, §547). Built in the order: the save · the page · the playback · the rebuild.
+
+**The save (`scores/piece-septet.json`, a script in the file's own formatting — compact, one line; git is the undo; his tab to RELOAD):**
+- **14 strikes to their part's articulation (2j.5 / 2j.1):** Vn1 36.25 · 49.68 · 114.44 · 119.67 and Vn2 43.33 · 49.52 · 167.90 → `bartok_vel` ·
+  Va 36.13 · 43.10 · 49.63 · 58.87 · 120.98 and Vc 123.34 → `gettato_vel` · Fl 59.56 → `pizzicato` with the pitch folded F4 → F3 (65 → 53,
+  `Cresc.foldInto` into the tongue ram's sounding C3–D4). Only `technique` (and the flute's `sonifyNote`) changed — a strike's identity is
+  its captured note and velocity, which stay (wc-900 and its Bartók neighbour wc-909 differ in nothing else).
+- **29 piano velocities in section 2 to their written marks (2j.3):** `recVel` ← the eight-step scale (pp 18 · p 37 · mp 55 · mf 72 · f 90 ·
+  ff 109; **ppp → 9**, the band's top — 0 is a note-off); the 15 already in band untouched. The far ones now: 278.34 ff (was p 31) · 318.48
+  pp (was f 90) · 427.75 ppp (was mf 78 · 76) · 250.29 pp (was mp 55). The marks do not move (D50 reads the ensemble).
+
+**The page:**
+- **"sempre secco" to the top (2j.2, §540):** `layout.js` — the word leaves the chain; a `text` at t = the cut edge, `dxSs` = registry
+  `seccoGapSs` 0.15 (the staccato-dot gap), `yAt: 'top'`; `render.js` — `yAt 'top'` draws at `sys.yTopPx` (where the envcurve peaks) with the
+  hanging baseline, so the text's top sits on the curve's top corner. **On the page (a fresh tab, closed after): two texts in the 526–538
+  window — Va at y 793.4, BCl at y 149.3, both `dominant-baseline="hanging"`, x 0.15 ss right of the edge.**
+- **The groups (2j.4, D56):** `notate_section --threes 2+1` (a stretch of three = a pair + a single; default 3 = D51's triple, kept for
+  another piece) and the piano's cut moved to `--groupCuts 2@587.32,611.5` — the existing cutter already leaves a remainder of one alone
+  ("a single, its own GC" in its warning now). **Built: 42 pairs · 17 fours from 611.50 · 624.00 alone; Vc 488.51, Vn1 620.56, Va 622.01,
+  Va 623.20 each 2 + 1 — no group of three anywhere.** The fours shifted one note earlier, so no four lies wholly on the bass staff any
+  more; the one-staff test re-pinned to the all-treble four at 618.73.
+
+**The playback (for the re-render, 2j.7–2j.8):** `composer.html tickCurvePlayback` — `preArm` also sends a morph note's initial bend
+(`bend14Of`, the tick's own formula through the instrument's measured range), the record starts with that `lastBend`; a new `centreBend`
+after each of the three note-off sends (the abrupt close, the scheduled off, the short-note off) — the residue cure at exit. `midiplayer.js`
+— the same pre-arm, and `lastBend` set at the note-on so its existing exit cure fires. `capture_composer_midi.js` — `expect.notes` carry
+`bend0` (the initial cents). `export_midi.js` — check (e): no note-on on a channel still bent by an earlier note; every bent note's bend in
+place before its note-on (±40 units ≈ ±1 c, the instrument's own range tolerated). Nothing heard yet: the capture at 2i.9 proves it.
+
+**The rebuild:** the recorded build with the two new values (R re-runs it): VALID, 1806 events · 1163 chunks · 1195 overlays. **The build's
+band flags 32 → 30.** Guards: `test_surge_run` 30 (the gap and the top pinned) · `test_cross_staff` **77** (the piano 42 · 0 · 17 + the single,
+the four 2 + 1s, the build line, the treble four) · `test_septet_notation` **88** with the new percussive-strike guard (999 strikes, 0 not
+percussive; one articulation per part) · trills 92 · morph 178 · identity · step_dynamics --save 15 · check_cresc_panel · morph_septet_check
+· trill_conflicts 3 (accepted) — green · **piece #4's batteries on a fresh staging (26 files, removed after): test_layout · test_render
+(snapshots stable) · test_animobj · test_splice · ir_validate_battery GREEN.** Syntax-checked: every edited file, and composer.html's two
+inline scripts compile.
+
+**His eye owed (F5 on the notation page; RELOAD in his composer tab first — the file changed under it):** the word at 528.0 Va · 529.2 BCl ·
+530.2 Vn1 · 531.6 Vc · 532.8 Vn2 · 533.9 Fl · the piano's run at 611.5 and its last note at 624.0 · the 2 + 1s at 488.5 Vc · 620.6 Vn1 ·
+622.0 and 623.2 Va · the flute's tongue ram at 59.56 (now F3, "T. R.") · the strings' snap-pizz / jeté signs at 36.1 · 36.25 · 43.1 · 43.3 ·
+49.5 · 49.6 · 49.7 · 58.9 · 114.4 · 119.7 · 121.0 · 123.3 · 167.9. The piano's section-2 dynamics and the two bend cures are heard only at
+the re-render (2i.9).
+
+**Rejected on the way:** nothing — every fix went in as collected. **One AI choice, his to overturn:** ppp velocity 9 rather than 0.

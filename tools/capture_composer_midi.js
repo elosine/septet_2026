@@ -119,7 +119,8 @@ const RUN = (score, fps) => `(async () => {
       const inst = C.trackInstrument(o.layer); if (!inst) continue;
       const r = C.routeForNote(o, C.curveTechniqueFor(o), inst);
       const eaten = C.trillCovers(o.layer, o.startSeconds) || C.mutedByLive(o);
-      (eaten ? expect.eaten : expect.notes).push({ id: o.id, port: r.port, ch: r.ch, pitch: o.sonifyNote, t0: o.startSeconds, t1: o.endSeconds, ks: o.sonifyMode === 'ks' ? o.ksNote : null });
+      (eaten ? expect.eaten : expect.notes).push({ id: o.id, port: r.port, ch: r.ch, pitch: o.sonifyNote, t0: o.startSeconds, t1: o.endSeconds, ks: o.sonifyMode === 'ks' ? o.ksNote : null,
+        bend0: (o.morphBend && o.morphBend.length) ? o.morphBend[0][1] : null });   // [2j.7, §548] the initial bend in cents — export_midi check (e)
     }
   }
   return { frames: f, P0, OFF, pps, T_END, n: window.__midi.length, blocked: window.__blocked.slice(0, 20), blockedN: window.__blocked.length,

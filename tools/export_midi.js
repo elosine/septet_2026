@@ -125,6 +125,27 @@ function writeType0(abs, name, events) {
   }
   for (const v of open.values()) hanging += v;
   if (hanging) fails.push(hanging + ' notes never closed');
+  // (e) [PLAN 2j.7–2j.8, RUNNING_LOG §548–§549] THE PITCH BEND: no note-on lands on a channel left bent by an earlier note (a bent
+  //     note's channel is centred again at its exit), and a morph note's own bend is in place BEFORE its note-on (pre-armed). The
+  //     first render started 45 of the 78 surge swells on bent channels (Va +84 c) and 62 morph notes at the written key.
+  {
+    const bentNotes = expect.notes.filter(n => n.bend0 != null);
+    const findBent = (port, ch, pitch, t) => bentNotes.find(n => lc(n.port) === port && n.ch === ch && n.pitch === pitch && Math.abs(n.t0 - t) <= 0.01);
+    const lastBend = new Map(); const onBent = [], lateBend = [];
+    for (const e of events.slice().sort((a, b) => a[1] - b[1])) {
+      const st = e[2][0] & 0xF0, port = lc(e[0]), ch = e[2][0] & 15, k = port + '|' + ch;
+      if (st === 0xE0) { lastBend.set(k, (e[2][2] << 7) | e[2][1]); continue; }
+      if (st !== 0x90 || e[2][2] === 0) continue;
+      const b = lastBend.get(k), bn = findBent(port, ch, e[2][1], e[1]);
+      if (!bn) { if (b != null && b !== 8192) onBent.push(port + ' ch' + (ch + 1) + ' ' + e[2][1] + '@' + e[1].toFixed(3) + ' bend ' + b); continue; }
+      if (Math.abs(bn.bend0) < 1) continue;   // a bend of nothing needs no message
+      const want = Math.round(8192 + (Math.round(bn.bend0) / 199) * 8192);   // the measured range (sonify_core BEND_RANGE_CENTS); ±40 units ≈ ±1 c covers an instrument's own range
+      if (b == null || Math.abs(b - want) > 40) lateBend.push(bn.id + '@' + bn.t0.toFixed(3) + ' bend ' + (b == null ? 'none' : b) + ' wanted ' + want);
+    }
+    if (onBent.length) fails.push(onBent.length + ' note-ons on a channel still bent by an earlier note, e.g. ' + onBent.slice(0, 4).join(', '));
+    if (lateBend.length) fails.push(lateBend.length + ' morph notes whose bend is not in place at the note-on, e.g. ' + lateBend.slice(0, 4).join(', '));
+    console.log('  bend: ' + bentNotes.length + ' bent notes checked — ' + (lateBend.length ? lateBend.length + ' late' : 'every bend in place at the note-on') + ' · ' + (onBent.length ? onBent.length + ' note-ons on a bent channel' : 'no note-on on a bent channel'));
+  }
   if (meta.blockedN) console.log('  note: the page tried ' + meta.blockedN + ' write(s), all refused — ' + meta.blocked.slice(0, 3).join(' · '));
 
   // 3. the rack's layout

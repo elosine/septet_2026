@@ -30,7 +30,7 @@ const C2C = 4 + C.engraving.layout.grandStaff.interStaffGapSs;
 const CROSS = [
   // [E1, §527] re-pinned: 581.21 is a single since the piano's time cuts (§526) — the first cross-staff pair with no ottava after 587.32
   { cl: clusterAt(588.762), what: 'the pair at 588.76 (E6 → G3)', n: 2, rests: 2 },
-  { cl: clusterAt(623.547), what: 'the four at 623.55 (G2 · G♯5 · B1 · A♯5)', n: 4, rests: 0 },
+  { cl: clusterAt(623.547), what: 'the last four, 623.39–623.85 (D♭3 · G2 · G♯5 · B1; the run\'s last note 624.00 stands alone, §545)', n: 4, rests: 0 },
 ];
 for (const X of CROSS) {
   const ms = members(X.cl), ids = new Set(ms.map(e => e.id));
@@ -60,12 +60,14 @@ for (const X of CROSS) {
   ok(!TRE.items.some(it => it.k === 'goline' && ids.has(it.ev)), X.what + ': no go line');
   ok(TRE.items.filter(it => it.k === 'rest' && it.cluster === X.cl).length === X.rests, X.what + ': ' + X.rests + ' rests on the treble staff');
 }
-// one staff = as normal: the bass four at 620.3 stays in the bass system, stems down
+// one staff = as normal: [2j.4, §545] under the 611.50 cut no four lies wholly on the bass staff (the old bass four at 620.3 is now split
+// across two fours); the one all-treble four, 618.73 (E7 · C8 · C6 · C♯7), stays in the treble system with its stems down
 {
-  const ms = members(clusterAt(620.316)), ids = new Set(ms.map(e => e.id));
-  const stems = BAS.items.filter(it => it.k === 'stem' && ids.has(it.ev));
-  ok(stems.length === 4 && stems.every(s => s.attach === 'down'), 'the bass four at 620.3: four stems down in the bass system, as before');
-  ok(!TRE.items.some(it => ids.has(it.ev)), 'the bass four at 620.3: nothing in the treble system');
+  const e0 = ir.events.find(x => partOfEv.get(x.id) === 2 && Math.abs(x.onset - 618.73) < 0.01);
+  const ms = e0 ? members(clusterOf.get(e0.id)) : [], ids = new Set(ms.map(e => e.id));
+  const stems = TRE.items.filter(it => it.k === 'stem' && ids.has(it.ev));
+  ok(ms.length === 4 && ms.every(e => e.pitch.midi >= 60) && stems.length === 4 && stems.every(s => s.attach === 'down'), 'the treble four at 618.73: four stems down in the treble system, as normal (got ' + ms.length + ' members, ' + stems.filter(s => s.attach === 'down').length + ' stems down)');
+  ok(ms.length === 4 && !BAS.items.some(it => ids.has(it.ev)), 'the treble four at 618.73: nothing in the bass system');
 }
 ok(!model.warnings.some(w => /beam group /.test(w)), 'no beam-group warnings anywhere');
 
@@ -75,21 +77,36 @@ ok(!model.warnings.some(w => /beam group /.test(w)), 'no beam-group warnings any
   const byPart = p => S3.filter(ms => partOfEv.get(ms[0].id) === p);
   const sizes = p => byPart(p).map(ms => ms.length);
   // re-pinned 2026-09-14 after his 17 note moves in two rounds, 488-623 s (RUNNING_LOG §523-§524): Fl 2 pairs · Vn1 5 + a triple · Vn2 8 · Va 4 + 2 · Vc 4 + 1
-  const want = { 0: [2, 0, 0], 1: [7, 0, 0], 3: [5, 1, 0], 4: [8, 0, 0], 5: [4, 2, 0], 6: [4, 1, 0], 2: [41, 1, 17] };   // [E1] --groupCuts 2@587.32,611.72 (§526)
+  // [2j.4, §545 — his verdicts 2026-09-16] every three is 2 + 1 (--threes 2+1): Vn1 620.56 · Va 622.01 · Va 623.20 · Vc 488.51 each a pair + a single;
+  // the piano cut at 611.50 (--groupCuts 2@587.32,611.50): 42 pairs · 17 fours · the last note 624.00 its own GC
+  const want = { 0: [2, 0, 0], 1: [7, 0, 0], 3: [6, 0, 0], 4: [8, 0, 0], 5: [6, 0, 0], 6: [5, 0, 0], 2: [42, 0, 17] };
   for (const p of Object.keys(want).map(Number)) {
     const s = sizes(p), got = [2, 3, 4].map(n => s.filter(x => x === n).length);
     ok(got.join() === want[p].join(), 'part ' + p + ': pairs · triples · fours = ' + want[p].join(' · ') + ' (got ' + got.join(' · ') + ')');
   }
   const pno = byPart(2).sort((a, b) => a[0].onset - b[0].onset);
-  ok(pno.map(ms => ms.length).join('') === '2'.repeat(41) + '3' + '4'.repeat(17), 'the piano run (§526): pairs from 587.32, the triple at 611.05, then fours from 611.72 to the end');
-  ok(pno.flat().length === 153 && Math.abs(pno[0][0].onset - 587.32) < 0.006 && Math.abs(pno[pno.length - 1][3].onset - 624) < 0.002, 'the piano run: 153 grouped notes, 587.32 → 624.00');
-  const tri = pno.find(ms => ms.length === 3), four1 = pno.find(ms => ms.length === 4);
-  ok(tri && Math.abs(tri[0].onset - 611.05) < 0.006 && four1 && Math.abs(four1[0].onset - 611.72) < 0.006, 'the piano run: the triple at 611.05 closes the pairs, the fours start at 611.72');
+  ok(pno.map(ms => ms.length).join('') === '2'.repeat(42) + '4'.repeat(17), 'the piano run (§526 · §545): 42 pairs from 587.32, then 17 fours from 611.50 — no triple');
+  ok(pno.flat().length === 152 && Math.abs(pno[0][0].onset - 587.32) < 0.006 && Math.abs(pno[pno.length - 1][3].onset - 623.85) < 0.006, 'the piano run: 152 grouped notes, 587.32 → 623.85');
+  const four1 = pno.find(ms => ms.length === 4);
+  ok(!pno.some(ms => ms.length === 3) && four1 && Math.abs(four1[0].onset - 611.50) < 0.006, 'the piano run: the fours start at 611.50 (the old triple\'s third note)');
+  const lastPno = ir.events.filter(e => e.env === 'strike' && partOfEv.get(e.id) === 2).sort((a, b) => b.onset - a.onset)[0];
+  ok(lastPno && Math.abs(lastPno.onset - 624) < 0.002 && !clusterOf.has(lastPno.id), 'the piano\'s last note (624.00) stands alone with its own GC (his "2s then 4s then last one single")');
+  ok(/ --groupCuts 2@587\.32,611\.5( |$)/.test(ir.provenance.build) && / --threes 2\+1( |$)/.test(ir.provenance.build), 'the recorded build carries --groupCuts 2@587.32,611.5 and --threes 2+1');
+  {
+    // [2j.4] the four other threes as 2 + 1: the pair's first two notes grouped, the third a single
+    const S21 = [[3, 620.56, 621.30], [5, 622.01, 622.70], [5, 623.20, 623.84], [6, 488.51, 489.18]];
+    let good = 0;
+    for (const [p, t0, t3] of S21) {
+      const a = ir.events.find(e => partOfEv.get(e.id) === p && Math.abs(e.onset - t0) < 0.006), c = ir.events.find(e => partOfEv.get(e.id) === p && Math.abs(e.onset - t3) < 0.006);
+      if (a && c && clusterOf.has(a.id) && members(clusterOf.get(a.id)).length === 2 && !clusterOf.has(c.id)) good++;
+    }
+    ok(good === 4, 'the four threes are 2 + 1 — Vn1 620.56 · Va 622.01 · Va 623.20 · Vc 488.51: a pair and a single GC (got ' + good + ')');
+  }
   const pSingles = ir.events.filter(e => e.env === 'strike' && partOfEv.get(e.id) === 2 && e.onset >= 581.2 && e.onset < 587.3);
   ok(pSingles.length === 16 && pSingles.every(e => !clusterOf.has(e.id)), 'the piano run: the 16 notes 581.21 → 586.96 are singles, no beam (his "a", §526) (got ' + pSingles.filter(e => !clusterOf.has(e.id)).length + ' of ' + pSingles.length + ')');
   ok(pno.filter(ms => ms.length === 4).every(ms => ms.slice(1).every((e, i) => e.onset - ms[i].onset < 0.25)), 'every four: every gap under 0.25 s');
   const triples = S3.filter(ms => ms.length === 3 && partOfEv.get(ms[0].id) !== 2).map(ms => partOfEv.get(ms[0].id) + '@' + ms[0].onset.toFixed(2)).sort();
-  ok(triples.join() === '3@620.56,5@622.01,5@623.20,6@488.51', 'the triples outside the piano (D51\'s writing): Vn1 620.56 · Va 622.01 · Va 623.20 · Vc 488.51 (got ' + triples.join(' ') + ')');
+  ok(triples.join() === '', 'no group of three anywhere (his 2026-09-16, §545: every three is 2 + 1 — D51\'s triple writing retired) (got ' + (triples.join(' ') || 'none') + ')');
   ok(S3.every(ms => ms.slice(1).every((e, i) => e.onset - ms[i].onset < 0.4)), 'every group: every gap under 0.4 s');
   const dyn = new Set([...ir.overlays].filter(ov => ov.kind === 'engraving' && ov.value.device && ov.value.device.clusterId && ov.value.device.dynMark).map(ov => ov.target.event));
   // [§529] superseded by the page rule (2i.7): a group carries no --dyn mark of its own — its members are on --dynOnChange (below)

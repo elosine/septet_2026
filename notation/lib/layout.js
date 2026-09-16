@@ -1758,15 +1758,15 @@
                 }
                 // [PLAN 2i.8, RUNNING_LOG §530, D54 — the composer's (b)] "sempre secco" ONCE PER PART, on the part's FIRST
                 // secco swell (the crescendo run, 526.8–559.4 s): the strings damp at the cut, the winds take the word for the
-                // shape; the instructions page carries the rest. The chain's instruction slot, after the pair — its own row, so
-                // the shortest swell's pair (≈ 6 ss from the head column) never meets it — left-justified on the CUT EDGE
-                // (t = the note end, the curve's 90° back edge): the pair states the levels at the head, the word sits where
-                // the cliff is. Recorded as chrome like the instruction above it.
+                // shape; the instructions page carries the rest. [PLAN 2j.2, §539–§540 — his eye, 2026-09-16: "move sempre secco
+                // text to the top for all parts, so it will be at the tip of the crescendo end … the gap between notehead and
+                // staccato dot; text top justified with the top of the crescendo"] The word sits at the CUT EDGE's TOP — the
+                // surge's sharp top-right corner, the lane's top (render.js draws the curve to sys.yTopPx) — its top edge on the
+                // curve's top (`yAt: 'top'`, the renderer's hanging baseline) and its "s" the staccato-dot gap (0.15 ss,
+                // registry seccoGapSs) right of the edge's stroke. Off the chain: nothing else stacks against it.
                 if (e.secco && seccoShown.has(e.id)) {
-                  const secEm = TS.technique * (o.textEmScale != null ? o.textEmScale : 1.3);
-                  const ySec = placeChain(secEm);
-                  items.push({ k: 'text', t: e.onset + e.duration, dxSs: 0, ySs: ySec - secEm / 2 + secEm * 0.2, text: 'sempre secco', size: TS.technique, color: '#000', anchor: 'start', ev: e.id });
-                  recChrome(items[items.length - 1], chainAbove ? 'above' : 'below', secEm * 0.8, -secEm * 0.2);
+                  const secGap = o.seccoGapSs != null ? o.seccoGapSs : 0.15;
+                  items.push({ k: 'text', t: e.onset + e.duration, dxSs: secGap, yAt: 'top', text: 'sempre secco', size: TS.technique, color: '#000', anchor: 'start', ev: e.id });
                 }
                 // [2h.5, §490–§491] "Ped." — piece #2's Emmentaler sustain-pedal
                 // glyph, once per chord (the chord's lowest note draws it, like

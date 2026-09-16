@@ -351,6 +351,11 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
       const gm = String(process.argv[gi + 1] || '').match(/^([\d.]+)-([\d.]+)$/);
       if (!gm) { console.error('--groups needs t0-t1 (e.g. --groups 444-624.1)'); process.exit(2); }
       const G0 = parseFloat(gm[1]), G1 = parseFloat(gm[2]), PAIR = 0.4, FOUR = 0.25, EPS = 0.005;
+      // [PLAN 2j.4, RUNNING_LOG §545, D56 — the composer 2026-09-16] --threes 2+1: a stretch of THREE is a PAIR and a SINGLE (the third
+      // note its own GC), not D51's triple — his verdict on every three in the piece (Vc 488 · Vn1 620 · Va 622 · Va 623; the piano's
+      // cut away by time). The count of 2 · 3 · 4 or 3 · 3 in a row reads as compound meter (CN-87). Default '3' = D51's triple.
+      const THREES = (() => { const i = process.argv.indexOf('--threes'); return i >= 0 ? String(process.argv[i + 1]) : '3'; })();
+      if (THREES !== '3' && THREES !== '2+1') { console.error('--threes takes 3 (the triple, D51) or 2+1 (a pair and a single)'); process.exit(2); }
       // [2i E1] --groupCuts P@t1,t2 (repeatable) — one part's stretches set BY TIME instead of by the gaps (the composer 2026-09-14,
       // the piano: "let's start the eighth note beaming, the two to a beam at 587.32. And let's start the four grouping at 611.72";
       // RUNNING_LOG §526 his "a" = singles before t1). In that part's runs: every note before t1 stays single · t1 to t2 = pairs from
@@ -386,7 +391,7 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
           const n = run.length;
           if (n < 2 || run[0].onset < G0 - 1e-9 || run[0].onset > G1 + 1e-9) continue;
           const groups = [];
-          const pairsOver = (a, b) => { for (let i = a; b - i >= 2;) { const take = b - i === 3 ? 3 : 2; groups.push({ g: run.slice(i, i + take), four: false }); i += take; } };
+          const pairsOver = (a, b) => { for (let i = a; b - i >= 2;) { const take = b - i === 3 && THREES !== '2+1' ? 3 : 2; groups.push({ g: run.slice(i, i + take), four: false }); i += take; } };
           const cuts = cutsOf.get(p);
           if (cuts) {
             const at = t => { const i = run.findIndex(e => e.onset >= t - EPS); return i < 0 ? n : i; };
@@ -394,7 +399,7 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
             pairsOver(i1, i2);
             const left = (n - i2) % 4;
             for (let j = i2; j + 4 <= n; j += 4) groups.push({ g: run.slice(j, j + 4), four: true });
-            if (left) { console.warn('  --groupCuts ' + p + ': ' + left + ' note(s) after the last four at ' + run[n - left].onset.toFixed(2) + ' — written by the pair rule'); pairsOver(n - left, n); }
+            if (left) { console.warn('  --groupCuts ' + p + ': ' + left + ' note(s) after the last four at ' + run[n - left].onset.toFixed(2) + (left === 1 ? ' — a single, its own GC (his "2s then 4s then last one single", §545)' : ' — written by the pair rule')); pairsOver(n - left, n); }
             const wide = run.slice(i2).findIndex((e, j) => j > 0 && e.onset - run[i2 + j - 1].onset >= FOUR);
             if (wide >= 0) console.warn('  --groupCuts ' + p + ': a gap of ' + FOUR + ' s or more inside the fours at ' + run[i2 + wide].onset.toFixed(2));
             said.push('part ' + p + ' cut by time: ' + i1 + ' single(s) before ' + cuts[0] + ' · pairs ' + cuts[0] + '–' + cuts[1] + ' · fours from ' + cuts[1]);
@@ -416,7 +421,7 @@ if (flag('bracketsAbove')) doc.layoutPolicy = { bracketSide: 'above' };
         }
         if (count[2] + count[3] + count[4]) said.push('part ' + p + ': ' + count[2] + ' pairs · ' + count[3] + ' triples · ' + count[4] + ' fours');
       }
-      console.log('  --groups ' + G0 + '-' + G1 + ': ' + (said.join(' | ') || 'no runs under ' + PAIR + ' s'));
+      console.log('  --groups ' + G0 + '-' + G1 + (THREES === '2+1' ? ' (threes as 2+1)' : '') + ': ' + (said.join(' | ') || 'no runs under ' + PAIR + ' s'));
     }
   }
   // THE DAY-35 CLUSTER-WRITING DEFAULTS (global, db2 onward — the composer, on

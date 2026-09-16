@@ -110,6 +110,9 @@
               if (tech && tech.cc0 != null) send(out, key, [0xB0 | ch, 0, tech.cc0]);
               if (ksMode) ksArm();
               else send(out, key, [0xB0 | ch, 7, Core.curveValToCC(Core.evalWaveCurve(wc, 0), ccPoints, spanDb)]);
+              // [PLAN 2j.7, RUNNING_LOG §548] a morph note's BEND is pre-armed with its bank and level, so the note starts at its
+              // composed pitch (not at the written key for a tick — up to 75 c in the first render)
+              if (wc.morphBend && wc.morphBend.length) { const v0 = Core.bend14(Math.round(Core.morphBendAt(wc.morphBend, 0))); send(out, key, [0xE0 | ch, v0 & 0x7F, (v0 >> 7) & 0x7F]); bentCh.add(key); }
               prearmed[wc.id] = true;
             }
           } else {
@@ -120,15 +123,18 @@
         const t01 = (t - wc.startSeconds) / Math.max(1e-6, wc.endSeconds - wc.startSeconds);
         const cc = ksMode ? null : Core.curveValToCC(Core.evalWaveCurve(wc, t01), ccPoints, spanDb);
         if (!st) {
+          // [2j.7] the bend in force at the note-on: pre-armed above, or sent here on a scrub; remembered so the exit cure fires
+          const bend0 = (wc.morphBend && wc.morphBend.length) ? Math.round(Core.morphBendAt(wc.morphBend, t - wc.startSeconds)) : null;
           if (!prearmed[wc.id]) {   // scrubbed in mid-curve: no pre-arm happened
             if (tech && tech.cc0 != null) send(out, key, [0xB0 | ch, 0, tech.cc0]);
             if (ksMode) ksArm();
             else send(out, key, [0xB0 | ch, 7, cc]);
+            if (bend0 != null) { const v0 = Core.bend14(bend0); send(out, key, [0xE0 | ch, v0 & 0x7F, (v0 >> 7) & 0x7F]); bentCh.add(key); }
           }
           send(out, key, [0x90 | ch, wc.sonifyNote,
             (wc.sonifyMode === 'plain' && wc.recVel != null) ? wc.recVel : 100]);
           delete prearmed[wc.id];
-          active[wc.id] = { note: wc.sonifyNote, port: r.port, ch, lastCC: cc, lastSendT: t, lastBend: null };
+          active[wc.id] = { note: wc.sonifyNote, port: r.port, ch, lastCC: cc, lastSendT: t, lastBend: bend0 };
           continue;
         }
         // CC7 stream: >= 25 ms apart, on change — paced by transport t, not a

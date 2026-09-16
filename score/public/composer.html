@@ -11137,7 +11137,18 @@ const Composer = {
                     : ksMode ? this.curveValToCC(Math.max(...wc.nodes.map(n => n.y)) / 10)
                     : this.heldCc7(wc, this.evalWaveCurve(wc, 0));   // 1g item 5: the measured curves (the tuba map without a remap)
                 output.send([0xB0 | ch, 7, cc], at);
+                // [PLAN 2j.7, RUNNING_LOG §548 — 2026-09-16] a morph note's BEND is pre-armed with its bank and level, so the note
+                // starts at its composed pitch: the first render started 62 morph notes at the written key and bent them a tick
+                // later (up to 75 c — the composed line itself is continuous within 0.7 c at every boundary). The tick finds the
+                // value already in place (lastBend on the record below) and streams from there.
+                if (wc.morphBend && wc.morphBend.length) { const v0 = bend14Of(this.morphBendAt(wc.morphBend, 0)); output.send([0xE0 | ch, v0 & 0x7F, (v0 >> 7) & 0x7F], at); }
             };
+            // [2j.7 · 2j.8] the 14-bit bend through the instrument's MEASURED range (the tick's own formula, §203), and THE RESIDUE
+            // CURE AT NOTE EXIT: a bent note's channel is centred again right after its note-off. RUNNING_LOG §549: the first render
+            // never centred (only the flush did, and a capture never flushes) — ten channels were still bent after the morph sections
+            // and 45 of the 78 surge swells started out of tune (Va +84 c). The page's midiplayer.js has cured at exit all along.
+            const bend14Of = (cents) => Math.max(0, Math.min(16383, Math.round(8192 + (Math.round(cents) / (100 * ((inst && inst.bendRangeSt) || 1.99))) * 8192)));
+            const centreBend = (at) => { if (wc.morphBend && wc.morphBend.length) output.send([0xE0 | ch, 0, 64], at); };
 
             // ---- a note in flight: leave, stop, or finish ----
             if (st) {
@@ -11148,6 +11159,7 @@ const Composer = {
                 // closed just after that on)
                 if (!audible || (before && jumped) || (past && jumped) || (past && !st.offScheduled)) {
                     output.send([0x80 | ch, st.note, 0], Math.max(nowPerf, st.onAt + 5));
+                    centreBend(Math.max(nowPerf, st.onAt + 5) + 2);   // [2j.8] the residue cure
                     delete this._activeCurvePlayback[wc.id];
                     return;
                 }
@@ -11156,6 +11168,7 @@ const Composer = {
                 if (!st.offScheduled && wc.endSeconds <= currentTimeSec + LOOKAHEAD_S) {
                     this.seccoCut(wc, output, ch, portKey, perfAt(wc.endSeconds));   // PLAN 1l step 5: the cliff, cut
                     output.send([0x80 | ch, st.note, 0], Math.max(nowPerf, perfAt(wc.endSeconds)));
+                    centreBend(Math.max(nowPerf, perfAt(wc.endSeconds)) + 2);   // [2j.8] the residue cure
                     st.offScheduled = true;
                 }
                 if (currentTimeSec < wc.startSeconds) return;   // scheduled, not yet sounding: nothing to stream
@@ -11213,10 +11226,12 @@ const Composer = {
             // `ccNext` is where the queue has been filled to, in score seconds; `lastCC` starts at what the pre-arm just sent, so the
             // first streamed value is only sent if it actually differs
             const rec = { note: wc.sonifyNote, onAt, lastCC: ksMode ? null : this.heldCc7(wc, this.evalWaveCurve(wc, 0)),
-                ccNext: null, lastSend: nowPerf, offScheduled: false };
+                ccNext: null, lastSend: nowPerf, offScheduled: false,
+                lastBend: (wc.morphBend && wc.morphBend.length) ? Math.round(this.morphBendAt(wc.morphBend, 0)) : undefined };   // [2j.7] pre-armed above
             if (wc.endSeconds - wc.startSeconds <= OFF_HORIZON_S) {
                 this.seccoCut(wc, output, ch, portKey, perfAt(wc.endSeconds));   // PLAN 1l step 5
                 output.send([0x80 | ch, wc.sonifyNote, 0], Math.max(onAt + 1, perfAt(wc.endSeconds)));
+                centreBend(Math.max(onAt + 1, perfAt(wc.endSeconds)) + 2);   // [2j.8] the residue cure
                 rec.offScheduled = true;
             }
             this._activeCurvePlayback[wc.id] = rec;

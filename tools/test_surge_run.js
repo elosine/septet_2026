@@ -119,12 +119,15 @@ ok(!(DEV.surge && DEV.surge.curveZero) && !(DEV.surge && DEV.surge.curveFloor > 
   ok(texts.length === 6, 'six "sempre secco" texts on the page (got ' + texts.length + ')');
   const firsts = PARTS.map(p => swells.find(e => partOfEv.get(e.id) === p));
   let placed = 0;
+  const GAP = C.engraving.layout.seccoGapSs != null ? C.engraving.layout.seccoGapSs : 0.15;
   for (const e of firsts) {
     const p = partOfEv.get(e.id);
     const t = texts.find(x => String(x.sys).split(':')[0] === String(p));
-    if (t && near(t.t, e.onset + e.duration) && t.anchor === 'start') placed++;
+    // [2j.2, §540] at the cut edge's TOP: top-justified on the curve's top (yAt 'top'), the "s" the staccato-dot gap right of the edge
+    if (t && near(t.t, e.onset + e.duration) && t.anchor === 'start' && t.yAt === 'top' && Math.abs(t.dxSs - GAP) < 1e-9 && t.ySs == null) placed++;
   }
-  ok(placed === 6, 'each on its part\'s first swell, left-justified on the cut edge (got ' + placed + ')');
+  ok(Math.abs(GAP - 0.15) < 1e-9, 'the gap is the staccato-dot gap, 0.15 ss (registry seccoGapSs = ' + GAP + ')');
+  ok(placed === 6, 'each on its part\'s first swell, at the cut edge\'s top: top-justified on the curve\'s top, 0.15 ss right of the edge (got ' + placed + ')');
   console.log('  sempre secco at: ' + firsts.map(e => ens.parts[partOfEv.get(e.id)].short + ' ' + (e.onset + e.duration).toFixed(2)).join(' · '));
 }
 

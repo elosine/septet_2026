@@ -22,7 +22,7 @@
   "date": "2026-09-16",
   "tool": "tools/notate_section.js (profile trance) --bricks --trills --trillRate 100",
   "notes": "Derived extraction (B1). Segmentation: DB-6 greedy IOI runs, TOL 0.015 s. Regenerable; authored content belongs in overlays only. TRILLS (PLAN 2f.3): 69 trill zone(s) as env trill; 11 eaten note(s) (mutedBy) not extracted; 0 trill(s) read a flat level. BRICKS MODE: all chunks forced unresolved (working file).",
-  "build": "node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --trillRate 100 --id piece-septet --beamsThrough --rests16 --cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1 --morph grp-morph-01 --morph grp-morph-03 --pairBeam wc-1769,wc-1770 --pairBeam wc-1774,wc-1775 --pairBeam wc-1785,wc-1786 --ensembleDyn 205-428@2 --groups 444-624.1 --groupCuts 2@587.32,611.72 --max16 --dynOnChange 444-624.1"
+  "build": "node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --trillRate 100 --id piece-septet --beamsThrough --rests16 --cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1 --morph grp-morph-01 --morph grp-morph-03 --pairBeam wc-1769,wc-1770 --pairBeam wc-1774,wc-1775 --pairBeam wc-1785,wc-1786 --ensembleDyn 205-428@2 --groups 444-624.1 --groupCuts 2@587.32,611.5 --threes 2+1 --max16 --dynOnChange 444-624.1"
  },
  "events": [
   {
@@ -3530,7 +3530,7 @@
     "objectId": "wc-899"
    },
    "onset": 36.127,
-   "duration": 0.04999999999999716,
+   "duration": 0.963,
    "pitch": {
     "midi": 68,
     "spelled": {
@@ -3539,7 +3539,7 @@
      "octave": 4
     }
    },
-   "technique": "senza_vel",
+   "technique": "gettato_vel",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -3552,7 +3552,7 @@
     "objectId": "wc-900"
    },
    "onset": 36.25,
-   "duration": 0.06700000000000017,
+   "duration": 0.767,
    "pitch": {
     "midi": 64,
     "spelled": {
@@ -3561,7 +3561,7 @@
      "octave": 4
     }
    },
-   "technique": "senza_vel",
+   "technique": "bartok_vel",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -4234,7 +4234,7 @@
     "objectId": "wc-825"
    },
    "onset": 43.103,
-   "duration": 0.06400000000000006,
+   "duration": 0.88,
    "pitch": {
     "midi": 85,
     "spelled": {
@@ -4243,7 +4243,7 @@
      "octave": 6
     }
    },
-   "technique": "senza_vel",
+   "technique": "gettato_vel",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -4300,7 +4300,7 @@
     "objectId": "wc-828"
    },
    "onset": 43.328,
-   "duration": 0.0799999999999983,
+   "duration": 0.66,
    "pitch": {
     "midi": 78,
     "spelled": {
@@ -4309,7 +4309,7 @@
      "octave": 5
     }
    },
-   "technique": "senza_vel",
+   "technique": "bartok_vel",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -4784,7 +4784,7 @@
     "objectId": "wc-851"
    },
    "onset": 49.517,
-   "duration": 0.04999999999999716,
+   "duration": 0.617,
    "pitch": {
     "midi": 74,
     "spelled": {
@@ -4793,7 +4793,7 @@
      "octave": 5
     }
    },
-   "technique": "senza_vel",
+   "technique": "bartok_vel",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -4837,7 +4837,7 @@
      "octave": 7
     }
    },
-   "technique": "senza_vel",
+   "technique": "gettato_vel",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -4850,7 +4850,7 @@
     "objectId": "wc-854"
    },
    "onset": 49.679,
-   "duration": 0.04999999999999716,
+   "duration": 0.64,
    "pitch": {
     "midi": 84,
     "spelled": {
@@ -4859,7 +4859,7 @@
      "octave": 6
     }
    },
-   "technique": "senza_vel",
+   "technique": "bartok_vel",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -5158,7 +5158,7 @@
     "objectId": "wc-869"
    },
    "onset": 58.873,
-   "duration": 0.07200000000000273,
+   "duration": 1.083,
    "pitch": {
     "midi": 62,
     "spelled": {
@@ -5167,7 +5167,7 @@
      "octave": 4
     }
    },
-   "technique": "senza_vel",
+   "technique": "gettato_vel",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -5336,14 +5336,14 @@
    "onset": 59.561,
    "duration": 0.07200000000000273,
    "pitch": {
-    "midi": 65,
+    "midi": 53,
     "spelled": {
      "step": "F",
      "alter": 0,
-     "octave": 4
+     "octave": 3
     }
    },
-   "technique": "ord",
+   "technique": "pizzicato",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -29146,7 +29146,7 @@
     "objectId": "wc-1034"
    },
    "onset": 114.441,
-   "duration": 0.06099999999999284,
+   "duration": 0.7,
    "pitch": {
     "midi": 65,
     "spelled": {
@@ -29155,7 +29155,7 @@
      "octave": 4
     }
    },
-   "technique": "senza_vel",
+   "technique": "bartok_vel",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -29674,7 +29674,7 @@
     "objectId": "wc-1058"
    },
    "onset": 119.669,
-   "duration": 0.06100000000000705,
+   "duration": 0.7,
    "pitch": {
     "midi": 65,
     "spelled": {
@@ -29683,7 +29683,7 @@
      "octave": 4
     }
    },
-   "technique": "senza_vel",
+   "technique": "bartok_vel",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -29850,7 +29850,7 @@
     "objectId": "wc-1066"
    },
    "onset": 120.982,
-   "duration": 0.06900000000000261,
+   "duration": 1.083,
    "pitch": {
     "midi": 62,
     "spelled": {
@@ -29859,7 +29859,7 @@
      "octave": 4
     }
    },
-   "technique": "senza_vel",
+   "technique": "gettato_vel",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -30224,7 +30224,7 @@
     "objectId": "wc-1083"
    },
    "onset": 123.344,
-   "duration": 0.05000000000001137,
+   "duration": 1.033,
    "pitch": {
     "midi": 56,
     "spelled": {
@@ -30233,7 +30233,7 @@
      "octave": 3
     }
    },
-   "technique": "senza_vel",
+   "technique": "gettato_vel",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -41900,7 +41900,7 @@
     "objectId": "wc-1278"
    },
    "onset": 167.895,
-   "duration": 0.08799999999999386,
+   "duration": 0.533,
    "pitch": {
     "midi": 76,
     "spelled": {
@@ -41909,7 +41909,7 @@
      "octave": 5
     }
    },
-   "technique": "senza_vel",
+   "technique": "bartok_vel",
    "provenance": "derived",
    "env": "strike",
    "mode": "plain",
@@ -45662,7 +45662,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 72
+   "vel": 109
   },
   {
    "id": "ev-wc-1431",
@@ -46179,7 +46179,7 @@
    "technique": "main",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 55
+   "vel": 90
   },
   {
    "id": "ev-wc-1435",
@@ -47337,7 +47337,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 72
+   "vel": 109
   },
   {
    "id": "ev-wc-1444",
@@ -47730,7 +47730,7 @@
    "technique": "main",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 94
+   "vel": 109
   },
   {
    "id": "ev-wc-1447",
@@ -49136,7 +49136,7 @@
    "technique": "main",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 90
+   "vel": 72
   },
   {
    "id": "ev-wc-1458",
@@ -49777,7 +49777,7 @@
    "technique": "main",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 55
+   "vel": 18
   },
   {
    "id": "ev-wc-1463",
@@ -52093,7 +52093,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 93
+   "vel": 109
   },
   {
    "id": "ev-wc-1481",
@@ -52610,7 +52610,7 @@
    "technique": "main",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 31
+   "vel": 109
   },
   {
    "id": "ev-wc-1485",
@@ -52879,7 +52879,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 76
+   "vel": 90
   },
   {
    "id": "ev-wc-1487",
@@ -53789,7 +53789,7 @@
    "technique": "main",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 43
+   "vel": 18
   },
   {
    "id": "ev-wc-1494",
@@ -54182,7 +54182,7 @@
    "technique": "main",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 18
+   "vel": 9
   },
   {
    "id": "ev-wc-1497",
@@ -54451,7 +54451,7 @@
    "technique": "main",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 18
+   "vel": 9
   },
   {
    "id": "ev-wc-3071",
@@ -55216,7 +55216,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 90
+   "vel": 18
   },
   {
    "id": "ev-wc-3073",
@@ -57677,7 +57677,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 105
+   "vel": 90
   },
   {
    "id": "ev-wc-1775",
@@ -57698,7 +57698,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 118
+   "vel": 90
   },
   {
    "id": "ev-wc-1700",
@@ -59125,7 +59125,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 110
+   "vel": 90
   },
   {
    "id": "ev-wc-1711",
@@ -60262,7 +60262,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 90
+   "vel": 72
   },
   {
    "id": "ev-wc-1782",
@@ -60283,7 +60283,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 108
+   "vel": 72
   },
   {
    "id": "ev-wc-1719",
@@ -60924,7 +60924,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 104
+   "vel": 90
   },
   {
    "id": "ev-wc-1784",
@@ -60945,7 +60945,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 107
+   "vel": 90
   },
   {
    "id": "ev-wc-3087",
@@ -61834,7 +61834,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 112
+   "vel": 90
   },
   {
    "id": "ev-wc-1732",
@@ -61979,7 +61979,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 108
+   "vel": 90
   },
   {
    "id": "ev-wc-1734",
@@ -63488,7 +63488,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 100
+   "vel": 90
   },
   {
    "id": "ev-wc-1790",
@@ -63509,7 +63509,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 101
+   "vel": 90
   },
   {
    "id": "ev-wc-1746",
@@ -64171,7 +64171,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 98
+   "vel": 72
   },
   {
    "id": "ev-wc-1751",
@@ -64936,7 +64936,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 94
+   "vel": 72
   },
   {
    "id": "ev-wc-1796",
@@ -64957,7 +64957,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 84
+   "vel": 72
   },
   {
    "id": "ev-wc-1757",
@@ -65970,7 +65970,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 78
+   "vel": 9
   },
   {
    "id": "ev-wc-1800",
@@ -65991,7 +65991,7 @@
    "technique": "plucked",
    "provenance": "derived",
    "mode": "plain",
-   "vel": 76
+   "vel": 9
   },
   {
    "id": "ev-wc-2052",
@@ -109093,7 +109093,7 @@
     49.634,
     56.831
    ],
-   "class": "ord-sustained",
+   "class": "fixed-oneshot",
    "strategy": "unresolved",
    "events": [
     "ev-wc-853"
@@ -117196,7 +117196,7 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-52a",
      "clusterId": "cl-52",
-     "beamUnit": 0.11230000000000219,
+     "beamUnit": 0.1125000000000022,
      "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
@@ -117234,46 +117234,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-52a",
      "clusterId": "cl-52",
-     "beamUnit": 0.11230000000000219,
+     "beamUnit": 0.1125000000000022,
      "beamPos": 2,
-     "beamLevels": 2,
-     "beamSubdivision": 4,
-     "rest16Before": true,
-     "ringBar": false,
-     "nhHead": "filled",
-     "nhHeadScale": 0.844,
-     "nhDot": true,
-     "nhDotGapSs": 0.15,
-     "noteUnits": 1,
-     "noteBeams": 2,
-     "beamThrough": true,
-     "beamOverRest": true,
-     "nhArtic": "accent",
-     "beamHasArtic": "accent",
-     "dynOnChange": true
-    }
-   },
-   "provenance": "authored"
-  },
-  {
-   "id": "ov-cl-52-ev-wc-2340",
-   "kind": "engraving",
-   "target": {
-    "event": "ev-wc-2340"
-   },
-   "value": {
-    "device": {
-     "goLine": false,
-     "gc": false,
-     "dynBesideStem": false,
-     "dynMark": "band",
-     "nhUnit": true,
-     "nhStem": "beam",
-     "nhAnchor": "leftEdge",
-     "beamGroup": "cl-52a",
-     "clusterId": "cl-52",
-     "beamUnit": 0.11230000000000219,
-     "beamPos": 4,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117295,10 +117257,10 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-53-ev-wc-2341",
+   "id": "ov-cl-53-ev-wc-2340",
    "kind": "engraving",
    "target": {
-    "event": "ev-wc-2341"
+    "event": "ev-wc-2340"
    },
    "value": {
     "device": {
@@ -117311,8 +117273,45 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-53a",
      "clusterId": "cl-53",
-     "beamUnit": 0.22000000000000425,
+     "beamUnit": 0.22100000000000428,
      "beamPos": 0,
+     "beamLevels": 2,
+     "beamSubdivision": 4,
+     "rest16Before": true,
+     "ringBar": false,
+     "nhHead": "filled",
+     "nhHeadScale": 0.844,
+     "nhDot": true,
+     "nhDotGapSs": 0.15,
+     "noteUnits": 1,
+     "noteBeams": 2,
+     "beamThrough": true,
+     "nhArtic": "accent",
+     "beamHasArtic": "accent",
+     "dynOnChange": true
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-cl-53-ev-wc-2341",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-2341"
+   },
+   "value": {
+    "device": {
+     "goLine": false,
+     "gc": false,
+     "dynBesideStem": false,
+     "dynMark": "band",
+     "nhUnit": true,
+     "nhStem": "beam",
+     "nhAnchor": "leftEdge",
+     "beamGroup": "cl-53a",
+     "clusterId": "cl-53",
+     "beamUnit": 0.22100000000000428,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117348,8 +117347,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-53a",
      "clusterId": "cl-53",
-     "beamUnit": 0.22000000000000425,
-     "beamPos": 1,
+     "beamUnit": 0.22100000000000428,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117385,8 +117384,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-53a",
      "clusterId": "cl-53",
-     "beamUnit": 0.22000000000000425,
-     "beamPos": 2,
+     "beamUnit": 0.22100000000000428,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117406,7 +117405,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-53-ev-wc-2344",
+   "id": "ov-cl-54-ev-wc-2344",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2344"
@@ -117414,16 +117413,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-53a",
-     "clusterId": "cl-53",
-     "beamUnit": 0.22000000000000425,
-     "beamPos": 3,
+     "beamGroup": "cl-54a",
+     "clusterId": "cl-54",
+     "beamUnit": 0.21600000000000413,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117451,7 +117450,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -117459,8 +117458,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-54a",
      "clusterId": "cl-54",
-     "beamUnit": 0.2146000000000041,
-     "beamPos": 0,
+     "beamUnit": 0.21600000000000413,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117496,8 +117495,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-54a",
      "clusterId": "cl-54",
-     "beamUnit": 0.2146000000000041,
-     "beamPos": 1,
+     "beamUnit": 0.21600000000000413,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117533,8 +117532,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-54a",
      "clusterId": "cl-54",
-     "beamUnit": 0.2146000000000041,
-     "beamPos": 2,
+     "beamUnit": 0.21600000000000413,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117554,7 +117553,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-54-ev-wc-2348",
+   "id": "ov-cl-55-ev-wc-2348",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2348"
@@ -117562,16 +117561,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-54a",
-     "clusterId": "cl-54",
-     "beamUnit": 0.2146000000000041,
-     "beamPos": 3,
+     "beamGroup": "cl-55a",
+     "clusterId": "cl-55",
+     "beamUnit": 0.211000000000004,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117599,7 +117598,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -117607,8 +117606,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-55a",
      "clusterId": "cl-55",
-     "beamUnit": 0.21000000000000396,
-     "beamPos": 0,
+     "beamUnit": 0.211000000000004,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117644,8 +117643,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-55a",
      "clusterId": "cl-55",
-     "beamUnit": 0.21000000000000396,
-     "beamPos": 1,
+     "beamUnit": 0.211000000000004,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117681,8 +117680,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-55a",
      "clusterId": "cl-55",
-     "beamUnit": 0.21000000000000396,
-     "beamPos": 2,
+     "beamUnit": 0.211000000000004,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117702,7 +117701,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-55-ev-wc-2352",
+   "id": "ov-cl-56-ev-wc-2352",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2352"
@@ -117710,16 +117709,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-55a",
-     "clusterId": "cl-55",
-     "beamUnit": 0.21000000000000396,
-     "beamPos": 3,
+     "beamGroup": "cl-56a",
+     "clusterId": "cl-56",
+     "beamUnit": 0.20600000000000385,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117747,7 +117746,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -117755,8 +117754,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-56a",
      "clusterId": "cl-56",
-     "beamUnit": 0.20500000000000382,
-     "beamPos": 0,
+     "beamUnit": 0.20600000000000385,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117792,8 +117791,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-56a",
      "clusterId": "cl-56",
-     "beamUnit": 0.20500000000000382,
-     "beamPos": 1,
+     "beamUnit": 0.20600000000000385,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117829,8 +117828,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-56a",
      "clusterId": "cl-56",
-     "beamUnit": 0.20500000000000382,
-     "beamPos": 2,
+     "beamUnit": 0.20600000000000385,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117850,7 +117849,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-56-ev-wc-2356",
+   "id": "ov-cl-57-ev-wc-2356",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2356"
@@ -117858,16 +117857,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-56a",
-     "clusterId": "cl-56",
-     "beamUnit": 0.20500000000000382,
-     "beamPos": 3,
+     "beamGroup": "cl-57a",
+     "clusterId": "cl-57",
+     "beamUnit": 0.2012000000000037,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117895,7 +117894,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -117903,8 +117902,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-57a",
      "clusterId": "cl-57",
-     "beamUnit": 0.20020000000000368,
-     "beamPos": 0,
+     "beamUnit": 0.2012000000000037,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117940,8 +117939,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-57a",
      "clusterId": "cl-57",
-     "beamUnit": 0.20020000000000368,
-     "beamPos": 1,
+     "beamUnit": 0.2012000000000037,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117977,8 +117976,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-57a",
      "clusterId": "cl-57",
-     "beamUnit": 0.20020000000000368,
-     "beamPos": 2,
+     "beamUnit": 0.2012000000000037,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -117998,7 +117997,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-57-ev-wc-2360",
+   "id": "ov-cl-58-ev-wc-2360",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2360"
@@ -118006,16 +118005,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-57a",
-     "clusterId": "cl-57",
-     "beamUnit": 0.20020000000000368,
-     "beamPos": 3,
+     "beamGroup": "cl-58a",
+     "clusterId": "cl-58",
+     "beamUnit": 0.19680000000000358,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118043,7 +118042,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -118051,8 +118050,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-58a",
      "clusterId": "cl-58",
-     "beamUnit": 0.19540000000000354,
-     "beamPos": 0,
+     "beamUnit": 0.19680000000000358,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118088,8 +118087,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-58a",
      "clusterId": "cl-58",
-     "beamUnit": 0.19540000000000354,
-     "beamPos": 1,
+     "beamUnit": 0.19680000000000358,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118125,8 +118124,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-58a",
      "clusterId": "cl-58",
-     "beamUnit": 0.19540000000000354,
-     "beamPos": 2,
+     "beamUnit": 0.19680000000000358,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118146,7 +118145,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-58-ev-wc-2364",
+   "id": "ov-cl-59-ev-wc-2364",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2364"
@@ -118154,16 +118153,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-58a",
-     "clusterId": "cl-58",
-     "beamUnit": 0.19540000000000354,
-     "beamPos": 3,
+     "beamGroup": "cl-59a",
+     "clusterId": "cl-59",
+     "beamUnit": 0.19200000000000345,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118191,7 +118190,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -118199,8 +118198,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-59a",
      "clusterId": "cl-59",
-     "beamUnit": 0.19100000000000342,
-     "beamPos": 0,
+     "beamUnit": 0.19200000000000345,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118236,8 +118235,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-59a",
      "clusterId": "cl-59",
-     "beamUnit": 0.19100000000000342,
-     "beamPos": 1,
+     "beamUnit": 0.19200000000000345,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118273,8 +118272,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-59a",
      "clusterId": "cl-59",
-     "beamUnit": 0.19100000000000342,
-     "beamPos": 2,
+     "beamUnit": 0.19200000000000345,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118294,7 +118293,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-59-ev-wc-2368",
+   "id": "ov-cl-60-ev-wc-2368",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2368"
@@ -118302,16 +118301,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-59a",
-     "clusterId": "cl-59",
-     "beamUnit": 0.19100000000000342,
-     "beamPos": 3,
+     "beamGroup": "cl-60a",
+     "clusterId": "cl-60",
+     "beamUnit": 0.18780000000000333,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118339,7 +118338,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -118347,8 +118346,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-60a",
      "clusterId": "cl-60",
-     "beamUnit": 0.18640000000000329,
-     "beamPos": 0,
+     "beamUnit": 0.18780000000000333,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118384,8 +118383,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-60a",
      "clusterId": "cl-60",
-     "beamUnit": 0.18640000000000329,
-     "beamPos": 1,
+     "beamUnit": 0.18780000000000333,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118421,8 +118420,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-60a",
      "clusterId": "cl-60",
-     "beamUnit": 0.18640000000000329,
-     "beamPos": 2,
+     "beamUnit": 0.18780000000000333,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118442,7 +118441,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-60-ev-wc-2372",
+   "id": "ov-cl-61-ev-wc-2372",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2372"
@@ -118450,16 +118449,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-60a",
-     "clusterId": "cl-60",
-     "beamUnit": 0.18640000000000329,
-     "beamPos": 3,
+     "beamGroup": "cl-61a",
+     "clusterId": "cl-61",
+     "beamUnit": 0.1832000000000032,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118487,7 +118486,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -118495,8 +118494,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-61a",
      "clusterId": "cl-61",
-     "beamUnit": 0.18220000000000316,
-     "beamPos": 0,
+     "beamUnit": 0.1832000000000032,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118532,8 +118531,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-61a",
      "clusterId": "cl-61",
-     "beamUnit": 0.18220000000000316,
-     "beamPos": 1,
+     "beamUnit": 0.1832000000000032,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118569,8 +118568,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-61a",
      "clusterId": "cl-61",
-     "beamUnit": 0.18220000000000316,
-     "beamPos": 2,
+     "beamUnit": 0.1832000000000032,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118590,7 +118589,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-61-ev-wc-2376",
+   "id": "ov-cl-62-ev-wc-2376",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2376"
@@ -118598,16 +118597,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-61a",
-     "clusterId": "cl-61",
-     "beamUnit": 0.18220000000000316,
-     "beamPos": 3,
+     "beamGroup": "cl-62a",
+     "clusterId": "cl-62",
+     "beamUnit": 0.17920000000000308,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118635,7 +118634,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -118643,8 +118642,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-62a",
      "clusterId": "cl-62",
-     "beamUnit": 0.17820000000000305,
-     "beamPos": 0,
+     "beamUnit": 0.17920000000000308,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118680,8 +118679,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-62a",
      "clusterId": "cl-62",
-     "beamUnit": 0.17820000000000305,
-     "beamPos": 1,
+     "beamUnit": 0.17920000000000308,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118717,8 +118716,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-62a",
      "clusterId": "cl-62",
-     "beamUnit": 0.17820000000000305,
-     "beamPos": 2,
+     "beamUnit": 0.17920000000000308,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118738,7 +118737,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-62-ev-wc-2380",
+   "id": "ov-cl-63-ev-wc-2380",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2380"
@@ -118746,16 +118745,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-62a",
-     "clusterId": "cl-62",
-     "beamUnit": 0.17820000000000305,
-     "beamPos": 3,
+     "beamGroup": "cl-63a",
+     "clusterId": "cl-63",
+     "beamUnit": 0.17480000000000295,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118783,7 +118782,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -118791,8 +118790,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-63a",
      "clusterId": "cl-63",
-     "beamUnit": 0.17420000000000294,
-     "beamPos": 0,
+     "beamUnit": 0.17480000000000295,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118828,8 +118827,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-63a",
      "clusterId": "cl-63",
-     "beamUnit": 0.17420000000000294,
-     "beamPos": 1,
+     "beamUnit": 0.17480000000000295,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118865,8 +118864,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-63a",
      "clusterId": "cl-63",
-     "beamUnit": 0.17420000000000294,
-     "beamPos": 2,
+     "beamUnit": 0.17480000000000295,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118886,7 +118885,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-63-ev-wc-2384",
+   "id": "ov-cl-64-ev-wc-2384",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2384"
@@ -118894,16 +118893,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-63a",
-     "clusterId": "cl-63",
-     "beamUnit": 0.17420000000000294,
-     "beamPos": 3,
+     "beamGroup": "cl-64a",
+     "clusterId": "cl-64",
+     "beamUnit": 0.17080000000000284,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118931,7 +118930,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -118939,8 +118938,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-64a",
      "clusterId": "cl-64",
-     "beamUnit": 0.17000000000000282,
-     "beamPos": 0,
+     "beamUnit": 0.17080000000000284,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -118976,8 +118975,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-64a",
      "clusterId": "cl-64",
-     "beamUnit": 0.17000000000000282,
-     "beamPos": 1,
+     "beamUnit": 0.17080000000000284,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119013,8 +119012,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-64a",
      "clusterId": "cl-64",
-     "beamUnit": 0.17000000000000282,
-     "beamPos": 2,
+     "beamUnit": 0.17080000000000284,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119034,7 +119033,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-64-ev-wc-2388",
+   "id": "ov-cl-65-ev-wc-2388",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2388"
@@ -119042,16 +119041,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-64a",
-     "clusterId": "cl-64",
-     "beamUnit": 0.17000000000000282,
-     "beamPos": 3,
+     "beamGroup": "cl-65a",
+     "clusterId": "cl-65",
+     "beamUnit": 0.16720000000000274,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119079,7 +119078,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -119087,8 +119086,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-65a",
      "clusterId": "cl-65",
-     "beamUnit": 0.1660000000000027,
-     "beamPos": 0,
+     "beamUnit": 0.16720000000000274,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119124,8 +119123,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-65a",
      "clusterId": "cl-65",
-     "beamUnit": 0.1660000000000027,
-     "beamPos": 1,
+     "beamUnit": 0.16720000000000274,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119161,8 +119160,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-65a",
      "clusterId": "cl-65",
-     "beamUnit": 0.1660000000000027,
-     "beamPos": 2,
+     "beamUnit": 0.16720000000000274,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119182,7 +119181,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-65-ev-wc-2392",
+   "id": "ov-cl-66-ev-wc-2392",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2392"
@@ -119190,16 +119189,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-65a",
-     "clusterId": "cl-65",
-     "beamUnit": 0.1660000000000027,
-     "beamPos": 3,
+     "beamGroup": "cl-66a",
+     "clusterId": "cl-66",
+     "beamUnit": 0.16320000000000262,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119227,7 +119226,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -119235,8 +119234,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-66a",
      "clusterId": "cl-66",
-     "beamUnit": 0.1622000000000026,
-     "beamPos": 0,
+     "beamUnit": 0.16320000000000262,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119272,8 +119271,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-66a",
      "clusterId": "cl-66",
-     "beamUnit": 0.1622000000000026,
-     "beamPos": 1,
+     "beamUnit": 0.16320000000000262,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119309,8 +119308,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-66a",
      "clusterId": "cl-66",
-     "beamUnit": 0.1622000000000026,
-     "beamPos": 2,
+     "beamUnit": 0.16320000000000262,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119330,7 +119329,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-66-ev-wc-2396",
+   "id": "ov-cl-67-ev-wc-2396",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2396"
@@ -119338,16 +119337,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-66a",
-     "clusterId": "cl-66",
-     "beamUnit": 0.1622000000000026,
-     "beamPos": 3,
+     "beamGroup": "cl-67a",
+     "clusterId": "cl-67",
+     "beamUnit": 0.1592000000000025,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119375,7 +119374,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -119383,8 +119382,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-67a",
      "clusterId": "cl-67",
-     "beamUnit": 0.15840000000000248,
-     "beamPos": 0,
+     "beamUnit": 0.1592000000000025,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119420,8 +119419,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-67a",
      "clusterId": "cl-67",
-     "beamUnit": 0.15840000000000248,
-     "beamPos": 1,
+     "beamUnit": 0.1592000000000025,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119457,8 +119456,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-67a",
      "clusterId": "cl-67",
-     "beamUnit": 0.15840000000000248,
-     "beamPos": 2,
+     "beamUnit": 0.1592000000000025,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119478,7 +119477,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-67-ev-wc-2400",
+   "id": "ov-cl-68-ev-wc-2400",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2400"
@@ -119486,16 +119485,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-67a",
-     "clusterId": "cl-67",
-     "beamUnit": 0.15840000000000248,
-     "beamPos": 3,
+     "beamGroup": "cl-68a",
+     "clusterId": "cl-68",
+     "beamUnit": 0.1554000000000024,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119523,7 +119522,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -119531,8 +119530,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-68a",
      "clusterId": "cl-68",
-     "beamUnit": 0.15480000000000238,
-     "beamPos": 0,
+     "beamUnit": 0.1554000000000024,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119568,8 +119567,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-68a",
      "clusterId": "cl-68",
-     "beamUnit": 0.15480000000000238,
-     "beamPos": 1,
+     "beamUnit": 0.1554000000000024,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119605,8 +119604,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-68a",
      "clusterId": "cl-68",
-     "beamUnit": 0.15480000000000238,
-     "beamPos": 2,
+     "beamUnit": 0.1554000000000024,
+     "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119626,7 +119625,7 @@
    "provenance": "authored"
   },
   {
-   "id": "ov-cl-68-ev-wc-2404",
+   "id": "ov-cl-69-ev-wc-2404",
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2404"
@@ -119634,16 +119633,16 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": false,
+     "gc": true,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
      "nhStem": "beam",
      "nhAnchor": "leftEdge",
-     "beamGroup": "cl-68a",
-     "clusterId": "cl-68",
-     "beamUnit": 0.15480000000000238,
-     "beamPos": 3,
+     "beamGroup": "cl-69a",
+     "clusterId": "cl-69",
+     "beamUnit": 0.1518000000000023,
+     "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119671,7 +119670,7 @@
    "value": {
     "device": {
      "goLine": false,
-     "gc": true,
+     "gc": false,
      "dynBesideStem": false,
      "dynMark": "band",
      "nhUnit": true,
@@ -119679,8 +119678,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-69a",
      "clusterId": "cl-69",
-     "beamUnit": 0.15120000000000228,
-     "beamPos": 0,
+     "beamUnit": 0.1518000000000023,
+     "beamPos": 1,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119716,8 +119715,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-69a",
      "clusterId": "cl-69",
-     "beamUnit": 0.15120000000000228,
-     "beamPos": 1,
+     "beamUnit": 0.1518000000000023,
+     "beamPos": 2,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -119753,44 +119752,7 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-69a",
      "clusterId": "cl-69",
-     "beamUnit": 0.15120000000000228,
-     "beamPos": 2,
-     "beamLevels": 2,
-     "beamSubdivision": 4,
-     "rest16Before": true,
-     "ringBar": false,
-     "nhHead": "filled",
-     "nhHeadScale": 0.844,
-     "nhDot": true,
-     "nhDotGapSs": 0.15,
-     "noteUnits": 1,
-     "noteBeams": 2,
-     "beamThrough": true,
-     "nhArtic": "accent",
-     "beamHasArtic": "accent",
-     "dynOnChange": true
-    }
-   },
-   "provenance": "authored"
-  },
-  {
-   "id": "ov-cl-69-ev-wc-2408",
-   "kind": "engraving",
-   "target": {
-    "event": "ev-wc-2408"
-   },
-   "value": {
-    "device": {
-     "goLine": false,
-     "gc": false,
-     "dynBesideStem": false,
-     "dynMark": "band",
-     "nhUnit": true,
-     "nhStem": "beam",
-     "nhAnchor": "leftEdge",
-     "beamGroup": "cl-69a",
-     "clusterId": "cl-69",
-     "beamUnit": 0.15120000000000228,
+     "beamUnit": 0.1518000000000023,
      "beamPos": 3,
      "beamLevels": 2,
      "beamSubdivision": 4,
@@ -120212,7 +120174,7 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-75a",
      "clusterId": "cl-75",
-     "beamUnit": 0.18579999999999586,
+     "beamUnit": 0.18699999999999573,
      "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
@@ -120250,46 +120212,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-75a",
      "clusterId": "cl-75",
-     "beamUnit": 0.18579999999999586,
+     "beamUnit": 0.18699999999999573,
      "beamPos": 2,
-     "beamLevels": 2,
-     "beamSubdivision": 4,
-     "rest16Before": true,
-     "ringBar": false,
-     "nhHead": "filled",
-     "nhHeadScale": 0.844,
-     "nhDot": true,
-     "nhDotGapSs": 0.15,
-     "noteUnits": 1,
-     "noteBeams": 2,
-     "beamThrough": true,
-     "beamOverRest": true,
-     "nhArtic": "accent",
-     "beamHasArtic": "accent",
-     "dynOnChange": true
-    }
-   },
-   "provenance": "authored"
-  },
-  {
-   "id": "ov-cl-75-ev-wc-3053",
-   "kind": "engraving",
-   "target": {
-    "event": "ev-wc-3053"
-   },
-   "value": {
-    "device": {
-     "goLine": false,
-     "gc": false,
-     "dynBesideStem": false,
-     "dynMark": "band",
-     "nhUnit": true,
-     "nhStem": "beam",
-     "nhAnchor": "leftEdge",
-     "beamGroup": "cl-75a",
-     "clusterId": "cl-75",
-     "beamUnit": 0.18579999999999586,
-     "beamPos": 4,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -121251,7 +121175,7 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-88a",
      "clusterId": "cl-88",
-     "beamUnit": 0.17249999999999732,
+     "beamUnit": 0.1734999999999972,
      "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
@@ -121289,46 +121213,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-88a",
      "clusterId": "cl-88",
-     "beamUnit": 0.17249999999999732,
+     "beamUnit": 0.1734999999999972,
      "beamPos": 2,
-     "beamLevels": 2,
-     "beamSubdivision": 4,
-     "rest16Before": true,
-     "ringBar": false,
-     "nhHead": "filled",
-     "nhHeadScale": 0.844,
-     "nhDot": true,
-     "nhDotGapSs": 0.15,
-     "noteUnits": 1,
-     "noteBeams": 2,
-     "beamThrough": true,
-     "beamOverRest": true,
-     "nhArtic": "accent",
-     "beamHasArtic": "accent",
-     "dynOnChange": true
-    }
-   },
-   "provenance": "authored"
-  },
-  {
-   "id": "ov-cl-88-ev-wc-3061",
-   "kind": "engraving",
-   "target": {
-    "event": "ev-wc-3061"
-   },
-   "value": {
-    "device": {
-     "goLine": false,
-     "gc": false,
-     "dynBesideStem": false,
-     "dynMark": "band",
-     "nhUnit": true,
-     "nhStem": "beam",
-     "nhAnchor": "leftEdge",
-     "beamGroup": "cl-88a",
-     "clusterId": "cl-88",
-     "beamUnit": 0.17249999999999732,
-     "beamPos": 4,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -121366,7 +121252,7 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-89a",
      "clusterId": "cl-89",
-     "beamUnit": 0.16149999999999853,
+     "beamUnit": 0.16249999999999842,
      "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
@@ -121404,46 +121290,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-89a",
      "clusterId": "cl-89",
-     "beamUnit": 0.16149999999999853,
+     "beamUnit": 0.16249999999999842,
      "beamPos": 2,
-     "beamLevels": 2,
-     "beamSubdivision": 4,
-     "rest16Before": true,
-     "ringBar": false,
-     "nhHead": "filled",
-     "nhHeadScale": 0.844,
-     "nhDot": true,
-     "nhDotGapSs": 0.15,
-     "noteUnits": 1,
-     "noteBeams": 2,
-     "beamThrough": true,
-     "beamOverRest": true,
-     "nhArtic": "accent",
-     "beamHasArtic": "accent",
-     "dynOnChange": true
-    }
-   },
-   "provenance": "authored"
-  },
-  {
-   "id": "ov-cl-89-ev-wc-3068",
-   "kind": "engraving",
-   "target": {
-    "event": "ev-wc-3068"
-   },
-   "value": {
-    "device": {
-     "goLine": false,
-     "gc": false,
-     "dynBesideStem": false,
-     "dynMark": "band",
-     "nhUnit": true,
-     "nhStem": "beam",
-     "nhAnchor": "leftEdge",
-     "beamGroup": "cl-89a",
-     "clusterId": "cl-89",
-     "beamUnit": 0.16149999999999853,
-     "beamPos": 4,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -121558,7 +121406,7 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-91a",
      "clusterId": "cl-91",
-     "beamUnit": 0.16879999999999773,
+     "beamUnit": 0.17199999999999738,
      "beamPos": 0,
      "beamLevels": 2,
      "beamSubdivision": 4,
@@ -121596,46 +121444,8 @@
      "nhAnchor": "leftEdge",
      "beamGroup": "cl-91a",
      "clusterId": "cl-91",
-     "beamUnit": 0.16879999999999773,
+     "beamUnit": 0.17199999999999738,
      "beamPos": 2,
-     "beamLevels": 2,
-     "beamSubdivision": 4,
-     "rest16Before": true,
-     "ringBar": false,
-     "nhHead": "filled",
-     "nhHeadScale": 0.844,
-     "nhDot": true,
-     "nhDotGapSs": 0.15,
-     "noteUnits": 1,
-     "noteBeams": 2,
-     "beamThrough": true,
-     "beamOverRest": true,
-     "nhArtic": "accent",
-     "beamHasArtic": "accent",
-     "dynOnChange": true
-    }
-   },
-   "provenance": "authored"
-  },
-  {
-   "id": "ov-cl-91-ev-wc-2479",
-   "kind": "engraving",
-   "target": {
-    "event": "ev-wc-2479"
-   },
-   "value": {
-    "device": {
-     "goLine": false,
-     "gc": false,
-     "dynBesideStem": false,
-     "dynMark": "band",
-     "nhUnit": true,
-     "nhStem": "beam",
-     "nhAnchor": "leftEdge",
-     "beamGroup": "cl-91a",
-     "clusterId": "cl-91",
-     "beamUnit": 0.16879999999999773,
-     "beamPos": 4,
      "beamLevels": 2,
      "beamSubdivision": 4,
      "rest16Before": true,
@@ -124472,6 +124282,20 @@
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2522"
+   },
+   "value": {
+    "device": {
+     "dynMark": "band",
+     "dynOnChange": true
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-dynchg-ev-wc-2479",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-2479"
    },
    "value": {
     "device": {
@@ -132140,6 +131964,20 @@
    "provenance": "authored"
   },
   {
+   "id": "ov-dynchg-ev-wc-3053",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-3053"
+   },
+   "value": {
+    "device": {
+     "dynMark": "band",
+     "dynOnChange": true
+    }
+   },
+   "provenance": "authored"
+  },
+  {
    "id": "ov-dynchg-ev-wc-2885",
    "kind": "engraving",
    "target": {
@@ -132280,6 +132118,20 @@
    "provenance": "authored"
   },
   {
+   "id": "ov-dynchg-ev-wc-3061",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-3061"
+   },
+   "value": {
+    "device": {
+     "dynMark": "band",
+     "dynOnChange": true
+    }
+   },
+   "provenance": "authored"
+  },
+  {
    "id": "ov-dynchg-ev-wc-3062",
    "kind": "engraving",
    "target": {
@@ -132340,6 +132192,34 @@
    "kind": "engraving",
    "target": {
     "event": "ev-wc-2899"
+   },
+   "value": {
+    "device": {
+     "dynMark": "band",
+     "dynOnChange": true
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-dynchg-ev-wc-3068",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-3068"
+   },
+   "value": {
+    "device": {
+     "dynMark": "band",
+     "dynOnChange": true
+    }
+   },
+   "provenance": "authored"
+  },
+  {
+   "id": "ov-dynchg-ev-wc-2408",
+   "kind": "engraving",
+   "target": {
+    "event": "ev-wc-2408"
    },
    "value": {
     "device": {

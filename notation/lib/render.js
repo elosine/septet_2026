@@ -254,8 +254,11 @@
           parts.push('<polygon points="' + fwd.concat(back).join(' ') + '"/>');
         } else if (it.k === 'text') {
           if (!inWin(it.t)) continue;
-          parts.push('<text x="' + X(it.t, it.dxSs).toFixed(1) + '" y="' + Y(it.ySs).toFixed(1) + '" font-size="' + ((it.size || 1) * ssPx * E.textScale).toFixed(1) +
-            '"' + fontAttr + (it.anchor && it.anchor !== 'start' ? ' text-anchor="' + it.anchor + '"' : '') + (it.italic ? ' font-style="italic"' : '') + ' xml:space="preserve" fill="' + (it.color || o.muted) + '">' + esc(it.text) + '</text>');
+          // [2j.2, §540] yAt 'top': the text's TOP on the system's top edge — where a surge curve's cut edge peaks (the envcurve
+          // is drawn to sys.yTopPx) — through the hanging baseline; "sempre secco" is the one user so far
+          const yTxt = it.yAt === 'top' ? sys.yTopPx : Y(it.ySs);
+          parts.push('<text x="' + X(it.t, it.dxSs).toFixed(1) + '" y="' + yTxt.toFixed(1) + '" font-size="' + ((it.size || 1) * ssPx * E.textScale).toFixed(1) +
+            '"' + fontAttr + (it.anchor && it.anchor !== 'start' ? ' text-anchor="' + it.anchor + '"' : '') + (it.italic ? ' font-style="italic"' : '') + (it.yAt === 'top' ? ' dominant-baseline="hanging"' : '') + ' xml:space="preserve" fill="' + (it.color || o.muted) + '">' + esc(it.text) + '</text>');
         } else if (it.k === 'attackline') {
           if (!inWin(it.t)) continue;
           // M4: a vertical stroke straddling the pitch position
