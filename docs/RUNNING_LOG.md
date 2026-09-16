@@ -14928,3 +14928,36 @@ marks were later derived from the ensemble (D50, 2026-09-14); nothing ever fed t
 in the direction he chose — the sound follows the page.)
 
 **Decided:** nothing new; the collection is open.
+
+**His follow-up, same day:** *"Can you explain the proposed fix more simply? I just want the render to reflect the marked notation as much as possible. Is that what you're proposing here? I don't think I understand the marks versus the ensemble."* — answered: yes, exactly that. Each piano note has a written mark (the page) and a stored loudness number (what the sampler plays); the mark was derived from the ensemble's curve (D50), the number set by ear, and nothing ever made them agree. The fix changes the numbers to match the marks; the page does not move; the render then plays what the page says.
+
+## §545. Proofing note 4 — the piano's 2 · 3 · 4 at 611 and the groups of three: his (c) measured and recommended; the alternatives; the other triples (2026-09-16, Fable 5.1)
+
+**His words:** CN-87, verbatim (the compound-meter risk of ONE-two · ONE-two-three · ONE-two-three-four; three options weighed, the third —
+rebeam the fours from the triple's third note, the last note its own GC — *"may be the best solution"*; *"if there's any alternatives, let me know"*).
+
+**Measured (the MAIN IR):** the piano's run from 581.21 — 16 singles · 41 pairs · the triple **611.05 · 611.28 · 611.50** · 17 fours 611.72 → 624.00
+(the last four 623.55 · 623.70 · 623.85 · 624.00). From the triple's third note to the end: **69 notes = 17 fours + 1**, every gap 0.150–0.222 s;
+the pair stretch 587.32 → 611.28: **84 notes = 42 pairs**. So his (c) is exact: **42 pairs · 17 fours from 611.50 · the last note (624.00) its own
+GC** — duple all the way down, and the run's last impulse (the piano's last note in the piece) an arrival with its own GC. **Recommended.**
+
+**The alternatives, for the record:**
+- (B) the odd note as a single at the START of the fours: 42 pairs · 1 · 17 fours — a pickup into the fours, not compound; weaker than (c)
+  (the single ends nothing) but keeps the run closing on a four.
+- (C) compose it away: one strike MORE after 624.00 → 42 pairs · 17 fours · a closing pair (duple, symmetrical); one FEWER (drop 624.00) → the
+  fours end exactly. Composition, not notation — only if the ending wants it.
+- (A′) his own rejected pair — the GC on the third note (2 · 1 · 4…) and the five (2 · 5 · 4…): both make a third size in a row; agreed.
+
+**The other groups of three (D51's), measured:** Vn1 620.56 · 620.93 · 621.30 — isolated (no other group within 3 s in the part): a lone three
+reads as a figure, not a meter — leave. Vc 488.51 · 488.86 · 489.18 after a pair at 487.76 — a 2 · 3, borderline. Va 622.01 · 622.36 · 622.70
+then 623.20 · 623.52 · 623.84 — **3 · 3 back to back, the clearest risk of the four**; 0.50 s apart, so the gap rule keeps them separate runs
+(no 2 + 4 merge); each as 2 + 1 (a pair and a single GC), or a note moved, or left — his ear.
+
+**The principle (CN-87, the AI's reading):** the compound feel lives in the SEQUENCE the ear counts (2 · 3 · 4, or 3 · 3), not in a three
+itself; the odd note goes where it reads as an event — the arrival at the end, or a pickup at the front.
+
+**The fix, when the pass closes:** `--groupCuts 2@587.32,611.50` with the fours counted from the cut FORWARD and the remainder a single at
+the END — a small addition to `notate_section` (today the fours are cut from the end, §522) · `test_cross_staff` re-pinned (41 · 1 · 17 →
+42 · 0 · 17 + the 624.00 single; 153 grouped → 152 + 1) · NOTATION_STANDARDS §2's run row updated. Collected as PLAN 2j.4.
+
+**Decided:** nothing yet — his word on (c) and on the Va pair of triples.

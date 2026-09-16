@@ -1834,3 +1834,20 @@ covering it). Three things it joins: **CN-42** (the rondo whose refrain is a mor
 **CN-51** (a counterpoint of timbres after Sciarrino — the same composer, now a specific work as the reference) · **CN-31** (the sparse
 pointillistic multitempo writing — a candidate for the figures). The reference to study when piece #6 opens: Sciarrino, *Raffigurar Narciso
 al fonte*. For the morph tool's revision: MORPH_NOTES §3, same date.
+
+## CN-87 — 2026-09-16: an odd number of strikes without the compound-meter feel (the piano's run at 611; the groups of three)
+
+**Composer, verbatim (proofing the notation, PLAN 2j note 4):** *"in the piano at 611.1, give me some alternatives to 2 beamed then 3beamed
+then 4 beamed; and in general to the 3 beamed groups; This risks to sound a bit like compound meter, especially this, these three groups in
+the piano context. so in otherwords, how to deal with an odd number without sounding like compound meter so ONE-two, ONE-two-three,
+ONE-two-three-four; I've considered using another GC on just the one or the third one. So it would go one, two, one, one, two, three, four.
+But that reinforces the same feel. Also considered making them five. So it'd be one, two, one, two, three, four, five, one, two, three, four.
+But I think that also reinforces that compound feel. Also, we can rebeam all of the groups of four and just leave the last note at the end its
+own GC. So in other words, it would be one, two, one, two, and then the third partial of the three group would start a new four and just
+move on down to the end. And then the last partial of the piece in the piano would just be its own GC. That may be the best solution. I, if
+there's any alternatives, let me know."*
+
+*(AI's reading, kept separate:)* the compound feel is not in the group of three itself but in the SEQUENCE the ear counts — 2 · 3 · 4 in a row,
+or 3 · 3 back to back. A lone three among strikes reads as a figure. So the principle: never let the odd note make a third group-size in a
+row; park it where it reads as an event — the arrival at the end (his (c)), or a pickup at the front. His (c) on the run's numbers: 42 pairs ·
+17 fours from 611.50 · the last note of the piano in the piece its own GC. RUNNING_LOG §545 for the alternatives and the other triples.
