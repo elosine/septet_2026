@@ -14906,3 +14906,25 @@ of, in section three, every dynamic, new dynamic, it needs some sort of siempre 
 **Decided:** nothing — his word on the line; if yes it goes on the NITS performance-instructions list beside the others.
 
 **His word, same day:** *"yes add the line to the instructions list"* — added to the NITS performance-instructions list beside the pedal, l.v., secco and curve lines.
+
+## §544. Proofing note 3 — the piano's section-2 dynamics: what he heard on the page's MIDI is what the render plays; 29 of the 44 notes sound a band other than their written mark (2026-09-16, Fable 5.1)
+
+**His words:** *"in the piano parts in section 2 seems some of the dynamics aren't picked up in the midi, This isn't worth too much effort and
+troubleshooting, but let's see if we can't have the notated dynamics reflected in the final audio render."*
+
+**Measured (the MAIN IR against the save):** the piano's 44 section-2 notes (205.85–427.75 s; 32 plucked, 12 ordinary) are all captured-note
+(`plain`) mode — they sound at `recVel` on the page's MIDI and in the composer's playback alike (§442's item 6), so the render has the same
+loudness he heard. Their marks are D50's — derived from the ensemble's level at the note, never from the piano's own velocity — and **29 of 44
+play a band other than their mark.** The far ones: 278.34 plays p (31) under a written ff · 318.48 f (90) under pp · 427.75 mf (78 · 76) under
+ppp · 250.29 mp under pp · the 345–402 plucks ff (104–118) under f · 369.92 f and ff under mf. Fifteen already agree.
+
+**Collected as PLAN 2j.3, not fixed.** The fix, minimal, as he asked: the 29 take their mark's step value (`recVel` ← the score's eight-step
+scale — the field `stepDynamics()` writes, §520), the 15 in band untouched; Save → R (the marks do not move — D50 reads the ensemble); the
+re-render (2i.9) carries the sound. A note for his ear after: the three big moves (278.34 up two bands, 318.48 down three, 427.75 down four)
+are what the notation has been claiming all along.
+
+*(Why the mismatch exists — a reading, not measured:* the piano's morph-section velocities were set by his ear against the sampler while the
+marks were later derived from the ensemble (D50, 2026-09-14); nothing ever fed the marks back into the sound. This note closes that loop
+in the direction he chose — the sound follows the page.)
+
+**Decided:** nothing new; the collection is open.
