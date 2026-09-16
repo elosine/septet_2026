@@ -14961,3 +14961,9 @@ the END — a small addition to `notate_section` (today the fours are cut from t
 42 · 0 · 17 + the 624.00 single; 153 grouped → 152 + 1) · NOTATION_STANDARDS §2's run row updated. Collected as PLAN 2j.4.
 
 **Decided:** nothing yet — his word on (c) and on the Va pair of triples.
+
+**His verdicts on the threes, as they come (2026-09-16):** *"vc at 488 2+2+1"* — the pair at 487.76 stays; the three at 488.51 becomes the pair 488.51 · 488.86 and the single 489.18 with its own GC. Into PLAN 2j.4.
+*"pno at end my solution, 2s then 4s then last one single"* — DECIDED: the piano's run 42 pairs · 17 fours from 611.50 · 624.00 its own GC (his (c), §545). Into PLAN 2j.4.
+*"va at 622 all 2s instead of 4s"* — the AI's reading: the two threes as three pairs, 622.01·622.36 | 622.70·623.20 | 623.52·623.84; the middle pair's 0.50 s gap is over the pair trigger, so a dictated cluster — to confirm at fix time. Into PLAN 2j.4.
+→ on the middle pair's 0.50 s gap: *"no then 2+1 , 2+1"* — DECIDED: each Va three as a pair and a single GC — 622.01·622.36 + 622.70 · 623.20·623.52 + 623.84. Into PLAN 2j.4.
+*"vn1 at 620 leave it"* — DECIDED: the Vn1 three stays. All five threes ruled on (Vc 2+2+1 · Pno 2s, 4s, last single · Vn1 stays · Va 2+1, 2+1); asked for any others: there are none — the five are the piece's every group of three (measured §545).
