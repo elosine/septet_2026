@@ -15337,3 +15337,9 @@ last ring is heard. (The tuba lost 0.5 s the same way — 751.42 vs 751.92 — t
 `export_video.js --ir piece-septet --view video --fps 30 --cut <scratch>/cut53.json --fade 5 --fadeMode cross --t1 630.1 --audio
 notation/audio/piece-septet.wav --out notation/video/renders/piece-septet-V-CUT-seed53.mp4`. Clip speed ~25 fps → ~13 min for 18 903 frames.
 **Guards:** `test_septet_notation` 101 green after the registry's new `video-cut` realization.
+
+## §561. His pick: seed 53; his eye on the transitions: good (2026-09-16, Opus 5)
+
+**His word:** *"a, seed 53 — clips look good"* — (a) the recommended seed (two close-ups in every section, one top and one bottom each) and
+the 5-frame cross-dissolve on septet frames approved. `notation/video/cut-list.json` written by `make_cut.js --seed 53` (committed, as the
+tuba's was); its timeline identical to the scratch copy the running render uses. 2i.10.3 and 2i.10.4 closed.
