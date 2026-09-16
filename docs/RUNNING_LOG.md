@@ -14991,3 +14991,26 @@ in the six parts outside those windows) so it cannot recur silently.
 **His addition, same day:** *"and trills are exception as well"* — the rule reads: outside the morph sections, the surge run and the trills. Checked: none of the 14 sits inside or within 2 s of a trill in its part (the 69 trills span 63.7–148.8 s); the list stands. PLAN 2j.5 updated.
 **His word on the open question, same day:** *"va vc always jete"* — the viola and cello strikes are jeté (gettato_vel), the violins Bartók; PLAN 2j.5 closed on its articulations.
 **His precision, same day:** *"in the trills section, there are one shots very close or between trills. So just make sure we distinguish those. The actual trills themselves, not percussive, just the ordinaro or senza vibrato. But the ones in between that have the GCs, those get the percussive treatment."* — so the exception is the trill NOTES (env trill), not a time window: every GC one-shot is percussive wherever it falls, the trill span included. The audit already read it so (strikes by env); the four offenders at 114.44–123.34 inside the trill span are his "ones in between". PLAN 2j.5 reworded.
+
+## §547. Proofing note 6 — the violin's morph-section dynamics: what he heard is the page's MIDI (a known gap); the render's capture follows the curve on rotating channels; his ear on the render owed (2026-09-16, Fable 5.1)
+
+**His words:** *"in the morph section, the violin volume slash dynamics doesn't seem to correspond to the curve. Again, this is only impacts
+the audio render, but if there's a relatively easy fix to this, we can try it. It might have something to do with the CC7 round robin. I can't
+remember if we used several tracks for the CC7 or just one, but we might have to, if it's the round robin, we might have to set the next one
+well before it's routed and used at the next breath."*
+
+**Measured (the MAIN IR against the render's capture `midi/piece-septet.capture.json`):**
+- **The page's MIDI is not the reference for these notes:** §442 item 4 — the morph section's held (curve-mode) notes play on the notation
+  page at velocity 100 with the anchor-scale CC7, so their loudness cannot follow the curve there. He was soloing on the page's MIDI (§538).
+- **The render's capture follows the curve.** Vn1 has 27 morph-section curve notes (209.4 … ), none overlapping. Each takes its own curve
+  channel in rotation — ch 2 → 3 → 4 (D11's pool, CN-50's round robin), pre-armed 0.15 s before its onset (the composer's prearm; his "set
+  the next one well before" is already so). The CC7 stream tracks the level: 215.50 → 221.88 (6.4 s): CC7 114 · 125 · 120 · 115 · 108 at
+  the quarter points against the IR level 0.65 · 0.86 · 0.78 · 0.67 · 0.53; 221.94 → 227.94: 108 · 112 · 109 · 118 · 104 against 0.27 · 0.37 ·
+  0.29 · 0.45 · 0.60. No round-robin fault visible.
+- **What remains is the ear:** the measured CC7 map (E0) puts levels 0.27–0.92 on CC 104–127 — a narrow band; if the render's loudness reads
+  flat to him, the suspect is the map's compression on the Xsample strings (or the fade weight, D32), not the rotation.
+
+**Collected as PLAN 2j.6, not fixed.** **His ear owed on ♪ render at 209–228 s** (no solo there). A fix only if the render is wrong; if it
+is, the candidates are the CC7 map's range for the strings' curve channels and the fade weight — measured before touched.
+
+**Decided:** nothing new; the collection is open.
