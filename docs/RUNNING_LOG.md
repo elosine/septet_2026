@@ -15343,3 +15343,22 @@ notation/audio/piece-septet.wav --out notation/video/renders/piece-septet-V-CUT-
 **His word:** *"a, seed 53 — clips look good"* — (a) the recommended seed (two close-ups in every section, one top and one bottom each) and
 the 5-frame cross-dissolve on septet frames approved. `notation/video/cut-list.json` written by `make_cut.js --seed 53` (committed, as the
 tuba's was); its timeline identical to the scratch copy the running render uses. 2i.10.3 and 2i.10.4 closed.
+
+## §562. 2i.10.5 RENDERED · 2i.10.6 the proof — three of four checks done; his eye on the film owed (2026-09-16, Opus 5)
+
+**The render (seed 53, cross 5, `--t1 630.1`):** 14.8 min · 21.3 fps · 85 page rasters for 18 903 frames · ffmpeg exit 0 ·
+`notation/video/renders/piece-septet-V-CUT-seed53.mp4` 53.8 MB (gitignored) · 1920 × 1080 h264 + aac 256 k.
+
+**The tuba's PHASE 5, on the septet:**
+
+| check | measured |
+|---|---|
+| duration equality | video **18 903 frames = 630.100 s** at 30 fps · audio **630.100 s** = the WAV · format 630.100 s |
+| A/V offset | `start_time 0.000000` on both streams (the WAV at `-ss 0`: structural) |
+| spot frames vs the live app | §558: pages 1 and 50, six systems + the furniture identical to his page (SVG, group by group) |
+| cut sources, with a control | frames pulled from the mp4 vs a direct probe of the RIGHT source / the WRONG one (pixels off by > 32 levels): t 30 wide **1.213 %** / 15.012 % · t 70 V-BOT **0.455 %** / 11.056 % (V-TOP) and 15.172 % (wide) · t 130 V-TOP **0.463 %** / 10.910 % · t 628 (held) vs the 625 wide probe **2.067 %** / 9.273 % |
+| the hold | mp4 frames 625.0 · 626.0 · 628.0 · 630.07 within **0.005 %** of each other (control 620 vs 625: 0.433 %) — the picture rests, the tail rings |
+
+**Read (the AI's):** the right-source figures are codec loss, not error — the wide frames lose more than the close-ups (1.2–2.1 % vs 0.46 %)
+because yuv420p halves the chroma of thin magenta lines and the wide shot carries more of them at a smaller scale (625 s: 32 781 magenta px;
+30 s: 20 057); the wrong-source controls sit 5–30× higher. **Open: his eye on the film** (the fourth check, as in #4).
