@@ -14987,3 +14987,6 @@ note is re-taken; Save → R; the re-render carries the sound. **A rule for NOTA
 in the six parts outside those windows) so it cannot recur silently.
 
 **Decided:** nothing new; the collection is open.
+
+**His addition, same day:** *"and trills are exception as well"* — the rule reads: outside the morph sections, the surge run and the trills. Checked: none of the 14 sits inside or within 2 s of a trill in its part (the 69 trills span 63.7–148.8 s); the list stands. PLAN 2j.5 updated.
+**His word on the open question, same day:** *"va vc always jete"* — the viola and cello strikes are jeté (gettato_vel), the violins Bartók; PLAN 2j.5 closed on its articulations.
