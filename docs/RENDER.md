@@ -54,3 +54,9 @@ Then: the notation page (CTRL+SHIFT+R) → the MAIN file → **♪ render** → 
   equal. Render: 150 s · 630.100 s · float true peak **+2.0 dBTP** (would have clipped at 24-bit) · −22.7 LUFS · LRA 14.1 · gain **−3.0 dB** →
   **−1.0 dBTP** · first sound 3.7 ms after the first onset. The first attempt stopped on Reaper's MIDI-import prompt → items now built
   directly (`tools/reaper_midi_place.js`). Linked: ♪ render ✓ on the MAIN file. His ear on the sync: pending.
+- **2026-09-16 — the re-render, PLAN 2i.9** (RUNNING_LOG §553–§554). `piece-septet.json` as saved 16:03. Capture: 37 627 frames, 20 789
+  messages, 0 writes. Checks: trill notes 2066/2066, notes 1737/1737, 11 eaten silent, 0 hanging, **bend (e): 183 bent notes, every bend in
+  place, none on a bent channel** (the check now reads each instrument's measured range — the Xsample parts bend ~1 st). Reaper: 14 items by
+  name, counts equal. Render: 141 s · 630.100 s · float true peak **+1.9 dBTP** · −21.8 LUFS · LRA 13.8 · gain **−2.9 dB** → **−1.0 dBTP** ·
+  first sound 3.7 ms after the first onset. The first attempt refused on the bridge guard's heartbeat race → the tool now waits for the
+  heartbeat to name the render tab. His ear: pending.

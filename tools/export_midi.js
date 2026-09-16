@@ -128,7 +128,16 @@ function writeType0(abs, name, events) {
   // (e) [PLAN 2j.7–2j.8, RUNNING_LOG §548–§549] THE PITCH BEND: no note-on lands on a channel left bent by an earlier note (a bent
   //     note's channel is centred again at its exit), and a morph note's own bend is in place BEFORE its note-on (pre-armed). The
   //     first render started 45 of the 78 surge swells on bent channels (Va +84 c) and 62 morph notes at the written key.
+  //     Each port's bend range is its instrument's MEASURED one (sandbox/instruments.js MEASURED_BEND, the composer's bend14Of): the
+  //     Xsample parts bend ~1 st, the flute 2 — a fixed 199 c flagged 122 correct pre-arms as late at the 2026-09-16 re-render.
   {
+    const vm = require('vm');
+    const INST = vm.runInNewContext(fs.readFileSync(path.join(ROOT, 'sandbox', 'instruments.js'), 'utf8') + '\n;INSTRUMENTS;', {});
+    const rangeOfPort = new Map();
+    for (const I of Object.values(INST)) {
+      const ports = [I.port].concat(((I.channels && I.channels.curve) || []).map(c => c && c.port));
+      for (const p of ports) if (p && !rangeOfPort.has(lc(p))) rangeOfPort.set(lc(p), I.bendRangeSt || 1.99);
+    }
     const bentNotes = expect.notes.filter(n => n.bend0 != null);
     const findBent = (port, ch, pitch, t) => bentNotes.find(n => lc(n.port) === port && n.ch === ch && n.pitch === pitch && Math.abs(n.t0 - t) <= 0.01);
     const lastBend = new Map(); const onBent = [], lateBend = [];
@@ -139,7 +148,7 @@ function writeType0(abs, name, events) {
       const b = lastBend.get(k), bn = findBent(port, ch, e[2][1], e[1]);
       if (!bn) { if (b != null && b !== 8192) onBent.push(port + ' ch' + (ch + 1) + ' ' + e[2][1] + '@' + e[1].toFixed(3) + ' bend ' + b); continue; }
       if (Math.abs(bn.bend0) < 1) continue;   // a bend of nothing needs no message
-      const want = Math.round(8192 + (Math.round(bn.bend0) / 199) * 8192);   // the measured range (sonify_core BEND_RANGE_CENTS); ±40 units ≈ ±1 c covers an instrument's own range
+      const want = Math.max(0, Math.min(16383, Math.round(8192 + (Math.round(bn.bend0) / (100 * (rangeOfPort.get(port) || 1.99))) * 8192)));   // ±40 units ≈ ±½ c at 1 st, ±1 c at 2
       if (b == null || Math.abs(b - want) > 40) lateBend.push(bn.id + '@' + bn.t0.toFixed(3) + ' bend ' + (b == null ? 'none' : b) + ' wanted ' + want);
     }
     if (onBent.length) fails.push(onBent.length + ' note-ons on a channel still bent by an earlier note, e.g. ' + onBent.slice(0, 4).join(', '));

@@ -15171,3 +15171,74 @@ presentation override; the performance score (PLAN 3) decides its own form at it
 
 **Decided:** nothing new — D55 built as written. **One AI call, his to overturn:** the presentation override lives on `video-jury` (which
 print borrows) rather than a new `presentation` realization key — one block, two exporters; a rename is a one-line move when 2b adapts them.
+
+## §553. Sitting F, step 9 — the re-render: the capture clean; the export refused on its own new bend check, the CHECK wrong (a fixed 199 c against ~1 st Xsample bends); fixed, the export green (2026-09-16, session 13, Opus 5)
+
+**His word:** *"rack saved, reaper up, go"* — after the postclear playback (checkpoint #4).
+
+**Before:** :5300 up (200) · `scores/piece-septet.json` saved 16:03:18 and the rack 16:03:01, a minute before the go · the bridge heartbeat
+current (0.2.1, Reaper 7.72/x64, `septet_rack.rpp`, 15 tracks).
+
+**The capture** (`node tools/capture_composer_midi.js`): 37 627 frames, 20 789 messages (§453: 20 565), **0 writes refused** · 810.2 s of wall time.
+
+**The export refused** — check (e), new at §550: *"122 morph notes whose bend is not in place at the note-on, e.g. wc-1413@189.521 bend 8108
+wanted 8151 …"* · 183 bent notes checked, no note-on on a bent channel.
+
+**Read, not guessed:**
+1. The misses were small and all ≈ 2× the wanted offset from centre: −84 vs −41 · +253 vs +123 · −338 vs −165. Not a centred (8192) bend,
+   so not a missing pre-arm.
+2. wc-1413 (bass clarinet, ch 3, pitch 60, `bend0` −1.4 c): the capture sends **8108 at 189.433** — the pre-arm, 88 ms before the note-on at
+   189.521 — then 8025 at 189.717 and 7941 at 191.533: **one cent = ~84 units**, not 41. The save's `morphBend` starts [0, −1.4], [0.773, −1.8].
+3. Units per cent over every checked note, by port: basscl 83.5–84 · vc 84.3–84.5 · vn2 84–84.5 · va 82.7–82.8 · vn1 85–85.4 · **fluteb 40.9–41**.
+4. The composer's `bend14Of` (composer.html, §2j.7) divides by `100 × inst.bendRangeSt`; `sandbox/instruments.js` MEASURED_BEND (the probe,
+   2026-09-07): flute 2 · bass clarinet **0.98** · Vn1 **0.96** · Vn2 **0.97** · Va **0.99** · Vc **0.97**. Predicted units per cent 41 · 83.6 ·
+   85.3 · 84.5 · 82.7 · 84.5 — **every port exactly as captured.**
+
+**Diagnosis:** the playback is right — every morph note's bend IS pre-armed, through its instrument's measured range. The check (§550, the
+AI's) wrote `want` with the tuba's fixed 199 c (`sonify_core BEND_RANGE_CENTS`) and a comment that ±40 units "covers an instrument's own
+range" — true for the flute, false for the five Xsample parts at ~1 st.
+
+**Fixed:** `tools/export_midi.js` check (e) reads `sandbox/instruments.js` (the tools' `vm` idiom), maps each port — the instrument's own and
+its curve ports (the flute's `Fluteb`) — to its `bendRangeSt`, and computes `want` with the composer's own formula (clamped, `|| 1.99`).
+**Rejected:** re-capturing with the range recorded per note (13 more minutes for a number the recipe already holds); widening the tolerance
+(it would blind the check to a real miss at 1 st, where 40 units is already ½ c).
+
+**The export, re-run on the same capture — green:** bend 183 checked, every bend in place, no note-on on a bent channel · trill notes
+**2066/2066** (69 zones) · notes **1737/1737** (§453: 1739) · 11 eaten silent · 0 hanging · read-back ok · `midi/piece-septet.mid` 14 tracks +
+tempo, 627.12 s · Flute 464 · Fluteb 44 · BassCl 518 ×2 · Piano 772 ×4 · Vn1 485 · Vn2 484 · Va 500 · Vc 536. Then `render_reaper.js`.
+
+## §554. Sitting F, step 9 — RENDERED: the bridge guard's race found and closed; the second render clean, measured, linked (2026-09-16, session 13, Opus 5)
+
+**The first run of `render_reaper.js` stopped at step 3:** *"1. reaper\piece-septet_render.rpp ← the rack (saved 2026-09-16T20:03) ·
+2. opened in a new tab · 15 tracks · RENDER FAILED: bridge job failed: refusing: Reaper has piece-septet_render.rpp open, this repo expects
+septet_rack"*. Nothing placed; the rack never written.
+
+**Read:** `render_reaper.js` sets the guard (`REAPER_PROJECT`) from the heartbeat when it spawns a job; `reaper_job.js` reads the heartbeat
+AGAIN before sending. The message itself is the evidence: at the tool's read the heartbeat still named the rack, at the client's read the
+render tab — the two reads straddled the heartbeat's update right after the open job returned. §453's run passed only because Reaper was
+still loading (its note: "the setup job passed only because Reaper was busy loading"); §453's fix named the open project but left the race.
+
+**Fixed:** after the open job, the tool waits (250 ms polls, 30 s limit) until the heartbeat names the render tab; from then on both reads
+agree until the close. **Recovered:** the empty render tab closed through the bridge (checked: current = the render copy, not dirty → action
+40860 → current = `septet_rack.rpp`); waited for the heartbeat to name the rack; the tool re-run from the start.
+
+**The render (piece-septet as saved 2026-09-16 16:03, captured 20:17):**
+
+| measured off the file | this render | §453 (2026-09-13) |
+|---|---|---|
+| placed, by name | 14 items at 0:00, counts equal, 60 BPM | same |
+| offline render | 141 s · 242.0 MB float | 150 s |
+| length | **630.100 s** (30 244 800 samples) | 630.100 s |
+| true peak (float) | **+1.9 dBTP** · sample +1.9 dBFS | +2.0 · +1.7 |
+| loudness | **−21.8 LUFS** · LRA **13.8 LU** | −22.7 · 14.1 |
+| gain to −1 dBTP | **−2.9 dB**, plain | −3.0 dB |
+| `notation/audio/piece-septet.wav` | 24-bit · −1.0 dBTP · −1.0 dBFS · −24.7 LUFS | −1.0 dBTP |
+| sync | first onset 0.608 s · first sound 0.6117 s (**3.7 ms**) | 3.7 ms |
+
+**Read of the numbers (the AI's):** 0.9 LU louder overall with the peak a tenth lower — consistent with the piano's section-2 velocities
+raised to their marks (2j.3: e.g. 278.34 p 31 → ff) and the proofing pass's changes, not a new attack peak. The float render again would have
+clipped at 24-bit (+1.9); one gain, no second render — rule 8 held.
+
+**Linked:** `/api/notation/renders` lists `piece-septet.wav`; the WAV served 200 `audio/wav`. **Not verified in his page:** a notation tab
+open on the old render holds the old audio — F5, the MAIN file, ♪ render. **His ear owed:** the sync · the piano's section-2 dynamics
+(2j.3) · the morph notes starting at their composed pitch (2j.7) · the surge run in tune (2j.8).

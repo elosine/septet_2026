@@ -79,6 +79,13 @@ local _, p = reaper.EnumProjects(-1, '')
 return { path = p, tracks = reaper.CountTracks(0) }`, 240000);
     if (!opened.path || opened.path.toLowerCase() !== RPP.toLowerCase()) throw new Error('the render project did not open: ' + JSON.stringify(opened));
     log('2. opened in a new tab · ' + opened.tracks + ' tracks');
+    // the guard reads the heartbeat twice (here, then in reaper_job.js); until the heartbeat names the new tab the two reads can
+    // straddle its update — the 2026-09-16 re-render was refused exactly so (RUNNING_LOG §553). Wait for it.
+    for (let w = Date.now(); ; await sleep(250)) {
+      const h = heartbeat();
+      if (h && h.project && path.basename(h.project).toLowerCase() === path.basename(RPP).toLowerCase()) break;
+      if (Date.now() - w > 30000) throw new Error('the heartbeat never named the render tab: ' + JSON.stringify(h));
+    }
 
     const setup = job(`local _, p = reaper.EnumProjects(-1, '')
 if p:lower() ~= (${L(RPP)}):lower() then return { error = 'wrong project: ' .. p } end

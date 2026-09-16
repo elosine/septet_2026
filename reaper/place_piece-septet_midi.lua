@@ -1,4 +1,4 @@
--- place_piece-septet_midi.lua — written by tools/export_midi.js (2026-09-13T23:55; RUNNING_LOG §453).
+-- place_piece-septet_midi.lua — written by tools/export_midi.js (2026-09-16T20:19; RUNNING_LOG §453).
 -- Run INSIDE the render project (a copy of the rack): Actions → Show action list → New action → Load ReaScript → this file → Run.
 -- Sets the tempo to 60 BPM (the files are 60 BPM / 960 PPQ), then builds each part's MIDI item on the track of the SAME NAME at 0:00 —
 -- by name, never by position (piece #4's trap: a duplicated track shifts a positional drop) — directly, with no MIDI import and so
@@ -27,7 +27,7 @@ local function place(tr, name, evt, itemEnd)
   return notes, ccs
 end
 local files = {
-  { [[Flute SI2]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\01 Flute SI2.evt]], 462 },
+  { [[Flute SI2]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\01 Flute SI2.evt]], 464 },
   { [[Flute strikes]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\02 Flute strikes.evt]], 0 },
   { [[Fluteb SI2]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\03 Fluteb SI2.evt]], 44 },
   { [[Bass Clarinet XS]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\04 Bass Clarinet XS.evt]], 518 },
@@ -37,10 +37,10 @@ local files = {
   { [[PianoPlucked Kontakt]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\08 PianoPlucked Kontakt.evt]], 772 },
   { [[PianoMute PP2]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\09 PianoMute PP2.evt]], 772 },
   { [[PianoHarm PP2]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\10 PianoHarm PP2.evt]], 772 },
-  { [[Vn1 XS]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\11 Vn1 XS.evt]], 487 },
-  { [[Vn2 XS]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\12 Vn2 XS.evt]], 485 },
+  { [[Vn1 XS]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\11 Vn1 XS.evt]], 485 },
+  { [[Vn2 XS]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\12 Vn2 XS.evt]], 484 },
   { [[Va XS]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\13 Va XS.evt]], 500 },
-  { [[Vc XS]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\14 Vc XS.evt]], 537 },
+  { [[Vc XS]], [[C:\Users\jwloy\GitHub\septet_2026\midi\piece-septet\14 Vc XS.evt]], 536 },
 }
 reaper.Undo_BeginBlock()
 reaper.PreventUIRefresh(1)
