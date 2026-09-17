@@ -16290,3 +16290,36 @@ D58's "no marks". Struck in place with the reason, as this repo's rule requires.
 
 **Owed: his eye on the whole PDF (2b.5.6)** → notes fixed in one pass → **2b.6** archive + docs.
 
+## §613. HIS EYE ON THE WHOLE PDF: the page edges — one cause, one rule (D59 proposed), designed not patched (2026-09-17, session 15, Fable 5.1)
+
+**His word, with four screenshots** (the right edge of p2; arcs and notes over the clefs at 0:17, 0:36, 1:06): *"what can we do about these edge cases; p2
+to 3; pg in the clef gutter; lots in the cleff gutter I thought that was clamped? lots more, lets find a solution that will resolve them all, try to find
+robust solution that will fix all and not result in continuous reprinting and reviewing and redoing"*.
+
+**Read, to answer it:** `splice.js` whole · `page_rules.json` · `render.js` 520–580 (the go line, the GC arc, the ring bar). **Measured** (a census from
+the IR and the print's own page plan, no rendering):
+- **GC arc: pre 0.36 s, post 0.24 s** — at the print's 144 px/s the approach is 52 px = **7.3 ss**. §404's buffer is **4.2 ss**, sized against the
+  notehead unit (3.44 ss). *That is his "I thought that was clamped": it is — for the note, never for the arc.*
+- The window is a CONSTANT 10.32 s from the cut, but the cut falls early by up to **2.37 s** (mean 0.18): everything after the cut is the NEXT page's
+  music drawn a first time and sliced by the right edge. **129 onsets are drawn on two pages (20 pages); 101 onsets have an arc cut by the right edge
+  (34 pages); 53 onsets put an arc into the gutter (26 pages).**
+- `render.js` draws a note only `inWin(onset)` but an arc whenever `[onset − pre, onset + post]` TOUCHES the window — so a strike just before the
+  window leaves an arc over the clef with no note under it (the V shapes on the clefs in his screenshots).
+- The film does all of this too and he approved it: there the overlap is right (the ball needs its approach, the page is on screen for 12 s). Paper is
+  looked at, edge by edge.
+- **Gaps ≥ pre + post (0.6 s) between any two onsets: 222 — but none at all for 82.8 s from 542 s** (section 3's close). A fix that hunts for a clean
+  gap cannot work there. **Cuts that sever a beam: 0 of 63** (stamp-atomic already holds). **221 of 1806 events last > 2 s** — held sounds cross cuts.
+
+**THE DESIGN (PLAN 2b.7): a page OWNS [cut, next cut).** Point events draw once, on the owning page, whole; long items draw on every page they cross,
+clipped to the owned span. Left reserve = the arc's approach + margin (so "clamped" becomes true of everything attached to a strike); right reserve =
+the rebound + margin; the system ENDS at the page's last owned music. Simulated: **63 → 68 pages; ~18 pages end > 0.5 s early, 10 > 1 s, max 1.86 s.**
+**The guarantee he asked for is the checker, not the rule:** `check_print_edges.js` asserts, over every page, that every IR event is drawn exactly once
+and whole and that nothing timed touches the gutter — so an edge case is a red line in the build, not something found by paging through 68 sheets.
+
+**Rejected:** widening the buffer alone (fixes the first strike's arc, leaves the doubled and sliced events and the ghost arcs) · moving cuts to silent
+gaps (none exist for the last 83 s; and gestures would be split to find them) · stretching each page's time scale to fill the width (distance is time —
+his own correction on the film, *"in page two the cursor speeds up significantly"*) · blank staff out to the right edge (reads as silence in a
+proportional score) · an SVG clip at the gutter (hides the symptom on the left, halves arcs instead of removing them, does nothing on the right).
+
+**Put to him:** the one look decision — the ragged right edge (2b.7.4). **Builder: Opus**, from the written sub-steps; the film's byte-identity is the gate.
+

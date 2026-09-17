@@ -123,8 +123,14 @@ video are still of this score.** Green: `check_print_frame` · `check_print_fron
 · `check_print_pages` (all 63 music pages carry the full frame; one terminal barline, on the last).
 **Rebuild it any time with `bash print/score/build.sh` (add `--rebuild-ir` after a Save, `--proof` for the two proof PDFs).**
 
-**Next concrete step: HIS EYE on the whole PDF (2b.5.6)** → his notes fixed in one pass (2j's way) → **2b.6 archive + docs** (the approved PDF to
-`print/score/approved/<date>/` with a README, NITS's two 2b entries closed, CLAUDE.md's Apps line, journal §2, PLANNER).
+**HIS EYE ON THE WHOLE PDF (2026-09-17, §613): THE PAGE EDGES.** Arcs and notes over the clefs, strikes sliced at the right edge. One cause — a page's
+window is wider than what it owns (129 onsets drawn twice · 101 arcs cut at the right on 34 pages · 53 arcs into the gutter on 26 pages; §404's buffer
+covers the notehead, not the GC arc's 7.3 ss approach). **Designed on Fable as PLAN 2b.7 — a page OWNS [cut, next cut): point events once and whole,
+long items clipped, left/right reserves, the system ends where the page's music ends, `check_print_edges.js` as a build gate.** Cost: 63 → 68 pages.
+
+**Next concrete step: on Opus, build PLAN 2b.7.1–2b.7.6 as written** (the film's seven-page byte-identity of §608 is the gate for the `render.js` change;
+baseline SVGs must be re-dumped first — the scratchpad does not survive a clear). **Waiting on him:** his word on 2b.7.4's ragged right edge (the AI
+recommends it). Then his eye on the re-render → **2b.6 archive + docs**.
 
 **Answered 2026-09-17 (D58, §607):** A **yes** — *Scattered Substance*, "for flute, bass clarinet, piano and string quartet" · B **no section
 marks** · C **a** — one PDF, the instructions page's demo link is enough, no Tempus copy. **Open with him:** the time ruler (he asked what it
@@ -196,7 +202,7 @@ comment beside it) · `tools/gen_morph_chart.js` (the chart) · `tools/gen_m2_ch
 |---|---|---|---|
 | ~~N0~~ | ~~the Bloom practice videos (PLAN 2h.7)~~ — **DONE 2026-09-17** (§602: "videos good", online, linked, archived) | — | — |
 | N1 | the performance instructions — PARKED: drafted and copy-edited; the pending items 2–5 in the checkpoint above, at his convenience | Opus | no |
-| **N2** | **► PLAN 2b the print score — PLANNED (§606); build 2b.1 the septet frame → 2b.2 A3 + marks → 2b.3 four proof pages, his eye** · then 2b.4 front matter (cover waits on CN-64) · 2b.5 full render, his eye · 2b.6 archive | **Opus builds** | **switch to Opus now; no clear needed (the session is short) — clear after 2b.3's proof pages** |
+| **N2** | **► PLAN 2b the print score** — 2b.1–2b.5 BUILT (§608–§612: the frame, A3, the front matter, the whole 66-page PDF, four checks green) · **NOW 2b.7 the page edges by rule (designed §613)** · then his eye → 2b.6 archive | **Opus builds 2b.7** (Fable designed it) | **yes — `/checkpoint` on Opus, `/clear`, `/postclear`, then build: this session is long and 2b.7 is a fresh chunk with a written plan** |
 | **N3** | Later, noted: the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
 | **N4** | Still his, from before: the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 

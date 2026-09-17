@@ -1807,6 +1807,31 @@ player would touch parts, solo, crop and print.
     - 2b.5.4 the PDF checks, #4's: page count = cover + 2 + N · MediaBox on every page · fonts embedded · zero raster · the file's size.
     - 2b.5.5 the AI's page-through: every page's ink inside the block · page 1 has its clefs and labels · the final barline at the end.
     - 2b.5.6 HIS EYE on the whole PDF → notes → fixed in one pass (2j's way) → "print good".
+  - **2b.7 — The page edges, by rule** — `todo — designed 2026-09-17 (Fable, RUNNING_LOG §613); runs BEFORE 2b.6` — **Result when done:** on every
+    printed page every strike is drawn exactly once and WHOLE (head, stem, marks, go line, its GC arc and impact); nothing timed sits in the clef
+    gutter; nothing is half-drawn at the right edge; and a checker proves it over all pages, so nobody pages through 60-odd sheets to find out.
+    *Why a rule and not fixes:* his screenshots (p2→3's right edge; arcs and notes over the clefs) are three faces of one fact — a page's WINDOW is
+    wider than what the page OWNS. Measured on the 63 pages: **129 onsets drawn on two pages** (the window runs a constant 10.32 s although the cut
+    fell up to 2.4 s early) · **101 onsets with an arc cut by the right edge, on 34 pages** · **53 onsets whose arc enters the gutter, on 26 pages**
+    (§404's buffer is 4.2 ss — it clears the notehead unit, 3.44 ss, and never knew about the GC arc, 0.36 s = 7.3 ss before the go line) · plus
+    "ghost" arcs over the clefs: a strike just BEFORE the window draws its arc (range test) but not its note (`inWin`).
+    **THE RULE (D59): a page OWNS [cut, next cut).** A POINT EVENT — a strike and everything attached to it — draws only on the page that owns its
+    onset, and draws whole. A LONG ITEM (ring bar, curve, trill, morph glissando, ottava; 221 events last > 2 s) draws on every page it crosses,
+    clipped at the owned span. Density cannot break it: two strikes 0.1 s apart across a cut are each whole, on their own pages (the last 83 s of
+    the piece offer no 0.6 s gap at all, so any gap-seeking fix would fail there). No cut severs a beam (0 of 63 — the splicer's stamp-atomic rule).
+    - 2b.7.1 `render.js`: `opts.owned = [a, b)`. Point kinds gate on OWNERSHIP instead of `inWin`; a GC arc gates on its strike's ownership, not on
+      range intersection; long kinds clip to the owned span. Absent = today's behaviour exactly — **the film stays byte-identical** (the 7-page
+      baseline of §608 is the proof; the film keeps its overlap on purpose: the ball needs the approach).
+    - 2b.7.2 THE LEFT RESERVE: the window opens `max(musicStartBufferSs, GC.pre + margin)` before the cut, so the first owned strike's whole arc
+      clears the gutter; the previous page's events inside that reserve are not drawn (ownership).
+    - 2b.7.3 THE RIGHT RESERVE: print plans its pages at `pageSeconds − left reserve − (GC.post + margin)`, so the last owned strike's rebound and
+      its marks are whole. Cost, simulated: **63 → 68 pages.**
+    - 2b.7.4 THE SYSTEM ENDS WHERE THE PAGE'S MUSIC ENDS (his look decision, §613): staff lines, ruler and long items stop at the cut + the right
+      reserve — a ragged right edge on the ~18 pages whose cut falls > 0.5 s early (max 1.9 s ≈ 18 % of the width). *Why:* in a proportional score
+      blank staff READS AS SILENCE; a staff that stops reads as "turn the page". The scale never changes (distance is time).
+    - 2b.7.5 `tools/check_print_edges.js`, a build gate: over ALL pages — every IR event drawn exactly ONCE across the score · every arc whole (its
+      impact present, both ends inside gutter…system end) · no timed ink left of the gutter · no point ink right of the system end.
+    - 2b.7.6 re-render; the four existing checks green; the film's seven pages byte-identical.
   - **2b.6 — Archive + docs** — `todo` — the approved PDF to `print/score/approved/<date>/` with a README (the command, the save's commit,
     the checks) · NITS's two "FOR PLAN 2b" entries closed · CLAUDE.md's Apps gains the print line · journal §2 · PLANNER.
 - **2c — Parts** — only if selected; due ~2026-10-29.
