@@ -16494,3 +16494,24 @@ for the one required checkbox on his application's declarations page, which is h
 **What is left of the piece:** **PLAN 3, the performance score** (it carries D50's acceptance line and D55's pitch form) · **PLAN 2c parts,
 only if the piece is selected** (~2026-10-29).
 
+
+## §620. SESSION 15 CLOSED — the journal trimmed, principle 18, D59 amended, §6 Done gains the print score (2026-09-17, Opus 5)
+
+**His word:** *"just close pls"* — the two session-end questions (lessons to capture · the §7 review) answered by delegation, so the AI took
+its own candidate and marked the §7 items complete **on the evidence**, saying so in place rather than asking again.
+
+**§3 Principle 18, the session's real lesson:** *A checker that tests one half of a rule is worse than no checker, because it reads as proof.*
+D59 names two classes; §615's gate tested the point half exhaustively and the long half not at all, so it printed PASS while 19 curve stubs
+sat on the score and he found them by eye. **When a rule names two classes of thing, the gate tests both, or it says in writing which one it
+does not test.** With the corollary from the same hour: **a test must assert a property of what is DRAWN, not of where the material happens to
+fall** — the first attempt asserted the latter and could never have been satisfied.
+
+**D59 amended in §4** with the correction of §616 (crossing is judged against what a page OWNS, never what it DRAWS) and with the built
+numbers. **§6 Done** gains the print score and the completed submission. **§7 Human Notes:** the title struck (confirmed, D58); the practice
+videos split — **Bloom done**, **Spectral still open**, in his own words from D48.
+
+**§2 trimmed 252 → 81 lines** and rewritten for a cold reader: what shipped, where every deliverable lives, the film's seven baseline hashes
+and the instruction to re-dump before touching `render.js`, the standing warnings including the shared `ensembleFrame`, and one line per
+earlier session. **Nothing in flight; every commit pushed.**
+
+**The one thing that is his and is not done:** the required checkbox on his application's declarations page. Flagged twice, never touched.

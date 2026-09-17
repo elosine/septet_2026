@@ -85,253 +85,82 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### STATE — 2026-09-17 (session 15, Opus 5) — **PLAN 2b CLOSED**: the print score approved and archived
+### SESSION END — 2026-09-17 (session 15, Opus 5 throughout, one mid-session clear) — **THE SUBMISSION IS COMPLETE**
 
-**His word:** *"a"* — the ragged right edge (D59) — then *"go"*. Built the same session, RUNNING_LOG §615.
+- **PLAN 2b, the print score, built and CLOSED in one day** (RUNNING_LOG §606–§618): the septet frame — `Coords.ensembleFrame`, shared
+  with the video exporter — A3 landscape drawn inside the call's ceiling, the cover, the two instructions pages, the whole score.
+- **D59, the page edges as a RULE**, after his eye on the first 66 pages: **a page owns `[cut, next cut)`.** Point events drawn once and
+  whole; long items on every page they CROSS, clipped to the drawn span; reserves derived from the GC arc itself (left 0.422 s, right
+  0.302 s); the system ends with the page's music — his **"a"**, the ragged right edge, on 19 of 68 pages, at most 1.90 s (18 % of the
+  width). 63 → 68 music pages. §615; corrected at his eye in §616 (a long item's crossing is judged against what a page OWNS, never what
+  it DRAWS — 19 curve stubs from neighbouring pages).
+- **Five build gates, each proven to fail** with its rule switched off: `check_print_frame` · `check_print_front` · `check_print_pdf` ·
+  `check_print_pages` · **`check_print_edges`** (new — the plan AND the ink).
+- **His "ok print score good" (§617)** → archived `print/score/approved/2026-09-17/`: **71 pages, 6.39 MB, A3**, sha256 `d1966ef1…`.
+- **The four items carried since §605 are settled (§619, his "these all settled")** — the instructions page is DONE — and **his
+  application is compiled** at his ask: `docs/application/Tempus-Lab2026-application-JYang.pdf`, 5 pp (form pp. 4–5 · bio · payment ×2).
 
-**Where PLAN 2b stands:** **2b.1–2b.5 BUILT and committed** (RUNNING_LOG §608–§612). The print score exists whole:
-`print/score/Scattered-Substance-score-JYang.pdf` — **66 pages** (cover · instructions ×2 · 63 of music), 6.71 MB, A3 landscape, 10.32 s/page,
-staff 7.55 mm. Rebuild it with **`bash print/score/build.sh`** (`--rebuild-ir` after a Save · `--proof` for the two proof PDFs). Four checkers are
-green and are build gates: `check_print_frame` (the printed page IS the filmed page, 4 moments) · `check_print_front` (the cover's face resolved,
-no column clipped) · `check_print_pdf` (inside DIN A3, nothing unembedded, no raster, the 4 links) · `check_print_pages` (all 63 music pages carry
-seven labels · 8 systems · 2 brackets + brace · ruler · folio; one terminal barline, on the last page).
-Three of his layout notes are in it (§610–§611). **The IR was rebuilt and came out identical apart from its date — the approved audio render and the
-approved video are still of THIS score.**
-
-**PLAN 2b.7 IS BUILT (§615): a page owns [cut, next cut).** `render.js` gained `opts.owned` and `opts.inkEnd` — sixteen point kinds gate on OWNERSHIP,
-the GC arc follows its strike instead of range intersection (the ghost arcs), five long kinds clip to the drawn span. `export_print` derives the reserves
-from `gc.js` itself (**left 0.422 s · right 0.302 s**, margin `edgeReserveMarginSs: 1.2` new in `page_rules.json`) and advances **9.60 s** while the WINDOW
-stays **10.32 s** — the scale never changes, the cost is pages only: **63 → 68.** His "a" is in: staff, ruler and long items stop at the cut + the right
-reserve (**19 pages ragged, max 1.90 s = 18 %**), and the folio now reads what the page OWNS.
-**The re-render: `print/score/Scattered-Substance-score-JYang.pdf`, 71 pages (cover · instructions ×2 · 68 of music), 6.39 MB, FIVE checks green** —
-frame · front · pdf · pages · **the new `check_print_edges`** (14 532 of 14 532 point items owned exactly once · 1304 arcs = 1304 impact dots · no timed
-ink in the gutter, none past the system end). It is a gate in `build.sh` and it is **proven to fail**: with ownership switched off for one run it read
-§613's whole census back. **The film did not move** — pages 0 · 9 · 20 · 30 · 43 · 49 · 53 byte-identical, proven twice.
-
-**HIS EYE, ROUND 1 (§616):** *"pg 2 in piano, extra from next page trill ; vc pg 14"* — a long item was gated on the span the page DRAWS instead of the span it OWNS, so 19 curve stubs from neighbouring pages sat in the reserves (his piano one was p7, his cello one p14; also 16 · 17 · 33 · 47 · 57 · 58 · 60). Fixed with one predicate, `crosses(t0,t1)`; the checker gained the test it was missing and now COUNTS THE INK — 484 curve paths over 68 pages, none from a neighbour, proven to fail on the old gate. Re-rendered, five checks green, the film byte-identical a third time.
-
-**HIS EYE, ROUND 2 (§617): "ok print score good" — ACCEPTED. 2b.6 DONE (§618): PLAN 2b IS CLOSED.**
-The approved PDF and its README are in `print/score/approved/2026-09-17/` (the PDF gitignored, as the approved video is — `.gitignore`
-gained `print/score/**/*.pdf`); NITS's two "FOR PLAN 2b" entries are struck and closed; CLAUDE.md's Apps section carries the print line,
-its five gates and the shared-frame warning. **Also done at his ask: his application compiled** —
-`docs/application/Tempus-Lab2026-application-JYang.pdf`, 5 pages (form pp. 4–5 · bio · payment ×2), each page verified.
-**FLAGGED, HIS TO DO:** the required checkbox on the declarations page still reads as an empty ☐.
-
-**THE FOUR ITEMS CARRIED SINCE §605 ARE CLOSED (§619): his *"these all settled"*.** The score-in-C line stands · the three fact flags
-stay AS WRITTEN (heard and kept — **do not raise them again**) · the tuba text is accepted · the two AI calls stand (the video link order;
-BCl + Vc take 6). **The performance instructions page is DONE.**
-
-**NEXT CONCRETE STEP — the submission is complete**, but for the one required checkbox on his application's declarations page, which is
-his to tick. What remains of the piece is **PLAN 3, the performance score** (it carries D50's acceptance line and D55's pitch form);
-**PLAN 2c parts only if the piece is selected** (~2026-10-29). Deadline **2026-10-15**.
-
-*(kept, for what round 2 was asked to look at)* **Round 2** (sent 2026-09-17) — the right edge of a page whose music stops early (**13 · 58 · 60 · 63 · 64 · 65**
-are the raggedest) and the clef gutter anywhere. On his word → **2b.6 archive + docs**: the PDF to `print/score/approved/<date>/` with a README (the
-command, the save's commit, the checks) · NITS's two "FOR PLAN 2b" entries closed · CLAUDE.md's Apps gains the print line · journal §2 · PLANNER.
-
-**Resume reads:** `docs/PLAN.md` — **2b.6** (search `2b.6 — Archive + docs`) · `docs/RUNNING_LOG.md` **§615**. Nothing else.
-
-**Model:** **Opus** (2b.6 is mechanical) · **Fable** if his eye on the ragged edge raises a look question.
-
-**Noted for whoever reads `check_print_frame` next:** its census differences at the four moments are now LARGER and will stay larger — it compares a
-print page with the film page at the same second, and ownership IS the difference between them (9.6 s owned against a 12 s window). Its real assertions
-— eight systems, seven labels, two brackets, one brace — are untouched. Not drift.
-
-**Decisions pending the composer:** his eye on the 2b.7 re-render (then 2b.6 archive) · the four items carried from N1 since §605 — the score-in-C
-line · the three fact flags on the instructions page · the tuba text he has not reviewed (the intro paragraph, the Conduction Tools' first two
-paragraphs, the Crescendos paragraph) · the AI calls he may undo (the practice-video link order; Bass Clarinet + Cello's take 6).
-
-**Deliberately uncommitted** (`git status --short`) — **his, per D40, never staged by the AI:**
-- **NEW: `docs/Tempus-Lab2026_Application_English_JYang.pdf`** (untracked) — **his filled application form** (PLAN 4). His to keep or commit; the AI
-  has not opened it.
-- `scores/piece-septet.json` (M) — his Save of 09-17 11:04. **Now proven metadata-only:** the IR rebuilt from it is identical to `bc54cdc`'s apart
-  from the date (§612), so the audio render and the video still match.
-- `reaper/septet_rack.rpp` (M) · `bank/panel_snapshots.json` (M) — his rack, his panel
-- `bank/passages/` 4materials · accentedcres01 · accentedcres01-2 · chordcyc01 · chstr02 · section3 (untracked)
-- `scores/` Sec3 · SeptetSec03-Materials-B · -C · -D · piece-septet-v1.31 · -v1.32 · -v1.33 · spectralMorph (untracked)
-- two AI copies, deletable at his call: `scores/zz-ai-run-nosecco.json` · `scores/zz-ai-1t-walk.json`
-- unsaved working copies (`node tools/unsaved_check.js`): cres-run01 · cres2strike · piano-harmonics-test · trill-curve-test · trillBuildTst · zz-ai-1t-walk
-
-**Gitignored, left on disk on purpose** (`print/score/*.pdf` is ignored — every print PDF lives on this machine only): **the score itself**
-`print/score/Scattered-Substance-score-JYang.pdf` (6.39 MB, **71 pp** — re-rendered by 2b.7, §615) · `PROOF-A3-frame.pdf` · `PROOF-front-matter.pdf` · `PROOF-density-8.5 / -10.3 /
--12.pdf` · `notation/ir/piece-septet.ir.json.bak` (the pre-rebuild snapshot, deletable) · the practice videos' archived mp4s (his to back up) ·
-`notation/audio/` — **keep `raw/demo-bloom-heldmax-float.wav`**.
-**Running:** his :5300 and Reaper. Nothing of the AI's; the Browser pane was not used this session.
-
----
-
-### *(superseded)* CHECKPOINT — 2026-09-17 (session 15, Opus 5) — N2 THE PRINT SCORE (PLAN 2b), FABLE PLANS *(mid-session checkpoint #1; 2b.1–2b.5 are now built — kept for its record of what the port faced)*
-
-**His word:** *"lets move to print score next, prep for clear"*.
-
-**Session 15 in one line:** N1 the performance instructions drafted end to end and copy-edited (his seven "good"s, RUNNING_LOG §603–§604) ·
-N0 the Bloom practice videos built, his "videos good", online, linked from the page, archived (`notation/video/approved/2026-09-17-bloom-practice/`,
-§595–§602). PLAN 2h.7 done.
-
-**The task now: PLAN 2b the presentation score — not started.** Known going in (from the record, not re-derived):
-- `tools/export_print.js` still lays out as the tuba did: on piece-septet it drew SIX systems, no piano, no part labels (PLAN 2b "FOUND", §552;
-  NITS "FOR PLAN 2b"). The model to port is the video exporter's septet frame (§558): the realized ensemble (`video-jury` — the bass clarinet in C),
-  the techniques registry, lanes weighted by the ensemble, the piano's grand staff, the labels.
-- His order (§515): the demo video ✓ → the performance instructions ✓ (drafted; open items below) → **the print score**.
-- The Tempus copy carries the demo video's link at the top — https://youtu.be/x8EZ3B1EvbE (the call takes a print score only).
-- The cover needs the title and the ensemble line (item 1 below). Where the instructions page goes in the print — open.
-- A3 landscape; format entry + cover + performance notes as in #4; **deadline 2026-10-15**.
-
-**► PLANNED 2026-09-17 (Fable, RUNNING_LOG §606)** — his word: *"no need for the full planning protocol, lets just gather necessary data, resolve
-any issues and make plan"*. The plan is in PLAN 2b: top line **1 ⚠ the septet frame · 2 the paper (A3, marks) · 3 the proof pages, his eye ·
-4 the front matter · 5 the full render, his eye · 6 archive + docs.** Measured: tabloid is 12 mm over A3 (the call refuses it) · 57 pages at the
-video's density · the instructions need TWO pages (three columns of content, clipped silently today) · #4's PDF was 4 MB · no anonymity asked.
-
-**► BUILT 2026-09-17 (Opus, §608): 2b.1 the septet frame · 2b.2 A3 · 2b.3's proof pages rendered.** `Coords.ensembleFrame` is shared by both
-exporters (the video's seven dumped pages byte-identical before/after); `tools/check_print_frame.js` PASSES at four moments — eight systems, the
-seven labels, two brackets, one brace, census identical. A3 is drawn 419.7 × 296.8 mm so the MediaBox lands INSIDE the call's ceiling. Staff
-7.55 mm, 63 pages at the film's density.
-
-**Also built 2026-09-17 (§609): 2b.4 the front matter.** His density pick: **10.3, the film's own — 63 pages, staff 7.55 mm.** The A3 cover is drawn
-in #4's house style (`print/cover/make_cover_septet.ps1` → `cover-septet-a3-landscape.svg`, title 73.5 pt); the instructions print as TWO pages, broken
-at "Acoustic Beating", each about three quarters full; the four video links are clickable annotations. `tools/check_print_front.js` PASSES and is
-proven to fail on an overflowing split.
-
-**2b.5 BUILT 2026-09-17 (§612): THE WHOLE SCORE — `print/score/Scattered-Substance-score-JYang.pdf`, 66 pages, 6.71 MB.** Three of his layout notes
-applied on the way (§610–§611). The IR was rebuilt first and came out identical apart from its date — **so the approved audio render and the approved
-video are still of this score.** Green: `check_print_frame` · `check_print_front` · `check_print_pdf` (inside A3, nothing unembedded, no raster, 4 links)
-· `check_print_pages` (all 63 music pages carry the full frame; one terminal barline, on the last).
-**Rebuild it any time with `bash print/score/build.sh` (add `--rebuild-ir` after a Save, `--proof` for the two proof PDFs).**
-
-**HIS EYE ON THE WHOLE PDF (2026-09-17, §613): THE PAGE EDGES.** Arcs and notes over the clefs, strikes sliced at the right edge. One cause — a page's
-window is wider than what it owns (129 onsets drawn twice · 101 arcs cut at the right on 34 pages · 53 arcs into the gutter on 26 pages; §404's buffer
-covers the notehead, not the GC arc's 7.3 ss approach). **Designed on Fable as PLAN 2b.7 — a page OWNS [cut, next cut): point events once and whole,
-long items clipped, left/right reserves, the system ends where the page's music ends, `check_print_edges.js` as a build gate.** Cost: 63 → 68 pages.
-
-**Next concrete step: on Opus, build PLAN 2b.7.1–2b.7.6 as written** (the film's seven-page byte-identity of §608 is the gate for the `render.js` change;
-baseline SVGs must be re-dumped first — the scratchpad does not survive a clear). **Waiting on him:** his word on 2b.7.4's ragged right edge (the AI
-recommends it). Then his eye on the re-render → **2b.6 archive + docs**.
-
-**Answered 2026-09-17 (D58, §607):** A **yes** — *Scattered Substance*, "for flute, bass clarinet, piano and string quartet" · B **no section
-marks** · C **a** — one PDF, the instructions page's demo link is enough, no Tempus copy. **Open with him:** the time ruler (he asked what it
-is; keep it or not is his word) · **his standing word for this build: "check in before moving on"** — the builder starts only on his go.
-
-**Resume reads:** `docs/PLAN.md` — the 2b item whole (search `- **2b — Presentation score**`, ~60 lines) · `docs/RUNNING_LOG.md` §608 (what the
-build did and what was measured). Nothing else.
-
-**Model:** **Opus builds** (a written plan) · Fable only if a proof page raises a judgment call.
-
-**Standing warning added 2026-09-17:** `tools/export_print.js` and `tools/export_video.js` now share `Coords.ensembleFrame` — a change to the frame
-math moves BOTH, so re-run `node tools/check_print_frame.js` and dump two video pages against a baseline before believing it.
-
-**Decisions pending the composer** *(carried from N1; only item 1 touches 2b)*:
-1. ~~The title and the ensemble line~~ — **CONFIRMED 2026-09-17 (D58):** *Scattered Substance* · "for flute, bass clarinet, piano and string quartet".
-2. The score-in-C line — his "The full score is in C." stands unless he picks another (§591).
-3. Three fact flags left as written on the page (§569): the crescendo's "dynamic 1 to dynamic 2" vs the image's ppp → fff · Spectral "Performers …
-   glissando" (the flute and bass clarinet hold) · "two curves for each performer" (the piano has none).
-4. Tuba text on the page he has not reviewed: the intro paragraph · the Conduction Tools' first two paragraphs · the Crescendos paragraph.
-5. AI calls he may undo: the practice-video links in the chart's row order · Bass Clarinet + Cello's held dyad take 6 over take 4 (§600).
-
-**Deliberately uncommitted** (`git status --short`) — **his, per D40, never staged by the AI:**
-- `scores/piece-septet.json` (M) — his Save of 09-17 11:04, metadata only (§598: the objects equal `bc54cdc`)
-- `reaper/septet_rack.rpp` (M) · `bank/panel_snapshots.json` (M) — his rack, his panel
-- `bank/passages/` 4materials · accentedcres01 · accentedcres01-2 · chordcyc01 · chstr02 · section3 (untracked)
-- `scores/` Sec3 · SeptetSec03-Materials-B · -C · -D · piece-septet-v1.31 · -v1.32 · -v1.33 · spectralMorph (untracked)
-- two AI copies, deletable at his call: `scores/zz-ai-run-nosecco.json` · `scores/zz-ai-1t-walk.json`
-- unsaved working copies (`node tools/unsaved_check.js`, unchanged): cres-run01 · cres2strike · piano-harmonics-test · trill-curve-test ·
-  trillBuildTst · zz-ai-1t-walk
-
-**Gitignored, left on disk on purpose:** the practice videos' archived mp4s (his to back up) · their duplicates and scratch in
-`notation/video/renders/demos/` (deletable) · `notation/audio/demo-bloom-*.wav` and `raw/demo-bloom-*` — **keep
-`raw/demo-bloom-heldmax-float.wav`**, the picks belong to that render · `reaper/demo-bloom-*_render.rpp`.
-**Running:** his :5300 and Reaper; the AI's Browser pane has one tab on the instructions page. Nothing of the AI's running.
-
-### PARKED — 2026-09-17 (session 15) — N1 THE PERFORMANCE INSTRUCTIONS: DRAFTED, COPY-EDITED *(parked at his move to the print score; its open items are carried in the checkpoint above — kept for the page's section table)*
-
-**Sessions 14–15 in one line:** the tuba's instructions page copied (nouns only), then revised section by section to his dictation; every image is
-now this piece's; the morph sequence chart built; the legend and instrumentation drafted at his request and trimmed to his notes (RUNNING_LOG §565–§593).
-
-**The deliverable:** `docs/notation_instructions/index.html` (+ `styles.css`, `images/`), served by his :5300 at
-http://localhost:5300/docs/notation_instructions/index.html.
-
-**HIS RULE FOR THIS PAGE (§569, standing):** the prose is HIS. The AI swaps images, changes nouns, and inserts what he dictates VERBATIM
-(logged verbatim in RUNNING_LOG). Where a fact has moved it SAYS so in chat and leaves the sentence. Draft or offer wording only when he asks.
-
-| section (page order) | text | images |
-|---|---|---|
-| title + subtitle | *Scattered Substance*, "for flute, bass clarinet, piano and string quartet" — both still his to confirm (CN-64) | — |
-| Demo Recording with Score Following Video | the link alone, 1.3 em — https://youtu.be/x8EZ3B1EvbE (no Tempus mention, his word) | — |
-| intro paragraph | the tuba's ("computer-animated score, served from the cloud …"), not yet reviewed by him | — |
-| Instrumentation | the seven instruments (AI draft; no doublings — Q1 piccolo / bass flute open) · "Bass clarinet to low C." · "The full score is in C. Parts will be transposed." | — |
-| Animated Conduction Tools | the tuba's + "go-time for events" (§590) + his example sentence (§568) | Vn1 Bartók pizz 20.5 s · Vn1 trill 140 s, the trill and its curve only (§592) |
-| Gradient Curves → Crescendos · Trills | his intro (§575) · the crescendo paragraph = the tuba's · Trills: "The curves describe the trill intensity, both volume and speed." (§582) | Va surge 527 s · Bcl trill opening 129 s |
-| Acoustic Beating | all his: the beating paragraph · the two sections + Bloom · Spectral's strategy · the Bloom demo paragraph (§593) · the Notation paragraph (§586). One placeholder line: "Bloom practice videos — to be added" | the morph sequence chart (§576–§580) · Va Bloom entry 182–189 s + Va 196–203 s, stacked (§588) |
-| Notation Legend | the Ped. GLYPH inline "(with no release sign) — hold the pedal until the sound has died away or until the next note." · "Let ring slurs — …" · "sempre secco — continue secco for the crescendo gestures." · "Dynamics. In the first movement … In the third movement …" (§591) | the piano's let-ring slurs: a plucked note 212.8 s + an ordinary note 217.6 s, side by side |
-
-**Tools:** `tools/capture_lane.js` (`--part fl|bcl|pno|vn1|vn2|va|vc --t --span --padBot --onlyOnsets a-b --out`; each image's command sits in an HTML
-comment beside it) · `tools/gen_morph_chart.js` (the chart) · `tools/gen_m2_chart.js` (superseded arrows figure, kept, not on the page).
-
-*(Its next-step, resume-reads and model lines are retired — N1 parked 2026-09-17; the open items live in the checkpoint above.)*
-
-**Deliberately uncommitted at this checkpoint:** his files only, unchanged from session 13's list below (D40) · the six unsaved working copies unchanged
-(`node tools/unsaved_check.js`) · no AI copies added.
+**THE APPROVED FILM NEVER MOVED.** `render.js` changed under a rule that is inert without `opts.owned`, and the video exporter's pages
+0 · 9 · 20 · 30 · 43 · 49 · 53 were dumped and proven byte-identical **three times**. sha256 `65e4e10d…` `1ae2a06a…` `ccdbc3f5…`
+`68913256…` `ef8c055f…` `5ffc7104…` `c6d1b4c5…`. **Re-dump them before touching `notation/lib/render.js` again** —
+`node tools/export_video.js --ir piece-septet --dumpPage N --dumpTo <file>` (a FILE, not a directory).
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| ~~N0~~ | ~~the Bloom practice videos (PLAN 2h.7)~~ — **DONE 2026-09-17** (§602: "videos good", online, linked, archived) | — | — |
-| N1 | the performance instructions — PARKED: drafted and copy-edited; the pending items 2–5 in the checkpoint above, at his convenience | Opus | no |
-| ~~N2~~ | ~~**PLAN 2b the print score**~~ — **DONE 2026-09-17** (§606–§618): the frame · A3 · the front matter · the whole score · the page edges by rule (D59) · archived. His *"ok print score good"*; 71 pages, five gates green; `print/score/approved/2026-09-17/` | — | — |
-| ~~N2b~~ | ~~his application~~ — **COMPILED 2026-09-17** at his ask: `docs/application/Tempus-Lab2026-application-JYang.pdf`, 5 pp (form pp. 4–5 · bio · payment ×2), each page verified. **HIS TO FINISH:** the required checkbox on the declarations page is still an empty ☐ | — | — |
-| ~~N5~~ | ~~the four items carried since §605~~ — **SETTLED 2026-09-17 (§619)**, his *"these all settled"*: all four stand as written; the instructions page is DONE | — | — |
-| **► N6** | **PLAN 3 — the performance score** (carries D50's acceptance line, D55's pitch form). **2c parts only if selected** (~2026-10-29). Nothing else is owed before the 2026-10-15 deadline | Fable to plan · Opus to build | **yes — the submission is complete; PLAN 3 is a fresh piece of work** |
-| **N3** | Later, noted: the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
-| **N4** | Still his, from before: the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
+| ~~N1–N4~~ | ~~the instructions page · the practice videos · PLAN 2b · the four carried items~~ — **ALL DONE 2026-09-17** (§602, §618, §619) | — | — |
+| **HIS** | **One required checkbox on his application's declarations page is still an empty ☐.** Flagged; his to tick, never the AI's. Then send: the print score + the application, deadline **2026-10-15 23:59 CET** | — | — |
+| **► N6** | **PLAN 3 — the performance score.** It carries **D50**'s acceptance line and **D55**'s pitch form; it ports from the tuba modules. Nothing else is owed before the deadline | **Fable to plan · Opus to build** | **yes — a fresh piece of work on a clean tree** |
+| N7 | **PLAN 2c — parts**, ONLY if the piece is selected (~2026-10-29) | — | — |
+| N8 | Still his, from before: the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 · **the SPECTRAL practice videos** (§7, his D48) | Fable to hear · Opus to fix | no |
 
-### SESSION END — 2026-09-16 (session 13, Fable 5.1 ⇄ Opus 5) — SITTING F DONE: the audio re-render and the demo video, approved, archived as the submission copy, online
+**Open at session end:** nothing in flight. The working tree is clean of AI work; every commit is pushed.
+**Open questions:** does "the same crescendo in several parts" mean both players on every onset (§413, his word first) · the piano's
+device in the morphs (2h.5). **Blockers:** none.
 
-**Last session (13, 2026-09-16):**
-- **Fable** — PLAN 2i.8 the crescendo run's 78 swells as the surge (D54, his eye "good") · PLAN 2j the proofing pass: eight notes collected, fixed
-  in one pass, his "all good" (D56: no group of three) · PLAN 2k the pitch form per realization — the presentation's bass clarinet in C (D55).
-- **Opus — 2i.9 the audio re-render** (RUNNING_LOG §553–§555): capture → checked export → Reaper; two of the AI's tool bugs found and fixed on the
-  way (export check (e) assumed a 199 c bend range — the Xsample parts bend ~1 st; the bridge guard's heartbeat race). 630.100 s, −1.0 dBTP,
-  −21.8 LUFS float. **His ear: "render good".**
-- **Opus — 2i.10 the demo video** (§556–§564): the exporter draws the septet frame (pages identical to his page but the bcl's C clef, by design) ·
-  close-ups as GROUPS at 1.85× (D57) · `make_cut.js` on the septet's sections, **seed 53** his pick · cross 5, his "clips look good" · the
-  picture holds through the audio tail · PHASE 5 checks. **His eye: "video good"** → `notation/video/approved/2026-09-16-submission/` ·
-  **online https://youtu.be/x8EZ3B1EvbE**.
-- Discussed, not decided: the cover's ensemble line — the AI recommended *"for flute, bass clarinet, piano and string quartet"* (§564).
+**The deliverables, and where they are:** the print score `print/score/approved/2026-09-17/` (README = full provenance) · the demo video
+`notation/video/approved/2026-09-16-submission/`, online **https://youtu.be/x8EZ3B1EvbE** · the Bloom practice videos
+`notation/video/approved/2026-09-17-bloom-practice/` · the instructions page `docs/notation_instructions/index.html` (its section-by-section
+table is RUNNING_LOG §565–§604; **the prose is HIS** — the AI swaps images and nouns, inserts dictation verbatim, and flags a moved fact in
+chat without editing the sentence) · the application `docs/application/`.
 
-**Open at session end:**
-- **`V-CUT.mp4` is not in git** (`notation/video/**/*.mp4` ignored) — the approved copy and `notation/video/renders/piece-septet-V-CUT-seed53.mp4`
-  (the same bytes, 51 MiB each) live on this machine only; the YouTube upload is the other copy. His to back up; the renders/ duplicate is deletable.
-- The render and the video are snapshots of the save of 16:03 (`bc54cdc`): a later Save means a re-render (RENDER.md §1) and a video re-render
-  (the command is in the archive README, ~15 min).
+**Deliberately uncommitted — ALL HIS, per D40, never staged by the AI:** `scores/piece-septet.json` (M — his Save of 09-17 11:04, proven
+metadata-only: the IR rebuilt from it is identical to `bc54cdc`'s apart from its date, §612) · `reaper/septet_rack.rpp` (M) ·
+`bank/panel_snapshots.json` (M) · `bank/passages/` 4materials · accentedcres01 · accentedcres01-2 · chordcyc01 · chstr02 · section3 ·
+`scores/` Sec3 · SeptetSec03-Materials-B · -C · -D · piece-septet-v1.31 · -v1.32 · -v1.33 · spectralMorph · `docs/application/` and
+`docs/Tempus-Lab2026_Application_English_JYang.pdf` (his application files) · plus two AI copies, deletable at his call:
+`scores/zz-ai-run-nosecco.json` · `scores/zz-ai-1t-walk.json`.
+**Unsaved working copies** (`node tools/unsaved_check.js`, six, unchanged for weeks; **piece-septet itself is clean**): cres-run01 ·
+cres2strike · piano-harmonics-test · trill-curve-test · trillBuildTst · zz-ai-1t-walk. **His to Save or Reload in the app.**
 
-**Decisions pending the composer:** the title *Scattered Substance* (CN-64) and the cover's ensemble line — before 2b's cover. **AI calls he
-may overturn:** the close-ups as groups at 1.85× (D57) · the ppp velocity 9 (§550) · print borrowing the `video-jury` realization (§552).
+**Gitignored, on disk on purpose:** every print PDF (`print/score/**/*.pdf` — the working copy, the archived copy, the proofs) · the
+approved and archived mp4s · `notation/ir/piece-septet.ir.json.bak` (deletable) · `notation/audio/` — **keep
+`raw/demo-bloom-heldmax-float.wav`**. **Back up the archived score and the videos; git does not have them.**
+**Running at session end:** nothing of the AI's. His :5300 and Reaper are his.
 
-**Open questions:** does "the same crescendo in several parts" mean both players on every onset (§413, his word first) · the piano's device in
-the morphs (2h.5). **Blockers:** none.
-
-**Deliberately uncommitted — all his:** `bank/panel_snapshots.json` · `reaper/septet_rack.rpp` · `bank/passages/` 4materials · accentedcres01 ·
-accentedcres01-2 · chordcyc01 · chstr02 · section3 · `scores/` Sec3 · SeptetSec03-Materials-B · -C · -D · piece-septet-v1.31 · -v1.32 · -v1.33
-· spectralMorph · plus two AI copies, deletable at his call: `scores/zz-ai-run-nosecco.json` · `scores/zz-ai-1t-walk.json`. **Unsaved working
-copies** (`node tools/unsaved_check.js`, unchanged since checkpoint #2; piece-septet clean): cres-run01 · cres2strike · piano-harmonics-test ·
-trill-curve-test · trillBuildTst · zz-ai-1t-walk. **Running:** nothing of the AI's (his :5300 and Reaper; the Browser pane closed).
-
-**Standing warnings:** ⚠ **CTRL+SHIFT+R detaches the ♪ render** — click it again (§460); an IR rebuild does not, **but a change to
-`notation/lib/*.js` needs a page reload** · ⚠ **do not press R on the strikes page** (§403) · **one open composer tab per score** (2d.5.8) ·
-the piano never swells (CN-34) · the MAIN IR is 5.2 MB and the page re-fetches it every second (NITS).
+**Standing warnings:** ⚠ `export_print` and `export_video` share `Coords.ensembleFrame` — **a change to the frame math moves BOTH**
+(run `check_print_frame` AND dump video pages against a baseline) · ⚠ **CTRL+SHIFT+R detaches the ♪ render** — click it again (§460); an
+IR rebuild does not, **but a change to `notation/lib/*.js` needs a page reload** · ⚠ **do not press R on the strikes page** (§403) ·
+**one open composer tab per score** (2d.5.8) · the piano never swells (CN-34) · the MAIN IR is 5.2 MB and the page re-fetches it every
+second (NITS) · `check_print_frame`'s census differences are LARGER since D59 and that is correct, not drift (§615).
 
 **Tests:** `tools/test_morph_notation.js` (178) · `test_cross_staff.js` (79) · `test_surge_run.js` (30) · `test_step_dynamics.js --save` (15) ·
 `test_septet_notation.js` (101) · `test_trills.js` (92) · `test_identity.js` (20) · `score/tools/check_cresc_panel.js` (35) ·
 `morph_septet_check.js` · `trill_conflicts.js --list` (3, accepted) · check_fill · check_containers · check_cresc_deck · the tuba battery per
-`notation/ir/README.md`. **The video:** `export_video.js --probe/--half/--dumpPage` + the archive README's PHASE 5 measures.
+`notation/ir/README.md`. **The print:** `bash print/score/build.sh` runs all five gates. **The video:**
+`export_video.js --probe/--half/--dumpPage` + the archive README's PHASE 5 measures.
 
-**Earlier sessions, one line each:** **12** (2026-09-14) PLAN 2i sittings A–E2: go-to-time, D53, the save edits, the cross-staff groups,
-`--max16`, section 3's dynamics; step 8 designed (D54) — §515–§530. **11** (2026-09-14) the morph section notated — D44–D50; section 3
-planned (D51, D52) — §464–§514. **10** (2026-09-13) trills notated (D41, D42); the first recording (§453); D43; section 1 complete —
-§427–§463. **9** (2026-09-12) PLAN 1t the chain; the first full draft tagged `Scattered_Substance-finalDraft_1.0` — §405–§426. **8**
-(2026-09-10 → 11) SWEEP_LIST · 2a + 2d · section 1's strikes notated — §352–§404. **7** the strikes drawer revised (§324–351). **6** the
-morph's fade in CC7, the note card (§311–323). **4** BEATING, the morph panel, the crescendo suite, D11 (§111–310). **3** the piece to #31,
-the trill module 0–3, D18–D21 (§65–110). **2** the strikes drawer and the sandbox. **1** the port.
+**Earlier sessions, one line each:** **15** (2026-09-17) the Bloom practice videos · the instructions page drafted and copy-edited · **PLAN 2b
+the print score, D58, D59** · the application compiled — §595–§619. **14–15** (2026-09-16 → 17) the tuba instructions page ported and revised to
+his dictation, the morph chart, the legend — §565–§594. **13** (2026-09-16) the audio re-render and the demo video, approved, archived, online
+(D54–D57) — §531–§564. **12** (2026-09-14) PLAN 2i sittings A–E2 — §515–§530. **11** (2026-09-14) the morph section notated, D44–D50; section 3
+planned (D51, D52) — §464–§514. **10** (2026-09-13) trills notated (D41, D42); the first recording (§453); section 1 complete — §427–§463.
+**9** (2026-09-12) PLAN 1t the chain; the first full draft tagged `Scattered_Substance-finalDraft_1.0` — §405–§426. **8** (2026-09-10 → 11)
+SWEEP_LIST · 2a + 2d · section 1's strikes notated — §352–§404. **7** the strikes drawer revised (§324–351). **6** the morph's fade in CC7, the
+note card (§311–323). **4** BEATING, the morph panel, the crescendo suite, D11 (§111–310). **3** the piece to #31, the trill module 0–3,
+D18–D21 (§65–110). **2** the strikes drawer and the sandbox. **1** the port.
+
 
 ## §3 Principles
 
@@ -392,6 +221,15 @@ sources; verified here only when they bite.)*
 
 ---
 
+18. **A checker that tests one half of a rule is worse than no checker, because it reads as
+    proof** (2026-09-17, §615–§616). D59 names TWO classes — point events drawn once and whole,
+    long items drawn on every page they cross. `check_print_edges` tested the point half
+    exhaustively and the long half not at all, so it printed PASS while 19 curve stubs from
+    neighbouring pages sat on the score, and the composer found them by eye — the exact thing the
+    rule exists to prevent. **When a rule names two classes of thing, the gate tests both, or it
+    says in writing which one it does not test.** Corollary from the same day: a test must assert
+    a property of what is DRAWN, not of where the material happens to fall (the first attempt
+    asserted the latter and could never have been satisfied).
 17. **The notehead's left edge is the moment; the go line marks displacement** (2026-09-14, D49,
     RUNNING_LOG §496 — piece #4's D59/D58 promoted here at the composer's word). A head is placed
     off its time only for a reason (a GC disc to clear, a trill's after-go unit) and then, and
@@ -952,6 +790,12 @@ sources; verified here only when they bite.)*
   approach) and the approved video's pages must stay byte-identical. **The guarantee is a checker, not the rule:** `check_print_edges.js` asserts over
   every page that each event is drawn exactly once and whole and that nothing timed touches the gutter, so an edge case is a red line in the build
   rather than something found by paging through 68 sheets — which is what he asked for in "not … continuous reprinting and reviewing and redoing".
+  **AMENDED 2026-09-17 (§616), by his eye on the first build — "pg 2 in piano, extra from next page trill ; vc pg 14":** a long item belongs to
+  the pages it **CROSSES**, and crossing is judged against what the page **OWNS**, never against what it DRAWS. The first build tested the drawn
+  span, so a trill beginning on a cut left a stub of its curve in the previous page's right reserve (19 such, on 9 pages). How far a crossing item
+  is then drawn is the separate question and is unchanged — out to the system end, so a sound continuing over the page turn still reaches the edge.
+  **BUILT AND ACCEPTED 2026-09-17** (§615–§617, his *"ok print score good"*): 68 music pages, 71 with the front matter; 14 532 point items owned
+  exactly once; 1304 arcs = 1304 impact dots; 484 curve paths, none from a neighbour; 19 pages ragged, at most 1.90 s = 18 % of the width.
 
 ---
 
@@ -987,6 +831,14 @@ cut mid-way — write patch scripts to the scratchpad, splice by exact anchor, a
 
 ## §6 Done
 
+- 2026-09-17 — **THE PRINT SCORE, AND THE SUBMISSION COMPLETE** (RUNNING_LOG §606–§619; D58, D59). PLAN 2b built and closed in a day: the septet
+  frame shared with the video exporter (`Coords.ensembleFrame`), A3 landscape drawn inside the call's ceiling, the cover and the two instructions
+  pages, the whole score — and then **the page edges as a rule (D59)**, after his eye on the first 66 pages found arcs in the clef gutter and strikes
+  sliced at the right edge. A page owns `[cut, next cut)`; his **"a"** put the ragged right edge on 19 of 68 pages. **Five gates hold it**, the new
+  `check_print_edges` among them, each proven to fail with the rule switched off. His *"ok print score good"* →
+  `print/score/approved/2026-09-17/` — **71 pages, 6.39 MB, A3**. With it: the four items carried since §605 settled (§619), the performance
+  instructions page done, and his application compiled to one 5-page PDF at his ask. **The Tempus Lab 2026 submission is complete** but for one
+  required checkbox on his application, which is his. Deadline 2026-10-15.
 - 2026-09-16 — **THE DEMO VIDEO, THE SUBMISSION COPY** (RUNNING_LOG §553–§564; D57). The audio re-rendered from the proofed save (630.100 s,
   −1.0 dBTP; his "render good") and the animated presentation score cut with close-ups (seed 53, cross 5; PHASE 5 measured; his "video good")
   — archived `notation/video/approved/2026-09-16-submission/`, online **https://youtu.be/x8EZ3B1EvbE**. PLAN 2i closed through step 10.
@@ -1052,12 +904,12 @@ cut mid-way — write patch scripts to the scratchpad, splice by exact anchor, a
 - **Piece #4 (the tubas): check the morph headers' pitches** *(found by the AI, 2026-09-14, RUNNING_LOG §477; NITS)* — the tuba's header
   overlays carry no pitch, so every header head is drawn at F2 (`db1`'s 30 headers, the three morph pages). Right only for parts that start
   on F2. Look at the tuba's presentation score's morph pages in a tuba session; its rehearsal / performance scores take D45 anyway.
-- **Practice videos for the morphs, with the beating speed** *(composer, 2026-09-14, D48: "lets locate the hz notate to the practice videos,
-  I'll make a similar set like the [tuba's] was for this piece as well. So at least for the bloom section, I'll have to think about the
-  spectral section. But this way, they can see the speed and hear it in isolation.")* — at the performance stage (PLAN 2h.7); the tuba's set
-  as the model.
-- **The title — tentative: _Scattered Substance_** *(2026-09-11, CN-64; used unqualified in the draft tag name 2026-09-12, CN-74)*. Confirm or change before the cover and the
-  Tempus format entry are written (PLAN 2b authoring). Written down in CN-64, PLANNER and PLAN 2b.
+- **Practice videos for the morphs, with the beating speed** *(composer, 2026-09-14, D48)* — **BLOOM DONE 2026-09-17** (PLAN 2h.7, §595–§602:
+  built, his "videos good", online, linked from the instructions page, archived `notation/video/approved/2026-09-17-bloom-practice/`).
+  **SPECTRAL still open** — his own words at D48: *"at least for the bloom section, I'll have to think about the spectral section."*
+- ~~**The title — tentative: _Scattered Substance_**~~ — **CONFIRMED 2026-09-17 (D58, §607):** *Scattered Substance*, "for flute, bass clarinet,
+  piano and string quartet". It is on the cover of the approved print score and in the application. *(Closed at session end 2026-09-17; the AI
+  marked it complete on the evidence rather than asking again — his "just close".)*
 - Decide piccolo vs bass flute when the music asks (Q1); confirm that library is installed.
 - **Test the trills and the curve windows on the piece** (reload): T on a strike note · `1 2 3` on the zone · P for the
   attack and the interval · `A B C`, `✒ Points`, `Fill`, hold the line to bend · SHIFT-drag a span, T. Say what bites; then
