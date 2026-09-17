@@ -18,6 +18,16 @@
 //    peak (ebur128), the loudness range and the first attack; then ONE plain gain (no limiter — the range is the piece) brings the true
 //    peak to --peak dBTP (default −1) if it is above it, never up, and writes notation/audio/<score>.wav as 24-bit PCM — the name the
 //    notation page's ♪ render chip looks for (IR source.score). The float stays in notation/audio/raw/ (gitignored) as the evidence.
+//
+// [PLAN 2h.7 — 2026-09-17, the Bloom practice videos] A DEMO RENDER: some parts, or a generated file, to its own name. Every flag is
+// optional and the default call is unchanged.
+//   --dir midi/<folder>     the per-track files to place (default midi/<score>)
+//   --only "Va XS,Vn1 XS"   place only the tracks of these names (every file of each name); the rest of the rack stays empty
+//   --out <name>            reaper/<name>_render.rpp · raw/<name>-float.wav · notation/audio/<name>.wav (default <score>)
+//   --end S                 the render's end (default: the capture's last note-off + --tail)
+//   --gainWindow a-b        the true peak is measured INSIDE a..b s and the one plain gain may go UP to --peak (a pair alone sits far
+//                           under the mix); the first sound is read after a. For demo files only — the piece's render never goes up.
+// A demo render may never write the piece's own WAV: --dir or --only without an --out of another name is refused.
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -26,11 +36,14 @@ const ROOT = path.join(__dirname, '..');
 const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i > 0 ? process.argv[i + 1] : d; };
 const score = arg('score', 'piece-septet');
 const PEAK = +arg('peak', -1), TAIL = +arg('tail', 6);
+const MIDIDIR = arg('dir', null), ONLY = arg('only', null), NAME = arg('out', score), END_ARG = arg('end', null);
+const WINDOW = arg('gainWindow', null) ? arg('gainWindow').split('-').map(Number) : null;
+if ((MIDIDIR || ONLY) && NAME === score) { console.error('RENDER REFUSED: a demo render (--dir/--only) needs --out <another name> — it would overwrite notation/audio/' + score + '.wav'); process.exit(2); }
 const RACK = path.join(ROOT, 'reaper', 'septet_rack.rpp');
-const RPP = path.join(ROOT, 'reaper', score + '_render.rpp');
+const RPP = path.join(ROOT, 'reaper', NAME + '_render.rpp');
 const RAWDIR = path.join(ROOT, 'notation', 'audio', 'raw');
-const RAW = path.join(RAWDIR, score + '-float.wav');
-const OUT = path.join(ROOT, 'notation', 'audio', score + '.wav');
+const RAW = path.join(RAWDIR, NAME + '-float.wav');
+const OUT = path.join(ROOT, 'notation', 'audio', NAME + '.wav');
 const FF = (() => { try { return execFileSync('where', ['ffmpeg'], { encoding: 'utf8' }).split(/\r?\n/)[0].trim(); } catch (e) { return 'ffmpeg'; } })();
 const log = s => console.log(s);
 
@@ -52,12 +65,15 @@ const L = s => '[[' + s + ']]';
 const { PLACE_LUA, writeEvt } = require('./reaper_midi_place.js');   // the one copy of how a part reaches a track
 
 (async () => {
-  const dir = path.join(ROOT, 'midi', score);
-  const files = fs.readdirSync(dir).filter(f => /^\d\d .+\.mid$/.test(f)).sort();
-  if (!files.length) throw new Error('no per-track files in midi/' + score + ' — run tools/export_midi.js first');
+  const dir = MIDIDIR ? path.join(ROOT, MIDIDIR) : path.join(ROOT, 'midi', score);
+  const onlyNames = ONLY ? ONLY.split(',').map(s => s.trim()).filter(Boolean) : null;
+  const files = fs.readdirSync(dir).filter(f => /^\d\d .+\.mid$/.test(f)).sort()
+    .filter(f => !onlyNames || onlyNames.includes(f.replace(/^\d\d /, '').replace(/\.mid$/, '')));
+  if (!files.length) throw new Error('no per-track files in ' + path.relative(ROOT, dir) + (onlyNames ? ' named ' + ONLY : '') + ' — run tools/export_midi.js first');
+  if (onlyNames) { const miss = onlyNames.filter(n => !files.some(f => f.replace(/^\d\d /, '').replace(/\.mid$/, '') === n)); if (miss.length) throw new Error('--only names no file: ' + miss.join(', ')); }
   const cap = JSON.parse(fs.readFileSync(path.join(ROOT, 'midi', score + '.capture.json'), 'utf8'));
   const lastOff = Math.max(...cap.events.filter(e => (e[2][0] & 0xF0) === 0x80 || ((e[2][0] & 0xF0) === 0x90 && e[2][2] === 0)).map(e => e[1]));
-  const END = +(lastOff + TAIL).toFixed(3);
+  const END = END_ARG != null ? +END_ARG : +(lastOff + TAIL).toFixed(3);
   const evts = files.map(f => writeEvt(path.join(dir, f)));
 
   if (!process.argv.includes('--skip-render')) {
@@ -111,7 +127,7 @@ for _, f in ipairs(files) do
 end
 local S = function(k, v) reaper.GetSetProjectInfo_String(0, k, v, true) end
 local N = function(k, v) reaper.GetSetProjectInfo(0, k, v, true) end
-S('RENDER_FILE', ${L(RAWDIR)}) S('RENDER_PATTERN', ${L(score + '-float')}) S('RENDER_FORMAT', 'ZXZhdyAAAQ==')
+S('RENDER_FILE', ${L(RAWDIR)}) S('RENDER_PATTERN', ${L(NAME + '-float')}) S('RENDER_FORMAT', 'ZXZhdyAAAQ==')
 N('RENDER_SETTINGS', 0) N('RENDER_BOUNDSFLAG', 0) N('RENDER_STARTPOS', 0) N('RENDER_ENDPOS', ${END}) N('RENDER_SRATE', 48000)
 N('RENDER_CHANNELS', 2) N('RENDER_TAILFLAG', 0) N('RENDER_ADDTOPROJ', 0) N('RENDER_DITHER', 0)
 pcall(N, 'RENDER_NORMALIZE', 0)
@@ -169,17 +185,24 @@ return { closed = true, current = q }`, 60000);
     const silStart0 = /silence_start: 0\b/.test(txt) || /silence_start: -?0\.0/.test(txt);
     return { I: num(/I:\s+(-?[\d.]+) LUFS/), LRA: num(/LRA:\s+(-?[\d.]+) LU/), truePeak: num(/True peak:\s+Peak:\s+(-?[\d.]+|-inf) dBFS/), samplePeak: num(/Sample peak:\s+Peak:\s+(-?[\d.]+|-inf) dBFS/), firstSound: silStart0 && sil.length ? sil[0] : 0 };
   };
-  const m = readM(meas(RAW));
+  let m = readM(meas(RAW));
+  if (WINDOW) {   // a demo file: the peak and the first sound are the window's, not the whole file's
+    const w = readM(spawnSync(FF, ['-hide_banner', '-nostats', '-ss', String(WINDOW[0]), '-to', String(WINDOW[1]), '-i', RAW, '-af', 'ebur128=peak=true+sample,silencedetect=noise=-80dB:d=0.05', '-f', 'null', '-'], { encoding: 'utf8', maxBuffer: 1 << 28 }).stderr);
+    log('   the whole file: true peak ' + m.truePeak + ' dBTP · ' + m.I + ' LUFS — the gain is read in the window ' + WINDOW.join('–') + ' s');
+    m = Object.assign(w, { firstSound: +(WINDOW[0] + w.firstSound).toFixed(3) });
+  }
   const secs = probe.duration_ts / +probe.sample_rate;
   log('6. ' + path.relative(ROOT, RAW) + ' · ' + probe.codec_name + ' · ' + probe.sample_rate + ' Hz · ' + probe.channels + ' ch · ' + secs.toFixed(3) + ' s');
   log('   true peak ' + m.truePeak + ' dBTP · sample peak ' + m.samplePeak + ' dBFS · ' + m.I + ' LUFS · LRA ' + m.LRA + ' LU · first sound at ' + m.firstSound + ' s');
   if (probe.codec_name !== 'pcm_f32le') log('   WARNING: the render is not 32-bit float (' + probe.codec_name + ') — a peak over 0 would already be clipped');
   const firstOnset = Math.min(...cap.expect.notes.map(n => n.t0), ...cap.expect.snippets.map(s => s.start + Math.min(...s.notes.map(x => x[3])) / 1000));
-  const gain = m.truePeak > PEAK ? +(PEAK - m.truePeak).toFixed(2) : 0;
+  const gain = (m.truePeak > PEAK || WINDOW) ? +(PEAK - m.truePeak).toFixed(2) : 0;
   execFileSync(FF, ['-hide_banner', '-loglevel', 'error', '-y', '-i', RAW, '-af', 'volume=' + gain + 'dB', '-c:a', 'pcm_s24le', OUT]);
-  const m2 = readM(meas(OUT));
+  const m2 = WINDOW
+    ? readM(spawnSync(FF, ['-hide_banner', '-nostats', '-ss', String(WINDOW[0]), '-to', String(WINDOW[1]), '-i', OUT, '-af', 'ebur128=peak=true+sample', '-f', 'null', '-'], { encoding: 'utf8', maxBuffer: 1 << 28 }).stderr)
+    : readM(meas(OUT));
   log('7. ' + path.relative(ROOT, OUT) + ' · 24-bit · gain ' + gain + ' dB (plain, no limiter) → true peak ' + m2.truePeak + ' dBTP · sample peak ' + m2.samplePeak + ' dBFS');
   log('   the equivalent master fader for a direct 24-bit render: ' + gain + ' dB');
   log('   sync: the first onset in the score ' + firstOnset.toFixed(3) + ' s · the first sound in the file ' + m.firstSound + ' s (a sampler\'s attack lands a few ms after)');
-  fs.writeFileSync(path.join(RAWDIR, score + '-render.json'), JSON.stringify({ score, rendered: new Date().toISOString(), rpp: path.relative(ROOT, RPP), raw: probe, seconds: secs, float: m, gainDb: gain, final: m2, firstOnset, end: END }, null, 1));
+  fs.writeFileSync(path.join(RAWDIR, NAME + '-render.json'), JSON.stringify({ score, name: NAME, dir: path.relative(ROOT, dir), only: onlyNames, window: WINDOW, rendered: new Date().toISOString(), rpp: path.relative(ROOT, RPP), raw: probe, seconds: secs, float: m, gainDb: gain, final: m2, firstOnset, end: END }, null, 1));
 })().catch(e => { console.error('RENDER FAILED: ' + e.message); process.exit(1); });

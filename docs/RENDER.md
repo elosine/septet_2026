@@ -60,3 +60,8 @@ Then: the notation page (CTRL+SHIFT+R) → the MAIN file → **♪ render** → 
   name, counts equal. Render: 141 s · 630.100 s · float true peak **+1.9 dBTP** · −21.8 LUFS · LRA 13.8 · gain **−2.9 dB** → **−1.0 dBTP** ·
   first sound 3.7 ms after the first onset. The first attempt refused on the bridge guard's heartbeat race → the tool now waits for the
   heartbeat to name the render tab. His ear: pending.
+- **2026-09-17 — the Bloom practice videos' renders, PLAN 2h.7** (RUNNING_LOG §599–§600; not the piece's WAV — `render_reaper.js --dir/--only/--out/
+  --end/--gainWindow`, refused without an `--out` of another name). Pair recordings, 0 → 312 s, gain read in the used window and allowed UP (demo files
+  only): `demo-bloom-bclvc.wav` +13.3 dB · `demo-bloom-vn1va.wav` +13.4 · `demo-bloom-flvn2.wav` +16.2. Held dyads `demo-bloom-heldmax` (six takes a
+  pair, 0 → 660 s, 69 s). **Found:** every Xsample note-on lands ±1–2 c from its bend (the SI2 flute is exact) — one strike is a draw; the takes
+  are picked by `tools/pick_bloom_takes.js`. `piece-septet.wav` sha unchanged throughout.

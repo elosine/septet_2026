@@ -1,0 +1,873 @@
+{
+ "made": "2026-09-17T16:21:05.661Z",
+ "capture": "midi/piece-septet.capture.json",
+ "cc7": "at",
+ "takes": 6,
+ "renderEnd": 660,
+ "slots": [
+  {
+   "id": "flvn2",
+   "take": 1,
+   "label": "Flute + Violin 2",
+   "T": 226.6,
+   "slot": 10,
+   "hold": 32,
+   "chartHz": 21.5,
+   "frozenHz": 21.9,
+   "parts": [
+    {
+     "port": "Fluteb",
+     "ch": 4,
+     "pitch": 81,
+     "vel": 111,
+     "cc0": null,
+     "cc7max": 122,
+     "cc7atT": 82,
+     "bend": 9216,
+     "bendAt": 226.483333,
+     "rangeSt": 2,
+     "cents": 25,
+     "hz": 892.8,
+     "span": [
+      226.576,
+      234.576
+     ]
+    },
+    {
+     "port": "Vn2",
+     "ch": 2,
+     "pitch": 81,
+     "vel": 118,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 127,
+     "bend": 6672,
+     "bendAt": 225.816667,
+     "rangeSt": 0.97,
+     "cents": -18,
+     "hz": 870.899,
+     "span": [
+      225.524,
+      233.666
+     ]
+    }
+   ]
+  },
+  {
+   "id": "flvn2",
+   "take": 2,
+   "label": "Flute + Violin 2",
+   "T": 226.6,
+   "slot": 46,
+   "hold": 32,
+   "chartHz": 21.5,
+   "frozenHz": 21.9,
+   "parts": [
+    {
+     "port": "Fluteb",
+     "ch": 4,
+     "pitch": 81,
+     "vel": 111,
+     "cc0": null,
+     "cc7max": 122,
+     "cc7atT": 82,
+     "bend": 9216,
+     "bendAt": 226.483333,
+     "rangeSt": 2,
+     "cents": 25,
+     "hz": 892.8,
+     "span": [
+      226.576,
+      234.576
+     ]
+    },
+    {
+     "port": "Vn2",
+     "ch": 2,
+     "pitch": 81,
+     "vel": 118,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 127,
+     "bend": 6672,
+     "bendAt": 225.816667,
+     "rangeSt": 0.97,
+     "cents": -18,
+     "hz": 870.899,
+     "span": [
+      225.524,
+      233.666
+     ]
+    }
+   ]
+  },
+  {
+   "id": "flvn2",
+   "take": 3,
+   "label": "Flute + Violin 2",
+   "T": 226.6,
+   "slot": 82,
+   "hold": 32,
+   "chartHz": 21.5,
+   "frozenHz": 21.9,
+   "parts": [
+    {
+     "port": "Fluteb",
+     "ch": 4,
+     "pitch": 81,
+     "vel": 111,
+     "cc0": null,
+     "cc7max": 122,
+     "cc7atT": 82,
+     "bend": 9216,
+     "bendAt": 226.483333,
+     "rangeSt": 2,
+     "cents": 25,
+     "hz": 892.8,
+     "span": [
+      226.576,
+      234.576
+     ]
+    },
+    {
+     "port": "Vn2",
+     "ch": 2,
+     "pitch": 81,
+     "vel": 118,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 127,
+     "bend": 6672,
+     "bendAt": 225.816667,
+     "rangeSt": 0.97,
+     "cents": -18,
+     "hz": 870.899,
+     "span": [
+      225.524,
+      233.666
+     ]
+    }
+   ]
+  },
+  {
+   "id": "flvn2",
+   "take": 4,
+   "label": "Flute + Violin 2",
+   "T": 226.6,
+   "slot": 118,
+   "hold": 32,
+   "chartHz": 21.5,
+   "frozenHz": 21.9,
+   "parts": [
+    {
+     "port": "Fluteb",
+     "ch": 4,
+     "pitch": 81,
+     "vel": 111,
+     "cc0": null,
+     "cc7max": 122,
+     "cc7atT": 82,
+     "bend": 9216,
+     "bendAt": 226.483333,
+     "rangeSt": 2,
+     "cents": 25,
+     "hz": 892.8,
+     "span": [
+      226.576,
+      234.576
+     ]
+    },
+    {
+     "port": "Vn2",
+     "ch": 2,
+     "pitch": 81,
+     "vel": 118,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 127,
+     "bend": 6672,
+     "bendAt": 225.816667,
+     "rangeSt": 0.97,
+     "cents": -18,
+     "hz": 870.899,
+     "span": [
+      225.524,
+      233.666
+     ]
+    }
+   ]
+  },
+  {
+   "id": "flvn2",
+   "take": 5,
+   "label": "Flute + Violin 2",
+   "T": 226.6,
+   "slot": 154,
+   "hold": 32,
+   "chartHz": 21.5,
+   "frozenHz": 21.9,
+   "parts": [
+    {
+     "port": "Fluteb",
+     "ch": 4,
+     "pitch": 81,
+     "vel": 111,
+     "cc0": null,
+     "cc7max": 122,
+     "cc7atT": 82,
+     "bend": 9216,
+     "bendAt": 226.483333,
+     "rangeSt": 2,
+     "cents": 25,
+     "hz": 892.8,
+     "span": [
+      226.576,
+      234.576
+     ]
+    },
+    {
+     "port": "Vn2",
+     "ch": 2,
+     "pitch": 81,
+     "vel": 118,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 127,
+     "bend": 6672,
+     "bendAt": 225.816667,
+     "rangeSt": 0.97,
+     "cents": -18,
+     "hz": 870.899,
+     "span": [
+      225.524,
+      233.666
+     ]
+    }
+   ]
+  },
+  {
+   "id": "flvn2",
+   "take": 6,
+   "label": "Flute + Violin 2",
+   "T": 226.6,
+   "slot": 190,
+   "hold": 32,
+   "chartHz": 21.5,
+   "frozenHz": 21.9,
+   "parts": [
+    {
+     "port": "Fluteb",
+     "ch": 4,
+     "pitch": 81,
+     "vel": 111,
+     "cc0": null,
+     "cc7max": 122,
+     "cc7atT": 82,
+     "bend": 9216,
+     "bendAt": 226.483333,
+     "rangeSt": 2,
+     "cents": 25,
+     "hz": 892.8,
+     "span": [
+      226.576,
+      234.576
+     ]
+    },
+    {
+     "port": "Vn2",
+     "ch": 2,
+     "pitch": 81,
+     "vel": 118,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 127,
+     "bend": 6672,
+     "bendAt": 225.816667,
+     "rangeSt": 0.97,
+     "cents": -18,
+     "hz": 870.899,
+     "span": [
+      225.524,
+      233.666
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vn1va",
+   "take": 1,
+   "label": "Violin 1 + Viola",
+   "T": 222.9,
+   "slot": 226,
+   "hold": 32,
+   "chartHz": 16.1,
+   "frozenHz": 15.94,
+   "parts": [
+    {
+     "port": "Vn1",
+     "ch": 4,
+     "pitch": 74,
+     "vel": 100,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 117,
+     "bend": 10155,
+     "bendAt": 222.25,
+     "rangeSt": 0.96,
+     "cents": 23,
+     "hz": 595.186,
+     "span": [
+      221.939,
+      227.938
+     ]
+    },
+    {
+     "port": "Va",
+     "ch": 4,
+     "pitch": 74,
+     "vel": 115,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 98,
+     "bend": 6206,
+     "bendAt": 222.766667,
+     "rangeSt": 0.99,
+     "cents": -24,
+     "hz": 579.243,
+     "span": [
+      222.862,
+      229.658
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vn1va",
+   "take": 2,
+   "label": "Violin 1 + Viola",
+   "T": 222.9,
+   "slot": 262,
+   "hold": 32,
+   "chartHz": 16.1,
+   "frozenHz": 15.94,
+   "parts": [
+    {
+     "port": "Vn1",
+     "ch": 4,
+     "pitch": 74,
+     "vel": 100,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 117,
+     "bend": 10155,
+     "bendAt": 222.25,
+     "rangeSt": 0.96,
+     "cents": 23,
+     "hz": 595.186,
+     "span": [
+      221.939,
+      227.938
+     ]
+    },
+    {
+     "port": "Va",
+     "ch": 4,
+     "pitch": 74,
+     "vel": 115,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 98,
+     "bend": 6206,
+     "bendAt": 222.766667,
+     "rangeSt": 0.99,
+     "cents": -24,
+     "hz": 579.243,
+     "span": [
+      222.862,
+      229.658
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vn1va",
+   "take": 3,
+   "label": "Violin 1 + Viola",
+   "T": 222.9,
+   "slot": 298,
+   "hold": 32,
+   "chartHz": 16.1,
+   "frozenHz": 15.94,
+   "parts": [
+    {
+     "port": "Vn1",
+     "ch": 4,
+     "pitch": 74,
+     "vel": 100,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 117,
+     "bend": 10155,
+     "bendAt": 222.25,
+     "rangeSt": 0.96,
+     "cents": 23,
+     "hz": 595.186,
+     "span": [
+      221.939,
+      227.938
+     ]
+    },
+    {
+     "port": "Va",
+     "ch": 4,
+     "pitch": 74,
+     "vel": 115,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 98,
+     "bend": 6206,
+     "bendAt": 222.766667,
+     "rangeSt": 0.99,
+     "cents": -24,
+     "hz": 579.243,
+     "span": [
+      222.862,
+      229.658
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vn1va",
+   "take": 4,
+   "label": "Violin 1 + Viola",
+   "T": 222.9,
+   "slot": 334,
+   "hold": 32,
+   "chartHz": 16.1,
+   "frozenHz": 15.94,
+   "parts": [
+    {
+     "port": "Vn1",
+     "ch": 4,
+     "pitch": 74,
+     "vel": 100,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 117,
+     "bend": 10155,
+     "bendAt": 222.25,
+     "rangeSt": 0.96,
+     "cents": 23,
+     "hz": 595.186,
+     "span": [
+      221.939,
+      227.938
+     ]
+    },
+    {
+     "port": "Va",
+     "ch": 4,
+     "pitch": 74,
+     "vel": 115,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 98,
+     "bend": 6206,
+     "bendAt": 222.766667,
+     "rangeSt": 0.99,
+     "cents": -24,
+     "hz": 579.243,
+     "span": [
+      222.862,
+      229.658
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vn1va",
+   "take": 5,
+   "label": "Violin 1 + Viola",
+   "T": 222.9,
+   "slot": 370,
+   "hold": 32,
+   "chartHz": 16.1,
+   "frozenHz": 15.94,
+   "parts": [
+    {
+     "port": "Vn1",
+     "ch": 4,
+     "pitch": 74,
+     "vel": 100,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 117,
+     "bend": 10155,
+     "bendAt": 222.25,
+     "rangeSt": 0.96,
+     "cents": 23,
+     "hz": 595.186,
+     "span": [
+      221.939,
+      227.938
+     ]
+    },
+    {
+     "port": "Va",
+     "ch": 4,
+     "pitch": 74,
+     "vel": 115,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 98,
+     "bend": 6206,
+     "bendAt": 222.766667,
+     "rangeSt": 0.99,
+     "cents": -24,
+     "hz": 579.243,
+     "span": [
+      222.862,
+      229.658
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vn1va",
+   "take": 6,
+   "label": "Violin 1 + Viola",
+   "T": 222.9,
+   "slot": 406,
+   "hold": 32,
+   "chartHz": 16.1,
+   "frozenHz": 15.94,
+   "parts": [
+    {
+     "port": "Vn1",
+     "ch": 4,
+     "pitch": 74,
+     "vel": 100,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 117,
+     "bend": 10155,
+     "bendAt": 222.25,
+     "rangeSt": 0.96,
+     "cents": 23,
+     "hz": 595.186,
+     "span": [
+      221.939,
+      227.938
+     ]
+    },
+    {
+     "port": "Va",
+     "ch": 4,
+     "pitch": 74,
+     "vel": 115,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 98,
+     "bend": 6206,
+     "bendAt": 222.766667,
+     "rangeSt": 0.99,
+     "cents": -24,
+     "hz": 579.243,
+     "span": [
+      222.862,
+      229.658
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bclvc",
+   "take": 1,
+   "label": "Bass Clarinet + Cello",
+   "T": 214.8,
+   "slot": 442,
+   "hold": 32,
+   "chartHz": 7.2,
+   "frozenHz": 7.11,
+   "parts": [
+    {
+     "port": "BassCl",
+     "ch": 3,
+     "pitch": 60,
+     "vel": 77,
+     "cc0": 12,
+     "cc7max": 127,
+     "cc7atT": 124,
+     "bend": 6353,
+     "bendAt": 214.05,
+     "rangeSt": 0.98,
+     "cents": -22,
+     "hz": 258.322,
+     "span": [
+      214.148,
+      220.853
+     ]
+    },
+    {
+     "port": "Vc",
+     "ch": 3,
+     "pitch": 60,
+     "vel": 73,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 104,
+     "bend": 10303,
+     "bendAt": 214.216667,
+     "rangeSt": 0.97,
+     "cents": 25,
+     "hz": 265.43,
+     "span": [
+      212.144,
+      218.332
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bclvc",
+   "take": 2,
+   "label": "Bass Clarinet + Cello",
+   "T": 214.8,
+   "slot": 478,
+   "hold": 32,
+   "chartHz": 7.2,
+   "frozenHz": 7.11,
+   "parts": [
+    {
+     "port": "BassCl",
+     "ch": 3,
+     "pitch": 60,
+     "vel": 77,
+     "cc0": 12,
+     "cc7max": 127,
+     "cc7atT": 124,
+     "bend": 6353,
+     "bendAt": 214.05,
+     "rangeSt": 0.98,
+     "cents": -22,
+     "hz": 258.322,
+     "span": [
+      214.148,
+      220.853
+     ]
+    },
+    {
+     "port": "Vc",
+     "ch": 3,
+     "pitch": 60,
+     "vel": 73,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 104,
+     "bend": 10303,
+     "bendAt": 214.216667,
+     "rangeSt": 0.97,
+     "cents": 25,
+     "hz": 265.43,
+     "span": [
+      212.144,
+      218.332
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bclvc",
+   "take": 3,
+   "label": "Bass Clarinet + Cello",
+   "T": 214.8,
+   "slot": 514,
+   "hold": 32,
+   "chartHz": 7.2,
+   "frozenHz": 7.11,
+   "parts": [
+    {
+     "port": "BassCl",
+     "ch": 3,
+     "pitch": 60,
+     "vel": 77,
+     "cc0": 12,
+     "cc7max": 127,
+     "cc7atT": 124,
+     "bend": 6353,
+     "bendAt": 214.05,
+     "rangeSt": 0.98,
+     "cents": -22,
+     "hz": 258.322,
+     "span": [
+      214.148,
+      220.853
+     ]
+    },
+    {
+     "port": "Vc",
+     "ch": 3,
+     "pitch": 60,
+     "vel": 73,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 104,
+     "bend": 10303,
+     "bendAt": 214.216667,
+     "rangeSt": 0.97,
+     "cents": 25,
+     "hz": 265.43,
+     "span": [
+      212.144,
+      218.332
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bclvc",
+   "take": 4,
+   "label": "Bass Clarinet + Cello",
+   "T": 214.8,
+   "slot": 550,
+   "hold": 32,
+   "chartHz": 7.2,
+   "frozenHz": 7.11,
+   "parts": [
+    {
+     "port": "BassCl",
+     "ch": 3,
+     "pitch": 60,
+     "vel": 77,
+     "cc0": 12,
+     "cc7max": 127,
+     "cc7atT": 124,
+     "bend": 6353,
+     "bendAt": 214.05,
+     "rangeSt": 0.98,
+     "cents": -22,
+     "hz": 258.322,
+     "span": [
+      214.148,
+      220.853
+     ]
+    },
+    {
+     "port": "Vc",
+     "ch": 3,
+     "pitch": 60,
+     "vel": 73,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 104,
+     "bend": 10303,
+     "bendAt": 214.216667,
+     "rangeSt": 0.97,
+     "cents": 25,
+     "hz": 265.43,
+     "span": [
+      212.144,
+      218.332
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bclvc",
+   "take": 5,
+   "label": "Bass Clarinet + Cello",
+   "T": 214.8,
+   "slot": 586,
+   "hold": 32,
+   "chartHz": 7.2,
+   "frozenHz": 7.11,
+   "parts": [
+    {
+     "port": "BassCl",
+     "ch": 3,
+     "pitch": 60,
+     "vel": 77,
+     "cc0": 12,
+     "cc7max": 127,
+     "cc7atT": 124,
+     "bend": 6353,
+     "bendAt": 214.05,
+     "rangeSt": 0.98,
+     "cents": -22,
+     "hz": 258.322,
+     "span": [
+      214.148,
+      220.853
+     ]
+    },
+    {
+     "port": "Vc",
+     "ch": 3,
+     "pitch": 60,
+     "vel": 73,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 104,
+     "bend": 10303,
+     "bendAt": 214.216667,
+     "rangeSt": 0.97,
+     "cents": 25,
+     "hz": 265.43,
+     "span": [
+      212.144,
+      218.332
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bclvc",
+   "take": 6,
+   "label": "Bass Clarinet + Cello",
+   "T": 214.8,
+   "slot": 622,
+   "hold": 32,
+   "chartHz": 7.2,
+   "frozenHz": 7.11,
+   "parts": [
+    {
+     "port": "BassCl",
+     "ch": 3,
+     "pitch": 60,
+     "vel": 77,
+     "cc0": 12,
+     "cc7max": 127,
+     "cc7atT": 124,
+     "bend": 6353,
+     "bendAt": 214.05,
+     "rangeSt": 0.98,
+     "cents": -22,
+     "hz": 258.322,
+     "span": [
+      214.148,
+      220.853
+     ]
+    },
+    {
+     "port": "Vc",
+     "ch": 3,
+     "pitch": 60,
+     "vel": 73,
+     "cc0": 5,
+     "cc7max": 127,
+     "cc7atT": 104,
+     "bend": 10303,
+     "bendAt": 214.216667,
+     "rangeSt": 0.97,
+     "cents": 25,
+     "hz": 265.43,
+     "span": [
+      212.144,
+      218.332
+     ]
+    }
+   ]
+  }
+ ]
+}

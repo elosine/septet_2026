@@ -1631,7 +1631,7 @@ player would touch parts, solo, crop and print.
      of the score (NITS).
      *(The opening reference, kept: CN-82 — piece #2's score around 0:50, the plucked notes, the pedal mark, the rosette, the duration line.)*
   6. **Journal, standards, D-entry; commit** — `done 2026-09-14: D49; NOTATION_STANDARDS §0 + §3 rows; RUNNING_LOG §483–§500`.
-  7. **The practice videos with the beat rates (D48)** — `todo — planned 2026-09-17, Opus builds` *(was `later, the performance stage`;
+  7. **The practice videos with the beat rates (D48)** — `doing — built 2026-09-17, his eye and ear next` *(was `later, the performance stage`;
      pulled forward at his word, RUNNING_LOG §595)* — a set for this piece like the tuba's: the players see
      the beating speed and hear it in isolation; BLOOM only — **no SPECTRAL demos** (his word 2026-09-17, RUNNING_LOG §584) (M1 at full spread: C4 ≈ 7 Hz · D5 ≈ 16 · A5 ≈ 22).
      **THE BUILD PLAN: `docs/plans/BLOOM_PRACTICE_VIDEOS.md`** (RUNNING_LOG §595–§597) — the tuba's final form, located and read
@@ -1639,11 +1639,11 @@ player would touch parts, solo, crop and print.
      Clarinet + Cello (C4, 7.2 Hz at 214.8 s) · Violin 1 + Viola (D5, 16.1 Hz at 222.9 s) · Flute + Violin 2 (A5, 21.5 Hz at 226.6 s) —
      each a labelled 30 s static with the HELD max dyad, then the whole Bloom in two lanes with the pair's own audio; the bass clarinet
      in C (his word, §596); the AI renders through the Reaper bridge itself (§596).
-     - **2h.7.1** Prove the two new uses — a two-lane export on the septet frame (non-adjacent lanes) · a pair-only bridge render — `todo`
-     - **2h.7.2** The held-max dyads — the capture frozen at each pair's peak instant; the sound holds 30 s; the rate measured off the file — `todo`
-     - **2h.7.3** The three pair recordings of the whole Bloom — `todo`
-     - **2h.7.4** The build script (`notation/video/renders/bloom_demos.sh`) and the pilot, Bass Clarinet + Cello — `todo`
-     - **2h.7.5** His eye and ear — the pilot, then the set — `todo`
+     - **2h.7.1** Prove the two new uses — a two-lane export on the septet frame (non-adjacent lanes) · a pair-only bridge render — `done 2026-09-17` (§599)
+     - **2h.7.2** The held-max dyads — the capture frozen at each pair's peak instant; the sound holds 30 s; the rate measured off the file — `done 2026-09-17` (§600: every Xsample strike a draw → six takes, one picked by a written rule)
+     - **2h.7.3** The three pair recordings of the whole Bloom — `done 2026-09-17` (§599)
+     - **2h.7.4** The build script (`notation/video/renders/bloom_demos.sh`) and the pilot, Bass Clarinet + Cello — `done 2026-09-17` (§601: all three built; `tools/check_bloom_demos.js`)
+     - **2h.7.5** His eye and ear — the pilot, then the set — `doing` (the three together)
      - **2h.7.6** His upload → the three links on the instructions page, each URL checked against its title — `todo`
      - **2h.7.7** Archive (`notation/video/approved/<date>-bloom-practice/`), docs, commit — `todo`
      *Why this way:* his — *"We should essentially make similar videos to the final ones that were made for the Tubo piece."* The one

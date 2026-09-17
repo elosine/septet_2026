@@ -306,11 +306,12 @@ const HALVES = (() => {
   if (!hv) return null;
   const zv = Coords.makeView(Coords.zoomCfg(baseCfgFor(0), Z, pageT0Of(0)));
   const MH = Math.round(H * Z);
+  // [PLAN 2h.7.1 — 2026-09-17] a --parts subset can leave a half with no drawn part (Vn1 + Va: both V-BOT): skip it here, fail only if a cut uses it
   const ext = Object.entries(hv).map(([name, ps]) => {
     const ss = zv.systems.filter(s => ps.includes(s.part));
-    if (!ss.length) throw new Error('video-cut half ' + name + ' names no drawn part');
+    if (!ss.length) return null;
     return { name, top: Math.min(...ss.map(s => s.yTopPx)), bot: Math.max(...ss.map(s => s.yBotPx)) };
-  }).sort((a, b) => a.top - b.top);
+  }).filter(Boolean).sort((a, b) => a.top - b.top);
   const out = {};
   ext.forEach((e, i) => {
     out[e.name] = { lo: i === 0 ? 0 : Math.ceil(ext[i - 1].bot), hi: i === ext.length - 1 ? MH : Math.ceil(e.bot),
@@ -451,6 +452,7 @@ function blendAt(k) {
 function srcBuf(src, t) {
   if (src === 'V-MAIN') return frameRGBA(t, 'video');
   const full = frameRGBA(t, 'zoom');
+  if (HALVES && !HALVES[src]) throw new Error('video-cut half ' + src + ' names no drawn part');
   return HALVES ? cropHalf(full, HALVES[src]) : cropRows(full, src === 'V-BOT' ? H : 0, H);   // the tuba: the y=1080 gap, measured
 }
 // linear cross-dissolve; w is the weight of B. Both buffers are opaque RGBA, so

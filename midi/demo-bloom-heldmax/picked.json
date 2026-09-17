@@ -1,0 +1,343 @@
+{
+ "made": "2026-09-17T16:26:43.344Z",
+ "rule": {
+  "tolPct": 4,
+  "depthTiePct": 10,
+  "holdDb": -12
+ },
+ "pairs": [
+  {
+   "id": "flvn2",
+   "row": 0,
+   "chartLabel": "Fl + Vn2",
+   "names": "Flute + Violin 2",
+   "parts": "0,4",
+   "chartHz": "21.5",
+   "label": "Bloom — 21.5 Hz — Flute + Violin 2",
+   "still": {
+    "t": 226.6
+   },
+   "static": {
+    "take": 3,
+    "slot": 82,
+    "from": 83,
+    "seconds": 30,
+    "measuredHz": 21.41,
+    "offPct": 0.4,
+    "depth": 3.8,
+    "balanceDb": -2.2,
+    "truePeakFloat": -14.9,
+    "gainDb": 13.9,
+    "gainFrom": "capped at -1 dBTP"
+   },
+   "section": {
+    "t0": 182,
+    "t1": 305.17,
+    "lastCurveEnd": 302.17,
+    "audio": "notation/audio/demo-bloom-flvn2.wav",
+    "gainDb": 16.2
+   },
+   "takes": [
+    {
+     "take": 1,
+     "slot": 10,
+     "rate": 20.43,
+     "offPct": 5,
+     "envelope": 20.42,
+     "harmonic": 1,
+     "depth": 3.8,
+     "balanceDb": -2.9,
+     "ok": false,
+     "why": [
+      "rate 5.0 % from the chart"
+     ]
+    },
+    {
+     "take": 2,
+     "slot": 46,
+     "rate": 21.3,
+     "offPct": 0.9,
+     "envelope": 21.3,
+     "harmonic": 1,
+     "depth": 2.9,
+     "balanceDb": -9.2,
+     "ok": true,
+     "why": []
+    },
+    {
+     "take": 3,
+     "slot": 82,
+     "rate": 21.41,
+     "offPct": 0.4,
+     "envelope": 21.41,
+     "harmonic": 1,
+     "depth": 3.8,
+     "balanceDb": -2.2,
+     "ok": true,
+     "why": []
+    },
+    {
+     "take": 4,
+     "slot": 118,
+     "rate": 21.53,
+     "offPct": 0.1,
+     "envelope": 21.01,
+     "harmonic": 1,
+     "depth": 3.1,
+     "balanceDb": -8.4,
+     "ok": true,
+     "why": []
+    },
+    {
+     "take": 5,
+     "slot": 154,
+     "rate": 21.49,
+     "offPct": 0,
+     "envelope": 20.07,
+     "harmonic": null,
+     "depth": 3.6,
+     "balanceDb": -0.5,
+     "ok": false,
+     "why": [
+      "envelope at no multiple of the rate"
+     ]
+    },
+    {
+     "take": 6,
+     "slot": 190,
+     "rate": 20.07,
+     "offPct": 6.7,
+     "envelope": 20.07,
+     "harmonic": 1,
+     "depth": 3.6,
+     "balanceDb": -1.6,
+     "ok": false,
+     "why": [
+      "rate 6.7 % from the chart"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vn1va",
+   "row": 1,
+   "chartLabel": "Vn1 + Va",
+   "names": "Violin 1 + Viola",
+   "parts": "3,5",
+   "chartHz": "16.1",
+   "label": "Bloom — 16.1 Hz — Violin 1 + Viola",
+   "still": {
+    "t": 222.9
+   },
+   "static": {
+    "take": 2,
+    "slot": 262,
+    "from": 263,
+    "seconds": 30,
+    "measuredHz": 16.12,
+    "offPct": 0.1,
+    "depth": 2.2,
+    "balanceDb": -5.4,
+    "truePeakFloat": -21,
+    "gainDb": 13.4,
+    "gainFrom": "the pair recording"
+   },
+   "section": {
+    "t0": 182,
+    "t1": 307.82,
+    "lastCurveEnd": 304.82,
+    "audio": "notation/audio/demo-bloom-vn1va.wav",
+    "gainDb": 13.4
+   },
+   "takes": [
+    {
+     "take": 1,
+     "slot": 226,
+     "rate": 15.49,
+     "offPct": 3.8,
+     "envelope": 15.49,
+     "harmonic": 1,
+     "depth": 1.8,
+     "balanceDb": -20.1,
+     "ok": true,
+     "why": []
+    },
+    {
+     "take": 2,
+     "slot": 262,
+     "rate": 16.12,
+     "offPct": 0.1,
+     "envelope": 32.72,
+     "harmonic": 2,
+     "depth": 2.2,
+     "balanceDb": -5.4,
+     "ok": true,
+     "why": []
+    },
+    {
+     "take": 3,
+     "slot": 298,
+     "rate": 14.85,
+     "offPct": 7.8,
+     "envelope": 1.09,
+     "harmonic": null,
+     "depth": 1.7,
+     "balanceDb": -16.1,
+     "ok": false,
+     "why": [
+      "rate 7.8 % from the chart",
+      "envelope at no multiple of the rate"
+     ]
+    },
+    {
+     "take": 4,
+     "slot": 334,
+     "rate": 16.59,
+     "offPct": 3,
+     "envelope": 33.65,
+     "harmonic": 2,
+     "depth": 2.4,
+     "balanceDb": -3.3,
+     "ok": true,
+     "why": []
+    },
+    {
+     "take": 5,
+     "slot": 370,
+     "rate": 15.83,
+     "offPct": 1.7,
+     "envelope": 32,
+     "harmonic": 2,
+     "depth": 2.3,
+     "balanceDb": -5.1,
+     "ok": true,
+     "why": []
+    },
+    {
+     "take": 6,
+     "slot": 406,
+     "rate": 15.25,
+     "offPct": 5.3,
+     "envelope": 15.26,
+     "harmonic": 1,
+     "depth": 1.7,
+     "balanceDb": -20.3,
+     "ok": false,
+     "why": [
+      "rate 5.3 % from the chart"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bclvc",
+   "row": 2,
+   "chartLabel": "Bcl + Vc",
+   "names": "Bass Clarinet + Cello",
+   "parts": "1,6",
+   "chartHz": "7.2",
+   "label": "Bloom — 7.2 Hz — Bass Clarinet + Cello",
+   "still": {
+    "t": 214.8
+   },
+   "static": {
+    "take": 6,
+    "slot": 622,
+    "from": 623,
+    "seconds": 30,
+    "measuredHz": 7.16,
+    "offPct": 0.6,
+    "depth": 4.6,
+    "balanceDb": -4.6,
+    "truePeakFloat": -22.7,
+    "gainDb": 13.3,
+    "gainFrom": "the pair recording"
+   },
+   "section": {
+    "t0": 182,
+    "t1": 302.93,
+    "lastCurveEnd": 299.93,
+    "audio": "notation/audio/demo-bloom-bclvc.wav",
+    "gainDb": 13.3
+   },
+   "takes": [
+    {
+     "take": 1,
+     "slot": 442,
+     "rate": 7.1,
+     "offPct": 1.4,
+     "envelope": 7.1,
+     "harmonic": 1,
+     "depth": 3.5,
+     "balanceDb": -4.7,
+     "ok": true,
+     "why": []
+    },
+    {
+     "take": 2,
+     "slot": 478,
+     "rate": 7.08,
+     "offPct": 1.7,
+     "envelope": 7.08,
+     "harmonic": 1,
+     "depth": 2.9,
+     "balanceDb": -8.3,
+     "ok": true,
+     "why": []
+    },
+    {
+     "take": 3,
+     "slot": 514,
+     "rate": 6.98,
+     "offPct": 3.1,
+     "envelope": 6.98,
+     "harmonic": 1,
+     "depth": 2.9,
+     "balanceDb": -5.6,
+     "ok": true,
+     "why": []
+    },
+    {
+     "take": 4,
+     "slot": 550,
+     "rate": 6.84,
+     "offPct": 5,
+     "envelope": 6.84,
+     "harmonic": 1,
+     "depth": 8.4,
+     "balanceDb": -0.3,
+     "ok": false,
+     "why": [
+      "rate 5.0 % from the chart"
+     ]
+    },
+    {
+     "take": 5,
+     "slot": 586,
+     "rate": 6.79,
+     "offPct": 5.7,
+     "envelope": 6.79,
+     "harmonic": 1,
+     "depth": 2,
+     "balanceDb": -0.7,
+     "ok": false,
+     "why": [
+      "rate 5.7 % from the chart"
+     ]
+    },
+    {
+     "take": 6,
+     "slot": 622,
+     "rate": 7.16,
+     "offPct": 0.6,
+     "envelope": 7.16,
+     "harmonic": 1,
+     "depth": 4.6,
+     "balanceDb": -4.6,
+     "ok": true,
+     "why": []
+    }
+   ]
+  }
+ ]
+}

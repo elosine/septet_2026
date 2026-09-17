@@ -15870,3 +15870,130 @@ stop-and-report list · a register. PLAN 2h.7 → `todo` with sub-steps 2h.7.1�
 stop Opus for nothing. The guard now judges by CONTENT (objects against `bc54cdc`) and expects `export_midi.js`'s saved-after-capture warning.
 
 **Left:** `scores/piece-septet.json` uncommitted — his file, his Save; not the AI's to commit unasked.
+
+## §599. PLAN 2h.7.1 + 2h.7.3: the two new uses proven — a two-lane picture on the septet frame, a pair alone out of the rack; the three pair recordings (2026-09-17, session 15, Opus 5)
+
+**His word, verbatim:** *"go for n0 and continue independantly as much as possible. no clear"* — the model switched to Opus; the build plan
+`docs/plans/BLOOM_PRACTICE_VIDEOS.md` taken up in the same session.
+
+**Guards first (plan §3):** the save's 1885 objects identical to `bc54cdc` · the 09-16 capture present · the approved render's sha256
+`ae3f6f74…6b25565a9026ad8d1d6156f04b35b60c07d618fe2e0fa5ea6c3b65` — re-checked after every render below, unchanged every time.
+
+**The picture.** Stills at the three peak instants (`export_video.js --parts 1,6 --probe 214.8` · `3,5` @ 222.9 · `0,4` @ 226.6).
+- **Violin 1 + Viola failed first:** `video-cut half V-TOP names no drawn part` — the close-up table (D57, groups) was built for every export
+  and threw when a `--parts` subset left a half empty (Vn1 and Va are both V-BOT). **Fixed:** a half with no drawn part is skipped when the
+  table is built and fails only if a cut asks for it (`srcBuf`). The default and the cut exports are unchanged.
+- **Looked at, all three:** two lanes only, capped and centred (the sparse-lane path), the bass clarinet in C on a bass clef, both curves, the
+  cursor, white paper above for the label. Non-adjacent lanes (every septet pair; no tuba pair was) draw as neighbours — nothing between them.
+- **A 10 s moving probe** (1,6, 210–220 s, with audio): 300 frames = 10.000 s, the cursor 770 px in 5 s = the page's 154 px/s. Faint grey flecks
+  on the staff lines in the video frame and not in the still at the same instant: h264 on 1 px lines at crf 16 — the encoder of the approved
+  submission video. Nothing to fix.
+
+**The sound.** `tools/render_reaper.js` gained five optional flags, the default call untouched: `--dir` (another MIDI folder) · `--only` (place
+only the tracks of these names) · `--out` (its own rpp / raw / wav names) · `--end` · `--gainWindow a-b` (the true peak read inside the used
+window, the one plain gain allowed UP — the plan's call for demo files). **A refusal built in:** `--dir` or `--only` without an `--out` of another
+name exits before anything opens — tested: *"RENDER REFUSED … it would overwrite notation/audio/piece-septet.wav"*.
+
+| recording | tracks placed | render | window | float peak in it | gain | first sound (float, −80 dB) |
+|---|---|---|---|---|---|---|
+| `demo-bloom-bclvc.wav` | Bass Clarinet XS ×2 · Vc XS | 42 s | 182–306 | −14.3 dBTP | +13.3 dB | 185.121 s |
+| `demo-bloom-vn1va.wav` | Vn1 XS · Va XS | 45 s | 182–311 | −14.4 dBTP | +13.4 dB | 185.277 s |
+| `demo-bloom-flvn2.wav` | Flute SI2 · Fluteb SI2 · Vn2 XS | ~45 s | 182–309 | −17.2 dBTP | +16.2 dB | 184.065 s |
+
+All 0 → 312 s, the piece's own timeline (the exporter lines audio up by its `-ss t0`). Outside the window the gained files are over full scale
+(section 1 is louder in these parts) — never used, and said here so nobody reuses them for anything else.
+
+**The first sound, explained rather than asserted:** 185.121 s against the pair's note-ons at 183.003 — the capture shows both notes start with
+CC7 = 0 (niente) and rise: CC7 11 at 185.0 s, where the sound crosses −80 dB. The fade, not drift.
+
+## §600. PLAN 2h.7.2: the held dyads — the capture frozen; the rate check failed, four readings that were wrong, and the one that held: every Xsample strike is a draw; six takes and a written pick (2026-09-17, session 15, Opus 5)
+
+**The generator:** `tools/gen_bloom_heldmax.js` — each part = the capture frozen at its pair's peak instant (the note sounding at T, its channel —
+the morph rotates channels 2–4 span by span; the flute's morph plays on the Fluteb port — its velocity, the bend at T), held 32 s. No program
+changes or keyswitches exist in these parts; the articulation is CC0. The frozen bends, through each instrument's MEASURED range
+(`sandbox/instruments.js` MEASURED_BEND), give **21.9 · 15.94 · 7.11 Hz** against the chart's **21.5 · 16.1 · 7.2**.
+**The measurer:** `tools/measure_beating.js` — per slot: the level each second (does it hold), the two strongest spectral peaks near the
+unison (their distance = the rate; 2^20 samples, 0.046 Hz a bin), the RMS envelope's own spectrum (the beating as heard); later the 2nd and
+3rd harmonics and the envelope's top peaks.
+
+**In order — what was measured, what was concluded, and which conclusions did not survive:**
+
+1. **Render 1** (the sounding channel's state only; CC7 raised to the span's top — the plan's design): **every part HOLDS 32 s** (within 1.7 dB;
+   the samples loop, no re-strike needed). **Rates 19.83 · 14.59 · 7.59 Hz — 7.8 · 9.4 · 5.4 % off the chart: the plan's stop condition (§7).**
+   Diagnosed, not worked around. The harmonics gave the same rate on every partial — a real pitch difference, 1–4 c per part.
+2. **The music itself, measured** (a sweep of the three pair recordings, 2.8 s windows every 2 s across the Bloom, against the chart's curve):
+   the recordings FOLLOW the chart — both rises, the trough, the return — and at the peaks run within about ±5 % of it (Bcl + Vc 6.69–6.88 vs
+   7.12–7.14 · Vn1 + Va 16.03–16.20 vs 15.46–16.03 · Fl + Vn2 20.57–20.96 vs 21.39–21.41). **The chart is true to the music.**
+3. **A hypothesis refuted:** the sample's loop region differs from its attack (the music re-strikes every ~5 s) — the held dyad was the same
+   from 0.6 s to 25 s into the hold.
+4. **A fault found in the generator:** the plan said *"its channels' whole state"*; the code sent the sounding channel's alone. The capture
+   carries more at T (Vn1: CC0 79 on channel 1, channel 2 left bent at 9557; Va: CC0 20 on channel 1). Fixed: every channel's last controller
+   values and bend. **Render 2:** 20.56 · 15.70 · 7.19 Hz. *Concluded then: the channel state was the cause.* — **WRONG, see 6.**
+5. **Render 3** (CC7 left as at T, the pure freeze): 20.88 · 16.34 · 7.04. *Concluded then: CC7 moves the pitch in these instruments (a
+   crossfade between layers).* — **WRONG, see 6.** It was written into the generator's comments and corrected there within the hour.
+6. **Render 4 — the SAME file as render 3, rendered again: 19.72 · 15.80 · 7.22 Hz.** The render-to-render difference was as large as every
+   "effect" in 4 and 5. Across all four renders **the SI2 flute sat at 892.66 Hz every time**; every Xsample part moved ±1–2 c. **Each Xsample
+   note-on is a draw** (round robin or randomised tuning — which, not established, not needed). The same draw is in the music: it is the ±5 %
+   jitter of reading 2. *Kept from 4 and 5:* every channel's state (it is what the plan said); CC7 as at T (the pure freeze — no design call on
+   loudness). *Not concluded:* that either changes the rate.
+
+**The remedy — choose, do not tune.** `gen_bloom_heldmax.js --takes 6` (default): each pair struck six times, 36 s apart, one render of 660 s
+(69 s). **The six takes of each** (rate · % off the chart · envelope · depth max/min · the weaker part's level):
+
+| | Fl + Vn2 (21.5) | Vn1 + Va (16.1) | Bcl + Vc (7.2) |
+|---|---|---|---|
+| 1 | 20.43 · 5.0 · 1× · 3.8 · −2.9 | 15.49 · 3.8 · 1× · 1.8 · −20.1 | 7.10 · 1.4 · 1× · 3.5 · −4.7 |
+| 2 | 21.30 · 0.9 · 1× · 2.9 · −9.2 | **16.12 · 0.1 · 2× · 2.2 · −5.4 ◄** | 7.08 · 1.7 · 1× · 2.9 · −8.3 |
+| 3 | **21.41 · 0.4 · 1× · 3.8 · −2.2 ◄** | 14.85 · 7.8 · — · 1.7 · −16.1 | 6.98 · 3.1 · 1× · 2.9 · −5.6 |
+| 4 | 21.53 · 0.1 · 1× · 3.1 · −8.4 | 16.59 · 3.0 · 2× · 2.4 · −3.3 | 6.84 · 5.0 · 1× · 8.4 · −0.3 |
+| 5 | 21.49 · 0.0 · — · 3.6 · −0.5 | 15.83 · 1.7 · 2× · 2.3 · −5.1 | 6.79 · 5.7 · 1× · 2.0 · −0.7 |
+| 6 | 20.07 · 6.7 · 1× · 3.6 · −1.6 | 15.25 · 5.3 · 1× · 1.7 · −20.3 | **7.16 · 0.6 · 1× · 4.6 · −4.6 ◄** |
+
+The viola's level moved 17 dB between strikes of one message — the "viola 24 dB under the violin" of renders 1–4 was a draw too.
+**The envelope at 2×** (Vn1 + Va takes 2, 4, 5): where the two parts balance, the beating as heard sits on the viola's strong 2nd harmonic —
+consistent with the rate, not a wrong pitch; the verdict now accepts 1, 2 or 3 times the rate.
+
+**THE RULE** (`tools/pick_bloom_takes.js`, written before it was run): holds · rate within **4 %** of the chart (a margin inside the plan's 5 %) ·
+envelope at 1–3× the rate · then the deepest beating, depths within 10 % of the deepest equal, and then the nearest the chart. **Picks: Fl + Vn2
+take 3 · Vn1 + Va take 2 · Bcl + Vc take 6.** *The one the rule turned down that an ear might want:* Bcl + Vc take 4 — the deepest beating of
+all (8.4×, the two parts within 0.3 dB) at 6.84 Hz, exactly 5.0 % slow. His to ask for.
+**The static's audio:** one second into the take, 30 s; gain = the pair recording's own (so it sits where the rack puts the music), capped at
+−1 dBTP — Fl + Vn2 capped at +13.9 dB (its recording's +16.2 would have peaked over).
+**The label's figure and the row order are read from the chart SVG** (`≈ 21.5 / 16.1 / 7.2 Hz`, rows `Fl + Vn2 · Vn1 + Va · Bcl + Vc`).
+
+*Rejected on the way:* tuning the bends by measurement until the rate matched (it would tune one draw, and the next render draws again) ·
+porting the tuba's arithmetic generator (plan §2) · labelling with the measured rate (the page's chart prints the figure; the label must agree).
+
+## §601. PLAN 2h.7.4: the build script, the pilot, and all three videos built and measured — all checks pass; to his eye and ear (2026-09-17, session 15, Opus 5)
+
+**Built:** `notation/video/renders/bloom_demos.sh <bclvc|vn1va|flvn2|all>` — ported from piece #4's `demos.sh`; every number from
+`midi/demo-bloom-heldmax/picked.json` (§600). Per video: the still at the peak instant (`export_video.js --parts --probe`) → the label drawn on
+it (Georgia 58 px black, x 70 y 48, from a text file) + the picked take's 30 s (one plain gain, 20 ms fade in / 500 ms out) → the section playback
+(`--parts --t0 182 --t1 <the pair's last curve end + 3>` with the pair recording) → joined. The tuba's encode: 1920 × 1080 · 30 fps · x264 crf 16 ·
+AAC 256 k 48 kHz. **The pilot first** (Bass Clarinet + Cello, 1:40), measured and looked at; **then, at his "continue independantly as much as
+possible", the other two before his ear rather than after it** — a rebuild of all three is ~5 min, the renders are cached.
+
+**The first sound, a reading corrected before it became a claim:** the pilot's first sound after the join read 0.79 s EARLIER than the recording's
+185.121 s. Not drift: that figure was read on the float BEFORE the +13.3 dB gain, so the niente entry crosses −80 dB later there. Against the gained
+recording (184.315 s): Δ 20 ms — about one AAC priming frame (21.3 ms), below any audible A/V offset. The check now compares gained with gained.
+
+**`tools/check_bloom_demos.js`** (the tuba's PHASE 5, cut to fit) — every video, measured:
+
+| | length (frames) | label band PSNR | join vs probe @ 182 / vs the still | first sound Δ | rate in the mp4 (the take · the label) | static RMS · music at its peak | true peaks |
+|---|---|---|---|---|---|---|---|
+| bclvc | 150.933 s (4528) | 11.8 dB | 41.9 / 26.2 dB | 20 ms | 7.16 Hz (0.0 % · 0.6 %) | −16.3 · −17.8 dBFS | −9.4 / −1.1 dBTP |
+| vn1va | 155.833 s (4675) | 12.7 dB | 39.7 / 26.1 dB | 18 ms | 16.12 Hz (0.0 % · 0.1 %) | −18.4 · −16.5 | −7.7 / −1.0 |
+| flvn2 | 153.167 s (4595) | 12.5 dB | 40.4 / 25.9 dB | 17 ms | 21.41 Hz (0.0 % · 0.4 %) | −12.7 · −12.0 | −1.0 / −1.0 |
+
+**The statics sit within ~2 dB of the music at the instant they demonstrate** — the pair gain doing what it was chosen for. The first version of
+the JOIN check read 33.5 dB (it grabbed the frame at 30.001 s — the next frame, the cursor moved); corrected to the frame at 30.000 s.
+
+**The exporter's change proven harmless:** the full frame and both close-up halves (`--cut … --half V-TOP|V-BOT --probe 100`) rendered by the
+committed `export_video.js` and by the changed one — **byte-identical** PNGs.
+
+**Files:** `notation/video/renders/demos/bloom-bclvc.mp4` (7.7 MiB, sha256 `64a707d4…ec39ed57`… see the plan's register) · `bloom-vn1va.mp4`
+(8.2 MiB) · `bloom-flvn2.mp4` (7.9 MiB) — gitignored, this machine only. Approved render sha unchanged at the end.
+
+**Next:** his eye and ear on the three (PLAN 2h.7.5). What is his to hear for: the held dyads' 30 s against the section that follows · Violin 1 +
+Viola's beating is the shallowest (depth 2.2×; D48 calls D5 ≈ 16 Hz roughness, not a countable rate) · Bass Clarinet + Cello take 4 is on offer
+(the deepest of all, 8.4×, at 6.84 Hz — 5 % slow) · the title pattern for the upload.

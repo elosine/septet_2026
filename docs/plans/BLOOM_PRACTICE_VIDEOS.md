@@ -57,7 +57,7 @@ render, twice run on the whole piece) · `tools/export_video.js` with the tuba's
 
 ## §4 The steps
 
-**1. Prove the two new uses** (a two-lane picture on the septet frame · a pair alone out of the rack) — `todo`
+**1. Prove the two new uses** (a two-lane picture on the septet frame · a pair alone out of the rack) — `done 2026-09-17` *(§599: one fix in export_video.js — the close-up table threw on a part subset; render_reaper.js --dir/--only/--out/--end/--gainWindow)*
 
 - Stills of all three pairs at their peak instants: `node tools/export_video.js --ir piece-septet --view video --parts 1,6 --probe 214.8
   --probeDir notation/video/renders/demos/tmp` (then `3,5` @ 222.9 · `0,4` @ 226.6). Look at each: two lanes only, the bass clarinet in C,
@@ -70,7 +70,7 @@ render, twice run on the whole piece) · `tools/export_video.js` with the tuba's
   pair and nothing else (silence where both rest).
 - *If the two-lane export fails:* report what it draws before choosing — the tuba's named fallback is cropping the full-frame video.
 
-**2. The held-max dyads** (30 s of each pair's fastest beating, which the music itself never holds) — `todo`
+**2. The held-max dyads** (30 s of each pair's fastest beating, which the music itself never holds) — `done 2026-09-17` *(§600 — AS BUILT, departing from the text below: the stop condition fired; every Xsample strike proved to be a draw (±1–2 c); six takes per pair, one picked by a written rule — tools/pick_bloom_takes.js; CC7 as at T, not raised to the span top; the tuba's 40 s slots became 36 s)*
 
 - One generated set, three slots on one timeline (the tuba's layout: slot k at 10 + 40·k s, 32 s long) → `midi/demo-bloom-heldmax/`,
   rendered once with all six parts → `notation/audio/demo-bloom-heldmax.wav`.
@@ -86,14 +86,14 @@ render, twice run on the whole piece) · `tools/export_video.js` with the tuba's
   bend ranges live only in the composer (RENDER.md rule 1; §553's bend-range bug is the proof). *Held in reserve if the freeze fails the
   rate check:* a small composer score with flat morph curves, captured headless.
 
-**3. The three pair recordings** (each pair alone through the whole Bloom) — `todo`
+**3. The three pair recordings** (each pair alone through the whole Bloom) — `done 2026-09-17` *(§599)*
 
 - Step 1's route, twice more → `demo-bloom-vn1va.wav` · `demo-bloom-flvn2.wav` (about a minute of rendering each).
 - **Gain: ONE plain gain per demo file to −1 dBTP, UP allowed** — a pair alone sits far under the full mix and would be faint online.
   No limiter, no normalize beyond that one number; each file's gain goes in the register. (For these files only; RENDER.md rule 8 stands for the piece.)
 - *Check:* as step 1, per file.
 
-**4. The build script, and the pilot** (one command makes a video; Bass Clarinet + Cello first) — `todo`
+**4. The build script, and the pilot** (one command makes a video; Bass Clarinet + Cello first) — `done 2026-09-17` *(§601: the pilot measured, then — at his "continue independantly as much as possible" — the other two built before his ear, not after; tools/check_bloom_demos.js measures each)*
 
 - `notation/video/renders/bloom_demos.sh <pair>|all`, ported from the tuba's `demos.sh`: a row per pair (lanes · names · peak instant · end ·
   the dyad's slot offset · N) · the still → the 30 s static with the label (the tuba's drawtext: Georgia 58 px, black, x 70 y 48 — moved only if
@@ -104,7 +104,7 @@ render, twice run on the whole piece) · `tools/export_video.js` with the tuba's
 - *Check, measured (the tuba's PHASE 5):* duration = 30 + (t1 − t0) to the frame · A/V start 0 · the label present by frame extraction ·
   the section's first frame against a direct probe at t0 · the section's first sound against the pair's first onset.
 
-**5. His eye and ear** (the pilot, then the set) — `todo`
+**5. His eye and ear** (the pilot, then the set) — `doing` *(the three to him together)*
 
 - The pilot to him: the file's path, its length, the measures in three lines. Collect his notes in one pass, fix in one pass.
 - On his word: the other two (`bloom_demos.sh all`), the same checks, then the three to him.
@@ -132,7 +132,12 @@ render, twice run on the whole piece) · `tools/export_video.js` with the tuba's
 ## §6 AI calls he may overturn
 
 - The demo files' gain brought UP to −1 dBTP · the pilot being Bass Clarinet + Cello · the section starting one second before the first
-  go line · 30 s statics (the tuba's final; its first build had 10) · the dyad's loudness at the top of the swell · the file names · the title pattern.
+  go line · 30 s statics (the tuba's final; its first build had 10) · ~~the dyad's loudness at the top of the swell~~ *(replaced as built: CC7 as
+  at the peak instant — the pure freeze, §600)* · the file names · the title pattern.
+- *Added as built (§600–§601):* **the pick rule** (within 4 % of the chart, the envelope agreeing, then the deepest beating, ties to the nearest) —
+  the one it turned down that an ear might want: Bass Clarinet + Cello take 4, the deepest of all (8.4×) at 6.84 Hz, 5.0 % slow · the static's gain =
+  its pair recording's (Flute + Violin 2 capped at −1 dBTP) · 20 ms in / 500 ms out on the static's sound so its cuts do not click · the other two
+  built before his ear on the pilot.
 
 ## §7 Stop and report — do not work around
 
@@ -141,3 +146,20 @@ render, twice run on the whole piece) · `tools/export_video.js` with the tuba's
 
 ## §8 Register *(append-only — Opus fills this as the steps land)*
 
+
+- **2026-09-17 · step 1** — stills 1,6 @ 214.8 · 3,5 @ 222.9 · 0,4 @ 226.6 looked at, clean; moving probe 1,6 210–220 = 300 frames, 154 px/s.
+  Fixed: `export_video.js` threw `video-cut half V-TOP names no drawn part` on 3,5. Approved render sha unchanged after every render.
+- **2026-09-17 · step 3** — `demo-bloom-bclvc.wav` +13.3 dB (window 182–306, float −14.3 dBTP) · `demo-bloom-vn1va.wav` +13.4 dB (182–311, −14.4) ·
+  `demo-bloom-flvn2.wav` +16.2 dB (182–309, −17.2). 0 → 312 s each; outside the window the gained files are over full scale (never used).
+- **2026-09-17 · step 2** — four renders of one or two takes: rates moved ±5–8 % render to render (the flute exact, every Xsample part ±1–2 c).
+  **Six takes each, one render 0 → 660 s (69 s):** picks Fl + Vn2 take 3 (slot 82, 21.41 Hz, depth 3.8) · Vn1 + Va take 2 (slot 262, 16.12 Hz,
+  2× envelope, depth 2.2) · Bcl + Vc take 6 (slot 622, 7.16 Hz, depth 4.6). `midi/demo-bloom-heldmax/` slots · measured · picked.json.
+  **The picks belong to THAT render** (`notation/audio/raw/demo-bloom-heldmax-float.wav`, gitignored): a re-render draws new takes — then
+  re-measure and re-pick before any rebuild (the chain is in `tools/pick_bloom_takes.js`'s header).
+- **2026-09-17 · step 4** — `bloom_demos.sh`: bclvc 1:40 · vn1va and flvn2 ~1:45 each. `check_bloom_demos.js`:
+  bclvc 150.933 s, all six checks ok (join 41.9 dB, first sound Δ 20 ms, rate 7.16 in the mp4, static RMS −16.3 vs the music at its peak −17.8) ·
+  vn1va 155.833 s, all ok (join 39.7 dB, Δ 18 ms, 16.12 Hz, −18.4 vs −16.5).
+- **2026-09-17 · step 4, the set** — flvn2 153.167 s, all six checks ok (join 40.4 dB, Δ 17 ms, 21.41 Hz, −12.7 vs −12.0). sha256:
+  `bloom-bclvc.mp4` 64a707d4a860c385e2976f50727539474ee90ee5474a9fec576fb5c2a5e804cb · `bloom-vn1va.mp4`
+  673a015b44731135149cb82a944b4e086ed4b0004abe4e7a61a663a5ec39ed57 · `bloom-flvn2.mp4` 360217dce9ee4ceb5c7f969b776b0908223682cd956ceea5afcb86ef6e21543c.
+  `export_video.js` after its change: full frame + both halves byte-identical to the committed version. Approved render sha unchanged.

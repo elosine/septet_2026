@@ -1,0 +1,1532 @@
+[
+ {
+  "from": 10,
+  "to": 42,
+  "f0": 881.8495,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 1744.48,
+    "f2": 1785.33,
+    "balanceDb": -12.3,
+    "levelDb": -11.2
+   },
+   {
+    "h": 3,
+    "f1": 2617.09,
+    "f2": 2677.99,
+    "balanceDb": -11.2,
+    "levelDb": -9.3
+   }
+  ],
+  "hold": [
+   -30.7,
+   -29.2,
+   -29.8,
+   -30.9,
+   -29.5,
+   -30.9,
+   -30.6,
+   -29.8,
+   -30.9,
+   -30.1,
+   -29.9,
+   -31.3,
+   -29.5,
+   -30.5,
+   -30.8,
+   -29.7,
+   -30.9,
+   -30.5,
+   -29.6,
+   -31.4,
+   -29.7,
+   -30.2,
+   -31.1,
+   -29.5,
+   -30.9,
+   -30.5,
+   -29.8,
+   -31,
+   -30.1,
+   -29.8,
+   -31.3,
+   -29.6
+  ],
+  "holdDropDb": 0.4,
+  "minAfterAttackDb": -2.2,
+  "spectrum": {
+   "f1": 892.66,
+   "f2": 872.24,
+   "rate": 20.43,
+   "balanceDb": -2.9
+  },
+  "envelope": {
+   "rate": 20.42,
+   "depth": 3.8,
+   "top": [
+    "20.42 Hz 0.0 dB",
+    "20.79 Hz -5.2 dB",
+    "21.90 Hz -9.4 dB"
+   ]
+  },
+  "id": "flvn2",
+  "take": 1,
+  "slot": 10,
+  "label": "Flute + Violin 2 · take 1",
+  "chartHz": 21.5,
+  "frozenHz": 21.9,
+  "verdict": {
+   "spectrumOffPct": 5,
+   "envelopeOffPct": 5,
+   "envelopeHarmonic": 1,
+   "rateOk": true,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 46,
+  "to": 78,
+  "f0": 881.8495,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 1742.99,
+    "f2": 1745.1,
+    "balanceDb": -7.3,
+    "levelDb": -12.2
+   },
+   {
+    "h": 3,
+    "f1": 2613.83,
+    "f2": 2617,
+    "balanceDb": -1.8,
+    "levelDb": -10.5
+   }
+  ],
+  "hold": [
+   -31.1,
+   -30.1,
+   -30.8,
+   -29.5,
+   -31.7,
+   -31.5,
+   -31,
+   -29.6,
+   -32,
+   -31.4,
+   -30.5,
+   -30,
+   -32.1,
+   -31.2,
+   -30.2,
+   -30.6,
+   -31.8,
+   -31.3,
+   -29.9,
+   -31.1,
+   -31.6,
+   -31.2,
+   -29.5,
+   -31.8,
+   -31.5,
+   -30.9,
+   -29.7,
+   -32,
+   -31.4,
+   -30.5,
+   -30.1,
+   -32
+  ],
+  "holdDropDb": 2.5,
+  "minAfterAttackDb": -2.6,
+  "spectrum": {
+   "f1": 892.66,
+   "f2": 871.36,
+   "rate": 21.3,
+   "balanceDb": -9.2
+  },
+  "envelope": {
+   "rate": 21.3,
+   "depth": 2.9,
+   "top": [
+    "21.30 Hz 0.0 dB",
+    "21.03 Hz -1.1 dB",
+    "20.51 Hz -1.3 dB"
+   ]
+  },
+  "id": "flvn2",
+  "take": 2,
+  "slot": 46,
+  "label": "Flute + Violin 2 · take 2",
+  "chartHz": 21.5,
+  "frozenHz": 21.9,
+  "verdict": {
+   "spectrumOffPct": 0.9,
+   "envelopeOffPct": 0.9,
+   "envelopeHarmonic": 1,
+   "rateOk": true,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 82,
+  "to": 114,
+  "f0": 881.8495,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 1744.58,
+    "f2": 1741.91,
+    "balanceDb": -1.2,
+    "levelDb": -10.6
+   },
+   {
+    "h": 3,
+    "f1": 2617.9,
+    "f2": 2612.87,
+    "balanceDb": -2,
+    "levelDb": -4.1
+   }
+  ],
+  "hold": [
+   -28.4,
+   -26.8,
+   -26.3,
+   -26.1,
+   -27.3,
+   -26.7,
+   -25.8,
+   -27.4,
+   -26.7,
+   -26.2,
+   -26.7,
+   -27.2,
+   -26.7,
+   -25.7,
+   -27.4,
+   -26.7,
+   -25.9,
+   -27.2,
+   -27,
+   -26.3,
+   -26.4,
+   -27.2,
+   -26.7,
+   -25.6,
+   -27.6,
+   -26.5,
+   -26.2,
+   -27,
+   -27.1,
+   -26.5,
+   -26.1,
+   -27.3
+  ],
+  "holdDropDb": 1.7,
+  "minAfterAttackDb": -2,
+  "spectrum": {
+   "f1": 892.66,
+   "f2": 871.25,
+   "rate": 21.41,
+   "balanceDb": -2.2
+  },
+  "envelope": {
+   "rate": 21.41,
+   "depth": 3.8,
+   "top": [
+    "21.41 Hz 0.0 dB",
+    "20.52 Hz -0.9 dB",
+    "20.23 Hz -1.6 dB"
+   ]
+  },
+  "id": "flvn2",
+  "take": 3,
+  "slot": 82,
+  "label": "Flute + Violin 2 · take 3",
+  "chartHz": 21.5,
+  "frozenHz": 21.9,
+  "verdict": {
+   "spectrumOffPct": 0.4,
+   "envelopeOffPct": 0.4,
+   "envelopeHarmonic": 1,
+   "rateOk": true,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 118,
+  "to": 150,
+  "f0": 881.8495,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 1742,
+    "f2": 1744.11,
+    "balanceDb": -10.7,
+    "levelDb": -10.5
+   },
+   {
+    "h": 3,
+    "f1": 2613.66,
+    "f2": 2677.99,
+    "balanceDb": -8.5,
+    "levelDb": -12
+   }
+  ],
+  "hold": [
+   -30.3,
+   -29.5,
+   -30.6,
+   -28.8,
+   -31,
+   -31.9,
+   -30.3,
+   -29.1,
+   -31.5,
+   -31.9,
+   -29.7,
+   -29.3,
+   -32,
+   -31.3,
+   -29.5,
+   -29.7,
+   -32,
+   -31.1,
+   -29.3,
+   -30.3,
+   -31.9,
+   -30.9,
+   -28.9,
+   -31.1,
+   -31.9,
+   -30.2,
+   -29.1,
+   -31.5,
+   -31.8,
+   -29.6,
+   -29.3,
+   -32
+  ],
+  "holdDropDb": 3.2,
+  "minAfterAttackDb": -3.2,
+  "spectrum": {
+   "f1": 892.66,
+   "f2": 871.13,
+   "rate": 21.53,
+   "balanceDb": -8.4
+  },
+  "envelope": {
+   "rate": 21.01,
+   "depth": 3.1,
+   "top": [
+    "21.01 Hz 0.0 dB",
+    "21.80 Hz -0.4 dB",
+    "21.53 Hz -0.6 dB"
+   ]
+  },
+  "id": "flvn2",
+  "take": 4,
+  "slot": 118,
+  "label": "Flute + Violin 2 · take 4",
+  "chartHz": 21.5,
+  "frozenHz": 21.9,
+  "verdict": {
+   "spectrumOffPct": 0.1,
+   "envelopeOffPct": 2.3,
+   "envelopeHarmonic": 1,
+   "rateOk": true,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 154,
+  "to": 186,
+  "f0": 881.8495,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 1742.64,
+    "f2": 1740.27,
+    "balanceDb": -2.3,
+    "levelDb": -10.6
+   },
+   {
+    "h": 3,
+    "f1": 2614.11,
+    "f2": 2609.97,
+    "balanceDb": -3.1,
+    "levelDb": -5.7
+   }
+  ],
+  "hold": [
+   -28.6,
+   -26.9,
+   -25.3,
+   -26.7,
+   -27.7,
+   -26.2,
+   -25.6,
+   -28,
+   -26.9,
+   -25.1,
+   -27.3,
+   -27.2,
+   -25.8,
+   -26.3,
+   -27.9,
+   -26.5,
+   -25.4,
+   -27.9,
+   -27.1,
+   -25.2,
+   -27,
+   -27.4,
+   -26.1,
+   -25.8,
+   -28.1,
+   -26.6,
+   -25.2,
+   -27.6,
+   -27.2,
+   -25.5,
+   -26.6,
+   -27.9
+  ],
+  "holdDropDb": 2.8,
+  "minAfterAttackDb": -3,
+  "spectrum": {
+   "f1": 892.66,
+   "f2": 871.17,
+   "rate": 21.49,
+   "balanceDb": -0.5
+  },
+  "envelope": {
+   "rate": 20.07,
+   "depth": 3.6,
+   "top": [
+    "21.49 Hz 0.0 dB",
+    "21.20 Hz -0.6 dB",
+    "22.38 Hz -2.6 dB"
+   ]
+  },
+  "id": "flvn2",
+  "take": 5,
+  "slot": 154,
+  "label": "Flute + Violin 2 · take 5",
+  "chartHz": 21.5,
+  "frozenHz": 21.9,
+  "verdict": {
+   "spectrumOffPct": 0,
+   "envelopeOffPct": 0,
+   "envelopeHarmonic": 1,
+   "rateOk": true,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 190,
+  "to": 222,
+  "f0": 881.8495,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 1745.19,
+    "f2": 1785.33,
+    "balanceDb": -12.5,
+    "levelDb": -11.1
+   },
+   {
+    "h": 3,
+    "f1": 2618.15,
+    "f2": 2677.99,
+    "balanceDb": -9.6,
+    "levelDb": -10.9
+   }
+  ],
+  "hold": [
+   -30.7,
+   -29,
+   -29.8,
+   -30.7,
+   -29.6,
+   -30.4,
+   -30.5,
+   -29.8,
+   -30.6,
+   -30,
+   -29.9,
+   -31,
+   -29.5,
+   -30.4,
+   -30.6,
+   -29.8,
+   -30.5,
+   -30.3,
+   -29.6,
+   -31,
+   -29.7,
+   -30.1,
+   -30.8,
+   -29.5,
+   -30.5,
+   -30.4,
+   -29.8,
+   -30.7,
+   -29.9,
+   -29.9,
+   -31,
+   -29.5
+  ],
+  "holdDropDb": 0.5,
+  "minAfterAttackDb": -2,
+  "spectrum": {
+   "f1": 892.66,
+   "f2": 872.59,
+   "rate": 20.07,
+   "balanceDb": -1.6
+  },
+  "envelope": {
+   "rate": 20.07,
+   "depth": 3.6,
+   "top": [
+    "20.07 Hz 0.0 dB",
+    "20.44 Hz -6.3 dB",
+    "21.54 Hz -10.3 dB"
+   ]
+  },
+  "id": "flvn2",
+  "take": 6,
+  "slot": 190,
+  "label": "Flute + Violin 2 · take 6",
+  "chartHz": 21.5,
+  "frozenHz": 21.9,
+  "verdict": {
+   "spectrumOffPct": 6.7,
+   "envelopeOffPct": 6.7,
+   "envelopeHarmonic": 1,
+   "rateOk": false,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 226,
+  "to": 258,
+  "f0": 587.2145,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 1159.26,
+    "f2": 1190.24,
+    "balanceDb": -5.1,
+    "levelDb": -13
+   },
+   {
+    "h": 3,
+    "f1": 1738.9,
+    "f2": 1785.36,
+    "balanceDb": -11.7,
+    "levelDb": -7.3
+   }
+  ],
+  "hold": [
+   -40.7,
+   -36.4,
+   -36.4,
+   -36.4,
+   -36.2,
+   -36.2,
+   -36.2,
+   -36.4,
+   -36.4,
+   -36.2,
+   -36.2,
+   -36.1,
+   -36.3,
+   -36.5,
+   -36.3,
+   -36.3,
+   -36.1,
+   -36.2,
+   -36.4,
+   -36.3,
+   -36.4,
+   -36.2,
+   -36.2,
+   -36.2,
+   -36.4,
+   -36.5,
+   -36.2,
+   -36.2,
+   -36.1,
+   -36.3,
+   -36.5,
+   -36.2
+  ],
+  "holdDropDb": 0.1,
+  "minAfterAttackDb": -0.4,
+  "spectrum": {
+   "f1": 579.63,
+   "f2": 595.12,
+   "rate": 15.49,
+   "balanceDb": -20.1
+  },
+  "envelope": {
+   "rate": 15.49,
+   "depth": 1.8,
+   "top": [
+    "15.49 Hz 0.0 dB",
+    "9.85 Hz -3.0 dB",
+    "1.64 Hz -3.2 dB"
+   ]
+  },
+  "id": "vn1va",
+  "take": 1,
+  "slot": 226,
+  "label": "Violin 1 + Viola · take 1",
+  "chartHz": 16.1,
+  "frozenHz": 15.94,
+  "verdict": {
+   "spectrumOffPct": 3.8,
+   "envelopeOffPct": 3.8,
+   "envelopeHarmonic": 1,
+   "rateOk": true,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 262,
+  "to": 294,
+  "f0": 587.2145,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 1191.88,
+    "f2": 1159.16,
+    "balanceDb": -11.3,
+    "levelDb": 4.9
+   },
+   {
+    "h": 3,
+    "f1": 1740.44,
+    "f2": 1787.83,
+    "balanceDb": -4.3,
+    "levelDb": -0.8
+   }
+  ],
+  "hold": [
+   -33.3,
+   -31,
+   -31.4,
+   -31.7,
+   -31.8,
+   -31.6,
+   -31.9,
+   -31.5,
+   -32.1,
+   -31.3,
+   -32.2,
+   -31.3,
+   -32.3,
+   -31.2,
+   -32.3,
+   -31.3,
+   -32.2,
+   -31.4,
+   -32,
+   -31.6,
+   -31.8,
+   -31.7,
+   -31.7,
+   -31.8,
+   -31.6,
+   -32,
+   -31.5,
+   -32.1,
+   -31.5,
+   -32.1,
+   -31.4,
+   -32
+  ],
+  "holdDropDb": 1,
+  "minAfterAttackDb": -1.3,
+  "spectrum": {
+   "f1": 579.82,
+   "f2": 595.94,
+   "rate": 16.12,
+   "balanceDb": -5.4
+  },
+  "envelope": {
+   "rate": 32.72,
+   "depth": 2.2,
+   "top": [
+    "32.72 Hz 0.0 dB",
+    "33.21 Hz -0.4 dB",
+    "16.12 Hz -3.7 dB"
+   ]
+  },
+  "id": "vn1va",
+  "take": 2,
+  "slot": 262,
+  "label": "Violin 1 + Viola · take 2",
+  "chartHz": 16.1,
+  "frozenHz": 15.94,
+  "verdict": {
+   "spectrumOffPct": 0.1,
+   "envelopeOffPct": 103.2,
+   "envelopeHarmonic": 2,
+   "rateOk": true,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 298,
+  "to": 330,
+  "f0": 587.2145,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 1160.38,
+    "f2": 1190.06,
+    "balanceDb": -18.4,
+    "levelDb": 3.8
+   },
+   {
+    "h": 3,
+    "f1": 1740.56,
+    "f2": 1785.09,
+    "balanceDb": -13.1,
+    "levelDb": -1.2
+   }
+  ],
+  "hold": [
+   -37.5,
+   -35.2,
+   -35.4,
+   -35.4,
+   -35.6,
+   -35.4,
+   -35.7,
+   -35.3,
+   -35.8,
+   -35.2,
+   -35.9,
+   -35.2,
+   -35.8,
+   -35.3,
+   -35.5,
+   -35.5,
+   -35.4,
+   -35.7,
+   -35.3,
+   -35.8,
+   -35.2,
+   -35.9,
+   -35.2,
+   -35.8,
+   -35.3,
+   -35.6,
+   -35.5,
+   -35.4,
+   -35.6,
+   -35.4,
+   -35.8,
+   -35.2
+  ],
+  "holdDropDb": 0,
+  "minAfterAttackDb": -0.7,
+  "spectrum": {
+   "f1": 580.18,
+   "f2": 595.03,
+   "rate": 14.85,
+   "balanceDb": -16.1
+  },
+  "envelope": {
+   "rate": 1.09,
+   "depth": 1.7,
+   "top": [
+    "1.09 Hz 0.0 dB",
+    "29.68 Hz -3.3 dB",
+    "1.63 Hz -3.3 dB"
+   ]
+  },
+  "id": "vn1va",
+  "take": 3,
+  "slot": 298,
+  "label": "Violin 1 + Viola · take 3",
+  "chartHz": 16.1,
+  "frozenHz": 15.94,
+  "verdict": {
+   "spectrumOffPct": 7.8,
+   "envelopeOffPct": 93.2,
+   "envelopeHarmonic": null,
+   "rateOk": false,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 334,
+  "to": 366,
+  "f0": 587.2145,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 1191.53,
+    "f2": 1157.88,
+    "balanceDb": -8.1,
+    "levelDb": 5.4
+   },
+   {
+    "h": 3,
+    "f1": 1736.58,
+    "f2": 1787.3,
+    "balanceDb": -2.5,
+    "levelDb": -1.8
+   }
+  ],
+  "hold": [
+   -33.6,
+   -31.4,
+   -31.7,
+   -32.5,
+   -32.1,
+   -32.3,
+   -32.2,
+   -32.2,
+   -32.2,
+   -32.2,
+   -32.4,
+   -32.1,
+   -32.4,
+   -32.1,
+   -32.3,
+   -32.1,
+   -32.3,
+   -32.2,
+   -32.1,
+   -32.4,
+   -32,
+   -32.6,
+   -31.9,
+   -32.6,
+   -31.9,
+   -32.6,
+   -31.9,
+   -32.6,
+   -31.9,
+   -32.6,
+   -31.9,
+   -32.5
+  ],
+  "holdDropDb": 1.1,
+  "minAfterAttackDb": -1.2,
+  "spectrum": {
+   "f1": 579.18,
+   "f2": 595.77,
+   "rate": 16.59,
+   "balanceDb": -3.3
+  },
+  "envelope": {
+   "rate": 33.65,
+   "depth": 2.4,
+   "top": [
+    "33.65 Hz 0.0 dB",
+    "32.21 Hz -3.2 dB",
+    "32.68 Hz -3.4 dB"
+   ]
+  },
+  "id": "vn1va",
+  "take": 4,
+  "slot": 334,
+  "label": "Violin 1 + Viola · take 4",
+  "chartHz": 16.1,
+  "frozenHz": 15.94,
+  "verdict": {
+   "spectrumOffPct": 3,
+   "envelopeOffPct": 109,
+   "envelopeHarmonic": 2,
+   "rateOk": true,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 370,
+  "to": 402,
+  "f0": 587.2145,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 1158.59,
+    "f2": 1190.59,
+    "balanceDb": -8.6,
+    "levelDb": 5.8
+   },
+   {
+    "h": 3,
+    "f1": 1786.05,
+    "f2": 1737.87,
+    "balanceDb": -12.7,
+    "levelDb": -6.6
+   }
+  ],
+  "hold": [
+   -32.8,
+   -30.1,
+   -28.9,
+   -30.1,
+   -29.5,
+   -29.3,
+   -29.8,
+   -29.6,
+   -29.1,
+   -30.2,
+   -29.4,
+   -29.2,
+   -30.3,
+   -29.2,
+   -29.4,
+   -30.1,
+   -29.4,
+   -29.2,
+   -30.4,
+   -29,
+   -29.5,
+   -30.2,
+   -29.1,
+   -29.6,
+   -30,
+   -29.2,
+   -29.5,
+   -30.2,
+   -28.9,
+   -29.9,
+   -29.7,
+   -29.2
+  ],
+  "holdDropDb": 0.3,
+  "minAfterAttackDb": -1.5,
+  "spectrum": {
+   "f1": 595.12,
+   "f2": 579.29,
+   "rate": 15.83,
+   "balanceDb": -5.1
+  },
+  "envelope": {
+   "rate": 32,
+   "depth": 2.3,
+   "top": [
+    "32.00 Hz 0.0 dB",
+    "31.31 Hz -3.0 dB",
+    "32.35 Hz -3.3 dB"
+   ]
+  },
+  "id": "vn1va",
+  "take": 5,
+  "slot": 370,
+  "label": "Violin 1 + Viola · take 5",
+  "chartHz": 16.1,
+  "frozenHz": 15.94,
+  "verdict": {
+   "spectrumOffPct": 1.7,
+   "envelopeOffPct": 98.8,
+   "envelopeHarmonic": 2,
+   "rateOk": true,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 406,
+  "to": 438,
+  "f0": 587.2145,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 1159.98,
+    "f2": 1190.49,
+    "balanceDb": -4,
+    "levelDb": -15.4
+   },
+   {
+    "h": 3,
+    "f1": 1739.97,
+    "f2": 1785.74,
+    "balanceDb": -15.1,
+    "levelDb": -5.7
+   }
+  ],
+  "hold": [
+   -40.6,
+   -36.1,
+   -35.9,
+   -36.2,
+   -36,
+   -35.8,
+   -36.1,
+   -35.9,
+   -36.2,
+   -35.9,
+   -35.9,
+   -36.1,
+   -35.8,
+   -36.3,
+   -35.9,
+   -36,
+   -36,
+   -35.8,
+   -36.3,
+   -35.9,
+   -36.2,
+   -36,
+   -35.8,
+   -36.2,
+   -35.9,
+   -36.3,
+   -35.9,
+   -35.9,
+   -36.1,
+   -35.8,
+   -36.3,
+   -35.9
+  ],
+  "holdDropDb": 0.1,
+  "minAfterAttackDb": -0.5,
+  "spectrum": {
+   "f1": 579.99,
+   "f2": 595.24,
+   "rate": 15.25,
+   "balanceDb": -20.3
+  },
+  "envelope": {
+   "rate": 15.26,
+   "depth": 1.7,
+   "top": [
+    "15.26 Hz 0.0 dB",
+    "9.86 Hz -3.9 dB",
+    "17.06 Hz -6.3 dB"
+   ]
+  },
+  "id": "vn1va",
+  "take": 6,
+  "slot": 406,
+  "label": "Violin 1 + Viola · take 6",
+  "chartHz": 16.1,
+  "frozenHz": 15.94,
+  "verdict": {
+   "spectrumOffPct": 5.3,
+   "envelopeOffPct": 5.2,
+   "envelopeHarmonic": 1,
+   "rateOk": false,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 442,
+  "to": 474,
+  "f0": 261.876,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 531.17,
+    "f2": 516.97,
+    "balanceDb": -4.6,
+    "levelDb": -25
+   },
+   {
+    "h": 3,
+    "f1": 775.46,
+    "f2": 796.75,
+    "balanceDb": -16.2,
+    "levelDb": -4.8
+   }
+  ],
+  "hold": [
+   -29.4,
+   -28.5,
+   -29,
+   -28.7,
+   -28.9,
+   -28.9,
+   -28.5,
+   -29.1,
+   -28.7,
+   -29.1,
+   -29,
+   -28.5,
+   -29,
+   -28.5,
+   -29.1,
+   -28.7,
+   -28.7,
+   -29,
+   -28.5,
+   -29.2,
+   -28.7,
+   -28.9,
+   -28.9,
+   -28.5,
+   -29.1,
+   -28.5,
+   -29.1,
+   -28.9,
+   -28.6,
+   -29.1,
+   -28.5,
+   -29.2
+  ],
+  "holdDropDb": 0.7,
+  "minAfterAttackDb": -0.7,
+  "spectrum": {
+   "f1": 258.49,
+   "f2": 265.59,
+   "rate": 7.1,
+   "balanceDb": -4.7
+  },
+  "envelope": {
+   "rate": 7.1,
+   "depth": 3.5,
+   "top": [
+    "7.10 Hz 0.0 dB",
+    "6.68 Hz -15.6 dB",
+    "6.27 Hz -18.9 dB"
+   ]
+  },
+  "id": "bclvc",
+  "take": 1,
+  "slot": 442,
+  "label": "Bass Clarinet + Cello · take 1",
+  "chartHz": 7.2,
+  "frozenHz": 7.11,
+  "verdict": {
+   "spectrumOffPct": 1.4,
+   "envelopeOffPct": 1.4,
+   "envelopeHarmonic": 1,
+   "rateOk": true,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 478,
+  "to": 510,
+  "f0": 261.876,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 530.28,
+    "f2": 516.12,
+    "balanceDb": -7,
+    "levelDb": -22.2
+   },
+   {
+    "h": 3,
+    "f1": 774.17,
+    "f2": 795.41,
+    "balanceDb": -12.6,
+    "levelDb": -11.7
+   }
+  ],
+  "hold": [
+   -31.5,
+   -29.9,
+   -30.1,
+   -30,
+   -29.8,
+   -30.1,
+   -30,
+   -29.9,
+   -30.1,
+   -29.8,
+   -30.2,
+   -30,
+   -29.7,
+   -30.2,
+   -30,
+   -29.8,
+   -30.1,
+   -29.9,
+   -30.1,
+   -30.1,
+   -29.7,
+   -30.2,
+   -30,
+   -29.7,
+   -30.1,
+   -29.9,
+   -30,
+   -30.1,
+   -29.7,
+   -30.2,
+   -30.1,
+   -29.8
+  ],
+  "holdDropDb": 0.1,
+  "minAfterAttackDb": -0.5,
+  "spectrum": {
+   "f1": 258.05,
+   "f2": 265.14,
+   "rate": 7.08,
+   "balanceDb": -8.3
+  },
+  "envelope": {
+   "rate": 7.08,
+   "depth": 2.9,
+   "top": [
+    "7.08 Hz 0.0 dB",
+    "14.16 Hz -21.7 dB",
+    "1.86 Hz -22.0 dB"
+   ]
+  },
+  "id": "bclvc",
+  "take": 2,
+  "slot": 478,
+  "label": "Bass Clarinet + Cello · take 2",
+  "chartHz": 7.2,
+  "frozenHz": 7.11,
+  "verdict": {
+   "spectrumOffPct": 1.7,
+   "envelopeOffPct": 1.7,
+   "envelopeHarmonic": 1,
+   "rateOk": true,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 514,
+  "to": 546,
+  "f0": 261.876,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 530.65,
+    "f2": 516.69,
+    "balanceDb": -1.7,
+    "levelDb": -26.6
+   },
+   {
+    "h": 3,
+    "f1": 775.04,
+    "f2": 795.97,
+    "balanceDb": -18.1,
+    "levelDb": -4.3
+   }
+  ],
+  "hold": [
+   -29.3,
+   -28.3,
+   -28.9,
+   -28.4,
+   -28.6,
+   -28.7,
+   -28.2,
+   -28.8,
+   -28.4,
+   -28.8,
+   -28.7,
+   -28.3,
+   -28.7,
+   -28.3,
+   -28.9,
+   -28.5,
+   -28.5,
+   -28.7,
+   -28.3,
+   -28.9,
+   -28.3,
+   -28.6,
+   -28.7,
+   -28.2,
+   -28.9,
+   -28.3,
+   -28.8,
+   -28.6,
+   -28.3,
+   -28.8,
+   -28.3,
+   -29
+  ],
+  "holdDropDb": 0.8,
+  "minAfterAttackDb": -0.8,
+  "spectrum": {
+   "f1": 258.35,
+   "f2": 265.32,
+   "rate": 6.98,
+   "balanceDb": -5.6
+  },
+  "envelope": {
+   "rate": 6.98,
+   "depth": 2.9,
+   "top": [
+    "6.98 Hz 0.0 dB",
+    "6.57 Hz -14.6 dB",
+    "6.15 Hz -18.4 dB"
+   ]
+  },
+  "id": "bclvc",
+  "take": 3,
+  "slot": 514,
+  "label": "Bass Clarinet + Cello · take 3",
+  "chartHz": 7.2,
+  "frozenHz": 7.11,
+  "verdict": {
+   "spectrumOffPct": 3.1,
+   "envelopeOffPct": 3.1,
+   "envelopeHarmonic": 1,
+   "rateOk": true,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 550,
+  "to": 582,
+  "f0": 261.876,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 530.21,
+    "f2": 516.53,
+    "balanceDb": -2,
+    "levelDb": -29.3
+   },
+   {
+    "h": 3,
+    "f1": 774.78,
+    "f2": 795.68,
+    "balanceDb": -5.3,
+    "levelDb": -12.4
+   }
+  ],
+  "hold": [
+   -29.2,
+   -27.6,
+   -27.5,
+   -27.3,
+   -27.4,
+   -27.6,
+   -27.5,
+   -27.4,
+   -27.2,
+   -27.4,
+   -27.6,
+   -27.4,
+   -27.4,
+   -27.6,
+   -27.2,
+   -27.4,
+   -27.4,
+   -27.5,
+   -27.6,
+   -27.4,
+   -27.3,
+   -27.5,
+   -27.2,
+   -27.4,
+   -27.6,
+   -27.4,
+   -27.5,
+   -27.3,
+   -27.3,
+   -27.6,
+   -27.5,
+   -27.4
+  ],
+  "holdDropDb": 0.2,
+  "minAfterAttackDb": -0.4,
+  "spectrum": {
+   "f1": 265.1,
+   "f2": 258.26,
+   "rate": 6.84,
+   "balanceDb": -0.3
+  },
+  "envelope": {
+   "rate": 6.84,
+   "depth": 8.4,
+   "top": [
+    "6.84 Hz 0.0 dB",
+    "7.21 Hz -11.6 dB",
+    "6.48 Hz -11.9 dB"
+   ]
+  },
+  "id": "bclvc",
+  "take": 4,
+  "slot": 550,
+  "label": "Bass Clarinet + Cello · take 4",
+  "chartHz": 7.2,
+  "frozenHz": 7.11,
+  "verdict": {
+   "spectrumOffPct": 5,
+   "envelopeOffPct": 5,
+   "envelopeHarmonic": 1,
+   "rateOk": true,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 586,
+  "to": 618,
+  "f0": 261.876,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 530.46,
+    "f2": 516.87,
+    "balanceDb": -1.5,
+    "levelDb": -13.8
+   },
+   {
+    "h": 3,
+    "f1": 775.31,
+    "f2": 795.69,
+    "balanceDb": -17,
+    "levelDb": 1.5
+   }
+  ],
+  "hold": [
+   -33.6,
+   -32.1,
+   -32.3,
+   -32.3,
+   -32,
+   -32.4,
+   -32,
+   -32.4,
+   -32.1,
+   -32.1,
+   -32.4,
+   -32.1,
+   -32.5,
+   -32,
+   -32.3,
+   -32.2,
+   -32.2,
+   -32.5,
+   -32,
+   -32.4,
+   -32.1,
+   -32.3,
+   -32.4,
+   -32,
+   -32.4,
+   -32,
+   -32.4,
+   -32.2,
+   -32,
+   -32.5,
+   -31.9,
+   -32.5
+  ],
+  "holdDropDb": 0.6,
+  "minAfterAttackDb": -0.6,
+  "spectrum": {
+   "f1": 258.44,
+   "f2": 265.23,
+   "rate": 6.79,
+   "balanceDb": -0.7
+  },
+  "envelope": {
+   "rate": 6.79,
+   "depth": 2,
+   "top": [
+    "6.79 Hz 0.0 dB",
+    "20.39 Hz -14.0 dB",
+    "7.21 Hz -16.3 dB"
+   ]
+  },
+  "id": "bclvc",
+  "take": 5,
+  "slot": 586,
+  "label": "Bass Clarinet + Cello · take 5",
+  "chartHz": 7.2,
+  "frozenHz": 7.11,
+  "verdict": {
+   "spectrumOffPct": 5.7,
+   "envelopeOffPct": 5.7,
+   "envelopeHarmonic": 1,
+   "rateOk": false,
+   "holdOk": true
+  }
+ },
+ {
+  "from": 622,
+  "to": 654,
+  "f0": 261.876,
+  "harmonics": [
+   {
+    "h": 2,
+    "f1": 530.73,
+    "f2": 516.4,
+    "balanceDb": -3.8,
+    "levelDb": -25.1
+   },
+   {
+    "h": 3,
+    "f1": 774.6,
+    "f2": 796.09,
+    "balanceDb": -9.2,
+    "levelDb": -11.5
+   }
+  ],
+  "hold": [
+   -30.8,
+   -29.4,
+   -29.9,
+   -29.8,
+   -29.2,
+   -30,
+   -29.4,
+   -29.6,
+   -29.7,
+   -29.5,
+   -30.1,
+   -29.3,
+   -29.6,
+   -29.5,
+   -29.7,
+   -29.8,
+   -29.4,
+   -29.9,
+   -29.4,
+   -29.7,
+   -29.5,
+   -29.6,
+   -30,
+   -29.2,
+   -29.9,
+   -29.4,
+   -29.6,
+   -30,
+   -29.2,
+   -29.9,
+   -29.5,
+   -29.4
+  ],
+  "holdDropDb": 0.2,
+  "minAfterAttackDb": -0.9,
+  "spectrum": {
+   "f1": 258.2,
+   "f2": 265.36,
+   "rate": 7.16,
+   "balanceDb": -4.6
+  },
+  "envelope": {
+   "rate": 7.16,
+   "depth": 4.6,
+   "top": [
+    "7.16 Hz 0.0 dB",
+    "6.75 Hz -12.7 dB",
+    "6.34 Hz -18.5 dB"
+   ]
+  },
+  "id": "bclvc",
+  "take": 6,
+  "slot": 622,
+  "label": "Bass Clarinet + Cello · take 6",
+  "chartHz": 7.2,
+  "frozenHz": 7.11,
+  "verdict": {
+   "spectrumOffPct": 0.6,
+   "envelopeOffPct": 0.6,
+   "envelopeHarmonic": 1,
+   "rateOk": true,
+   "holdOk": true
+  }
+ }
+]

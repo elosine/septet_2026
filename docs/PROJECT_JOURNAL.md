@@ -85,7 +85,22 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### HAND-OFF — 2026-09-17 (session 15, Fable 5.1 → Opus) — N0 THE BLOOM PRACTICE VIDEOS: PLANNED, OPUS BUILDS *(pulled ahead of N1 at his word)*
+### PROGRESS — 2026-09-17 (session 15, Opus 5, same session, no clear) — N0 THE BLOOM PRACTICE VIDEOS: ALL THREE BUILT AND MEASURED; HIS EYE AND EAR NEXT
+
+**His word:** *"go for n0 and continue independantly as much as possible. no clear"*. **Done (RUNNING_LOG §599–§601):** PLAN 2h.7.1–7.4. The three
+videos at `notation/video/renders/demos/bloom-{bclvc,vn1va,flvn2}.mp4` (gitignored; 150.9 / 155.8 / 153.2 s; each a labelled 30 s static + the whole
+Bloom in two lanes) — **all six checks pass on all three** (`node tools/check_bloom_demos.js`). **Found on the way:** every Xsample note-on is a
+draw (±1–2 c; the flute exact) — so the held dyads are six takes a pair, one picked by a written rule (§600); four wrong readings before that are
+in §600, corrected. **Rebuild chain:** `gen_bloom_heldmax.js` → `render_reaper.js --dir …` → `measure_beating.js --slots … --json` →
+`pick_bloom_takes.js` → `bash notation/video/renders/bloom_demos.sh all` → `check_bloom_demos.js` (a re-render of the dyads draws new takes: re-pick).
+
+**Next concrete step:** PLAN 2h.7.5 — the three videos to him; his notes in one pass. Put to him: the statics against the sections · Vn1 + Va the
+shallowest beating (2.2×) · Bcl + Vc take 4 on offer (8.4×, 6.84 Hz, 5 % slow) · the upload title pattern. Then 2h.7.6 (his upload → the links,
+each checked against its title) → 2h.7.7 (archive, commit).
+
+**Resume reads:** `docs/plans/BLOOM_PRACTICE_VIDEOS.md` (its §8 register is the state). Nothing else.
+
+### HAND-OFF — 2026-09-17 (session 15, Fable 5.1 → Opus) — N0 THE BLOOM PRACTICE VIDEOS: PLANNED, OPUS BUILDS *(pulled ahead of N1 at his word; superseded by PROGRESS above)*
 
 **His word:** *"Can we prepare the beating demo videos? … We should essentially make similar videos to the final ones that were made for the Tubo
 piece."* — then *"we can skip the planning protocol … pls draw up the plan to hand to opus"* (RUNNING_LOG §595–§597).
@@ -155,7 +170,7 @@ When he calls the read-through done, N1 closes (the Bloom practice-video links w
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N0** | **► the Bloom practice videos (PLAN 2h.7)** — build from `docs/plans/BLOOM_PRACTICE_VIDEOS.md`, the pilot (Bass Clarinet + Cello) first, his eye and ear, then the set → his upload → the links on the page | **Opus** | **yes — clear now; then /postclear** |
+| **N0** | **► the Bloom practice videos (PLAN 2h.7)** — BUILT, all checks pass (§601) → **his eye and ear on the three** → his upload → the links on the page → archive | **Opus** | no |
 | **N1** | the performance instructions — his read-through of the drafted page (items 1–5 above); then N1 closes | Opus | no — it can ride in the N0 session while renders run, or after |
 | **N2** | **PLAN 2b the print score** — the print exporter's septet frame (the §558 port) · the cover (title CN-64 + the ensemble line) · the Tempus copy with the video link at the top · where the instructions page goes in the print | Fable plans · Opus builds | yes, between |
 | **N3** | Later, noted: the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
