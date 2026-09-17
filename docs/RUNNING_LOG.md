@@ -15997,3 +15997,24 @@ committed `export_video.js` and by the changed one — **byte-identical** PNGs.
 **Next:** his eye and ear on the three (PLAN 2h.7.5). What is his to hear for: the held dyads' 30 s against the section that follows · Violin 1 +
 Viola's beating is the shallowest (depth 2.2×; D48 calls D5 ≈ 16 Hz roughness, not a countable rate) · Bass Clarinet + Cello take 4 is on offer
 (the deepest of all, 8.4×, at 6.84 Hz — 5 % slow) · the title pattern for the upload.
+
+## §602. PLAN 2h.7 DONE: his "videos good"; uploaded by him; the links checked against their titles, on the page; archived (2026-09-17, session 15, Opus 5)
+
+**His word, verbatim:** *"bcl/cello https://youtu.be/W1uv11zZC8U?si=eukf9RiNI1TC1R0l ; fl vln2 https://youtu.be/3GiK0cx5d74?si=JURESh3vWVFji8ic ; vln1 vla
+https://youtu.be/fOV4lDN3kKA?si=MWS4OgPj38LMW3Oh videos good"* — the verdict and the three uploads in one message. Bcl + Vc take 4 not asked for:
+the pick stands.
+
+**Each URL checked against its own title before wiring** (the tuba's rule; YouTube's oEmbed, no consent page): W1uv11zZC8U = *"Scattered Substance ·
+Acoustic Beating Demo · Bass Clarinet + Cello"* · 3GiK0cx5d74 = *"… · flute + violin 2"* · fOV4lDN3kKA = *"… · violin 1 + viola"* — all three match
+the pairs he named. (Noted, not changed — his titles: the first is capitalised, the other two lower case.)
+
+**The page** (`docs/notation_instructions/index.html`): the one placeholder line (*"Bloom practice videos — to be added"*) became three, in the
+tuba's list shape `<pair> — <url>`, **in the chart's row order** (Fl + Vn2 · Vn1 + Va · Bcl + Vc — the chart sits just above; an AI call, his
+message's order was bcl · fl · vln1). The share links' `?si=` tracking parameter dropped (the tuba's links are bare). The HTML comment above the
+section updated. No prose touched (§569). **Verified on his :5300:** three list items, each `href` its own URL.
+
+**Archived:** `notation/video/approved/2026-09-17-bloom-practice/` — the three mp4s (`cmp`-identical to the renders; sha256 as registered),
+`README.md` (the URLs and titles, provenance, the rebuild chain, the measures), `picked.json`. The mp4s are not in git — his to back up.
+*(A first attempt to write the README, this entry and the closures in one shell command failed to parse and wrote nothing; redone as separate steps.)*
+
+**Closed:** PLAN 2h.7 → done · the build plan's steps 5–7 · journal §2 N0 closed → N1 (his read-through of the instructions page).

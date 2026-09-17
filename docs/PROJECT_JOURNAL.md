@@ -85,7 +85,16 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### PROGRESS — 2026-09-17 (session 15, Opus 5, same session, no clear) — N0 THE BLOOM PRACTICE VIDEOS: ALL THREE BUILT AND MEASURED; HIS EYE AND EAR NEXT
+### N0 CLOSED — 2026-09-17 (session 15, Opus 5) — THE BLOOM PRACTICE VIDEOS: HIS "videos good", ONLINE, LINKED, ARCHIVED (RUNNING_LOG §602)
+
+**His word:** *"… videos good"* with the three uploads — Fl + Vn2 https://youtu.be/3GiK0cx5d74 · Vn1 + Va https://youtu.be/fOV4lDN3kKA · Bcl + Vc
+https://youtu.be/W1uv11zZC8U — each checked against its YouTube title, on the instructions page (the chart's row order), archived at
+`notation/video/approved/2026-09-17-bloom-practice/` (the mp4s not in git — his to back up). **PLAN 2h.7 done.**
+
+**Next concrete step:** N1 — his read-through of the instructions page: the CHECKPOINT block below, items 1–5, stands as written (the page now has the
+three practice-video links where its placeholder was). **Resume reads:** `docs/notation_instructions/index.html`. **Model:** Opus.
+
+### PROGRESS — 2026-09-17 (session 15, Opus 5, same session, no clear) — N0 THE BLOOM PRACTICE VIDEOS: ALL THREE BUILT AND MEASURED *(superseded by N0 CLOSED above)*
 
 **His word:** *"go for n0 and continue independantly as much as possible. no clear"*. **Done (RUNNING_LOG §599–§601):** PLAN 2h.7.1–7.4. The three
 videos at `notation/video/renders/demos/bloom-{bclvc,vn1va,flvn2}.mp4` (gitignored; 150.9 / 155.8 / 153.2 s; each a labelled 30 s static + the whole
@@ -170,8 +179,8 @@ When he calls the read-through done, N1 closes (the Bloom practice-video links w
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N0** | **► the Bloom practice videos (PLAN 2h.7)** — BUILT, all checks pass (§601) → **his eye and ear on the three** → his upload → the links on the page → archive | **Opus** | no |
-| **N1** | the performance instructions — his read-through of the drafted page (items 1–5 above); then N1 closes | Opus | no — it can ride in the N0 session while renders run, or after |
+| ~~N0~~ | ~~the Bloom practice videos (PLAN 2h.7)~~ — **DONE 2026-09-17** (§602: "videos good", online, linked, archived) | — | — |
+| **N1** | **► the performance instructions — his read-through** of the drafted page (the CHECKPOINT's items 1–5); then N1 closes | **Opus** | **a good clear point now (N0 closed): /checkpoint → /clear → /postclear** |
 | **N2** | **PLAN 2b the print score** — the print exporter's septet frame (the §558 port) · the cover (title CN-64 + the ensemble line) · the Tempus copy with the video link at the top · where the instructions page goes in the print | Fable plans · Opus builds | yes, between |
 | **N3** | Later, noted: the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
 | **N4** | Still his, from before: the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |

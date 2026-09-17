@@ -104,12 +104,12 @@ render, twice run on the whole piece) · `tools/export_video.js` with the tuba's
 - *Check, measured (the tuba's PHASE 5):* duration = 30 + (t1 − t0) to the frame · A/V start 0 · the label present by frame extraction ·
   the section's first frame against a direct probe at t0 · the section's first sound against the pair's first onset.
 
-**5. His eye and ear** (the pilot, then the set) — `doing` *(the three to him together)*
+**5. His eye and ear** (the pilot, then the set) — `done 2026-09-17` *(his "videos good", §602)*
 
 - The pilot to him: the file's path, its length, the measures in three lines. Collect his notes in one pass, fix in one pass.
 - On his word: the other two (`bloom_demos.sh all`), the same checks, then the three to him.
 
-**6. Upload, and the links on the page** (his upload; the AI wires) — `todo`
+**6. Upload, and the links on the page** (his upload; the AI wires) — `done 2026-09-17` *(each URL checked against its title; the chart's row order; §602)*
 
 - He uploads the three and gives the URLs. Offer a title pattern, his to change: `Scattered Substance — Bloom practice — Bass Clarinet + Cello`
   (the piece's title is still his to confirm, CN-64).
@@ -117,7 +117,7 @@ render, twice run on the whole piece) · `tools/export_video.js` with the tuba's
   (`Bloom practice videos — to be added`, `docs/notation_instructions/index.html`) becomes three, in the tuba's list shape:
   `<Part A> + <Part B> — <url>`. The HTML comment above the section updated. Nothing else on the page moves — **the prose is his (§569).**
 
-**7. Archive, docs, commit** — `todo`
+**7. Archive, docs, commit** — `done 2026-09-17` *(`notation/video/approved/2026-09-17-bloom-practice/`, §602)*
 
 - `notation/video/approved/<date>-bloom-practice/` — the three mp4s (gitignored; his to back up) + a README in the form of
   `approved/2026-09-16-submission/README.md`: what made each, the commands, the measures, sha256s, the URLs.
@@ -163,3 +163,6 @@ render, twice run on the whole piece) · `tools/export_video.js` with the tuba's
   `bloom-bclvc.mp4` 64a707d4a860c385e2976f50727539474ee90ee5474a9fec576fb5c2a5e804cb · `bloom-vn1va.mp4`
   673a015b44731135149cb82a944b4e086ed4b0004abe4e7a61a663a5ec39ed57 · `bloom-flvn2.mp4` 360217dce9ee4ceb5c7f969b776b0908223682cd956ceea5afcb86ef6e21543c.
   `export_video.js` after its change: full frame + both halves byte-identical to the committed version. Approved render sha unchanged.
+- **2026-09-17 · steps 5–7** — his *"videos good"* with the uploads: Fl + Vn2 https://youtu.be/3GiK0cx5d74 · Vn1 + Va https://youtu.be/fOV4lDN3kKA ·
+  Bcl + Vc https://youtu.be/W1uv11zZC8U — each checked against its YouTube title (oEmbed), on the page in the chart's row order, verified on :5300.
+  Archived `notation/video/approved/2026-09-17-bloom-practice/` (mp4s cmp-identical, README, picked.json). **PLAN 2h.7 closed.**
