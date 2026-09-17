@@ -16334,3 +16334,56 @@ the plan, on Opus. **The gate before touching `render.js`:** re-dump the video e
 the hashes, and prove them byte-identical after the change (§608's method; the session scratchpad does not survive a `/clear`, so the baselines are
 re-made rather than carried).
 
+
+## §615. BUILT PLAN 2b.7: THE PAGE EDGES BY RULE — a page owns [cut, next cut); 68 pages, five checks green, the film untouched (2026-09-17, session 15, Opus 5)
+
+**What prompted it:** §613–§614 — his word on the whole 66-page PDF, *"lets find a solution that will resolve them all, try to find robust solution
+that will fix all and not result in continuous reprinting and reviewing and redoing"*, then ***"a"*** for the ragged right edge. D59 is the rule;
+this is the build, 2b.7.1 → 2b.7.6 in order.
+
+**THE GATE FIRST, before `render.js` was opened.** The video exporter's pages **0 · 9 · 20 · 30 · 43 · 49 · 53** dumped from the clean tree and
+hashed (the §608 method; the previous baselines died with the `/clear`). SHA-256, for any future session that needs them without a re-dump:
+`page-0 65e4e10d…` · `page-9 1ae2a06a…` · `page-20 ccdbc3f5…` · `page-30 68913256…` · `page-43 ef8c055f…` · `page-49 5ffc7104…` · `page-53 c6d1b4c5…`.
+Proven byte-identical **twice** — after 2b.7.1, and again after every later change. *(`--dumpTo` takes a FILE, not a directory; a directory gives EISDIR.)*
+
+**2b.7.1 — `render.js`, the ownership gate.** `opts.owned = [cut, next cut)` and `opts.inkEnd`. Sixteen point kinds moved from `inWin(it.t)` to
+`owns(it.t)`; the beam's tip filter and the markers with them. The **GC arc now follows ITS STRIKE** — owned, drawn whole; unowned, not drawn at all —
+instead of gating on range intersection, which is what left the ghost V over the clefs. Five long kinds (env curve · cresc curve · gliss curve · ring
+bar · brick) and the staff clip to `wInk` instead of the window edge. **With `owned` absent every path is character-for-character the old one**, which
+is why the film did not move: the film keeps its overlap on purpose — the ball needs its approach.
+*Not touched: `tuplet`, which has no window gate at all. A tuplet bracket belongs to a beam group and the splicer is stamp-atomic, so it cannot cross
+a cut (0 severed, measured again at the new advance). Recorded here rather than "fixed" on a guess.*
+
+**2b.7.2 / 2b.7.3 — the reserves, derived, never typed.** `export_print` now asks `gc.js` for the arc's own timings and computes
+**left = max(§404's 4.2 ss buffer, GC.pre + margin) = 0.422 s · right = GC.post + margin = 0.302 s**, margin `edgeReserveMarginSs: 1.2` — a new RULE in
+`page_rules.json`, ss-stated like its neighbour so one number holds at any zoom. The page plan then advances **9.60 s** while the WINDOW stays **10.32 s**:
+the scale never changes page to page (distance is time), and the cost is pages and only pages. **63 → 68** — the number the design simulated.
+
+**2b.7.4 — the ragged right edge, his "a".** Staff, ruler and long items stop at `cut + right reserve`. Measured on the render: **19 pages end more than
+0.5 s early, at most 1.90 s = 18 % of the width** — against the design's ~18 pages and 1.86 s. The folio now reads what the page OWNS rather than the
+drawn window, so the times under the page and the music on it agree. *(Page 68's 4.17 s is the piece ending, not a cut falling early.)*
+
+**2b.7.5 — `tools/check_print_edges.js`, a build gate in `print/score/build.sh`.** Two passes, because the two faults live in different places.
+**A, the plan** — read from `export_print --planJson` so the checker never re-derives the geometry and ends up checking its own arithmetic: the pages
+TILE the source window, no page owns nothing, no cut severs a beam, and **every point item is owned by exactly one page (14 532 of 14 532)**.
+**B, the ink** — the 68 rendered pages measured in Chrome in the SVG's own units: nothing timed straddles the clef gutter (anything reaching left of it
+must lie ENTIRELY left of it — that is furniture), no ink past the system end, and **1304 GC arcs = 1304 impact dots = 1304 owned strikes**, every arc
+inside `[gutter, system end]`.
+
+**THE NEGATIVE PROOF — a gate that has never failed is not a gate.** Ownership switched off in `static_page.js` for one run: the checker reported the
+whole of §613's census back, page by page — *"49 arcs drawn, 36 strikes owned"* (the doubled onsets) · *"7 element(s) straddle the clef gutter"* (the
+ghost arcs) · *"47 arcs but 43 impact dots — an arc is not whole"* (the slices at the right edge) · *"ink to x=1562.6, past the system end 1229.7"*.
+Restored immediately.
+
+**2b.7.6 — the re-render.** `bash print/score/build.sh`: **`print/score/Scattered-Substance-score-JYang.pdf`, 71 pages (cover · instructions ×2 ·
+68 of music), 6.39 MB**, and **all five checks green** — `check_print_frame` · `check_print_front` · `check_print_pdf` (1189.92 × 840.96 pt, inside
+DIN A3; 0 fonts unembedded; 0 raster; the 4 links) · `check_print_pages` (every music page: seven labels, 8 systems, 2 brackets + brace, ruler, folio;
+one terminal barline, on page 71) · `check_print_edges`.
+
+**Noted, not a fault:** `check_print_frame`'s census differences at its four moments are now LARGER, and will stay larger. It compares a print page with
+the film page at the same second, and ownership is exactly the difference between them — the print draws 9.6 s of owned music where the film's window
+overlaps 12 s. Its real assertions (eight systems, the seven labels, two brackets, one brace) are untouched. A future reader should not mistake this
+widening for drift.
+
+**Owed:** his eye on the new PDF — specifically the right edge of a page whose music stops early (13 · 58 · 60 · 63 · 64 · 65 are the raggedest) and the
+clef gutter anywhere. Then **2b.6**, archive + docs.

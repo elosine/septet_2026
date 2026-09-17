@@ -53,6 +53,11 @@
     if (o.markers) opts.markers = o.markers;
     // [septet 2i.10.1] the ensemble registry (labels, brackets, the grand staff brace) — absent = the tuba page, byte-identical
     if (o.ensemble) opts.ensemble = o.ensemble;
+    // [PLAN 2b.7.1] the page's OWNED span [cut, next cut) and the right end of
+    // its drawn ink. Absent on the video path — an absent key and an undefined
+    // one are the same to render.js, so the film stays byte-identical.
+    if (o.owned) opts.owned = o.owned;
+    if (o.inkEnd != null) opts.inkEnd = o.inkEnd;
     const svg = Render.renderSection(o.model, view, o.glyphs, opts);
 
     // the system TERMINAL barline, exactly as notation.html appends it

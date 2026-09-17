@@ -34,7 +34,9 @@ const ROOT = path.join(__dirname, '..');
 const Coords = require(path.join(ROOT, 'notation', 'lib', 'coords.js'));
 const Layout = require(path.join(ROOT, 'notation', 'lib', 'layout.js'));
 const Splice = require(path.join(ROOT, 'notation', 'lib', 'splice.js'));
+const GC = require(path.join(ROOT, 'notation', 'lib', 'gc.js'));   // [2b.7.3] the arc's own pre/post — the reserves are derived, never typed
 const StaticPage = require(path.join(ROOT, 'notation', 'lib', 'static_page.js'));
+const Render = require(path.join(ROOT, 'notation', 'lib', 'render.js'));   // [2b.7.5] its own kind census, for --planJson
 
 // ---------------------------------------------------------------- args
 function arg(name, def) { const i = process.argv.indexOf('--' + name); return i >= 0 ? process.argv[i + 1] : def; }
@@ -52,9 +54,10 @@ const wantRuler = arg('ruler', 'on') !== 'off';
 const wantCover = arg('cover', 'off') !== 'off';
 const wantInstructions = arg('instructions', 'off') !== 'off';
 const htmlOnly = flag('htmlOnly');
+const planJson = arg('planJson', null);   // [2b.7.5] dump the page plan and its owned census, then stop — what check_print_edges measures against
 const quiet = flag('quiet');
 
-if (!outFile) {
+if (!outFile && !planJson) {   // [2b.7.5] --planJson needs no output file: it dumps the plan and stops
   console.error('usage: export_print.js --out <file.pdf> [--ir db1] [--sec N] [--pages a-b] [--at SEC]');
   console.error('       [--format a3-landscape|tabloid-landscape|letter-landscape] [--margin 0.5]');
   console.error('       [--ruler on|off] [--cover on|off] [--instructions on|off] [--htmlOnly]');
@@ -156,6 +159,24 @@ const defaultSec = blockW / (videoDensitySsPerSec * ssPx);
 const pageSeconds = secArg != null ? parseFloat(secArg) : defaultSec;
 if (!(pageSeconds > 0)) { console.error('--sec must be positive'); process.exit(2); }
 
+// [PLAN 2b.7.2 / 2b.7.3, D59 — 2026-09-17] THE RESERVES. A PAGE OWNS [cut, next cut), and an owned strike's ink reaches
+// BOTH WAYS out of its onset: back along the GC arc's approach (0.36 s = 7.3 ss) and the notehead unit that hangs left of
+// the go line (§404, 4.2 ss), forward through the rebound (0.24 s) and the marks beside the head. So the page's WINDOW is
+// deliberately wider than what it owns — it opens leftReserve BEFORE the cut and the plan advances only
+// pageSeconds minus the two reserves, which puts both ends of every owned strike inside the drawn area.
+// THE SCALE NEVER CHANGES: the window is still exactly pageSeconds wide on every page (distance is time — his own
+// correction on the film, "in page two the cursor speeds up significantly"). The cost is pages, and only pages.
+const bufSs = pageRules.musicStartBufferSs || 0;
+const pxPerSecPage = (blockW - ((C.prefatory && C.prefatory.gutterPx) || 0)) / pageSeconds;
+const secOfSs = ss => (ssPerSystem > 0 && pxPerSecPage > 0) ? ss * ssPx / pxPerSecPage : 0;
+const bufSec = secOfSs(bufSs);
+const gcP = GC.params((((C.engraving && C.engraving.render) || {}).gc || {}).preset || {});
+const edgeMarginSec = secOfSs(pageRules.edgeReserveMarginSs != null ? pageRules.edgeReserveMarginSs : 1.2);
+const leftReserve = Math.max(bufSec, gcP.pre + edgeMarginSec);
+const rightReserve = gcP.post + edgeMarginSec;
+const advanceSeconds = pageSeconds - leftReserve - rightReserve;
+if (!(advanceSeconds > 0)) { console.error('--sec ' + pageSeconds.toFixed(2) + ' leaves no music after the edge reserves'); process.exit(2); }
+
 // ------------------------------------------------- IR-vs-score staleness HINT
 // The print score is drawn from the IR, not from the save file. So editing the
 // score and re-running THIS tool renders the OLD notation, silently. That is the
@@ -180,7 +201,8 @@ try {
 } catch (e) { /* a missing score is not an error; marks just go quiet */ }
 
 // ---------------------------------------------------------------- pages
-const pages = Splice.planPages(ir, pageRules, pageSeconds);
+// [2b.7.3] planned at the ADVANCE, not the window width: page i owns [pages[i].t0, pages[i].t1).
+const pages = Splice.planPages(ir, pageRules, advanceSeconds);
 let sel = pages.map((_, i) => i);
 if (atArg != null) {
   // the page containing a given second — the page plan changes with --sec, so
@@ -198,14 +220,15 @@ if (pagesArg) {
   if (!sel.length) { console.error('--pages ' + pagesArg + ' selects nothing (have 1-' + pages.length + ')'); process.exit(2); }
 }
 
-// [PLAN 2b.1.5 — 2026-09-17; §404 on the page] THE BUFFER AFTER THE CLEF. A page break can land on a note's own onset and the
-// unit hangs LEFT of its go line, so every window opens page_rules.musicStartBufferSs staff spaces early (never before the IR's
-// own start) — the page, the app and the video all do it; the print did not, so a first note could sit in the gutter.
-// ss -> seconds through THIS page's own scale, which is why it is computed here and not carried over from the video.
-const bufSs = pageRules.musicStartBufferSs || 0;
-const pxPerSecPage = (blockW - ((C.prefatory && C.prefatory.gutterPx) || 0)) / pageSeconds;
-const bufSec = bufSs > 0 && ssPerSystem > 0 ? bufSs * ssPx / pxPerSecPage : 0;
-const pageT0Of = i => Math.max(ir.source.window[0], pages[i].t0 - bufSec);
+// [PLAN 2b.1.5, then 2b.7.2] THE WINDOW OPENS BEFORE THE CUT. §404 (the composer, on a viola note sitting on the alto clef:
+// "in the tuba score we had a buffer zone after the clef") bought the notehead unit 4.2 ss of room; the GC arc's approach is
+// 7.3 ss and was never counted, which is how arcs came to be drawn over the clefs. leftReserve is now the larger of the two.
+const pageT0Of = i => Math.max(ir.source.window[0], pages[i].t0 - leftReserve);
+// THE OWNED SPAN and THE INK END (2b.7.1 / 2b.7.4). The page draws only the events it owns; the right reserve past its cut is
+// where the last owned strike's rebound goes, and the system STOPS there — a ragged right edge on a page whose cut fell early,
+// which in a proportional score is the honest reading (blank staff reads as silence).
+const ownedOf = i => [pages[i].t0, pages[i].t1];
+const inkEndOf = (i, view) => Math.min(view.window[1], pages[i].t1 + rightReserve);
 
 function viewFor(i) {
   // THE LAST PAGE REACHES THE PIECE'S END. Measured day 37: with the default
@@ -225,6 +248,42 @@ function viewFor(i) {
   });
 }
 
+// ------------------------------------------------- [PLAN 2b.7.5] THE PAGE PLAN, DUMPED
+// ONE source for the geometry. The checker could re-derive the lane weights, the A3 block and the
+// reserves — and then be checking its own arithmetic instead of the exporter's. It reads this instead.
+if (planJson) {
+  const POINT = new Set(Render.POINT_KINDS), LONG = new Set(Render.LONG_KINDS);
+  const items = [];
+  for (const sys of model.systems) for (const it of (sys.items || [])) {
+    if (POINT.has(it.k)) items.push({ k: it.k, t: it.t, part: sys.part });
+    else if (LONG.has(it.k)) items.push({ k: it.k, t0: it.t0, t1: it.t1, part: sys.part, long: true });
+  }
+  const pts = items.filter(x => !x.long && isFinite(x.t));
+  const out = {
+    ir: irId, format: formatName, pageSeconds, advanceSeconds, leftReserve, rightReserve,
+    gutterPx: (C.prefatory && C.prefatory.gutterPx) || 0, blockW, srcStart: ir.source.window[0], srcEnd,
+    pointKinds: Render.POINT_KINDS, longKinds: Render.LONG_KINDS,
+    pointTotal: pts.length,
+    pages: pages.map((p, i) => {
+      const view = viewFor(i);
+      const inkEnd = inkEndOf(i, view);
+      const last = i === pages.length - 1;
+      const ownsT = t => t >= p.t0 - 1e-9 && (last ? t <= p.t1 + 1e-9 : t < p.t1 - 1e-9);
+      const mine = pts.filter(x => ownsT(x.t));
+      return {
+        n: i + 1, t0: p.t0, t1: p.t1, kind: p.kind, severed: p.severed,
+        w0: view.window[0], w1: view.window[1], inkEnd,
+        xInk: view.xOfSeconds(inkEnd), xMusic0: view.gutterPx,
+        points: mine.length, gc: mine.filter(x => x.k === 'gc').length,
+        golines: mine.filter(x => x.k === 'goline').length,
+      };
+    }),
+  };
+  fs.writeFileSync(planJson, JSON.stringify(out, null, 1));
+  if (!quiet) console.log('  plan -> ' + planJson + '  (' + out.pages.length + ' pages, ' + out.pointTotal + ' point items)');
+  process.exit(0);
+}
+
 // ------------------------------------------------- section marks: NONE
 // [PLAN 2b.2.3, D58 — 2026-09-17] The composer, asked what the marks above the
 // music should say: "no marks". So there are none, and the derivation that made
@@ -241,17 +300,21 @@ const clock = t => {
 };
 // The ruler is drawn in its own strip but shares the music view's x mapping, so
 // a tick and the note under it cannot disagree.
-function rulerSvg(view) {
-  const [t0, t1] = view.window;
+function rulerSvg(view, inkEnd) {
+  const [t0, t1W] = view.window;
+  // [2b.7.4] the ruler ends with the system: on a page whose cut fell early the
+  // last seconds are not this page's music, and a ruler over them would lie.
+  const t1 = inkEnd != null ? Math.min(t1W, inkEnd) : t1W;
+  const xInk = view.xOfSeconds(t1);
   const p = ['<svg xmlns="http://www.w3.org/2000/svg" width="' + blockW.toFixed(2) + '" height="' + headerPx +
     '" viewBox="0 0 ' + blockW.toFixed(2) + ' ' + headerPx + '">'];
   const yBase = headerPx - 0.5;
   if (wantRuler) {
-    p.push('<line x1="0" y1="' + yBase + '" x2="' + blockW.toFixed(2) + '" y2="' + yBase + '" stroke="#8a8a8a" stroke-width="0.4"/>');
+    p.push('<line x1="0" y1="' + yBase + '" x2="' + Math.min(blockW, xInk).toFixed(2) + '" y2="' + yBase + '" stroke="#8a8a8a" stroke-width="0.4"/>');
     const first = Math.ceil(t0), last = Math.floor(Math.min(t1, srcEnd));
     for (let t = first; t <= last; t++) {
       const x = view.xOfSeconds(t);
-      if (x < 0 || x > blockW) continue;
+      if (x < 0 || x > Math.min(blockW, xInk) + 0.01) continue;
       const five = t % 5 === 0;
       p.push('<line x1="' + x.toFixed(2) + '" y1="' + (yBase - (five ? 5 : 2.5)).toFixed(2) + '" x2="' + x.toFixed(2) +
         '" y2="' + yBase + '" stroke="#8a8a8a" stroke-width="' + (five ? 0.6 : 0.35) + '"/>');
@@ -415,14 +478,16 @@ function buildHtml() {
     const svg = StaticPage.staticPageSvg({
       model, view, glyphs, C, srcEnd,
       reshow: pages[i].reshow, ownsEnd: i === pages.length - 1,
+      owned: ownedOf(i), inkEnd: inkEndOf(i, view),   // [2b.7.1/.4] a page owns [cut, next cut); its ink stops at the cut + the right reserve
       ensemble: ENS,        // [PLAN 2b.1.4] the part labels, the winds' and strings' brackets, the piano's brace (§558)
       // composer, day 37: no bar line at the right of every page. On paper the
       // page edge is not a musical event; the bar draws only at the true end.
       edgeBar: false,
     });
-    const t0 = view.window[0], t1 = Math.min(view.window[1], srcEnd);   // the folio reads the DRAWN window (2b.1.5's buffer included)
+    // [2b.7.1] the folio reads what the page OWNS — with ownership that is exactly the music on it, reserves excluded.
+    const t0 = ownedOf(i)[0], t1 = Math.min(ownedOf(i)[1], srcEnd);
     out.push('<div class="page">');
-    if (headerPx) out.push('<div class="hdr">' + rulerSvg(view) + '</div>');
+    if (headerPx) out.push('<div class="hdr">' + rulerSvg(view, inkEndOf(i, view)) + '</div>');
     out.push('<div class="mus">' + svg + '</div>');
     out.push('<div class="fol"><span>' + esc(clock(t0)) + ' – ' + esc(clock(t1)) + '</span>' +
       '<span>' + (i + 1) + '</span></div>');
@@ -454,6 +519,8 @@ if (!quiet) {
   console.log('  page      ' + mm(pageW).toFixed(0) + ' x ' + mm(pageH).toFixed(0) + ' mm · margin ' + mm(margin).toFixed(1) + ' mm');
   console.log('  music     ' + mm(blockW).toFixed(0) + ' x ' + mm(blockH).toFixed(0) + ' mm');
   console.log('  ' + N + ' lanes  lane ' + mm(lanePx).toFixed(1) + ' mm  STAFF ' + mm(staffPx).toFixed(2) + ' mm');
+  console.log('  reserves  left ' + leftReserve.toFixed(3) + ' s  right ' + rightReserve.toFixed(3) +
+    ' s  -> ' + advanceSeconds.toFixed(2) + ' s of music per page   [2b.7]');
   console.log('  ' + pageSeconds.toFixed(2) + ' s/page' + (secArg == null ? '  [default = the video\'s approved density]' : '') +
     ' → ' + pages.length + ' pages for ' + srcEnd + ' s');
   console.log('  frame     ' + (ENS ? FRAME_PARTS.map(p => (ensPart(p) || {}).short || p).join(' · ') + '   buffer ' + bufSec.toFixed(3) + ' s'

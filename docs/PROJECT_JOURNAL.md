@@ -85,9 +85,9 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### CHECKPOINT — 2026-09-17 (session 15, Opus 5) — NEXT: BUILD PLAN 2b.7, THE PAGE EDGES *(mid-session checkpoint #2)*
+### STATE — 2026-09-17 (session 15, Opus 5) — PLAN 2b.7 BUILT · NEXT: HIS EYE ON THE 68-PAGE RE-RENDER, THEN 2b.6 ARCHIVE
 
-**His word:** *"a; checkpoint pls"* — (a) the ragged right edge, D59.
+**His word:** *"a"* — the ragged right edge (D59) — then *"go"*. Built the same session, RUNNING_LOG §615.
 
 **Where PLAN 2b stands:** **2b.1–2b.5 BUILT and committed** (RUNNING_LOG §608–§612). The print score exists whole:
 `print/score/Scattered-Substance-score-JYang.pdf` — **66 pages** (cover · instructions ×2 · 63 of music), 6.71 MB, A3 landscape, 10.32 s/page,
@@ -98,21 +98,27 @@ seven labels · 8 systems · 2 brackets + brace · ruler · folio; one terminal 
 Three of his layout notes are in it (§610–§611). **The IR was rebuilt and came out identical apart from its date — the approved audio render and the
 approved video are still of THIS score.**
 
-**THE TASK NOW: PLAN 2b.7 — the page edges. Designed, nothing built.** His eye on the 66 pages found arcs and notes in the clef gutter and strikes
-sliced at the right edge; the cause is one fact — **a page's window (a constant 10.32 s) is wider than what the page owns** (the cut can fall 2.37 s
-early). Measured: **129 onsets drawn on two pages · 101 arcs cut at the right edge (34 pages) · 53 arcs into the gutter (26 pages)** · ghost arcs over
-clefs (the note gates on `inWin`, the arc on range intersection). **D59 is the rule; PLAN 2b.7.1–2b.7.6 is the build**, with the numbers each step must
-hit. Cost: **63 → 68 music pages.**
+**PLAN 2b.7 IS BUILT (§615): a page owns [cut, next cut).** `render.js` gained `opts.owned` and `opts.inkEnd` — sixteen point kinds gate on OWNERSHIP,
+the GC arc follows its strike instead of range intersection (the ghost arcs), five long kinds clip to the drawn span. `export_print` derives the reserves
+from `gc.js` itself (**left 0.422 s · right 0.302 s**, margin `edgeReserveMarginSs: 1.2` new in `page_rules.json`) and advances **9.60 s** while the WINDOW
+stays **10.32 s** — the scale never changes, the cost is pages only: **63 → 68.** His "a" is in: staff, ruler and long items stop at the cut + the right
+reserve (**19 pages ragged, max 1.90 s = 18 %**), and the folio now reads what the page OWNS.
+**The re-render: `print/score/Scattered-Substance-score-JYang.pdf`, 71 pages (cover · instructions ×2 · 68 of music), 6.39 MB, FIVE checks green** —
+frame · front · pdf · pages · **the new `check_print_edges`** (14 532 of 14 532 point items owned exactly once · 1304 arcs = 1304 impact dots · no timed
+ink in the gutter, none past the system end). It is a gate in `build.sh` and it is **proven to fail**: with ownership switched off for one run it read
+§613's whole census back. **The film did not move** — pages 0 · 9 · 20 · 30 · 43 · 49 · 53 byte-identical, proven twice.
 
-**Next concrete step:** on **Opus**, build **PLAN 2b.7 in order 7.1 → 7.6** as written. **Before editing `notation/lib/render.js`:** dump the video
-exporter's pages **0 · 9 · 20 · 30 · 43 · 49 · 53** from the clean tree (`node tools/export_video.js --ir piece-septet --dumpPage N --dumpTo <scratch>`),
-keep their hashes, and prove them **byte-identical** after the change — the approved film must not move (§608's method; the old baselines were in the
-session scratchpad, which a `/clear` does not survive). Then re-render, run all five checks, and send him the new PDF.
+**Next concrete step: HIS EYE on the new PDF** (sent to him 2026-09-17) — the right edge of a page whose music stops early (**13 · 58 · 60 · 63 · 64 · 65**
+are the raggedest) and the clef gutter anywhere. On his word → **2b.6 archive + docs**: the PDF to `print/score/approved/<date>/` with a README (the
+command, the save's commit, the checks) · NITS's two "FOR PLAN 2b" entries closed · CLAUDE.md's Apps gains the print line · journal §2 · PLANNER.
 
-**Resume reads:** `docs/PLAN.md` — **2b.7 whole** (search `2b.7 — The page edges`) · journal §4 **D59** (search `- **D59**`). Nothing else; the
-builder opens `notation/lib/render.js` (the item loop, ~470–600), `notation/lib/splice.js` and `tools/export_print.js` as its first act.
+**Resume reads:** `docs/PLAN.md` — **2b.6** (search `2b.6 — Archive + docs`) · `docs/RUNNING_LOG.md` **§615**. Nothing else.
 
-**Model:** **Opus builds** (a written plan, mechanical). Fable only if the ragged edge raises a new look question.
+**Model:** **Opus** (2b.6 is mechanical) · **Fable** if his eye on the ragged edge raises a look question.
+
+**Noted for whoever reads `check_print_frame` next:** its census differences at the four moments are now LARGER and will stay larger — it compares a
+print page with the film page at the same second, and ownership IS the difference between them (9.6 s owned against a 12 s window). Its real assertions
+— eight systems, seven labels, two brackets, one brace — are untouched. Not drift.
 
 **Decisions pending the composer:** his eye on the 2b.7 re-render (then 2b.6 archive) · the four items carried from N1 since §605 — the score-in-C
 line · the three fact flags on the instructions page · the tuba text he has not reviewed (the intro paragraph, the Conduction Tools' first two
@@ -130,7 +136,7 @@ paragraphs, the Crescendos paragraph) · the AI calls he may undo (the practice-
 - unsaved working copies (`node tools/unsaved_check.js`): cres-run01 · cres2strike · piano-harmonics-test · trill-curve-test · trillBuildTst · zz-ai-1t-walk
 
 **Gitignored, left on disk on purpose** (`print/score/*.pdf` is ignored — every print PDF lives on this machine only): **the score itself**
-`print/score/Scattered-Substance-score-JYang.pdf` (6.7 MB, 66 pp) · `PROOF-A3-frame.pdf` · `PROOF-front-matter.pdf` · `PROOF-density-8.5 / -10.3 /
+`print/score/Scattered-Substance-score-JYang.pdf` (6.39 MB, **71 pp** — re-rendered by 2b.7, §615) · `PROOF-A3-frame.pdf` · `PROOF-front-matter.pdf` · `PROOF-density-8.5 / -10.3 /
 -12.pdf` · `notation/ir/piece-septet.ir.json.bak` (the pre-rebuild snapshot, deletable) · the practice videos' archived mp4s (his to back up) ·
 `notation/audio/` — **keep `raw/demo-bloom-heldmax-float.wav`**.
 **Running:** his :5300 and Reaper. Nothing of the AI's; the Browser pane was not used this session.
@@ -254,7 +260,7 @@ comment beside it) · `tools/gen_morph_chart.js` (the chart) · `tools/gen_m2_ch
 |---|---|---|---|
 | ~~N0~~ | ~~the Bloom practice videos (PLAN 2h.7)~~ — **DONE 2026-09-17** (§602: "videos good", online, linked, archived) | — | — |
 | N1 | the performance instructions — PARKED: drafted and copy-edited; the pending items 2–5 in the checkpoint above, at his convenience | Opus | no |
-| **N2** | **► PLAN 2b the print score** — 2b.1–2b.5 BUILT (§608–§612: the frame, A3, the front matter, the whole 66-page PDF, four checks green) · **NOW 2b.7 the page edges by rule (designed §613)** · then his eye → 2b.6 archive | **Opus builds 2b.7** (Fable designed it) | **yes — `/checkpoint` on Opus, `/clear`, `/postclear`, then build: this session is long and 2b.7 is a fresh chunk with a written plan** |
+| **N2** | **► PLAN 2b the print score** — 2b.1–2b.5 and **2b.7 BUILT** (§608–§612, §615: the frame, A3, the front matter, the page edges by rule; **71 pages, five checks green**) · **NOW: HIS EYE on the re-render** → then **2b.6 archive + docs** | **Fable** for his eye on the ragged edge · **Opus** for 2b.6 | **yes before 2b.6** — a fresh mechanical chunk |
 | **N3** | Later, noted: the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
 | **N4** | Still his, from before: the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 

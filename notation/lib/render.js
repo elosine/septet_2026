@@ -94,6 +94,24 @@
     // pass opts.ownsEnd = true.
     const ownsEnd = !opts || opts.ownsEnd !== false;
     const inWin = t => t >= w0 - 1e-9 && (ownsEnd ? t <= w1 + 1e-9 : t < w1 - 1e-9);
+    // [PLAN 2b.7.1, D59] A PRINTED PAGE OWNS [cut, next cut). A POINT EVENT — a
+    // strike and everything attached to it — draws only on the page that owns
+    // its ONSET, and draws WHOLE; a LONG ITEM draws on every page it crosses,
+    // clipped to the drawn span. opts.owned carries the two cuts; the page's
+    // WINDOW is wider than what it owns, and the reserves it gains (2b.7.2/.3)
+    // are where the overflowing ink goes. ABSENT = today's behaviour exactly —
+    // the film keeps its overlap on purpose (the ball needs its approach), so
+    // with no owned span the approved video renders byte-identical.
+    const OWN = (opts && opts.owned) || null;
+    const owns = OWN
+      ? (t => t >= OWN[0] - 1e-9 && (ownsEnd ? t <= OWN[1] + 1e-9 : t < OWN[1] - 1e-9))
+      : inWin;
+    // [2b.7.4] THE SYSTEM ENDS WHERE THE PAGE'S MUSIC ENDS: staff, ruler and
+    // long items stop at the cut + the right reserve rather than at the window
+    // edge — the ragged right edge of a page whose cut fell early. In a
+    // proportional score blank staff reads as SILENCE, and the scale may never
+    // change page to page (distance is time). Absent = the window edge.
+    const wInk = (opts && opts.inkEnd != null) ? Math.min(opts.inkEnd, w1) : w1;
 
     for (const sysModel of model.systems) {
       let sys;
@@ -173,7 +191,7 @@
           // engraving.render.staffFull makes every view draw the staff to the page edges
           const full = (opts && opts.staffFull) || !!E.staffFull;
           const t0 = (full && it.t0 <= mw[0] + 1e-9) ? w0 : Math.max(it.t0, w0);
-          const t1 = (full && it.t1 >= mw[1] - 1e-9) ? w1 : Math.min(it.t1, w1);
+          const t1 = (full && it.t1 >= mw[1] - 1e-9) ? wInk : Math.min(it.t1, wInk);
           const x0 = view.xOfSeconds(t0), x1 = view.xOfSeconds(t1);
           for (let line = -2; line <= 2; line++) {
             const y = Y(line) - (stds.staff.lineThickness * ssPx) / 2;
@@ -202,13 +220,13 @@
             parts.push(Stamps.toSvg(cStamp, { xPx: cx + E.clefInsetSs * ssPx, yPx: Y(CL.line), ssPx, align: CL.anchor }));
           }
         } else if (it.k === 'glyph') {
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           parts.push(Stamps.toSvg((it.scale || it.scaleY) ? Stamps.scaled(boxFor(it.g), it.scale || 1, it.scaleY != null ? it.scaleY : (it.scale || 1)) : boxFor(it.g), { xPx: X(it.t, it.dxSs), yPx: (it.sys ? sysYOf(it.sys) : Y)(it.ySs), ssPx, align: it.align }));
         } else if (it.k === 'rest') {
           // day 23: a rest at LP's own vertical placement — the glyph's topSs
           // is where its bbox top sits above the staff middle line, so the
           // rest lands exactly where LilyPond would put it.
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           const rg = glyphs.rest['rest' + it.dur];
           // LEFT EDGE on the rest's time (day 24): a rest is placed like a note
           // of its value, and noteheads in this piece put their left edge on the
@@ -226,16 +244,16 @@
               (Y(it.ySs != null ? it.ySs : rg.topSs) + (rg.hSs / 2) * ssPx).toFixed(2) + '" r="' + (dd / 2).toFixed(2) + '"/>');
           }
         } else if (it.k === 'stem') {
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           const x = X(it.t, it.dxSs) - (stds.stem.thickness * ssPx) / 2;
           const YB = it.sysB ? sysYOf(it.sysB) : Y;   // [§495] the cross-staff stem's far end
           const yTop = Math.min(Y(it.yA), YB(it.yB)), h = Math.abs(Y(it.yA) - YB(it.yB));
           parts.push('<rect x="' + x.toFixed(2) + '" y="' + yTop.toFixed(2) + '" width="' + (stds.stem.thickness * ssPx).toFixed(2) + '" height="' + h.toFixed(2) + '"/>');
         } else if (it.k === 'dot') {
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           parts.push('<circle cx="' + X(it.t, it.dxSs).toFixed(2) + '" cy="' + Y(it.ySs).toFixed(2) + '" r="' + (glyphs.standards.staccatoDot.diameter / 2 * ssPx).toFixed(2) + '"/>');
         } else if (it.k === 'ledger') {
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           // day 22: honor the item's dxSs (was silently dropped — a shifted
           // head left its ledgers behind) and its own head width (the open
           // head is wider than filled)
@@ -243,7 +261,7 @@
           parts.push('<rect x="' + (X(it.t, it.dxSs) - w / 2).toFixed(2) + '" y="' + (Y(it.ySs) - stds.ledgerLine.thickness * ssPx / 2).toFixed(2) +
             '" width="' + w.toFixed(2) + '" height="' + (stds.ledgerLine.thickness * ssPx).toFixed(2) + '"/>');
         } else if (it.k === 'beam') {
-          const tips = it.tips.filter(p => inWin(p.t));
+          const tips = it.tips.filter(p => owns(p.t));
           if (tips.length < 2) continue;
           // beam thickness extends TOWARD the noteheads: down the page for
           // up-stems, up the page for down-stems (review finding: down-stem
@@ -253,25 +271,25 @@
           const back = tips.slice().reverse().map(p => X(p.t, p.dxSs).toFixed(2) + ',' + (Y(p.ySs) + t).toFixed(2));
           parts.push('<polygon points="' + fwd.concat(back).join(' ') + '"/>');
         } else if (it.k === 'text') {
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           // [2j.2, §540] yAt 'top': the text's TOP on the system's top edge — where a surge curve's cut edge peaks (the envcurve
           // is drawn to sys.yTopPx) — through the hanging baseline; "sempre secco" is the one user so far
           const yTxt = it.yAt === 'top' ? sys.yTopPx : Y(it.ySs);
           parts.push('<text x="' + X(it.t, it.dxSs).toFixed(1) + '" y="' + yTxt.toFixed(1) + '" font-size="' + ((it.size || 1) * ssPx * E.textScale).toFixed(1) +
             '"' + fontAttr + (it.anchor && it.anchor !== 'start' ? ' text-anchor="' + it.anchor + '"' : '') + (it.italic ? ' font-style="italic"' : '') + (it.yAt === 'top' ? ' dominant-baseline="hanging"' : '') + ' xml:space="preserve" fill="' + (it.color || o.muted) + '">' + esc(it.text) + '</text>');
         } else if (it.k === 'attackline') {
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           // M4: a vertical stroke straddling the pitch position
           parts.push('<rect x="' + (X(it.t, 0) - E.attackLine.wSs / 2 * ssPx).toFixed(2) + '" y="' + (Y(it.ySs + E.attackLine.offsetSs)).toFixed(2) +
             '" width="' + (E.attackLine.wSs * ssPx).toFixed(2) + '" height="' + (E.attackLine.hSs * ssPx).toFixed(2) + '"/>');
         } else if (it.k === 'tick') {
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           parts.push('<rect x="' + (X(it.t, 0) - E.tick.wSs / 2 * ssPx).toFixed(2) + '" y="' + (Y(it.ySs) - E.tick.hSs * ssPx).toFixed(2) +
             '" width="' + (E.tick.wSs * ssPx).toFixed(2) + '" height="' + (E.tick.hSs * ssPx).toFixed(2) + '"/>');
         } else if (it.k === 'envcurve') {
           // the drawn level curve over the FULL lane band (piece #1: value
           // 0..1 maps bottom -> top of the track), clipped to the window
-          if (it.t1 < w0 || it.t0 > w1) continue;
+          if (it.t1 < w0 || it.t0 > wInk) continue;
           const EC = E.envCurve;
           // [2f.4] band 'lane': a multi-staff part's curve spans its whole lane (the piano's trills), as its go line does
           const yT = it.band === 'lane' ? lane.yTopPx : sys.yTopPx, yB = it.band === 'lane' ? lane.yBotPx : sys.yBotPx;
@@ -290,7 +308,7 @@
           const pts = [];
           for (let i = 0; i < n; i++) {
             const t = it.t0 + (it.t1 - it.t0) * (i / (n - 1));
-            if (t < w0 - 1e-9 || t > w1 + 1e-9) continue;
+            if (t < w0 - 1e-9 || t > wInk + 1e-9) continue;
             pts.push([view.xOfSeconds(t), yB - samples[i] * (yB - yT)]);
           }
           if (pts.length >= 2) {
@@ -311,7 +329,7 @@
           // THE TRANCE BAR LINE (day 35, composer): one at every new tempo,
           // sitting a MEDIUM space left of the bar's leftmost ink so it never
           // crowds the downbeat. Full staff height, stem thickness.
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           const BL = E.barLine;
           const x = X(it.t, it.dxSs) - (BL.thickSs * ssPx) / 2;
           parts.push('<rect x="' + x.toFixed(2) + '" y="' + Y(2).toFixed(2) +
@@ -322,7 +340,7 @@
           // The quarter note is DRAWN (small notehead + stem) rather than typed —
           // Crimson has no musical glyph, and everything else on this page comes
           // from the glyph set, so a typed character would be the odd one out.
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           const BL = E.barLine;
           const tx = X(it.t, it.dxSs), ty = Y(BL.tempoYSs);
           const ns = ssPx * BL.tempoHeadScale;
@@ -343,7 +361,7 @@
           // the gliss line between the section's two pitches (day 35): a plain
           // rule at stem thickness, its length the diameter of TWO regular
           // half-note heads, a standard spacer clear of each head
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           const gy = Y(it.ySs), gt = it.thickSs * ssPx;
           if (it.y1Ss != null && it.y1Ss !== it.ySs) {
             // [PLAN 2h.2] D45: the start and the destination on different lines — the rule slants
@@ -359,7 +377,7 @@
           // LilyPond the circled tip is DRAWN — so it is drawn here: an open
           // circle the diameter of the `m` in mf (measured 0.4695 ss), stroked
           // at the arrow's own thickness, sitting on the dynamic row.
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           // centred ON the arrow's axis, so the two read as one gesture
           // (the composer's reference image: circle then hairpin, one line)
           const r = it.diaSs * ssPx / 2;
@@ -375,14 +393,14 @@
           // above exists because on a MORPH page the glissando owns the top
           // half. The trance section has no glissando, so its final crescendo
           // takes the whole lane. Opt-in per overlay — morph pages unchanged.
-          if (it.t1 < w0 || it.t0 > w1) continue;
+          if (it.t1 < w0 || it.t0 > wInk) continue;
           const CC = E.crescCurve;
           const yB = sys.yBotPx;
           const yCeil = it.full ? sys.yTopPx : (sys.yTopPx + sys.yBotPx) / 2;
           const n2 = it.samples.length, cp = [];
           for (let i = 0; i < n2; i++) {
             const t = it.t0 + (it.t1 - it.t0) * (i / (n2 - 1));
-            if (t < w0 - 1e-9 || t > w1 + 1e-9) continue;
+            if (t < w0 - 1e-9 || t > wInk + 1e-9) continue;
             cp.push([view.xOfSeconds(t), yB - it.samples[i] * (yB - yCeil)]);
           }
           if (cp.length >= 2) {
@@ -403,13 +421,13 @@
           // THE MORPH GLISSANDO (day 35, composer): one smooth interpolated
           // line for the whole section, brightOrange, taking PRECISELY the TOP
           // HALF of the lane. The bottom half belongs to the crescendo.
-          if (it.t1 < w0 || it.t0 > w1) continue;
+          if (it.t1 < w0 || it.t0 > wInk) continue;
           const GC2 = E.glissCurve;
           const yT = sys.yTopPx, yMid = (sys.yTopPx + sys.yBotPx) / 2;
           const n = it.samples.length, gp = [];
           for (let i = 0; i < n; i++) {
             const t = it.t0 + (it.t1 - it.t0) * (i / (n - 1));
-            if (t < w0 - 1e-9 || t > w1 + 1e-9) continue;
+            if (t < w0 - 1e-9 || t > wInk + 1e-9) continue;
             gp.push([view.xOfSeconds(t), yMid - it.samples[i] * (yMid - yT)]);
           }
           if (gp.length >= 2) {
@@ -435,7 +453,7 @@
         } else if (it.k === 'dynarrow') {
           // the surge's hairpin replacement: a short rightward arrow between
           // the two marks — line + solid triangular head, stem-thickness
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           const x0 = X(it.t, it.dx0Ss), x1 = X(it.t, it.dx1Ss);
           const yA = Y(it.ySs);
           const headL = (it.headSs || 0.45) * ssPx, thick = (it.thickSs || 0.13) * ssPx;
@@ -478,7 +496,7 @@
           // label · dashes RIGHT-ALIGNED stepping back from the hook (p2's
           // emitDashes — the connecting dash meets the hook, forming the L),
           // hook at the head's right edge. Geometry: glyphs.standards.ottava.
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           const O = stds.ottava || {};
           const lg = glyphs.ottavaText && glyphs.ottavaText[it.label];
           const yLine = Y(it.ySs);
@@ -513,7 +531,7 @@
           // a filled outline with LilyPond's 0.1 ss stroke. The attachment
           // line sits at ySs; the crescent rises away from the head ('above')
           // or is mirrored about that line ('below').
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           const LV = glyphs.letRing;
           if (!LV) continue;
           const ax = X(it.t, it.dxSs), ay = Y(it.ySs), ky = it.dir === 'below' ? -1 : 1;
@@ -523,7 +541,7 @@
         } else if (it.k === 'goline') {
           // dotted vertical at go time, full lane band (piece #1's go-time
           // marker: 0.5 @ 0.4, dasharray 2,2)
-          if (!inWin(it.t)) continue;
+          if (!owns(it.t)) continue;
           const GL = E.goLine;
           const gx = view.xOfSeconds(it.t).toFixed(2);
           // §401h: the top at the GC arc's top when this note carries a GC and the registry says so; a
@@ -553,7 +571,13 @@
           // above the lane bottom. Sizes at the 1080 frame × magnification.
           // Clipped to the page like the ring bar (an arc may cross a cut).
           const P = GC.params(Object.assign({}, (E.gc && E.gc.preset) || {}, it.preset || {}));
-          if (it.t + P.post < w0 || it.t - P.pre > w1) continue;
+          // [2b.7.1] the arc follows ITS STRIKE: owned = drawn whole, unowned =
+          // not drawn at all. That is what kills the ghost arc over the clef —
+          // the note gated on inWin and the arc on range intersection, so a
+          // strike just BEFORE the window left its arc behind. With no owned
+          // span the old range test stands: the film's approach is deliberate.
+          if (OWN) { if (!owns(it.t)) continue; }
+          else if (it.t + P.post < w0 || it.t - P.pre > w1) continue;
           // §401e: the GC's own system (the first staff of a multi-staff part) — a single lane's height, the
           // impact between the piano's staves; the go line above keeps the whole lane
           const G = GC.laneGeom(GC.systemOf(view, sysModel.part), view, E.gc && E.gc.look);
@@ -561,24 +585,24 @@
           const d = GC.trajectory(P).map((p, i) =>
             (i ? 'L' : 'M') + view.xOfSeconds(it.t + p.dt).toFixed(2) + ' ' + (G.impactY - p.frac * G.h).toFixed(2)).join(' ');
           parts.push('<path class="gc-arc" d="' + d + '" stroke="' + color + '" stroke-width="' + (G.look.arcStrokePx * G.k).toFixed(2) + '" fill="none"/>');
-          if (inWin(it.t)) parts.push('<circle class="gc-impact" cx="' + view.xOfSeconds(it.t).toFixed(2) + '" cy="' + G.impactY.toFixed(2) +
+          if (OWN || inWin(it.t)) parts.push('<circle class="gc-impact" cx="' + view.xOfSeconds(it.t).toFixed(2) + '" cy="' + G.impactY.toFixed(2) +
             '" r="' + (G.look.impactRadiusPx * G.k).toFixed(2) + '" fill="' + color + '"/>');
         } else if (it.k === 'ringbar') {
           // the sounding-length bar: left edge flush with the go line,
           // right edge at onset + sounding length, centered on the written
           // head; clipped to the page like a brick
-          if (it.t1 < w0 || it.t0 > w1) continue;
+          if (it.t1 < w0 || it.t0 > wInk) continue;
           const RB = E.ringBar;
           // dx0Ss (day 24): the bar begins after the nh-unit's ink, not at the
           // go line — layout computes it from the unit's own right edge.
-          const x0 = X(Math.max(it.t0, w0), it.t0 >= w0 ? it.dx0Ss : 0), x1 = view.xOfSeconds(Math.min(it.t1, w1));
+          const x0 = X(Math.max(it.t0, w0), it.t0 >= w0 ? it.dx0Ss : 0), x1 = view.xOfSeconds(Math.min(it.t1, wInk));
           const h = RB.hSs * ssPx;
           parts.push('<rect x="' + x0.toFixed(2) + '" y="' + (Y(it.ySs) - h / 2).toFixed(2) + '" width="' + Math.max(1, x1 - x0).toFixed(2) +
             '" height="' + h.toFixed(2) + '" fill="' + RB.color + '" opacity="' + RB.opacity + '"/>');
         } else if (it.k === 'brick') {
           if (o.hideBricks) continue;   // day 22: the bricks toggle
-          if (it.t1 < w0 || it.t0 > w1) continue;
-          const x0 = view.xOfSeconds(Math.max(it.t0, w0)), x1 = view.xOfSeconds(Math.min(it.t1, w1));
+          if (it.t1 < w0 || it.t0 > wInk) continue;
+          const x0 = view.xOfSeconds(Math.max(it.t0, w0)), x1 = view.xOfSeconds(Math.min(it.t1, wInk));
           // native tooltip (day 22): hover a brick to see what it is; the
           // brick must opt back into pointer events — the sheet SVG is
           // otherwise passive and the anim overlay above is pointer-inert.
@@ -642,12 +666,25 @@
 
     // read-through marker labels along the top (S1, not IR — passed in opts)
     for (const mk of ((model && model.hideMarkers) ? [] : ((opts && opts.markers) || []))) {
-      if (!inWin(mk.time)) continue;
+      if (!owns(mk.time)) continue;
       parts.push('<text x="' + view.xOfSeconds(mk.time).toFixed(1) + '" y="12" font-size="10" font-family="sans-serif" fill="' + o.muted + '">' + esc(mk.label) + '</text>');
     }
     parts.push('</svg>');
     return parts.join('\n');
   }
 
-  return { renderSection };
+  // [PLAN 2b.7.5] THE CENSUS, stated where the gates are. A POINT kind is drawn
+  // once, on the page that owns its `t`; a LONG kind is drawn on every page it
+  // crosses and clipped to the drawn span; FURNITURE is neither (it belongs to
+  // the page, not to the music). check_print_edges reads these rather than
+  // keeping a second list that could quietly disagree with the loop above.
+  const POINT_KINDS = ['glyph', 'rest', 'stem', 'dot', 'ledger', 'beam', 'text', 'attackline', 'tick',
+    'barline', 'tempotext', 'glissline', 'niente', 'dynarrow', 'ottava', 'lvslur', 'goline', 'gc'];
+  const LONG_KINDS = ['envcurve', 'cresccurve', 'glisscurve', 'ringbar', 'brick'];
+  const FURNITURE_KINDS = ['staff', 'clef'];
+  // 'tuplet' is neither: it has no window gate at all, because a tuplet bracket
+  // belongs to a beam group and the splicer is stamp-atomic — no cut severs a
+  // beam (measured 0 of 63 on this score), so a bracket never crosses a cut.
+
+  return { renderSection, POINT_KINDS, LONG_KINDS, FURNITURE_KINDS };
 });
