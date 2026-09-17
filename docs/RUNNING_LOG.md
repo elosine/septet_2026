@@ -16215,3 +16215,26 @@ noise or false comfort — both caught by reading the numbers rather than the ve
 **The front-matter proof for his eye:** `print/score/PROOF-front-matter.pdf` — cover · the two instructions pages · one page of music, 4 pp, 0.36 MB,
 zero raster images, 6 embedded font programs (the instructions bring the italic and the notation faces the music pages do not use).
 
+## §610. HIS FIRST NOTE ON THE FRONT MATTER: the crescendo figure and its paragraph into column 1 — and the column-fill that was the real cause (2026-09-17, session 15, Opus 5)
+
+**His word, with a screenshot of the printed crescendo figure:** *"crescendos image and bottom text, shrink image so image and bottom text fit in column 1"*.
+
+**What was actually happening, measured before touching anything** (a column census of every block on both instructions pages): the "Crescendos" heading
+ended column 1 at **525 px of 980**, and the figure began **column 2** — 455 px of column 1 stood empty beneath its own heading. So the figure was not
+too big for the column at all. **The cause was `column-fill`, which defaults to BALANCE:** Chrome picks a target height, finds the unbreakable figure
+will not fit under it, and moves the figure on — leaving the first column half empty. `column-fill:auto` fills column 1 to its full height before
+column 2 begins, which is what a fixed-height printed page wants and what the tuba's two-column page never revealed (its figures were smaller).
+
+**Three changes, and why each:**
+- **`column-fill:auto`** — the cause. With it the figure sits in column 1 under its heading, as he asked.
+- **The figure shrunk 92 % → 78 % of the column** (245 px tall instead of 289) — *his instruction, and kept even though the fill change alone would have
+  seated it*: the pair now ends at 817 of 980 with room to spare rather than crowding the column's foot.
+- **A figure and the paragraph that explains it are now ONE unbreakable block** (`.figblock`) — the general form of what he is asking for. A reader never
+  meets a picture whose sentence is in the next column; the pair moves together or not at all.
+
+**After:** the crescendo figure **539–784** and its paragraph **789–817**, both in **column 1** of instructions page 1. Columns now: page 1 col1 845 ·
+col2 337 · page 2 col1 836 · col2 443, of 980. `check_print_front.js` PASSES.
+**The check was corrected again in passing:** it reported "last block ends 980 of 980", which is true of the CONTAINER div — it spans both columns, so
+asking it where it ends always answers "the bottom". It now measures the leaf blocks and reports how full each column is, which is the number a person
+actually wants when deciding where to break a page.
+

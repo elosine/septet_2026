@@ -324,7 +324,9 @@ function instructionsPages() {
   // chart is a 16:5 strip and the two conduction stills are wider than tall.
   const FIGW = {
     morph_sequence_chart: 100, conduction_e1_strike_vn1_20: 100, conduction_e2_trill_vn1: 100,
-    curve_cresc_527_va: 92, gradient_trill: 92,
+    // the crescendo figure: he asked for it smaller so that it and the paragraph
+    // under it ride in the FIRST column together (2026-09-17, his screenshot)
+    curve_cresc_527_va: 78, gradient_trill: 92,
     beating_notation_entry_va: 88, beating_notation_mid_va: 88,
     let_ring_plucked_pno: 100, let_ring_ordinary_pno: 100,
   };
@@ -339,6 +341,13 @@ function instructionsPages() {
     return '<div class="figwrap"' + (w && w !== 100 ? ' style="width:' + w + '%"' : '') + '>' + svg + '</div>';
   });
   if (missing.length) { console.error('  ! instructions images MISSING: ' + missing.join(', ')); process.exit(5); }
+
+  // A FIGURE AND THE PARAGRAPH THAT EXPLAINS IT ARE ONE BLOCK (his ask, 2026-09-17:
+  // "crescendos image and bottom text ... fit in column 1"). Held together, they
+  // move as a unit to whichever column can take both, and a reader never meets a
+  // picture whose sentence is in the next column.
+  body = body.replace(/(<div class="figwrap"[^>]*>[\s\S]*?<\/div>)\s*(<div class="description">[\s\S]*?<\/div>)/g,
+    (_, fig, desc) => '<div class="figblock">' + fig + desc + '</div>');
 
   // the break: the <h3> named by --insBreak opens the second page
   const bi = body.search(new RegExp('<h3[^>]*>\\s*' + INS_BREAK.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
@@ -370,7 +379,12 @@ function buildHtml() {
     '.institle{display:flex;align-items:baseline;gap:18px;border-bottom:0.75px solid #111;padding-bottom:4px;margin-bottom:9px;}\n' +
     '.institle .t{font-size:21px;letter-spacing:3px;}\n' +
     '.institle .s{font-size:12px;font-style:italic;color:#444;}\n' +
-    '.cols{column-count:2;column-gap:36px;height:' + (pageH - 2 * margin - 46) + 'px;font-size:10.4px;line-height:1.36;}\n' +
+    // column-fill:auto FILLS the first column before starting the second, which is
+    // what a fixed-height printed page wants. Balanced (the default) it chose a
+    // target height, found the crescendo figure would not fit under it, and threw
+    // the figure into column 2 while column 1 stood half empty — his screenshot.
+    '.cols{column-count:2;column-fill:auto;column-gap:36px;height:' + (pageH - 2 * margin - 46) + 'px;font-size:10.4px;line-height:1.36;}\n' +
+    '.figblock{break-inside:avoid;}\n' +
     '.cols h3{font-size:12.5px;letter-spacing:1.5px;margin:7px 0 3px;}\n' +
     '.cols p{margin:0 0 5px;}\n' +
     '.cols ul{margin:0 0 5px 16px;padding:0;}\n' +

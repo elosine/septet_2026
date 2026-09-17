@@ -45,10 +45,14 @@ const probe = `
     let over='', fill='';
     if(c){ // a third column, or a column taller than its box, means content is being thrown away
       over=Math.max(c.scrollWidth-c.clientWidth, c.scrollHeight-c.clientHeight)+'px';
-      const kids=[...c.children], last=kids.length?kids[kids.length-1].getBoundingClientRect():null;
+      // how full each column is, measured on the LEAF blocks — the container div
+      // spans both columns, so asking it where it ends always answers "the bottom"
       const cr=c.getBoundingClientRect();
-      fill=Math.round(100*c.scrollWidth/c.clientWidth)+'% wide, last block ends '+
-           (last?Math.round(last.bottom-cr.top):0)+' of '+Math.round(cr.height);
+      const deep=[...c.querySelectorAll('h3, h4, .figwrap, .description p, .pair, ul, table')];
+      const low=n=>Math.round(Math.max(0,...deep.filter(e=>{const r=e.getBoundingClientRect();
+        return n===1 ? (r.left-cr.left)<cr.width/2 : (r.left-cr.left)>=cr.width/2;})
+        .map(e=>e.getBoundingClientRect().bottom-cr.top-(n===1?0:0))));
+      fill='col1 '+low(1)+' · col2 '+low(2)+' of '+Math.round(cr.height);
     }
     // Anything sticking out of the SHEET. Block-level boxes only: an SVG's own
     // children routinely reach past their viewport (a conduction arc runs off the
