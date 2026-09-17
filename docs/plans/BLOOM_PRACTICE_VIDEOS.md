@@ -47,7 +47,11 @@ render, twice run on the whole piece) · `tools/export_video.js` with the tuba's
 - **Never overwrite the approved render.** `notation/audio/piece-septet.wav` sha256 `ae3f6f74fb6b25565a9026ad8d1d6156f04b35b60c07d618fe2e0fa5ea6c3b65`
   — check it before the first demo render and after the last. `render_reaper.js` with default arguments writes exactly that file.
 - **The rack is never written** (RENDER.md rule 12) — renders are copies in their own tab. `reaper/septet_rack.rpp` is his and uncommitted: never staged.
-- **No composer tab, no capture run** — everything comes from the 09-16 capture. (If the capture is missing or older than the save: stop and say so.)
+- **No composer tab, no capture run** — everything comes from the 09-16 capture. **Judge the capture against the save by CONTENT, not by file
+  time:** `scores/piece-septet.json` was saved again 2026-09-17 11:04, during the planning session — measured at once (§598): all 1885 objects
+  identical to the committed save, only `metadata` differs. So the capture is current and `export_midi.js`'s "saved after the capture" warning is
+  expected. Before step 1, repeat that comparison (the objects of the working file against `git show bc54cdc:scores/piece-septet.json`); **if any
+  object differs, or the capture is missing: stop and say so** — a changed Bloom means a new capture (RENDER.md §1) before any demo render.
 - **No second engine.** No MIDI is written from pitch arithmetic; every message in a demo file is the composer's own, moved or held.
 - Stage explicit paths only. The mp4s and wavs are gitignored — say so in the archive README.
 

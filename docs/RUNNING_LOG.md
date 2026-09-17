@@ -15856,3 +15856,17 @@ stop-and-report list · a register. PLAN 2h.7 → `todo` with sub-steps 2h.7.1�
   his word. *Rejected:* building all three and showing the set — the tuba's set was rebuilt twice (the statics' length, then the Hz labels).
 - **New against the tuba:** every septet pair is two NON-ADJACENT lanes (1,6 · 3,5 · 0,4); every tuba pair was two neighbours. Step 1 looks at it.
 - **The step table's N0**, not a renumbering: N1 (his read-through) stays open beneath and can ride in the same Opus session.
+
+## §598. The save re-saved during the planning session: metadata only; the plan's capture guard corrected (2026-09-17, session 15, Fable 5.1)
+
+**What prompted it:** after §597's commit, `git status` showed ` M scores/piece-septet.json` — not there at the session's start. File time 2026-09-17
+11:04:54. Not the AI's doing (every script this session only read it); a Save from his open composer tab.
+
+**Measured:** the working file against `HEAD` (= `bc54cdc`, the save the 09-16 capture, render and video were made from — confirmed the same blob):
+1885 objects → 1885, **0 added, 0 deleted, 0 changed**; the only top-level key that differs is `metadata`. The git diff is one line.
+
+**What it means:** the capture, the approved render and the submission video are still the playback of this score. **Corrected in the plan**
+(a NEW reading, §597's wording replaced in the plan file only): its guard said "capture … older than the save: stop" — by file time that would now
+stop Opus for nothing. The guard now judges by CONTENT (objects against `bc54cdc`) and expects `export_midi.js`'s saved-after-capture warning.
+
+**Left:** `scores/piece-septet.json` uncommitted — his file, his Save; not the AI's to commit unasked.
