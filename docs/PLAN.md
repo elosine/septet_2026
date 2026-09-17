@@ -1775,15 +1775,16 @@ player would touch parts, solo, crop and print.
     - 2b.2.1 `FORMATS` gains `a3-landscape` (420 × 297 mm) and it is the default; tabloid stays for #4's sake.
     - 2b.2.2 seconds per page stays the rule it was — the video's approved density — expect ≈ 58 pages; the exporter reports the staff
       in mm (expect ≈ 7 mm; #4's was ≈ 8 on ten lanes).
-    - 2b.2.3 the section marks: the tuba's ACT-/TRANCE derivation replaced — from the save's two MORPH markers (183.00 · 314.00), the
-      piece's start, and section 3's first strike (444). **The labels are his (question B, §606).**
+    - 2b.2.3 ~~the section marks~~ — **NO MARKS (his word, D58):** the tuba's ACT-/TRANCE derivation is removed from the septet's path
+      (`--marks` defaults off; nothing is derived, nothing printed). **The time ruler: his word owed (§607)** — build it as it is
+      (`--ruler on`), so the proof pages show it and he can say.
     - 2b.2.4 the folio unchanged: the clock range left, the page number right.
   - **2b.3 — The proof pages — HIS EYE** — `todo` — **Result when done:** he has looked at four A3 pages in one PDF, one per section
     (≈ 100 · 250 · 380 · 530 s), and his notes are fixed. Before he looks: MediaBox 1190.55 × 841.89 pt · fonts embedded · zero raster
     images · no ink outside the music block (measured, not eyed).
   - **2b.4 — The front matter** — `todo` — **Result when done:** cover + instructions, on paper as on his page.
     - 2b.4.1 the cover at A3 — #4's cover D layout (EngraversGothic BT: title / "for …" / Justin Yang) at 1190.55 × 841.89 pt.
-      **Waits on his title and ensemble line (CN-64; question A).**
+      **Confirmed (D58):** *Scattered Substance* / "for flute, bass clarinet, piano and string quartet" / Justin Yang.
     - 2b.4.2 the instructions: ONE SOURCE stays `docs/notation_instructions/index.html` — his prose untouched (§569). **Two pages, four
       columns** (measured: three columns of content). The `FIGW` table rewritten for this piece's nine images. The exporter now FAILS
       LOUDLY when the columns overflow (it was silent clipping under `.page{overflow:hidden}`).
@@ -1793,8 +1794,7 @@ player would touch parts, solo, crop and print.
     - 2b.5.1 the IR rebuilt from its recorded build first (the save is newer by timestamp; §598 found the objects equal — the rebuild
       makes it certain).
     - 2b.5.2 `print/score/build.sh` rewritten for the septet (IR `piece-septet`, A3, cover + instructions on, the septet's out name).
-    - 2b.5.3 the Tempus copy: **question C (§606)** — the instructions page already opens with the demo link, which may make a separate
-      Tempus copy unnecessary.
+    - 2b.5.3 ~~the Tempus copy~~ — **ONE PDF (his word, D58):** the instructions page opens with the demo link; no separate copy, no flag.
     - 2b.5.4 the PDF checks, #4's: page count = cover + 2 + N · MediaBox on every page · fonts embedded · zero raster · the file's size.
     - 2b.5.5 the AI's page-through: every page's ink inside the block · page 1 has its clefs and labels · the final barline at the end.
     - 2b.5.6 HIS EYE on the whole PDF → notes → fixed in one pass (2j's way) → "print good".

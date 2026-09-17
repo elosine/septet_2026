@@ -16112,3 +16112,21 @@ instrumentation on top).
 C whether the Tempus copy still needs its own video line now that the instructions page opens with the demo link (the 09-14 decision predates that
 section). **Written:** PLAN 2b — the result line, the measured state, the top line (1 ⚠ frame · 2 paper · 3 proof pages, his eye · 4 front matter ·
 5 full render, his eye · 6 archive), sub-steps 2b.1–2b.6. **Builder: Opus**, starting at 2b.1; nothing in it waits on the three answers until 2b.2.3.
+
+## §607. HIS ANSWERS to §606's three questions: the title confirmed, no section marks, one PDF — and "what is the ruler?" (2026-09-17, session 15, Fable 5.1)
+
+**His word, whole:** *"from the application: The score as an Adobe PDF document with a maximum size of DIN A3 (297 x 420 mm) · A yes · B no marks what is
+the ruler? · c a · check in before moving on"*.
+
+- **The call's line, quoted by him** — the same sentence §606 measured against: A3 is the ceiling; the plan's A3 landscape (420 × 297) stands.
+- **A yes** — the title *Scattered Substance* and the ensemble line "for flute, bass clarinet, piano and string quartet" are confirmed. CN-64's
+  "tentative" ends here (a new entry, not an edit: D58).
+- **B no marks** — the AI had recommended `I · II · BLOOM · II · SPECTRAL · III` on the ground that his instructions page uses those words. Rejected
+  by him without a reason given; none asked. The print page carries no section names. PLAN 2b.2.3 struck and rewritten.
+- **"what is the ruler?"** — the AI had used the word without saying what it is. Answered in chat: #4's print page has a thin grey strip above the
+  music — a tick every second, a clock time (m:ss) every five seconds — because paper has no moving cursor and the score is proportional, so without
+  it a reader cannot tell where in time a page sits or match it to the video; the page's foot also carries its clock range. Whether the septet's
+  print keeps it is his word, owed. The plan builds it as it stands so the four proof pages show it.
+- **C a** — one PDF. The 09-14 decision (*"the Tempus copy only: a link to the demo video at the top"*) predates the instructions page's Demo
+  Recording section, which now heads page 2 of the print; that section meets the decision's purpose. No `--videoLink` flag, no second build.
+- **"check in before moving on"** — nothing built. The AI recorded the answers (D58 · PLAN 2b.2.3 · 2b.4.1 · 2b.5.3 · journal §2 · PLANNER) and stopped.

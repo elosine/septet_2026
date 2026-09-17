@@ -110,8 +110,9 @@ video's density · the instructions need TWO pages (three columns of content, cl
 **Next concrete step:** on **Opus**, build **PLAN 2b.1** (the septet frame in `tools/export_print.js`, sub-steps 2b.1.1–2b.1.6 as written), then
 2b.2.1–2b.2.2 (A3). Stop at 2b.2.3 if his answer B has not come; 2b.3's four proof pages are the first thing he looks at.
 
-**Put to him, unanswered (§606):** A the title + ensemble line (blocks 2b.4.1 the cover only) · B the section marks' labels (2b.2.3) · C whether
-the Tempus copy needs its own video line now that the instructions page opens with the demo link (2b.5.3).
+**Answered 2026-09-17 (D58, §607):** A **yes** — *Scattered Substance*, "for flute, bass clarinet, piano and string quartet" · B **no section
+marks** · C **a** — one PDF, the instructions page's demo link is enough, no Tempus copy. **Open with him:** the time ruler (he asked what it
+is; keep it or not is his word) · **his standing word for this build: "check in before moving on"** — the builder starts only on his go.
 
 **Resume reads:** `docs/PLAN.md` — the 2b item whole (search `- **2b — Presentation score**`, ~60 lines). Nothing else; the builder opens
 `tools/export_print.js` and `tools/export_video.js:70–140` as its first act.
@@ -119,7 +120,7 @@ the Tempus copy needs its own video line now that the instructions page opens wi
 **Model:** **Opus builds** (a written plan) · Fable only if a proof page raises a judgment call.
 
 **Decisions pending the composer** *(carried from N1; only item 1 touches 2b)*:
-1. **The title** *Scattered Substance* **and the ensemble line** "for flute, bass clarinet, piano and string quartet" (CN-64) — before the cover.
+1. ~~The title and the ensemble line~~ — **CONFIRMED 2026-09-17 (D58):** *Scattered Substance* · "for flute, bass clarinet, piano and string quartet".
 2. The score-in-C line — his "The full score is in C." stands unless he picks another (§591).
 3. Three fact flags left as written on the page (§569): the crescendo's "dynamic 1 to dynamic 2" vs the image's ppp → fff · Spectral "Performers …
    glissando" (the flute and bass clarinet hold) · "two curves for each performer" (the piano has none).
@@ -826,6 +827,12 @@ sources; verified here only when they bite.)*
   lost) · a zoom per group (two masters, two sweep speeds) · a resampled crop (blur). The seed: of 300, only 53 and 72 gave two close-ups in
   every section and 4/4; 53 gives each section one top and one bottom. The tail: the render ends 5.1 s after the score's material, so the
   picture rests at the end while it rings (`--t1 630.1`). Archived `notation/video/approved/2026-09-16-submission/`.
+- **D58** *(2026-09-17, composer, RUNNING_LOG §607 · CN-64)* — **THE TITLE IS _SCATTERED SUBSTANCE_; THE ENSEMBLE LINE IS "for flute, bass
+  clarinet, piano and string quartet"; THE PRINT SCORE CARRIES NO SECTION MARKS; ONE PDF, NO SEPARATE TEMPUS COPY.** His word, to the three
+  questions of §606: *"A yes · B no marks what is the ruler? · c a"*. The title is no longer tentative (CN-64) — the cover, the instructions
+  page and PLAN 4's form all take it. No marks above the music (the AI had recommended `I · II · BLOOM · II · SPECTRAL · III`). The demo link at
+  the head of the instructions page (page 2) is the score telling the jury the video exists — the 09-14 "Tempus copy only: a link at the top"
+  is met by it, so there is one PDF. **Open:** the time ruler — he asked what it is; answered in chat, his word owed on keeping it.
 
 ---
 
