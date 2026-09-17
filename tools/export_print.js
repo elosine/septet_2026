@@ -384,7 +384,15 @@ function buildHtml() {
     // target height, found the crescendo figure would not fit under it, and threw
     // the figure into column 2 while column 1 stood half empty — his screenshot.
     '.cols{column-count:2;column-fill:auto;column-gap:36px;height:' + (pageH - 2 * margin - 46) + 'px;font-size:10.4px;line-height:1.36;}\n' +
+    // [his notes, 2026-09-17] A HEADING NEVER ENDS A COLUMN, AND A FIGURE NEVER
+    // LEAVES WHAT INTRODUCES IT BEHIND. "trills heading to column 2 · notation
+    // legend heading + ped to column 2": both were headings stranded at the foot
+    // of column 1 with their picture at the top of column 2. break-after on the
+    // headings carries them over; break-before on a figure pulls the line above
+    // it along, which is what moves the legend's Ped. sentence with its heading.
     '.figblock{break-inside:avoid;}\n' +
+    '.cols h3,.cols h4{break-after:avoid;}\n' +
+    '.cols .figblock,.cols .pair{break-before:avoid;}\n' +
     '.cols h3{font-size:12.5px;letter-spacing:1.5px;margin:7px 0 3px;}\n' +
     '.cols p{margin:0 0 5px;}\n' +
     '.cols ul{margin:0 0 5px 16px;padding:0;}\n' +

@@ -16238,3 +16238,21 @@ col2 337 · page 2 col1 836 · col2 443, of 980. `check_print_front.js` PASSES.
 asking it where it ends always answers "the bottom". It now measures the leaf blocks and reports how full each column is, which is the number a person
 actually wants when deciding where to break a page.
 
+## §611. HIS NEXT TWO NOTES: no heading left at the foot of a column (2026-09-17, session 15, Opus 5)
+
+**His word:** *"trills heading to column 2; notation legend heading + ped to column 2"*.
+
+Both are the same fault, and the same one his crescendo note found from the other side: a heading stranded at the bottom of column 1 with its picture at
+the top of column 2. Measured before: page 1 "Trills" at **831–845 of 980**, its figure the first thing in column 2; page 2 "Notation Legend" at
+**802–819** and the Ped. sentence at **822–836**, the piano's let-ring pair opening column 2.
+
+**Written as two typographic rules rather than two nudges, because a nudge would not survive the next edit of his page:**
+- `h3, h4 { break-after: avoid }` — a heading is carried over to whatever follows it. That alone moves "Trills".
+- `.figblock, .pair { break-before: avoid }` — a figure pulls the line above it along. That is what takes the Ped. sentence over with its heading:
+  the pair holds the paragraph, the paragraph's heading holds to the paragraph, and all three travel together.
+
+**After:** page 1 column 2 opens **Trills (0–14) · figure (28–346) · its text (351–365)**; page 2 column 2 opens **Notation Legend (0–17) · the Ped.
+sentence (20–34) · the piano pair (39–425)**. Columns page 1 col1 817 · col2 365; page 2 col1 795 · col2 483, of 980. `check_print_front.js` PASSES.
+*Chrome honours `break-after`/`break-before: avoid` inside a multi-column box — worth knowing, because the alternative was grouping the blocks by
+regex in the exporter, which would have had to understand his page's nesting and would break the first time he restructured a section.*
+
