@@ -16423,3 +16423,17 @@ none from a neighbour.** Proven to fail: with the old gate restored for one run 
 
 **Re-rendered:** 71 pages, five checks green again. *(`brick` items appear in the leak list but are invisible in print — `hideBricks: true`. They are
 counted because the census is over the model, and a hidden kind that starts being drawn later should not escape the test. `ringbar`: 0 in this score.)*
+
+## §617. HIS EYE, ROUND 2: "ok print score good" — PLAN 2b.7 ACCEPTED (2026-09-17, session 15, Opus 5)
+
+**His word, on the re-rendered 71-page PDF:** *"ok print score good"*.
+
+**What he accepted:** the page edges as a rule (D59) — a page owns `[cut, next cut)`; every strike drawn once and whole; nothing timed in the clef
+gutter; the **ragged right edge** he chose in §614, on 19 of 68 pages, at most 1.90 s (18 % of the width); 63 → 68 music pages, 71 with the front
+matter. The five build gates are what hold it: frame · front · pdf · pages · edges.
+
+**So PLAN 2b.7 is closed and 2b.6 (archive + docs) is unblocked** — the approved PDF to `print/score/approved/<date>/` with a README naming the command,
+the save's commit and the checks · NITS's two "FOR PLAN 2b" entries closed · CLAUDE.md's Apps gains the print line · journal §2 · PLANNER.
+
+**Still his, unchanged by this:** the four items carried from N1 since §605 — the score-in-C line · the three fact flags on the instructions page · the
+tuba text he has not reviewed · the two AI calls he may undo.
