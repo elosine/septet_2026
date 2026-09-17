@@ -5,7 +5,7 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ✦** 2026-09-17 (session 15, Opus ⇄ Fable; checkpoint) — **N1 THE PERFORMANCE INSTRUCTIONS: DRAFTED END TO END** (RUNNING_LOG §565–§593): `docs/notation_instructions/index.html` (served at :5300/docs/notation_instructions/) — the demo-video link at the top · Instrumentation · Animated Conduction Tools · Gradient Curves (Crescendos, Trills) · Acoustic Beating (his text, the BLOOM + SPECTRAL chart, the Bloom notation images) · Notation Legend (the Ped. glyph, let-ring slurs, sempre secco, dynamics); every image this piece's; **the prose is his** (§569). No SPECTRAL demos (§584). **N0 THE BLOOM PRACTICE VIDEOS (PLAN 2h.7) — DONE 2026-09-17** (his "videos good"; three videos online and linked from the page; archived `notation/video/approved/2026-09-17-bloom-practice/`; RUNNING_LOG §595–§602). **► NOW: his read-through of the instructions page (journal §2 CHECKPOINT). Opus.** Then N1 closes → the print score (2b), Fable to plan.
+**NOW ✦** 2026-09-17 (session 15, Opus; checkpoint) — the demo video ✓ · the performance instructions drafted and copy-edited (`docs/notation_instructions/index.html`; RUNNING_LOG §565–§604) · the Bloom practice videos online, linked, archived (PLAN 2h.7 done, §595–§602). **► NOW: PLAN 2b THE PRINT SCORE — Fable plans (`/plan-item`), Opus builds.** Deadline 2026-10-15. Pending him: the title and ensemble line before the cover (CN-64).
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 

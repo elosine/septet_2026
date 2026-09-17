@@ -16061,3 +16061,12 @@ glissando" (the flute and bass clarinet hold) · "two curves for each performer"
 
 **Still open (the checkpoint's fact flags, untouched):** the crescendo's "dynamic 1 to dynamic 2" · Spectral "Performers … glissando" · "two
 curves for each performer".
+
+## §605. CHECKPOINT — the practice videos done, the instructions copy-edited; the print score (PLAN 2b) next, Fable to plan (2026-09-17, session 15, Opus 5)
+
+**His word:** `/checkpoint` — *"lets move to print score next, prep for clear"*. **Written:** journal §2 — the three session-15 N0 blocks (closed /
+progress / hand-off) folded into one CHECKPOINT for N2 (what is known going in about `export_print.js`, the next step as an instruction — `/plan-item`
+for 2b, data first — Resume reads: PLAN 2b + its two NITS entries, the model, the pending decisions, the uncommitted list); N1's block PARKED
+(its open items carried up; its stale next-step lines retired); the NEXT STEPS table (N0 done, N1 parked, **N2 ► active**) · PLANNER NOW.
+**Committed:** the docs. **Left:** his files per D40 (unchanged) · the six unsaved working copies (his) · the gitignored practice-video artefacts
+(the archive mp4s his to back up; keep `raw/demo-bloom-heldmax-float.wav`).

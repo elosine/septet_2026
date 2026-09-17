@@ -85,53 +85,55 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### N0 CLOSED — 2026-09-17 (session 15, Opus 5) — THE BLOOM PRACTICE VIDEOS: HIS "videos good", ONLINE, LINKED, ARCHIVED (RUNNING_LOG §602)
+### CHECKPOINT — 2026-09-17 (session 15, Opus 5) — NEXT: N2 THE PRINT SCORE (PLAN 2b), FABLE PLANS *(mid-session checkpoint)*
 
-**His word:** *"… videos good"* with the three uploads — Fl + Vn2 https://youtu.be/3GiK0cx5d74 · Vn1 + Va https://youtu.be/fOV4lDN3kKA · Bcl + Vc
-https://youtu.be/W1uv11zZC8U — each checked against its YouTube title, on the instructions page (the chart's row order), archived at
-`notation/video/approved/2026-09-17-bloom-practice/` (the mp4s not in git — his to back up). **PLAN 2h.7 done.**
+**His word:** *"lets move to print score next, prep for clear"*.
 
-**Next concrete step:** N1 — his read-through of the instructions page: the CHECKPOINT block below, items 1–5, stands as written (the page now has the
-three practice-video links where its placeholder was). **Resume reads:** `docs/notation_instructions/index.html`. **Model:** Opus.
+**Session 15 in one line:** N1 the performance instructions drafted end to end and copy-edited (his seven "good"s, RUNNING_LOG §603–§604) ·
+N0 the Bloom practice videos built, his "videos good", online, linked from the page, archived (`notation/video/approved/2026-09-17-bloom-practice/`,
+§595–§602). PLAN 2h.7 done.
 
-### PROGRESS — 2026-09-17 (session 15, Opus 5, same session, no clear) — N0 THE BLOOM PRACTICE VIDEOS: ALL THREE BUILT AND MEASURED *(superseded by N0 CLOSED above)*
+**The task now: PLAN 2b the presentation score — not started.** Known going in (from the record, not re-derived):
+- `tools/export_print.js` still lays out as the tuba did: on piece-septet it drew SIX systems, no piano, no part labels (PLAN 2b "FOUND", §552;
+  NITS "FOR PLAN 2b"). The model to port is the video exporter's septet frame (§558): the realized ensemble (`video-jury` — the bass clarinet in C),
+  the techniques registry, lanes weighted by the ensemble, the piano's grand staff, the labels.
+- His order (§515): the demo video ✓ → the performance instructions ✓ (drafted; open items below) → **the print score**.
+- The Tempus copy carries the demo video's link at the top — https://youtu.be/x8EZ3B1EvbE (the call takes a print score only).
+- The cover needs the title and the ensemble line (item 1 below). Where the instructions page goes in the print — open.
+- A3 landscape; format entry + cover + performance notes as in #4; **deadline 2026-10-15**.
 
-**His word:** *"go for n0 and continue independantly as much as possible. no clear"*. **Done (RUNNING_LOG §599–§601):** PLAN 2h.7.1–7.4. The three
-videos at `notation/video/renders/demos/bloom-{bclvc,vn1va,flvn2}.mp4` (gitignored; 150.9 / 155.8 / 153.2 s; each a labelled 30 s static + the whole
-Bloom in two lanes) — **all six checks pass on all three** (`node tools/check_bloom_demos.js`). **Found on the way:** every Xsample note-on is a
-draw (±1–2 c; the flute exact) — so the held dyads are six takes a pair, one picked by a written rule (§600); four wrong readings before that are
-in §600, corrected. **Rebuild chain:** `gen_bloom_heldmax.js` → `render_reaper.js --dir …` → `measure_beating.js --slots … --json` →
-`pick_bloom_takes.js` → `bash notation/video/renders/bloom_demos.sh all` → `check_bloom_demos.js` (a re-render of the dyads draws new takes: re-pick).
+**Next concrete step:** on Fable, `/plan-item` for PLAN 2b (docs/PLANNING_METHOD.md). Phase 1 with the data first: what `export_print.js
+--htmlOnly --at 100` draws on piece-septet today set beside the video's frame — then the shared understanding, then the top line. Nothing built
+before the plan.
 
-**Next concrete step:** PLAN 2h.7.5 — the three videos to him; his notes in one pass. Put to him: the statics against the sections · Vn1 + Va the
-shallowest beating (2.2×) · Bcl + Vc take 4 on offer (8.4×, 6.84 Hz, 5 % slow) · the upload title pattern. Then 2h.7.6 (his upload → the links,
-each checked against its title) → 2h.7.7 (archive, commit).
+**Resume reads:** `docs/PLAN.md` — the 2b item (search `- **2b — Presentation score**`) · `docs/NITS.md` — its two PLAN 2b entries (search
+`FOR PLAN 2b` and `The exports are still the tuba's`). Nothing else.
 
-**Resume reads:** `docs/plans/BLOOM_PRACTICE_VIDEOS.md` (its §8 register is the state). Nothing else.
+**Model:** **Fable** plans (after `/clear` + `/postclear`) · Opus builds.
 
-### HAND-OFF — 2026-09-17 (session 15, Fable 5.1 → Opus) — N0 THE BLOOM PRACTICE VIDEOS: PLANNED, OPUS BUILDS *(pulled ahead of N1 at his word; superseded by PROGRESS above)*
+**Decisions pending the composer** *(carried from N1; only item 1 touches 2b)*:
+1. **The title** *Scattered Substance* **and the ensemble line** "for flute, bass clarinet, piano and string quartet" (CN-64) — before the cover.
+2. The score-in-C line — his "The full score is in C." stands unless he picks another (§591).
+3. Three fact flags left as written on the page (§569): the crescendo's "dynamic 1 to dynamic 2" vs the image's ppp → fff · Spectral "Performers …
+   glissando" (the flute and bass clarinet hold) · "two curves for each performer" (the piano has none).
+4. Tuba text on the page he has not reviewed: the intro paragraph · the Conduction Tools' first two paragraphs · the Crescendos paragraph.
+5. AI calls he may undo: the practice-video links in the chart's row order · Bass Clarinet + Cello's held dyad take 6 over take 4 (§600).
 
-**His word:** *"Can we prepare the beating demo videos? … We should essentially make similar videos to the final ones that were made for the Tubo
-piece."* — then *"we can skip the planning protocol … pls draw up the plan to hand to opus"* (RUNNING_LOG §595–§597).
+**Deliberately uncommitted** (`git status --short`) — **his, per D40, never staged by the AI:**
+- `scores/piece-septet.json` (M) — his Save of 09-17 11:04, metadata only (§598: the objects equal `bc54cdc`)
+- `reaper/septet_rack.rpp` (M) · `bank/panel_snapshots.json` (M) — his rack, his panel
+- `bank/passages/` 4materials · accentedcres01 · accentedcres01-2 · chordcyc01 · chstr02 · section3 (untracked)
+- `scores/` Sec3 · SeptetSec03-Materials-B · -C · -D · piece-septet-v1.31 · -v1.32 · -v1.33 · spectralMorph (untracked)
+- two AI copies, deletable at his call: `scores/zz-ai-run-nosecco.json` · `scores/zz-ai-1t-walk.json`
+- unsaved working copies (`node tools/unsaved_check.js`, unchanged): cres-run01 · cres2strike · piano-harmonics-test · trill-curve-test ·
+  trillBuildTst · zz-ai-1t-walk
 
-**Settled with him (§596):** three Bloom-only videos, one per pair, in the tuba's exact final shape (a labelled 30 s static with the held max dyad →
-the whole Bloom in two lanes with the pair's audio) · **the bass clarinet in C** · **the AI renders in Reaper itself** through the bridge
-(`tools/render_reaper.js`); his Reaper was open, the bridge alive and the rack saved at planning time.
+**Gitignored, left on disk on purpose:** the practice videos' archived mp4s (his to back up) · their duplicates and scratch in
+`notation/video/renders/demos/` (deletable) · `notation/audio/demo-bloom-*.wav` and `raw/demo-bloom-*` — **keep
+`raw/demo-bloom-heldmax-float.wav`**, the picks belong to that render · `reaper/demo-bloom-*_render.rpp`.
+**Running:** his :5300 and Reaper; the AI's Browser pane has one tab on the instructions page. Nothing of the AI's running.
 
-**The deliverable of this hand-off:** `docs/plans/BLOOM_PRACTICE_VIDEOS.md` — self-contained: the shape, the measured data, the guards, seven steps
-with their checks, what is his, the AI calls he may overturn, the stop-and-report list, an empty register. PLAN 2h.7 carries the sub-steps 2h.7.1–7.
-
-**Next concrete step:** PLAN 2h.7.1 — the plan's step 1: the three two-lane stills and a 10 s moving probe from `export_video.js --parts`, then the
-smallest change to `render_reaper.js` that renders named parts to their own file, then the Bass Clarinet + Cello render — with the approved
-render's sha checked before and after (the plan's §3). Ask him first that Reaper is open, the bridge alive, the rack saved.
-
-**Resume reads:** `docs/plans/BLOOM_PRACTICE_VIDEOS.md`. Nothing else.
-
-**Model:** **Opus** builds, after a clear. Fable only if a stop-and-report condition (the plan's §7) needs a verdict.
-
-**Still open beneath this:** N1, his read-through of the instructions page — the checkpoint block below stands as written.
-
-### CHECKPOINT — 2026-09-17 (session 15, Opus 5 ⇄ Fable 5.1) — N1 THE PERFORMANCE INSTRUCTIONS: DRAFTED END TO END, HIS READ-THROUGH NEXT *(mid-session checkpoint)*
+### PARKED — 2026-09-17 (session 15) — N1 THE PERFORMANCE INSTRUCTIONS: DRAFTED, COPY-EDITED *(parked at his move to the print score; its open items are carried in the checkpoint above — kept for the page's section table)*
 
 **Sessions 14–15 in one line:** the tuba's instructions page copied (nouns only), then revised section by section to his dictation; every image is
 now this piece's; the morph sequence chart built; the legend and instrumentation drafted at his request and trimmed to his notes (RUNNING_LOG §565–§593).
@@ -156,21 +158,7 @@ http://localhost:5300/docs/notation_instructions/index.html.
 **Tools:** `tools/capture_lane.js` (`--part fl|bcl|pno|vn1|vn2|va|vc --t --span --padBot --onlyOnsets a-b --out`; each image's command sits in an HTML
 comment beside it) · `tools/gen_morph_chart.js` (the chart) · `tools/gen_m2_chart.js` (superseded arrows figure, kept, not on the page).
 
-**Next concrete step:** open http://localhost:5300/docs/notation_instructions/index.html in the Browser pane (his :5300 must be running; if not, ask him to
-start it), say in a few lines that the page is drafted end to end, and ask him for his read-through. Put to him, as short bullets, only what is his:
-1. **The score-in-C line** — his "The full score is in C." stands unless he picks from §591: A "Score in C." · B "The score is written at sounding pitch." ·
-   C "The score is in concert pitch." (AI recommended keeping his, ≈ A).
-2. **Three fact flags, left as written (§569):** the crescendo text "dynamic 1 to dynamic 2" vs the image's ppp → fff · Spectral "Performers … glissando" —
-   the flute and bass clarinet hold · the Notation paragraph "two curves for each performer" — the piano has none, and the flute and bass clarinet have
-   no orange curve in Spectral.
-3. **AI layout calls he may undo:** the two stacked Bloom notation images · Instrumentation after the intro, the legend last · the instrument list line.
-4. **Unreviewed tuba text:** the intro paragraph · the Conduction Tools' first two paragraphs · the Crescendos paragraph.
-5. **The title and ensemble line** (CN-64).
-When he calls the read-through done, N1 closes (the Bloom practice-video links wait for PLAN 2h.7) → N2.
-
-**Resume reads:** `docs/notation_instructions/index.html` (the page is the state). Nothing else.
-
-**Model:** his read-through and dictation — **Opus**. N2's planning — **Fable**, after a clear.
+*(Its next-step, resume-reads and model lines are retired — N1 parked 2026-09-17; the open items live in the checkpoint above.)*
 
 **Deliberately uncommitted at this checkpoint:** his files only, unchanged from session 13's list below (D40) · the six unsaved working copies unchanged
 (`node tools/unsaved_check.js`) · no AI copies added.
@@ -180,8 +168,8 @@ When he calls the read-through done, N1 closes (the Bloom practice-video links w
 | # | Step | Model | Clear first? |
 |---|---|---|---|
 | ~~N0~~ | ~~the Bloom practice videos (PLAN 2h.7)~~ — **DONE 2026-09-17** (§602: "videos good", online, linked, archived) | — | — |
-| **N1** | **► the performance instructions — his read-through** of the drafted page (the CHECKPOINT's items 1–5); then N1 closes | **Opus** | **a good clear point now (N0 closed): /checkpoint → /clear → /postclear** |
-| **N2** | **PLAN 2b the print score** — the print exporter's septet frame (the §558 port) · the cover (title CN-64 + the ensemble line) · the Tempus copy with the video link at the top · where the instructions page goes in the print | Fable plans · Opus builds | yes, between |
+| N1 | the performance instructions — PARKED: drafted and copy-edited; the pending items 2–5 in the checkpoint above, at his convenience | Opus | no |
+| **N2** | **► PLAN 2b the print score** — the print exporter's septet frame (the §558 port) · the cover (title + ensemble line, CN-64) · the Tempus copy with the video link at the top · where the instructions page goes in the print | **Fable plans** · Opus builds | **yes — this checkpoint; then /postclear on Fable** |
 | **N3** | Later, noted: the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
 | **N4** | Still his, from before: the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 
