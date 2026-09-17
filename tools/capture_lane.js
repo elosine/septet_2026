@@ -26,6 +26,8 @@
 //            wider than that window lowers Z until the span fits.
 //   --keepNeighbors  draw the other lanes too (default: only the target lanes
 //            are drawn; the geometry keeps all seven, so nothing moves)
+//   --onlyOnsets a-b  draw ONLY the events whose onset lies in [a, b] (every part) — the rest of the IR is dropped
+//            before layout, so a neighbour's notation or GC arc cannot leak into the crop (session 15, RUNNING_LOG §592)
 //   --padTop / --padBot  px of headroom above / below the lane in the crop
 //            (30 / 6: GC arc apexes legitimately overflow the lane band)
 const fs = require('fs');
@@ -56,6 +58,22 @@ const glyphs = rd('notation/lib/glyphs.json');
 const ens = rd('notation/registry/ensemble.json');
 const T = rd('notation/registry/techniques.json');
 const ir = rd(path.join('notation', 'ir', irId + '.ir.json'));
+// [§592] --onlyOnsets: keep the events with onset in [a, b]; their chunks, engraving overlays, and the span / t overlays that touch the range
+const onlyArg = arg('onlyOnsets', null);
+if (onlyArg) {
+  const [oa, ob] = onlyArg.split('-').map(Number);
+  const keep = new Set(ir.events.filter(e => e.onset >= oa - 1e-6 && e.onset <= ob + 1e-6).map(e => e.id));
+  ir.events = ir.events.filter(e => keep.has(e.id));
+  ir.chunks = (ir.chunks || []).map(c => Object.assign({}, c, { events: c.events.filter(id => keep.has(id)) })).filter(c => c.events.length);
+  ir.overlays = (ir.overlays || []).filter(o => {
+    const t = o.target || {};
+    if (t.event != null) return keep.has(t.event);
+    if (Array.isArray(t.span)) return t.span[1] >= oa && t.span[0] <= ob;
+    if (t.t != null) return t.t >= oa - 1e-6 && t.t <= ob + 1e-6;
+    return true;
+  });
+  console.log('onlyOnsets ' + oa + '-' + ob + ': ' + ir.events.length + ' events kept');
+}
 let score = null;
 try { score = rd(path.join('scores', ir.source.score + '.json')); } catch (e) { score = null; }
 

@@ -1632,7 +1632,7 @@ player would touch parts, solo, crop and print.
      *(The opening reference, kept: CN-82 — piece #2's score around 0:50, the plucked notes, the pedal mark, the rosette, the duration line.)*
   6. **Journal, standards, D-entry; commit** — `done 2026-09-14: D49; NOTATION_STANDARDS §0 + §3 rows; RUNNING_LOG §483–§500`.
   7. **The practice videos with the beat rates (D48)** — `later, the performance stage` — a set for this piece like the tuba's: the players see
-     the beating speed and hear it in isolation; BLOOM first, SPECTRAL his to think about (M1 at full spread: C4 ≈ 7 Hz · D5 ≈ 16 · A5 ≈ 22).
+     the beating speed and hear it in isolation; BLOOM only — **no SPECTRAL demos** (his word 2026-09-17, RUNNING_LOG §584) (M1 at full spread: C4 ≈ 7 Hz · D5 ≈ 16 · A5 ≈ 22).
      Locate the tuba's set in `for_seven_tubas` when reached. His to-do in journal §7.
      **His idea for SPECTRAL, tbd (RUNNING_LOG §515):** the origin tone alone for some seconds, then the destination tone; where the rest of the
      ensemble holds a beating reference, the isolated demo plays only that instrument, or a couple.

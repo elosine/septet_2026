@@ -190,3 +190,9 @@ h4 {
     margin-top: 1.4em;
     margin-bottom: 0.15em;
 }
+
+/* septet 2026-09-17: the demo video link, a little bigger (RUNNING_LOG §589) */
+.demo-link {
+    font-size: 1.3em;
+    margin-bottom: 1.2em;
+}

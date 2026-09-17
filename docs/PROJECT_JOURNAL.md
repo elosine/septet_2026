@@ -85,61 +85,57 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### CHECKPOINT — 2026-09-16 late (session 14, Fable 5.1; wrapped on Opus 5) — N1 THE PERFORMANCE INSTRUCTIONS, PART-WAY *(mid-session checkpoint — he resumes tomorrow after a clear)*
+### CHECKPOINT — 2026-09-17 (session 15, Opus 5 ⇄ Fable 5.1) — N1 THE PERFORMANCE INSTRUCTIONS: DRAFTED END TO END, HIS READ-THROUGH NEXT *(mid-session checkpoint)*
 
-**Where it stands — the draft page:** `docs/notation_instructions/index.html` (+ `styles.css`, `images/`), served by his :5300 at
-http://localhost:5300/docs/notation_instructions/index.html. Begun as a copy of the tuba's page (piece #4, day 40) with the nouns changed; he
-is revising it section by section in chat (RUNNING_LOG §565–§580).
+**Sessions 14–15 in one line:** the tuba's instructions page copied (nouns only), then revised section by section to his dictation; every image is
+now this piece's; the morph sequence chart built; the legend and instrumentation drafted at his request and trimmed to his notes (RUNNING_LOG §565–§593).
+
+**The deliverable:** `docs/notation_instructions/index.html` (+ `styles.css`, `images/`), served by his :5300 at
+http://localhost:5300/docs/notation_instructions/index.html.
 
 **HIS RULE FOR THIS PAGE (§569, standing):** the prose is HIS. The AI swaps images, changes nouns, and inserts what he dictates VERBATIM
-(logged verbatim in RUNNING_LOG). Where a fact has moved it SAYS so in chat and leaves the sentence. Wording options only when he asks.
+(logged verbatim in RUNNING_LOG). Where a fact has moved it SAYS so in chat and leaves the sentence. Draft or offer wording only when he asks.
 
-| section | text | images |
+| section (page order) | text | images |
 |---|---|---|
-| intro | the tuba's, nouns changed; the title *Scattered Substance* and "for flute, bass clarinet, piano and string quartet" still his to confirm (CN-64) | — |
-| Animated Conduction Tools | the tuba's + his example sentence (§568) | the septet's: Vn1 Bartók pizz 20.5 s · Vn1 trill 140 s |
-| Gradient Curves → Crescendos | his dictation (§575), "curve follower" bold; the crescendo paragraph = the tuba's, untouched | the septet's: Va surge 527 s |
-| Gradient Curves → Trills | **EMPTY — his text to follow.** His idea (§565): the curve is intensity, volume AND speed — true of the build (TRILLS_TOOL §1, TRILL_NOTATION_SPEC §5) | the septet's: Bcl trill opening 129 s, cursor midway |
-| Acoustic Beating | para 1 his (§567 · §570 · §573 · §578). STILL THE TUBA'S: "There are three sections in this movement…" (**fact moved: two morphs**) · the demo-recordings paragraph + a placeholder line · the "Notation" paragraph (orange + green curves, rearticulation) | **the morph sequence chart DONE** (§576–§580) · the notation image `beating_notation_224_T7.svg` STILL THE TUBA'S |
-| Multiple Tempos | the tuba's | the tuba's — probably tuba-only (no trance section); delete on his word |
+| title + subtitle | *Scattered Substance*, "for flute, bass clarinet, piano and string quartet" — both still his to confirm (CN-64) | — |
+| Demo Recording with Score Following Video | the link alone, 1.3 em — https://youtu.be/x8EZ3B1EvbE (no Tempus mention, his word) | — |
+| intro paragraph | the tuba's ("computer-animated score, served from the cloud …"), not yet reviewed by him | — |
+| Instrumentation | the seven instruments (AI draft; no doublings — Q1 piccolo / bass flute open) · "Bass clarinet to low C." · "The full score is in C. Parts will be transposed." | — |
+| Animated Conduction Tools | the tuba's + "go-time for events" (§590) + his example sentence (§568) | Vn1 Bartók pizz 20.5 s · Vn1 trill 140 s, the trill and its curve only (§592) |
+| Gradient Curves → Crescendos · Trills | his intro (§575) · the crescendo paragraph = the tuba's · Trills: "The curves describe the trill intensity, both volume and speed." (§582) | Va surge 527 s · Bcl trill opening 129 s |
+| Acoustic Beating | all his: the beating paragraph · the two sections + Bloom · Spectral's strategy · the Bloom demo paragraph (§593) · the Notation paragraph (§586). One placeholder line: "Bloom practice videos — to be added" | the morph sequence chart (§576–§580) · Va Bloom entry 182–189 s + Va 196–203 s, stacked (§588) |
+| Notation Legend | the Ped. GLYPH inline "(with no release sign) — hold the pedal until the sound has died away or until the next note." · "Let ring slurs — …" · "sempre secco — continue secco for the crescendo gestures." · "Dynamics. In the first movement … In the third movement …" (§591) | the piano's let-ring slurs: a plucked note 212.8 s + an ordinary note 217.6 s, side by side |
 
-**The chart (his design, §576–§580):** BLOOM, three pair rows, beating in Hz, peaks ≈ 21.5 / 16.1 / 7.2 Hz · SPECTRAL, six part rows,
-pitch in cents from the start, start-pitch labels, the flute and bass clarinet straight with no dot, dots at the four glissers' farthest
-points · a B♭ HARMONICS column (p9 · C4 · p5 · D2 · p1 · B♭3 · p5 · D4 (−14 c) · p11 · E half-flat 2). `node tools/gen_morph_chart.js`.
-**A finding for his text (§576):** M2 is a WAVE — each voice goes to its partial and back, twice, ending on the start chord.
+**Tools:** `tools/capture_lane.js` (`--part fl|bcl|pno|vn1|vn2|va|vc --t --span --padBot --onlyOnsets a-b --out`; each image's command sits in an HTML
+comment beside it) · `tools/gen_morph_chart.js` (the chart) · `tools/gen_m2_chart.js` (superseded arrows figure, kept, not on the page).
 
-**Tools made this session:** `tools/capture_lane.js` (ported from the tuba; `--part fl|bcl|pno|vn1|vn2|va|vc --t --span --padBot --out`;
-each image's command sits in an HTML comment beside it) · `tools/gen_morph_chart.js` · `tools/gen_m2_chart.js` (an arrows figure,
-superseded, kept, not on the page).
+**Next concrete step:** open http://localhost:5300/docs/notation_instructions/index.html in the Browser pane (his :5300 must be running; if not, ask him to
+start it), say in a few lines that the page is drafted end to end, and ask him for his read-through. Put to him, as short bullets, only what is his:
+1. **The score-in-C line** — his "The full score is in C." stands unless he picks from §591: A "Score in C." · B "The score is written at sounding pitch." ·
+   C "The score is in concert pitch." (AI recommended keeping his, ≈ A).
+2. **Three fact flags, left as written (§569):** the crescendo text "dynamic 1 to dynamic 2" vs the image's ppp → fff · Spectral "Performers … glissando" —
+   the flute and bass clarinet hold · the Notation paragraph "two curves for each performer" — the piano has none, and the flute and bass clarinet have
+   no orange curve in Spectral.
+3. **AI layout calls he may undo:** the two stacked Bloom notation images · Instrumentation after the intro, the legend last · the instrument list line.
+4. **Unreviewed tuba text:** the intro paragraph · the Conduction Tools' first two paragraphs · the Crescendos paragraph.
+5. **The title and ensemble line** (CN-64).
+When he calls the read-through done, N1 closes (the Bloom practice-video links wait for PLAN 2h.7) → N2.
 
-**Next concrete step:** open http://localhost:5300/docs/notation_instructions/index.html in the Browser pane (his :5300 must be running;
-if not, ask him to start it), play back the table above in a few lines, and ask which section he picks up. The open items, in page order:
-1. **Trills** — his text.
-2. **Acoustic Beating** — the "three sections" sentence · the demo-recordings paragraph and list (the practice videos are not made, PLAN
-   2h.7) · the Notation paragraph and image: capture a BLOOM moment with `capture_lane.js` once he names a part and time; the septet's
-   morph notation is not the tuba's (D45 header, D47 curve, D48 no beating indication on the score) — say so, do not rewrite.
-3. **Multiple Tempos** — delete?
-4. **The NITS list not yet placed** (`docs/NITS.md` "FOR THE PERFORMANCE INSTRUCTIONS"): the bass clarinet to low C · the Ped. legend ·
-   l.v. · sempre secco · the curves' two meanings · the dynamic regimes · the pitch-form lines.
-5. **Fact flag only:** the crescendo text says "dynamic 1 to dynamic 2"; the image shows ppp → fff.
-6. His order and structure pass; the title and ensemble line.
+**Resume reads:** `docs/notation_instructions/index.html` (the page is the state). Nothing else.
 
-**Resume reads:** `docs/notation_instructions/index.html` (the page is the state) · `docs/NITS.md` "FOR THE PERFORMANCE INSTRUCTIONS"
-only when placing item 4.
+**Model:** his read-through and dictation — **Opus**. N2's planning — **Fable**, after a clear.
 
-**Model:** resume on **Opus** for the dictation pass (his words verbatim, images and charts by command) · **Fable** for a design question
-(the morph Notation paragraph's facts, a new figure).
-
-**Deliberately uncommitted at this checkpoint:** his files only, unchanged from session 13's list below (D40) · the six unsaved working
-copies unchanged (`node tools/unsaved_check.js`) · no AI copies added.
+**Deliberately uncommitted at this checkpoint:** his files only, unchanged from session 13's list below (D40) · the six unsaved working copies unchanged
+(`node tools/unsaved_check.js`) · no AI copies added.
 
 **NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N1** | **► the performance instructions — PART-WAY:** his dictation pass on the page, items 1–6 above | **Opus** (dictation) · Fable (design questions) | **yes — this checkpoint; then /postclear** |
-| **N2** | **PLAN 2b the print score** — the print exporter's septet frame (the §558 port) · the cover (title CN-64 + the ensemble line) · the Tempus copy with the video link at the top | Fable plans · Opus builds | yes, between |
-| **N3** | Later, noted: the practice videos, BLOOM at least, SPECTRAL tbd (2h.7) · the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
+| **N1** | **► the performance instructions — his read-through** of the drafted page (items 1–5 above); then N1 closes | **Opus** | **yes — this checkpoint; then /postclear** |
+| **N2** | **PLAN 2b the print score** — the print exporter's septet frame (the §558 port) · the cover (title CN-64 + the ensemble line) · the Tempus copy with the video link at the top · where the instructions page goes in the print | Fable plans · Opus builds | yes, between |
+| **N3** | Later, noted: the Bloom practice videos (2h.7; no SPECTRAL demos, §584) → their links on the page · the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
 | **N4** | Still his, from before: the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 
 ### SESSION END — 2026-09-16 (session 13, Fable 5.1 ⇄ Opus 5) — SITTING F DONE: the audio re-render and the demo video, approved, archived as the submission copy, online
@@ -695,7 +691,7 @@ sources; verified here only when they bite.)*
   where there is nothing); the raw per-breath level (9–16 humps per part; the tuba's principle is one arc per part). His eye on M1's first
   page decides; the floor stays a flag. Spec: NOTATION_STANDARDS §3; build: PLAN 2h.2.
 - **D48** *(2026-09-14, composer, RUNNING_LOG §476)* — **NO BEATING INDICATION ON THE SCORE; THE RATES GO TO THE PRACTICE VIDEOS.** A set
-  for this piece like the tuba's — *"they can see the speed and hear it in isolation"* — BLOOM first, SPECTRAL his to think about. *Why:*
+  for this piece like the tuba's — *"they can see the speed and hear it in isolation"* — BLOOM first, SPECTRAL his to think about. *Settled 2026-09-17 (§584): no SPECTRAL demos.* *Why:*
   only M1's C4 pair beats at a countable rate (≈ 7 Hz; D5 ≈ 16, A5 ≈ 22 are roughness); M2's pairs are not mirrors. *Rejected:* a rate at
   each end of the gliss on the score (the tuba's committed-never-built form); deferring. **The piano's notes in the morphs deferred the same
   day** — built after the morphs (PLAN 2h.5).

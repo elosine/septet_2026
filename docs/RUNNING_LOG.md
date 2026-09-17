@@ -15647,3 +15647,141 @@ NOW · NITS "FOR THE PERFORMANCE INSTRUCTIONS" gains a drafting status and two i
 the AI's finding) · the page's head comment brought current (a comment, not prose). **"Everything" read as this session's work:** his takes,
 passages, rack, section-3 materials and score backups stay uncommitted per D40 (the first full draft is tagged); the six unsaved working
 copies are unchanged and his.
+
+## §582. The Trills text, his (2026-09-17, session 15, Opus 5)
+
+**His word:** *"The curves describe the trill intensity, both volume and speed. {under the trills image.}"* — on the page verbatim, the
+Trills sub-section's description under the bass clarinet image (the §565 idea, now his sentence). Journal §2 item 1 and the NITS item marked placed.
+
+## §583. The beating section: his two paragraphs; the SPECTRAL demo to discuss (2026-09-17, session 15, Opus 5 → Fable 5.1)
+
+**His word, verbatim, on the page (his " - " set as the page's em dash):** *"There are two sections in this movement - Bloom and Spectral. In
+the Bloom section,  pairs of performers glissando away from each other — one goes up in pitch while the other goes down — and then back
+together. The chart below gives the approximate frequency at the maximum beating rate."* (replacing the tuba's "three sections … sequenced
+as follows") · *"I have prepared demo recordings at the links below. For the Bloom section, the demos isolate the pairs and demonstrate how
+the maximum beating levels sound and then provide a two-part demo of the Bloom section."* (replacing the tuba's demo paragraph). Then: *"{then
+lets discuss what the spectral demo if any should be}"* — he switched to Fable for it.
+
+**The AI's framing for that talk (data first):** SPECTRAL's target is a pitch, not a rate (D48); the arrivals are STAGGERED — vc 5:43 · vn2 5:54
+· va 6:21 · vn1 6:28 (§576) — so there is no moment when the whole chord is in focus at once; the only stable references are the two holders,
+fl C4 (+4, p9) and bcl D2 (−14, p5), both on the series throughout. Against the bcl's D2 −14: vn2's D4 −14 is pure octaves (a strong lock),
+vn1/va's B♭3 a pure major tenth (5:4, clear); the cello's E half-flat 2 (p11) has no simple ratio to either holder (11:5, 11:9) — its target
+is a tuner's, not a lock. Options put to him: A per-glisser start → destination over the bcl's held D2 (his §515 idea, with the reference) ·
+B the whole section from the render, no isolation · C no demo, a B♭ drone file and the D45 cents instead. Recommended A for vn2, vn1, va; the
+cello's as a bare target tone. His word owed.
+
+## §584. No SPECTRAL demos (2026-09-17, session 15, Fable 5.1)
+
+**His word:** *"ok lets skip the spectral demos"* — after the options of §583 (A per-glisser over the bcl's D2 · B the section from the render ·
+C none, a drone + the cents). **Decided: none.** The practice videos are BLOOM's only (PLAN 2h.7). §515's SPECTRAL idea (origin tone, destination
+tone, the beating reference in isolation) closed unbuilt. Updated: PLAN 2h.7 · journal §2 N3 and §4 D48 (a settled note) · the page's
+placeholder line ("Bloom practice videos — to be added", a placeholder, not his prose) and its comment.
+
+## §585. The Spectral paragraph, his (2026-09-17, session 15, Opus 5)
+
+**His word, verbatim, on the page:** *"The strategy for the Spectral section is different. Performers begin on a pitch and then glissando towards
+and away from a target harmonic partial."* — placed as its own paragraph after the Bloom paragraph, before the chart (placement the AI's; his
+to move). Agrees with §576 (M2 is a wave). **Fact flagged in chat, not written:** the flute and bass clarinet hold (they start on their partials,
+travel 4 c and 14 c, D44) — "Performers … glissando" is true of the four strings only.
+
+## §586. The morph Notation paragraph, his (2026-09-17, session 15, Opus 5)
+
+**His word, verbatim, on the page (replacing the tuba's "There are two curves …" paragraph under the Notation heading):** *"The notation for
+the acoustic beating movement employs two curves for each performer: a green one at the bottom of the staff and an orange one at the top. The
+green curve indicates dynamic level and the orange curve indicates beating/glissando level. The dotted vertical go-lines are rearticulation
+points — the rearticulation should happen at the go-line: breathe/take up bow before, and rearticulate at the line. The pitch range notated at
+the beginning of each section is approximate, you will calibrate the glissando pitch using beating speed and timbre. The animated curves can
+assist."*
+
+**Checked against the registry (container.json + NOTATION_STANDARDS §2 morph rows):** the gliss curve is brightOrange #F04B00 in the TOP half of
+the lane, with its own orange meter (glissMeter); the dynamic curve limeGreen in the bottom half; one go line per breath; the D45 header gives
+the pitch figure. The paragraph agrees. **Flagged in chat, not written:** the piano has no curves in the morphs (2h.5, plucked notes) · in
+SPECTRAL the flute and bass clarinet are crescendo-only (D44, under 20 c) — no orange curve · the notation image under the paragraph is still
+the tuba's.
+
+## §587. Multiple Tempos removed (2026-09-17, session 15, Opus 5)
+
+**His word:** *"remove multiple tempos and can you list for me as concise bullets the things I noted to cover here"* — the section, its comment and
+the tuba image `multitempo_530_T8T9T10.svg` removed (no trance section in the septet). The list he asked for: NITS "FOR THE PERFORMANCE
+INSTRUCTIONS" (the seven items + his trill-curve note, now placed) and §515 (the video link on the Tempus copy · the practice videos), given in chat.
+
+## §588. The morph notation images, the septet's (2026-09-17, session 15, Opus 5)
+
+**His word:** *"please capture a new notation image from this score"* (no part or time named — the AI's pick).
+
+**Tried, by eye through resvg:** (a) va entry 182.6–189.4 — the header cut at the left edge · (b) vn1 mid-morph 218.3–224.6 — both curves
+nearly flat over six seconds, no notehead, no header · (c) va entry 180.6–187.4 — the header whole, both curves at their starting edges, no
+motion · (d) va 195.9–202.7 — the orange falling, the green rising, a go line, both followers, no header. **The geometry cannot give both in one
+frame:** the morph curves change slowly (25 c over ~35 s) and the image's aspect is Z-invariant (~1.1 × span in seconds, the lane ~140 px at
+~155 px/s), so a window long enough to show motion is a strip. **Placed: two images stacked under his Notation paragraph** — (1) the entry,
+182.3–189.4 (the header, niente → fff, the go line) and (2) = (d). The tuba's `beating_notation_224_T7.svg` deleted; no tuba image remains on
+the page. Stacking two images is the AI's layout call; one of them can go on his word.
+
+## §589. Two headings (C), the legend items drafted, the demo video at the top (2026-09-17, session 15, Opus 5)
+
+**His words:** *"for the list up thru pitch form options for a heading"* → four offered (A Performance Notes · B Notation Legend · C two headings,
+Instrumentation + Notation Legend · D General Notes; recommended C) → *"ok c and then pls draft concise, clear for each item. also add the demo video
+link at the top, a little bigger with its own heading, no need to mention tempus"*.
+
+**On the page — AI DRAFTS at his request, his to revise (§569's rule: prose his; here he asked for the draft):**
+- **Demo Video** (h3, under the subtitle): the link alone, https://youtu.be/x8EZ3B1EvbE, at 1.3 em (`.demo-link` in styles.css). No Tempus mention.
+- **Instrumentation** (after the intro): the seven instruments (no doublings — Q1 piccolo / bass flute still open) · *"Bass clarinet to low C. The part
+  reaches the instrument's lowest note, sounding B♭1."* · *"Pitch. The full score is in C; the bass clarinet sounds as written. The bass clarinet part
+  is in B♭ (treble clef), sounding a major ninth lower."* (D55's two front-matter lines folded into one entry for a page that serves both forms).
+- **Notation Legend** (the end of the page): Ped. · l.v. · sempre secco · Curves as dynamics (niente at the bottom per D46's header figure, fff at the
+  top) · Dynamics (176 s = 2:56, 444 s = 7:24; no "sempre"). Each from the NITS item's draft line, tightened.
+
+**Placement the AI's:** the demo video at the top (his) · Instrumentation after the intro · the legend last, after the sections that explain the
+curves. His to reorder.
+
+## §590. "for events" (2026-09-17, session 15, Opus 5)
+
+**His word:** *"The dotted vertical line marks the go-time for events."* — on the page (Animated Conduction Tools, second paragraph), the bold on
+"dotted vertical line" and "go-time" kept.
+
+## §591. Instrumentation and the legend revised to his notes; the Ped. glyph; let-ring slur images; the video heading (2026-09-17, session 15, Opus 5)
+
+**His words, verbatim:** *"just Bass clarinet to low C. no bold / The full score is in C or is in concert pitch {can you look up typical phrasing for
+this in contemporary chamber/orchestral scores}. Parts will be transposed. / can we get the actual ped glyph; then [Ped glyph] (with no release sign);
+remove 'whichever comes first to the end. / I don't think we ever use the text l.v. can you check, if not, then just grab an image with the lv slurs and
+then the text: Let ring slurs (delete piano in ()) - let the note ... / sempre secco - continue secco for the crescendo gestures. / remove curves as
+dynamics / Dynamics. In the first movement, every strike... In the third movement, a dynamic holds until the next marking."* · then *"Demo Recording
+with Score Following Video:"*
+
+**Checked:** the score never writes "l.v." — the let-ring mark is piece #2's baked crescent glyph (`glyphs.letRing`, layout.js ≈l.1699), drawn on the
+piano's `main` and `plucked` notes in the morphs (the opening's piano strikes carry the strike device, letRing false). The Ped. glyph is in the engine
+(`glyphs.pedal.Ped`, piece #2's Emmentaler sustain mark, 2.433 × 1.4 ss, bounds measured 0–2.43 × 0–1.40).
+
+**On the page:** the heading "Demo Recording with Score Following Video" (his colon dropped for a heading) · Instrumentation: "Bass clarinet to low C."
+plain · "The full score is in C. Parts will be transposed." (his first phrasing; the lookup's options put to him in chat) · the legend: the Ped. glyph
+inline as SVG (the engine's path, currentColor) "(with no release sign) — hold the pedal until the sound has died away or until the next note." · two
+images side by side — a plucked note at 212.84 s (pizz., Ped., ff, the slur) and an ordinary note at 217.56 s (f, the slur), each a 1.35 s crop of the
+piano lane · "Let ring slurs — let the note ring. Ordinary notes: hold the key. Plucked notes: hold the pedal." · "sempre secco — continue secco for the
+crescendo gestures." · "Curves as dynamics" removed · "Dynamics. In the first movement, every strike carries its own marking. In the third movement,
+a dynamic holds until the next marking." (the morph-curves sentence dropped with his dictation).
+
+**The phrasing lookup (web + practice):** "concert pitch" and "in C" name the same thing (written as it sounds); the preface formulas in use are "Score in
+C" (the European publishers' standard, e.g. "Score in C / Partitur in C"), "The score is written at sounding pitch" (often with "except for the usual octave
+transpositions"), and "concert score" / "concert pitch", more common in US band and jazz usage. Put to him as options.
+
+## §592. The conduction trill image: the trill and its curve only; capture_lane.js --onlyOnsets (2026-09-17, session 15, Opus 5)
+
+**His word (with a screenshot of the second conduction example):** *"img 2 please take out the gc at the end and the notation; just the trill and its
+curve"*. The next strike (ev-wc-1157, Vn1 Bartók pizz at 141.975 s) begins its GC arc before the trill's curve ends (141.80 s), so no crop could remove it.
+**Built:** `--onlyOnsets a-b` in `tools/capture_lane.js` — keeps only the events with onset in [a, b] (their chunks, engraving overlays, and the span / t
+overlays touching the range) before layout, so nothing else can be drawn. Re-captured with `--onlyOnsets 139.9-140.1` (2 events kept: the trill and its
+aux): tr, the go line, the head with the auxiliary, sfz, the green curve with the follower — no GC, no strike. Same span, same 739 × 319.
+
+## §593. The demo-recordings paragraph, his revision (2026-09-17, session 15, Opus 5)
+
+**His word, verbatim:** *"I  have prepared demo recordings for the Bloom section at the links below. The demos isolate the pairs and demonstrate how the
+maximum beating levels sound and then provide a two-part demo of the Bloom section."* — replacing his §583 version on the page (his double space
+normalised).
+
+## §594. CHECKPOINT — the performance instructions drafted end to end; his read-through next (2026-09-17, session 15, Opus 5)
+
+**His word:** `/checkpoint`. **Written:** journal §2 — session 14's checkpoint block replaced by session 15's (the page section by section, his prose
+rule, the tools, the next step as an instruction with the five things that are his to settle, Resume reads: the page only, the model, the NEXT STEPS
+table with N1 = his read-through and N2 = the print score) · PLANNER NOW · NITS drafting status (what is placed, removed, not placed). **Committed:**
+this session's page, images (four added, one re-captured, two tuba images deleted), styles, `tools/capture_lane.js` (--onlyOnsets) and the docs. **Left:**
+his files per D40; the six unsaved working copies, his.
