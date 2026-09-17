@@ -117,9 +117,14 @@ in #4's house style (`print/cover/make_cover_septet.ps1` → `cover-septet-a3-la
 at "Acoustic Beating", each about three quarters full; the four video links are clickable annotations. `tools/check_print_front.js` PASSES and is
 proven to fail on an overflowing split.
 
-**Next concrete step: HIS EYE on two PDFs in `print/score/`** — `PROOF-A3-frame.pdf` (4 pages of music, one per section) and
-`PROOF-front-matter.pdf` (cover · instructions ×2 · one music page). His notes → fixed in one pass (2j's way) → **2b.5 the full render**
-(2b.5.1 rebuild the IR first, 2b.5.2 rewrite `print/score/build.sh` for the septet) → 2b.6 archive + docs.
+**2b.5 BUILT 2026-09-17 (§612): THE WHOLE SCORE — `print/score/Scattered-Substance-score-JYang.pdf`, 66 pages, 6.71 MB.** Three of his layout notes
+applied on the way (§610–§611). The IR was rebuilt first and came out identical apart from its date — **so the approved audio render and the approved
+video are still of this score.** Green: `check_print_frame` · `check_print_front` · `check_print_pdf` (inside A3, nothing unembedded, no raster, 4 links)
+· `check_print_pages` (all 63 music pages carry the full frame; one terminal barline, on the last).
+**Rebuild it any time with `bash print/score/build.sh` (add `--rebuild-ir` after a Save, `--proof` for the two proof PDFs).**
+
+**Next concrete step: HIS EYE on the whole PDF (2b.5.6)** → his notes fixed in one pass (2j's way) → **2b.6 archive + docs** (the approved PDF to
+`print/score/approved/<date>/` with a README, NITS's two 2b entries closed, CLAUDE.md's Apps line, journal §2, PLANNER).
 
 **Answered 2026-09-17 (D58, §607):** A **yes** — *Scattered Substance*, "for flute, bass clarinet, piano and string quartet" · B **no section
 marks** · C **a** — one PDF, the instructions page's demo link is enough, no Tempus copy. **Open with him:** the time ruler (he asked what it

@@ -77,9 +77,12 @@ or not at all.**
 5. **Gestures carry `groupId`** on every member note, and the gesture's META shape carries
    the same `groupId` on the META layer — the app's insert-time shape.
 6. **Markers live in `objects` as `{ type: 'marker', layer, time, label, … }`.** The
-   extractor skips them (`--complete` does not count them); `export_print` reads them for
-   section marks — **a section mark is a marker whose label starts with `ACT-`** (piece #4's
-   rule, inherited by the exporter).
+   extractor skips them (`--complete` does not count them). ~~`export_print` reads them for
+   section marks — a section mark is a marker whose label starts with `ACT-`~~ — **NO LONGER
+   TRUE (2026-09-17, D58):** the composer asked for no marks on the printed page, so that
+   derivation (piece #4's) was deleted from `tools/export_print.js` rather than switched off.
+   The septet's own markers (`MORPH M1 — BEATING BLOOM` 183.00 · `MORPH M2 — SPECTRAL DRIFT`
+   314.00) are read by the video cut list and the app, not by the print.
 7. **The real sounding length of a one-shot** comes from `bank/sample_lengths.json`
    `[technique][midi]` (seconds) — the app's `techLength` and the extractor read the same
    table. The copied table is the tuba's (`staccato` / `cuivre` / `fortepiano`, a few

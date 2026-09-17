@@ -1796,7 +1796,10 @@ player would touch parts, solo, crop and print.
       LOUDLY when the columns overflow (it was silent clipping under `.page{overflow:hidden}`).
     - 2b.4.3 the demo link and the practice-video links print as visible URLs and stay clickable in the PDF.
     - 2b.4.4 the order: cover · instructions (2 pp) · the score — as #4 (the AI's call; his to overturn).
-  - **2b.5 — The full render** — `todo` — **Result when done:** the whole PDF, checked, his "print good".
+  - **2b.5 — The full render** — `doing 2026-09-17 (§612): 66 pages / 6.71 MB rendered; the IR rebuilt first and found identical apart from its date
+    (so the approved audio and video still match this score); build.sh rewritten; check_print_pdf.js and check_print_pages.js new and green —
+    every MediaBox inside A3, 0 not-embedded fonts, 0 raster, 4 links, all 63 music pages carrying the full frame, one terminal barline.
+    HIS EYE (2b.5.6) OWED.` — **Result when done:** the whole PDF, checked, his "print good".
     - 2b.5.1 the IR rebuilt from its recorded build first (the save is newer by timestamp; §598 found the objects equal — the rebuild
       makes it certain).
     - 2b.5.2 `print/score/build.sh` rewritten for the septet (IR `piece-septet`, A3, cover + instructions on, the septet's out name).

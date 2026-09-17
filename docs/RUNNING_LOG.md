@@ -16256,3 +16256,37 @@ sentence (20–34) · the piano pair (39–425)**. Columns page 1 col1 817 · co
 *Chrome honours `break-after`/`break-before: avoid` inside a multi-column box — worth knowing, because the alternative was grouping the blocks by
 regex in the exporter, which would have had to understand his page's nesting and would break the first time he restructured a section.*
 
+## §612. BUILT PLAN 2b.5: THE WHOLE PRINT SCORE — 66 pages, every page walked, every check green; his eye owed (2026-09-17, session 15, Opus 5)
+
+**His word:** *"go for full render pls"*.
+
+**2b.5.1 THE IR REBUILT FIRST, and what that settled.** `tools/notate_section.js` re-run from the IR's own `provenance.build` (the 30-flag command it
+records), snapshot taken first. **The rebuilt IR is identical to the old one apart from `provenance.date`** — 1163 chunks, 1806 events, every other key
+byte-identical. That is the proof §598 could only infer from equal objects: **his save of 11:04 changed metadata only, so the approved audio render and
+the approved video are still of THIS score.** (Had the notation moved, both would have needed re-rendering — RENDER.md §1 and the video's ~15 min.)
+
+**2b.5.2 `print/score/build.sh` rewritten for the septet:** IR `piece-septet`, A3 by default (the call's limit, stated in the header), out
+`print/score/Scattered-Substance-score-JYang.pdf`, `--proof` for the two proof PDFs alone, and **the checks run BEFORE the render, not after** — the
+frame check and the front check gate the build, then the PDF check and the page walk verify what came out.
+
+**THE RENDER:** 63 music pages + cover + 2 instructions = **66 pages, 6.71 MB**, 10.32 s/page, staff 7.55 mm.
+
+**2b.5.4 THE FILE ITSELF — `tools/check_print_pdf.js`, new, kept.** It reads the delivered PDF, because the last step (Chrome's print-to-pdf) can still
+get the sheet wrong, fall back to a system face or rasterize vector work, and none of that shows in a viewer at screen size. **PASS: 66 pages · every
+MediaBox 1189.92 × 840.96 pt, inside DIN A3 · 6 embedded font programs, 12 font objects, ZERO not embedded · 0 raster images · the 4 links intact ·
+6.71 MB.**
+
+**2b.5.5 EVERY PAGE, NOT THE FOUR — `tools/check_print_pages.js`, new, kept.** The frame check samples four moments; a page that lost a clef between
+them would reach the jury unseen. This walks all 63: **seven labels · eight system groups · two brackets and one brace · a ruler with ticks and clock
+numbers · a folio reading m:ss – m:ss · nothing block-level outside the sheet — on every one. The terminal barline appears exactly ONCE, on page 66**,
+which is `edgeBar:false` doing its job (no bar at the right of every page — his ask on #4).
+**It failed first on 7 of 63 pages, and the check was wrong, not the score:** it called a part label "any text in the gutter", so a technique word
+belonging to a note just before the window's start — `(slap)`, `jeté`, `T. R.` — was read as an eighth part. A label is a text at **x = 4**
+(`engraving.partLabel.xPx`) and nothing else sits there; both this check and the frame check now say so. *Third check this session whose first version
+was wrong. The pattern is the same every time — a loose predicate that happens to pass on the sample it was written against.*
+
+**Also corrected:** `docs/NAMING.md` §6 still said `export_print` reads `ACT-` markers for section marks. It does not — that derivation was deleted with
+D58's "no marks". Struck in place with the reason, as this repo's rule requires.
+
+**Owed: his eye on the whole PDF (2b.5.6)** → notes fixed in one pass → **2b.6** archive + docs.
+

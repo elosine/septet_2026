@@ -19,7 +19,7 @@
  },
  "provenance": {
   "createdBy": "tools/notate_section.js (profile trance) --bricks --trills --trillRate 100",
-  "date": "2026-09-16",
+  "date": "2026-09-17",
   "tool": "tools/notate_section.js (profile trance) --bricks --trills --trillRate 100",
   "notes": "Derived extraction (B1). Segmentation: DB-6 greedy IOI runs, TOL 0.015 s. Regenerable; authored content belongs in overlays only. TRILLS (PLAN 2f.3): 69 trill zone(s) as env trill; 11 eaten note(s) (mutedBy) not extracted; 0 trill(s) read a flat level. BRICKS MODE: all chunks forced unresolved (working file).",
   "build": "node tools/notate_section.js --score piece-septet --all --profile trance --bricks --trills --trillRate 100 --id piece-septet --beamsThrough --rests16 --cluster 43.3-43.7@2 --gridDiv 2 --restAfter 1 --dyn 1 --accents 1,2 --beamOver 1 --morph grp-morph-01 --morph grp-morph-03 --pairBeam wc-1769,wc-1770 --pairBeam wc-1774,wc-1775 --pairBeam wc-1785,wc-1786 --ensembleDyn 205-428@2 --groups 444-624.1 --groupCuts 2@587.32,611.5 --threes 2+1 --max16 --dynOnChange 444-624.1"

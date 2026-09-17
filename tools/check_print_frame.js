@@ -58,9 +58,10 @@ function census(svg) {
   return out;
 }
 // The furniture outside the systems, plus the part labels. A label is a <text>
-// in the untimed gutter (x < gutterPx), which is scale-free enough to compare
-// across the two views — and its STRING is compared, not just its count.
-const GUTTER = 72;
+// at x = 4 (registry engraving.partLabel.xPx) — its STRING is compared, not just
+// its count. NOT "anything in the gutter": a technique word on a note just before
+// the window's start also lands there, and read as a label on 7 of the 63 pages.
+const GUTTER = 6;
 const furniture = svg => ({
   brackets: (svg.match(/class="[^"]*sysgrp-bracket/g) || []).length,
   braces: (svg.match(/class="[^"]*sysgrp-brace/g) || []).length,
