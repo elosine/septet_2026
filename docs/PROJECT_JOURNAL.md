@@ -117,9 +117,13 @@ its five gates and the shared-frame warning. **Also done at his ask: his applica
 `docs/application/Tempus-Lab2026-application-JYang.pdf`, 5 pages (form pp. 4–5 · bio · payment ×2), each page verified.
 **FLAGGED, HIS TO DO:** the required checkbox on the declarations page still reads as an empty ☐.
 
-**NEXT CONCRETE STEP — nothing of PLAN 2b remains.** The open work is the four items that have been his since §605 (the score-in-C line ·
-the three fact flags on the instructions page · the unreviewed tuba text · the two AI calls he may undo), then **PLAN 3 the performance
-score**; **PLAN 2c parts only if the piece is selected** (~2026-10-29). Deadline **2026-10-15**.
+**THE FOUR ITEMS CARRIED SINCE §605 ARE CLOSED (§619): his *"these all settled"*.** The score-in-C line stands · the three fact flags
+stay AS WRITTEN (heard and kept — **do not raise them again**) · the tuba text is accepted · the two AI calls stand (the video link order;
+BCl + Vc take 6). **The performance instructions page is DONE.**
+
+**NEXT CONCRETE STEP — the submission is complete**, but for the one required checkbox on his application's declarations page, which is
+his to tick. What remains of the piece is **PLAN 3, the performance score** (it carries D50's acceptance line and D55's pitch form);
+**PLAN 2c parts only if the piece is selected** (~2026-10-29). Deadline **2026-10-15**.
 
 *(kept, for what round 2 was asked to look at)* **Round 2** (sent 2026-09-17) — the right edge of a page whose music stops early (**13 · 58 · 60 · 63 · 64 · 65**
 are the raggedest) and the clef gutter anywhere. On his word → **2b.6 archive + docs**: the PDF to `print/score/approved/<date>/` with a README (the
@@ -275,7 +279,8 @@ comment beside it) · `tools/gen_morph_chart.js` (the chart) · `tools/gen_m2_ch
 | N1 | the performance instructions — PARKED: drafted and copy-edited; the pending items 2–5 in the checkpoint above, at his convenience | Opus | no |
 | ~~N2~~ | ~~**PLAN 2b the print score**~~ — **DONE 2026-09-17** (§606–§618): the frame · A3 · the front matter · the whole score · the page edges by rule (D59) · archived. His *"ok print score good"*; 71 pages, five gates green; `print/score/approved/2026-09-17/` | — | — |
 | ~~N2b~~ | ~~his application~~ — **COMPILED 2026-09-17** at his ask: `docs/application/Tempus-Lab2026-application-JYang.pdf`, 5 pp (form pp. 4–5 · bio · payment ×2), each page verified. **HIS TO FINISH:** the required checkbox on the declarations page is still an empty ☐ | — | — |
-| **► N5** | **The four items that have been his since §605** — the score-in-C line · the three fact flags on the instructions page · the tuba text he has not reviewed · the two AI calls he may undo. Then **PLAN 3 the performance score**; **2c parts only if selected** (~2026-10-29) | Fable to decide · Opus to apply | **yes — PLAN 2b is closed, a clean break** |
+| ~~N5~~ | ~~the four items carried since §605~~ — **SETTLED 2026-09-17 (§619)**, his *"these all settled"*: all four stand as written; the instructions page is DONE | — | — |
+| **► N6** | **PLAN 3 — the performance score** (carries D50's acceptance line, D55's pitch form). **2c parts only if selected** (~2026-10-29). Nothing else is owed before the 2026-10-15 deadline | Fable to plan · Opus to build | **yes — the submission is complete; PLAN 3 is a fresh piece of work** |
 | **N3** | Later, noted: the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
 | **N4** | Still his, from before: the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 

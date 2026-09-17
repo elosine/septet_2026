@@ -16470,3 +16470,27 @@ print · notation) read in one place.
 
 **Left of the piece:** PLAN 2c parts, only if selected (~2026-10-29) · PLAN 3 the performance score · the four items that have been his
 since §605. **Deadline 2026-10-15.**
+
+
+## §619. "these all settled" — the four items carried since §605 are CLOSED (2026-09-17, session 15, Opus 5)
+
+**His word, on the four items listed back to him:** *"these all settled"*.
+
+**So, as of 2026-09-17, on `docs/notation_instructions/index.html`:**
+
+1. **The score-in-C line stands** — *"The full score is in C. Parts will be transposed."* (§591). No alternative wanted.
+2. **The three fact flags stay AS WRITTEN** (§569) — the crescendo paragraph's *"dynamic 1 to dynamic 2"* against the image's ppp → fff ·
+   Spectral's *"Performers … glissando"* where the flute and bass clarinet hold · *"two curves for each performer"* where the piano has
+   none. **They were flagged in chat, never edited** — his rule for this page is that the prose is his, and the AI says when a fact has
+   moved and leaves the sentence. He has now heard all three and kept them. **Nothing to do; do not raise them again.**
+3. **The tuba text is accepted** — the intro paragraph, the Conduction Tools' first two paragraphs and the Crescendos paragraph, carried
+   from piece #4 with the nouns swapped, are his text now.
+4. **The two AI calls stand** — the practice-video links in the chart's row order, and Bass Clarinet + Cello's held dyad **take 6** over
+   take 4 (§600).
+
+**The performance instructions page is DONE.** With PLAN 2b closed (§618) and the application compiled, **the submission is complete** but
+for the one required checkbox on his application's declarations page, which is his to tick. Deadline **2026-10-15**.
+
+**What is left of the piece:** **PLAN 3, the performance score** (it carries D50's acceptance line and D55's pitch form) · **PLAN 2c parts,
+only if the piece is selected** (~2026-10-29).
+
