@@ -271,10 +271,20 @@ const faces = [
 ].map(f => "@font-face{font-family:'Crimson Pro Light';font-style:" + f.style +
   ";src:url(data:font/ttf;base64," + fontB64(f.file) + ") format('truetype');}").join('\n');
 
+// [PLAN 2b.4.1 — 2026-09-17] THE COVER, PER FORMAT. This piece's cover is
+// `cover-septet-<format>.svg` (print/cover/make_cover_septet.ps1 draws it in the
+// house style at the sheet's own size); #4's tabloid cover is the fallback, which
+// is what a missing septet cover would silently have printed. A cover drawn for a
+// DIFFERENT sheet is not an option: it would be scaled by the browser and the
+// type would no longer be the measured size, so this refuses rather than guesses.
 function coverSvg() {
   if (!wantCover) return null;
-  const p = path.join(ROOT, 'print', 'cover', 'cover-D-tabloid-landscape-1line.svg');
-  if (!fs.existsSync(p)) { console.error('  ! --cover on but ' + path.relative(ROOT, p) + ' is missing; skipping cover'); return null; }
+  const p = path.join(ROOT, 'print', 'cover', 'cover-septet-' + formatName + '.svg');
+  if (!fs.existsSync(p)) {
+    console.error('  ! --cover on but ' + path.relative(ROOT, p) + ' is missing.');
+    console.error('    draw it first:  powershell -ExecutionPolicy Bypass -File print/cover/make_cover_septet.ps1');
+    process.exit(4);
+  }
   return fs.readFileSync(p, 'utf8');
 }
 
@@ -286,7 +296,16 @@ function coverSvg() {
 // for paper (two CSS columns, the score's Crimson faces, images inlined so
 // the SVGs' own 'Crimson Pro Light' <text> resolves against the embedded
 // fonts — an <img> would isolate them and fall back).
-function instructionsHtml() {
+// [PLAN 2b.4.2 — 2026-09-17] TWO PAGES, NOT ONE. Measured on the septet's page:
+// the content is 2322 px of a 1536 px two-column frame — exactly ONE COLUMN over,
+// and `.page{overflow:hidden}` was CLIPPING it with no message of any kind (the
+// third column simply did not print). This piece's front matter carries what the
+// tuba's did not: the morph sequence chart, the legend and the instrumentation.
+// So it breaks at a SECTION (never mid-paragraph) and prints as two spreads.
+// The type is not shrunk to fit: 10.4 px is already the floor for a player
+// reading at a stand.
+const INS_BREAK = arg('insBreak', 'Acoustic Beating');   // the <h3> that opens page 2
+function instructionsPages() {
   if (!wantInstructions) return null;
   const src = path.join(ROOT, 'docs', 'notation_instructions', 'index.html');
   if (!fs.existsSync(src)) { console.error('  ! --instructions on but docs/notation_instructions/index.html is missing; skipping'); return null; }
@@ -298,23 +317,38 @@ function instructionsHtml() {
   const subtitle = tm ? tm[2] : '';
   if (tm) body = body.replace(tm[0], '');
   // inline every image (all SVG, all with viewBox — they scale by CSS width).
-  // Per-figure widths, % of the column: the two big panels (the 3-lane
-  // multitempo shot, the beating chart) cannot ride at full column width or
-  // the page overflows — measured day 40, content ran 0.55 of a column over.
+  // Per-figure widths, % of the column. Keyed by THIS piece's image names — the
+  // table was the tuba's (multitempo_530_T8T9T10, clusters_37_T9 …) and not one
+  // of its keys existed here, so every figure rode at full column width.
+  // The wide panels are the ones that must be held back: the morph sequence
+  // chart is a 16:5 strip and the two conduction stills are wider than tall.
   const FIGW = {
-    multitempo_530_T8T9T10: 66, beating_sequence_chart: 72,
-    curve_cresc_691_T2: 90, clusters_37_T9: 85, beating_notation_224_T7: 85,
+    morph_sequence_chart: 100, conduction_e1_strike_vn1_20: 100, conduction_e2_trill_vn1: 100,
+    curve_cresc_527_va: 92, gradient_trill: 92,
+    beating_notation_entry_va: 88, beating_notation_mid_va: 88,
+    let_ring_plucked_pno: 100, let_ring_ordinary_pno: 100,
   };
+  const missing = [];
   body = body.replace(/<img\s+src="([^"]+)"[^>]*>/g, (_, rel) => {
     const p = path.join(ROOT, 'docs', 'notation_instructions', rel);
-    if (!fs.existsSync(p)) { console.error('  ! instructions image missing: ' + rel); return ''; }
+    if (!fs.existsSync(p)) { missing.push(rel); return ''; }
     const svg = fs.readFileSync(p, 'utf8').replace(/^<\?xml[^>]*\?>\s*/, '');
-    const w = FIGW[path.basename(rel, '.svg')];
-    return '<div class="figwrap"' + (w ? ' style="width:' + w + '%"' : '') + '>' + svg + '</div>';
+    const key = path.basename(rel, '.svg');
+    if (!(key in FIGW)) console.error('  ! instructions figure has no width in FIGW: ' + key + ' (drawn at full column width)');
+    const w = FIGW[key];
+    return '<div class="figwrap"' + (w && w !== 100 ? ' style="width:' + w + '%"' : '') + '>' + svg + '</div>';
   });
-  return '<div class="page ins"><div class="insframe">' +
-    '<div class="institle"><span class="t">' + title + '</span><span class="s">' + subtitle + '</span></div>' +
-    '<div class="cols">' + body + '</div></div></div>';
+  if (missing.length) { console.error('  ! instructions images MISSING: ' + missing.join(', ')); process.exit(5); }
+
+  // the break: the <h3> named by --insBreak opens the second page
+  const bi = body.search(new RegExp('<h3[^>]*>\\s*' + INS_BREAK.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  if (bi < 0) { console.error('  ! --insBreak "' + INS_BREAK + '" matches no <h3> in the instructions page'); process.exit(5); }
+  const halves = [body.slice(0, bi), body.slice(bi)];
+  const page = (html, i) => '<div class="page ins"><div class="insframe">' +
+    '<div class="institle"><span class="t">' + title + '</span><span class="s">' +
+    (i === 0 ? subtitle : 'continued') + '</span></div>' +
+    '<div class="cols">' + html + '</div></div></div>';
+  return halves.map(page);
 }
 
 function buildHtml() {
@@ -348,10 +382,11 @@ function buildHtml() {
     '.figwrap svg{display:block;width:100%;height:auto;}\n' +
     '</style>');
 
+  // the order, as #4: cover · performance instructions · the score
   const cov = coverSvg();
   if (cov) out.push('<div class="page cov">' + cov + '</div>');
-  const ins = instructionsHtml();
-  if (ins) out.push(ins);
+  const ins = instructionsPages();
+  if (ins) out.push(...ins);
 
   sel.forEach((i, n) => {
     const view = viewFor(i);
@@ -432,5 +467,6 @@ if (!fs.existsSync(outAbs)) {
   console.error((r.stderr || '').split('\n').slice(-6).join('\n'));
   process.exit(1);
 }
+const frontPages = (wantCover && coverSvg() ? 1 : 0) + (wantInstructions ? (instructionsPages() || []).length : 0);
 console.log('wrote ' + path.relative(ROOT, outAbs) + '  (' + (fs.statSync(outAbs).size / 1024 / 1024).toFixed(1) + ' MB, ' +
-  (sel.length + (wantCover && coverSvg() ? 1 : 0) + (wantInstructions && instructionsHtml() ? 1 : 0)) + ' pages)');
+  (sel.length + frontPages) + ' pages: ' + frontPages + ' front matter + ' + sel.length + ' of music)');

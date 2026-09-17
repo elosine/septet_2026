@@ -112,9 +112,14 @@ exporters (the video's seven dumped pages byte-identical before/after); `tools/c
 seven labels, two brackets, one brace, census identical. A3 is drawn 419.7 × 296.8 mm so the MediaBox lands INSIDE the call's ceiling. Staff
 7.55 mm, 63 pages at the film's density.
 
-**Next concrete step: HIS EYE on `print/score/PROOF-A3-frame.pdf`** (4 pages, one per section) and on the density trio
-(`PROOF-density-8.5 / -10.3 / -12.pdf` = 76 / 63 / 54 pages, the staff identical at all three) — **the density is the one thing he must pick.**
-His notes → fixed in one pass → then 2b.4 the front matter (cover · the instructions on two pages), 2b.5 the full render (IR rebuilt first), 2b.6 archive.
+**Also built 2026-09-17 (§609): 2b.4 the front matter.** His density pick: **10.3, the film's own — 63 pages, staff 7.55 mm.** The A3 cover is drawn
+in #4's house style (`print/cover/make_cover_septet.ps1` → `cover-septet-a3-landscape.svg`, title 73.5 pt); the instructions print as TWO pages, broken
+at "Acoustic Beating", each about three quarters full; the four video links are clickable annotations. `tools/check_print_front.js` PASSES and is
+proven to fail on an overflowing split.
+
+**Next concrete step: HIS EYE on two PDFs in `print/score/`** — `PROOF-A3-frame.pdf` (4 pages of music, one per section) and
+`PROOF-front-matter.pdf` (cover · instructions ×2 · one music page). His notes → fixed in one pass (2j's way) → **2b.5 the full render**
+(2b.5.1 rebuild the IR first, 2b.5.2 rewrite `print/score/build.sh` for the septet) → 2b.6 archive + docs.
 
 **Answered 2026-09-17 (D58, §607):** A **yes** — *Scattered Substance*, "for flute, bass clarinet, piano and string quartet" · B **no section
 marks** · C **a** — one PDF, the instructions page's demo link is enough, no Tempus copy. **Open with him:** the time ruler (he asked what it

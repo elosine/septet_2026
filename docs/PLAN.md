@@ -1776,8 +1776,8 @@ player would touch parts, solo, crop and print.
   - **2b.2 — The paper** — `done 2026-09-17 (§608): a3-landscape default, drawn 419.7 x 296.8 so Chrome's rounding lands INSIDE A3
     (MediaBox 419.92 x 296.63 mm) · staff 7.55 mm · 63 pages at the film's density · the marks derivation deleted (D58)` — **Result when done:** a page is A3 landscape, reads in time, names the movements.
     - 2b.2.1 `FORMATS` gains `a3-landscape` (420 × 297 mm) and it is the default; tabloid stays for #4's sake.
-    - 2b.2.2 seconds per page stays the rule it was — the video's approved density — expect ≈ 58 pages; the exporter reports the staff
-      in mm (expect ≈ 7 mm; #4's was ≈ 8 on ten lanes).
+    - 2b.2.2 ~~seconds per page~~ — **SETTLED (his "10.3 is fine", §609):** the film's own density, 10.32 s/page → **63 pages**, staff
+      **7.55 mm**. The trio he was shown: 8.5 → 76 pp · 10.3 → 63 · 12 → 54, the staff identical at all three.
     - 2b.2.3 ~~the section marks~~ — **NO MARKS (his word, D58):** the tuba's ACT-/TRANCE derivation is removed from the septet's path
       (`--marks` defaults off; nothing is derived, nothing printed). **The time ruler: KEPT** (his "a keep", D58, §608) — as #4's.
     - 2b.2.4 the folio unchanged: the clock range left, the page number right.
@@ -1785,7 +1785,10 @@ player would touch parts, solo, crop and print.
     every measurement passed (MediaBox inside A3, fonts embedded, zero raster, furniture in place). HIS EYE OWED.` — **Result when done:** he has looked at four A3 pages in one PDF, one per section
     (≈ 100 · 250 · 380 · 530 s), and his notes are fixed. Before he looks: MediaBox 1190.55 × 841.89 pt · fonts embedded · zero raster
     images · no ink outside the music block (measured, not eyed).
-  - **2b.4 — The front matter** — `todo` — **Result when done:** cover + instructions, on paper as on his page.
+  - **2b.4 — The front matter** — `done 2026-09-17 (§609): the A3 cover in the house style (make_cover_septet.ps1) · the instructions on TWO pages,
+    broken at Acoustic Beating, both ~3/4 full · FIGW rewritten for this piece's images · 4 clickable link annotations ·
+    tools/check_print_front.js PASS, and proven to fail on an overflowing split. HIS EYE on PROOF-front-matter.pdf owed.` —
+    **Result when done:** cover + instructions, on paper as on his page.
     - 2b.4.1 the cover at A3 — #4's cover D layout (EngraversGothic BT: title / "for …" / Justin Yang) at 1190.55 × 841.89 pt.
       **Confirmed (D58):** *Scattered Substance* / "for flute, bass clarinet, piano and string quartet" / Justin Yang.
     - 2b.4.2 the instructions: ONE SOURCE stays `docs/notation_instructions/index.html` — his prose untouched (§569). **Two pages, four

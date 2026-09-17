@@ -16178,3 +16178,40 @@ three densities — `PROOF-density-8.5.pdf` (76 pages) · `PROOF-density-10.3.pd
 **Not done, deliberately:** the IR is not rebuilt (the exporter's D75 hint fires because his save of 11:04 is newer; §598 measured the objects equal
 to `bc54cdc`, and 2b.5.1 rebuilds it before the real render) — so the proof pages are geometry, not a fresh extraction.
 
+## §609. HIS DENSITY PICK, and BUILT PLAN 2b.4 the front matter: the cover, the instructions on two pages, both checked (2026-09-17, session 15, Opus 5)
+
+**His word:** *"10.3 is fine; what else am I looking for? what is next?"* — **the density is the film's own, 10.32 s/page → 63 pages of music.** It was
+already the default (the rule: hold the video's approved staff-spaces-per-second, so a printed bar looks like the filmed bar); the trio proved what the
+choice costs — 8.5 → 76 pages, 12 → 54 — and that the staff is 7.55 mm at every one of them, because density moves time across the page, never the
+size of the notation.
+
+**2b.4.1 THE COVER.** `print/cover/make_cover_septet.ps1` (new) draws `cover-septet-a3-landscape.svg` in #4's house style, measured off the same
+Litany.pdf proportions: EngraversGothic BT · title : name = 2 : 1 · title baseline 27.1 % down · subtitle 0.65 × title · centred, no tracking, black.
+**Title 73.5 pt · subtitle 47.8 pt · name 36.8 pt; the title line 684 pt wide of 1082 available.** *Scattered Substance* / "for flute, bass clarinet,
+piano and string quartet" / Justin Yang (D58). **One thing the tuba's generator would have got wrong here:** its fitting loop shrank the type until the
+TITLE fitted and never looked at the subtitle — and this piece's subtitle at 0.65 × title is WIDER than its title, so it would have run into the
+margins. The loop now fits every line it draws. The exporter's `coverSvg()` takes the cover for the FORMAT (`cover-septet-<format>.svg`) and **exits**
+if it is absent rather than falling back to #4's tabloid cover, which is exactly what it would have printed before, scaled and off-size.
+
+**2b.4.2 THE INSTRUCTIONS, TWO PAGES.** The break is a SECTION, never mid-paragraph: page 1 Demo · Instrumentation · Conduction Tools · Gradient
+Curves, page 2 (headed "continued") Acoustic Beating · Notation Legend — `--insBreak` names the `<h3>`, default "Acoustic Beating". **Measured:
+page 1 ends 701 px of 980, page 2 ends 650 of 980** — both about three quarters full, no column overflow. The type is NOT shrunk: 10.4 px is the floor
+for a player at a stand. The `FIGW` width table was rewritten for this piece: it held the tuba's image names (`multitempo_530_T8T9T10`,
+`clusters_37_T9` …) and **not one of its keys existed here**, so every figure had been riding at full column width; an unknown figure now says so on
+stderr instead of passing silently. A missing image exits.
+
+**2b.4.3 THE LINKS.** All four (the demo video and the three Bloom practice takes) print their URL as visible text — on paper a link with only a title
+is useless — and survive as **4 PDF link annotations** with the right targets, checked in the rendered file.
+
+**THE CHECK — `tools/check_print_front.js`, new, kept.** The exporter cannot see its own layout (Chrome does the columns), which is why the clipping
+went unnoticed in the first place; so the check renders the front matter and measures it: column overflow, blocks outside the sheet, an empty page, and
+whether the cover's display face RESOLVED (a missing EngraversGothic BT would silently fall back and nobody would know from the PDF).
+**PASS on the real build; and proven to FAIL** — forced to break at "Notation Legend" instead, it reports *"COLUMNS OVERFLOW by 763px — content is
+being CLIPPED"* (151 % wide). **Its first draft also had to be corrected:** it counted every SVG descendant and called 111 elements "outside the sheet"
+on a page whose every block was in place — an SVG's children routinely reach past their viewport (the same conduction arc that overruns the page edge
+in the film) and are clipped by it. It now measures block-level boxes only. *Second check in two steps whose first version was wrong in the direction of
+noise or false comfort — both caught by reading the numbers rather than the verdict.*
+
+**The front-matter proof for his eye:** `print/score/PROOF-front-matter.pdf` — cover · the two instructions pages · one page of music, 4 pp, 0.36 MB,
+zero raster images, 6 embedded font programs (the instructions bring the italic and the notation faces the music pages do not use).
+
