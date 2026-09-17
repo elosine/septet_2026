@@ -5,7 +5,7 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ✦** 2026-09-17 (session 15, Opus; checkpoint) — the demo video ✓ · the performance instructions drafted and copy-edited (`docs/notation_instructions/index.html`; RUNNING_LOG §565–§604) · the Bloom practice videos online, linked, archived (PLAN 2h.7 done, §595–§602). **► NOW: PLAN 2b THE PRINT SCORE — PLANNED (Fable, §606): 1 ⚠ the septet frame · 2 the paper (A3, marks) · 3 proof pages, his eye · 4 front matter · 5 full render, his eye · 6 archive. Opus builds from 2b.1.** Deadline 2026-10-15. His answers (D58, §607): the title *Scattered Substance* and the ensemble line confirmed · no section marks · one PDF, no Tempus copy. Pending him: the time ruler, keep or not · his go to start the build ("check in before moving on").
+**NOW ✦** 2026-09-17 (session 15, Opus; checkpoint) — the demo video ✓ · the performance instructions drafted and copy-edited (`docs/notation_instructions/index.html`; RUNNING_LOG §565–§604) · the Bloom practice videos online, linked, archived (PLAN 2h.7 done, §595–§602). **► NOW: PLAN 2b THE PRINT SCORE — 2b.1–2b.5 BUILT (§608–§612): the whole score renders, `print/score/Scattered-Substance-score-JYang.pdf`, 66 pages on A3, four checkers green. NEXT: 2b.7 THE PAGE EDGES (D59, designed §613–§614, nothing built) — a page owns [cut, next cut), then his eye, then 2b.6 archive.** Deadline 2026-10-15. Settled: the title *Scattered Substance* · no section marks · one PDF · the ruler kept · 10.3 s/page · the ragged right edge. Pending him: his eye on the 2b.7 re-render.
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 

@@ -16323,3 +16323,14 @@ proportional score) · an SVG clip at the gutter (hides the symptom on the left,
 
 **Put to him:** the one look decision — the ragged right edge (2b.7.4). **Builder: Opus**, from the written sub-steps; the film's byte-identity is the gate.
 
+## §614. HIS WORD: "a" — the ragged right edge; the rule becomes D59; checkpoint before the build (2026-09-17, session 15, Opus 5)
+
+**His word:** *"a; checkpoint pls"* — **(a) the staff stops where the page's music stops.** The alternative (blank staff out to the right edge) was
+tidier and he rejected it on the reasoning given: in a proportional score blank staff reads as silence, so a page that ends early would appear to ask
+for ~1.9 s of rest that is not in the piece. The rule and this look decision together are now **D59** in journal §4, and PLAN 2b.7.4 records his "a".
+
+**Nothing of 2b.7 is built.** The whole of it is written as six sub-steps (2b.7.1–2b.7.6) with the numbers they must hit; the next session builds from
+the plan, on Opus. **The gate before touching `render.js`:** re-dump the video exporter's pages 0 · 9 · 20 · 30 · 43 · 49 · 53 from the CLEAN tree, keep
+the hashes, and prove them byte-identical after the change (§608's method; the session scratchpad does not survive a `/clear`, so the baselines are
+re-made rather than carried).
+

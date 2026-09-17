@@ -1826,7 +1826,7 @@ player would touch parts, solo, crop and print.
       clears the gutter; the previous page's events inside that reserve are not drawn (ownership).
     - 2b.7.3 THE RIGHT RESERVE: print plans its pages at `pageSeconds − left reserve − (GC.post + margin)`, so the last owned strike's rebound and
       its marks are whole. Cost, simulated: **63 → 68 pages.**
-    - 2b.7.4 THE SYSTEM ENDS WHERE THE PAGE'S MUSIC ENDS (his look decision, §613): staff lines, ruler and long items stop at the cut + the right
+    - 2b.7.4 THE SYSTEM ENDS WHERE THE PAGE'S MUSIC ENDS — **HIS WORD: "a" (D59, §614), the ragged right edge:** staff lines, ruler and long items stop at the cut + the right
       reserve — a ragged right edge on the ~18 pages whose cut falls > 0.5 s early (max 1.9 s ≈ 18 % of the width). *Why:* in a proportional score
       blank staff READS AS SILENCE; a staff that stops reads as "turn the page". The scale never changes (distance is time).
     - 2b.7.5 `tools/check_print_edges.js`, a build gate: over ALL pages — every IR event drawn exactly ONCE across the score · every arc whole (its

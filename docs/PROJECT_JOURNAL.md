@@ -85,7 +85,59 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### CHECKPOINT — 2026-09-17 (session 15, Opus 5) — NEXT: N2 THE PRINT SCORE (PLAN 2b), FABLE PLANS *(mid-session checkpoint)*
+### CHECKPOINT — 2026-09-17 (session 15, Opus 5) — NEXT: BUILD PLAN 2b.7, THE PAGE EDGES *(mid-session checkpoint #2)*
+
+**His word:** *"a; checkpoint pls"* — (a) the ragged right edge, D59.
+
+**Where PLAN 2b stands:** **2b.1–2b.5 BUILT and committed** (RUNNING_LOG §608–§612). The print score exists whole:
+`print/score/Scattered-Substance-score-JYang.pdf` — **66 pages** (cover · instructions ×2 · 63 of music), 6.71 MB, A3 landscape, 10.32 s/page,
+staff 7.55 mm. Rebuild it with **`bash print/score/build.sh`** (`--rebuild-ir` after a Save · `--proof` for the two proof PDFs). Four checkers are
+green and are build gates: `check_print_frame` (the printed page IS the filmed page, 4 moments) · `check_print_front` (the cover's face resolved,
+no column clipped) · `check_print_pdf` (inside DIN A3, nothing unembedded, no raster, the 4 links) · `check_print_pages` (all 63 music pages carry
+seven labels · 8 systems · 2 brackets + brace · ruler · folio; one terminal barline, on the last page).
+Three of his layout notes are in it (§610–§611). **The IR was rebuilt and came out identical apart from its date — the approved audio render and the
+approved video are still of THIS score.**
+
+**THE TASK NOW: PLAN 2b.7 — the page edges. Designed, nothing built.** His eye on the 66 pages found arcs and notes in the clef gutter and strikes
+sliced at the right edge; the cause is one fact — **a page's window (a constant 10.32 s) is wider than what the page owns** (the cut can fall 2.37 s
+early). Measured: **129 onsets drawn on two pages · 101 arcs cut at the right edge (34 pages) · 53 arcs into the gutter (26 pages)** · ghost arcs over
+clefs (the note gates on `inWin`, the arc on range intersection). **D59 is the rule; PLAN 2b.7.1–2b.7.6 is the build**, with the numbers each step must
+hit. Cost: **63 → 68 music pages.**
+
+**Next concrete step:** on **Opus**, build **PLAN 2b.7 in order 7.1 → 7.6** as written. **Before editing `notation/lib/render.js`:** dump the video
+exporter's pages **0 · 9 · 20 · 30 · 43 · 49 · 53** from the clean tree (`node tools/export_video.js --ir piece-septet --dumpPage N --dumpTo <scratch>`),
+keep their hashes, and prove them **byte-identical** after the change — the approved film must not move (§608's method; the old baselines were in the
+session scratchpad, which a `/clear` does not survive). Then re-render, run all five checks, and send him the new PDF.
+
+**Resume reads:** `docs/PLAN.md` — **2b.7 whole** (search `2b.7 — The page edges`) · journal §4 **D59** (search `- **D59**`). Nothing else; the
+builder opens `notation/lib/render.js` (the item loop, ~470–600), `notation/lib/splice.js` and `tools/export_print.js` as its first act.
+
+**Model:** **Opus builds** (a written plan, mechanical). Fable only if the ragged edge raises a new look question.
+
+**Decisions pending the composer:** his eye on the 2b.7 re-render (then 2b.6 archive) · the four items carried from N1 since §605 — the score-in-C
+line · the three fact flags on the instructions page · the tuba text he has not reviewed (the intro paragraph, the Conduction Tools' first two
+paragraphs, the Crescendos paragraph) · the AI calls he may undo (the practice-video link order; Bass Clarinet + Cello's take 6).
+
+**Deliberately uncommitted** (`git status --short`) — **his, per D40, never staged by the AI:**
+- **NEW: `docs/Tempus-Lab2026_Application_English_JYang.pdf`** (untracked) — **his filled application form** (PLAN 4). His to keep or commit; the AI
+  has not opened it.
+- `scores/piece-septet.json` (M) — his Save of 09-17 11:04. **Now proven metadata-only:** the IR rebuilt from it is identical to `bc54cdc`'s apart
+  from the date (§612), so the audio render and the video still match.
+- `reaper/septet_rack.rpp` (M) · `bank/panel_snapshots.json` (M) — his rack, his panel
+- `bank/passages/` 4materials · accentedcres01 · accentedcres01-2 · chordcyc01 · chstr02 · section3 (untracked)
+- `scores/` Sec3 · SeptetSec03-Materials-B · -C · -D · piece-septet-v1.31 · -v1.32 · -v1.33 · spectralMorph (untracked)
+- two AI copies, deletable at his call: `scores/zz-ai-run-nosecco.json` · `scores/zz-ai-1t-walk.json`
+- unsaved working copies (`node tools/unsaved_check.js`): cres-run01 · cres2strike · piano-harmonics-test · trill-curve-test · trillBuildTst · zz-ai-1t-walk
+
+**Gitignored, left on disk on purpose** (`print/score/*.pdf` is ignored — every print PDF lives on this machine only): **the score itself**
+`print/score/Scattered-Substance-score-JYang.pdf` (6.7 MB, 66 pp) · `PROOF-A3-frame.pdf` · `PROOF-front-matter.pdf` · `PROOF-density-8.5 / -10.3 /
+-12.pdf` · `notation/ir/piece-septet.ir.json.bak` (the pre-rebuild snapshot, deletable) · the practice videos' archived mp4s (his to back up) ·
+`notation/audio/` — **keep `raw/demo-bloom-heldmax-float.wav`**.
+**Running:** his :5300 and Reaper. Nothing of the AI's; the Browser pane was not used this session.
+
+---
+
+### *(superseded)* CHECKPOINT — 2026-09-17 (session 15, Opus 5) — N2 THE PRINT SCORE (PLAN 2b), FABLE PLANS *(mid-session checkpoint #1; 2b.1–2b.5 are now built — kept for its record of what the port faced)*
 
 **His word:** *"lets move to print score next, prep for clear"*.
 
@@ -858,6 +910,22 @@ sources; verified here only when they bite.)*
   page and PLAN 4's form all take it. No marks above the music (the AI had recommended `I · II · BLOOM · II · SPECTRAL · III`). The demo link at
   the head of the instructions page (page 2) is the score telling the jury the video exists — the 09-14 "Tempus copy only: a link at the top"
   is met by it, so there is one PDF. **The time ruler: KEPT** (his *"a keep; go for build"*, §608) — a tick a second, m:ss every five.
+- **D59** *(2026-09-17, composer + AI, RUNNING_LOG §613–§614)* — **A PRINTED PAGE OWNS `[cut, next cut)`. A POINT EVENT IS DRAWN ONCE, ON THE PAGE
+  THAT OWNS ITS ONSET, AND DRAWN WHOLE; A LONG ITEM IS DRAWN ON EVERY PAGE IT CROSSES, CLIPPED TO THE OWNED SPAN; THE SYSTEM ENDS WHERE THE PAGE'S
+  MUSIC ENDS.** His word, on the whole 66-page PDF: *"what can we do about these edge cases … lets find a solution that will resolve them all, try to
+  find robust solution that will fix all and not result in continuous reprinting and reviewing and redoing"* — then, on the one look question,
+  ***"a"*** (the ragged right edge). **The fault, measured over the 63 pages:** the window is a constant 10.32 s but the cut can fall 2.37 s earlier,
+  so **129 onsets are drawn on two pages · 101 have an arc sliced by the right edge (34 pages) · 53 put an arc in the clef gutter (26 pages)**, and a
+  strike just before the window leaves a ghost arc over the clef (the note gates on `inWin`, the arc on range intersection). §404's 4.2 ss buffer was
+  sized for the notehead unit (3.44 ss) and never knew about the GC arc's approach (0.36 s = **7.3 ss**) — his *"I thought that was clamped"* is
+  right, for the note. **Why ownership and not a bigger buffer:** the doubled and sliced events are the same fault from the other side, and only a
+  rule that says which page a strike belongs to removes all three at once. **Why not cut at silent gaps:** the last **82.8 s** of the piece contain no
+  0.6 s gap at all. **Why the ragged right edge:** in a proportional score blank staff READS AS SILENCE, and the time scale must never change page to
+  page (distance is time — his own correction on the film, *"in page two the cursor speeds up significantly"*). **Cost: 63 → 68 music pages;** ~18
+  pages end more than 0.5 s early, at most 1.86 s (≈ 18 % of the width). **The film is NOT changed** — there the overlap is right (the ball needs its
+  approach) and the approved video's pages must stay byte-identical. **The guarantee is a checker, not the rule:** `check_print_edges.js` asserts over
+  every page that each event is drawn exactly once and whole and that nothing timed touches the gutter, so an edge case is a red line in the build
+  rather than something found by paging through 68 sheets — which is what he asked for in "not … continuous reprinting and reviewing and redoing".
 
 ---
 
