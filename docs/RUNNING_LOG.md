@@ -15377,3 +15377,273 @@ it: the save `bc54cdc`, the WAV and its sha256, the frame, the 1.85× groups, se
 the archive README, PLAN 2i.10 and the journal: it is the link the Tempus copy of the print score carries at the top (his order, §515; PLAN 2b).
 Also this sitting, no decision yet: the cover's ensemble statement discussed (CN-64's title) — the AI recommended *"for flute, bass clarinet,
 piano and string quartet"* (the doublings in the instrumentation list inside); his word open.
+
+## §565. THE PERFORMANCE INSTRUCTIONS BEGUN: the tuba's page copied as the septet's draft, nouns only · piece #2 has no player-facing text for its curves · the notes surfaced (2026-09-16, session 14, Fable 5.1)
+
+**His word (session start):** *"Let's start a draft of the performance instructions. You can copy the performance instructions for the tuba piece as the
+first, as a starting point for the draft. Also, I don't think I got as far as performance instructions for the two piano, two percussion piece, but for
+the trill curves in this piece, I want to say something about the curve representing intensity, both volume and speed, but see, before I draft it from
+fresh, see if there was anything already written for the two piano, two percussion piece. And then could you surface all the notes we've been taking
+along the way to include in performance instructions for this piece as well? And let me just see that as a bulleted list. So I want to see the HTML
+page for this piece with the tuba instructions, but just revised. Can you go through them and make sure everything's updated with the septet's
+instruments and referring to the septet? But you don't have to change any of the descriptions yet. I'll go through. You can just change the nouns.
+I'll go through and adjust the wording of the text and the order, etc."* · then: *"in piece it would be reference to tremolo or ostinato curves"*
+
+**Done:**
+- **`docs/notation_instructions/`** created from the tuba's (`for_seven_tubas/docs/notation_instructions/`: `index.html` · `styles.css` · `images/`,
+  the day-40 page), served by :5300's `/docs/` route at http://localhost:5300/docs/notation_instructions/index.html. **Nouns only:** the title
+  *Scattered Substance* (CN-64, tentative) · the ensemble line "for flute, bass clarinet, piano and string quartet" (the AI's §564 recommendation,
+  his to confirm) · "the pair of tubas" → "the pair of instruments" · "a two-tuba demo" → "a two-player demo" · the five tuba practice-video links →
+  one placeholder line (the tuba's kept in an HTML comment for the shape). Every description is the tuba's; **every image is the tuba's capture** —
+  `tools/capture_lane.js` and `tools/gen_beating_chart.js` were never ported to this repo (a port owed before the images can be the septet's);
+  said in the file's head comment. "Multiple Tempos" flagged as probably tuba-only (no trance section here).
+- **Piece #2:** no performance instructions were ever written — no `docs/notation-instructions/` folder (the landing page's link is SQ1's
+  inheritance and points at nothing). The only text about its tremolo / ostinato curves is technical: OSTINATO_TIMING_MODEL ("ostinato MIDI
+  snippets that follow WaveCurve shapes, using human-sampled timing and velocity data"), OSTINATO_SCORE_INTEGRATION ("streams represent things
+  that change continuously — dynamics, tremolo speed"), MIDI_PREVIEW_ZONE ("alternating-hand tremolo driven by WaveCurve shape"). Nothing
+  player-facing to reuse; his trill-curve paragraph is drafted fresh.
+- **What this repo says the trill curve IS, for that paragraph:** TRILLS_TOOL §1 — "the trill continues, its speed following a reference curve the
+  composer has drawn"; its `speed` row — curve height 0–10 → notes per second per instrument (`bank/trill_speed.json`); TRILL_NOTATION_SPEC §5 —
+  the SAME curve is the level curve drawn on the page (limeGreen, D42), and "the rate curve is never notated … it'll just say trill". So one drawn
+  curve carries both the loudness and the speed — his "intensity".
+- **The notes surfaced** (the bulleted list went to the chat; the sources): NITS "FOR THE PERFORMANCE INSTRUCTIONS" (seven items: the bass clarinet
+  to low C · the Ped. legend · the l.v. slur · sempre secco · the curves' two meanings · the dynamic regimes · the pitch form's front-matter lines) ·
+  RUNNING_LOG §515 (the Tempus copy's video link at the top · the practice videos, BLOOM at least · SPECTRAL's isolated-demo idea) · journal §7
+  (the practice videos with the beating speed, D48).
+
+**Not done, his:** the wording and the order of every section · the trill-curve paragraph · the title and the ensemble line.
+
+## §566. The capture tool ported; the conduction and crescendo images are the septet's; the clusters section out (2026-09-16, session 14, Fable 5.1)
+
+**His words, in order:** *"please find equivalent images and update the PI and update the text to fit the images"* (with the tuba's two
+conduction images pasted) · *"find a new image from this piece as look and feel of curve and curve follower have changed, replace"* (the
+tuba's crescendo image pasted) · *"remove notated clusters section"* · *"from Pairs of performers use micro-glissandos over long durations
+to gen.. to Performers use micro..."*
+
+**The port — `tools/capture_lane.js`** (from piece #4's day-40 v3.2; the tuba's rule kept: render THE FRAME the composer approves, then crop
+via the viewBox, no hand scaling). The septet's differences, every one taken from `export_video.js` (§558): the REALIZED ensemble
+(`Layout.ensembleFor(ens, realizations['video-jury'])` — the bass clarinet in C on a bass clef, the presentation form the instructions
+accompany) · the techniques registry into `layoutSection` · lanes weighted by the ensemble with the piano's two staves (`Coords.withStaves`,
+`ssPerSystem`) · the prefatory gutter · the zoom window from `Coords.zoomCfg` (the app's own; Z = the registry's `zoom-working` 2, lowered
+automatically when the span is wider than the window) · `staticPageSvg` with `ensemble` (labels, brackets, brace — in the gutter, outside
+the crop) · `AnimObj.collect` with the save. `--part` takes a name (fl bcl pno vn1 vn2 va vc) or an index. Parts are found through the
+chunks (`ir.chunks[].part`) — the events carry no `part` field.
+
+**The three captures** (each verified by eye through resvg before it went on the page):
+- **E1** violin 1's Bartók pizzicato fff at 20.52 s (the opening's scattered strikes): `--part vn1 --t 20.34 --span 19.98-20.98 --padBot 14`
+  — the GC arc, the ball descending, the cursor approaching the go line, the accent and the Bartók sign, the fff. The tuba's E1 was T4's
+  staccato at 7.515.
+- **E2** violin 1's trill at 140.00 s (1.80 s): `--part vn1 --t 140.81 --span 139.65-142.05 --padBot 14` — "tr", the go line, the open head
+  with the auxiliary in parentheses, sfz, the green level curve (flat here) with the follower inside it, the next strike's go line at the
+  right. **Why a trill and not the tuba's held fortepiano:** the septet has no ring-bar hold — the `fortepiano` and `cuivre` devices are used
+  by no event of this score (NITS, the D49 audit); the trill is this piece's held device (go line + open head + sfz + the level curve,
+  TRILL_NOTATION_SPEC). First try was wrong: the trill at 65.76 s I took for violin 1's (midi 80) is the CELLO's — the chunk map, not the
+  pitch, names the part.
+- **E3** the viola's first surge of the crescendo run, 526.79 s (1.21 s): `--part va --t 527.6 --span 526.4-528.75 --padBot 8` — ppp → fff,
+  the go line, the head below the staff, the lime shape curve, the meter two-thirds up, "sempre secco" at the top right (the part's first
+  swell carries it, §531). The tuba's was T2 at 691.19.
+
+**The page:** the two sections' text rewritten to fit the images (E1 "when the cursor reaches the go-line and the ball lands"; E2 "begin
+the trill at the go-line, sforzando, and continue it for the length of the green curve; the curve follower inside the curve gives your
+position"; the crescendo "the pair of dynamics states the levels" + the NITS draft line for sempre secco as a third paragraph) · the Notated
+Clusters section removed · "Pairs of performers use micro-glissandos" → "Performers use micro-glissandos" · the four tuba images the page
+no longer shows deleted from `images/` (conduction ×2, curve_cresc_691, clusters). **Still the tuba's:** the beating chart (its generator
+reads the tuba save), the beating notation image (to be re-captured from BLOOM once the spot is chosen), Multiple Tempos.
+
+## §567. His revision of the Acoustic Beating paragraph (2026-09-16, session 14, Fable 5.1)
+
+**His text, verbatim, replacing the tuba's first paragraph on the page (the rest of the section untouched until he revises it):**
+*"The middle movement of this piece uses acoustic beating as the central musical material. Performers use micro-glissandos over long
+durations to generate acoustic beating. Conceptually, it may be helpful to think of a common tuning method — play two strings and adjust the
+tuning of one until there is no longer any beating, and the strings are in tune. In a similar way, this section is less about trying to play
+a particular pitch, but more about using small deviations of pitch to modulate the speed of the acoustic beating."*
+
+**AI reading (not his words):** the tuba's "pairs glissando away from each other, both tuning pegs move" is gone — the septet's instruction
+is about the goal (the beating's speed), not the pair mechanics; the pitch is a means. Fits D48's practice videos (the speed heard in
+isolation) and NITS' "the pitches at the beginning of each section are approximate; calibrate using beating speed and timbre".
+
+## §568. His revision of the conduction examples' sentence (2026-09-16, session 14, Fable 5.1)
+
+**His text, verbatim, replacing the AI's fitted sentence:** *"In the first example, you would play the Bartók pizzicato when the scrolling
+cursor reaches the go-line and the ball bounces. In the second example, you would begin the trill at the go-line and continue it for the
+length of the green curve - the trill ends where the curve ends."* — the dynamic, the sforzando, the curve follower and the next strike's
+go-line all dropped from the sentence; the tuba's "the ball bounces" restored over the AI's "lands".
+
+## §569. The crescendo text restored to the tuba's; HIS RULE for the instructions page: the AI does not modify the text (2026-09-16, session 14, Fable 5.1)
+
+**His word:** *"This is the original text from the Tuba piece. no need to modify the text unless the facts warrent it, and in fact, don't
+modify, I'll manually make adjustments"* — after the AI had rewritten the Curve-Based Crescendo paragraphs to fit the new image (§566:
+"the pair of dynamics states the levels", "the green meter", and a third paragraph with the sempre secco line).
+
+**Done:** the two tuba paragraphs restored word for word; the AI's sempre secco paragraph removed (the line stays on the NITS
+performance-instructions list for him to place). **The rule from here:** on the instructions page the AI changes images, nouns and what he
+dictates; the prose is his — even where the facts have moved, the AI SAYS so and leaves the sentence.
+
+## §570. The tuning sentence, option A (2026-09-16, session 14, Fable 5.1)
+
+**His word:** *"and the strings are in tune lands a little awakward, any suggestions?"* Four offered (A "until the beating disappears and the
+two strings are in tune" · B a colon · C two sentences · D drop the clause); his pick: *"a good"*. On the page.
+
+## §571. The beating diagram for the instructions: can M2's movement be described as beating? (2026-09-16, session 14, Fable 5.1)
+
+**His word:** *"There are three sections in this movement, and the beating is sequenced as follows: and diagram; I'm trying to design a new
+diagram, the bloom can remain similar just with new data, but the spectral m2 — the septet m2 can one describe the gliss/movement in terms
+of beating or is it strictly a gliss to destination pitch?"*
+
+**The data (the MAIN IR's D45 headers, i.e. the save as it stands, post-swap ACT-SPECTRAL-05):**
+- M1 BLOOM (183.0 s): every voice a quarter-tone travel, 24.7–25 c — fl A5 +25 · bcl D5 −25 · vn1 D5 +25 · vn2 A5 −25 · va D5 −25 · vc C4 +25.
+- M2 SPECTRAL (314–317 s, staggered entries): bcl E3 static (14 c, crescendo-only D44) · vc D2 → E♭2 (148 c) · vn1 A3 → B♭3 (100 c) ·
+  va A3 → B♭3 (99.5 c) · fl C4 static (4 c, D44) · vn2 C4 → D4 −14 c (186 c). Two real travellers (vc, vn2), one parallel pair (vn1 · va,
+  unison throughout), two near-static voices (fl, bcl). The piano has no header (2h.5).
+
+**The answer (AI):** by construction M2 is a gliss to a destination PITCH — the SPECTRAL model assigns each voice its nearest free partial
+of one fundamental (§465; B♭ before the swap) and beating is not the quantity it controls. Beating describes only the two ENDS: the pairs
+start in unison (no beating) and the travellers lock onto the series at the arrival (the beating against the held voices vanishes — the
+tuning method in its ordinary direction). The middle of a 100–186 c travel is not a beating regime: past ~30–40 c the beating turns to
+roughness, then to a plain interval. So: BLOOM = tune AWAY (make the beating, its speed the material); SPECTRAL = tune IN (remove it, the
+lock the cue). D48 already had it: only M1's C4 pair beats countably; M2's pairs are not mirrors.
+
+**For the diagram, proposed:** BLOOM keeps the tuba's form with the new data (pairs, ±25 c, the rates per section from the save); SPECTRAL a
+different figure — per voice: origin → destination (D45 spelling + cents), the travel, and a "listen for" column: the held voice(s) it
+locks against and the interval that goes pure (e.g. vn2's D −14 c against vn1/va's B♭, a pure major third). **Owed before it is drawn:**
+the post-swap destinations (vc E♭2, bcl E3) do not sit on B♭'s low partials, so the current fundamental and partial numbers must be re-read
+from the model / the ACT-SPECTRAL-05 take, not taken from §465's pre-swap table. His to decide the figure.
+
+## §572. CORRECTION to §571's M2 table, and which column holds the partials (2026-09-16, session 14, Fable 5.1)
+
+**His question:** *"which set are the partials? or both columns are partials just different ones?"*
+
+**Correction first:** §571 (and the chat table) read the bass clarinet's header as "E3 held" — that is its WRITTEN pitch on MAIN (the
+working page is transposed, a major ninth up); sounding it is **D2** (the header's q 76 = midi 38). And the cello's destination printed as
+"E♭2" is **E quarter-flat 2** (the header's acc `quarterFlat`; D2 + 148 c = E2 −49 c). Read the `q` and `acc` fields, not the spelling alone.
+
+**The answer:** the DESTINATION column is the partials — every destination lies on one harmonic series on B♭ (§465: the SPECTRAL model
+sends each voice to its nearest free partial of the root box's fundamental, A♯/B♭). The START column is not a series: it is the chord the
+pairs begin on in unison, **D · A · C** (bcl + vc on D2, vn1 + va on A3, fl + vn2 on C4). A voice already sitting on a partial holds (the
+model's nearest-first rule): the bass clarinet's D2 is the 5th (−14 c), the flute's C4 the 9th (+4 c); the others travel to the nearest
+free one. Sounding, with the partial as an octave class of the B♭ series:
+
+| voice | start | destination | partial |
+|---|---|---|---|
+| bass clarinet | D2 | held (−14 c) | 5th |
+| cello | D2 | E half-flat 2 (−49 c) | 11th |
+| violin 1 · viola | A3 | B♭3 | the fundamental's octave |
+| flute | C4 | held (+4 c) | 9th |
+| violin 2 | C4 | D4 −14 c | 5th |
+
+*(Checked: from B♭ at midi 10, the partial numbers are 5 · 11 · 16 · 18 · 20 — the same classes.)*
+
+## §573. "speed and timbre"; the M2 diagram sketched in chat (2026-09-16, session 14, Fable 5.1)
+
+**His word:** *"deviations of pitch to modulate the speed and timbre of the acoustic beating."* — on the page (the beating paragraph's last
+sentence). · *"can I see the diagram here in chat as proposed"* — a schematic drawn in chat (vertical = pitch): the start chord D2 · A3 · C4
+on the left, one head per pair; the B♭ series' five used partials on the right (D2 −14 5th · E half-flat 2 −49 11th · B♭3 the fundamental ·
+C4 +4 9th · D4 −14 5th); one arrow per voice, the flute's and the bass clarinet's flat ("holds"), violin 1 and viola on one arrow. Not on the
+page; his verdict on the figure owed before it is drawn for real (the chart generator port, N1b).
+
+## §574. The M2 SPECTRAL figure drawn for real: tools/gen_m2_chart.js, on the page (2026-09-16, session 14, Fable 5.1)
+
+**His word:** *"no lets see the actual diagram somehow, if not possible in chat then just show in the html page"* — after the chat sketch (§573).
+
+**Built:** `tools/gen_m2_chart.js` → `docs/notation_instructions/images/m2_spectral_chart.svg` (860 × 424), placed on the page under the tuba's
+BLOOM chart (which stays until its own generator is ported). **Data:** the MAIN IR's D45 headers after 300 s — the sounding midi from the
+header's `q` (the spelling can be written pitch: the bass clarinet's), the destination as start + dir × travelC; the partial numbers found
+against the panel's M2 root (A♯2 = 46, §465) by nearest match within 30 c; the destination spelled per D45 (nearest quarter-tone sign +
+residual cents). Voices with the same start and end within 2 c share one arrow (violin 1 + viola). **Look:** the tuba chart's — Georgia,
+ink #222 / muted #777 / grid #d8d8d0, letter-spaced headers, the orange #F04B00 accent for the travellers, grey for the two holds, an octave
+grid (C2 · C3 · C4) with "sounding pitch" as the axis. Vertical = pitch, so the octave-and-a-half between the two bands is real.
+**Output, from the data:** bcl D2 → D2 (−14 c) 5th, holds · vc D2 → E half-flat 2, 11th (148 c) · vn1 + va A3 → B♭3, the fundamental
+(100 c) · fl C4 → C4 (+4 c) 9th, holds · vn2 C4 → D4 (−14 c) 5th (186 c). One fix on the way: the D45 speller glued "half-flat2".
+**Not touched:** the page's prose (his rule, §569); the caption is his to write. **Owed:** his eye.
+
+## §575. GRADIENT CURVES: the section restructured to his dictation; the Trills image found (2026-09-16, session 14, Fable 5.1)
+
+**His word, verbatim:** *"Curve-Based Crescendo becomes Gradient Curves. This score uses graphic curves to describe continuous change. An
+animated curve follower appears along side the cursor and gives the real-time position in the gradient. Heading2:Crescendos NL (image) NL
+Gradient curves are used to describe crescendos.  Play the crescendo from dynamic 1 to dynamic 2. The bottom of the curve corresponds to the
+starting dynamic, the top to the ending dynamic. The contour of the curve determines how the crescendo grows over time. Heading2: Trills find
+image like the crescendo in mid flight with tr notation header in the image, text to follow"*
+
+**On the page:** h3 "Gradient Curves" · his intro paragraph (as dictated, "along side" kept) · h4 "Crescendos" · the viola surge image ·
+his crescendo paragraph (the old "A curve follower gives your real-time position" sentence gone — his intro carries it) · h4 "Trills" · the
+new image · an empty description for his text. The page's sections are h3, so his "Heading2" is an h4 inside the section; `styles.css`
+gains an h4 rule (1.05 em, 600). Prose untouched beyond his words (§569).
+
+**The Trills image — the search:** no trill of 1.2–5 s has a moving level curve (all flat at 1, the trill's own level); the shaped ones
+are the long trills — the tutti at 72.8 (12 s, 0.98 → 1 with a dip) and 85.35 (17.3 s, 0.02 → 1), the cello's 127.15 (7.55 s, 1 → 0 → 1),
+the bass clarinet's 129.17 (5.53 s, 0.58 → 0 → 1). Three captures compared by eye: (a) the cello's whole trill at Z 1.45 (thin — the
+tool lowers Z to fit the span), (b) the cello's first 5 s at Z 2 (only the descent), **(c) the bass clarinet's whole trill at Z 1.89 —
+chosen:** the tr header (go line, open head with the flat auxiliary in parentheses, sfz), the full gradient (fall to the floor, hold, rise
+to the top), the follower at the floor, the next strike's GC arc entering at the right. `--part bcl --t 132.2 --span 128.82-134.95
+--padBot 14` → `images/gradient_trill.svg` (1784 × 303). (a) and (b) deleted.
+
+## §576. THE MORPH SEQUENCE CHART — BLOOM and SPECTRAL side by side, his spec, measured from the save; M2 IS A WAVE (2026-09-16, session 14, Fable 5.1)
+
+**His word (on the tuba's beating chart):** *"I like the original diagram. so this one will just have 2 sections side by side. Bloom is the
+same format. 3 rows now, the three pairs, the curves with max hz , keep the timeline at bottom; 2nd column SPECTRAL heading (spectral is the
+name we gave the morph model correct?) then 6 rows, an new set of row headers: Fl, Bcl... show flute bcl streight lines then the other 4
+parts, show me a proposal, please use the same look and feel of the tuba chart in section 2 lines for each part will represent the entire m2
+and correspond to timeline plotted underneath, no need for all the text in the new chart, maybe rows and columns, heading: Bb Harmonics,
+then in each row p5 D4(-14c) etc."* Yes: SPECTRAL is the model's name (`bank/morph_models.json`).
+
+**Built: `tools/gen_morph_chart.js` → `images/morph_sequence_chart.svg` (860 × 356)**, on the page in place of the tuba's chart and the
+arrows figure (§574; that tool is kept, its image deleted from the folder with the tuba's). Piece #4's `gen_beating_chart.js` ported in
+spirit: the morphs are the save's `waveCurve` objects with `morphBend`, grouped (`grp-morph-01` = BLOOM 3:03–5:05, `grp-morph-03` =
+SPECTRAL 5:14–7:15), a part's pitch at t = `sonifyNote` + the covering span's bend; nothing typed in. BLOOM: the pairs found from the
+parts that start on one note (Fl + Vn2 on A5 · Vn1 + Va on D5 · Bcl + Vc on C4), |f1 − f2| in Hz sampled at 0.5 s, the peak dotted
+and labelled — **≈ 21.5 · 16.1 · 7.2 Hz**, D48's ≈ 22 / 16 / 7 confirmed by measurement; each pair swells twice. SPECTRAL: six rows
+(Fl, Bcl, Vn1, Vn2, Va, Vc), each part's pitch in cents from its start on one common scale (the flute and bass clarinet flat, as he
+asked), the dot at the farthest point, and the B♭ HARMONICS column from the MAIN IR's D45 headers with the partial CLASS (the smallest n:
+p1 B♭ · p5 D · p9 C · p11 E half-flat). The look: the tuba's (Georgia, ink / muted / grid, the orange accent, letter-spaced headers,
+the timeline at the foot with each panel's start and end).
+
+**THE FINDING — M2 is a wave, not a one-way gliss.** The save's curves take each voice TO its partial and BACK, twice, ending on the start
+chord (every part ends at 0 c). The drawn extremes match the headers within 3 c: Vn2 183 c (header 186) at 5:54 · Vc 148 (148) at 5:43 ·
+Vn1 99 (100) at 6:28 · Va 98 (100) at 6:21 · Fl 4 · Bcl −14. So §571–§572's "glisses onto the series" is the half-truth the header
+tells: the chord goes into focus on the B♭ series and comes back out, twice. The one-way arrows figure (§574) drew the headers, not the
+motion. **His to weigh for the instructions' text.**
+
+**Also this exchange:** the Trills image re-cropped to his screenshot — the opening only, the cursor midway (`--part bcl --t 129.95
+--span 128.82-131.0 --padBot 14`, 671 × 319) · "curve follower" bold in the Gradient Curves intro · "as its central musical material" in the
+beating paragraph (his words, verbatim).
+
+## §577. The SPECTRAL rows gain their starting pitches (2026-09-16, session 14, Fable 5.1)
+
+**His word:** *"what are the orange circles represent in the spectral"* → answered: the farthest point from the start, where the voice
+reaches the partial in the right column (the BLOOM dots' counterpart). Then: *"in the spectral graph at the beginning of the line or
+above the beginning of the line. Can you add the starting pitches? As labels."* — added in `gen_morph_chart.js`: the sounding start pitch
+(from the save's `sonifyNote`) as an 11 px label just above the start of each row's line (C4 · D2 · A3 · C4 · A3 · D2). Regenerated.
+
+## §578. The tuning sentence, his own (2026-09-16, session 14, Fable 5.1)
+
+**His word:** *"Conceptually, it may be helpful to think of a common tuning method  help with this sentence pls in the place of
+conceptually, maybe something to do with analogy or metaphor … I don't think a common tuning method works. So the idea is the analogy
+would be this way of that people commonly use to tune."* Four offered (A "A useful analogy is the way people commonly tune" · B "As an
+analogy, imagine …" · C "by analogy with everyday tuning" · D "The familiar act of tuning is a good metaphor"); he wrote his own instead:
+*"Acoustic beating is commonly used to tune stringed instruments - play two strings and adjust the tuning of one until the beating
+disappears. In a similar..."* — on the page verbatim (his hyphen set as the page's em dash), the "In a similar way" sentence following as
+before. §570's option A is superseded.
+
+## §579. The holders' labels without cents (2026-09-16, session 14, Fable 5.1)
+
+**His word:** *"the c4 and d2 remove the cents +4 -14 just from those 2 since they are not glissing"* — `gen_morph_chart.js`: a voice whose
+header travel is under D44's 20 c (the flute, the bass clarinet) is labelled by its pitch alone: "p9 · C4", "p5 · D2"; the glissing voices
+keep theirs ("p5 · D4 (−14 c)"). Regenerated.
+
+## §580. The holders drawn straight, no dot (2026-09-16, session 14, Fable 5.1)
+
+**His word:** *"remove the orange dots for c4/d2 and make them streight lines pls"* — `gen_morph_chart.js`: a voice whose header travel is
+under D44's 20 c (the flute, the bass clarinet) is drawn as a straight line at its pitch over its span, without the extreme dot; the
+glissing four keep their curves and dots. Regenerated (7 dots: 3 BLOOM peaks + 4 SPECTRAL).
+
+## §581. CHECKPOINT — the performance instructions part-way; resume tomorrow after a clear (2026-09-16, session 14, Opus 5)
+
+**His word:** *"lets document comitt and push everything and we'll pick up here tomorrow and after a clear so make sure this part-way-thru
+the perf inst restart point is understood ty"* — with the model switched to Opus for the wrap (THE RHYTHM).
+
+**Written:** journal §2 a CHECKPOINT block above session 13's (the page's state section by section, his prose rule, the chart, the tools,
+the next step as an instruction, the six open items in page order, Resume reads, the model; the NEXT STEPS table moved into it) · PLANNER
+NOW · NITS "FOR THE PERFORMANCE INSTRUCTIONS" gains a drafting status and two items (the trill curve = intensity, his; SPECTRAL is a wave,
+the AI's finding) · the page's head comment brought current (a comment, not prose). **"Everything" read as this session's work:** his takes,
+passages, rack, section-3 materials and score backups stay uncommitted per D40 (the first full draft is tagged); the six unsaved working
+copies are unchanged and his.

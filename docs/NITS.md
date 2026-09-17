@@ -368,6 +368,14 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 
 ## 2026-09-14 — FOR THE PERFORMANCE INSTRUCTIONS (PLAN 2h.5, RUNNING_LOG §490; the composer: "make a note pls for when we write the performance instructions")
 
+- **DRAFTING STATUS (2026-09-16, session 14, RUNNING_LOG §565–§581):** the draft is `docs/notation_instructions/index.html`; none of the
+  items below is placed yet (the sempre secco line was put in and taken out at his word, §569 — the prose is his).
+- **The trill curve = intensity (his, 2026-09-16, §565):** *"for the trill curves in this piece, I want to say something about the curve
+  representing intensity, both volume and speed"* — piece #2 has no player-facing text to reuse (its tremolo / ostinato curves are documented
+  only technically). The fact: one drawn curve drives the trill's speed (height → notes per second per instrument) and its loudness; the rate
+  is never notated separately. The page's Trills sub-section waits for his text.
+- **SPECTRAL is a wave (AI finding, 2026-09-16, §576):** the save's M2 curves take each voice to its B♭ partial and back, twice, ending on the
+  start chord — the header states the destination, not a one-way arrival. For his beating text.
 - **The bass clarinet to low C** (Q7 closed 2026-09-14, RUNNING_LOG §512): one line in the instrumentation — the piece's lowest note is
   B♭1, the low-C instrument's floor; the call names no requirement; the low-C model is the professional norm.
 - **The piano's pedal legend.** The plucked notes in the morph section carry `Ped.` with NO release sign (his choice A over the ✱ at each

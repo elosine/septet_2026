@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Instructions — Scattered Substance</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>body { font-family: 'Lato', sans-serif; }</style>
+</head>
+<body>
+
+<!-- ═══ SEPTET DRAFT — begun 2026-09-16 (session 14) ═══════════════════════════
+     Begun as a copy of piece #4's docs/notation_instructions/index.html (the tuba's
+     performance instructions, day 40), nouns changed (RUNNING_LOG §565); the composer
+     revises it section by section. THE PROSE IS HIS (§569): the AI inserts his
+     dictation verbatim, swaps images, and flags moved facts in chat only.
+     IMAGES — THIS PIECE'S: conduction x2, the crescendo, the trill (tools/capture_lane.js;
+     each command beside its image) and the morph sequence chart (tools/gen_morph_chart.js).
+     STILL THE TUBA'S: beating_notation_224_T7.svg and multitempo_530_T8T9T10.svg.
+     State and open items: docs/PROJECT_JOURNAL.md §2 CHECKPOINT (session 14).
+     Served at http://localhost:5300/docs/notation_instructions/ -->
+
+<h1>Performance Instructions</h1>
+<p class="subtitle">Scattered Substance, for flute, bass clarinet, piano and string quartet — Justin Yang</p>
+
+<p>The score for <em>Scattered Substance</em> is a computer-animated score, served from the cloud and played in a web browser, like an online video game.</p>
+
+<!-- ═══ Animated Conduction Tools ══════════════════════════════════════════
+     E1: Violin 1, Bartók pizzicato fff at 20.52 s (the opening's scattered
+         strikes), captured at t=20.34 — cursor approaching the go line, ball
+         descending.
+     E2: Violin 1, the trill at 140.00 s (1.80 s, sfz, the level curve flat),
+         captured at t=140.81 — cursor and curve follower mid-trill, the next
+         strike's go line at the right.
+     Regenerate:
+     node tools/capture_lane.js --part vn1 --t 20.34 --span 19.98-20.98 --padBot 14 --out docs/notation_instructions/images/conduction_e1_strike_vn1_20.svg
+     node tools/capture_lane.js --part vn1 --t 140.81 --span 139.65-142.05 --padBot 14 --out docs/notation_instructions/images/conduction_e2_trill_vn1.svg  -->
+
+<h3>Animated Conduction Tools</h3>
+
+<div class="notation-section">
+    <div class="description">
+        <p>There are a number of animated conduction tools that are intuitive to follow and aid performers in realizing the score.</p>
+        <p>A <strong>scrolling cursor</strong> runs throughout the piece at a consistent speed and indicates when things are to be played. Notation is spaced proportionally in time — distance on the page equals duration. <strong>Bouncing-ball conductors</strong> aid with rhythmic precision. The <strong>dotted vertical line</strong> marks the <strong>go-time</strong>.</p>
+        <p>In the first example, you would play the Bartók pizzicato when the scrolling cursor reaches the go-line and the ball bounces. In the second example, you would begin the trill at the go-line and continue it for the length of the green curve &#8212; the trill ends where the curve ends.</p>
+    </div>
+    <div class="pair">
+        <figure style="flex: 308 1 0">
+            <img src="images/conduction_e1_strike_vn1_20.svg" alt="Example 1 — a Bartók pizzicato at the go line, ball descending, cursor approaching">
+        </figure>
+        <figure style="flex: 739 1 0">
+            <img src="images/conduction_e2_trill_vn1.svg" alt="Example 2 — a trill: go line, open head, sfz, the green level curve with the curve follower mid-trill">
+        </figure>
+    </div>
+</div>
+
+<!-- ═══ Curve-Based Crescendo ══════════════════════════════════════════════
+     Image: Viola, the crescendo run's first swell at 526.79 s (1.21 s, ppp → fff,
+     "sempre secco" at its first swell), captured at t=527.6 — cursor and curve
+     follower two-thirds up the curve. Regenerate:
+     node tools/capture_lane.js --part va --t 527.6 --span 526.4-528.75 --padBot 8 --out docs/notation_instructions/images/curve_cresc_527_va.svg  -->
+
+<h3>Gradient Curves</h3>
+
+<div class="notation-section">
+    <div class="description">
+        <p>This score uses graphic curves to describe continuous change. An animated <strong>curve follower</strong> appears along side the cursor and gives the real-time position in the gradient.</p>
+    </div>
+
+    <h4>Crescendos</h4>
+    <img src="images/curve_cresc_527_va.svg" alt="A gradient curve describing a crescendo, ppp to fff, with the curve follower — viola at 527 s">
+    <div class="description">
+        <p>Gradient curves are used to describe crescendos. Play the crescendo from dynamic 1 to dynamic 2. The bottom of the curve corresponds to the starting dynamic, the top to the ending dynamic. The contour of the curve determines how the crescendo grows over time.</p>
+    </div>
+
+    <!-- Trills image: a trill whose level curve moves, captured mid-flight with the tr header in the frame;
+         node tools/capture_lane.js --part bcl --t 129.95 --span 128.82-131.0 --padBot 14 --out docs/notation_instructions/images/gradient_trill.svg
+         (the bass clarinet trill at 129.17 s, 5.5 s; RUNNING_LOG §575). Text to follow (the composer's). -->
+    <h4>Trills</h4>
+    <img src="images/gradient_trill.svg" alt="A trill mid-flight: the tr header at the go line, the green gradient curve with the curve follower part-way along it">
+    <div class="description">
+    </div>
+</div>
+
+<!-- ═══ Acoustic Beating ═══════════════════════════════════════════════════
+     The chart below is THIS PIECE'S (tools/gen_morph_chart.js, RUNNING_LOG §576-§580).
+     Practice videos: TO BE ADDED (PLAN 2h.7, D48 — BLOOM at least; SPECTRAL tbd, §515).
+     The tuba's five links, for the shape of the list: https://youtu.be/n9HFN30aGYo ·
+     PnJre7J_xgI · zlqiG6Dki2E · OZHjSIHwhcU · HiSCkZz7AuI.
+     Notation image: STILL THE TUBA'S (T7, 224.32 s) — re-capture a BLOOM moment with
+     tools/capture_lane.js once the composer names a part and a time.  -->
+
+<h3>Acoustic Beating</h3>
+
+<div class="notation-section">
+    <div class="description">
+        <p>The middle movement of this piece uses acoustic beating as its central musical material. Performers use micro-glissandos over long durations to generate acoustic beating. Acoustic beating is commonly used to tune stringed instruments &#8212; play two strings and adjust the tuning of one until the beating disappears. In a similar way, this section is less about trying to play a particular pitch, but more about using small deviations of pitch to modulate the speed and timbre of the acoustic beating.</p>
+        <p>There are three sections in this movement, and the beating is sequenced as follows:</p>
+    </div>
+    <!-- The morph sequence chart, THIS PIECE'S, measured from the save's morph curves (RUNNING_LOG §576):
+         node tools/gen_morph_chart.js
+         BLOOM: the three pairs' beating in Hz over the morph, the peak marked · SPECTRAL: each part's pitch over the
+         morph in cents from its start (flat where it holds), the dot where it reaches its partial, the B♭ HARMONICS
+         column from the score's D45 headers. (The one-way arrows figure, tools/gen_m2_chart.js, is kept but not shown.) -->
+    <img src="images/morph_sequence_chart.svg" alt="The morph sequence: BLOOM, the three pairs' beating over time with the peak rate; SPECTRAL, each part's pitch travel toward its B-flat partial and back, with the partial named">
+    <div class="description">
+        <p>I have prepared demo recordings at the links below. These demonstrate how the maximum and minimum beating levels sound in each section for each pair, and then provide a two-player demo of each beating section.</p>
+        <ul>
+            <li>Practice videos &#8212; to be added (BLOOM at least; SPECTRAL to be decided)</li>
+        </ul>
+        <p><strong>Notation</strong></p>
+    </div>
+    <img src="images/beating_notation_224_T7.svg" alt="A beating-glissando breath span — orange beating curve above the staff, green dynamic curve below, cursor and meters mid-curve">
+    <div class="description">
+        <p>There are two curves: a green one at the bottom of the staff and an orange one at the top. The green curve indicates dynamic level; the orange curve indicates beating/glissando level. The dotted vertical go-lines are rearticulation points &#8212; the rearticulation should happen at the go-line: breathe before, and rearticulate at the line. The pitches at the beginning of each section are approximate; calibrate using beating speed and timbre. The final section has no glissando &#8212; it is a held chord articulated through a variety of crescendos.</p>
+    </div>
+</div>
+
+<!-- ═══ Multiple Tempos — TUBA-ONLY? (the septet has no trance section) ═════
+     (tuba image) T8/T9/T10, span 528.6-532.4, cursor at 530.1. -->
+
+<h3>Multiple Tempos</h3>
+
+<div class="notation-section">
+    <img src="images/multitempo_530_T8T9T10.svg" alt="Three adjacent parts at different tempos — per-lane tempo marks at the top, bouncing balls frozen at different heights on the cursor">
+    <div class="description">
+        <p>The final section of this piece consists of a steady pulse and rapidly changing tempos. The tempo you are playing in is marked with hashes at the top, and a bouncing ball marks out the tempo.</p>
+    </div>
+</div>
+
+</body>
+</html>

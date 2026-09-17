@@ -85,6 +85,63 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
+### CHECKPOINT — 2026-09-16 late (session 14, Fable 5.1; wrapped on Opus 5) — N1 THE PERFORMANCE INSTRUCTIONS, PART-WAY *(mid-session checkpoint — he resumes tomorrow after a clear)*
+
+**Where it stands — the draft page:** `docs/notation_instructions/index.html` (+ `styles.css`, `images/`), served by his :5300 at
+http://localhost:5300/docs/notation_instructions/index.html. Begun as a copy of the tuba's page (piece #4, day 40) with the nouns changed; he
+is revising it section by section in chat (RUNNING_LOG §565–§580).
+
+**HIS RULE FOR THIS PAGE (§569, standing):** the prose is HIS. The AI swaps images, changes nouns, and inserts what he dictates VERBATIM
+(logged verbatim in RUNNING_LOG). Where a fact has moved it SAYS so in chat and leaves the sentence. Wording options only when he asks.
+
+| section | text | images |
+|---|---|---|
+| intro | the tuba's, nouns changed; the title *Scattered Substance* and "for flute, bass clarinet, piano and string quartet" still his to confirm (CN-64) | — |
+| Animated Conduction Tools | the tuba's + his example sentence (§568) | the septet's: Vn1 Bartók pizz 20.5 s · Vn1 trill 140 s |
+| Gradient Curves → Crescendos | his dictation (§575), "curve follower" bold; the crescendo paragraph = the tuba's, untouched | the septet's: Va surge 527 s |
+| Gradient Curves → Trills | **EMPTY — his text to follow.** His idea (§565): the curve is intensity, volume AND speed — true of the build (TRILLS_TOOL §1, TRILL_NOTATION_SPEC §5) | the septet's: Bcl trill opening 129 s, cursor midway |
+| Acoustic Beating | para 1 his (§567 · §570 · §573 · §578). STILL THE TUBA'S: "There are three sections in this movement…" (**fact moved: two morphs**) · the demo-recordings paragraph + a placeholder line · the "Notation" paragraph (orange + green curves, rearticulation) | **the morph sequence chart DONE** (§576–§580) · the notation image `beating_notation_224_T7.svg` STILL THE TUBA'S |
+| Multiple Tempos | the tuba's | the tuba's — probably tuba-only (no trance section); delete on his word |
+
+**The chart (his design, §576–§580):** BLOOM, three pair rows, beating in Hz, peaks ≈ 21.5 / 16.1 / 7.2 Hz · SPECTRAL, six part rows,
+pitch in cents from the start, start-pitch labels, the flute and bass clarinet straight with no dot, dots at the four glissers' farthest
+points · a B♭ HARMONICS column (p9 · C4 · p5 · D2 · p1 · B♭3 · p5 · D4 (−14 c) · p11 · E half-flat 2). `node tools/gen_morph_chart.js`.
+**A finding for his text (§576):** M2 is a WAVE — each voice goes to its partial and back, twice, ending on the start chord.
+
+**Tools made this session:** `tools/capture_lane.js` (ported from the tuba; `--part fl|bcl|pno|vn1|vn2|va|vc --t --span --padBot --out`;
+each image's command sits in an HTML comment beside it) · `tools/gen_morph_chart.js` · `tools/gen_m2_chart.js` (an arrows figure,
+superseded, kept, not on the page).
+
+**Next concrete step:** open http://localhost:5300/docs/notation_instructions/index.html in the Browser pane (his :5300 must be running;
+if not, ask him to start it), play back the table above in a few lines, and ask which section he picks up. The open items, in page order:
+1. **Trills** — his text.
+2. **Acoustic Beating** — the "three sections" sentence · the demo-recordings paragraph and list (the practice videos are not made, PLAN
+   2h.7) · the Notation paragraph and image: capture a BLOOM moment with `capture_lane.js` once he names a part and time; the septet's
+   morph notation is not the tuba's (D45 header, D47 curve, D48 no beating indication on the score) — say so, do not rewrite.
+3. **Multiple Tempos** — delete?
+4. **The NITS list not yet placed** (`docs/NITS.md` "FOR THE PERFORMANCE INSTRUCTIONS"): the bass clarinet to low C · the Ped. legend ·
+   l.v. · sempre secco · the curves' two meanings · the dynamic regimes · the pitch-form lines.
+5. **Fact flag only:** the crescendo text says "dynamic 1 to dynamic 2"; the image shows ppp → fff.
+6. His order and structure pass; the title and ensemble line.
+
+**Resume reads:** `docs/notation_instructions/index.html` (the page is the state) · `docs/NITS.md` "FOR THE PERFORMANCE INSTRUCTIONS"
+only when placing item 4.
+
+**Model:** resume on **Opus** for the dictation pass (his words verbatim, images and charts by command) · **Fable** for a design question
+(the morph Notation paragraph's facts, a new figure).
+
+**Deliberately uncommitted at this checkpoint:** his files only, unchanged from session 13's list below (D40) · the six unsaved working
+copies unchanged (`node tools/unsaved_check.js`) · no AI copies added.
+
+**NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
+
+| # | Step | Model | Clear first? |
+|---|---|---|---|
+| **N1** | **► the performance instructions — PART-WAY:** his dictation pass on the page, items 1–6 above | **Opus** (dictation) · Fable (design questions) | **yes — this checkpoint; then /postclear** |
+| **N2** | **PLAN 2b the print score** — the print exporter's septet frame (the §558 port) · the cover (title CN-64 + the ensemble line) · the Tempus copy with the video link at the top | Fable plans · Opus builds | yes, between |
+| **N3** | Later, noted: the practice videos, BLOOM at least, SPECTRAL tbd (2h.7) · the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
+| **N4** | Still his, from before: the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
+
 ### SESSION END — 2026-09-16 (session 13, Fable 5.1 ⇄ Opus 5) — SITTING F DONE: the audio re-render and the demo video, approved, archived as the submission copy, online
 
 **Last session (13, 2026-09-16):**
@@ -98,23 +155,6 @@ no tool calls beyond the resume reads. Start only on his word. *(At `/session-st
   picture holds through the audio tail · PHASE 5 checks. **His eye: "video good"** → `notation/video/approved/2026-09-16-submission/` ·
   **online https://youtu.be/x8EZ3B1EvbE**.
 - Discussed, not decided: the cover's ensemble line — the AI recommended *"for flute, bass clarinet, piano and string quartet"* (§564).
-
-**Next up — the performance instructions** (his order after the video, §515): `docs/NITS.md` "FOR THE PERFORMANCE INSTRUCTIONS" (the pedal
-and l.v. legends, the bass clarinet to low C, "sempre secco", …) + NOTATION_STANDARDS §0b's front-matter lines ("Score in C …"). A design
-job: **Fable**, after a clear. **Then PLAN 2b the print score** — its first job is the print exporter's frame (no piano, no labels: the
-tuba's), the same port §558 made for the video (the ensemble's parts, weights, staves, labels; `static_page.js` already takes the ensemble);
-the Tempus copy carries the video link; the cover's title and ensemble line are his word.
-
-**Resume reads:** this §2 · `docs/NITS.md` from "FOR THE PERFORMANCE INSTRUCTIONS" · NOTATION_STANDARDS §0b · RUNNING_LOG §515.
-
-**NEXT STEPS · MODEL · CLEAR** *(the running thread — THE RHYTHM, CLAUDE.md. Keep current.)*
-
-| # | Step | Model | Clear first? |
-|---|---|---|---|
-| **N1** | **► the performance instructions** — the NITS list + §0b's lines, designed as the score's front matter | **Fable** | **yes** |
-| **N2** | **PLAN 2b the print score** — the print exporter's septet frame (the §558 port) · the cover (title CN-64 + the ensemble line) · the Tempus copy with the video link | Fable plans · Opus builds | yes, between |
-| **N3** | Later, noted: the practice videos, BLOOM at least, SPECTRAL tbd (2h.7) · the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
-| **N4** | Still his, from before: the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 
 **Open at session end:**
 - **`V-CUT.mp4` is not in git** (`notation/video/**/*.mp4` ignored) — the approved copy and `notation/video/renders/piece-septet-V-CUT-seed53.mp4`
