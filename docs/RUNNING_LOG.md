@@ -16041,3 +16041,23 @@ legend's em-dash entries · P7 the intro paragraph sits under the demo-video hea
 
 **Still open from the checkpoint, not re-raised as copy edits:** the crescendo's "dynamic 1 to dynamic 2" vs ppp → fff · Spectral "Performers …
 glissando" (the flute and bass clarinet hold) · "two curves for each performer" (the piano has none).
+
+## §604. The performance instructions: his seven "good"s — P1–P7 applied (2026-09-17, session 15, Opus 5)
+
+**His word, verbatim:** *"Suggest: "less about trying to play a particular pitch than about using…" good / 2 good / 3 good / 4 good / 5 good /
+6 good / 7 good"* — every proposal of §603 taken.
+
+**Applied (before → after), verified on his :5300 (each new text present, each old text gone, the new order read off the page):**
+- **P1 + P2** *"this section is less about trying to play a particular pitch, but more about using small deviations"* → *"this movement is less
+  about trying to play a particular pitch than about using small deviations"*
+- **P3** *"The chart below gives the approximate frequency at the maximum beating rate."* → *"The chart below gives the approximate beating rate at
+  its maximum."*
+- **P4** *"The dotted vertical line marks the go-time for events."* → *"The dotted vertical line — the go-line — marks the go-time for events."*
+  (go-line in bold, as the paragraph's other terms)
+- **P5** *"breathe/take up bow before"* → *"breathe or retake the bow before"*
+- **P6** *"Dynamics. In the first movement, …"* → *"Dynamics — in the first movement, …"*
+- **P7** the intro paragraph (*"The score for Scattered Substance is a computer-animated score …"*) moved above the demo-video heading; the page now
+  reads title · subtitle · intro · Demo Recording with Score-Following Video · the link · Instrumentation …
+
+**Still open (the checkpoint's fact flags, untouched):** the crescendo's "dynamic 1 to dynamic 2" · Spectral "Performers … glissando" · "two
+curves for each performer".
