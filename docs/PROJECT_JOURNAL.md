@@ -107,17 +107,26 @@ any issues and make plan"*. The plan is in PLAN 2b: top line **1 ⚠ the septet 
 4 the front matter · 5 the full render, his eye · 6 archive + docs.** Measured: tabloid is 12 mm over A3 (the call refuses it) · 57 pages at the
 video's density · the instructions need TWO pages (three columns of content, clipped silently today) · #4's PDF was 4 MB · no anonymity asked.
 
-**Next concrete step:** on **Opus**, build **PLAN 2b.1** (the septet frame in `tools/export_print.js`, sub-steps 2b.1.1–2b.1.6 as written), then
-2b.2.1–2b.2.2 (A3). Stop at 2b.2.3 if his answer B has not come; 2b.3's four proof pages are the first thing he looks at.
+**► BUILT 2026-09-17 (Opus, §608): 2b.1 the septet frame · 2b.2 A3 · 2b.3's proof pages rendered.** `Coords.ensembleFrame` is shared by both
+exporters (the video's seven dumped pages byte-identical before/after); `tools/check_print_frame.js` PASSES at four moments — eight systems, the
+seven labels, two brackets, one brace, census identical. A3 is drawn 419.7 × 296.8 mm so the MediaBox lands INSIDE the call's ceiling. Staff
+7.55 mm, 63 pages at the film's density.
+
+**Next concrete step: HIS EYE on `print/score/PROOF-A3-frame.pdf`** (4 pages, one per section) and on the density trio
+(`PROOF-density-8.5 / -10.3 / -12.pdf` = 76 / 63 / 54 pages, the staff identical at all three) — **the density is the one thing he must pick.**
+His notes → fixed in one pass → then 2b.4 the front matter (cover · the instructions on two pages), 2b.5 the full render (IR rebuilt first), 2b.6 archive.
 
 **Answered 2026-09-17 (D58, §607):** A **yes** — *Scattered Substance*, "for flute, bass clarinet, piano and string quartet" · B **no section
 marks** · C **a** — one PDF, the instructions page's demo link is enough, no Tempus copy. **Open with him:** the time ruler (he asked what it
 is; keep it or not is his word) · **his standing word for this build: "check in before moving on"** — the builder starts only on his go.
 
-**Resume reads:** `docs/PLAN.md` — the 2b item whole (search `- **2b — Presentation score**`, ~60 lines). Nothing else; the builder opens
-`tools/export_print.js` and `tools/export_video.js:70–140` as its first act.
+**Resume reads:** `docs/PLAN.md` — the 2b item whole (search `- **2b — Presentation score**`, ~60 lines) · `docs/RUNNING_LOG.md` §608 (what the
+build did and what was measured). Nothing else.
 
 **Model:** **Opus builds** (a written plan) · Fable only if a proof page raises a judgment call.
+
+**Standing warning added 2026-09-17:** `tools/export_print.js` and `tools/export_video.js` now share `Coords.ensembleFrame` — a change to the frame
+math moves BOTH, so re-run `node tools/check_print_frame.js` and dump two video pages against a baseline before believing it.
 
 **Decisions pending the composer** *(carried from N1; only item 1 touches 2b)*:
 1. ~~The title and the ensemble line~~ — **CONFIRMED 2026-09-17 (D58):** *Scattered Substance* · "for flute, bass clarinet, piano and string quartet".
@@ -832,7 +841,7 @@ sources; verified here only when they bite.)*
   questions of §606: *"A yes · B no marks what is the ruler? · c a"*. The title is no longer tentative (CN-64) — the cover, the instructions
   page and PLAN 4's form all take it. No marks above the music (the AI had recommended `I · II · BLOOM · II · SPECTRAL · III`). The demo link at
   the head of the instructions page (page 2) is the score telling the jury the video exists — the 09-14 "Tempus copy only: a link at the top"
-  is met by it, so there is one PDF. **Open:** the time ruler — he asked what it is; answered in chat, his word owed on keeping it.
+  is met by it, so there is one PDF. **The time ruler: KEPT** (his *"a keep; go for build"*, §608) — a tick a second, m:ss every five.
 
 ---
 

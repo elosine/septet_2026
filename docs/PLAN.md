@@ -1757,7 +1757,9 @@ player would touch parts, solo, crop and print.
   silently (`scrollWidth 2322 / 1536`); #4's finished PDF was 4 MB, so size is no issue; the call asks no anonymity, names no size cap.
   **Top line:** 1 ⚠ the septet frame · 2 the paper (A3, marks) · 3 the proof pages — his eye · 4 the front matter · 5 the full render ·
   6 archive + docs. **Builder: Opus.** His eye at 3 and 5 only.
-  - **2b.1 — ⚠ The septet frame in the print exporter** — `todo` — **Result when done:** `export_print.js --at T` on piece-septet draws
+  - **2b.1 — ⚠ The septet frame in the print exporter** — `done 2026-09-17 (RUNNING_LOG §608): Coords.ensembleFrame shared by both exporters ·
+    the video's 7 dumped pages byte-identical before/after · tools/check_print_frame.js PASS at t=100·250·380·530 (8 systems, 7 labels,
+    2 brackets, 1 brace, census identical)` — **Result when done:** `export_print.js --at T` on piece-septet draws
     what the video draws at the same window — Fl · BCl (in C, bass clef) · Pno grand staff + brace · Vn1 · Vn2 · Va · Vc, the labels, the
     winds' and strings' brackets — scaled to paper.
     - 2b.1.1 `FRAME_PARTS` from the realized ensemble (`video-jury`), not `ir.source.parts`.
@@ -1771,15 +1773,16 @@ player would touch parts, solo, crop and print.
       the ruler and the folio read the shifted window; the last page still reaches the piece's end.
     - 2b.1.6 THE CHECK: print at `--sec 12 --at T` beside the video's `--dumpPage` of the same window, T = 100 · 250 · 380 · 530 — the same
       systems (seven, the piano's two staves), the same element count per system; only the view's scale differs. §552's finding gone.
-  - **2b.2 — The paper** — `todo` — **Result when done:** a page is A3 landscape, reads in time, names the movements.
+  - **2b.2 — The paper** — `done 2026-09-17 (§608): a3-landscape default, drawn 419.7 x 296.8 so Chrome's rounding lands INSIDE A3
+    (MediaBox 419.92 x 296.63 mm) · staff 7.55 mm · 63 pages at the film's density · the marks derivation deleted (D58)` — **Result when done:** a page is A3 landscape, reads in time, names the movements.
     - 2b.2.1 `FORMATS` gains `a3-landscape` (420 × 297 mm) and it is the default; tabloid stays for #4's sake.
     - 2b.2.2 seconds per page stays the rule it was — the video's approved density — expect ≈ 58 pages; the exporter reports the staff
       in mm (expect ≈ 7 mm; #4's was ≈ 8 on ten lanes).
     - 2b.2.3 ~~the section marks~~ — **NO MARKS (his word, D58):** the tuba's ACT-/TRANCE derivation is removed from the septet's path
-      (`--marks` defaults off; nothing is derived, nothing printed). **The time ruler: his word owed (§607)** — build it as it is
-      (`--ruler on`), so the proof pages show it and he can say.
+      (`--marks` defaults off; nothing is derived, nothing printed). **The time ruler: KEPT** (his "a keep", D58, §608) — as #4's.
     - 2b.2.4 the folio unchanged: the clock range left, the page number right.
-  - **2b.3 — The proof pages — HIS EYE** — `todo` — **Result when done:** he has looked at four A3 pages in one PDF, one per section
+  - **2b.3 — The proof pages — HIS EYE** — `doing 2026-09-17 (§608): print/score/PROOF-A3-frame.pdf (4 pp) + three density proofs sent;
+    every measurement passed (MediaBox inside A3, fonts embedded, zero raster, furniture in place). HIS EYE OWED.` — **Result when done:** he has looked at four A3 pages in one PDF, one per section
     (≈ 100 · 250 · 380 · 530 s), and his notes are fixed. Before he looks: MediaBox 1190.55 × 841.89 pt · fonts embedded · zero raster
     images · no ink outside the music block (measured, not eyed).
   - **2b.4 — The front matter** — `todo` — **Result when done:** cover + instructions, on paper as on his page.

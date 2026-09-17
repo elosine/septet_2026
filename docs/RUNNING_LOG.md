@@ -16130,3 +16130,51 @@ the ruler? · c a · check in before moving on"*.
 - **C a** — one PDF. The 09-14 decision (*"the Tempus copy only: a link to the demo video at the top"*) predates the instructions page's Demo
   Recording section, which now heads page 2 of the print; that section meets the decision's purpose. No `--videoLink` flag, no second build.
 - **"check in before moving on"** — nothing built. The AI recorded the answers (D58 · PLAN 2b.2.3 · 2b.4.1 · 2b.5.3 · journal §2 · PLANNER) and stopped.
+
+## §608. BUILT PLAN 2b.1–2b.3: the septet frame in the print exporter, A3, the four proof pages — his eye next (2026-09-17, session 15, Opus 5)
+
+**His word:** *"a keep; go for build"* — the time ruler stays (D58 amended), and the build runs from 2b.1.
+
+**2b.1.2 THE FRAME MOVED, NOT COPIED.** `Coords.ensembleFrame(parts, o)` is new in `notation/lib/coords.js`: weighted lanes → `lanePx` (one weight
+unit) → per-lane `ssPerSystem × weight` → `withStaves` at the registry's grand-staff gap, plus the sparse-lane cap. It is the fourth copy retired
+before it was written — NITS had already named three (the app, the video, the print), and PLAN 3's performance score would have wanted one more.
+**2b.1.3 the video exporter moved onto it first, as the plan's gate:** seven pages dumped BEFORE the change (0 · 9 · 20 · 30 · 43 · 49 · 53, chosen
+to span the piece and to include the buffered page 43 and the end-owning page 53) and again after — **all seven byte-identical** (SHA-256). The
+approved film is provably untouched. The app (`notation.html`) keeps its own copy: a running page is not worth the risk today, and it is the one
+consumer that never drifted.
+
+**2b.1.1 / 2b.1.4 / 2b.1.5 the print exporter.** `FRAME_PARTS` now comes from the realized ensemble (`video-jury`), not `ir.source.parts` — that one
+line is §552's whole bug: the grand staff's systems are keyed `2:0` / `2:1`, so a frame built from the IR's part list could never contain the piano.
+`ensemble` passed to `staticPageSvg` (labels, brackets, brace). The §404 clef buffer added, computed in the PRINT's own scale (0.218 s at the default
+density) — the page, the app and the video all open their window early; the print did not, so a first note could sit in the gutter.
+
+**2b.1.6 THE CHECK — `tools/check_print_frame.js`, new, kept.** Not a byte compare (the two views differ in scale by construction): same system list,
+same element census per system, same furniture, at four moments, both tools forced to `--sec 12` so a moment lands on the same page index.
+**PASS at t = 100 · 250 · 380 · 530:** `sys-p0 · p1 · p2 · p2 · p3 · p4 · p5 · p6` (eight groups — the piano is two staves of one part), labels
+`Fl,BCl,Pno,Vn1,Vn2,Va,Vc`, 2 brackets, 1 brace, **census identical in every system**; the windows differ by 0.04 s because each tool computes the
+buffer in its own scale, which is printed rather than hidden. **A first draft of this check said PASS while reporting SIX systems** — its regex keyed
+the census by class, which merged the piano's two `sys-p2` groups, and its lookahead dropped the last system. Caught by reading the number, not the
+verdict; the scanner is now depth-aware and the expected count (8) is asserted. *The lesson, again: a check that cannot fail is worse than no check.*
+
+**2b.2 THE PAPER.** `a3-landscape` added and made the default. **A3 is a ceiling, not a target** — `size:420mm 297mm` measured out as MediaBox
+1191.12 × 841.92 pt = **420.2 × 297.0 mm, two tenths OVER** the sheet the call allows. Shrinking `@page` alone made every page spill onto a second
+(8 pages for 4 — the page DIV keeps its own height), so the sheet itself is 419.7 × 296.8 mm and both derive from it: **MediaBox 1189.92 × 840.96 pt
+= 419.92 × 296.63 mm, inside A3.** The marks derivation was DELETED, not switched off (his "no marks", D58): it was the tuba's ACT-/TRANCE rule, it
+found nothing here, and a dead derivation in a live tool is a trap. `--at` now takes a comma list, which is what makes a proof sheet.
+
+**2b.3 THE PROOF PAGES, and what was measured before he is asked to look:** `print/score/PROOF-A3-frame.pdf`, 4 pages, one per section (t = 100 ·
+250 · 380 · 530). **4 pages · MediaBox inside A3 on every page · fonts embedded (1 FontFile2 — Crimson Pro Light; the italic is used only on the
+instructions page) · ZERO raster images · 0.26 MB** (→ ~4 MB for the whole score, as #4's). The furniture sits where it should on all four pages
+(header 48,48 · music 48,80 · folio 48,1058 in a 1586 × 1122 px sheet). **The page numbers:** music block 394 × 258 mm, lane 32.8 mm, **staff 7.55 mm**
+(#4's was ~8 mm on ten lanes), 10.32 s/page → **63 pages**.
+**One measurement chased down:** the last proof page's ink runs 54 px past the music width. **It is a GC arc, and the film does the same** — measured
+at the same window, video ink 0..2001 of 1920 and print 0..1557 of 1490, the same `gc-arc` overflowing in both, clipped by the SVG viewport in both.
+Not a print defect; the printed page is the filmed page.
+
+**Sent to him as well, unasked (the density is a look decision and the tuba made it the same way — #4 had a DENSITY-PROOF):** the same moment at
+three densities — `PROOF-density-8.5.pdf` (76 pages) · `PROOF-density-10.3.pdf` (63, the default = the film's own density) · `PROOF-density-12.pdf`
+(54). The staff is 7.55 mm at every one of them: density changes only how much time a page holds, never the size of the notation.
+
+**Not done, deliberately:** the IR is not rebuilt (the exporter's D75 hint fires because his save of 11:04 is newer; §598 measured the objects equal
+to `bc54cdc`, and 2b.5.1 rebuilds it before the real render) — so the proof pages are geometry, not a fresh extraction.
+

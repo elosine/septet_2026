@@ -41,13 +41,14 @@ function arg(name, def) { const i = process.argv.indexOf('--' + name); return i 
 function flag(name) { return process.argv.indexOf('--' + name) >= 0; }
 const irId = arg('ir', 'db1');
 const outFile = arg('out', null);
-const formatName = arg('format', 'tabloid-landscape');
+// [PLAN 2b.2.1 — 2026-09-17] A3 LANDSCAPE IS THE DEFAULT. The call, verbatim: "The score as an Adobe PDF document with a
+// maximum size of DIN A3 (297 x 420 mm)". Tabloid — #4's format, and this tool's old default — is 431.8 mm long: 11.8 mm OVER.
+const formatName = arg('format', 'a3-landscape');
 const marginIn = parseFloat(arg('margin', '0.5'));
 const secArg = arg('sec', null);
 const pagesArg = arg('pages', null);
-const atArg = arg('at', null);        // select the page CONTAINING this second
+const atArg = arg('at', null);        // select the page(s) CONTAINING this second — a comma list makes a proof PDF (2b.3)
 const wantRuler = arg('ruler', 'on') !== 'off';
-const wantMarks = arg('marks', 'on') !== 'off';
 const wantCover = arg('cover', 'off') !== 'off';
 const wantInstructions = arg('instructions', 'off') !== 'off';
 const htmlOnly = flag('htmlOnly');
@@ -55,8 +56,8 @@ const quiet = flag('quiet');
 
 if (!outFile) {
   console.error('usage: export_print.js --out <file.pdf> [--ir db1] [--sec N] [--pages a-b] [--at SEC]');
-  console.error('       [--format tabloid-landscape|letter-landscape] [--margin 0.5]');
-  console.error('       [--ruler on|off] [--marks on|off] [--cover on|off] [--instructions on|off] [--htmlOnly]');
+  console.error('       [--format a3-landscape|tabloid-landscape|letter-landscape] [--margin 0.5]');
+  console.error('       [--ruler on|off] [--cover on|off] [--instructions on|off] [--htmlOnly]');
   process.exit(2);
 }
 
@@ -67,10 +68,22 @@ if (!outFile) {
 // first screenshot, not by reading. @page still carries the physical size in
 // inches, so the PDF is a true 17 x 11 regardless.
 const PX = 96;
+// `css` is what @page gets: A3 is a metric sheet and 420 mm is exact where
+// 16.5354 in is a rounding — Chrome sizes the MediaBox from this string.
+//
+// A3 IS A CEILING, NOT A TARGET (the call: "a maximum size of DIN A3"), and
+// Chrome does not honour the box exactly: `size:420mm 297mm` measured out as
+// MediaBox 1191.12 x 841.92 pt = 420.2 x 297.0 mm — two tenths of a millimetre
+// OVER the sheet it is meant to be. A checker that reads the box would call that
+// a bigger-than-A3 score. So the drawn sheet is a fifth of a millimetre under the
+// ceiling and Chrome's rounding lands inside it. (Shrinking @page alone does not
+// work: the page DIV keeps its old height and every page spills onto a second —
+// measured, 8 pages for 4. Both come from these numbers, which is why they live here.)
 const FORMATS = {
   // name                    w x h INCHES, landscape
-  'tabloid-landscape': { w: 17, h: 11, label: 'Tabloid landscape 17 x 11 in' },
-  'letter-landscape': { w: 11, h: 8.5, label: 'Letter landscape 11 x 8.5 in' },
+  'a3-landscape': { w: 419.7 / 25.4, h: 296.8 / 25.4, css: '419.7mm 296.8mm', label: 'A3 landscape (419.7 x 296.8 mm drawn, inside DIN A3 420 x 297)' },
+  'tabloid-landscape': { w: 17, h: 11, css: '17in 11in', label: 'Tabloid landscape 17 x 11 in' },
+  'letter-landscape': { w: 11, h: 8.5, css: '11in 8.5in', label: 'Letter landscape 11 x 8.5 in' },
 };
 const FMT = FORMATS[formatName];
 if (!FMT) { console.error('unknown --format ' + formatName + '; have: ' + Object.keys(FORMATS).join(', ')); process.exit(2); }
@@ -85,12 +98,15 @@ const C = rd('notation/registry/container.json');
 const ens = rd('notation/registry/ensemble.json');
 const T = rd('notation/registry/techniques.json');
 const ir = rd(path.join('notation', 'ir', irId + '.ir.json'));
-let score = null;
-try { score = rd(path.join('scores', ir.source.score + '.json')); } catch (e) { score = null; }
 
-const FRAME_PARTS = ir.source.parts.slice();
+// [PLAN 2b.1.1 — 2026-09-17] THE FRAME'S PARTS COME FROM THE REALIZED ENSEMBLE, exactly as the video's do. They came from
+// `ir.source.parts` — the parts the IR happens to carry — which is why the print drew six systems and no piano: the grand
+// staff's systems are keyed '2:0' / '2:1' and no part number 2 was ever in the frame (RUNNING_LOG §552).
+const ENS = Layout.ensembleFor(ens, (C.realizations || {})['video-jury']);
+const ensPart = p => (ENS && ENS.parts.find(q => q.part === p)) || null;
+const FRAME_PARTS = ENS ? ENS.parts.map(p => p.part) : ir.source.parts.slice();
 const model = Layout.layoutSection(ir, glyphs, Object.assign(
-  { m4AttackLines: false, frameParts: FRAME_PARTS, ensemble: Layout.ensembleFor(ens, (C.realizations || {})['video-jury']), techniques: T },
+  { m4AttackLines: false, frameParts: FRAME_PARTS, ensemble: ENS, techniques: T },
   (C.engraving && C.engraving.layout) || {}));
 const srcEnd = ir.source.window[1];
 
@@ -108,21 +124,25 @@ const videoPageSeconds = (C.timeScale && C.timeScale.defaults && C.timeScale.def
 
 const pageW = FMT.w * PX, pageH = FMT.h * PX;
 const margin = marginIn * PX;
-const headerPx = wantRuler || wantMarks ? 32 : 0;      // ruler + section marks strip
+const headerPx = wantRuler ? 32 : 0;                   // the time-ruler strip
 const footerPx = 19;                                   // folio
 const blockW = pageW - 2 * margin;
 const blockH = pageH - 2 * margin - headerPx - footerPx;
 if (!(blockW > 0 && blockH > 0)) { console.error('margins leave no room for music'); process.exit(2); }
 
-// lane fractions: identical proportions to the video frame
+// [PLAN 2b.1.2 / 2b.1.4 — 2026-09-17] THE BAND: the same function the video calls (Coords.ensembleFrame) — weighted lanes
+// (the piano 1.576), each lane's staff scale by its weight, the grand staff's two staves at the registry's gap. It is computed
+// in the VIDEO's frame height and used here at the print block's, which is sound because a lane is a FRACTION and ssPerSystem
+// is a RATIO (lane height / one staff space) — this is what keeps the printed staff proportional to the filmed one.
 const N = FRAME_PARTS.length;
-let topPad = lanes.padTopPx / VH, botPad = lanes.padBotPx / VH;
-const gap = lanes.gapPx / VH;
-const laneFrac = (1 - topPad - botPad - gap * (N - 1)) / N;
-const systems = Coords.systemsForParts(FRAME_PARTS, { topPad, botPad, gap, weights: lanes.weights });
-// ssPerSystem is a RATIO (lane height / one staff space), so it carries across
-// resolutions untouched — this is what keeps the printed staff proportional.
-const ssPerSystem = (laneFrac * VH) / (staffHeightPx / 4);
+const FRAME = Coords.ensembleFrame(FRAME_PARTS, {
+  heightPx: VH, lanes, staffHeightPx,
+  grandStaff: ((C.engraving || {}).layout || {}).grandStaff,
+  weightOf: ENS ? (p => (ensPart(p) && ensPart(p).weight) || 1) : undefined,
+  stavesOf: p => (ensPart(p) && ensPart(p).staves && ensPart(p).staves.length) || 1,
+});
+const systems = FRAME.systems, ssPerSystem = FRAME.ssPerSystem;
+const laneFrac = FRAME.lanePx / VH;              // ONE WEIGHT UNIT — a player's lane
 const lanePx = laneFrac * blockH;
 const ssPx = lanePx / ssPerSystem;
 const staffPx = 4 * ssPx;
@@ -165,10 +185,10 @@ let sel = pages.map((_, i) => i);
 if (atArg != null) {
   // the page containing a given second — the page plan changes with --sec, so
   // a fixed --pages number does NOT show the same music at two densities.
-  const t = parseFloat(atArg);
-  let best = 0;
-  for (let i = 0; i < pages.length; i++) if (pages[i].t0 <= t) best = i; else break;
-  sel = [best];
+  // [2b.3] a COMMA LIST gives one PDF of those pages — the proof sheet, one
+  // page per section, which is what the composer is asked to look at.
+  const pageAt = t => { let best = 0; for (let i = 0; i < pages.length; i++) if (pages[i].t0 <= t) best = i; else break; return best; };
+  sel = [...new Set(String(atArg).split(',').filter(s => s.trim() !== '').map(s => pageAt(parseFloat(s))))].sort((a, b) => a - b);
 }
 if (pagesArg) {
   const m = /^(\d+)(?:-(\d+))?$/.exec(pagesArg.trim());
@@ -178,6 +198,15 @@ if (pagesArg) {
   if (!sel.length) { console.error('--pages ' + pagesArg + ' selects nothing (have 1-' + pages.length + ')'); process.exit(2); }
 }
 
+// [PLAN 2b.1.5 — 2026-09-17; §404 on the page] THE BUFFER AFTER THE CLEF. A page break can land on a note's own onset and the
+// unit hangs LEFT of its go line, so every window opens page_rules.musicStartBufferSs staff spaces early (never before the IR's
+// own start) — the page, the app and the video all do it; the print did not, so a first note could sit in the gutter.
+// ss -> seconds through THIS page's own scale, which is why it is computed here and not carried over from the video.
+const bufSs = pageRules.musicStartBufferSs || 0;
+const pxPerSecPage = (blockW - ((C.prefatory && C.prefatory.gutterPx) || 0)) / pageSeconds;
+const bufSec = bufSs > 0 && ssPerSystem > 0 ? bufSs * ssPx / pxPerSecPage : 0;
+const pageT0Of = i => Math.max(ir.source.window[0], pages[i].t0 - bufSec);
+
 function viewFor(i) {
   // THE LAST PAGE REACHES THE PIECE'S END. Measured day 37: with the default
   // density the last window ended at 752.92 against srcEnd 753, so the true
@@ -186,47 +215,23 @@ function viewFor(i) {
   // window is therefore stretched to srcEnd — 11.49 s instead of 11.41, a 0.7 %
   // spacing difference on one page, in exchange for a correct final barline.
   const isLast = i === pages.length - 1;
-  const w1 = isLast ? Math.max(pages[i].t0 + pageSeconds, srcEnd) : pages[i].t0 + pageSeconds;
+  const t0 = pageT0Of(i);
+  const w1 = isLast ? Math.max(t0 + pageSeconds, srcEnd) : t0 + pageSeconds;
   return Coords.makeView({
     widthPx: blockW, heightPx: blockH,
-    window: [pages[i].t0, w1],
+    window: [t0, w1],
     gutterPx: (C.prefatory && C.prefatory.gutterPx) || 0,
     systems, ssPerSystem,
   });
 }
 
-// ------------------------------------------------- section marks
-// Derived, not typed: the score's ACT- markers are the three named sections and
-// they are unambiguous. The raw working marks ("S009 ch03 V2", "CG001") are
-// exactly what ir.hideMarkers suppresses and they never reach paper.
-function sectionMarks() {
-  if (!wantMarks || !score) return [];
-  const out = [];
-  for (const o of (score.objects || [])) {
-    const label = o.label || o.text || o.name;
-    if (!label || o.time == null) continue;
-    const m = /^ACT-([A-Z]+)/.exec(String(label));
-    // The score's internal tag is abbreviated ("ACT-CONVERGE-01"); the printed
-    // mark uses the TITLE's word, because the title IS the three sections
-    // ("Bloom - Convergence - Balance", day 35). Anything unmapped prints its
-    // own tag rather than being dropped.
-    if (m) out.push({ time: +o.time, label: ({ CONVERGE: 'CONVERGENCE' })[m[1]] || m[1] });
-  }
-  // the trance is the one section with no ACT- marker: it announces itself with
-  // bar-number marks, so its start is the first purely-numeric mark after the
-  // last ACT-. Reported below, never silent.
-  const lastAct = out.length ? Math.max(...out.map(x => x.time)) : 0;
-  let trance = null;
-  for (const o of (score.objects || [])) {
-    const label = String(o.label || o.text || o.name || '');
-    if (o.time == null || !/^\d+$/.test(label)) continue;
-    if (+o.time > lastAct && (trance == null || +o.time < trance)) trance = +o.time;
-  }
-  if (trance != null) out.push({ time: trance, label: 'TRANCE' });
-  out.sort((a, b) => a.time - b.time);
-  return out;
-}
-const MARKS = sectionMarks();
+// ------------------------------------------------- section marks: NONE
+// [PLAN 2b.2.3, D58 — 2026-09-17] The composer, asked what the marks above the
+// music should say: "no marks". So there are none, and the derivation that made
+// them is GONE rather than switched off — it was the tuba's (its ACT- markers
+// and the trance's numeric marks), it found nothing in this score anyway
+// ("marks NONE FOUND", §606), and a dead derivation in a live tool is a trap.
+// The strip above the music now carries the time ruler alone.
 
 // ------------------------------------------------- furniture
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -253,12 +258,6 @@ function rulerSvg(view) {
       if (five) p.push('<text x="' + x.toFixed(2) + '" y="' + (yBase - 7).toFixed(2) +
         '" font-size="6.5" font-family="\'Crimson Pro Light\', serif" fill="#8a8a8a" text-anchor="middle">' + clock(t) + '</text>');
     }
-  }
-  for (const mk of MARKS) {
-    if (mk.time < t0 || mk.time >= t1) continue;
-    const x = view.xOfSeconds(mk.time);
-    p.push('<line x1="' + x.toFixed(2) + '" y1="0" x2="' + x.toFixed(2) + '" y2="' + yBase + '" stroke="#111" stroke-width="0.8"/>');
-    p.push('<text x="' + (x + 3).toFixed(2) + '" y="9" font-size="9" font-family="\'Crimson Pro Light\', serif" fill="#111" letter-spacing="1">' + esc(mk.label) + '</text>');
   }
   p.push('</svg>');
   return p.join('');
@@ -322,7 +321,7 @@ function buildHtml() {
   const out = [];
   out.push('<!doctype html><meta charset="utf-8"><title>' + esc(irId) + ' — print score</title>');
   out.push('<style>' + faces + '\n' +
-    '@page{size:' + FMT.w + 'in ' + FMT.h + 'in;margin:0;}\n' +
+    '@page{size:' + FMT.css + ';margin:0;}\n' +
     'html,body{margin:0;padding:0;background:#fff;}\n' +
     '.page{position:relative;width:' + pageW + 'px;height:' + pageH + 'px;overflow:hidden;break-after:page;page-break-after:always;background:#fff;}\n' +
     '.page:last-child{break-after:auto;page-break-after:auto;}\n' +
@@ -359,11 +358,12 @@ function buildHtml() {
     const svg = StaticPage.staticPageSvg({
       model, view, glyphs, C, srcEnd,
       reshow: pages[i].reshow, ownsEnd: i === pages.length - 1,
+      ensemble: ENS,        // [PLAN 2b.1.4] the part labels, the winds' and strings' brackets, the piano's brace (§558)
       // composer, day 37: no bar line at the right of every page. On paper the
       // page edge is not a musical event; the bar draws only at the true end.
       edgeBar: false,
     });
-    const t0 = pages[i].t0, t1 = Math.min(view.window[1], srcEnd);
+    const t0 = view.window[0], t1 = Math.min(view.window[1], srcEnd);   // the folio reads the DRAWN window (2b.1.5's buffer included)
     out.push('<div class="page">');
     if (headerPx) out.push('<div class="hdr">' + rulerSvg(view) + '</div>');
     out.push('<div class="mus">' + svg + '</div>');
@@ -394,13 +394,18 @@ const html = buildHtml();
 
 if (!quiet) {
   console.log('export_print: ' + irId + ' · ' + FMT.label);
-  console.log('  page      ' + FMT.w + ' x ' + FMT.h + ' in · margin ' + marginIn + ' in');
+  console.log('  page      ' + mm(pageW).toFixed(0) + ' x ' + mm(pageH).toFixed(0) + ' mm · margin ' + mm(margin).toFixed(1) + ' mm');
   console.log('  music     ' + mm(blockW).toFixed(0) + ' x ' + mm(blockH).toFixed(0) + ' mm');
   console.log('  ' + N + ' lanes  lane ' + mm(lanePx).toFixed(1) + ' mm  STAFF ' + mm(staffPx).toFixed(2) + ' mm');
   console.log('  ' + pageSeconds.toFixed(2) + ' s/page' + (secArg == null ? '  [default = the video\'s approved density]' : '') +
     ' → ' + pages.length + ' pages for ' + srcEnd + ' s');
-  if (wantMarks) console.log('  marks     ' + (MARKS.length ? MARKS.map(m => m.label + '@' + m.time.toFixed(2)).join(' · ') : 'NONE FOUND'));
-  if (sel.length !== pages.length) console.log('  writing   pages ' + (sel[0] + 1) + '-' + (sel[sel.length - 1] + 1) + ' only (' + sel.length + ')');
+  console.log('  frame     ' + (ENS ? FRAME_PARTS.map(p => (ensPart(p) || {}).short || p).join(' · ') + '   buffer ' + bufSec.toFixed(3) + ' s'
+    : FRAME_PARTS.length + ' parts, NO ENSEMBLE'));
+  if (sel.length !== pages.length) {
+    const w = viewFor(sel[0]).window;
+    console.log('  writing   pages ' + (sel[0] + 1) + '-' + (sel[sel.length - 1] + 1) + ' only (' + sel.length + ')' +
+      '   first window ' + w[0].toFixed(2) + '–' + w[1].toFixed(2) + ' s');
+  }
 }
 
 if (htmlOnly || /\.html?$/i.test(outAbs)) {

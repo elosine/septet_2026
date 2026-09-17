@@ -86,6 +86,55 @@
     return out;
   }
 
+  // [PLAN 2b.1.2, the septet — 2026-09-17] THE ENSEMBLE'S LANE BAND, ONCE.
+  // Weighted lanes + the per-lane staff scale + the grand staff were three
+  // copies of the same fifteen lines: notation.html renderContainerView,
+  // export_video.js, export_print.js. The print copy was the OLDEST — it never
+  // got 2a.1's weights or 2i.10.1's staves, which is exactly why the print
+  // score drew six equal lanes and no piano (RUNNING_LOG §552). NITS had named
+  // the three copies; PLAN 3's performance score would have been a fourth.
+  // The video and print exporters now call this; the app keeps its own copy
+  // until it is next opened (a running page is not worth the risk today).
+  //
+  //   parts             the frame's part numbers, top to bottom
+  //   o.heightPx        the frame height the pads/gaps/cap are expressed in
+  //   o.lanes           realization lanes {padTopPx, padBotPx, gapPx, sparseCapPx, weights}
+  //   o.staffHeightPx   registry staff.staffHeightPx (the absolute staff size)
+  //   o.weightOf(part)  lane weight — ABSENT means NO ENSEMBLE: equal lanes and
+  //                     the registry's own weights, i.e. the tuba frame, untouched
+  //   o.stavesOf(part)  staves in a part (the piano's 2)
+  //   o.grandStaff      registry engraving.layout.grandStaff
+  //
+  // Returns { systems, ssPerSystem, lanePx, weights, units, topPad, botPad, gap }.
+  // lanePx is ONE WEIGHT UNIT — a player's lane — in the frame's own pixels;
+  // ssPerSystem is a RATIO (lane height / one staff space), so a consumer at a
+  // different size (the printed page) reuses both untouched.
+  function ensembleFrame(parts, o) {
+    const H = o.heightPx, lanes = o.lanes || {};
+    const ens = typeof o.weightOf === 'function';
+    let topPad = (lanes.padTopPx || 0) / H, botPad = (lanes.padBotPx || 0) / H;
+    const gap = (lanes.gapPx || 0) / H;
+    const weights = ens ? parts.map(o.weightOf) : lanes.weights;
+    const units = ens ? weights.reduce((a, b) => a + b, 0) : parts.length;
+    let lanePx = ((1 - topPad - botPad - gap * (parts.length - 1)) / units) * H;
+    // sparse-part IRs: cap the lane and centre the band, so a one-part
+    // experiment stops inflating a lane to the whole frame (app fix B, day 22)
+    if (lanes.sparseCapPx && lanePx > lanes.sparseCapPx) {
+      lanePx = lanes.sparseCapPx;
+      const content = (lanePx * units + (lanes.gapPx || 0) * (parts.length - 1)) / H;
+      topPad = botPad = Math.max(0, (1 - content) / 2);
+    }
+    let systems = systemsForParts(parts, { topPad, botPad, gap, weights });
+    const ssPerSystem = lanePx / ((o.staffHeightPx || 31.6) / 4);
+    if (ens) {
+      systems.forEach((s, i) => { s.ssPerSystem = ssPerSystem * weights[i]; });
+      const gs = o.grandStaff;
+      systems = withStaves(systems, o.stavesOf || (() => 1),
+        gs && gs.interStaffGapSs > 0 ? { interStaffGapSs: gs.interStaffGapSs } : undefined);
+    }
+    return { systems, ssPerSystem, lanePx, weights, units, topPad, botPad, gap };
+  }
+
   // A View binds the persistent layers to one viewport. All px appear here
   // and only here.
   //   cfg: { widthPx, heightPx, window: [t0, t1], systems, ssPerSystem?,
@@ -162,5 +211,5 @@
     });
   }
 
-  return { makeView, systemsForParts, withStaves, zoomCfg, DEFAULTS };
+  return { makeView, systemsForParts, withStaves, ensembleFrame, zoomCfg, DEFAULTS };
 });

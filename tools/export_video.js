@@ -90,26 +90,17 @@ const lanes = rz.lanes || { padTopPx: 8, padBotPx: 8, gapPx: 4 };
 const W = (C.frame && C.frame.widthPx) || 1920;
 const H = (C.frame && C.frame.heightPx) || 1080;
 const pageSeconds = (C.timeScale && C.timeScale.defaults && C.timeScale.defaults.trance) || 12;
-let topPad = lanes.padTopPx / H, botPad = lanes.padBotPx / H;
-const gap = lanes.gapPx / H;
 // [2a.1 on the page] lanes WEIGHTED by the ensemble (the piano's grand staff = 2): lanePx is one weight unit, each lane's staff
-// scale follows its weight, and a multi-staff part's staves are placed at the registry's inter-staff gap
-const weights = ENS ? FRAME_PARTS.map(p => (ensPart(p) && ensPart(p).weight) || 1) : lanes.weights;
-const units = ENS ? weights.reduce((a, b) => a + b, 0) : FRAME_PARTS.length;
-let lanePx = ((1 - topPad - botPad - gap * (FRAME_PARTS.length - 1)) / units) * H;
-if (lanes.sparseCapPx && lanePx > lanes.sparseCapPx) {
-  lanePx = lanes.sparseCapPx;
-  const content = (lanePx * units + lanes.gapPx * (FRAME_PARTS.length - 1)) / H;
-  topPad = botPad = Math.max(0, (1 - content) / 2);
-}
-let systems = Coords.systemsForParts(FRAME_PARTS, { topPad, botPad, gap, weights });
-const ssPerSystem = lanePx / (((C.staff && C.staff.staffHeightPx) || 31.6) / 4);
-if (ENS) {
-  systems.forEach((s, i) => { s.ssPerSystem = ssPerSystem * weights[i]; });
-  const gs = ((C.engraving || {}).layout || {}).grandStaff;
-  systems = Coords.withStaves(systems, p => (ensPart(p) && ensPart(p).staves && ensPart(p).staves.length) || 1,
-    gs && gs.interStaffGapSs > 0 ? { interStaffGapSs: gs.interStaffGapSs } : undefined);
-}
+// scale follows its weight, and a multi-staff part's staves are placed at the registry's inter-staff gap.
+// [PLAN 2b.1.2 — 2026-09-17] those fifteen lines now live in Coords.ensembleFrame, which the PRINT exporter calls too (it had
+// the pre-2a.1 copy — §552's six equal lanes and no piano). Proven unchanged here: seven dumped pages byte-identical.
+const FRAME = Coords.ensembleFrame(FRAME_PARTS, {
+  heightPx: H, lanes, staffHeightPx: (C.staff && C.staff.staffHeightPx) || 31.6,
+  grandStaff: ((C.engraving || {}).layout || {}).grandStaff,
+  weightOf: ENS ? (p => (ensPart(p) && ensPart(p).weight) || 1) : undefined,
+  stavesOf: p => (ensPart(p) && ensPart(p).staves && ensPart(p).staves.length) || 1,
+});
+const systems = FRAME.systems, ssPerSystem = FRAME.ssPerSystem, lanePx = FRAME.lanePx;
 // Z is the ZOOM FACTOR, not a mode flag. It was gated on viewMode==='zoom',
 // which made a CUT render its V-TOP/V-BOT halves from an UNZOOMED 1080-tall
 // frame — 63 zoom segments instead of 129, and the close-ups would have been
