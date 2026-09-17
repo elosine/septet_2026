@@ -16070,3 +16070,45 @@ for 2b, data first — Resume reads: PLAN 2b + its two NITS entries, the model, 
 (its open items carried up; its stale next-step lines retired); the NEXT STEPS table (N0 done, N1 parked, **N2 ► active**) · PLANNER NOW.
 **Committed:** the docs. **Left:** his files per D40 (unchanged) · the six unsaved working copies (his) · the gitignored practice-video artefacts
 (the archive mp4s his to back up; keep `raw/demo-bloom-heldmax-float.wav`).
+
+## §606. PLANNED: PLAN 2b the print score — the data gathered, the plan written, three questions put to him (2026-09-17, session 15, Fable 5.1)
+
+**His word** (after `/postclear`, to the offer of `/plan-item`): *"no need for the full planning protocol, lets just gather necessary data,
+resolve any issues and make plan"*. So: no three-phase walk; the data, the issues, the plan in one pass, written into PLAN 2b at once.
+
+**What was looked at, in order.** `tools/export_print.js` whole (406 lines) · `export_video.js:70–140` (the septet frame of §558) · `static_page.js`'s
+ensemble hook (line 55) · `print/score/build.sh` · `print/cover/cover-D-tabloid-landscape-1line.svg` · the call's PDF (all five pages) · the save's
+markers · two runs of the print exporter as it stands, into the scratchpad (nothing written in the repo).
+
+**The numbers.**
+- `export_print.js --ir piece-septet --htmlOnly --at 100`: *Tabloid landscape 17 × 11 in · music 406 × 241 mm · 7 lanes · lane 33.1 mm · STAFF 7.04 mm ·
+  11.41 s/page → 57 pages for 625 s · marks NONE FOUND*. The seven lanes are EQUAL (`lanes.weights` of the registry, no ensemble weights), no
+  `withStaves`, no `ensemble` to `staticPageSvg` — §552's six systems, no piano, no labels, confirmed as a frame problem only: the model already
+  takes the realized ensemble and the techniques (2k).
+- **The format.** The call, verbatim: *"The score as an Adobe PDF document with a maximum size of DIN A3 (297 x 420 mm)"*. Tabloid is 279.4 × 431.8 mm —
+  11.8 mm over on the long side. A3 landscape is not a preference, it is the rule (§ of 2026-09-03 had already said so; now measured against the code:
+  `FORMATS` has tabloid and letter only).
+- **The call asks no anonymity** (the form takes the name; nothing about the score) — the composer's name stays on the cover. It names no upload route
+  and no size cap. *"Once submitted, applications cannot be withdrawn or modified."* #4's finished PDF: 4.0 MB for ~68 pages — size is not an issue.
+- **The marks.** The derivation is the tuba's (`ACT-` markers, the trance's numeric marks). The septet's save has two markers: `MORPH M1 — BEATING BLOOM
+  ·dialled` 183.00 · `MORPH M2 — SPECTRAL DRIFT` 314.00; `make_cut.js` carries the rest as measured constants (section 1 from 0.61, section 3 444–624).
+  His page speaks of "the first movement", "the third movement", "Bloom", "Spectral".
+- **The instructions page in print.** `--cover on --instructions on`, measured in headless Chrome (a scratch script: `.cols` scrollWidth / clientWidth /
+  clientHeight) = **2322 / 1536 / 914**: one column is 750 px + a 36 px gap, 2322 − 1536 = 786 = exactly ONE column over. The page as it stands is three
+  columns of content in a two-column page, and `.page{overflow:hidden}` clips the third with no message. On A3 the column is ~66 px taller — still ~2.8.
+  The `FIGW` width table is keyed by the tuba's image names; none of the septet's nine images is in it.
+
+**Decided (the AI's, under "don't make the composer decide minutiae"; his to overturn):** the instructions take TWO pages, not smaller type (10.4 px is
+already the floor) · the order cover · instructions · score, as #4 · the frame math moves into one shared function rather than a fourth copy, and the
+approved video exporter joins it only if two dumped pages stay byte-identical · the density rule unchanged (the video's) · the exporter must fail loudly
+on column overflow from now on.
+
+**Rejected:** copying the video's 16 frame lines into the print exporter (NITS already counts three copies; PLAN 3 will want a fourth) · judging the print
+page by a byte compare with the video page (the views differ in scale — the check is systems + element counts at the same window instead) · shrinking
+figures until the instructions fit one page (the tuba's fit took per-figure tuning for a shorter text; this page has the chart, the legend and the
+instrumentation on top).
+
+**Put to him, three questions:** A the title and the ensemble line (CN-64) — blocks only the cover · B the labels of the section marks above the ruler ·
+C whether the Tempus copy still needs its own video line now that the instructions page opens with the demo link (the 09-14 decision predates that
+section). **Written:** PLAN 2b — the result line, the measured state, the top line (1 ⚠ frame · 2 paper · 3 proof pages, his eye · 4 front matter ·
+5 full render, his eye · 6 archive), sub-steps 2b.1–2b.6. **Builder: Opus**, starting at 2b.1; nothing in it waits on the three answers until 2b.2.3.

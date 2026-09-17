@@ -5,7 +5,7 @@
 > `COMPOSITION_NOTES.md` verbatim first and get folded into a tier here. Engineering
 > detail stays in `PLAN.md`. Rewritten freely; the sketch pad is the append-only record.
 
-**NOW ✦** 2026-09-17 (session 15, Opus; checkpoint) — the demo video ✓ · the performance instructions drafted and copy-edited (`docs/notation_instructions/index.html`; RUNNING_LOG §565–§604) · the Bloom practice videos online, linked, archived (PLAN 2h.7 done, §595–§602). **► NOW: PLAN 2b THE PRINT SCORE — Fable plans (`/plan-item`), Opus builds.** Deadline 2026-10-15. Pending him: the title and ensemble line before the cover (CN-64).
+**NOW ✦** 2026-09-17 (session 15, Opus; checkpoint) — the demo video ✓ · the performance instructions drafted and copy-edited (`docs/notation_instructions/index.html`; RUNNING_LOG §565–§604) · the Bloom practice videos online, linked, archived (PLAN 2h.7 done, §595–§602). **► NOW: PLAN 2b THE PRINT SCORE — PLANNED (Fable, §606): 1 ⚠ the septet frame · 2 the paper (A3, marks) · 3 proof pages, his eye · 4 front matter · 5 full render, his eye · 6 archive. Opus builds from 2b.1.** Deadline 2026-10-15. Pending him: A the title and ensemble line before the cover (CN-64) · B the section marks' labels · C whether the Tempus copy needs its own video line.
 
 ## The piece — outline (v1 — CN-1 · CN-5 · CN-8 · CN-10)
 

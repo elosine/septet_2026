@@ -102,14 +102,21 @@ N0 the Bloom practice videos built, his "videos good", online, linked from the p
 - The cover needs the title and the ensemble line (item 1 below). Where the instructions page goes in the print — open.
 - A3 landscape; format entry + cover + performance notes as in #4; **deadline 2026-10-15**.
 
-**Next concrete step:** on Fable, `/plan-item` for PLAN 2b (docs/PLANNING_METHOD.md). Phase 1 with the data first: what `export_print.js
---htmlOnly --at 100` draws on piece-septet today set beside the video's frame — then the shared understanding, then the top line. Nothing built
-before the plan.
+**► PLANNED 2026-09-17 (Fable, RUNNING_LOG §606)** — his word: *"no need for the full planning protocol, lets just gather necessary data, resolve
+any issues and make plan"*. The plan is in PLAN 2b: top line **1 ⚠ the septet frame · 2 the paper (A3, marks) · 3 the proof pages, his eye ·
+4 the front matter · 5 the full render, his eye · 6 archive + docs.** Measured: tabloid is 12 mm over A3 (the call refuses it) · 57 pages at the
+video's density · the instructions need TWO pages (three columns of content, clipped silently today) · #4's PDF was 4 MB · no anonymity asked.
 
-**Resume reads:** `docs/PLAN.md` — the 2b item (search `- **2b — Presentation score**`) · `docs/NITS.md` — its two PLAN 2b entries (search
-`FOR PLAN 2b` and `The exports are still the tuba's`). Nothing else.
+**Next concrete step:** on **Opus**, build **PLAN 2b.1** (the septet frame in `tools/export_print.js`, sub-steps 2b.1.1–2b.1.6 as written), then
+2b.2.1–2b.2.2 (A3). Stop at 2b.2.3 if his answer B has not come; 2b.3's four proof pages are the first thing he looks at.
 
-**Model:** **Fable** plans (after `/clear` + `/postclear`) · Opus builds.
+**Put to him, unanswered (§606):** A the title + ensemble line (blocks 2b.4.1 the cover only) · B the section marks' labels (2b.2.3) · C whether
+the Tempus copy needs its own video line now that the instructions page opens with the demo link (2b.5.3).
+
+**Resume reads:** `docs/PLAN.md` — the 2b item whole (search `- **2b — Presentation score**`, ~60 lines). Nothing else; the builder opens
+`tools/export_print.js` and `tools/export_video.js:70–140` as its first act.
+
+**Model:** **Opus builds** (a written plan) · Fable only if a proof page raises a judgment call.
 
 **Decisions pending the composer** *(carried from N1; only item 1 touches 2b)*:
 1. **The title** *Scattered Substance* **and the ensemble line** "for flute, bass clarinet, piano and string quartet" (CN-64) — before the cover.
@@ -169,7 +176,7 @@ comment beside it) · `tools/gen_morph_chart.js` (the chart) · `tools/gen_m2_ch
 |---|---|---|---|
 | ~~N0~~ | ~~the Bloom practice videos (PLAN 2h.7)~~ — **DONE 2026-09-17** (§602: "videos good", online, linked, archived) | — | — |
 | N1 | the performance instructions — PARKED: drafted and copy-edited; the pending items 2–5 in the checkpoint above, at his convenience | Opus | no |
-| **N2** | **► PLAN 2b the print score** — the print exporter's septet frame (the §558 port) · the cover (title + ensemble line, CN-64) · the Tempus copy with the video link at the top · where the instructions page goes in the print | **Fable plans** · Opus builds | **yes — this checkpoint; then /postclear on Fable** |
+| **N2** | **► PLAN 2b the print score — PLANNED (§606); build 2b.1 the septet frame → 2b.2 A3 + marks → 2b.3 four proof pages, his eye** · then 2b.4 front matter (cover waits on CN-64) · 2b.5 full render, his eye · 2b.6 archive | **Opus builds** | **switch to Opus now; no clear needed (the session is short) — clear after 2b.3's proof pages** |
 | **N3** | Later, noted: the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
 | **N4** | Still his, from before: the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 

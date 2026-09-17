@@ -1746,6 +1746,60 @@ player would touch parts, solo, crop and print.
   **The order, his (2026-09-14, RUNNING_LOG §515):** after the demo video (2i.10) → the performance instructions (NITS list) → the print score.
   **The Tempus copy only:** a link to the demo video at the top — the call takes a print score only (PLAN 4), so the score tells them the video
   exists. The practice videos (2h.7) go with the performance materials, BLOOM at least.
+  **The video half is DONE** (2i.10: "video good", online https://youtu.be/x8EZ3B1EvbE). What follows is the print half.
+  **PLANNED 2026-09-17 (session 15, Fable; RUNNING_LOG §606 — his word: "no need for the full planning protocol, lets just gather
+  necessary data, resolve any issues and make plan").** **Result when done:** one PDF — cover · the performance instructions · the whole
+  piece on A3 landscape, the septet's frame as the approved video draws it, in C (M5) — his "print good", archived, ready for PLAN 4.
+  *Why a port and not a build:* the page is `static_page.js`, the module the video draws through; print only lacks the frame the video
+  got in 2i.10.1. **Measured going in (§606):** today's exporter on piece-septet = tabloid 17 × 11 in (**12 mm over A3's long side — the
+  call refuses it**), 7 EQUAL lanes, no ensemble to the page → six systems, no piano, no labels (§552); marks NONE FOUND (the derivation
+  is the tuba's ACT-/TRANCE); 11.41 s/page → 57 pages; the instructions page fills THREE columns of the tuba's two and is clipped
+  silently (`scrollWidth 2322 / 1536`); #4's finished PDF was 4 MB, so size is no issue; the call asks no anonymity, names no size cap.
+  **Top line:** 1 ⚠ the septet frame · 2 the paper (A3, marks) · 3 the proof pages — his eye · 4 the front matter · 5 the full render ·
+  6 archive + docs. **Builder: Opus.** His eye at 3 and 5 only.
+  - **2b.1 — ⚠ The septet frame in the print exporter** — `todo` — **Result when done:** `export_print.js --at T` on piece-septet draws
+    what the video draws at the same window — Fl · BCl (in C, bass clef) · Pno grand staff + brace · Vn1 · Vn2 · Va · Vc, the labels, the
+    winds' and strings' brackets — scaled to paper.
+    - 2b.1.1 `FRAME_PARTS` from the realized ensemble (`video-jury`), not `ir.source.parts`.
+    - 2b.1.2 the frame math MOVED, not re-typed: `export_video.js:97–112` (weights from the ensemble — the piano 1.576 · `units` · each
+      lane's `ssPerSystem` × its weight · `Coords.withStaves` at the registry's grand-staff gap) becomes one function in `notation/lib/`
+      that print calls. *Why:* PLAN 3's performance score will be a fourth consumer; NITS already names the three copies.
+    - 2b.1.3 the video exporter moved onto the same function ONLY IF `--dumpPage 0` and `--dumpPage 49` come out byte-identical before and
+      after; otherwise it is left alone and NITS says so. The page (`notation.html`) is not touched.
+    - 2b.1.4 `ensemble` passed to `StaticPage.staticPageSvg` (labels, brackets, the brace — §558).
+    - 2b.1.5 the §404 buffer after the clef: every page's window opens `page_rules.musicStartBufferSs` early, as the video's `pageT0Of`;
+      the ruler and the folio read the shifted window; the last page still reaches the piece's end.
+    - 2b.1.6 THE CHECK: print at `--sec 12 --at T` beside the video's `--dumpPage` of the same window, T = 100 · 250 · 380 · 530 — the same
+      systems (seven, the piano's two staves), the same element count per system; only the view's scale differs. §552's finding gone.
+  - **2b.2 — The paper** — `todo` — **Result when done:** a page is A3 landscape, reads in time, names the movements.
+    - 2b.2.1 `FORMATS` gains `a3-landscape` (420 × 297 mm) and it is the default; tabloid stays for #4's sake.
+    - 2b.2.2 seconds per page stays the rule it was — the video's approved density — expect ≈ 58 pages; the exporter reports the staff
+      in mm (expect ≈ 7 mm; #4's was ≈ 8 on ten lanes).
+    - 2b.2.3 the section marks: the tuba's ACT-/TRANCE derivation replaced — from the save's two MORPH markers (183.00 · 314.00), the
+      piece's start, and section 3's first strike (444). **The labels are his (question B, §606).**
+    - 2b.2.4 the folio unchanged: the clock range left, the page number right.
+  - **2b.3 — The proof pages — HIS EYE** — `todo` — **Result when done:** he has looked at four A3 pages in one PDF, one per section
+    (≈ 100 · 250 · 380 · 530 s), and his notes are fixed. Before he looks: MediaBox 1190.55 × 841.89 pt · fonts embedded · zero raster
+    images · no ink outside the music block (measured, not eyed).
+  - **2b.4 — The front matter** — `todo` — **Result when done:** cover + instructions, on paper as on his page.
+    - 2b.4.1 the cover at A3 — #4's cover D layout (EngraversGothic BT: title / "for …" / Justin Yang) at 1190.55 × 841.89 pt.
+      **Waits on his title and ensemble line (CN-64; question A).**
+    - 2b.4.2 the instructions: ONE SOURCE stays `docs/notation_instructions/index.html` — his prose untouched (§569). **Two pages, four
+      columns** (measured: three columns of content). The `FIGW` table rewritten for this piece's nine images. The exporter now FAILS
+      LOUDLY when the columns overflow (it was silent clipping under `.page{overflow:hidden}`).
+    - 2b.4.3 the demo link and the practice-video links print as visible URLs and stay clickable in the PDF.
+    - 2b.4.4 the order: cover · instructions (2 pp) · the score — as #4 (the AI's call; his to overturn).
+  - **2b.5 — The full render** — `todo` — **Result when done:** the whole PDF, checked, his "print good".
+    - 2b.5.1 the IR rebuilt from its recorded build first (the save is newer by timestamp; §598 found the objects equal — the rebuild
+      makes it certain).
+    - 2b.5.2 `print/score/build.sh` rewritten for the septet (IR `piece-septet`, A3, cover + instructions on, the septet's out name).
+    - 2b.5.3 the Tempus copy: **question C (§606)** — the instructions page already opens with the demo link, which may make a separate
+      Tempus copy unnecessary.
+    - 2b.5.4 the PDF checks, #4's: page count = cover + 2 + N · MediaBox on every page · fonts embedded · zero raster · the file's size.
+    - 2b.5.5 the AI's page-through: every page's ink inside the block · page 1 has its clefs and labels · the final barline at the end.
+    - 2b.5.6 HIS EYE on the whole PDF → notes → fixed in one pass (2j's way) → "print good".
+  - **2b.6 — Archive + docs** — `todo` — the approved PDF to `print/score/approved/<date>/` with a README (the command, the save's commit,
+    the checks) · NITS's two "FOR PLAN 2b" entries closed · CLAUDE.md's Apps gains the print line · journal §2 · PLANNER.
 - **2c — Parts** — only if selected; due ~2026-10-29.
 
 - **2d — Notate while composing** — `built 2026-09-11 (RUNNING_LOG §391–396) — proven on copies; the live walk on piece-septet is his (journal §2)` (planned RUNNING_LOG §389–390) — **Result when done:** he
