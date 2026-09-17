@@ -29,6 +29,9 @@ notation/video/probe/
 notation/video/renders/demos/
 print/score/*.pdf
 print/score/*.__print.html
+# PLAN 2b.6: the APPROVED copy too — a print PDF lives on this machine only, as the
+# approved video does (notation/video/**/*.mp4). Its archive README is what git carries.
+print/score/**/*.pdf
 
 # Probe / research artefacts
 probes/_selftest_render.wav

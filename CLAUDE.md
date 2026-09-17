@@ -120,6 +120,12 @@ routing advice is also credit advice, and these bind every Fable turn:
   bridge (float, measured, plain gain) → `notation/audio/piece-septet.wav` → the ♪ render chip. Re-render after a Save.
 - **Sandbox:** `node sandbox/serve.js` → http://localhost:4800
 - **Notation workshop:** carried over with the port, NOT adapted until phase 2 (PLAN 0g / 2a).
+- **The print score (PLAN 2b, approved 2026-09-17):** `bash print/score/build.sh` → `print/score/Scattered-Substance-score-JYang.pdf`
+  — **71 pages** on A3 landscape (cover · instructions ×2 · 68 of music), the submission file for the call. `--rebuild-ir` after a Save,
+  `--proof` for the proof PDFs. The script runs **five gates** and they are not optional: `check_print_frame` · `check_print_front` ·
+  `check_print_pdf` · `check_print_pages` · `check_print_edges` (**D59** — a page owns `[cut, next cut)`). Every print PDF is gitignored
+  and lives on this machine; the record is `print/score/approved/2026-09-17/README.md`.
+  ⚠ `export_print` and `export_video` share `Coords.ensembleFrame` — **a change to the frame math moves BOTH.**
 - **THE MAIN NOTATION FILE (D41):** `notation/ir/piece-septet.ir.json` — :5300 → `/notation/app/notation.html` → picker "piece-septet ·
   MAIN notation score" (first). The whole piece with every notation rule in force; kept current by Save in the composer + **R** on the page.
   A new notation rule = a flag added to its recorded build, then one rebuild (`docs/NAMING.md`).

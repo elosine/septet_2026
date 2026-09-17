@@ -16437,3 +16437,36 @@ the save's commit and the checks · NITS's two "FOR PLAN 2b" entries closed · C
 
 **Still his, unchanged by this:** the four items carried from N1 since §605 — the score-in-C line · the three fact flags on the instructions page · the
 tuba text he has not reviewed · the two AI calls he may undo.
+
+## §618. PLAN 2b.6 — the print score ARCHIVED; PLAN 2b CLOSED (2026-09-17, session 15, Opus 5)
+
+**His word:** *"ok finish up 2b.6"*.
+
+**The archive: `print/score/approved/2026-09-17/`** — the approved PDF and a README carrying the command, the save's commit, what made
+the file and the five gates' numbers. The PDF itself is **not in git**: `.gitignore` gained `print/score/**/*.pdf`, so the archived copy
+is excluded as the existing rule excluded the working one, and as `notation/video/**/*.mp4` excludes the approved video. The precedent is
+deliberate — a 6.4 MB binary that can be rebuilt from a committed script and a committed IR does not belong in history; the README is the
+record, and it says so, and it says *back it up*.
+sha256 `d1966ef1c00e52e5065ad55327037086dec9af45c52a63f29beb453a64465270` · 71 pages · 6.39 MB.
+
+**NITS: the two "FOR PLAN 2b" entries struck through and closed** (struck, not deleted — a nit's history is part of the record):
+- *"`tools/export_print.js` lays out without `ensemble` and `techniques`"* → closed by 2b.1.1; the print passes the realized ensemble
+  (`video-jury`) and the techniques registry, which is what put the seven clefs, the grand staff and the family devices on the page.
+- *"The exports are still the tuba's … one shared function would end the three copies"* → closed by 2i.10 + 2b.1: **that shared function
+  now exists**, `Coords.ensembleFrame`. Both closures carry the warning the sharing created — **a change to the frame math moves BOTH
+  exporters**, so `check_print_frame` plus two dumped video pages before it is believed.
+
+**CLAUDE.md's Apps section gains the print line** — the command, the 71 pages, the five gates named as *not optional*, where the record
+lives, and the shared-frame warning. It sits above the MAIN notation file entry, so the three things a session might open (composer ·
+print · notation) read in one place.
+
+**PLAN 2b IS CLOSED.** 2b.1 the septet frame · 2b.2 A3 · 2b.3 the proof pages · 2b.4 the front matter · 2b.5 the whole score ·
+**2b.7 the page edges by rule** · 2b.6 archive + docs. §606 → §618, one day.
+
+**What the submission now has:** the print score (this) · the demo video, online and archived (§564) · the performance instructions page
+(§565–§604) · the Bloom practice videos (§602) · and — his own work this session, compiled at his ask — the application:
+`docs/application/Tempus-Lab2026-application-JYang.pdf`, 5 pages (form pp. 4–5 · bio · payment confirmation ×2), verified page by page.
+**Flagged to him and left as he had it:** the required checkbox on the declarations page still reads as an empty ☐. His to tick, not the AI's.
+
+**Left of the piece:** PLAN 2c parts, only if selected (~2026-10-29) · PLAN 3 the performance score · the four items that have been his
+since §605. **Deadline 2026-10-15.**

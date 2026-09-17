@@ -85,7 +85,7 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
-### STATE — 2026-09-17 (session 15, Opus 5) — PLAN 2b.7 BUILT · NEXT: HIS EYE ON THE 68-PAGE RE-RENDER, THEN 2b.6 ARCHIVE
+### STATE — 2026-09-17 (session 15, Opus 5) — **PLAN 2b CLOSED**: the print score approved and archived
 
 **His word:** *"a"* — the ragged right edge (D59) — then *"go"*. Built the same session, RUNNING_LOG §615.
 
@@ -110,7 +110,16 @@ ink in the gutter, none past the system end). It is a gate in `build.sh` and it 
 
 **HIS EYE, ROUND 1 (§616):** *"pg 2 in piano, extra from next page trill ; vc pg 14"* — a long item was gated on the span the page DRAWS instead of the span it OWNS, so 19 curve stubs from neighbouring pages sat in the reserves (his piano one was p7, his cello one p14; also 16 · 17 · 33 · 47 · 57 · 58 · 60). Fixed with one predicate, `crosses(t0,t1)`; the checker gained the test it was missing and now COUNTS THE INK — 484 curve paths over 68 pages, none from a neighbour, proven to fail on the old gate. Re-rendered, five checks green, the film byte-identical a third time.
 
-**HIS EYE, ROUND 2 (§617): "ok print score good" — PLAN 2b.7 ACCEPTED.** The print score is his. **Next concrete step: PLAN 2b.6, archive + docs** (Opus, mechanical).
+**HIS EYE, ROUND 2 (§617): "ok print score good" — ACCEPTED. 2b.6 DONE (§618): PLAN 2b IS CLOSED.**
+The approved PDF and its README are in `print/score/approved/2026-09-17/` (the PDF gitignored, as the approved video is — `.gitignore`
+gained `print/score/**/*.pdf`); NITS's two "FOR PLAN 2b" entries are struck and closed; CLAUDE.md's Apps section carries the print line,
+its five gates and the shared-frame warning. **Also done at his ask: his application compiled** —
+`docs/application/Tempus-Lab2026-application-JYang.pdf`, 5 pages (form pp. 4–5 · bio · payment ×2), each page verified.
+**FLAGGED, HIS TO DO:** the required checkbox on the declarations page still reads as an empty ☐.
+
+**NEXT CONCRETE STEP — nothing of PLAN 2b remains.** The open work is the four items that have been his since §605 (the score-in-C line ·
+the three fact flags on the instructions page · the unreviewed tuba text · the two AI calls he may undo), then **PLAN 3 the performance
+score**; **PLAN 2c parts only if the piece is selected** (~2026-10-29). Deadline **2026-10-15**.
 
 *(kept, for what round 2 was asked to look at)* **Round 2** (sent 2026-09-17) — the right edge of a page whose music stops early (**13 · 58 · 60 · 63 · 64 · 65**
 are the raggedest) and the clef gutter anywhere. On his word → **2b.6 archive + docs**: the PDF to `print/score/approved/<date>/` with a README (the
@@ -264,7 +273,9 @@ comment beside it) · `tools/gen_morph_chart.js` (the chart) · `tools/gen_m2_ch
 |---|---|---|---|
 | ~~N0~~ | ~~the Bloom practice videos (PLAN 2h.7)~~ — **DONE 2026-09-17** (§602: "videos good", online, linked, archived) | — | — |
 | N1 | the performance instructions — PARKED: drafted and copy-edited; the pending items 2–5 in the checkpoint above, at his convenience | Opus | no |
-| **N2** | **► PLAN 2b the print score** — 2b.1–2b.5 and **2b.7 BUILT** (§608–§612, §615: the frame, A3, the front matter, the page edges by rule; **71 pages, five checks green**) · **NOW: HIS EYE on the re-render** → then **2b.6 archive + docs** | **Fable** for his eye on the ragged edge · **Opus** for 2b.6 | **yes before 2b.6** — a fresh mechanical chunk |
+| ~~N2~~ | ~~**PLAN 2b the print score**~~ — **DONE 2026-09-17** (§606–§618): the frame · A3 · the front matter · the whole score · the page edges by rule (D59) · archived. His *"ok print score good"*; 71 pages, five gates green; `print/score/approved/2026-09-17/` | — | — |
+| ~~N2b~~ | ~~his application~~ — **COMPILED 2026-09-17** at his ask: `docs/application/Tempus-Lab2026-application-JYang.pdf`, 5 pp (form pp. 4–5 · bio · payment ×2), each page verified. **HIS TO FINISH:** the required checkbox on the declarations page is still an empty ☐ | — | — |
+| **► N5** | **The four items that have been his since §605** — the score-in-C line · the three fact flags on the instructions page · the tuba text he has not reviewed · the two AI calls he may undo. Then **PLAN 3 the performance score**; **2c parts only if selected** (~2026-10-29) | Fable to decide · Opus to apply | **yes — PLAN 2b is closed, a clean break** |
 | **N3** | Later, noted: the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
 | **N4** | Still his, from before: the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 

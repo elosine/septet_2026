@@ -286,9 +286,13 @@ Bend stays per frame either way: 14-bit and genuinely dense.
 
 - **Trills are not in the IR.** The extractor reads `waveCurve` objects only; piece-septet's trills are `zone` objects (70 of them on
   2026-09-11) and are skipped silently. Trill notation is new vocabulary (D20's zone → a written trill), not a 2a port. **Before 2b.**
-- **The exports are still the tuba's.** `tools/export_print.js` and `export_video.js` call layout/render without the ensemble —
+- ~~**The exports are still the tuba's.** `tools/export_print.js` and `export_video.js` call layout/render without the ensemble —
   ten T-lanes, bass clef, no weights, no grand staff (their lane math is a copy of the app's). 2b steps 4–5 give them the app's lane
-  code (weights · `Coords.withStaves` · `ensemble` to layout and render). One shared function would end the three copies.
+  code (weights · `Coords.withStaves` · `ensemble` to layout and render). One shared function would end the three copies.~~
+  **CLOSED 2026-09-17 (PLAN 2b.1.1, RUNNING_LOG §608; archived 2b.6, §618).** The video exporter was given the septet frame in 2i.10
+  and the print in 2b.1; both now call **one** shared function, `Coords.ensembleFrame` — the "one shared function" this nit asked for.
+  ⚠ **It therefore moves BOTH**: a change to the frame math needs `node tools/check_print_frame.js` AND two video pages dumped against
+  a baseline before it is believed.
 - **resvg panics on the septet page on this machine** (`geom.rs:27 unwrap on None`) — trivial SVGs render; the failure did not move
   when the new brackets/brace, the text or the new clefs were removed, nor with the repo's own fonts. Both exporters rasterize with
   resvg. **Must be diagnosed before 2b's first render.**
@@ -413,9 +417,12 @@ Bend stays per frame either way: 14-bit and genuinely dense.
   12 flute notes, which 2i.8 re-casts. Retire or re-anchor them when the surge device is designed (2i.8) — not before.
 - **`container.json _staccatoNote` contradicts its device** ("NO go line" vs `goLine: true`): the note is the day-23 Option B, the device
   the tuba's later D59. Rewrite the note with the strikes' verdict (§517).
-- **FOR PLAN 2b — `tools/export_print.js` lays out without `ensemble` and `techniques`** (the page passes both, `notation.html:271`): the
+- ~~**FOR PLAN 2b — `tools/export_print.js` lays out without `ensemble` and `techniques`** (the page passes both, `notation.html:271`): the
   print would draw the septet without clefs / transposition and without the family devices. Carried over from the tuba's single-clef
-  world; fix when the print score is built.
+  world; fix when the print score is built.~~
+  **CLOSED 2026-09-17 (PLAN 2b.1.1, RUNNING_LOG §608; archived 2b.6, §618).** `export_print` now passes the realized ensemble
+  (`video-jury`) and the techniques registry to `Layout.layoutSection`, which is what put the seven clefs, the grand staff and the
+  family devices on the printed page. `check_print_frame` is the standing proof.
 
 ## 2026-09-14 — the Experiments menu hides a never-saved score (composer: "open which?")
 

@@ -1832,8 +1832,11 @@ player would touch parts, solo, crop and print.
     - 2b.7.5 ✓ `tools/check_print_edges.js`, a build gate (in build.sh; PROVEN TO FAIL with ownership switched off — it reported §613's whole census back): over ALL pages — every IR event drawn exactly ONCE across the score · every arc whole (its
       impact present, both ends inside gutter…system end) · no timed ink left of the gutter · no point ink right of the system end.
     - 2b.7.6 ✓ re-rendered: 71 pages, 6.39 MB; the four existing checks green; the film's seven pages byte-identical.
-  - **2b.6 — Archive + docs** — `todo` — the approved PDF to `print/score/approved/<date>/` with a README (the command, the save's commit,
-    the checks) · NITS's two "FOR PLAN 2b" entries closed · CLAUDE.md's Apps gains the print line · journal §2 · PLANNER.
+  - **2b.6 — Archive + docs** — `DONE 2026-09-17 (Opus, RUNNING_LOG §618)` — `print/score/approved/2026-09-17/` holds the approved PDF
+    (71 pp, 6.39 MB, sha256 `d1966ef1…`) and a README carrying the command, the save's commit `bc54cdc`, what made the file and the five
+    gates' numbers; `.gitignore` gained `print/score/**/*.pdf` so the archived copy stays off git as the approved video does · NITS's two
+    "FOR PLAN 2b" entries struck and closed (both by the shared `Coords.ensembleFrame`) · CLAUDE.md's Apps gained the print line ·
+    journal §2 · PLANNER. **PLAN 2b IS CLOSED.**
 - **2c — Parts** — only if selected; due ~2026-10-29.
 
 - **2d — Notate while composing** — `built 2026-09-11 (RUNNING_LOG §391–396) — proven on copies; the live walk on piece-septet is his (journal §2)` (planned RUNNING_LOG §389–390) — **Result when done:** he
