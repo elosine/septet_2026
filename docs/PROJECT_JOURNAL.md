@@ -108,7 +108,9 @@ frame · front · pdf · pages · **the new `check_print_edges`** (14 532 of 14 
 ink in the gutter, none past the system end). It is a gate in `build.sh` and it is **proven to fail**: with ownership switched off for one run it read
 §613's whole census back. **The film did not move** — pages 0 · 9 · 20 · 30 · 43 · 49 · 53 byte-identical, proven twice.
 
-**Next concrete step: HIS EYE on the new PDF** (sent to him 2026-09-17) — the right edge of a page whose music stops early (**13 · 58 · 60 · 63 · 64 · 65**
+**HIS EYE, ROUND 1 (§616):** *"pg 2 in piano, extra from next page trill ; vc pg 14"* — a long item was gated on the span the page DRAWS instead of the span it OWNS, so 19 curve stubs from neighbouring pages sat in the reserves (his piano one was p7, his cello one p14; also 16 · 17 · 33 · 47 · 57 · 58 · 60). Fixed with one predicate, ; the checker gained the test it was missing and now COUNTS THE INK — 484 curve paths over 68 pages, none from a neighbour, proven to fail on the old gate. Re-rendered, five checks green, the film byte-identical a third time.
+
+**Next concrete step: HIS EYE, ROUND 2 on the re-render** (sent 2026-09-17) — the right edge of a page whose music stops early (**13 · 58 · 60 · 63 · 64 · 65**
 are the raggedest) and the clef gutter anywhere. On his word → **2b.6 archive + docs**: the PDF to `print/score/approved/<date>/` with a README (the
 command, the save's commit, the checks) · NITS's two "FOR PLAN 2b" entries closed · CLAUDE.md's Apps gains the print line · journal §2 · PLANNER.
 

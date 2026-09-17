@@ -112,6 +112,16 @@
     // proportional score blank staff reads as SILENCE, and the scale may never
     // change page to page (distance is time). Absent = the window edge.
     const wInk = (opts && opts.inkEnd != null) ? Math.min(opts.inkEnd, w1) : w1;
+    // WHICH PAGES A LONG ITEM APPEARS ON (his eye on the first 2b.7 render, 2026-09-17:
+    // "pg 2 in piano, extra from next page trill"). D59: a long item draws on every page
+    // it CROSSES — crosses what the page OWNS, not what the page draws. The first build
+    // tested it against the drawn span, so a trill starting just AFTER the cut left a
+    // 0.3 s stub of its curve in the right reserve: next page's music, on this page.
+    // HOW FAR it is then drawn is a separate question and unchanged — out to wInk, so a
+    // sound continuing over the page turn still reaches the edge of the system.
+    const crosses = OWN
+      ? ((t0, t1) => t1 > OWN[0] + 1e-9 && (ownsEnd ? t0 <= OWN[1] + 1e-9 : t0 < OWN[1] - 1e-9))
+      : ((t0, t1) => !(t1 < w0 || t0 > wInk));
 
     for (const sysModel of model.systems) {
       let sys;
@@ -289,7 +299,7 @@
         } else if (it.k === 'envcurve') {
           // the drawn level curve over the FULL lane band (piece #1: value
           // 0..1 maps bottom -> top of the track), clipped to the window
-          if (it.t1 < w0 || it.t0 > wInk) continue;
+          if (!crosses(it.t0, it.t1)) continue;
           const EC = E.envCurve;
           // [2f.4] band 'lane': a multi-staff part's curve spans its whole lane (the piano's trills), as its go line does
           const yT = it.band === 'lane' ? lane.yTopPx : sys.yTopPx, yB = it.band === 'lane' ? lane.yBotPx : sys.yBotPx;
@@ -393,7 +403,7 @@
           // above exists because on a MORPH page the glissando owns the top
           // half. The trance section has no glissando, so its final crescendo
           // takes the whole lane. Opt-in per overlay — morph pages unchanged.
-          if (it.t1 < w0 || it.t0 > wInk) continue;
+          if (!crosses(it.t0, it.t1)) continue;
           const CC = E.crescCurve;
           const yB = sys.yBotPx;
           const yCeil = it.full ? sys.yTopPx : (sys.yTopPx + sys.yBotPx) / 2;
@@ -421,7 +431,7 @@
           // THE MORPH GLISSANDO (day 35, composer): one smooth interpolated
           // line for the whole section, brightOrange, taking PRECISELY the TOP
           // HALF of the lane. The bottom half belongs to the crescendo.
-          if (it.t1 < w0 || it.t0 > wInk) continue;
+          if (!crosses(it.t0, it.t1)) continue;
           const GC2 = E.glissCurve;
           const yT = sys.yTopPx, yMid = (sys.yTopPx + sys.yBotPx) / 2;
           const n = it.samples.length, gp = [];
@@ -591,7 +601,7 @@
           // the sounding-length bar: left edge flush with the go line,
           // right edge at onset + sounding length, centered on the written
           // head; clipped to the page like a brick
-          if (it.t1 < w0 || it.t0 > wInk) continue;
+          if (!crosses(it.t0, it.t1)) continue;
           const RB = E.ringBar;
           // dx0Ss (day 24): the bar begins after the nh-unit's ink, not at the
           // go line — layout computes it from the unit's own right edge.
@@ -601,7 +611,7 @@
             '" height="' + h.toFixed(2) + '" fill="' + RB.color + '" opacity="' + RB.opacity + '"/>');
         } else if (it.k === 'brick') {
           if (o.hideBricks) continue;   // day 22: the bricks toggle
-          if (it.t1 < w0 || it.t0 > wInk) continue;
+          if (!crosses(it.t0, it.t1)) continue;
           const x0 = view.xOfSeconds(Math.max(it.t0, w0)), x1 = view.xOfSeconds(Math.min(it.t1, wInk));
           // native tooltip (day 22): hover a brick to see what it is; the
           // brick must opt back into pointer events — the sheet SVG is

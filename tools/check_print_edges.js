@@ -20,6 +20,8 @@
 //        · every point item is owned by EXACTLY ONE page — the 129 doubled
 //          onsets of §613 were this test failing.
 //        · no page owns nothing, and no beam is severed by a cut.
+//        · no LONG item (curve, ring bar) is drawn on a page it does not CROSS — the
+//          trill stubs he found in a right reserve on piano p7 and cello p14.
 //
 //   B. THE INK (measured in Chrome, ~2 min). The rendered pages themselves:
 //        · nothing TIMED in the clef gutter. Anything reaching left of the
@@ -74,6 +76,20 @@ if (owned !== P.pointTotal) fail('the pages own ' + owned + ' point items but th
   ' — ' + Math.abs(owned - P.pointTotal) + ' drawn twice or not at all');
 else console.log('   ok  every point item owned exactly once (' + owned + ')');
 
+// A LONG ITEM BELONGS TO THE PAGES IT CROSSES — crosses what the page OWNS, not what the
+// page draws. His eye on the first 2b.7 render, 2026-09-17: "pg 2 in piano, extra from next
+// page trill ; vc pg 14" — a trill beginning on the cut left a stub of its curve in the
+// previous page's right reserve, and one ending in a left reserve left a stub there. 19 of
+// them on 9 pages. The first checker did not look for this, which is why he had to.
+if (P.longMalformed && P.longMalformed.length)
+  fail(P.longMalformed.length + ' long item(s) have no bounds, so the ownership census cannot see them: ' + P.longMalformed.slice(0, 6).join(' · '));
+// The FAULT is not that curves fall in a reserve — that is just where the music is. The
+// fault is drawing them. So the plan states what each page SHOULD carry and pass B counts
+// the paths actually on it; the number below is only how much there was to get wrong.
+const inReserve = pages.reduce((a, p) => a + p.inReserveOnly, 0);
+console.log('   ok  ' + P.longTotal + ' long items (' + JSON.stringify(P.longByKind).replace(/[{}"]/g, '').replace(/,/g, ' ') +
+  ');  ' + inReserve + ' lie in a reserve without crossing the page that draws it — pass B proves none of them inks');
+
 const ragged = pages.slice(0, -1).map(p => p.w1 - p.inkEnd);
 console.log('   ok  ' + ragged.filter(g => g > 0.5).length + ' pages end more than 0.5 s early, at most ' +
   Math.max(...ragged).toFixed(2) + ' s (' + (100 * Math.max(...ragged) / P.pageSeconds).toFixed(0) + '% of the width)' +
@@ -96,7 +112,7 @@ const probe = `
     const R=mus.getBoundingClientRect();
     const k=mus.viewBox.baseVal.width/R.width;
     const box=el=>{const b=el.getBoundingClientRect();return [(b.left-R.left)*k,(b.right-R.left)*k,b.width*k];};
-    let arcs=0,dots=0,maxRight=-1e9,straddle=0,gutterOnly=0,arcOut=0;
+    let arcs=0,dots=0,maxRight=-1e9,straddle=0,gutterOnly=0,arcOut=0,cGreen=0,cOrange=0;
     for(const sys of mus.querySelectorAll('g[class^="sys sys-"]')){
       // LEAVES only: a nested <g> would be counted twice, and its box is its children's union anyway
       for(const el of sys.querySelectorAll('*')){
@@ -104,6 +120,10 @@ const probe = `
         const cls=el.getAttribute('class')||'';
         if(cls==='gc-arc') arcs++;
         if(cls==='gc-impact') dots++;
+        // a D42 curve is ONE path, filled in its own colour (render.js curvePathD42)
+        const f=el.getAttribute('fill');
+        if(el.tagName==='path'&&f===CGREEN) cGreen++;
+        if(el.tagName==='path'&&f===CORANGE) cOrange++;
         const [L,Rt,W]=box(el);
         if(W<=0&&Rt<=0) continue;                  // nothing drawn
         if(Rt>maxRight) maxRight=Rt;
@@ -111,13 +131,14 @@ const probe = `
         if(cls==='gc-arc'&&(L<GUT-0.5||Rt>XINK+1.5)) arcOut++;
       }
     }
-    return [i+1,arcs,dots,maxRight.toFixed(2),straddle,gutterOnly,arcOut].join('|');
+    return [i+1,arcs,dots,maxRight.toFixed(2),straddle,gutterOnly,arcOut,cGreen,cOrange].join('|');
   });
   document.body.setAttribute('data-e', rows.join(' ;; '));
 });</script>`;
 const GUT = P.gutterPx;
 // xInk differs per page (the ragged edge), so it is injected as a lookup the probe reads by index
-const inject = '<script>const GUT=' + GUT + ';const XINKS=' + JSON.stringify(pages.map(p => +p.xInk.toFixed(3))) + ';</script>';
+const inject = '<script>const GUT=' + GUT + ';const XINKS=' + JSON.stringify(pages.map(p => +p.xInk.toFixed(3))) +
+  ';const CGREEN=' + JSON.stringify(P.curveColorGreen) + ';const CORANGE=' + JSON.stringify(P.curveColorOrange) + ';</script>';
 fs.writeFileSync(html, fs.readFileSync(html, 'utf8') + inject +
   probe.replace('const R=mus.getBoundingClientRect();', 'const R=mus.getBoundingClientRect();const XINK=XINKS[i];'));
 
@@ -137,14 +158,18 @@ let arcTotal = 0, dotTotal = 0;
 for (const row of rows) {
   const n = +row[0], p = pages[n - 1];
   if (!p) continue;
-  const [arcs, dots, maxRight, straddle, gutterOnly, arcOut] =
-    [+row[1], +row[2], +row[3], +row[4], +row[5], +row[6]];
+  const [arcs, dots, maxRight, straddle, gutterOnly, arcOut, cGreen, cOrange] =
+    [+row[1], +row[2], +row[3], +row[4], +row[5], +row[6], +row[7], +row[8]];
   arcTotal += arcs; dotTotal += dots;
   const bad = [];
   if (straddle) bad.push(straddle + ' element(s) straddle the clef gutter');
   if (arcs !== p.gc) bad.push(arcs + ' arcs drawn, ' + p.gc + ' strikes owned');
   if (dots !== arcs) bad.push(arcs + ' arcs but ' + dots + ' impact dots — an arc is not whole');
   if (arcOut) bad.push(arcOut + ' arc(s) reach outside [gutter, system end]');
+  // HIS EYE, 2026-09-17: a trill's curve drawn on the page BEFORE the one that owns it
+  if (cGreen !== p.curvesGreen) bad.push(cGreen + ' limeGreen curves drawn, ' + p.curvesGreen + ' cross this page' +
+    (p.inReserveOnly ? '  (' + p.inReserveOnlyDetail.join(' · ') + ' lie in a reserve)' : ''));
+  if (cOrange !== p.curvesOrange) bad.push(cOrange + ' brightOrange curves drawn, ' + p.curvesOrange + ' cross this page');
   if (maxRight > p.xInk + 1.5) bad.push('ink to x=' + maxRight.toFixed(1) + ', past the system end ' + p.xInk.toFixed(1));
   if (bad.length) fail('page ' + n + '  ' + bad.join(' · '));
   else if (verbose) console.log('   ok  page ' + n + '  arcs ' + arcs + '  right edge ' + maxRight.toFixed(1) +
@@ -154,6 +179,8 @@ const gcPlan = pages.reduce((a, p) => a + p.gc, 0);
 if (!failures) {
   console.log('   ok  no timed ink in the clef gutter, none past the system end, on all ' + pages.length + ' pages');
   console.log('   ok  ' + arcTotal + ' GC arcs and ' + dotTotal + ' impact dots = ' + gcPlan + ' owned strikes');
+  console.log('   ok  every page draws exactly the curves that cross it — ' +
+    pages.reduce((a, p) => a + p.curvesGreen + p.curvesOrange, 0) + ' curve paths, none from a neighbouring page');
 }
 
 try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (e) { /* the temp dir is not the point */ }

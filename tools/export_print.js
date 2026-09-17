@@ -259,23 +259,46 @@ if (planJson) {
     else if (LONG.has(it.k)) items.push({ k: it.k, t0: it.t0, t1: it.t1, part: sys.part, long: true });
   }
   const pts = items.filter(x => !x.long && isFinite(x.t));
+  const longs = items.filter(x => x.long && isFinite(x.t0) && isFinite(x.t1));
+  const CURVE = ((C.engraving && C.engraving.render) || {});
   const out = {
-    ir: irId, format: formatName, pageSeconds, advanceSeconds, leftReserve, rightReserve,
+    ir: irId,
+    // the two D42 curve colours, read from the registry so the checker never hard-codes them
+    curveColorGreen: (CURVE.envCurve || {}).color, curveColorOrange: (CURVE.glissCurve || {}).color, format: formatName, pageSeconds, advanceSeconds, leftReserve, rightReserve,
     gutterPx: (C.prefatory && C.prefatory.gutterPx) || 0, blockW, srcStart: ir.source.window[0], srcEnd,
     pointKinds: Render.POINT_KINDS, longKinds: Render.LONG_KINDS,
-    pointTotal: pts.length,
+    pointTotal: pts.length, longTotal: longs.length,
+    // a long item with no bounds would be invisible to the ownership census AND still drawn — the one way this check could lie
+    longMalformed: items.filter(x => x.long && !(isFinite(x.t0) && isFinite(x.t1))).map(x => x.k + "@part" + x.part),
+    longByKind: Object.fromEntries(Render.LONG_KINDS.map(k => [k, longs.filter(x => x.k === k).length])),
     pages: pages.map((p, i) => {
       const view = viewFor(i);
       const inkEnd = inkEndOf(i, view);
       const last = i === pages.length - 1;
       const ownsT = t => t >= p.t0 - 1e-9 && (last ? t <= p.t1 + 1e-9 : t < p.t1 - 1e-9);
       const mine = pts.filter(x => ownsT(x.t));
+      const crossesOwned = x => x.t1 > p.t0 + 1e-9 && (last ? x.t0 <= p.t1 + 1e-9 : x.t0 < p.t1 - 1e-9);
+      const inDrawn = x => !(x.t1 < view.window[0] || x.t0 > inkEnd);
       return {
         n: i + 1, t0: p.t0, t1: p.t1, kind: p.kind, severed: p.severed,
         w0: view.window[0], w1: view.window[1], inkEnd,
         xInk: view.xOfSeconds(inkEnd), xMusic0: view.gutterPx,
         points: mine.length, gc: mine.filter(x => x.k === 'gc').length,
         golines: mine.filter(x => x.k === 'goline').length,
+        // LONG ITEMS (his eye, 2026-09-17: "pg 2 in piano, extra from next page trill ; vc pg 14").
+        // A long item belongs to the pages it CROSSES — crosses what the page OWNS.
+        //   longs        what the page should draw
+        //   curvesGreen  of those, the ones that ink as a D42 limeGreen path (env + cresc), ONE path each
+        //   curvesOrange the same for the morph glissando's brightOrange
+        // check_print_edges counts the paths on the rendered page and must find these numbers.
+        //   inReserveOnly  long items lying in a RESERVE without crossing the owned span — what the
+        //   first 2b.7 build drew as stubs (19 on 9 pages). Information, not a fault: it is a fact
+        //   about where the music falls, and the test is that none of them reaches the ink.
+        longs: longs.filter(crossesOwned).length,
+        curvesGreen: longs.filter(x => crossesOwned(x) && (x.k === 'envcurve' || x.k === 'cresccurve')).length,
+        curvesOrange: longs.filter(x => crossesOwned(x) && x.k === 'glisscurve').length,
+        inReserveOnly: longs.filter(x => inDrawn(x) && !crossesOwned(x)).length,
+        inReserveOnlyDetail: longs.filter(x => inDrawn(x) && !crossesOwned(x)).map(x => x.k + " part" + x.part + " @" + x.t0.toFixed(2) + "-" + x.t1.toFixed(2)),
       };
     }),
   };

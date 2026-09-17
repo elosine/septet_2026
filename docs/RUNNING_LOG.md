@@ -16387,3 +16387,39 @@ widening for drift.
 
 **Owed:** his eye on the new PDF — specifically the right edge of a page whose music stops early (13 · 58 · 60 · 63 · 64 · 65 are the raggedest) and the
 clef gutter anywhere. Then **2b.6**, archive + docs.
+
+## §616. HIS EYE ON THE 2b.7 RENDER: a long item belongs to the pages it CROSSES — and the checker that should have caught it (2026-09-17, session 15, Opus 5)
+
+**His word, with two screenshots:** *"pg 2 in piano, extra from next page trill ; vc pg 14"* — a pale-green curve at the right edge of a page, with no
+notes under it.
+
+**A CORRECTION TO §615, not an edit of it.** D59 says a long item *"draws on every page it crosses, clipped at the owned span"*. §615 built the CLIP
+right and the GATE wrong: the five long kinds were tested against `[w0, wInk]` — the span the page DRAWS — instead of against what the page OWNS. So a
+trill whose curve began after the cut was drawn as a 0.3 s stub in the previous page's right reserve, and a curve ending inside a left reserve left a
+stub there. **19 of them on 9 pages:**
+
+| page | the stub |
+|---|---|
+| 7 | `envcurve Pno @63.72–65.45` — **his piano one**; the trill begins EXACTLY on the cut |
+| 14 | `envcurve Vc @127.15–134.70` — **his cello one** |
+| 16 · 17 | Va, then Vn1 + Va reaching BACKWARD out of the left reserve |
+| 33 · 47 | the morph pair (gliss + cresc), BCl and Va |
+| 57 · 58 · 60 | Vn2 · BCl + Vn1 · Fl + Va, at the close |
+
+**The fix (one predicate):** `crosses(t0, t1)` — `t1 > own0 && t0 < own1`, half-open at the right, the last page owning its end. How far a crossing item
+is then drawn is unchanged: out to `wInk`, so a sound continuing over the page turn still reaches the end of the system. With no owned span the old test
+stands character for character; **the film is byte-identical, proven a third time.**
+
+**THE CHECKER'S OWN FAULT, which matters more.** §615's `check_print_edges` tested point events exhaustively and long items not at all — which is why he
+had to find this by eye, the exact thing D59 exists to prevent. The first attempt at a test was also wrong and is recorded here as a dead end: it
+asserted `inDrawn && !crossesOwned == 0`, a property of **where the music falls**, not of what is drawn — 19 curves lie in a reserve no matter what the
+renderer does, so the assertion could never be satisfied and failed on all 9 pages with the fix already in.
+
+**The test that works measures the INK.** A D42 curve is exactly ONE `<path>` filled in its own registry colour (`curvePathD42`, `pathOpacity` set) —
+limeGreen `#99FF00` for the env and cresc curves, brightOrange `#F04B00` for the morph glissando, both read from `container.json` so the checker
+hard-codes nothing. The plan states how many curves cross each page; Chrome counts the paths on it; they must agree. **484 curve paths over 68 pages,
+none from a neighbour.** Proven to fail: with the old gate restored for one run it named **page 7 (1 drawn, 0 cross)** and **page 14 (1 drawn, 0 cross)**
+— his two screenshots, by number, from the build.
+
+**Re-rendered:** 71 pages, five checks green again. *(`brick` items appear in the leak list but are invisible in print — `hideBricks: true`. They are
+counted because the census is over the model, and a hidden kind that starts being drawn later should not escape the test. `ringbar`: 0 in this score.)*
