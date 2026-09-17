@@ -16018,3 +16018,26 @@ section updated. No prose touched (§569). **Verified on his :5300:** three list
 *(A first attempt to write the README, this entry and the closures in one shell command failed to parse and wrote nothing; redone as separate steps.)*
 
 **Closed:** PLAN 2h.7 → done · the build plan's steps 5–7 · journal §2 N0 closed → N1 (his read-through of the instructions page).
+
+## §603. The performance instructions: a copy edit pass — five mechanical fixes applied, seven wording proposals put to him (2026-09-17, session 15, Opus 5)
+
+**His word, verbatim:** *"please do a copy edit pass on the performance instructions"*.
+
+**How the pass was bounded, and why:** his standing rule for this page (§569) — the prose is his; the AI does not reword it. A copy edit asked for
+by him is read as licence for **mechanics only** (spelling, hyphenation, punctuation) — applied, each listed. **Anything that changes his words**
+(grammar that needs a word swapped, clarity, consistency of form) is **proposed, not applied** — his to take or leave.
+
+**Applied (before → after), verified on his :5300 after a reload:**
+1. heading: *"Demo Recording with Score Following Video"* → *"… Score-Following Video"* (a compound modifier)
+2. Gradient Curves: *"appears along side the cursor"* → *"appears alongside the cursor"*
+3. Notation: *"indicates dynamic level and the orange curve indicates"* → *"indicates dynamic level, and the orange curve indicates"* (two clauses)
+4. Notation: *"is approximate, you will calibrate"* → *"is approximate; you will calibrate"* (a comma splice)
+5. Legend: *"Let ring slurs"* → *"Let-ring slurs"* (a compound modifier)
+
+**Proposed, not applied (in chat, P1–P7):** P1 *"less about … , but more about"* → *"less about … than about"* · P2 *"this section is less about"*
+→ *"this movement"* (the paragraph is about the movement; the next introduces its two sections) · P3 the chart sentence — its Hz are beat rates,
+not pitches · P4 "go-line" used before it is named · P5 *"breathe/take up bow before"* — unclear for strings · P6 *"Dynamics."* run-in vs the
+legend's em-dash entries · P7 the intro paragraph sits under the demo-video heading.
+
+**Still open from the checkpoint, not re-raised as copy edits:** the crescendo's "dynamic 1 to dynamic 2" vs ppp → fff · Spectral "Performers …
+glissando" (the flute and bass clarinet hold) · "two curves for each performer" (the piano has none).
