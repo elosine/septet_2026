@@ -85,6 +85,28 @@
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 
+### HAND-OFF — 2026-09-17 (session 15, Fable 5.1 → Opus) — N0 THE BLOOM PRACTICE VIDEOS: PLANNED, OPUS BUILDS *(pulled ahead of N1 at his word)*
+
+**His word:** *"Can we prepare the beating demo videos? … We should essentially make similar videos to the final ones that were made for the Tubo
+piece."* — then *"we can skip the planning protocol … pls draw up the plan to hand to opus"* (RUNNING_LOG §595–§597).
+
+**Settled with him (§596):** three Bloom-only videos, one per pair, in the tuba's exact final shape (a labelled 30 s static with the held max dyad →
+the whole Bloom in two lanes with the pair's audio) · **the bass clarinet in C** · **the AI renders in Reaper itself** through the bridge
+(`tools/render_reaper.js`); his Reaper was open, the bridge alive and the rack saved at planning time.
+
+**The deliverable of this hand-off:** `docs/plans/BLOOM_PRACTICE_VIDEOS.md` — self-contained: the shape, the measured data, the guards, seven steps
+with their checks, what is his, the AI calls he may overturn, the stop-and-report list, an empty register. PLAN 2h.7 carries the sub-steps 2h.7.1–7.
+
+**Next concrete step:** PLAN 2h.7.1 — the plan's step 1: the three two-lane stills and a 10 s moving probe from `export_video.js --parts`, then the
+smallest change to `render_reaper.js` that renders named parts to their own file, then the Bass Clarinet + Cello render — with the approved
+render's sha checked before and after (the plan's §3). Ask him first that Reaper is open, the bridge alive, the rack saved.
+
+**Resume reads:** `docs/plans/BLOOM_PRACTICE_VIDEOS.md`. Nothing else.
+
+**Model:** **Opus** builds, after a clear. Fable only if a stop-and-report condition (the plan's §7) needs a verdict.
+
+**Still open beneath this:** N1, his read-through of the instructions page — the checkpoint block below stands as written.
+
 ### CHECKPOINT — 2026-09-17 (session 15, Opus 5 ⇄ Fable 5.1) — N1 THE PERFORMANCE INSTRUCTIONS: DRAFTED END TO END, HIS READ-THROUGH NEXT *(mid-session checkpoint)*
 
 **Sessions 14–15 in one line:** the tuba's instructions page copied (nouns only), then revised section by section to his dictation; every image is
@@ -133,9 +155,10 @@ When he calls the read-through done, N1 closes (the Bloom practice-video links w
 
 | # | Step | Model | Clear first? |
 |---|---|---|---|
-| **N1** | **► the performance instructions — his read-through** of the drafted page (items 1–5 above); then N1 closes | **Opus** | **yes — this checkpoint; then /postclear** |
+| **N0** | **► the Bloom practice videos (PLAN 2h.7)** — build from `docs/plans/BLOOM_PRACTICE_VIDEOS.md`, the pilot (Bass Clarinet + Cello) first, his eye and ear, then the set → his upload → the links on the page | **Opus** | **yes — clear now; then /postclear** |
+| **N1** | the performance instructions — his read-through of the drafted page (items 1–5 above); then N1 closes | Opus | no — it can ride in the N0 session while renders run, or after |
 | **N2** | **PLAN 2b the print score** — the print exporter's septet frame (the §558 port) · the cover (title CN-64 + the ensemble line) · the Tempus copy with the video link at the top · where the instructions page goes in the print | Fable plans · Opus builds | yes, between |
-| **N3** | Later, noted: the Bloom practice videos (2h.7; no SPECTRAL demos, §584) → their links on the page · the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
+| **N3** | Later, noted: the performance score carries D50 (PLAN 3's acceptance line) · its own pitch form (D55) | — | — |
 | **N4** | Still his, from before: the chain and crescendo runs by ear (§420–§426) · CN-67 in the app · the 15 geometry touches + the Vn1 spill (§401n) · the drawer verdicts (STRIKES_TOOL §AG) · the pinned player (§AF2) · the rhythm drawer remodel (§AE) · SWEEP #4 · #10 · #11 · #12 | Fable to hear · Opus to fix | no |
 
 ### SESSION END — 2026-09-16 (session 13, Fable 5.1 ⇄ Opus 5) — SITTING F DONE: the audio re-render and the demo video, approved, archived as the submission copy, online

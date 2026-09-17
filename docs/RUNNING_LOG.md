@@ -15785,3 +15785,74 @@ rule, the tools, the next step as an instruction with the five things that are h
 table with N1 = his read-through and N2 = the print score) · PLANNER NOW · NITS drafting status (what is placed, removed, not placed). **Committed:**
 this session's page, images (four added, one re-captured, two tuba images deleted), styles, `tools/capture_lane.js` (--onlyOnsets) and the docs. **Left:**
 his files per D40; the six unsaved working copies, his.
+
+## §595. The Bloom practice videos taken up: the tuba's demo-video spec gathered; the septet's three pairs measured (2026-09-17, session 15, Fable 5.1)
+
+**His word, verbatim (with `/postclear`):** *"Can we prepare the beating demo videos? Please look at the Tubo ones. We should essentially make similar
+videos to the final ones that were made for the Tubo piece. Gather up the specs, please, and then report back and then let's build the plan."* — PLAN
+2h.7 (D48) pulled forward from N3, ahead of N1's read-through and N2.
+
+**Read, in `for_seven_tubas` (read-only):** `docs/PERFORMANCE_NOTES.md` § DEMO VIDEOS — CLOSED · `notation/video/renders/demos.sh` ·
+`tools/gen_demo_heldmax_midi.js` (header) · `docs/notation_instructions/index.html` (the five links).
+
+**The tuba's final form, as executed:** five videos, one per pair, 4:52–5:00 each, 1920×1080, 30 fps, x264 crf 16, AAC 256k 48 kHz. Per video:
+(1) a STATIC — a probe still of the two lanes at the pair's peak instant, the label drawn ON the image (Georgia 58 px, black, x 70 y 48: "Bloom — N Hz —
+Tuba A + Tuba B", N printed as the chart prints it), 30 s, under it the SUSTAINED max-beating dyad from `demo-heldmax.wav` (one generated MIDI of held
+dyads in 32 s slots, bends measured from the save at the peak, rendered by him through the Reaper rack) · (2) the WHOLE SECTION, two lanes
+(`export_video.js --parts a,b --t0 --t1`), with the pair's own demo audio (`demo-<PAIR>.wav`, the pair soloed in Reaper by him) · (3) 1.5 s white
+silent gap · (4)+(5) the same for Convergence. Rejected there on the way: minimum statics (*"they don't stay down there long enough. and it's too
+precise"*) · a Balance segment · a separate title card · 10 s statics (became 30 s: *"b, the samples loop so 30 sec is fine"*). Titles on YouTube in
+one pattern; each URL verified against its video's title before wiring into the page.
+
+**Measured here, from `scores/piece-septet.json` (the save's morphBend curves, read-only):** BLOOM 183.00–304.82 s · SPECTRAL 314.00–435.48 s. The
+three pairs: **Bcl + Vc on C4, peak 7.2 Hz at 214.8 s** · **Vn1 + Va on D5, peak 16.1 Hz at 222.9 s** · **Fl + Vn2 on A5, peak 21.5 Hz at 226.6 s** —
+D48's figures (7 · 16 · 22) confirmed. Pair ends: Bcl 299.78 / Vc 299.93 · Vn1 304.82 / Va 303.99 · Fl 299.21 / Vn2 302.17.
+
+**The septet's exporter** carries the tuba's day-40 flags (`--parts`, `--probe`/`--probeDir`, `--t0`/`--t1`, `--audio`) — read from its header, NOT
+yet run with a two-lane subset on the septet frame (the first thing a build would probe). **Nothing built, nothing decided.** Next: the plan, by
+`docs/PLANNING_METHOD.md`.
+
+## §596. The practice videos: the AI renders in Reaper itself (a correction of §595's reading); bcl in C; the shape confirmed (2026-09-17, session 15, Fable 5.1)
+
+**The AI's reading, put to him (§595):** *"Same pipeline and same division of labour: I generate the MIDI and the render list, you render in Reaper,
+I build the videos."* **His word, verbatim:** *"I believe AI can render independantly in reaper, correct me if I'm wrong"*. **He is right — the AI's
+reading was the tuba's day-40 arrangement carried over without checking this repo.** `docs/RENDER.md` §1: `node tools/render_reaper.js` renders
+through the Reaper bridge (a COPY of the rack in its own tab, items placed by track name, 32-bit float, measured, one plain gain); done twice, §453
+and §553–§554. It needs his Reaper open with the bridge alive and the rack saved. **Not yet known:** the route has only rendered the WHOLE piece —
+a pair-only render and a render of a generated held-dyad MIDI are new uses of it, the build's probe, not a claim.
+
+**His word, verbatim:** *"bcl in c is fine for these videos"* — the practice videos borrow the presentation's pitch form (D55), no transposed lane.
+
+**The shape, confirmed — his "yes"** to: three Bloom-only videos, one per pair (Bcl + Vc · Vn1 + Va · Fl + Vn2), in the tuba's exact shape — the
+labelled 30 s static with the held max dyad, then the whole Bloom in two lanes with the pair's audio; no second section.
+
+## §597. The practice videos: the planning protocol skipped at his word; the build plan written for Opus (2026-09-17, session 15, Fable 5.1)
+
+**What happened, in order.** The AI gave the top line (seven steps) and then step 1's goal in PLANNING_METHOD's format. **His word, verbatim**, to the
+AI's list of what the bridge render needs: *"done; good to go"* — and to the step-1 goal: *"we can skip the planning protocol. if you have what you
+need, pls draw up the plan to hand to opus"*. A port of a known recipe does not need the one-step-at-a-time method; the method's own header keeps it
+for building a plan item out of a problem. The top line stands as the plan's seven steps.
+
+**Checked before writing (read-only):** `tools/render_reaper.js` reads `midi/<score>/NN <track>.mid`, takes its end from `midi/<score>.capture.json`
+and writes `notation/audio/<score>.wav` — so **a careless demo render with default arguments would overwrite the approved render**; the plan's first
+guard is its sha256. The 09-16 capture and the 14 per-track files are on disk; `piece-septet.json` is unchanged since, so no new capture is needed.
+`tools/export_video.js` carries `--parts` through the sparse-lane path. `docs/plans/` did not exist.
+
+**Written:** `docs/plans/BLOOM_PRACTICE_VIDEOS.md` — the shape · the data · the guards · seven steps with checks · what is his · the AI calls · the
+stop-and-report list · a register. PLAN 2h.7 → `todo` with sub-steps 2h.7.1–7 · journal §2 HAND-OFF block + N0 in the NEXT STEPS table · PLANNER NOW.
+
+**The design calls in it, and what was rejected:**
+- **The held dyads = the capture FROZEN at each pair's peak instant** (the channels' whole state there, the note restarted and held 32 s, loudness
+  at the top of that span's swell). *Rejected:* porting the tuba's `gen_demo_heldmax_midi.js`, which writes notes and bends from arithmetic — the
+  septet's channel setup, keyswitches and measured bend ranges live only in the composer (RENDER.md rule 1), and §553's bend-range bug (199 c
+  assumed, ~1 st real) is what a second copy costs. *In reserve:* a small composer score with flat morph curves, captured headless — heavier (a
+  save, a capture run, the one-tab rule), used only if the freeze fails its rate check.
+- **Two checks the tuba build did not have:** each part must HOLD for 30 s (level per second; the score re-strikes every ~7 s, so nobody has heard
+  these samples held that long) · **the beat rate measured off the rendered file against the label's figure** — no label goes on a sound that does
+  not match it.
+- **Demo files gained UP to −1 dBTP** (one plain gain each) — a pair alone sits far under the full mix. For these files only; RENDER.md rule 8
+  ("never up") stands for the piece. His to overturn.
+- **The pilot first:** Bass Clarinet + Cello, the one countable rate (7 Hz), where a wrong rate or a seam is heard at once; the other two only on
+  his word. *Rejected:* building all three and showing the set — the tuba's set was rebuilt twice (the statics' length, then the Hz labels).
+- **New against the tuba:** every septet pair is two NON-ADJACENT lanes (1,6 · 3,5 · 0,4); every tuba pair was two neighbours. Step 1 looks at it.
+- **The step table's N0**, not a renumbering: N1 (his read-through) stays open beneath and can ride in the same Opus session.
