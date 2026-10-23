@@ -1,7 +1,7 @@
 # PROJECT JOURNAL — septet 2026 (the Tempus septet)
 
 <!-- card:tempus -->
-<!-- Chief of Staff card: rewrite these three lines (and the date) at the end of every session on this project. Plain words, one line each. Read by home-management/tools/brief.js; list in home-management/docs/PROJECTS.md. -->
+<!-- Chief of Staff card: the PA keeps it current from its scan of this repo (home-management/tools/scan.js); a session here may update it too. Plain words, one line each. List: home-management/docs/PROJECTS.md. -->
 > **▶ Where I left off** · updated 2026-10-22
 > - **Last:** the submission was built Sep 17 — print score, demo video, application.
 > - **Decided:** parts (PLAN 2c) only if the piece is selected; they come through the Parts engine (for_seven_tubas).
