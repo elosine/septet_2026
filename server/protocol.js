@@ -97,6 +97,7 @@ function attachProtocol(io, ctx) {
         part: me.part, partIndex: me.partIndex, rowId: me.rowId, name: me.name, leader: isLeader(),
         mode: ens.mode, roomState: ens.tuple, room: 'ensemble',
         rooms: rooms.roomsList(ens.id), roster: rosterOf(ens.id), letters: P ? P.letters : [],
+        displayPart: ens.displayPart == null ? null : ens.displayPart,   // 9i: the display's zoom, as last chosen
         serverTime: clock.now(), spare: !!ctx.spare,
       };
       if (me.role === 'gatekeeper') welcome.rows = registry.gatekeeperView(ens, ctx.originOf(socket.handshake.headers)).rows;
@@ -236,6 +237,10 @@ function attachProtocol(io, ctx) {
       if (!requireHello(cb, 'display.show')) return;
       if (me.role !== 'gatekeeper') return refuse(cb, 'display.show', 'gatekeeper only');
       const partIndex = msg && msg.partIndex != null && Number.isFinite(Number(msg.partIndex)) ? Number(msg.partIndex) : null;
+      // 9i: the choice is kept with the ensemble, so a display opened later (the
+      // remote's "show the score here" loads a fresh page) starts on that part
+      const ens = ensOf();
+      ens.displayPart = partIndex; registry.save();
       io.to(ensKey(me.ensId)).emit('display', { partIndex });
       ok(cb, { partIndex });
     });

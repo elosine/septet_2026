@@ -255,6 +255,8 @@
       if (st.msg && Date.now() - st.msgAt > 4000) st.msg = '';
       el.msg.textContent = st.msg || (!s.online ? 'offline' : alone && !local ? 'ALONE — the stands are their own' : '');
     }
+    if (room.welcome && room.welcome.displayPart != null) st.displayPart = Number(room.welcome.displayPart);   // the display's zoom as last chosen
+    if (room.socket) room.socket.on('welcome', w => { if (w && w.displayPart !== undefined) { st.displayPart = w.displayPart == null ? null : Number(w.displayPart); paint(); } });
     if (room.socket) room.socket.on('roster', r => { st.roster = r; paint(); });
     if (room.socket) room.socket.on('display', d => { st.displayPart = d && d.partIndex != null ? Number(d.partIndex) : null; paint(); });
     const timer = setInterval(paint, 250);

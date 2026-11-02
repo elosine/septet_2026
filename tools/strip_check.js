@@ -340,6 +340,27 @@ async function main() {
     const z = await D.evalJs('window.__standZoom(0)'); await sleep(500);
     assert(z.length === 1 && z[0] === 0, 'the display\'s own tap zooms a part (display-local)', z);
     await D.evalJs('window.__standZoom(null)'); await sleep(300);
+    // a REAL click on the display, on the cello's lane (the composer, day 46: every
+    // click zoomed the flute — the lane test read a field the laid-out system lacks)
+    S = await readAll();
+    const cello = S.D.lanes && S.D.lanes.find(l => l.part === 6);
+    assert(cello && cello.y0 > 0, 'the display reports its lanes', S.D.lanes && S.D.lanes.map(l => l.part));
+    const click = async (x, y) => { for (const type of ['mousePressed', 'mouseReleased']) await D.cdp.send('Input.dispatchMouseEvent', { type, x, y, button: 'left', clickCount: 1 }); };
+    await click(900, S.D.sheetTop + (cello.y0 + cello.y1) / 2); await sleep(600);
+    S = await readAll();
+    assert(S.D.parts.length === 1 && S.D.parts[0] === 6, 'a click on the cello\'s lane zooms the cello', S.D.parts);
+    await click(900, 400); await sleep(600);
+    S = await readAll();
+    assert(S.D.parts.length === 7, 'a second click brings the whole score back', S.D.parts);
+    // the remote's choice is kept with the ensemble: a display opened later starts on it
+    await remote('display', 2); await sleep(600);
+    const D2 = await open('D2', BASE + '/s/' + gk + '?view=display', [1920, 1080]);
+    let st2 = null;
+    for (let i = 0; i < 80 && !(st2 && (st2.ready || st2.error)); i++) { await sleep(250); try { st2 = await stateOf(D2); } catch (e) { st2 = null; } }
+    assert(st2 && st2.ready && st2.parts.length === 1 && st2.parts[0] === 2, 'a display opened after the remote chose the piano starts on the piano', st2 && st2.parts);
+    await remote('display', null); await sleep(600);
+    st2 = await stateOf(D2);
+    assert(st2.parts.length === 7, 'and follows the remote back to the whole score', st2.parts);
     await remote('mode', 'ALONE'); await settle();
 
     for (const p of pages) assert(p.problems.length === 0, 'page ' + p.name + ': no errors', p.problems.slice(0, 3));

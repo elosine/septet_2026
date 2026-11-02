@@ -407,11 +407,13 @@
     const rect = $('sheet').getBoundingClientRect();
     const k = Math.min(ROWS - 1, Math.max(0, Math.floor((clientY - rect.top) / rect.height * ROWS)));
     const slot = state.slots[k]; if (!slot) return null;
-    const fy = (clientY - rect.top) / rect.height;
+    // the laid-out systems carry their lane in frame px (yTopPx · yBotPx), and the
+    // row's SVG is the frame, so the finger's y in the sheet is the frame's y
+    const y = (clientY - rect.top) * (state.geom.H / rect.height);
     let best = null;
     for (const sy of slot.view.systems) {
       if (typeof sy.part !== 'number') continue;
-      const d = fy < sy.laneFrac0 ? sy.laneFrac0 - fy : fy > sy.laneFrac1 ? fy - sy.laneFrac1 : 0;
+      const d = y < sy.yTopPx ? sy.yTopPx - y : y > sy.yBotPx ? y - sy.yBotPx : 0;
       if (!best || d < best.d) best = { d, part: sy.part };
     }
     return best ? best.part : null;
@@ -486,7 +488,7 @@
     state.mode = w.mode || 'ALONE'; state.tuple = w.roomState || null; state.letters = w.letters || [];
     state.role = w.role || null; state.rowId = w.rowId || null; state.leader = !!w.leader;
     if (w.role !== 'gatekeeper') DISPLAY = false;   // only the gatekeeper's link is a display
-    if (DISPLAY) { document.body.classList.add('display'); if (!Q.get('rows')) ROWS = 1; $('toRemote').href = '/s/' + TOKEN; }
+    if (DISPLAY) { document.body.classList.add('display'); if (!Q.get('rows')) ROWS = 1; $('toRemote').href = '/s/' + TOKEN; state.zoom = w.displayPart == null ? null : Number(w.displayPart); }   // the zoom as last chosen from the remote
     const title = ((w.piece && w.piece.title) || 'Part') + ' · ' + (DISPLAY ? 'display' : (w.part || ('part ' + PART)));
     document.title = title;
     const m = document.querySelector('meta[name="apple-mobile-web-app-title"]'); if (m) m.content = title;
@@ -591,6 +593,8 @@
     part: PART, ir: IR, ready: !!state.slots, error: $('err').textContent,
     token: !!TOKEN, mode: state.mode, following: state.following, room: state.room ? state.room.status() : null, corner: $('ctext').textContent,
     strip: !!state.strip, leader: state.leader, role: state.role, display: DISPLAY, parts: partsDrawn(), zoom: state.zoom,
+    lanes: DISPLAY && state.slots && state.slots[0] ? state.slots[0].view.systems.filter(s => typeof s.part === 'number').map(s => ({ part: s.part, y0: s.yTopPx, y1: s.yBotPx })) : null,
+    sheetTop: $('sheet').getBoundingClientRect().top,
     stripText: state.strip ? { play: state.strip.host.querySelector('.ns-play').textContent, again: state.strip.host.querySelector('.ns-again').textContent, pos: state.strip.host.querySelector('.ns-pos').textContent, ready: state.strip.host.querySelector('.ns-ready').textContent, playing: state.strip.host.classList.contains('playing'), sheetTop: $('sheet').getBoundingClientRect().top } : null,
     t: state.transport.now(), playing: state.transport.isPlaying(),
     cur: state.cur, rowsTotal: state.planned ? state.planned.length : 0,
@@ -620,7 +624,7 @@
     state.model = NotationLayout.layoutSection(state.ir, state.glyphs, Object.assign(
       { frameParts: state.ir.source.parts, ensemble: state.ensemble, techniques: state.techniques },   // [port 9t]
       (container.engraving && container.engraving.layout) || {}));
-    if (DISPLAY) state.parts = state.ir.source.parts.slice();   // the full score (9i)
+    if (DISPLAY) state.parts = state.zoom == null ? state.ir.source.parts.slice() : [state.zoom];   // the full score, or the part the remote chose (9i)
     render();
     setTimeout(refit, 300); setTimeout(refit, 1200);
     if (state.leader && state.role === 'player' && TOKEN) mountStrip();   // 9i: the ticked leader's band
