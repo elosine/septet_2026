@@ -83,6 +83,8 @@
 ## §2 Resume Here
 
 **THE STAND PORT (9t, 2026-11-02, from piece #4):** this repo now carries the performance system — `notation/app/stand.html` (the part as rows, the overlay `notation/lib/animlive.js`), `server/` (the stand server: registry · rooms · clock · Socket.IO; `server/README.md`), `tools/admin.js · test_server.js · chaos_test.js · stand_check.js`. The piece's own notation library is UNCHANGED in what it draws (the seven film pages re-dumped byte-identical; three library files took the stand's additions, one behind `opts.flushCurves`). **The record of the performance system lives in `for_seven_tubas/docs`** (PLAN §9, DESIGN, REQUIREMENTS, RUNNING_LOG 107, PORTING.md); this journal gets one pointer line per sitting. Its server on the box: `scattered-substance.justinwenloyang.com` (PM2 `ss-server`, port 5301).
+- **9h-2 (2026-11-02, afternoon):** the stand's room client — `notation/lib/roomclient.js`, the stand opened by `/s/<token>`, the follow states, the corner; checked by the composer on the iPad, the laptop and the phone over the box (for_seven_tubas RUNNING_LOG 109).
+- **9i (2026-11-02, evening):** the strip · the remote · the display · the switch — `notation/lib/strip.js`, the band above the ticked leader's part, `notation/app/remote.html` on the gatekeeper's link, the display with `?view=display`, the 5-s pre-roll, `tools/admin.js letters` and `leader <ens> Flute`; `tools/strip_check.js` the Tuesday's thirteen 60/60 (for_seven_tubas RUNNING_LOG 110). Next: the composer's check, then the design sitting.
 
 
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
