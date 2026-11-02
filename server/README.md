@@ -86,7 +86,7 @@ SSH from the PC: `ssh -i C:\Users\jwloy\.ssh\id_ed25519 root@5.161.233.35 "…"`
    the clock samples must not pass through Cloudflare's proxy). TTL Auto.
 2. **Clone, install, start** (as `deploy`; the repository is public):
    ```
-   ssh -i C:\Users\jwloy\.ssh\id_ed25519 root@5.161.233.35 "su - deploy -c 'git clone --depth 1 https://github.com/elosine/for_seven_tubas.git /home/deploy/ss && cd /home/deploy/ss && npm ci --omit=dev && pm2 start server/ecosystem.config.js && pm2 save && sleep 2 && curl -s http://127.0.0.1:5301/health'"
+   ssh -i C:\Users\jwloy\.ssh\id_ed25519 root@5.161.233.35 "su - deploy -c 'git clone --depth 1 https://github.com/elosine/septet_2026.git /home/deploy/ss && cd /home/deploy/ss && npm ci --omit=dev && pm2 start server/ecosystem.config.js && pm2 save && sleep 2 && curl -s http://127.0.0.1:5301/health'"
    ```
    Ends with `{"ok":true,…}`. `pm2 save` adds `ss-server` to the dump the
    existing systemd unit resurrects after a reboot.
