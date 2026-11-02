@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leader</title>
+<!-- leader.html — THE SCRIPTED LEADER for 9h-2's check (DESIGN §3): the
+     gatekeeper's or the ticked leader's token sends mode · play · stop · again ·
+     jump · speed · resync as the one tuple. 9i replaces this with the strip and
+     the remote; nothing here is a design. Open: /notation/app/leader.html?token=… -->
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin: 0; background: #151515; color: #eee; font: 17px/1.3 system-ui, sans-serif; }
+  body { padding: 14px; padding-top: calc(14px + env(safe-area-inset-top, 0px)); }
+  h1 { font-size: 15px; font-weight: 500; color: #aaa; margin: 0 0 8px; }
+  #who { font-size: 14px; color: #8c8; margin-bottom: 10px; min-height: 1.3em; }
+  #who.bad { color: #e66; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+  button { font: 18px system-ui, sans-serif; padding: 14px 18px; border-radius: 12px; border: 0; background: #333; color: #eee; min-width: 92px; }
+  button.on { background: #2a6; color: #fff; }
+  button.big { background: #c33; color: #fff; min-width: 140px; }
+  button.big.play { background: #2a6; }
+  input { font: 18px system-ui, sans-serif; padding: 12px; border-radius: 10px; border: 1px solid #444; background: #222; color: #eee; width: 120px; }
+  #pos { font: 600 40px/1 system-ui, sans-serif; margin: 10px 0 4px; letter-spacing: .02em; }
+  #state { font-size: 14px; color: #aaa; white-space: pre-wrap; }
+  #roster { font-size: 14px; color: #ccc; margin-top: 10px; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #888; margin-right: 6px; vertical-align: middle; }
+  .dot.amber { background: #e9a825; } .dot.green { background: #2ecc71; }
+</style>
+</head>
+<body>
+<h1>Leader</h1>
+<div id="who">connecting…</div>
+<div id="pos">0:00.0</div>
+<div id="state"></div>
+<div class="row">
+  <button id="mAlone">ALONE</button><button id="mReh">REHEARSAL</button><button id="mCon">CONCERT</button>
+</div>
+<div class="row">
+  <button id="play" class="big play">PLAY</button><button id="stop" class="big">STOP</button><button id="again">AGAIN</button><button id="resync">RESYNC</button>
+</div>
+<div class="row">
+  <input id="jumpT" inputmode="decimal" placeholder="m:ss or s"><button id="jump">JUMP (−5 s)</button><button id="top">TOP</button>
+</div>
+<div class="row">
+  <button data-rate="0.5">50</button><button data-rate="0.7">70</button><button data-rate="0.85">85</button><button data-rate="1">100</button>
+</div>
+<div id="roster"></div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/testkit/js/syncclock.js"></script>
+<script src="/notation/lib/roomclient.js"></script>
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const Q = new URLSearchParams(location.search);
+  const TOKEN = Q.get('token') || (location.pathname.match(/^\/s\/([A-Za-z0-9_-]{8,64})$/) || [])[1];
+  if (!TOKEN) { $('who').textContent = 'no token — open this page as …/leader.html?token=<the leader link\'s code>'; $('who').className = 'bad'; return; }
+  let lastStart = 0, letters = [];
+  const fmt = t => { const s = Math.max(0, t), m = Math.floor(s / 60); return m + ':' + (s - m * 60).toFixed(1).padStart(4, '0'); };
+  const parseT = v => { v = String(v || '').trim(); if (!v) return NaN; const m = v.match(/^(\d+):(\d+(?:\.\d+)?)$/); return m ? +m[1] * 60 + +m[2] : parseFloat(v); };
+  const room = NotationRoom.makeRoomClient({
+    token: TOKEN, io: window.io, SyncClock: TK.SyncClock, posture: 'rehearsal',
+    on: {
+      welcome: w => { letters = w.letters || []; $('who').className = ''; $('who').textContent = (w.leader ? 'leader' : w.role) + ' · ' + (w.ensemble ? w.ensemble.name : '') + ' · ' + (w.piece ? w.piece.title : ''); paint(); },
+      refused: r => { $('who').className = 'bad'; $('who').textContent = (r && r.message) || 'refused'; },
+      state: paint, mode: paint, roster: paint, status: paint,
+    },
+  });
+  room.connect();
+  function paint() {
+    const s = room.status();
+    $('pos').textContent = fmt(s.position);
+    const t = s.tuple || {};
+    $('state').textContent = (s.online ? 'online' : 'OFFLINE') + ' · ' + s.mode + ' · ' + (t.playing ? 'PLAYING' : 'stopped') + ' · ' + Math.round((t.rate || 1) * 100) + ' %'
+      + ' · clock ' + (s.calibrated ? 'calibrated' : s.locked ? 'locked' : 'unlocked') + (s.clock && s.clock.sigmaMs != null ? ' ±' + s.clock.sigmaMs.toFixed(1) + ' ms' : '');
+    for (const [id, m] of [['mAlone', 'ALONE'], ['mReh', 'REHEARSAL'], ['mCon', 'CONCERT']]) $(id).className = s.mode === m ? 'on' : '';
+    for (const b of document.querySelectorAll('button[data-rate]')) b.className = Number(b.dataset.rate) === (t.rate || 1) ? 'on' : '';
+  }
+  // the roster: the server's broadcast, painted as it comes
+  let roster = null;
+  const paintRoster = () => {
+    if (!roster) return;
+    $('roster').innerHTML = roster.members.map(m => '<span class="dot ' + (m.ready && m.ready.calibrated ? 'green' : m.ready ? 'amber' : '') + '"></span>' + (m.part || m.role) + (m.leader ? ' ★' : '') + (m.room && m.room !== 'ensemble' ? ' (' + m.room + ')' : '')).join(' · ') || '(no one yet)';
+  };
+  room.socket.on('roster', r => { roster = r; paintRoster(); });
+  setInterval(paint, 250);
+  const send = req => room.send(req).then(a => { if (!a || !a.ok) $('who').textContent = (a && a.message) || 'refused'; });
+  $('mAlone').onclick = () => room.setMode('ALONE');
+  $('mReh').onclick = () => room.setMode('REHEARSAL');
+  $('mCon').onclick = () => room.setMode('CONCERT');
+  $('play').onclick = () => { const s = room.status(); lastStart = s.position; send({ playing: true }); };
+  $('stop').onclick = () => send({ playing: false });
+  $('again').onclick = () => send({ playing: true, anchorScoreTime: lastStart });
+  $('resync').onclick = () => room.resync();
+  $('jump').onclick = () => { const t = parseT($('jumpT').value); if (!isFinite(t)) return; lastStart = Math.max(0, t - 5); send({ playing: false, anchorScoreTime: lastStart }); };
+  $('top').onclick = () => { lastStart = 0; send({ playing: false, anchorScoreTime: 0 }); };
+  for (const b of document.querySelectorAll('button[data-rate]')) b.onclick = () => send({ rate: Number(b.dataset.rate), playing: !!(room.tuple && room.tuple.playing) });
+  window.__leader = { room, send };
+})();
+</script>
+</body>
+</html>

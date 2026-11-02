@@ -39,12 +39,25 @@
   #hint.on { opacity: 1; }
   #err { position: fixed; left: 8px; bottom: 8px; color: #b00; background: #fff8; font: 12px monospace; white-space: pre-wrap; max-width: 90vw; }
   #err:empty { display: none; }
+  /* 9h-2: the corner (AR-18 — the rehearsal letter and the time) and the dot
+     (AR-14 — readiness colour only, for now). Shown only when the page was
+     opened by a link. The look is the design sitting's (9i). */
+  #corner { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 6px); right: 10px; display: none; align-items: center; gap: 7px;
+            font: 13px/1 system-ui, sans-serif; color: #666; background: #fffc; padding: 5px 9px; border-radius: 10px; pointer-events: none; }
+  body.room #corner { display: flex; }
+  #dot { width: 9px; height: 9px; border-radius: 50%; background: #999; }
+  #dot.amber { background: #e9a825; } #dot.green { background: #2ecc71; }
+  #door { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: #fff; color: #222;
+          font: 20px/1.4 system-ui, sans-serif; padding: 2em; text-align: center; }
+  #door.on { display: flex; }
 </style>
 </head>
 <body>
 <div id="sheet"></div>
 <div id="hint"></div>
 <div id="err"></div>
+<div id="corner"><span id="dot"></span><span id="ctext"></span></div>
+<div id="door"></div>
 <script src="/notation/lib/coords.js"></script>
 <script src="/notation/lib/stamps.js"></script>
 <script src="/notation/lib/layout.js"></script>
@@ -54,18 +67,22 @@
 <script src="/notation/lib/transport.js"></script>
 <script src="/notation/lib/animobj.js"></script>
 <script src="/notation/lib/animlive.js"></script>
+<script src="/notation/lib/roomclient.js"></script>
 <script>
 (async function () {
   const $ = id => document.getElementById(id);
   const Q = new URLSearchParams(location.search);
+  // 9h-2: THE PAGE OPENED BY A TOKEN — /s/<token> (the door) carries the part,
+  // the piece and the room; ?part= stays for the workshop and the checks.
+  const TOKEN = (location.pathname.match(/^\/s\/([A-Za-z0-9_-]{8,64})$/) || [])[1] || Q.get('token') || null;
   // ?part=N (1…10) picks the part — the token of 9g will carry this later.
   // THE SIZE KNOBS (AR-20: "the part's size / the screen's time span: chosen by
   // eye on the real iPad" — 9i's sitting; here as link parameters so the
   // composer can try sizes without a build): ?s= seconds per system (row) ·
   // ?rows= systems per page · ?z= an extra factor on the staff. Also ?ir= the
   // score file · ?t= go to a time · ?play=1 start playing (the check's hooks).
-  const PART = Math.min(7, Math.max(1, parseInt(Q.get('part') || '1', 10) || 1));   // the septet: 7 parts
-  const IR = Q.get('ir') || 'piece-septet';   // the septet's score
+  let PART = Math.min(7, Math.max(1, parseInt(Q.get('part') || '1', 10) || 1));   // the septet: 7 parts; a token sets it
+  let IR = Q.get('ir') || 'piece-septet';   // the septet's score; a token sets it
   // THE DECISION (PLAN 9s, day 46, the composer's eye after the data: "8 seconds,
   // 5 rows, 7.5 mm reads best"): rows of 8 s at a 7.5 mm staff, five to a screen.
   // On the iPad that is 140 px/s = 2.7 cm/s — inside the 2–3 cm/s reading
@@ -88,7 +105,8 @@
   // screen shows rows cur … cur + ROWS − 1; when the cursor leaves row cur, its
   // slot reloads with row cur + ROWS; the cursor runs down the slots and wraps to
   // the top. At least ROWS − 1 rows of future music are visible at every moment.
-  const state = { scores: {}, cur: 0, live: null, slots: null, layers: null, geomKey: '', turnLog: [] };
+  const state = { scores: {}, cur: 0, live: null, slots: null, layers: null, geomKey: '', turnLog: [],
+    room: null, mode: 'ALONE', tuple: null, following: false, lastSeq: null, letters: [] };
   // [port 9t] THE PIECE'S INSTRUMENTS — notation/registry/ensemble.json (clefs,
   // staves, short names, lane weights) and techniques.json, as the piece's own
   // notation page reads them. Absent = one bass staff per part, 'T<n>' labels.
@@ -96,7 +114,8 @@
   const stavesOf = p => { const e = ensPart(p); return (e && e.staves && e.staves.length) || 1; };
   const weightOf = p => { const e = ensPart(p); return (e && e.weight) || 1; };
   function grandStaffOpts() { const g = (((state.container || {}).engraving || {}).layout || {}).grandStaff; return g && g.interStaffGapSs > 0 ? { interStaffGapSs: g.interStaffGapSs } : undefined; }
-  state.transport = NotationTransport.makeTransport();
+  state.local = NotationTransport.makeTransport();   // 9h-2: the local transport; the room's tuple is the other reader
+  state.transport = state.local;
   let rafId = null;
 
   async function loadScore(name) {
@@ -312,19 +331,24 @@
     state.transport.seek(t); ensureLoop();
   }
   let wakeLock = null;
+  // AR-25: the screen stays awake while the part plays (needs HTTPS; silent otherwise)
+  async function keepAwake() { try { if (navigator.wakeLock && !wakeLock) wakeLock = await navigator.wakeLock.request('screen'); } catch (e) { wakeLock = null; } }
+  function letSleep() { if (wakeLock) { try { wakeLock.release(); } catch (e) { } wakeLock = null; } }
   async function play() {
-    if (!state.slots) return;
+    if (!state.slots || state.following) return;
     const t = state.transport.now(), t0 = state.planned[state.cur].t0;
     if (t < t0 || t >= rowEnd()) state.transport.seek(t0);
     state.transport.play(); ensureLoop();
-    // AR-25: the screen stays awake while the part plays (needs HTTPS; silent otherwise)
-    try { if (navigator.wakeLock && !wakeLock) wakeLock = await navigator.wakeLock.request('screen'); } catch (e) { wakeLock = null; }
+    keepAwake();
   }
-  function pause() { state.transport.pause(); ensureLoop(); if (wakeLock) { try { wakeLock.release(); } catch (e) { } wakeLock = null; } }
-  function togglePlay() { if (state.transport.isPlaying()) pause(); else play(); }
+  function pause() { if (state.following) return; state.transport.pause(); ensureLoop(); letSleep(); }
+  function togglePlay() {
+    if (state.following) { hint('the room is playing', 1500); return; }   // AR-11: nothing while the room plays
+    if (state.transport.isPlaying()) pause(); else play();                  // AR-12: local play while the room is stopped
+  }
   // a swipe = a screenful of rows (AR-26's "page")
   function turnPage(d) {
-    if (!state.planned) return;
+    if (!state.planned || state.following) return;   // snapped while the room plays
     const i = Math.min(state.planned.length - 1, Math.max(0, state.cur + d * ROWS));
     if (i === state.cur) return;
     state.cur = i; render();
@@ -333,7 +357,7 @@
   // one-finger tap = place the cursor (AR-26): the slot under the finger, the
   // time under it, inside that row's music
   function seekAt(clientX, clientY) {
-    if (!state.slots) return;
+    if (!state.slots || state.following) return;
     const rect = $('sheet').getBoundingClientRect();
     const k = Math.min(ROWS - 1, Math.max(0, Math.floor((clientY - rect.top) / rect.height * ROWS)));
     const slot = state.slots[k]; if (!slot) return;
@@ -383,6 +407,78 @@
   window.addEventListener('orientationchange', () => setTimeout(refit, 300));
   if (window.visualViewport) window.visualViewport.addEventListener('resize', refit);
 
+  // ---- THE ROOM (9h-2; DESIGN §5–§6) --------------------------------------------
+  // The tuple is read as a transport while the room plays (the floor clock
+  // converts server time); while the room is stopped the local transport is back,
+  // snapped to the room's position; under ALONE the room is only listened to.
+  function loadScript(src) { return new Promise((res, rej) => { const el = document.createElement('script'); el.src = src; el.onload = res; el.onerror = () => rej(new Error('script ' + src)); document.head.appendChild(el); }); }
+  function door(msg) { const d = $('door'); d.textContent = msg; d.classList.add('on'); }
+  function applyWelcome(w) {
+    if (w.partIndex != null) PART = w.partIndex + 1;
+    if (w.piece && w.piece.ir) IR = w.piece.ir;
+    state.mode = w.mode || 'ALONE'; state.tuple = w.roomState || null; state.letters = w.letters || [];
+    const title = ((w.piece && w.piece.title) || 'Part') + ' · ' + (w.part || ('part ' + PART));
+    document.title = title;
+    const m = document.querySelector('meta[name="apple-mobile-web-app-title"]'); if (m) m.content = title;
+  }
+  // the page opened by a token: hello first (4 s), else the cached welcome (offline)
+  async function startRoom() {
+    document.body.classList.add('room');
+    await Promise.all([loadScript('/socket.io/socket.io.js'), loadScript('/testkit/js/syncclock.js')]);
+    state.room = NotationRoom.makeRoomClient({
+      token: TOKEN, io: window.io, SyncClock: TK.SyncClock, posture: 'rehearsal',
+      on: {
+        state: t => { state.tuple = t; applyRoom(); },
+        mode: m => { state.mode = m.mode; if (m.roomState) state.tuple = m.roomState; applyRoom(); hint(m.mode === 'ALONE' ? 'alone' : m.mode.toLowerCase(), 1500); },
+        status: roomCorner,
+        refused: r => door((r && r.message) || 'this link was refused'),
+      },
+    });
+    const first = new Promise(res => {
+      let done = false;
+      const fin = x => { if (!done) { done = true; res(x); } };
+      state.room.connect();
+      state.room.socket.once('welcome', w => fin({ welcome: w }));
+      state.room.socket.on('refused', r => { if (r && (r.what === 'hello' || r.what === 'token')) fin({ refused: r }); });
+      setTimeout(() => fin({ timeout: true }), 4000);
+    });
+    const r = await first;
+    if (r.refused) { door(r.refused.message || 'this link was refused'); throw new Error('refused: ' + (r.refused.error || '')); }
+    if (r.welcome) { applyWelcome(r.welcome); return; }
+    const c = state.room.cachedWelcome();
+    if (c) { applyWelcome(Object.assign({ mode: 'ALONE' }, c, { roomState: null })); hint('no connection — alone, from the last visit', 4000); return; }
+    door('No connection, and this stand has not opened this link before. Connect once, then it works alone too.');
+    throw new Error('offline and no cached welcome');
+  }
+  function applyRoom() {
+    if (!state.room || !state.slots) return;
+    const t = state.tuple, follow = state.mode !== 'ALONE' && !!(t && t.playing);
+    if (follow) {
+      if (!state.following) { state.local.pause(); state.following = true; state.transport = state.room.transport; }
+      const i = plannedOf(state.transport.now());
+      if (i !== state.cur) { state.cur = i; render(); }
+      ensureLoop(); keepAwake();
+    } else {
+      const was = state.following;
+      if (was) { state.following = false; state.transport = state.local; letSleep(); }
+      // snap: the room stopped, or jumped while stopped (a new tuple) — AR-11
+      if (state.mode !== 'ALONE' && t && (was || state.lastSeq !== t.seq)) { state.local.pause(); goto(t.anchorScoreTime); }
+    }
+    state.lastSeq = t ? t.seq : null;
+    roomCorner();
+  }
+  const fmtT = t => { const x = Math.max(0, t || 0), m = Math.floor(x / 60); return m + ':' + (x - m * 60).toFixed(1).padStart(4, '0'); };
+  function letterAt(t) { let l = null; for (const x of state.letters) if (x.t <= t + 1e-9) l = x; return l; }
+  function roomCorner() {
+    if (!state.room) return;
+    const s = state.room.status();
+    const pos = state.transport.now();
+    const L = letterAt(pos);
+    $('ctext').textContent = (s.online ? state.mode.toLowerCase() : 'offline') + (state.following ? ' ▶' : '') + ' · ' + (L ? L.label + ' · ' : '') + fmtT(pos);
+    $('dot').className = !s.online ? '' : s.calibrated ? 'green' : 'amber';
+  }
+  setInterval(() => { if (state.room && state.slots) roomCorner(); }, 500);
+
   // the one-time hint: how to play (the strip and the menu come in 9i)
   function hint(text, ms) {
     const h = $('hint'); h.textContent = text; h.classList.add('on');
@@ -394,8 +490,10 @@
   window.__standRows = () => (state.slots || []).map((sl, k) => sl ? { slot: k, idx: sl.idx, t0: sl.pg.t0, t1: sl.pg.t1, window: sl.view.window, gutterPx: sl.view.gutterPx } : null);
   window.__standPlay = () => { play(); return true; };
   window.__standPause = () => { pause(); return true; };
+  window.__standPlayLocal = () => { togglePlay(); return state.local.isPlaying(); };
   window.__standState = () => ({
     part: PART, ir: IR, ready: !!state.slots, error: $('err').textContent,
+    token: !!TOKEN, mode: state.mode, following: state.following, room: state.room ? state.room.status() : null, corner: $('ctext').textContent,
     t: state.transport.now(), playing: state.transport.isPlaying(),
     cur: state.cur, rowsTotal: state.planned ? state.planned.length : 0,
     pageIdx: Math.floor(state.cur / ROWS), pages: state.planned ? Math.ceil(state.planned.length / ROWS) : 0,
@@ -408,6 +506,7 @@
   });
 
   try {
+    if (TOKEN) await startRoom();
     const [glyphs, pageRules, container, irRes, ensemble, techniques] = await Promise.all([
       fetch('/notation/lib/glyphs.json').then(r => { if (!r.ok) throw new Error('glyphs fetch ' + r.status); return r.json(); }),
       fetch('/notation/registry/page_rules.json').then(r => { if (!r.ok) throw new Error('page rules fetch ' + r.status); return r.json(); }),
@@ -427,6 +526,7 @@
     setTimeout(refit, 300); setTimeout(refit, 1200);
     if (Q.has('t') && isFinite(parseFloat(Q.get('t')))) goto(parseFloat(Q.get('t')));
     else ensureLoop();
+    if (state.room) { state.lastSeq = state.tuple ? state.tuple.seq : null; if (state.tuple && state.mode !== 'ALONE') { if (state.tuple.playing) applyRoom(); else goto(state.tuple.anchorScoreTime); } roomCorner(); }
     if (Q.get('play') === '1') play();
     else hint('two fingers: play / stop · one finger: cursor · swipe: page', 5000);
   } catch (e) { $('err').textContent = String(e.stack || e); }
