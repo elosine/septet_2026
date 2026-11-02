@@ -175,6 +175,7 @@ async function admin(req, res, u) {
       io.to('ens:' + ens.id).emit('mode', { mode: ens.mode, roomState: ens.tuple, serverTime: clock.now() });
       return send(res, 200, { ok: true, mode: ens.mode });
     }
+    if (op === 'piece.letters' && req.method === 'POST') return send(res, 200, { ok: true, piece: registry.setLetters(body.id, body.letters) });   // 9i: the rehearsal letters
     if (op === 'pieces') return send(res, 200, { ok: true, pieces: Object.values(registry.pieces).map(registry.publicPiece) });
     if (op === 'ensembles') return send(res, 200, { ok: true, ensembles: Object.values(registry.ensembles).map(e => Object.assign(registry.publicEnsemble(e), { gatekeeperLink: origin + '/s/' + e.gatekeeper, live: rooms.roster(e.id).members.length })) });
     if (op.startsWith('ensemble/')) return send(res, 200, { ok: true, ensemble: registry.gatekeeperView(registry.ensembleOf(op.slice('ensemble/'.length)), origin), roster: rooms.roster(op.slice('ensemble/'.length)) });
@@ -219,7 +220,13 @@ const server = http.createServer(async (req, res) => {
       const r = registry.resolveToken(mS[1]);
       if (!r) return send(res, 404, '<!doctype html><meta charset="utf-8"><title>Unknown link</title><p style="font:20px system-ui;margin:2em">This link is not known here.', 'text/html; charset=utf-8');
       if (r.revoked) return send(res, 410, '<!doctype html><meta charset="utf-8"><title>Link replaced</title><p style="font:20px system-ui;margin:2em">This link was replaced — ask your leader for a new link.', 'text/html; charset=utf-8');
-      return serveFile(req, res, path.join(APP_DIR, 'stand.html'));
+      // 9i (AR-6, 31, 32): the gatekeeper's link opens on the REMOTE; with
+      // ?view=display it is the display (the full score). A player's link is
+      // the part; a ticked leader's with ?view=remote is the remote on a second
+      // device. The page says hello and learns its role; the server only picks the file.
+      const view = u.searchParams.get('view');
+      const file = r.role === 'gatekeeper' ? (view === 'display' ? 'stand.html' : 'remote.html') : (view === 'remote' ? 'remote.html' : 'stand.html');
+      return serveFile(req, res, path.join(APP_DIR, file));
     }
     const mSFile = /^\/s\/([A-Za-z0-9_.-]+\.[a-z0-9]+)$/.exec(p);
     if (mSFile) return serveFile(req, res, path.join(APP_DIR, path.basename(mSFile[1])));

@@ -126,6 +126,16 @@ function makeRegistry(file, opts) {
     return R.pieces[p.id];
   }
 
+  // 9i: the rehearsal letters (score-time → label), set after the piece is registered;
+  // every stand's strip and corner read them from the welcome
+  function setLetters(id, letters) {
+    const P = R.pieces[id];
+    if (!P) throw new Error('no such piece: ' + id);
+    if (!Array.isArray(letters)) throw new Error('letters: an array of { t, label }');
+    P.letters = letters.map(l => ({ t: Number(l.t), label: String(l.label || '').trim() })).filter(l => Number.isFinite(l.t) && l.label).sort((a, b) => a.t - b.t);
+    save();
+    return publicPiece(P);
+  }
   const publicPiece = P => P ? { id: P.id, title: P.title, version: P.version, ir: P.ir, parts: P.parts, letters: P.letters } : null;
 
   // ---- ensembles --------------------------------------------------------------------
@@ -223,7 +233,7 @@ function makeRegistry(file, opts) {
 
   return {
     R, MODES, load, loadSnapshot, save, saveNow, snapshot, newToken,
-    resolveToken, registerPiece, publicPiece, createEnsemble, ensembleOf, setParts, addRow, reissue, setMode,
+    resolveToken, registerPiece, setLetters, publicPiece, createEnsemble, ensembleOf, setParts, addRow, reissue, setMode,
     publicEnsemble, gatekeeperView,
     get pieces() { return R.pieces; }, get ensembles() { return R.ensembles; },
   };

@@ -4,6 +4,7 @@
 // server/data/admin.key (or ADMIN_KEY, or --key).
 //
 //   node tools/admin.js register ss "Scattered Substance" piece-septet     piece id · title · IR name
+//   node tools/admin.js letters ss A=1:00 B=2:30 E=5:00                 the rehearsal letters (label=m:ss or label=seconds); none = clear
 //   node tools/admin.js create "Tempus" ss            an ensemble → the links
 //   node tools/admin.js ensembles                                 every ensemble, live counts
 //   node tools/admin.js links <ensembleId>                        the gatekeeper link + every player's
@@ -47,15 +48,31 @@ function printLinks(ens) {
 }
 
 (async () => {
-  if (!cmd) { console.log(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 18).map(l => l.replace(/^\/\/ ?/, '')).join('\n')); return; }
+  if (!cmd) { console.log(fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 19).map(l => l.replace(/^\/\/ ?/, '')).join('\n')); return; }
   if (!KEY) throw new Error('no admin key: start the server once (it writes server/data/admin.key), or pass --key');
   switch (cmd) {
     case 'register': { const j = await call('piece.register', { id: a[0], title: a[1], ir: a[2] || a[0], version: a[3] }); console.log('piece ' + j.piece.id + ': ' + j.piece.parts.map(p => p.name).join(', ')); break; }
+    case 'letters': {
+      const letters = a.slice(1).map(x => { const m = /^([^=]+)=(\d+)(?::(\d{1,2}(?:\.\d+)?))?$/.exec(x); if (!m) throw new Error('a letter is label=m:ss or label=seconds: ' + x); return { label: m[1], t: m[3] != null ? +m[2] * 60 + +m[3] : +m[2] }; });
+      const j = await call('piece.letters', { id: a[0], letters });
+      console.log(j.piece.id + '  ' + (j.piece.letters.length ? j.piece.letters.map(l => l.label + '=' + Math.floor(l.t / 60) + ':' + String(Math.round(l.t % 60)).padStart(2, '0')).join('  ') : '(no letters)'));
+      break;
+    }
     case 'pieces': { const j = await call('pieces'); for (const p of j.pieces) console.log(p.id + '  ' + p.title + '  v' + p.version + '  ir ' + p.ir + '  ' + p.parts.length + ' parts  ' + p.letters.length + ' letters'); break; }
     case 'create': { const j = await call('ensemble.create', { name: a[0], piece: a[1], version: a[2] }); printLinks(j.ensemble); break; }
     case 'ensembles': { const j = await call('ensembles'); for (const e of j.ensembles) console.log(e.id + '  ' + e.name.padEnd(28) + ' ' + e.piece + '  ' + e.mode.padEnd(10) + ' live ' + e.live + '  ' + e.gatekeeperLink); break; }
     case 'links': { const j = await call('ensemble/' + a[0]); printLinks(j.ensemble); break; }
-    case 'leader': { const j = await call('parts.set', { ensembleId: a[0], rows: [{ id: a[1], leader: true }] }); printLinks(j.ensemble); break; }
+    case 'leader': {
+      // the row by its id, or by its part's name ("Flute") — the composer's line needs no id (9i)
+      let rowId = a[1];
+      if (!/^row-/.test(String(rowId || ''))) {
+        const e = (await call('ensemble/' + a[0])).ensemble;
+        const row = e.rows.find(r => String(r.part).toLowerCase() === String(rowId || '').toLowerCase());
+        if (!row) throw new Error('no row named ' + rowId + ' — the parts are: ' + e.rows.map(r => r.part).join(', '));
+        rowId = row.id;
+      }
+      const j = await call('parts.set', { ensembleId: a[0], rows: [{ id: rowId, leader: true }] }); printLinks(j.ensemble); break;
+    }
     case 'name': { const j = await call('parts.set', { ensembleId: a[0], rows: [{ id: a[1], name: a[2] }] }); printLinks(j.ensemble); break; }
     case 'add': { const j = await call('row.add', { ensembleId: a[0], partIndex: Number(a[1]) }); printLinks(j.ensemble); break; }
     case 'reissue': { const j = await call('token.reissue', { ensembleId: a[0], which: a[1] }); printLinks(j.ensemble); break; }

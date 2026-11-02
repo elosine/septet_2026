@@ -27,8 +27,21 @@
      never computed from innerHeight or the insets: on the home-screen app two
      computed versions each left the last row short (iPad, day 46). The home
      indicator at the bottom overlays the music; a black strip there read as a bug. */
-  #sheet { position: absolute; top: env(safe-area-inset-top, 0px); left: 0; right: 0; bottom: 0;
+  #sheet { position: absolute; top: calc(env(safe-area-inset-top, 0px) + var(--strip, 0px)); left: 0; right: 0; bottom: 0;
            background: #fff; overflow: hidden; }
+  /* 9i: THE LEADER'S STRIP (AR-30) — a thin band above the leader's own part, nothing
+     covered: the sheet starts below it and is measured from its own box, so the rows
+     refit. Its look is the design sitting's; the height is one number. */
+  #strip { position: absolute; top: env(safe-area-inset-top, 0px); left: 0; right: 0; height: var(--strip, 0px); display: none; }
+  body.leader { --strip: 44px; }
+  body.leader #strip { display: flex; }
+  body.leader #corner { top: calc(env(safe-area-inset-top, 0px) + var(--strip) + 6px); }   /* below the band, not over its right end */
+  /* 9i: THE DISPLAY (AR-32) — the full score on a big screen, big letter + time,
+     following the room; a small way back to the remote */
+  body.display #corner { font-size: 34px; padding: 10px 16px; gap: 12px; border-radius: 14px; }
+  body.display #dot { width: 14px; height: 14px; }
+  #toRemote { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 8px); left: 10px; display: none; font: 13px system-ui, sans-serif; color: #666; background: #fffc; padding: 5px 9px; border-radius: 10px; text-decoration: none; }
+  body.display #toRemote { display: block; }
   /* a page = several systems (rows) of this part, each its own SVG the size of
      the frame, stacked — a paper part's shape */
   #sheet > svg { position: absolute; left: 0; top: 0; display: block; }
@@ -53,10 +66,12 @@
 </style>
 </head>
 <body>
+<div id="strip"></div>
 <div id="sheet"></div>
 <div id="hint"></div>
 <div id="err"></div>
 <div id="corner"><span id="dot"></span><span id="ctext"></span></div>
+<a id="toRemote" href="#">remote</a>
 <div id="door"></div>
 <script src="/notation/lib/coords.js"></script>
 <script src="/notation/lib/stamps.js"></script>
@@ -68,6 +83,7 @@
 <script src="/notation/lib/animobj.js"></script>
 <script src="/notation/lib/animlive.js"></script>
 <script src="/notation/lib/roomclient.js"></script>
+<script src="/notation/lib/strip.js"></script>
 <script>
 (async function () {
   const $ = id => document.getElementById(id);
@@ -83,6 +99,11 @@
   // score file · ?t= go to a time · ?play=1 start playing (the check's hooks).
   let PART = Math.min(7, Math.max(1, parseInt(Q.get('part') || '1', 10) || 1));   // the septet: 7 parts; a token sets it
   let IR = Q.get('ir') || 'piece-septet';   // the septet's score; a token sets it
+  // 9i: THE DISPLAY (AR-32) — the gatekeeper's link with ?view=display: the full
+  // score on a big screen, following the room, stopped or playing; a tap on a
+  // part (or the remote's display.show) zooms that part, again → back. Only the
+  // gatekeeper's link is a display; a player's link is always their part.
+  let DISPLAY = Q.get('view') === 'display';
   // THE DECISION (PLAN 9s, day 46, the composer's eye after the data: "8 seconds,
   // 5 rows, 7.5 mm reads best"): rows of 8 s at a 7.5 mm staff, five to a screen.
   // On the iPad that is 140 px/s = 2.7 cm/s — inside the 2–3 cm/s reading
@@ -97,7 +118,7 @@
   // composer approved — 104 px at a 31.6 px staff = 13.2 ss. ?lane= overrides.
   const LANE_DEFAULT = 13.2;
   const LANE_SS = Math.max(6, parseFloat(Q.get('lane')) || LANE_DEFAULT);
-  const ROWS = Math.min(12, Math.max(1, parseInt(Q.get('rows') || String(ROWS_DEFAULT), 10) || ROWS_DEFAULT));
+  let ROWS = Math.min(12, Math.max(1, parseInt(Q.get('rows') || String(ROWS_DEFAULT), 10) || ROWS_DEFAULT));   // the display sets 1 after its welcome (9i)
   const Z_EXTRA = Math.max(0.25, parseFloat(Q.get('z')) || 1);
   // THE CIRCULAR BUFFER (D101, day 46 — the composer: "b"; the string quartet's
   // parts mode, built there and checked): the screen's ROWS slots are a ring over
@@ -106,7 +127,9 @@
   // slot reloads with row cur + ROWS; the cursor runs down the slots and wraps to
   // the top. At least ROWS − 1 rows of future music are visible at every moment.
   const state = { scores: {}, cur: 0, live: null, slots: null, layers: null, geomKey: '', turnLog: [],
-    room: null, mode: 'ALONE', tuple: null, following: false, lastSeq: null, letters: [] };
+    room: null, mode: 'ALONE', tuple: null, following: false, lastSeq: null, letters: [],
+    parts: null, zoom: null, strip: null, leader: false, role: null, rowId: null };   // 9i: the parts drawn (the display), the strip, who I am
+  const partsDrawn = () => state.parts || [PART - 1];
   // [port 9t] THE PIECE'S INSTRUMENTS — notation/registry/ensemble.json (clefs,
   // staves, short names, lane weights) and techniques.json, as the piece's own
   // notation page reads them. Absent = one bass staff per part, 'T<n>' labels.
@@ -175,20 +198,26 @@
     // comparison only.
     const ssArg = Q.get('ss');
     let ss, pxPerS, k;
+    // 9i: the parts in the band — one (the part) or all of them (the display's
+    // full score): the ensemble's weighted lanes, a gap between them
+    const parts = partsDrawn(), wts = parts.map(weightOf), wsum = wts.reduce((a, b) => a + b, 0);
+    const rowH = H / ROWS, padFrac = 0.03, gapFrac = parts.length > 1 ? 0.012 : 0;
+    const gapsFrac = gapFrac * (parts.length - 1);
     if (ssArg === 'auto') {
       pxPerS = W / (s + G0 / juryPxPerS);
       k = (pxPerS / juryPxPerS) * Z_EXTRA;
       ss = ssJury * k;
     } else {
       ss = (parseFloat(ssArg) || SS_DEFAULT) * Z_EXTRA;
+      // the full score: the staff shrinks until every lane fits the row (one size for all)
+      if (parts.length > 1) ss = Math.min(ss, rowH * (1 - 2 * padFrac) * (1 - gapsFrac) / (wsum * LANE_SS));
       k = ss / ssJury;
       pxPerS = (W - Math.min(W * 0.4, G0 * k)) / s;
     }
     const gutterPx = Math.min(W * 0.4, G0 * k);
-    const rowH = H / ROWS, padFrac = 0.03;
-    const laneH = Math.min(rowH * (1 - 2 * padFrac), LANE_SS * ss * weightOf(PART - 1));   // [port 9t] the ensemble's lane weight
+    const laneH = Math.min(rowH * (1 - 2 * padFrac), LANE_SS * ss * wsum / (1 - gapsFrac));   // [port 9t] the ensemble's lane weight; 9i: every drawn part's lane in the band
     const laneAir = (rowH - laneH) / 2;
-    return { W, H, s, ss, k, pxPerS, gutterPx, rowH, laneH, laneAir, ssPerSystem: laneH / ss, coupling: ssArg === 'auto' ? 'auto' : 'fixed' };
+    return { W, H, s, ss, k, pxPerS, gutterPx, rowH, laneH, laneAir, ssPerSystem: laneH / ss, parts, wts, gapFrac, coupling: ssArg === 'auto' ? 'auto' : 'fixed' };
   }
 
   // ONE ROW in one slot: a full-frame SVG with the system in the slot's lane, and
@@ -202,8 +231,19 @@
     const f0 = (k * G.rowH + G.laneAir) / G.H, f1 = (k * G.rowH + G.laneAir + G.laneH) / G.H;
     const rowSeconds = Math.min(G.s, pg.t1 - pg.t0);
     const rowW = Math.min(G.W, G.gutterPx + rowSeconds * G.pxPerS);
+    // the lanes in the band [f0, f1]: one part = the whole band; the full score (the
+    // display, 9i) = the ensemble's weighted lanes inside it, the staff one size
+    let sysList;
+    if (G.parts.length === 1) sysList = [{ part: G.parts[0], laneFrac0: f0, laneFrac1: f1, ssPerSystem: G.ssPerSystem }];
+    else {
+      const band = f1 - f0;
+      sysList = NotationCoords.systemsForParts(G.parts, { topPad: 0, botPad: 0, gap: G.gapFrac, weights: G.wts }).map(sy => {
+        const a = f0 + sy.laneFrac0 * band, b = f0 + sy.laneFrac1 * band;
+        return { part: sy.part, laneFrac0: a, laneFrac1: b, ssPerSystem: (b - a) * G.H / G.ss };
+      });
+    }
     const view = NotationCoords.makeView({ widthPx: rowW, heightPx: G.H, window: [pg.t0, pg.t0 + rowSeconds], gutterPx: G.gutterPx,
-      systems: NotationCoords.withStaves([{ part: PART - 1, laneFrac0: f0, laneFrac1: f1, ssPerSystem: G.ssPerSystem }], stavesOf, grandStaffOpts()),   // [port 9t] the part's own staves and clefs
+      systems: NotationCoords.withStaves(sysList, stavesOf, grandStaffOpts()),   // [port 9t] the part's own staves and clefs
       ssPerSystem: G.ssPerSystem });
     const ownsEnd = i === state.planned.length - 1;
     let svg = NotationRender.renderSection(state.model, view, state.glyphs, {
@@ -254,7 +294,7 @@
       }
       state.cur = Math.min(Math.max(0, state.cur), state.planned.length - 1);
       const G = geometry();
-      const key = [G.W, G.H, G.s, G.ss, ROWS, LANE_SS].join('|');
+      const key = [G.W, G.H, G.s, G.ss, ROWS, LANE_SS, G.parts.join(',')].join('|');
       if (key !== state.geomKey || !state.slots) {
         $('sheet').innerHTML = '';
         if (state.live) { state.live.destroy(); state.live = null; }
@@ -263,15 +303,16 @@
       }
       state.geom = G;
       // the instances: the whole piece once, then THIS part's (and the score-level ones)
-      if (!state.animInstances) {
+      if (!state.animInstances || state.animParts !== G.parts.join(',')) {
         const C = state.container;
         const score = state.scores[state.ir.source.score] || null;
         const _dev = NotationLayout.deviceResolver(state.ir, (C.engraving || {}).layout || {});
         const all = NotationAnimObj.collect(state.ir, score, C.animated,
           { parts: state.ir.source.parts, meta: false, deviceOf: _dev,
             drawnOf: e => NotationLayout.drawnLevelSamples(e, _dev(e) || {}) });
-        state.animInstances = all.filter(i => i.part === undefined || i.part === PART - 1);
-        state.animStyle = C.animated;
+        const drawn = new Set(G.parts);
+        state.animInstances = all.filter(i => i.part === undefined || drawn.has(i.part));
+        state.animParts = G.parts.join(','); state.animStyle = C.animated;
       }
       const n = state.planned.length;
       for (let i = state.cur; i < state.cur + ROWS; i++) {
@@ -282,7 +323,7 @@
       }
       const last = Math.min(n - 1, state.cur + ROWS - 1);
       state.size = { W: G.W, H: G.H, rows: last - state.cur + 1, rowsMax: ROWS, s: G.s, ss: +G.ss.toFixed(2), staffMmIpad: +(G.ss * 4 / 5.2).toFixed(2),
-        pxPerS: +G.pxPerS.toFixed(1), laneSs: +G.ssPerSystem.toFixed(1), laneWanted: LANE_SS, rowPx: +G.rowH.toFixed(1), k: +G.k.toFixed(3), coupling: G.coupling,
+        pxPerS: +G.pxPerS.toFixed(1), laneSs: +G.ssPerSystem.toFixed(1), laneWanted: LANE_SS, rowPx: +G.rowH.toFixed(1), k: +G.k.toFixed(3), coupling: G.coupling, parts: G.parts.slice(),
         page: [state.planned[state.cur].t0, state.planned[last].t1] };
       mountLive();
       $('err').textContent = '';
@@ -303,7 +344,9 @@
   const rowEnd = () => Math.min(state.planned[state.cur].t1, srcEnd());
   function drawOverlayFrame(tArg) {
     if (!state.slots) return null;
-    const t = tArg !== undefined ? tArg : state.transport.now();
+    // the pre-roll (AR-33): a jump lands ~5 s before the spot and the top gets the
+    // same — the transport may read NEGATIVE time; the drawing waits at the start
+    const t = Math.max(0, tArg !== undefined ? tArg : state.transport.now());
     if (state.transport.isPlaying() && t >= rowEnd() - 1e-9) {
       // the row change: the cursor leaves row cur — its slot reloads with row
       // cur + ROWS (one slot built), the cursor goes on in the next slot
@@ -343,12 +386,13 @@
   }
   function pause() { if (state.following) return; state.transport.pause(); ensureLoop(); letSleep(); }
   function togglePlay() {
+    if (DISPLAY) return;   // the display has no local play (AR-32)
     if (state.following) { hint('the room is playing', 1500); return; }   // AR-11: nothing while the room plays
     if (state.transport.isPlaying()) pause(); else play();                  // AR-12: local play while the room is stopped
   }
   // a swipe = a screenful of rows (AR-26's "page")
   function turnPage(d) {
-    if (!state.planned || state.following) return;   // snapped while the room plays
+    if (!state.planned || state.following || DISPLAY) return;   // snapped while the room plays; the display only follows
     const i = Math.min(state.planned.length - 1, Math.max(0, state.cur + d * ROWS));
     if (i === state.cur) return;
     state.cur = i; render();
@@ -356,7 +400,30 @@
   }
   // one-finger tap = place the cursor (AR-26): the slot under the finger, the
   // time under it, inside that row's music
+  // 9i: on the display a one-finger tap on a part ZOOMS it (AR-32: tap a part → zoom,
+  // again → back); display-local. The lane nearest the finger, in the slot under it.
+  function partAt(clientX, clientY) {
+    if (!state.slots) return null;
+    const rect = $('sheet').getBoundingClientRect();
+    const k = Math.min(ROWS - 1, Math.max(0, Math.floor((clientY - rect.top) / rect.height * ROWS)));
+    const slot = state.slots[k]; if (!slot) return null;
+    const fy = (clientY - rect.top) / rect.height;
+    let best = null;
+    for (const sy of slot.view.systems) {
+      if (typeof sy.part !== 'number') continue;
+      const d = fy < sy.laneFrac0 ? sy.laneFrac0 - fy : fy > sy.laneFrac1 ? fy - sy.laneFrac1 : 0;
+      if (!best || d < best.d) best = { d, part: sy.part };
+    }
+    return best ? best.part : null;
+  }
+  function setZoom(p) {
+    if (!DISPLAY || !state.ir) return;
+    state.zoom = p == null ? null : Number(p);
+    state.parts = state.zoom == null ? state.ir.source.parts.slice() : [state.zoom];
+    render(); ensureLoop();
+  }
   function seekAt(clientX, clientY) {
+    if (DISPLAY) { const p = partAt(clientX, clientY); if (p != null) setZoom(state.zoom == null ? p : null); return; }
     if (!state.slots || state.following) return;
     const rect = $('sheet').getBoundingClientRect();
     const k = Math.min(ROWS - 1, Math.max(0, Math.floor((clientY - rect.top) / rect.height * ROWS)));
@@ -417,7 +484,10 @@
     if (w.partIndex != null) PART = w.partIndex + 1;
     if (w.piece && w.piece.ir) IR = w.piece.ir;
     state.mode = w.mode || 'ALONE'; state.tuple = w.roomState || null; state.letters = w.letters || [];
-    const title = ((w.piece && w.piece.title) || 'Part') + ' · ' + (w.part || ('part ' + PART));
+    state.role = w.role || null; state.rowId = w.rowId || null; state.leader = !!w.leader;
+    if (w.role !== 'gatekeeper') DISPLAY = false;   // only the gatekeeper's link is a display
+    if (DISPLAY) { document.body.classList.add('display'); if (!Q.get('rows')) ROWS = 1; $('toRemote').href = '/s/' + TOKEN; }
+    const title = ((w.piece && w.piece.title) || 'Part') + ' · ' + (DISPLAY ? 'display' : (w.part || ('part ' + PART)));
     document.title = title;
     const m = document.querySelector('meta[name="apple-mobile-web-app-title"]'); if (m) m.content = title;
   }
@@ -432,6 +502,10 @@
         mode: m => { state.mode = m.mode; if (m.roomState) state.tuple = m.roomState; applyRoom(); hint(m.mode === 'ALONE' ? 'alone' : m.mode.toLowerCase(), 1500); },
         status: roomCorner,
         refused: r => door((r && r.message) || 'this link was refused'),
+        // 9i: the leader tick is live (DESIGN §8): the roster says who holds the strip
+        roster: r => { const me = state.rowId && r && r.members && r.members.find(m => m.rowId === state.rowId); if (me && typeof me.leader === 'boolean' && me.leader !== state.leader) { state.leader = me.leader; if (state.slots) { if (state.leader) mountStrip(); else unmountStrip(); } } },
+        // 9i: the remote's zoom for the display (AR-32)
+        display: d => { if (DISPLAY) setZoom(d && d.partIndex != null ? d.partIndex : null); },
       },
     });
     const first = new Promise(res => {
@@ -455,7 +529,7 @@
     const t = state.tuple, follow = state.mode !== 'ALONE' && !!(t && t.playing);
     if (follow) {
       if (!state.following) { state.local.pause(); state.following = true; state.transport = state.room.transport; }
-      const i = plannedOf(state.transport.now());
+      const i = plannedOf(Math.max(0, state.transport.now()));
       if (i !== state.cur) { state.cur = i; render(); }
       ensureLoop(); keepAwake();
     } else {
@@ -467,8 +541,28 @@
     state.lastSeq = t ? t.seq : null;
     roomCorner();
   }
-  const fmtT = t => { const x = Math.max(0, t || 0), m = Math.floor(x / 60); return m + ':' + (x - m * 60).toFixed(1).padStart(4, '0'); };
-  function letterAt(t) { let l = null; for (const x of state.letters) if (x.t <= t + 1e-9) l = x; return l; }
+  const fmtT = t => { const v = t || 0, x = Math.abs(v), m = Math.floor(x / 60); return (v < 0 ? '−' : '') + m + ':' + (x - m * 60).toFixed(1).padStart(4, '0'); };   // a negative time = the pre-roll's countdown
+  // the letter we are in — or the one the pre-roll is heading to: a jump lands 5 s
+  // before its letter, and the corner should say that letter, not the one before
+  function letterAt(t) { let l = null; for (const x of state.letters) if (x.t <= t + 5 + 1e-9) l = x; return l; }
+  // ---- THE STRIP (9i, AR-30): the leader's own part gets the band above it ----------
+  // Under ALONE the strip's play is this stand's own (DESIGN §6); under REHEARSAL
+  // it moves the room. Mounted when the welcome or the roster says "leader".
+  function mountStrip() {
+    if (state.strip || !state.room || DISPLAY) return;
+    document.body.classList.add('leader');
+    state.strip = NotationStrip.make($('strip'), {
+      room: state.room, layout: 'strip', letters: () => state.letters,
+      local: { play: () => play(), stop: () => pause(), isPlaying: () => !state.following && state.local.isPlaying(), now: () => state.transport.now(), goto: t => goto(t) },
+    });
+    refit();
+  }
+  function unmountStrip() {
+    if (!state.strip) return;
+    state.strip.destroy(); state.strip = null;
+    document.body.classList.remove('leader');
+    refit();
+  }
   function roomCorner() {
     if (!state.room) return;
     const s = state.room.status();
@@ -491,9 +585,13 @@
   window.__standPlay = () => { play(); return true; };
   window.__standPause = () => { pause(); return true; };
   window.__standPlayLocal = () => { togglePlay(); return state.local.isPlaying(); };
+  window.__stripAct = (name, arg) => state.strip ? (state.strip.act(name, arg), true) : false;   // 9i: the check drives the strip's buttons
+  window.__standZoom = p => { setZoom(p); return partsDrawn(); };
   window.__standState = () => ({
     part: PART, ir: IR, ready: !!state.slots, error: $('err').textContent,
     token: !!TOKEN, mode: state.mode, following: state.following, room: state.room ? state.room.status() : null, corner: $('ctext').textContent,
+    strip: !!state.strip, leader: state.leader, role: state.role, display: DISPLAY, parts: partsDrawn(), zoom: state.zoom,
+    stripText: state.strip ? { play: state.strip.host.querySelector('.ns-play').textContent, again: state.strip.host.querySelector('.ns-again').textContent, pos: state.strip.host.querySelector('.ns-pos').textContent, ready: state.strip.host.querySelector('.ns-ready').textContent, playing: state.strip.host.classList.contains('playing'), sheetTop: $('sheet').getBoundingClientRect().top } : null,
     t: state.transport.now(), playing: state.transport.isPlaying(),
     cur: state.cur, rowsTotal: state.planned ? state.planned.length : 0,
     pageIdx: Math.floor(state.cur / ROWS), pages: state.planned ? Math.ceil(state.planned.length / ROWS) : 0,
@@ -522,12 +620,15 @@
     state.model = NotationLayout.layoutSection(state.ir, state.glyphs, Object.assign(
       { frameParts: state.ir.source.parts, ensemble: state.ensemble, techniques: state.techniques },   // [port 9t]
       (container.engraving && container.engraving.layout) || {}));
+    if (DISPLAY) state.parts = state.ir.source.parts.slice();   // the full score (9i)
     render();
     setTimeout(refit, 300); setTimeout(refit, 1200);
+    if (state.leader && state.role === 'player' && TOKEN) mountStrip();   // 9i: the ticked leader's band
     if (Q.has('t') && isFinite(parseFloat(Q.get('t')))) goto(parseFloat(Q.get('t')));
     else ensureLoop();
     if (state.room) { state.lastSeq = state.tuple ? state.tuple.seq : null; if (state.tuple && state.mode !== 'ALONE') { if (state.tuple.playing) applyRoom(); else goto(state.tuple.anchorScoreTime); } roomCorner(); }
     if (Q.get('play') === '1') play();
+    else if (DISPLAY) hint('tap a part to zoom it · tap again for the whole score', 5000);
     else hint('two fingers: play / stop · one finger: cursor · swipe: page', 5000);
   } catch (e) { $('err').textContent = String(e.stack || e); }
 })();

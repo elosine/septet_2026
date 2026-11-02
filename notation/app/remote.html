@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Remote">
+<link rel="apple-touch-icon" href="stand-icon.png">
+<title>Remote</title>
+<!-- remote.html — THE REMOTE (PLAN 9i; AR-6, 31, 32; D94): the leader's controls
+     full-screen on a device with no part — the gatekeeper's link opens here; a
+     ticked leader's link opens here with ?view=remote. The same buttons as the
+     strip (notation/lib/strip.js), plus the display's zoom and "show the score
+     here", which turns THIS device into the display (the full score, following).
+     The Players list behind a button is 9n's. -->
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin: 0; min-height: 100%; background: #151515; color: #eee; font: 16px/1.3 system-ui, sans-serif; -webkit-user-select: none; user-select: none; }
+  body { padding-top: env(safe-area-inset-top, 0px); }
+  #head { display: flex; align-items: baseline; gap: 10px; padding: 12px 14px 0; }
+  #title { font-size: 15px; color: #aaa; }
+  #who { font-size: 14px; color: #8c8; min-height: 1.3em; flex: 1; }
+  #who.bad { color: #e66; }
+  #ctl { min-height: 60vh; }
+  #door { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: #151515; color: #eee;
+          font: 20px/1.4 system-ui, sans-serif; padding: 2em; text-align: center; }
+  #door.on { display: flex; }
+</style>
+</head>
+<body>
+<div id="head"><span id="title">remote</span><span id="who">connecting…</span></div>
+<div id="ctl"></div>
+<div id="door"></div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/testkit/js/syncclock.js"></script>
+<script src="/notation/lib/roomclient.js"></script>
+<script src="/notation/lib/strip.js"></script>
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const Q = new URLSearchParams(location.search);
+  const TOKEN = (location.pathname.match(/^\/s\/([A-Za-z0-9_-]{8,64})$/) || [])[1] || Q.get('token') || null;
+  const door = msg => { const d = $('door'); d.textContent = msg; d.classList.add('on'); };
+  if (!TOKEN) { door('Open this page by your link.'); return; }
+  const state = { welcome: null, strip: null, refused: null };
+  const room = NotationRoom.makeRoomClient({
+    token: TOKEN, io: window.io, SyncClock: TK.SyncClock, posture: 'rehearsal',
+    on: {
+      welcome: w => { state.welcome = w; applyWelcome(w); },
+      refused: r => { state.refused = r; $('who').className = 'bad'; $('who').textContent = (r && r.message) || 'refused'; if (r && (r.what === 'hello' || r.what === 'token')) door((r && r.message) || 'this link was refused'); },
+    },
+  });
+  function applyWelcome(w) {
+    const title = ((w.piece && w.piece.title) || 'Remote') + ' · remote';
+    document.title = title; $('title').textContent = title;
+    const m = document.querySelector('meta[name="apple-mobile-web-app-title"]'); if (m) m.content = title;
+    $('who').className = '';
+    $('who').textContent = (w.leader ? (w.role === 'gatekeeper' ? 'gatekeeper' : 'leader · ' + (w.part || '')) : w.role) + ' · ' + (w.ensemble ? w.ensemble.name : '');
+    if (!w.leader) { door('This link is a player\'s, not a leader\'s. The gatekeeper ticks "leader" on your row.'); return; }
+    if (state.strip) return;
+    state.strip = NotationStrip.make($('ctl'), {
+      room, layout: 'remote',
+      letters: () => (state.welcome && state.welcome.letters) || [],
+      // the piece's parts as the registry holds them ({ index, name }); a plain name list works too
+      parts: () => (((state.welcome && state.welcome.piece && state.welcome.piece.parts) || []).map((p, i) => ({ partIndex: (p && p.index != null) ? p.index : i, label: typeof p === 'string' ? p : (p && (p.short || p.name || p.id)) || ('part ' + (i + 1)) }))),
+      // "show the score here" (AR-31, 32): this device becomes the display
+      onShowHere: () => { if (w.role !== 'gatekeeper') { $('who').textContent = 'the display is the gatekeeper\'s link'; return; } location.href = '/s/' + TOKEN + '?view=display'; },
+    });
+  }
+  room.connect();
+  // the headless check drives the same buttons
+  window.__remoteAct = (name, arg) => state.strip ? (state.strip.act(name, arg), true) : false;
+  window.__remoteState = () => { const s = room.status(); return { ready: !!state.strip, role: state.welcome && state.welcome.role, leader: !!(state.welcome && state.welcome.leader), mode: s.mode, online: s.online, position: s.position, tuple: s.tuple, refused: state.refused,
+    text: state.strip ? { play: state.strip.host.querySelector('.ns-play').textContent, pos: state.strip.host.querySelector('.ns-pos').textContent, ready: state.strip.host.querySelector('.ns-ready').textContent, playing: state.strip.host.classList.contains('playing'), display: [...state.strip.host.querySelectorAll('.ns-display button')].map(b => b.textContent + (b.classList.contains('on') ? '*' : '')) } : null }; };
+})();
+</script>
+</body>
+</html>
