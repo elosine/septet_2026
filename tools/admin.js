@@ -8,7 +8,7 @@
 //   node tools/admin.js create "Tempus" ss            an ensemble → the links
 //   node tools/admin.js ensembles                                 every ensemble, live counts
 //   node tools/admin.js links <ensembleId>                        the gatekeeper link + every player's
-//   node tools/admin.js leader <ensembleId> <rowId>               tick the leader
+//   node tools/admin.js leader <ensembleId> <rowId|Flute> [off]   tick the leader (by row id or part name); "off" unticks
 //   node tools/admin.js name <ensembleId> <rowId> "Pat Lee"       a player's name
 //   node tools/admin.js add <ensembleId> <partIndex>              another player on a part (doubling)
 //   node tools/admin.js reissue <ensembleId> <rowId|gatekeeper>   a new link; the old one dies
@@ -71,7 +71,8 @@ function printLinks(ens) {
         if (!row) throw new Error('no row named ' + rowId + ' — the parts are: ' + e.rows.map(r => r.part).join(', '));
         rowId = row.id;
       }
-      const j = await call('parts.set', { ensembleId: a[0], rows: [{ id: rowId, leader: true }] }); printLinks(j.ensemble); break;
+      // "leader <ens> Flute off" takes the tick away again (the band leaves that stand live)
+      const j = await call('parts.set', { ensembleId: a[0], rows: [{ id: rowId, leader: a[2] !== 'off' }] }); printLinks(j.ensemble); break;
     }
     case 'name': { const j = await call('parts.set', { ensembleId: a[0], rows: [{ id: a[1], name: a[2] }] }); printLinks(j.ensemble); break; }
     case 'add': { const j = await call('row.add', { ensembleId: a[0], partIndex: Number(a[1]) }); printLinks(j.ensemble); break; }
