@@ -82,6 +82,9 @@
 
 ## §2 Resume Here
 
+**THE STAND PORT (9t, 2026-11-02, from piece #4):** this repo now carries the performance system — `notation/app/stand.html` (the part as rows, the overlay `notation/lib/animlive.js`), `server/` (the stand server: registry · rooms · clock · Socket.IO; `server/README.md`), `tools/admin.js · test_server.js · chaos_test.js · stand_check.js`. The piece's own notation library is UNCHANGED in what it draws (the seven film pages re-dumped byte-identical; three library files took the stand's additions, one behind `opts.flushCurves`). **The record of the performance system lives in `for_seven_tubas/docs`** (PLAN §9, DESIGN, REQUIREMENTS, RUNNING_LOG 107, PORTING.md); this journal gets one pointer line per sitting. Its server on the box: `scattered-substance.justinwenloyang.com` (PM2 `ss-server`, port 5301).
+
+
 **FIRST — HIS STANDING RULE (2026-09-11):** after `/clear` + `/postclear`: play back, then **STOP and ask**. No edits, no builds,
 no tool calls beyond the resume reads. Start only on his word. *(At `/session-start`: orient, agree the agenda, then work.)*
 

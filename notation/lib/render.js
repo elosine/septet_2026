@@ -112,6 +112,42 @@
     // proportional score blank staff reads as SILENCE, and the scale may never
     // change page to page (distance is time). Absent = the window edge.
     const wInk = (opts && opts.inkEnd != null) ? Math.min(opts.inkEnd, w1) : w1;
+    // [port 9t, day 46] a section's curve cut at the window — two ways.
+    // sampledInWin: the samples on the section's grid that fall inside
+    // [w0, wInk] — the print score's and the film's way, unchanged.
+    // curveInWin: the same samples PLUS the interpolated value at each edge the
+    // section crosses, so the fill meets the row's left and right edges flush
+    // (the stand, tubas RUNNING_LOG 99 — the composer: "the curves are never
+    // flush with the left side where the staff lines begin"). Chosen by
+    // opts.flushCurves; without it the page is byte-identical to before.
+    const sampledInWin = it => {
+      const n = it.samples.length, out = [];
+      for (let i = 0; i < n; i++) {
+        const t = it.t0 + (it.t1 - it.t0) * (i / (n - 1));
+        if (t < w0 - 1e-9 || t > wInk + 1e-9) continue;
+        out.push([t, it.samples[i]]);
+      }
+      return out;
+    };
+    const curveInWin = it => {
+      const n = it.samples.length, span = it.t1 - it.t0;
+      if (n < 2 || span <= 0) return [];
+      const at = t => {                       // linear interpolation on the grid
+        const u = Math.min(Math.max((t - it.t0) / span, 0), 1) * (n - 1);
+        const i = Math.min(Math.floor(u), n - 2), f = u - i;
+        return it.samples[i] + (it.samples[i + 1] - it.samples[i]) * f;
+      };
+      const a = Math.max(it.t0, w0), b = Math.min(it.t1, wInk);
+      if (b <= a) return [];
+      const pts = [[a, at(a)]];
+      for (let i = 0; i < n; i++) {
+        const t = it.t0 + span * (i / (n - 1));
+        if (t > a + 1e-9 && t < b - 1e-9) pts.push([t, it.samples[i]]);
+      }
+      pts.push([b, at(b)]);
+      return pts;
+    };
+    const pairsInWin = it => (opts && opts.flushCurves) ? curveInWin(it) : sampledInWin(it);
     // WHICH PAGES A LONG ITEM APPEARS ON (his eye on the first 2b.7 render, 2026-09-17:
     // "pg 2 in piano, extra from next page trill"). D59: a long item draws on every page
     // it CROSSES — crosses what the page OWNS, not what the page draws. The first build
@@ -313,14 +349,7 @@
           // day 40: the truncation moved to layout.drawnLevelSamples — the
           // samples arrive FINAL (one source for the page and the meters);
           // the stretch over the full note span is implicit in n-over-[t0,t1].
-          const samples = it.samples;
-          const n = samples.length;
-          const pts = [];
-          for (let i = 0; i < n; i++) {
-            const t = it.t0 + (it.t1 - it.t0) * (i / (n - 1));
-            if (t < w0 - 1e-9 || t > wInk + 1e-9) continue;
-            pts.push([view.xOfSeconds(t), yB - samples[i] * (yB - yT)]);
-          }
+          const pts = pairsInWin(it).map(p => [view.xOfSeconds(p[0]), yB - p[1] * (yB - yT)]);   // [port 9t] flush under opts.flushCurves
           if (pts.length >= 2) {
             const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
             if (EC.pathOpacity != null) {   // [D42] the two-piano look: one closed path, stroked round, opacity on the whole
@@ -407,12 +436,7 @@
           const CC = E.crescCurve;
           const yB = sys.yBotPx;
           const yCeil = it.full ? sys.yTopPx : (sys.yTopPx + sys.yBotPx) / 2;
-          const n2 = it.samples.length, cp = [];
-          for (let i = 0; i < n2; i++) {
-            const t = it.t0 + (it.t1 - it.t0) * (i / (n2 - 1));
-            if (t < w0 - 1e-9 || t > wInk + 1e-9) continue;
-            cp.push([view.xOfSeconds(t), yB - it.samples[i] * (yB - yCeil)]);
-          }
+          const cp = pairsInWin(it).map(p => [view.xOfSeconds(p[0]), yB - p[1] * (yB - yCeil)]);   // [port 9t] flush under opts.flushCurves
           if (cp.length >= 2) {
             const cline = cp.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
             if (CC.pathOpacity != null) {   // [D42]
@@ -434,12 +458,7 @@
           if (!crosses(it.t0, it.t1)) continue;
           const GC2 = E.glissCurve;
           const yT = sys.yTopPx, yMid = (sys.yTopPx + sys.yBotPx) / 2;
-          const n = it.samples.length, gp = [];
-          for (let i = 0; i < n; i++) {
-            const t = it.t0 + (it.t1 - it.t0) * (i / (n - 1));
-            if (t < w0 - 1e-9 || t > wInk + 1e-9) continue;
-            gp.push([view.xOfSeconds(t), yMid - it.samples[i] * (yMid - yT)]);
-          }
+          const gp = pairsInWin(it).map(p => [view.xOfSeconds(p[0]), yMid - p[1] * (yMid - yT)]);   // [port 9t] flush under opts.flushCurves
           if (gp.length >= 2) {
             const line = gp.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
             // the fill closes on the HALF-LANE baseline, not the lane floor —

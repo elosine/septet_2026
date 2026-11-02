@@ -60,3 +60,6 @@ midi/*.capture.json
 midi/*/*.evt
 reaper/*_render.rpp
 reaper/*_render.rpp-bak
+# the stand server (9t): its registry, marks and admin key; the checks' results
+server/data/
+testkit/results/
