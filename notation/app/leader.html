@@ -40,7 +40,7 @@
   <button id="play" class="big play">PLAY</button><button id="stop" class="big">STOP</button><button id="again">AGAIN</button><button id="resync">RESYNC</button>
 </div>
 <div class="row">
-  <input id="jumpT" inputmode="decimal" placeholder="m:ss or s"><button id="jump">JUMP (−5 s)</button><button id="top">TOP</button>
+  <input id="jumpT" inputmode="decimal" placeholder="4 = 4:00 · 4.30 = 4:30"><button id="jump">JUMP (−5 s)</button><button id="top">TOP</button>
 </div>
 <div class="row">
   <button data-rate="0.5">50</button><button data-rate="0.7">70</button><button data-rate="0.85">85</button><button data-rate="1">100</button>
@@ -57,7 +57,15 @@
   if (!TOKEN) { $('who').textContent = 'no token — open this page as …/leader.html?token=<the leader link\'s code>'; $('who').className = 'bad'; return; }
   let lastStart = 0, letters = [];
   const fmt = t => { const s = Math.max(0, t), m = Math.floor(s / 60); return m + ':' + (s - m * 60).toFixed(1).padStart(4, '0'); };
-  const parseT = v => { v = String(v || '').trim(); if (!v) return NaN; const m = v.match(/^(\d+):(\d+(?:\.\d+)?)$/); return m ? +m[1] * 60 + +m[2] : parseFloat(v); };
+  // the phone's number pad has no colon (the composer, day 46): a bare number is
+  // MINUTES, a dot or a colon separates minutes from seconds, an 's' suffix means seconds
+  const parseT = v => {
+    v = String(v || '').trim().replace(',', '.'); if (!v) return NaN;
+    let m = v.match(/^(\d+)[:.](\d{1,2})$/); if (m) return +m[1] * 60 + +m[2];
+    m = v.match(/^(\d+(?:\.\d+)?)s$/i); if (m) return +m[1];
+    if (/^\d+$/.test(v)) return +v * 60;
+    return NaN;
+  };
   const room = NotationRoom.makeRoomClient({
     token: TOKEN, io: window.io, SyncClock: TK.SyncClock, posture: 'rehearsal',
     on: {
@@ -75,6 +83,7 @@
       + ' · clock ' + (s.calibrated ? 'calibrated' : s.locked ? 'locked' : 'unlocked') + (s.clock && s.clock.sigmaMs != null ? ' ±' + s.clock.sigmaMs.toFixed(1) + ' ms' : '');
     for (const [id, m] of [['mAlone', 'ALONE'], ['mReh', 'REHEARSAL'], ['mCon', 'CONCERT']]) $(id).className = s.mode === m ? 'on' : '';
     for (const b of document.querySelectorAll('button[data-rate]')) b.className = Number(b.dataset.rate) === (t.rate || 1) ? 'on' : '';
+    $('again').textContent = 'AGAIN ' + fmt(lastStart);   // replay from the last start (AR-33) — say where
   }
   // the roster: the server's broadcast, painted as it comes
   let roster = null;
