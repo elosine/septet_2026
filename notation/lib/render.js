@@ -12,6 +12,65 @@
 
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+  // the glyph box for a 'glyph' item — ONE table, shared by the drawing and by inkExtentSs
+  function boxOf(S, g) {
+    if (g === 'notehead') return S.notehead();
+    if (g === 'notehead-open') return S.noteheadOpen();
+    if (g.startsWith('dyn-')) return S.dynamic(g.slice(4));
+    if (/^flag-(up|down)\d+$/.test(g)) { const m = g.match(/^flag-(up|down)(\d+)$/); return S.flagN(+m[2], m[1]); }
+    if (g.startsWith('artic-')) return S.articulation(g.slice('artic-'.length));
+    if (g.startsWith('accidental-')) return S.accidental(g.slice('accidental-'.length));
+    if (g.startsWith('text-')) return S.text(g.slice('text-'.length));       // [2h.5] piece #2's baked 'pizz.'
+    if (g.startsWith('pedal-')) return S.pedal(g.slice('pedal-'.length));    // [2h.5] piece #2's 'Ped.'
+    throw new Error('render: unknown glyph item "' + g + '"');
+  }
+
+  // [THE STAND'S SEAMS, day 46 — for_seven_tubas RUNNING_LOG 111] THE INK EXTENT of one item, in staff
+  // spaces relative to its own time's x: [x0Ss, x1Ss] — or null for ink with no extent of its own (the
+  // staff, the clef, the curves, a real beam, the go line: time-bound, never moved). seams.js reads the
+  // head units from it; the clamp pass in renderSection reads every movable item from it.
+  //   E        the engraving block (textScale, restDotGapSs) · measure(text, sizeSs, italic) -> widthSs, or null
+  function inkExtentSs(it, S, glyphs, E, measure) {
+    const stds = glyphs.standards;
+    const dx = it.dxSs || 0;
+    if (it.k === 'glyph') {
+      let b = boxOf(S, it.g);
+      if (it.scale || it.scaleY) b = Stamps.scaled(b, it.scale || 1, it.scaleY != null ? it.scaleY : (it.scale || 1));
+      const a = (it.align && b.anchors[it.align]) || { x: 0, y: 0 };
+      return [dx - a.x, dx - a.x + b.wSs];
+    }
+    if (it.k === 'rest') {
+      const rg = glyphs.rest['rest' + it.dur];
+      let x1 = dx + rg.wSs;
+      if (it.dotted) x1 += ((E && E.restDotGapSs != null) ? E.restDotGapSs : 0.28) + (stds.augmentationDot || stds.staccatoDot).diameter;
+      return [dx, x1];
+    }
+    if (it.k === 'stem') { const th = stds.stem.thickness; return [dx - th / 2, dx + th / 2]; }
+    if (it.k === 'dot') { const d = stds.staccatoDot.diameter; return [dx - d / 2, dx + d / 2]; }
+    if (it.k === 'ledger') { const w = (it.wSs || glyphs.notehead.filled.wSs) * (1 + 2 * stds.ledgerLine.lengthFraction); return [dx - w / 2, dx + w / 2]; }
+    if (it.k === 'text') {
+      const size = (it.size || 1) * ((E && E.textScale) || 1.3);
+      const w = measure ? measure(String(it.text), size, !!it.italic) : 0.48 * size * String(it.text).length;
+      return it.anchor === 'middle' ? [dx - w / 2, dx + w / 2] : it.anchor === 'end' ? [dx - w, dx] : [dx, dx + w];
+    }
+    if (it.k === 'niente') { const r = ((it.diaSs || 0.47) + (it.thickSs || 0.13)) / 2; return [dx - r, dx + r]; }
+    if (it.k === 'dynarrow' || it.k === 'glissline') return [Math.min(it.dx0Ss, it.dx1Ss), Math.max(it.dx0Ss, it.dx1Ss)];
+    if (it.k === 'ottava') {
+      const O = stds.ottava || {}, lg = glyphs.ottavaText && glyphs.ottavaText[it.label];
+      const lgW = lg ? lg.wSs + (O.textGapBeforeLineSs || 0.1) : 0, x1 = it.dx1Ss || 0;
+      let x0 = it.dx0Ss || 0;
+      if (x1 - (x0 + lgW) < (O.minBracketSpanSs || 1.37)) x0 = x1 - (O.minBracketSpanSs || 1.37) - lgW;
+      return [x0, x1];
+    }
+    if (it.k === 'beam' && it.stub && it.tips && it.tips.length === 2) return [Math.min(it.tips[0].dxSs, it.tips[1].dxSs), Math.max(it.tips[0].dxSs, it.tips[1].dxSs)];
+    return null;
+  }
+  const UNIT_GLYPH = /^(notehead|notehead-open|accidental-|flag-)/;
+  // a HEAD UNIT's own ink (the composer, day 46: the head with its accidentals and ledger lines — a chord's heads,
+  // the stem, the flag, the dot, a group's rests, a lone note's beamlet): never cut, never moved; the seam moves instead
+  const isUnitItem = it => it.k === 'ledger' || it.k === 'stem' || it.k === 'dot' || it.k === 'rest' ||
+    (it.k === 'glyph' && UNIT_GLYPH.test(it.g)) || (it.k === 'beam' && !!it.stub);
+
   // [D42, RUNNING_LOG §447] THE CURVE LOOK, from the two-piano piece's final performance score (builds/performance, renderCurve):
   // ONE closed path — fill = the colour at fillOpacity, a stroke of the same colour and strokeWPx ROUND THE WHOLE SHAPE (top, sides and
   // baseline), and pathOpacity on the path itself. With #2's numbers (0.3 · 2 px · 0.3) the interior shows at 0.3 × 0.3 = 9 % and the
@@ -66,17 +125,7 @@
     const FONT = esc0 => String(esc0).replace(/&/g, '&amp;').replace(/</g, '&lt;');
     const fontAttr = ' font-family="' + FONT(E.fontFamily).replace(/"/g, '&quot;') + '"';
     const S = Stamps.makeStamps(glyphs);
-    const boxFor = g => {
-      if (g === 'notehead') return S.notehead();
-      if (g === 'notehead-open') return S.noteheadOpen();
-      if (g.startsWith('dyn-')) return S.dynamic(g.slice(4));
-      if (/^flag-(up|down)\d+$/.test(g)) { const m = g.match(/^flag-(up|down)(\d+)$/); return S.flagN(+m[2], m[1]); }
-      if (g.startsWith('artic-')) return S.articulation(g.slice('artic-'.length));
-      if (g.startsWith('accidental-')) return S.accidental(g.slice('accidental-'.length));
-      if (g.startsWith('text-')) return S.text(g.slice('text-'.length));       // [2h.5] piece #2's baked 'pizz.'
-      if (g.startsWith('pedal-')) return S.pedal(g.slice('pedal-'.length));    // [2h.5] piece #2's 'Ped.'
-      throw new Error('render: unknown glyph item "' + g + '"');
-    };
+    const boxFor = g => boxOf(S, g);
     const stds = glyphs.standards;
     // [2a, the septet] the ensemble registry (notation/registry/ensemble.json)
     // — labels, brackets, the brace. Absent = the tuba page exactly.
@@ -158,6 +207,22 @@
     const crosses = OWN
       ? ((t0, t1) => t1 > OWN[0] + 1e-9 && (ownsEnd ? t0 <= OWN[1] + 1e-9 : t0 < OWN[1] - 1e-9))
       : ((t0, t1) => !(t1 < w0 || t0 > wInk));
+    // [THE STAND'S SEAMS, day 46 — the design sitting's rulings, for_seven_tubas RUNNING_LOG 111]
+    // opts.clamp = { x0Px, x1Px }: the row's ink lives between the staff's first pixel and its last.
+    // TIME-BOUND ink (the arc and ball, the beam, the curves, the ring bar, the brick, the go line)
+    // stays where time puts it and is CUT at both edges — a clipPath at the left (the clef's gutter),
+    // the SVG's own edge at the right. A HEAD UNIT is never cut: the planner (seams.js) keeps the
+    // seam out of its ink, and here its items move as ONE BLOCK only when they still overflow (a
+    // trill's column, which sits after its go line and is clamped left; a section header). Every
+    // MARK (text, dynamic, articulation, the header's figure) moves by its own overflow, after its
+    // unit's shift — the composer: "the marks stay with the notehead". Absent = every other view,
+    // byte-identical.
+    const CL = (opts && opts.clamp) || null;
+    const clipId = (opts && opts.clipId) || 'music-clip';
+    const CLIP = CL ? ' clip-path="url(#' + clipId + ')"' : '';
+    if (CL) parts.push('<clipPath id="' + clipId + '"><rect x="' + view.gutterPx.toFixed(2) + '" y="0" width="' +
+      (view.widthPx - view.gutterPx).toFixed(2) + '" height="' + view.heightPx + '"/></clipPath>');
+    const measure = (opts && opts.measureText) || null;
 
     for (const sysModel of model.systems) {
       let sys;
@@ -180,8 +245,28 @@
       };
       const lane = laneOf(sysModel, sys);
       const hasGc = new Set((sysModel.items || []).filter(x => x.k === 'gc' && x.ev).map(x => x.ev));   // §401h
-      const X = (t, dxSs) => view.xOfSeconds(t) + (dxSs || 0) * ssPx;
+      let shNow = 0;   // the clamp's shift for the item being drawn (0 for time-bound ink)
+      const X = (t, dxSs) => view.xOfSeconds(t) + (dxSs || 0) * ssPx + shNow;
       const Y = ss => sys.yOfSs(ss);
+      const SH = new Map();
+      if (CL) {
+        const tOf = it => it.k === 'beam' ? (it.stub && it.tips ? it.tips[0].t : undefined) : it.t;
+        const extPx = it => { const e = inkExtentSs(it, S, glyphs, E, measure); const x = view.xOfSeconds(tOf(it)); return e && [x + e[0] * ssPx, x + e[1] * ssPx]; };
+        const blocks = new Map(), marks = [];
+        for (const it of sysModel.items) {
+          const t = tOf(it);
+          if (t === undefined || !owns(t)) continue;
+          const unit = !!it.hdr || isUnitItem(it);
+          const mark = !unit && (it.k === 'text' || it.k === 'glyph' || it.k === 'niente' || it.k === 'dynarrow' || it.k === 'glissline' || it.k === 'ottava');
+          if (!unit && !mark) continue;
+          const e = extPx(it); if (!e) continue;
+          if (unit) { let b = blocks.get(t); if (!b) { b = { x0: Infinity, x1: -Infinity, items: [], d: 0 }; blocks.set(t, b); } b.x0 = Math.min(b.x0, e[0]); b.x1 = Math.max(b.x1, e[1]); b.items.push(it); }
+          else marks.push({ it, e, t });
+        }
+        const fit = (x0, x1) => x1 > CL.x1Px + 0.01 ? CL.x1Px - x1 : x0 < CL.x0Px - 0.01 ? CL.x0Px - x0 : 0;
+        for (const b of blocks.values()) { b.d = fit(b.x0, b.x1); if (b.d) for (const it of b.items) SH.set(it, b.d); }
+        for (const m of marks) { const b = blocks.get(m.t), d0 = b ? b.d : 0, d = fit(m.e[0] + d0, m.e[1] + d0); if (d0 + d) SH.set(m.it, d0 + d); }
+      }
       // [§495] an item placed against ANOTHER staff of the same part (the beamed
       // pair's bass stem reaching the treble beam, its pizz. on the treble row)
       const sysYOf = key => { try { const s2 = view.system(key); return ss => s2.yOfSs(ss); } catch (e) { return Y; } };
@@ -226,6 +311,7 @@
       const LAYER = k => (k === 'envcurve' ? 1 : k === 'goline' ? 2 : 0);
       const itemsInLayers = [...sysModel.items].sort((a, b) => LAYER(a.k) - LAYER(b.k));
       for (const it of itemsInLayers) {
+        shNow = SH.get(it) || 0;
         if (it.k === 'staff') {
           // staff is FURNITURE: in a free window wider than the material
           // (opts.staffFull, notation-view window mode) the outer segments
@@ -307,15 +393,19 @@
           parts.push('<rect x="' + (X(it.t, it.dxSs) - w / 2).toFixed(2) + '" y="' + (Y(it.ySs) - stds.ledgerLine.thickness * ssPx / 2).toFixed(2) +
             '" width="' + w.toFixed(2) + '" height="' + (stds.ledgerLine.thickness * ssPx).toFixed(2) + '"/>');
         } else if (it.k === 'beam') {
-          const tips = it.tips.filter(p => owns(p.t));
-          if (tips.length < 2) continue;
+          // [the stand's seams] under opts.clamp a beam is CUT at the seam like the strip of paper it is
+          // drawn on: every tip is used and the row's edges cut the polygon (the composer, day 46: "beams
+          // are just cut"); without it, the film's and the print's way — the tips this page owns
+          let tips;
+          if (CL) { const ts = it.tips.map(p => p.t); if (!crosses(Math.min.apply(null, ts), Math.max.apply(null, ts))) continue; tips = it.tips; }
+          else { tips = it.tips.filter(p => owns(p.t)); if (tips.length < 2) continue; }
           // beam thickness extends TOWARD the noteheads: down the page for
           // up-stems, up the page for down-stems (review finding: down-stem
           // beams hung beyond the tips)
           const t = stds.beam.thickness * ssPx * (it.dir === 'down' ? -1 : 1);
           const fwd = tips.map(p => X(p.t, p.dxSs).toFixed(2) + ',' + Y(p.ySs).toFixed(2));
           const back = tips.slice().reverse().map(p => X(p.t, p.dxSs).toFixed(2) + ',' + (Y(p.ySs) + t).toFixed(2));
-          parts.push('<polygon points="' + fwd.concat(back).join(' ') + '"/>');
+          parts.push('<polygon' + CLIP + ' points="' + fwd.concat(back).join(' ') + '"/>');
         } else if (it.k === 'text') {
           if (!owns(it.t)) continue;
           // [2j.2, §540] yAt 'top': the text's TOP on the system's top edge — where a surge curve's cut edge peaks (the envcurve
@@ -512,9 +602,9 @@
           const gap = (it.text || '3:2').length * (TP.numeralGapPerCharSs || 0.88) * ssPx;
           const gMid = (x0 + x1) / 2, gA = gMid - gap / 2, gB = gMid + gap / 2;
           const dir = it.dir === 'down' ? -1 : 1;      // hooks point toward the notes
-          const seg = (a, b) => '<rect x="' + Math.min(a, b).toFixed(2) + '" y="' + (yL - th / 2).toFixed(2) +
+          const seg = (a, b) => '<rect' + CLIP + ' x="' + Math.min(a, b).toFixed(2) + '" y="' + (yL - th / 2).toFixed(2) +
             '" width="' + Math.abs(b - a).toFixed(2) + '" height="' + th.toFixed(2) + '"/>';
-          const vert = x => '<rect x="' + (x - th / 2).toFixed(2) + '" y="' + (dir > 0 ? yL : yL - hook).toFixed(2) +
+          const vert = x => '<rect' + CLIP + ' x="' + (x - th / 2).toFixed(2) + '" y="' + (dir > 0 ? yL : yL - hook).toFixed(2) +
             '" width="' + th.toFixed(2) + '" height="' + hook.toFixed(2) + '"/>';
           parts.push(seg(x0, gA), seg(gB, x1), vert(x0), vert(x1));
           const baseY = yL + (TP.numeralBaselineBelowSs || 0.41) * ssPx;
@@ -570,9 +660,14 @@
         } else if (it.k === 'goline') {
           // dotted vertical at go time, full lane band (piece #1's go-time
           // marker: 0.5 @ 0.4, dasharray 2,2)
-          if (!owns(it.t)) continue;
+          // [the stand's seams] a go line ON the seam belongs to the row before it, slid left by its own
+          // width (GC rule 4 — the composer: "except for the amount of the thickness of the line"); the
+          // next row does not draw it again
+          const onSeam = CL && !ownsEnd && Math.abs(it.t - w1) < 1e-6;
+          if (!owns(it.t) && !onSeam) continue;
+          if (CL && Math.abs(it.t - w0) < 1e-6 && model.window && w0 > model.window[0] + 1e-6) continue;
           const GL = E.goLine;
-          const gx = view.xOfSeconds(it.t).toFixed(2);
+          const gx = (CL ? Math.min(view.xOfSeconds(it.t), view.widthPx - GL.wPx / 2) : view.xOfSeconds(it.t)).toFixed(2);
           // §401h: the top at the GC arc's top when this note carries a GC and the registry says so; a
           // multi-staff part's bottom trimmed by multiStaffBottomTrimPx (at the 1080 frame, scaled)
           let gy1 = lane.yTopPx, gy2 = lane.yBotPx;
@@ -613,8 +708,8 @@
           const color = (E.gc && E.gc.color) || G.look.color;
           const d = GC.trajectory(P).map((p, i) =>
             (i ? 'L' : 'M') + view.xOfSeconds(it.t + p.dt).toFixed(2) + ' ' + (G.impactY - p.frac * G.h).toFixed(2)).join(' ');
-          parts.push('<path class="gc-arc" d="' + d + '" stroke="' + color + '" stroke-width="' + (G.look.arcStrokePx * G.k).toFixed(2) + '" fill="none"/>');
-          if (OWN || inWin(it.t)) parts.push('<circle class="gc-impact" cx="' + view.xOfSeconds(it.t).toFixed(2) + '" cy="' + G.impactY.toFixed(2) +
+          parts.push('<path class="gc-arc"' + CLIP + ' d="' + d + '" stroke="' + color + '" stroke-width="' + (G.look.arcStrokePx * G.k).toFixed(2) + '" fill="none"/>');
+          if (OWN || inWin(it.t)) parts.push('<circle class="gc-impact"' + CLIP + ' cx="' + view.xOfSeconds(it.t).toFixed(2) + '" cy="' + G.impactY.toFixed(2) +
             '" r="' + (G.look.impactRadiusPx * G.k).toFixed(2) + '" fill="' + color + '"/>');
         } else if (it.k === 'ringbar') {
           // the sounding-length bar: left edge flush with the go line,
@@ -626,7 +721,7 @@
           // go line — layout computes it from the unit's own right edge.
           const x0 = X(Math.max(it.t0, w0), it.t0 >= w0 ? it.dx0Ss : 0), x1 = view.xOfSeconds(Math.min(it.t1, wInk));
           const h = RB.hSs * ssPx;
-          parts.push('<rect x="' + x0.toFixed(2) + '" y="' + (Y(it.ySs) - h / 2).toFixed(2) + '" width="' + Math.max(1, x1 - x0).toFixed(2) +
+          parts.push('<rect' + CLIP + ' x="' + x0.toFixed(2) + '" y="' + (Y(it.ySs) - h / 2).toFixed(2) + '" width="' + Math.max(1, x1 - x0).toFixed(2) +
             '" height="' + h.toFixed(2) + '" fill="' + RB.color + '" opacity="' + RB.opacity + '"/>');
         } else if (it.k === 'brick') {
           if (o.hideBricks) continue;   // day 22: the bricks toggle
@@ -715,5 +810,5 @@
   // belongs to a beam group and the splicer is stamp-atomic — no cut severs a
   // beam (measured 0 of 63 on this score), so a bracket never crosses a cut.
 
-  return { renderSection, POINT_KINDS, LONG_KINDS, FURNITURE_KINDS };
+  return { renderSection, inkExtentSs, isUnitItem, POINT_KINDS, LONG_KINDS, FURNITURE_KINDS };
 });

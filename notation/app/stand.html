@@ -79,6 +79,7 @@
 <script src="/notation/lib/gc.js"></script>
 <script src="/notation/lib/render.js"></script>
 <script src="/notation/lib/splice.js"></script>
+<script src="/notation/lib/seams.js"></script>
 <script src="/notation/lib/transport.js"></script>
 <script src="/notation/lib/animobj.js"></script>
 <script src="/notation/lib/animlive.js"></script>
@@ -168,6 +169,15 @@
   }
   function refit() { if (state.ir && sizeChanged()) render(); }
   const pageSeconds = () => Math.max(2, parseFloat(Q.get('s')) || S_DEFAULT);
+  // THE ROW'S END (the design sitting, day 46 — the composer: "the end should be 2 or 3 pixels before
+  // the right edge of the screen"): a full row's staff stops this many px short of the frame's right edge
+  const edgeGapPx = () => { const r = (state.pageRules && state.pageRules.stand) || {}; return r.edgeGapPx != null ? r.edgeGapPx : 3; };
+  // the text widths for the clamp (render.js inkExtentSs): the decided font, measured on a canvas
+  const _mc = document.createElement('canvas').getContext('2d');
+  function measureSs(text, sizeSs, italic) {
+    try { _mc.font = (italic ? 'italic ' : '') + "300 100px 'Crimson Pro Light', serif"; return _mc.measureText(String(text)).width / 100 * sizeSs; }
+    catch (e) { return 0.48 * sizeSs * String(text).length; }
+  }
   // the planned row (one system's worth, s seconds, cut by the page rules) that holds t
   function plannedOf(t) {
     const P = state.planned;
@@ -197,6 +207,7 @@
     // keeps the first build's coupling (the staff scaling with the speed), for
     // comparison only.
     const ssArg = Q.get('ss');
+    const EDGE = edgeGapPx();
     let ss, pxPerS, k;
     // 9i: the parts in the band — one (the part) or all of them (the display's
     // full score): the ensemble's weighted lanes, a gap between them
@@ -204,7 +215,7 @@
     const rowH = H / ROWS, padFrac = 0.03, gapFrac = parts.length > 1 ? 0.012 : 0;
     const gapsFrac = gapFrac * (parts.length - 1);
     if (ssArg === 'auto') {
-      pxPerS = W / (s + G0 / juryPxPerS);
+      pxPerS = (W - EDGE) / (s + G0 / juryPxPerS);
       k = (pxPerS / juryPxPerS) * Z_EXTRA;
       ss = ssJury * k;
     } else {
@@ -212,25 +223,26 @@
       // the full score: the staff shrinks until every lane fits the row (one size for all)
       if (parts.length > 1) ss = Math.min(ss, rowH * (1 - 2 * padFrac) * (1 - gapsFrac) / (wsum * LANE_SS));
       k = ss / ssJury;
-      pxPerS = (W - Math.min(W * 0.4, G0 * k)) / s;
+      pxPerS = (W - EDGE - Math.min(W * 0.4, G0 * k)) / s;
     }
     const gutterPx = Math.min(W * 0.4, G0 * k);
     const laneH = Math.min(rowH * (1 - 2 * padFrac), LANE_SS * ss * wsum / (1 - gapsFrac));   // [port 9t] the ensemble's lane weight; 9i: every drawn part's lane in the band
     const laneAir = (rowH - laneH) / 2;
-    return { W, H, s, ss, k, pxPerS, gutterPx, rowH, laneH, laneAir, ssPerSystem: laneH / ss, parts, wts, gapFrac, coupling: ssArg === 'auto' ? 'auto' : 'fixed' };
+    return { W, H, s, ss, k, pxPerS, gutterPx, edgePx: EDGE, rowH, laneH, laneAir, ssPerSystem: laneH / ss, parts, wts, gapFrac, coupling: ssArg === 'auto' ? 'auto' : 'fixed' };
   }
 
   // ONE ROW in one slot: a full-frame SVG with the system in the slot's lane, and
-  // its scene for the overlay. A ROW ENDS WHERE ITS MUSIC ENDS (the composer: "the
-  // cursors don't go all the way to the end"): the page rules cut one row in five
-  // short to keep a figure whole on the next row; the row's view is only as wide
-  // as its own music at the constant px per second — a ragged right edge, the end
-  // bar at the cut, the cursor running to it.
+  // its scene for the overlay. THE ROW IS THE STRIP OF PAPER CUT AT ITS SEAM (the
+  // design sitting, day 46 — tubas RUNNING_LOG 111): the staff IS the music's extent,
+  // from the row's first pixel to the seam — a full row ends edgeGapPx short of the
+  // frame's right edge, a row the seams shortened (a head unit, a beam's stub) ends
+  // where its music does; no bar line; the time-bound ink is cut at both edges, the
+  // head units never, the marks pushed to fit (render.js opts.clamp).
   function buildSlot(k, i) {
     const C = state.container, G = state.geom, pg = state.planned[i];
     const f0 = (k * G.rowH + G.laneAir) / G.H, f1 = (k * G.rowH + G.laneAir + G.laneH) / G.H;
     const rowSeconds = Math.min(G.s, pg.t1 - pg.t0);
-    const rowW = Math.min(G.W, G.gutterPx + rowSeconds * G.pxPerS);
+    const rowW = Math.min(G.W - G.edgePx, G.gutterPx + rowSeconds * G.pxPerS);
     // the lanes in the band [f0, f1]: one part = the whole band; the full score (the
     // display, 9i) = the ensemble's weighted lanes inside it, the staff one size
     let sysList;
@@ -251,17 +263,19 @@
       hideBricks: true,   // the parachute bricks are a workshop look, not the part's (composer, day 46)
       flushCurves: true,  // [port 9t] the section curves meet the row's edges (the stand only; the print score and the film keep their own cut)
       ensemble: state.ensemble,   // [port 9t] the part's short name as its label
+      clamp: { x0Px: G.gutterPx, x1Px: rowW }, clipId: 'clip-r' + i, measureText: measureSs,   // the seams (day 46): nothing left of the staff's start, nothing past its end
     });
     // the rows stack: the paper is the sheet's, not each SVG's (render.js paints
     // a full-frame paper rect first — the row above would vanish)
     svg = svg.replace(/ style="background:[^"]*"/, '')
              .replace(/<rect x="0" y="0" width="[\d.]+" height="[\d.]+" fill="[^"]*"\/>/, '');
-    // the system's terminal barline, as the full score draws it
+    // THE ROW'S END (the composer, day 46: "No bar line") — the only bar is the piece's own final one, where it ends
     const eb = ((C.engraving && C.engraving.render) || {}).systemEndBar;
     let endBar = '';
-    if (eb) {
-      const sys = view.systems[0], se = srcEnd();
-      const xEnd = (se > view.window[0] && se < view.window[1]) ? view.xOfSeconds(se) : view.widthPx;
+    const se = srcEnd();
+    if (eb && se > view.window[0] && se <= view.window[1] + 1e-9) {
+      const sys = view.systems[0];
+      const xEnd = Math.min(view.xOfSeconds(se), view.widthPx);
       endBar = '<rect x="' + (xEnd - eb.wPx).toFixed(2) + '" y="' + sys.yTopPx.toFixed(1) +
         '" width="' + eb.wPx + '" height="' + (sys.yBotPx - sys.yTopPx).toFixed(1) + '" fill="#111" opacity="' + (eb.opacity || 0.55) + '"/>';
     }
@@ -274,7 +288,7 @@
     state.slots[k] = { k, idx: i, pg, view, el };
     // each row shows its overlay only while t is inside ITS music — from its
     // start to the page rules' cut, where the next row begins
-    state.layers[k] = { scene: NotationAnimLive.plan(state.animInstances, view, state.animStyle), opacity: 1,
+    state.layers[k] = { scene: NotationAnimLive.plan(state.animInstances, view, state.animStyle, { cursorInside: true }), opacity: 1,
       clip: [pg.t0, Math.min(pg.t1, srcEnd() + 1)] };
   }
   function clearSlot(k) {
@@ -288,12 +302,22 @@
   function render() {
     try {
       const s = pageSeconds();
-      if (!state.planned || state.plannedS !== s) {
-        state.planned = NotationSplice.planPages(state.ir, state.pageRules, s);
-        state.plannedS = s;
+      const G = geometry();
+      // THE SEAMS (the design sitting, day 46): planned for THE PARTS DRAWN — one part on a stand, every
+      // part on the display — from the laid-out ink: never inside a head unit, a beam cut with a stub each
+      // side, else the target itself (seams.js; the rules in page_rules.json `stand`). Re-planned when the
+      // parts or the scale change; the row holding the clock is found again.
+      const partsKey = G.parts.join(',');
+      if (!state.ink || state.inkParts !== partsKey) { state.ink = NotationSeams.inkMap(state.model, state.glyphs, G.parts); state.inkParts = partsKey; }
+      const secPerSs = G.ss / G.pxPerS;
+      const planKey = [s, partsKey, secPerSs.toFixed(6)].join('|');
+      if (!state.planned || state.planKey !== planKey) {
+        const tNow = Math.max(0, state.transport.now());
+        state.planned = NotationSeams.planSeams(state.ir, state.pageRules, s, state.ink, secPerSs, state.glyphs);
+        state.planKey = planKey; state.secPerSs = secPerSs;
+        if (state.slots) state.cur = plannedOf(tNow);
       }
       state.cur = Math.min(Math.max(0, state.cur), state.planned.length - 1);
-      const G = geometry();
       const key = [G.W, G.H, G.s, G.ss, ROWS, LANE_SS, G.parts.join(',')].join('|');
       if (key !== state.geomKey || !state.slots) {
         $('sheet').innerHTML = '';
@@ -583,7 +607,13 @@
 
   // headless check + the composer's link: ?t= and ?play=1, and the state
   window.__standGoto = t => { goto(t); return { cur: state.cur, page: state.size && state.size.page }; };
-  window.__standRows = () => (state.slots || []).map((sl, k) => sl ? { slot: k, idx: sl.idx, t0: sl.pg.t0, t1: sl.pg.t1, window: sl.view.window, gutterPx: sl.view.gutterPx } : null);
+  window.__standRows = () => (state.slots || []).map((sl, k) => sl ? { slot: k, idx: sl.idx, t0: sl.pg.t0, t1: sl.pg.t1, window: sl.view.window, gutterPx: sl.view.gutterPx,
+    widthPx: sl.view.widthPx, reason: sl.pg.reason, endBar: /opacity="0\.55"/.test(sl.el.innerHTML) } : null);
+  // the seams (day 46): the plan, the ink it was planned from, and the audit of the invariants
+  window.__standSeams = () => (state.planned || []).map(pg => ({ t0: pg.t0, t1: pg.t1, reason: pg.reason, short: pg.short }));
+  window.__standInk = () => state.ink ? { units: state.ink.units.length, beams: state.ink.beams.length, forbidden: state.ink.units.filter(u => !u.trill && !u.hdr).length,
+    trills: state.ink.units.filter(u => u.trill).length, headers: state.ink.units.filter(u => u.hdr).length, secPerSs: state.secPerSs } : null;
+  window.__standSeamAudit = () => state.planned && state.ink ? NotationSeams.audit(state.planned, state.ink, state.secPerSs, state.pageRules, state.glyphs) : null;
   window.__standPlay = () => { play(); return true; };
   window.__standPause = () => { pause(); return true; };
   window.__standPlayLocal = () => { togglePlay(); return state.local.isPlaying(); };
@@ -597,7 +627,7 @@
     sheetTop: $('sheet').getBoundingClientRect().top,
     stripText: state.strip ? { play: state.strip.host.querySelector('.ns-play').textContent, again: state.strip.host.querySelector('.ns-again').textContent, pos: state.strip.host.querySelector('.ns-pos').textContent, ready: state.strip.host.querySelector('.ns-ready').textContent, playing: state.strip.host.classList.contains('playing'), sheetTop: $('sheet').getBoundingClientRect().top } : null,
     t: state.transport.now(), playing: state.transport.isPlaying(),
-    cur: state.cur, rowsTotal: state.planned ? state.planned.length : 0,
+    cur: state.cur, rowsTotal: state.planned ? state.planned.length : 0, edgePx: state.geom ? state.geom.edgePx : null,
     pageIdx: Math.floor(state.cur / ROWS), pages: state.planned ? Math.ceil(state.planned.length / ROWS) : 0,
     ring: (state.slots || []).map(sl => sl ? sl.idx : null),
     size: state.size || null, turns: state.turnLog.slice(),

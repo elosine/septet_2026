@@ -714,6 +714,7 @@
         if (first && (auto || part === (o.frameParts || ir.source.parts)[0]))
           items.push({ k: 'tempotext', t: tp.t, dxSs: dx, bpm: tp.bpm, autoClear: auto });
       }
+      const hdr0 = items.length;   // [the stand's seams, day 46] the section header's items are tagged after the loop
       for (const h of headers) if (h.part === part && first) {
         // THE SECTION FIGURE (day 35, composer): niente circle · arrow · fff,
         // sitting UNDER the staff where any other dynamic goes, and ENDING
@@ -829,6 +830,9 @@
         items.push({ k: 'dynarrow', t: h.t, dx0Ss: arrL, dx1Ss: arrR, ySs: y, headSs: A.headSs, thickSs: A.thickSs });
         items.push({ k: 'glyph', g: 'dyn-' + h.endMark, t: h.t, dxSs: markC, ySs: y, align: 'center' });
       }
+      // [the stand's seams, day 46] a section header is STATIC ink (the composer: "clamped"): tagged, NOT
+      // enumerable, so the saved model stays byte-identical; the stand's clamp moves it as one block
+      for (let i = hdr0; i < items.length; i++) Object.defineProperty(items[i], 'hdr', { value: true, enumerable: false, configurable: true });
       for (const d of dynTexts) if (d.part === part && first) items.push({ k: 'text', t: d.t, dxSs: 0, ySs: o.dynY, text: d.text, size: TS.dynamic });
       for (const ins of instrTexts) if (ins.parts.includes(part) && first) items.push({ k: 'text', t: ins.t, dxSs: 0, ySs: o.tempoY + 1.4, text: ins.text, size: TS.instruction });
 

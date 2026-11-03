@@ -239,7 +239,13 @@
       scene.xc = view.xOfSeconds(t);   // where the riders ride: the cursor's x
       if (cursor) {
         cursor.on = t >= w0 && t <= w1;
-        if (cursor.on) cursor.x = view.xOfSeconds(t);
+        if (cursor.on) {
+          let x = view.xOfSeconds(t);
+          // [the stand's seams, day 46] the cursor runs from the staff's first pixel to its last and juts
+          // past neither (the composer: "nothing juts out past that to the right"); opts.cursorInside
+          if (O.cursorInside) x = Math.min(Math.max(x, view.gutterPx + cursor.w / 2), view.widthPx - cursor.w / 2);
+          cursor.x = x;
+        }
       }
       for (let i = 0; i < items.length; i++) {
         const it = items[i];
