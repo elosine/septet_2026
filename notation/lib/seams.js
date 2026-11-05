@@ -29,6 +29,9 @@
 // A trill's column sits AFTER its go line and is clamped left by the drawing,
 // not avoided here (the composer: "it can go to the left … I don't think we
 // need to shorten the row"); a section header is static ink, clamped likewise.
+// "sempre secco" at a surge's cliff (day 49, for_seven_tubas NITS day 47, the audit's
+// item 7, built RUNNING_LOG 121) is AVOIDED like a head unit: the word is never cut
+// and never pushed — a seam inside it moves left to its start, so it opens the row whole.
 // Seams are planned for THE PARTS DRAWN: one part on a stand, every part on
 // the display (the composer: "the seams chosen for this part alone").
 // Pure, dual-load; the extents come from render.js (one geometry).
@@ -43,7 +46,8 @@
   // THE INK MAP of the parts drawn, from the layout model: every head unit's
   // ink span in staff spaces relative to its own time, every beam's tips, and every curve's span.
   //   -> { units: [{ t, x0Ss, x1Ss, part, trill?, hdr? }] by t, beams: [{ part, group, tips: [{ t, dxSs }] }], curves: [{ part, a, b, k }] by a }
-  function inkMap(model, glyphs, parts) {
+  //   measure(text, sizeSs, italic) -> widthSs, optional: the page's own font for the words (else the estimate)
+  function inkMap(model, glyphs, parts, measure) {
     const S = Stamps.makeStamps(glyphs);
     const set = new Set(parts);
     const units = [], beams = [], curves = [];
@@ -58,14 +62,17 @@
           beams.push({ part: sm.part, group: it.group || '', tips: it.tips.map(p => ({ t: p.t, dxSs: p.dxSs || 0 })) });
           continue;
         }
-        if (!(it.hdr || Render.isUnitItem(it))) continue;
+        // the secco word (day 49): a forbidden span of its own, at its time — merged with the cliff's head unit when they share it
+        const secco = it.k === 'text' && /secco/i.test(String(it.text || ''));
+        if (!(secco || it.hdr || Render.isUnitItem(it))) continue;
         const t = it.k === 'beam' ? it.tips[0].t : it.t;
-        const e = Render.inkExtentSs(it, S, glyphs, {}, null);
+        const e = Render.inkExtentSs(it, S, glyphs, {}, measure || null);
         if (!e || t === undefined) continue;
         const u = unitAt(t);
         u.x0Ss = Math.min(u.x0Ss, e[0]); u.x1Ss = Math.max(u.x1Ss, e[1]);
         if (it.k === 'glyph' && it.g === 'accidental-leftParen') u.trill = true;   // the trill's column: the parenthesised neighbour marks it
         if (it.hdr) u.hdr = true;
+        if (secco) u.secco = true;
       }
       for (const u of byT.values()) if (u.x1Ss > u.x0Ss) units.push(u);
     }

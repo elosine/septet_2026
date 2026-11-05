@@ -257,14 +257,26 @@
           const t = tOf(it);
           if (t === undefined || !owns(t)) continue;
           const unit = !!it.hdr || isUnitItem(it);
-          const mark = !unit && (it.k === 'text' || it.k === 'glyph' || it.k === 'niente' || it.k === 'dynarrow' || it.k === 'glissline' || it.k === 'ottava');
+          // (day 49, RUNNING_LOG 121) a GROUP ottava — its hook right of its head — is time-bound ink like the beam under it:
+          // cut at the seam and re-shown on the next row (the drawing below), never pushed; a head's own sign stays a mark
+          const mark = !unit && (it.k === 'text' || it.k === 'glyph' || it.k === 'niente' || it.k === 'dynarrow' || it.k === 'glissline' || (it.k === 'ottava' && !(it.dx1Ss > 0)));
           if (!unit && !mark) continue;
           const e = extPx(it); if (!e) continue;
           if (unit) { let b = blocks.get(t); if (!b) { b = { x0: Infinity, x1: -Infinity, items: [], d: 0 }; blocks.set(t, b); } b.x0 = Math.min(b.x0, e[0]); b.x1 = Math.max(b.x1, e[1]); b.items.push(it); }
           else marks.push({ it, e, t });
         }
-        const fit = (x0, x1) => x1 > CL.x1Px + 0.01 ? CL.x1Px - x1 : x0 < CL.x0Px - 0.01 ? CL.x0Px - x0 : 0;
+        const fit = (x0, x1, lo) => { const L = lo == null ? CL.x0Px : lo; return x1 > CL.x1Px + 0.01 ? CL.x1Px - x1 : x0 < L - 0.01 ? L - x0 : 0; };
         for (const b of blocks.values()) { b.d = fit(b.x0, b.x1); if (b.d) for (const it of b.items) SH.set(it, b.d); }
+        // THE ROW'S FIRST UNIT (day 49, RUNNING_LOG 121; the composer at the seam: "everything falls to the right of the
+        // notehead's left edge"): a unit opening the row — its ink at the staff's first pixel — bounds its marks at its
+        // HEAD's left edge, not the staff's: a centred dynamic no longer begins under the accidental. Mid-row nothing moves.
+        for (const b of blocks.values()) {
+          if (b.x0 + b.d > CL.x0Px + 0.25 * ssPx) continue;
+          let hx = null;
+          for (const it of b.items) { if (it.k === 'glyph' && /^notehead/.test(it.g)) { const e = extPx(it); if (e && (hx == null || e[0] < hx)) hx = e[0]; } }
+          if (hx != null) b.lo = hx + b.d;
+        }
+        const loOf = t => { const b = blocks.get(t); return b && b.lo != null ? Math.max(CL.x0Px, b.lo) : CL.x0Px; };
         // THE DYNAMIC CHAIN (day 49 — the composer's Bass Cl. shot: "ppp to fff and an arrow, but they're all smushed
         // together"): a dynamic, its arrow and its target at one time on one line move as ONE, pushed by their union's
         // overflow, so the push keeps their spacing. Every other mark still moves by its own overflow.
@@ -276,8 +288,8 @@
           let c = chains.get(key); if (!c) { c = { x0: Infinity, x1: -Infinity, items: [] }; chains.set(key, c); }
           c.x0 = Math.min(c.x0, m.e[0]); c.x1 = Math.max(c.x1, m.e[1]); c.items.push(m);
         }
-        for (const c of chains.values()) { const b = blocks.get(c.items[0].t), d0 = b ? b.d : 0, d = fit(c.x0 + d0, c.x1 + d0); if (d0 + d) for (const m of c.items) SH.set(m.it, d0 + d); }
-        for (const m of marks) { if (isDyn(m.it)) continue; const b = blocks.get(m.t), d0 = b ? b.d : 0, d = fit(m.e[0] + d0, m.e[1] + d0); if (d0 + d) SH.set(m.it, d0 + d); }
+        for (const c of chains.values()) { const b = blocks.get(c.items[0].t), d0 = b ? b.d : 0, d = fit(c.x0 + d0, c.x1 + d0, loOf(c.items[0].t)); if (d0 + d) for (const m of c.items) SH.set(m.it, d0 + d); }
+        for (const m of marks) { if (isDyn(m.it)) continue; const b = blocks.get(m.t), d0 = b ? b.d : 0, d = fit(m.e[0] + d0, m.e[1] + d0, loOf(m.t)); if (d0 + d) SH.set(m.it, d0 + d); }
       }
       // [§495] an item placed against ANOTHER staff of the same part (the beamed
       // pair's bass stem reaching the treble beam, its pizz. on the treble row)
@@ -627,18 +639,36 @@
           // label · dashes RIGHT-ALIGNED stepping back from the hook (p2's
           // emitDashes — the connecting dash meets the hook, forming the L),
           // hook at the head's right edge. Geometry: glyphs.standards.ottava.
-          if (!owns(it.t)) continue;
           const O = stds.ottava || {};
           const lg = glyphs.ottavaText && glyphs.ottavaText[it.label];
+          // [the stand's seams, day 49 — RUNNING_LOG 121] a GROUP bracket (the hook right of its head) is cut at the
+          // seam with the beam under it; on the next row the sign is shown again in parentheses at the row's start,
+          // the dashes running on to the hook (NITS day 47, the audit's item 3). A head's own sign belongs to its row.
+          let reshow = false;
+          if (CL && it.dx1Ss > 0 && !owns(it.t)) {
+            if (it.t < w0 && X(it.t, it.dx1Ss) > view.gutterPx + 0.01) reshow = true;
+            else continue;
+          } else if (!owns(it.t)) continue;
           const yLine = Y(it.ySs);
           let xLabel = X(it.t, it.dx0Ss || 0);
           const xHook = X(it.t, it.dx1Ss || 0);
           // a too-narrow unit widens the bracket leftward to its minimum span
           const minSpan = (O.minBracketSpanSs || 1.37) * ssPx;
           const lgW = lg ? (lg.wSs + (O.textGapBeforeLineSs || 0.1)) * ssPx : 0;
-          if (xHook - (xLabel + lgW) < minSpan) xLabel = xHook - minSpan - lgW;
+          if (!reshow && xHook - (xLabel + lgW) < minSpan) xLabel = xHook - minSpan - lgW;
           let xDashStart = xLabel;
-          if (lg) {
+          if (reshow) {
+            // the sign again, in the font's parentheses, from the staff's first pixel
+            const gap = (O.textGapBeforeLineSs || 0.1) * ssPx, hSs = lg ? lg.hSs : 0.75;
+            const pSize = hSs * 1.3 * ssPx, pW = 0.32 * pSize;
+            const tyB = yLine + (O.lineAttachAboveBaselineSs || 0.32) * ssPx;   // the sign's baseline
+            let x = view.gutterPx + gap;
+            parts.push('<text class="ottava-reshow" x="' + x.toFixed(2) + '" y="' + tyB.toFixed(2) + '" font-size="' + pSize.toFixed(1) + '"' + fontAttr + ' fill="' + o.ink + '">(</text>');
+            x += pW;
+            if (lg) { parts.push('<g transform="translate(' + x.toFixed(2) + ',' + (tyB - lg.hSs * ssPx).toFixed(2) + ') scale(' + ssPx + ')"><path d="' + lg.path + '"/></g>'); x += lg.wSs * ssPx; }
+            parts.push('<text class="ottava-reshow" x="' + x.toFixed(2) + '" y="' + tyB.toFixed(2) + '" font-size="' + pSize.toFixed(1) + '"' + fontAttr + ' fill="' + o.ink + '">)</text>');
+            xDashStart = x + pW + gap;
+          } else if (lg) {
             // text baseline straddles the line (lineAttachAboveBaselineSs)
             const ty = yLine + (O.lineAttachAboveBaselineSs || 0.32) * ssPx - lg.hSs * ssPx;
             parts.push('<g transform="translate(' + xLabel.toFixed(2) + ',' + ty.toFixed(2) + ') scale(' + ssPx + ')">' +

@@ -130,11 +130,20 @@
     .map(m => ({ label: m[1], t: m[3] != null ? +m[2] * 60 + +m[3] : +m[2] }));
   // THE CIRCULAR BUFFER (D101, day 46 — the composer: "b"; the string quartet's
   // parts mode, built there and checked): the screen's ROWS slots are a ring over
-  // the planned rows — planned row i always lives in slot i mod ROWS, so the
-  // screen shows rows cur … cur + ROWS − 1; when the cursor leaves row cur, its
-  // slot reloads with row cur + ROWS; the cursor runs down the slots and wraps to
-  // the top. At least ROWS − 1 rows of future music are visible at every moment.
-  const state = { scores: {}, cur: 0, live: null, slots: null, layers: null, geomKey: '', turnLog: [],
+  // the planned rows — planned row i lives in slot (i − base) mod ROWS, so a
+  // screen that starts at row base reads in order from the top; when the cursor
+  // leaves row cur, its slot reloads with row cur + ROWS; the cursor runs down the
+  // slots and wraps to the top. At least ROWS − 1 rows of future music are visible.
+  // THE SWIPE RULED (day 49, for_seven_tubas RUNNING_LOG 118 — a row is a PAGE, four
+  // are a SCREEN): a swipe is the previous or next SCREEN — the four pages before the
+  // oldest on screen, or after the newest — in order, the cursor at the start of its
+  // page 1 (base moves); a TAP moves only the cursor (base stays, nothing re-laid); the
+  // pages FLIP AT PLAY — every played page at once (play() re-lays the ring for cur…
+  // cur + ROWS − 1), then one at a time as the cursor goes; a jump or landing on a row
+  // not on screen lands a fresh screen with it on top. (The old slot = i mod ROWS
+  // rotated a screen whose first row was not a multiple of ROWS: the composer's
+  // 9 · 6 · 7 · 8 after a right swipe, RUNNING_LOG 120.)
+  const state = { scores: {}, cur: 0, base: 0, live: null, slots: null, layers: null, geomKey: '', turnLog: [],
     room: null, mode: 'ALONE', tuple: null, following: false, lastSeq: null, letters: LINK_LETTERS,
     parts: null, zoom: null, strip: null, leader: false, role: null, rowId: null };   // 9i: the parts drawn (the display), the strip, who I am
   const partsDrawn = () => state.parts || [PART - 1];
@@ -174,7 +183,7 @@
     const { W, H } = frameSize();
     return W !== state.size.W || H !== state.size.H;
   }
-  function refit() { if (state.ir && sizeChanged()) render(); }
+  function refit() { if (state.ir && sizeChanged()) { render(); ensureLoop(); } }   // 117: the re-mounted overlay needs a frame, or the landing cursor vanishes (the iPad's viewport settles after boot)
   const pageSeconds = () => Math.max(2, parseFloat(Q.get('s')) || S_DEFAULT);
   // THE ROW'S END (the design sitting, day 46 — the composer: "the end should be 2 or 3 pixels before
   // the right edge of the screen"): a full row's staff stops this many px short of the frame's right edge
@@ -192,7 +201,8 @@
     if (i < 0) i = t >= P[P.length - 1].t1 - 1e-9 ? P.length - 1 : 0;
     return i;
   }
-  const slotOf = i => i % ROWS;
+  const slotOf = i => ((i - state.base) % ROWS + ROWS) % ROWS;   // base = the row in the top slot of the current screen (118)
+  const onScreen = i => !!(state.slots && state.slots.some(sl => sl && sl.idx === i));
   const srcEnd = () => state.ir.source.window[1];
 
   // THE GEOMETRY of a row, computed once per frame size: the staff from the
@@ -338,14 +348,14 @@
       // side, else the target itself (seams.js; the rules in page_rules.json `stand`). Re-planned when the
       // parts or the scale change; the row holding the clock is found again.
       const partsKey = G.parts.join(',');
-      if (!state.ink || state.inkParts !== partsKey) { state.ink = NotationSeams.inkMap(state.model, state.glyphs, G.parts); state.inkParts = partsKey; }
+      if (!state.ink || state.inkParts !== partsKey) { state.ink = NotationSeams.inkMap(state.model, state.glyphs, G.parts, measureSs); state.inkParts = partsKey; }
       const secPerSs = G.ss / G.pxPerS;
       const planKey = [s, partsKey, secPerSs.toFixed(6)].join('|');
       if (!state.planned || state.planKey !== planKey) {
         const tNow = Math.max(0, state.transport.now());
         state.planned = NotationSeams.planSeams(state.ir, state.pageRules, s, state.ink, secPerSs, state.glyphs);
         state.planKey = planKey; state.secPerSs = secPerSs;
-        if (state.slots) state.cur = plannedOf(tNow);
+        if (state.slots) { state.cur = plannedOf(tNow); state.base = state.cur; }   // a re-plan: a fresh screen, the clock's row on top
       }
       state.cur = Math.min(Math.max(0, state.cur), state.planned.length - 1);
       const key = [G.W, G.H, G.s, G.ss, ROWS, LANE_SS, G.parts.join(',')].join('|');
@@ -422,9 +432,12 @@
     if (state.transport.isPlaying()) rafId = requestAnimationFrame(animLoop);
   }
   function ensureLoop() { if (!rafId) rafId = requestAnimationFrame(animLoop); }
+  // 118: a row already on screen (a tap, a jump within the screen) takes the cursor only — the
+  // pages stay as they are (they flip at play); a row off screen lands a fresh screen, it on top
   function goto(t) {
     const i = plannedOf(t);
-    if (i !== state.cur) { state.cur = i; render(); }
+    if (!onScreen(i)) { state.cur = i; state.base = i; render(); }
+    else if (i !== state.cur) { state.cur = i; if (state.transport.isPlaying()) render(); }   // playing on from a tap: the played pages flip now, as at play
     state.transport.seek(t); ensureLoop();
   }
   let wakeLock = null;
@@ -435,6 +448,7 @@
     if (!state.slots || state.following) return;
     const t = state.transport.now(), t0 = state.planned[state.cur].t0;
     if (t < t0 || t >= rowEnd()) state.transport.seek(t0);
+    render();   // 118, THE FLIP AT PLAY: every page before the cursor's becomes the next ones at once (the ring for cur … cur + ROWS − 1); then one at a time
     state.transport.play(); ensureLoop();
     keepAwake();
   }
@@ -447,9 +461,15 @@
   // a swipe = a screenful of rows (AR-26's "page")
   function turnPage(d) {
     if (!state.planned || state.following || DISPLAY) return;   // snapped while the room plays; the display only follows
-    const i = Math.min(state.planned.length - 1, Math.max(0, state.cur + d * ROWS));
-    if (i === state.cur) return;
-    state.cur = i; render();
+    // 118: the next screen = the ROWS pages after the newest on screen; the previous = the ROWS before the
+    // oldest — never relative to the cursor's page; the cursor lands at the start of the new screen's page 1
+    const on = (state.slots || []).filter(Boolean).map(sl => sl.idx);
+    if (!on.length) return;
+    const oldest = Math.min.apply(null, on), newest = Math.max.apply(null, on);
+    let i;
+    if (d > 0) { i = newest + 1; if (i > state.planned.length - 1) return; }
+    else { if (oldest <= 0) return; i = Math.max(0, oldest - ROWS); }
+    state.cur = i; state.base = i; render();
     state.transport.seek(state.planned[i].t0); ensureLoop();
   }
   // one-finger tap = place the cursor (AR-26): the slot under the finger, the
@@ -586,7 +606,7 @@
     if (follow) {
       if (!state.following) { state.local.pause(); state.following = true; state.transport = state.room.transport; }
       const i = plannedOf(Math.max(0, state.transport.now()));
-      if (i !== state.cur) { state.cur = i; render(); }
+      if (i !== state.cur) { if (!onScreen(i)) state.base = i; state.cur = i; render(); }   // 118: the leader's jump lands a fresh screen; a row change reloads one slot
       ensureLoop(); keepAwake();
     } else {
       const was = state.following;
@@ -637,6 +657,11 @@
 
   // headless check + the composer's link: ?t= and ?play=1, and the state
   window.__standGoto = t => { goto(t); return { cur: state.cur, page: state.size && state.size.page }; };
+  // the swipe check (day 49): a swipe, a tap through the gesture's own path (slot k, a fraction across the row), the cursor's presence
+  const ringNow = () => ({ cur: state.cur, base: state.base, ring: (state.slots || []).map(sl => sl ? sl.idx : null), t: state.transport.now() });
+  window.__standTurn = d => { turnPage(d); return ringNow(); };
+  window.__standTap = (k, frac) => { const r = $('sheet').getBoundingClientRect(); seekAt(r.left + frac * r.width, r.top + (k + 0.5) / ROWS * r.height); return ringNow(); };
+  window.__standCursorOn = () => !!(state.live && state.live.el && Array.from(state.live.el.querySelectorAll('div')).some(d => d.style.background && d.style.willChange === 'transform' && !d.style.borderRadius && !d.style.transformOrigin && d.style.display !== 'none'));   // the cursor is the overlay's vbar: a filled div with no radius (a disc) and no origin (a fill), shown — the containers carry no fill
   window.__standRows = () => (state.slots || []).map((sl, k) => sl ? { slot: k, idx: sl.idx, t0: sl.pg.t0, t1: sl.pg.t1, window: sl.view.window, gutterPx: sl.view.gutterPx,
     widthPx: sl.view.widthPx, reason: sl.pg.reason, endBar: /opacity="0\.55"/.test(sl.el.innerHTML) } : null);
   // the seams (day 46): the plan, the ink it was planned from, and the audit of the invariants
@@ -657,7 +682,7 @@
     sheetTop: $('sheet').getBoundingClientRect().top,
     stripText: state.strip ? { play: state.strip.host.querySelector('.ns-play').textContent, again: state.strip.host.querySelector('.ns-again').textContent, pos: state.strip.host.querySelector('.ns-pos').textContent, ready: state.strip.host.querySelector('.ns-ready').textContent, playing: state.strip.host.classList.contains('playing'), sheetTop: $('sheet').getBoundingClientRect().top } : null,
     t: state.transport.now(), playing: state.transport.isPlaying(),
-    cur: state.cur, rowsTotal: state.planned ? state.planned.length : 0, edgePx: state.geom ? state.geom.edgePx : null,
+    cur: state.cur, base: state.base, rowsTotal: state.planned ? state.planned.length : 0, edgePx: state.geom ? state.geom.edgePx : null,
     pageIdx: Math.floor(state.cur / ROWS), pages: state.planned ? Math.ceil(state.planned.length / ROWS) : 0,
     ring: (state.slots || []).map(sl => sl ? sl.idx : null),
     size: state.size || null, turns: state.turnLog.slice(),

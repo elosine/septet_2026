@@ -166,10 +166,22 @@ async function main() {
         const pg = seams[i];
         if (pg.reason === 'target' ? seen.target : seen[pg.reason]) continue;
         seen[pg.reason] = true;
+        // land far away first (118: a jump within the screen moves only the cursor), so this landing lays a fresh screen with row i on top
+        await p.evalJs('window.__standGoto(' + (i > ROWS ? seams[0].t0 : seams[seams.length - 1].t0) + ')'); await sleep(150);
         await p.evalJs('window.__standGoto(' + pg.t0 + ')'); await sleep(700);
-        const k = i % ROWS, k2 = (i + 1) % ROWS;
+        // day 49 (RUNNING_LOG 121): a landing lays a fresh screen, row i on top — read each row's slot from the page, not from i mod ROWS
+        const now = await p.evalJs('window.__standRows()');
+        const slotOfRow = j => { const rw = now.find(r => r && r.idx === j); return rw ? rw.slot : null; };
+        const k = slotOfRow(i);
+        if (k == null) { assert(false, tg.name + ': row ' + i + ' on screen after the landing', now.map(r => r && r.idx)); continue; }
         const cw = Math.min(260, W);
         await p.shot('seam_' + tg.name + '_' + i + '_' + pg.reason + '_end.png', { x: W - cw, y: sheetTop + k * rowH, width: cw, height: rowH });
+        let k2 = slotOfRow(i + 1);
+        if (k2 == null) {   // one row a screen (the display): the next row needs its own landing
+          await p.evalJs('window.__standGoto(' + seams[i + 1].t0 + ')'); await sleep(400);
+          const now2 = await p.evalJs('window.__standRows()'); const rw = now2.find(r => r && r.idx === i + 1); k2 = rw ? rw.slot : null;
+        }
+        if (k2 == null) { assert(false, tg.name + ': row ' + (i + 1) + ' on screen for its shot', null); continue; }
         await p.shot('seam_' + tg.name + '_' + i + '_' + pg.reason + '_next.png', { x: 0, y: sheetTop + k2 * rowH, width: cw, height: rowH });
         rec['shot_' + pg.reason] = { row: i, t0: pg.t0, t1: pg.t1, short: pg.short };
       }
