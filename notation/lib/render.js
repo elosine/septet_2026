@@ -265,7 +265,19 @@
         }
         const fit = (x0, x1) => x1 > CL.x1Px + 0.01 ? CL.x1Px - x1 : x0 < CL.x0Px - 0.01 ? CL.x0Px - x0 : 0;
         for (const b of blocks.values()) { b.d = fit(b.x0, b.x1); if (b.d) for (const it of b.items) SH.set(it, b.d); }
-        for (const m of marks) { const b = blocks.get(m.t), d0 = b ? b.d : 0, d = fit(m.e[0] + d0, m.e[1] + d0); if (d0 + d) SH.set(m.it, d0 + d); }
+        // THE DYNAMIC CHAIN (day 49 — the composer's Bass Cl. shot: "ppp to fff and an arrow, but they're all smushed
+        // together"): a dynamic, its arrow and its target at one time on one line move as ONE, pushed by their union's
+        // overflow, so the push keeps their spacing. Every other mark still moves by its own overflow.
+        const isDyn = it => (it.k === 'glyph' && /^dyn-/.test(it.g)) || it.k === 'dynarrow' || it.k === 'niente';
+        const chains = new Map();
+        for (const m of marks) {
+          if (!isDyn(m.it)) continue;
+          const key = m.t + '|' + (m.it.ySs != null ? Number(m.it.ySs).toFixed(2) : '');
+          let c = chains.get(key); if (!c) { c = { x0: Infinity, x1: -Infinity, items: [] }; chains.set(key, c); }
+          c.x0 = Math.min(c.x0, m.e[0]); c.x1 = Math.max(c.x1, m.e[1]); c.items.push(m);
+        }
+        for (const c of chains.values()) { const b = blocks.get(c.items[0].t), d0 = b ? b.d : 0, d = fit(c.x0 + d0, c.x1 + d0); if (d0 + d) for (const m of c.items) SH.set(m.it, d0 + d); }
+        for (const m of marks) { if (isDyn(m.it)) continue; const b = blocks.get(m.t), d0 = b ? b.d : 0, d = fit(m.e[0] + d0, m.e[1] + d0); if (d0 + d) SH.set(m.it, d0 + d); }
       }
       // [§495] an item placed against ANOTHER staff of the same part (the beamed
       // pair's bass stem reaching the treble beam, its pizz. on the treble row)

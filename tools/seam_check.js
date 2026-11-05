@@ -4,7 +4,8 @@
 // and the display on a gatekeeper's link; the plan read back through the page's own hooks
 // (__standSeams · __standInk · __standSeamAudit · __standRows) and checked against the rules:
 //   · no seam inside a head unit's ink · a cut beam keeps a notehead's width of beam each side,
-//     or is a recorded catch · a row is never shortened past the slack · a full row's staff
+//     or is a recorded catch · a cut curve gives the next row its half second (day 49, the
+//     half-second rule; the GC arc exempt) · a row is never shortened past the slack · a full row's staff
 //     ends edgeGapPx short of the frame · no end bar but the piece's own · no page errors
 // Shots for the eye: testkit/results/stand_shots/seam_<part>_<row>_<reason>.png — the right
 // end of the seam's row and the left start of the next, at 2×.
@@ -140,9 +141,11 @@ async function main() {
       const W = st.size.W, s = st.size.s, edge = st.edgePx;
       const rec = { name: tg.name, rows: seams.length, ink, audit, size: st.size, problems: p.problems.slice() };
       report.parts.push(rec);
-      console.log('   rows ' + seams.length + ' · ink ' + JSON.stringify(ink) + ' · ' + JSON.stringify(audit.byReason) + ' · catches ' + audit.catches);
+      console.log('   rows ' + seams.length + ' · ink ' + JSON.stringify(ink) + ' · ' + JSON.stringify(audit.byReason) + ' · catches ' + audit.catches +
+        ' · slack-bound ' + (audit.slackBound || 0) + (audit.shortCurveSlack && audit.shortCurveSlack.length ? ' (curves short of the half second there: ' + audit.shortCurveSlack.length + ')' : ''));
       assert(audit.insideUnit.length === 0, tg.name + ': no seam inside a head unit', audit.insideUnit.slice(0, 3));
       assert(audit.shortStub.length === 0, tg.name + ': every cut beam keeps a notehead of beam each side (or is a catch)', audit.shortStub.slice(0, 3));
+      assert((audit.shortCurve || []).length === 0, tg.name + ': every cut curve gives the next row its half second (' + audit.minCurveS + ' s), or the seam is slack-bound (recorded)', (audit.shortCurve || []).slice(0, 3));
       const over = seams.slice(0, -1).filter(pg => pg.t1 - pg.t0 > s + 1e-6 || pg.short > 2 + 1e-6 || pg.short < -1e-6);
       assert(over.length === 0, tg.name + ': every row within its seconds and its slack', over.slice(0, 3));
       const full = rows.filter(rw => rw && Math.abs((rw.t1 - rw.t0) - s) < 1e-6);
