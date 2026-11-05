@@ -679,6 +679,13 @@
       fetch('/notation/registry/techniques.json').then(r => r.ok ? r.json() : null).catch(() => null),
     ]);
     state.glyphs = glyphs; state.pageRules = pageRules; state.container = container; state.ir = irRes;
+    // day 49, THE WIDTH DIAL for the composer's eye (the Piano GCs, RUNNING_LOG 119): ?gcdur= the GC's
+    // duration in seconds (0.6 today — 0.36 before the hit, 0.24 after), the static arc and the ball alike
+    const gcdur = parseFloat(Q.get('gcdur'));
+    if (isFinite(gcdur) && gcdur > 0.05) {
+      for (const blk of [container.engraving && container.engraving.render && container.engraving.render.gc, container.animated && container.animated.gc])
+        if (blk) blk.preset = Object.assign({}, blk.preset || {}, { duration: gcdur });
+    }
     state.ensemble = ensemble; state.techniques = techniques;
     try { await loadScore(state.ir.source.score); } catch (e) { /* the score-level objects are optional */ }
     state.model = NotationLayout.layoutSection(state.ir, state.glyphs, Object.assign(

@@ -73,7 +73,11 @@
   // decides exactly, with the same tests the string path makes.
   const KINDS = {
     gc(inst, view, st) {
-      const s = view.system(inst.part);
+      // §401e / day 49 (for_seven_tubas RUNNING_LOG 119): THE GC'S SYSTEM, the same one render.js draws the arc and
+      // the disc on — a multi-staff part's FIRST staff, so the ball lands on the disc between the piano's staves.
+      // (view.system(part) was the whole lane: the ball bounced at the lane's bottom while the disc sat in the middle —
+      // the composer's finding on the Piano.)
+      const s = GC.systemOf(view, inst.part);
       const P = GC.params(Object.assign({}, st.preset || {}, (inst && inst.preset) || {}));
       const G = GC.laneGeom(s, view, st.look);
       const r = G.look.ballRadiusPx * G.k;
