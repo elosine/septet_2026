@@ -287,20 +287,25 @@
         '" width="' + eb.wPx + '" height="' + (sys.yBotPx - sys.yTopPx).toFixed(1) + '" fill="#111" opacity="' + (eb.opacity || 0.55) + '"/>';
     }
     // THE ROW'S MARKS (day 49, RUNNING_LOG 113 — the composer: "how performers are going to orient
-    // themselves in time"): the row's START TIME at its left above the staff, small and grey, like a
-    // bar number (m:ss, whole seconds) · the row's NUMBER under the staff (an aid for the sitting's
-    // talk about the swipe; not yet ruled to stay) · the REHEARSAL LETTERS boxed above the staff where
-    // they fall on the row (the room's letters from the welcome; a plain link's &letters= for a check).
-    const sys0 = view.systems[0], sysN = view.systems[view.systems.length - 1];
-    const ssPx = sys0.ssPx, fontFam = ((C.engraving && C.engraving.render && C.engraving.render.fontFamily) || 'sans-serif').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    // themselves in time"): the row's START TIME and its NUMBER as one stack at the row's left, just
+    // above the staff's top line over the part label — the time on top (m:ss, whole seconds), the
+    // number under it (an aid for the sitting's talk about the swipe; not yet ruled to stay); the
+    // composer, day 49: "I definitely want the page number and the time to be together", "closer to
+    // the instrument name". (The first draft put the time at the LANE's top and the number under the
+    // lane's bottom — far apart and belonging to no staff; sys.yTopPx is the lane, not the staff.)
+    // The REHEARSAL LETTERS boxed above the staff where they fall on the row (the room's letters from
+    // the welcome; a plain link's &letters= for a check).
+    const sys0 = view.systems[0];
+    const ssPx = sys0.ssPx, staffTop = sys0.yMidPx - 2 * ssPx;   // the staff's top line (five lines, ±2 ss about the middle)
+    const fontFam = ((C.engraving && C.engraving.render && C.engraving.render.fontFamily) || 'sans-serif').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
     const mmss = t => { const v = Math.max(0, Math.round(t)); return Math.floor(v / 60) + ':' + String(v % 60).padStart(2, '0'); };
-    let marks = '<text x="4" y="' + (sys0.yTopPx - 0.7 * ssPx).toFixed(1) + '" font-size="' + (0.9 * ssPx).toFixed(1) + '" font-family="' + fontFam + '" fill="#8a8a8a">' + mmss(pg.t0) + '</text>' +
-      '<text x="4" y="' + (sysN.yBotPx + 1.4 * ssPx).toFixed(1) + '" font-size="' + (0.8 * ssPx).toFixed(1) + '" font-family="' + fontFam + '" fill="#9a9a9a">' + (i + 1) + '</text>';
+    let marks = '<text x="4" y="' + (staffTop - 1.9 * ssPx).toFixed(1) + '" font-size="' + (0.95 * ssPx).toFixed(1) + '" font-family="' + fontFam + '" fill="#8a8a8a">' + mmss(pg.t0) + '</text>' +
+      '<text x="4" y="' + (staffTop - 0.6 * ssPx).toFixed(1) + '" font-size="' + (0.8 * ssPx).toFixed(1) + '" font-family="' + fontFam + '" fill="#8a8a8a">' + (i + 1) + '</text>';
     for (const L of state.letters || []) {
       if (!(L.t >= pg.t0 - 1e-9 && L.t < pg.t1 - 1e-9)) continue;
       const label = String(L.label).replace(/&/g, '&amp;').replace(/</g, '&lt;');
       const bw = Math.max(2.0, 1.1 + 0.9 * String(L.label).length) * ssPx, bh = 2.0 * ssPx;
-      const bx = Math.min(view.xOfSeconds(L.t), view.widthPx - bw), by = sys0.yTopPx - 4.4 * ssPx;
+      const bx = Math.min(view.xOfSeconds(L.t), view.widthPx - bw), by = staffTop - 4.3 * ssPx;
       marks += '<rect x="' + bx.toFixed(1) + '" y="' + by.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + bh.toFixed(1) + '" fill="#fff" fill-opacity="0.9" stroke="#111" stroke-width="1.2"/>' +
         '<text x="' + (bx + bw / 2).toFixed(1) + '" y="' + (by + bh * 0.74).toFixed(1) + '" font-size="' + (1.45 * ssPx).toFixed(1) + '" font-family="' + fontFam + '" font-weight="bold" text-anchor="middle" fill="#111">' + label + '</text>';
     }

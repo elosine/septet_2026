@@ -126,7 +126,9 @@ async function main() {
     const ready = async p => { let st = null; for (let i = 0; i < 80 && !(st && (st.ready || st.error)); i++) { await sleep(250); try { st = await stateOf(p); } catch (e) { st = null; } } return st; };
 
     const targets = [1, 2, 3, 4, 5, 6, 7].map(n => ({ name: 'part' + n, url: BASE + '/notation/app/stand.html?part=' + n, parts: 1 }))
-      .concat([{ name: 'display', url: BASE + '/s/' + gk + '?view=display', parts: 7, size: [1920, 1080] }]);
+      .concat([{ name: 'display', url: BASE + '/s/' + gk + '?view=display', parts: 7, size: [1920, 1080] },
+        // day 49, for the eye: the Bass Cl. at 8:32 with two rehearsal letters on the link (one at a row's start, one mid-row)
+        { name: 'letters', url: BASE + '/notation/app/stand.html?part=2&t=512&letters=A=8:48,B=9:00', parts: 1, eyeAt: 512 }]);
     for (const tg of targets) {
       step(tg.name);
       const p = await open(tg.name, tg.url, tg.size || [vw, vh]);
@@ -169,6 +171,7 @@ async function main() {
         rec['shot_' + pg.reason] = { row: i, t0: pg.t0, t1: pg.t1, short: pg.short };
       }
       if (tg.name === 'part1' || tg.name === 'display') { await p.evalJs('window.__standGoto(0)'); await sleep(700); await p.shot('seam_' + tg.name + '_page1.png'); }
+      if (tg.eyeAt != null) { await p.evalJs('window.__standGoto(' + tg.eyeAt + ')'); await sleep(700); await p.shot('eye_' + tg.name + '.png'); }
     }
   } catch (e) {
     fail++; checks.push('  FAIL ' + e.message); console.log('!! ' + e.message);

@@ -21,6 +21,7 @@ const argv = process.argv.slice(2);
 const opt = (name, dflt) => { const i = argv.indexOf('--' + name); if (i >= 0) { const v = argv[i + 1]; argv.splice(i, 2); return v; } return dflt; };
 const flag = name => { const i = argv.indexOf('--' + name); if (i >= 0) { argv.splice(i, 1); return true; } return false; };
 const ROWS = opt('rows', '4');
+const EXTRA = opt('extra', '');   // day 49: appended to every link, e.g. --extra '&letters=A=8:48,B=9:00' (the check aid)
 const BASE = opt('base', 'https://scattered-substance.justinwenloyang.com').replace(/\/$/, '');
 const OUT = path.resolve(ROOT, opt('out', path.join('testkit', 'results', 'qr', 'spots.svg')));
 const PNG = flag('png');
@@ -45,7 +46,7 @@ const spots = argv.length ? argv.map(a => {
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
   for (let i = 0; i < spots.length; i++) {
     const s = spots[i];
-    const url = BASE + '/notation/app/stand.html?part=' + s.part + '&t=' + s.t + '&rows=' + ROWS;
+    const url = BASE + '/notation/app/stand.html?part=' + s.part + '&t=' + s.t + '&rows=' + ROWS + EXTRA;
     const svg = await QR.toString(url, { type: 'svg', margin: 1, errorCorrectionLevel: 'M' });
     const vb = svg.match(/viewBox="([^"]+)"/)[1];
     const inner = svg.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
