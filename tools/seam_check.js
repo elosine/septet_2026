@@ -125,8 +125,8 @@ async function main() {
     const stateOf = p => p.evalJs('window.__standState ? window.__standState() : null');
     const ready = async p => { let st = null; for (let i = 0; i < 80 && !(st && (st.ready || st.error)); i++) { await sleep(250); try { st = await stateOf(p); } catch (e) { st = null; } } return st; };
 
-    const targets = [1, 2, 3, 4, 5, 6, 7].map(n => ({ name: 'part' + n, url: BASE + '/notation/app/stand.html?part=' + n, parts: 1 }))
-      .concat([{ name: 'display', url: BASE + '/s/' + gk + '?view=display', parts: 7, size: [1920, 1080] },
+    const targets = [1, 2, 3, 4, 5, 6, 7].map(n => ({ name: 'part' + n, url: BASE + '/notation/app/stand.html?part=' + n, parts: 1, rowsMax: n === 3 ? 3 : 4 }))
+      .concat([{ name: 'display', url: BASE + '/s/' + gk + '?view=display', parts: 7, size: [1920, 1080], rowsMax: 1 },
         // day 49, for the eye: the Bass Cl. at 8:32 with two rehearsal letters on the link (one at a row's start, one mid-row)
         { name: 'letters', url: BASE + '/notation/app/stand.html?part=2&t=512&letters=A=8:48,B=9:00', parts: 1, eyeAt: 512 }]);
     for (const tg of targets) {
@@ -136,6 +136,9 @@ async function main() {
       assert(st && st.ready && !st.error, tg.name + ' opened', st && { error: st.error, ready: st.ready });
       if (!(st && st.ready)) continue;
       assert(st.parts.length === tg.parts, tg.name + ' draws ' + tg.parts + ' part(s)', st.parts);
+      // day 49 (for_seven_tubas RUNNING_LOG 120): the rows a screen per part — the Piano (two staves) 3, every other part 4,
+      // the display 1 — from page_rules.stand, with no rows= on the link
+      if (tg.rowsMax) assert(st.size.rowsMax === tg.rowsMax, tg.name + ' shows ' + tg.rowsMax + ' rows a screen', st.size.rowsMax);
       const seams = await p.evalJs('window.__standSeams()');
       const ink = await p.evalJs('window.__standInk()');
       const audit = await p.evalJs('window.__standSeamAudit()');

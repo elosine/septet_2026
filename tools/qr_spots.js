@@ -7,7 +7,8 @@
 //   node tools/qr_spots.js                                  the four seam spots, four rows a screen
 //   node tools/qr_spots.js 6:40:"Viola · 0:40":"a note at the row start" 1:136:"Flute · 2:16"
 //        part:seconds[:title[:what]] — any number of spots; a title defaults to "part N · m:ss"
-//   --rows 4     rows a screen (default 4, the composer's ruling of day 49)
+//   --rows N     rows a screen on every link (default: none — the stand's own default per part,
+//                4, the Piano 3; for_seven_tubas RUNNING_LOG 120)
 //   --base URL   the stand's origin (default the box)
 //   --out FILE   where the SVG goes (default testkit/results/qr/spots.svg)
 //   --png        also one PNG per spot beside the SVG (plain codes, no labels)
@@ -20,7 +21,7 @@ const ROOT = path.join(__dirname, '..');
 const argv = process.argv.slice(2);
 const opt = (name, dflt) => { const i = argv.indexOf('--' + name); if (i >= 0) { const v = argv[i + 1]; argv.splice(i, 2); return v; } return dflt; };
 const flag = name => { const i = argv.indexOf('--' + name); if (i >= 0) { argv.splice(i, 1); return true; } return false; };
-const ROWS = opt('rows', '4');
+const ROWS = opt('rows', '');   // day 49: empty = the stand decides (rows per part)
 const EXTRA = opt('extra', '');   // day 49: appended to every link, e.g. --extra '&letters=A=8:48,B=9:00' (the check aid)
 const BASE = opt('base', 'https://scattered-substance.justinwenloyang.com').replace(/\/$/, '');
 const OUT = path.resolve(ROOT, opt('out', path.join('testkit', 'results', 'qr', 'spots.svg')));
@@ -46,7 +47,7 @@ const spots = argv.length ? argv.map(a => {
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
   for (let i = 0; i < spots.length; i++) {
     const s = spots[i];
-    const url = BASE + '/notation/app/stand.html?part=' + s.part + '&t=' + s.t + '&rows=' + ROWS + EXTRA;
+    const url = BASE + '/notation/app/stand.html?part=' + s.part + '&t=' + s.t + (ROWS ? '&rows=' + ROWS : '') + EXTRA;
     const svg = await QR.toString(url, { type: 'svg', margin: 1, errorCorrectionLevel: 'M' });
     const vb = svg.match(/viewBox="([^"]+)"/)[1];
     const inner = svg.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');

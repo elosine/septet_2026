@@ -689,6 +689,13 @@
         if (blk) blk.preset = Object.assign({}, blk.preset || {}, { duration: gcdur });
     }
     state.ensemble = ensemble; state.techniques = techniques;
+    // day 49, THREE ROWS FOR THE PIANO (for_seven_tubas RUNNING_LOG 120): a part's rows a screen come from
+    // page_rules.stand — rowsDefault (4) or rowsByStaves[staves] (a two-staff part, the Piano's grand staff: 3, the
+    // composer's eye in the full-screen app). A link's ?rows= still overrides; the display keeps its own (1).
+    if (!Q.get('rows') && !DISPLAY && pageRules.stand) {
+      const byStaves = pageRules.stand.rowsByStaves || {}, want = byStaves[String(stavesOf(PART - 1))] || pageRules.stand.rowsDefault;
+      if (isFinite(want) && want >= 1) ROWS = Math.min(12, Math.max(1, Math.round(want)));
+    }
     try { await loadScore(state.ir.source.score); } catch (e) { /* the score-level objects are optional */ }
     state.model = NotationLayout.layoutSection(state.ir, state.glyphs, Object.assign(
       { frameParts: state.ir.source.parts, ensemble: state.ensemble, techniques: state.techniques },   // [port 9t]
